@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,56 +22,32 @@ msgstr ""
 
 #. module: sale_edi_ubl
 #. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid ", Email: %(email)s"
-msgstr ", Eメール: %(email)s"
+#: code:addons/sale_edi_ubl/models/sale_edi_xml_ubl_bis3.py:0
+msgid "Could not retrieve the product named: %(name)s"
+msgstr ""
 
 #. module: sale_edi_ubl
 #. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid ", Phone: %(phone)s"
-msgstr ", 電話: %(phone)s"
+#: code:addons/sale_edi_ubl/models/sale_edi_xml_ubl_bis3.py:0
+msgid "Discount"
+msgstr "割引"
 
 #. module: sale_edi_ubl
-#: model:ir.model,name:sale_edi_ubl.model_sale_edi_common
-msgid "Common functions for EDI orders"
-msgstr "EDIオーダの共通機能"
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_edi_xml_ubl_bis3__display_name
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_order__display_name
+msgid "Display Name"
+msgstr "表示名"
 
 #. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Could not retrieve Delivery Address with Details: { %s }"
-msgstr "詳細な配送先住所を取得できませんでした: { %s }"
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_edi_xml_ubl_bis3__id
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_order__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Could not retrieve product for line '%s'"
-msgstr "明細 '%s'用のプロダクトを検出できませんでした"
-
-#. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Could not retrive Customer with Details: { %s }"
-msgstr "詳細な顧客を取得できませんでした: { %s }"
-
-#. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Format used to import the invoice: %s"
-msgstr "請求書をインポートするのに使用されるフォーマット：%s"
-
-#. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Insufficient details to extract Customer: { %s }"
-msgstr "詳細が不十分のため顧客を抽出できません: { %s }"
-
-#. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Name: %(name)s, Vat: %(vat)s"
-msgstr "氏名: %(name)s, 登録番号: %(vat)s"
+#: model:ir.model,name:sale_edi_ubl.model_sale_edi_xml_ubl_bis3
+msgid "Sale BIS Ordering 3.5"
+msgstr ""
 
 #. module: sale_edi_ubl
 #: model:ir.model,name:sale_edi_ubl.model_sale_order
@@ -80,10 +57,5 @@ msgstr "販売オーダ"
 #. module: sale_edi_ubl
 #. odoo-python
 #: code:addons/sale_edi_ubl/models/sale_order.py:0
-msgid "Some information could not be imported"
-msgstr "インポートできない情報がありました"
-
-#. module: sale_edi_ubl
-#: model:ir.model,name:sale_edi_ubl.model_sale_edi_xml_ubl_bis3
-msgid "UBL BIS Ordering 3.0"
-msgstr "UBL BIS Ordering 3.0"
+msgid "Some information could not be imported:"
+msgstr ""

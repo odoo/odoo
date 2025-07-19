@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-07-16 18:39+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -31,11 +31,9 @@ msgstr ""
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
-"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
-"wishlist\"/>Add to wishlist"
+"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>"
 msgstr ""
-"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
-"wishlist\"/>Afegeix a la llista de desitjos"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -45,14 +43,21 @@ msgstr "<small><i class=\"fa fa-trash-o\"/> Eliminar</small>"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid ""
-"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
+"<span class=\"fa fa-fw fa-shopping-cart o_not-animable\"/>\n"
 "                                                <span class=\"d-none d-md-inline\">Add</span>"
 msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgid ""
+"<span class=\"fa fa-heart o_not-animable\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
+msgid "<span class=\"text-300\">|</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -66,6 +71,8 @@ msgstr ""
 "Afegeix el producte a la cistella però mantén-lo a la llista de preferits"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/checkout_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Add to Wishlist"
@@ -87,6 +94,11 @@ msgid "Contact Us"
 msgstr "Contacta'ns"
 
 #. module: website_sale_wishlist
+#: model:ir.model,website_form_label:website_sale_wishlist.model_res_partner
+msgid "Create a Customer"
+msgstr "Crear un client"
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
 msgid "Created by"
 msgstr "Creat per"
@@ -102,7 +114,11 @@ msgid "Default Currency"
 msgstr "Moneda per defecte"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nom mostrat"
 
@@ -112,7 +128,11 @@ msgid "Duplicated wishlisted product for this partner."
 msgstr "Producte preferit duplicat per aquesta empresa."
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -188,6 +208,8 @@ msgid "Shop Wishlist"
 msgstr "Llista de preferits de botiga"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/show_empty_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Show/hide empty wishlist"
 msgstr ""
@@ -203,6 +225,9 @@ msgid "Website"
 msgstr "Lloc web"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/product_page_list_option.xml:0
+#: code:addons/website_sale_wishlist/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link

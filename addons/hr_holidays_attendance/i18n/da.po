@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.2a1+e\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:11+0000\n"
+"POT-Creation-Date: 2025-07-16 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -36,20 +36,10 @@ msgid "Attendance"
 msgstr "Fremmøde"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
-msgid "Attendances"
-msgstr "Fremmødte"
-
-#. module: hr_holidays_attendance
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 msgid "Available"
 msgstr "Til rådighed"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__calendar
-msgid "Calendar"
-msgstr "Kalender"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -80,7 +70,6 @@ msgid "Display Name"
 msgstr "Vis navn"
 
 #. module: hr_holidays_attendance
-#: model:hr.leave.type,name:hr_holidays_attendance.holiday_status_extra_hours
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
 msgid "Extra Hours"
@@ -93,9 +82,9 @@ msgid "Extra Hours Available"
 msgstr "Tilgængelige ekstra timer"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
-msgid "Frequency Hourly Source"
-msgstr "Kilde til hyppighed pr. time"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency
+msgid "Frequency"
+msgstr "Hyppighed"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -112,17 +101,6 @@ msgstr "Timer"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__id
 msgid "ID"
 msgstr "ID"
-
-#. module: hr_holidays_attendance
-#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
-msgid ""
-"If the source is set to \"Calendar\", the amount of worked hours will be "
-"computed based on the Employee's working schedule. Otherwise, the amount of "
-"worked hours will be based on Attendance records."
-msgstr ""
-"Når kilden er indstillet til \"Kalender\", beregnes arbejdstimerne ud fra "
-"medarbejderens arbejdsplan. Hvis ikke, baseres arbejdstimerne på "
-"tilstedeværelsesregistreringerne."
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
@@ -154,6 +132,11 @@ msgid "Overtime Deductible"
 msgstr "Fradrag for overarbejde"
 
 #. module: hr_holidays_attendance
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
+msgid "Per Hour Worked"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
 msgstr "Anmod om overarbejde"
@@ -162,11 +145,6 @@ msgstr "Anmod om overarbejde"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
 msgid "Save"
 msgstr "Gem"
-
-#. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
-msgid "Source"
-msgstr "Kilde"
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -224,6 +202,20 @@ msgstr "Bruger"
 
 #. module: hr_holidays_attendance
 #. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_accrual_plan_level.py:0
+msgid ""
+"You can't base accrued time on hours worked, because time is accrued at the "
+"start of the period."
+msgstr ""
+
+#. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 msgid "You do not have enough extra hours to request this leave"
 msgstr "Du har ikke nok ekstratimer til at anmode om dette fravær."
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
+msgid "every worked hour."
+msgstr ""

@@ -4,25 +4,21 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2025-07-16 18:39+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
-msgid ", .o_newsletter_popup"
-msgstr ", .o_newsletter_popup"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -33,9 +29,13 @@ msgstr ".o_newsletter_popup"
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid ""
 ".s_newsletter_block .s_newsletter_list, .o_newsletter_popup "
+".s_newsletter_list, .s_newsletter_box .s_newsletter_list, "
+".s_newsletter_centered .s_newsletter_list, .s_newsletter_grid "
 ".s_newsletter_list"
 msgstr ""
 ".s_newsletter_block .s_newsletter_list, .o_newsletter_popup "
+".s_newsletter_list, .s_newsletter_box .s_newsletter_list, "
+".s_newsletter_centered .s_newsletter_list, .s_newsletter_grid "
 ".s_newsletter_list"
 
 #. module: website_mass_mailing
@@ -44,6 +44,7 @@ msgid ".s_newsletter_list"
 msgstr ".s_newsletter_list"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_grid
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "<i class=\"fa fa-check-circle-o\" role=\"img\"/> Thanks for registering!"
 msgstr "<i class=\"fa fa-check-circle-o\" role=\"img\"/> Kiitos rekisteröitymisestä!"
@@ -90,6 +91,12 @@ msgid "Always <b>First</b>."
 msgstr "Aina <b>Ensimmäinen</b>."
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_grid
+msgid "Be the first to find out all the latest new, products and trends."
+msgstr ""
+"Saa ensimmäisenä tietoa uusimmista uutisista, tuotteista ja trendeistä."
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
@@ -115,19 +122,37 @@ msgid "Contact"
 msgstr "Yhteystiedot"
 
 #. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: website_mass_mailing
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.xml:0
 msgid "Display Thanks Message"
 msgstr "Näytä kiitosviesti"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
+msgid "Don't miss our upcoming updates"
+msgstr "Älä jää paitsi tulevista päivityksestämme"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+msgid "Email Address"
+msgstr "Sähköpostiosoite"
+
+#. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/website_builder/newsletter_layout_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Email Subscription"
 msgstr "Sähköpostitilaus"
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/static/src/interactions/subscribe.js:0
 msgid "Error"
 msgstr "Virhe"
 
@@ -137,18 +162,27 @@ msgid "First Name"
 msgstr "Etunimi"
 
 #. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/website_builder/newsletter_layout_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Form Subscription"
 msgstr "Lomakkeen tilaus"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_default_template
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_centered
 msgid ""
 "Get all the latest news, blog posts and product updates from our company, "
 "delivered directly to your inbox."
 msgstr ""
 "Saat yrityksemme uusimmat uutiset, blogikirjoitukset ja tuotepäivitykset "
 "suoraan sähköpostiisi."
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
+msgid "ID"
+msgstr "Tunnus"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -167,6 +201,8 @@ msgid "Mailing List(s) not found!"
 msgstr "Postituslistaa ei löytynyt!"
 
 #. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options_common
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
 msgid "Newsletter"
@@ -179,12 +215,28 @@ msgstr "Uutiskirjeen lohko"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Newsletter Box"
+msgstr "Uutiskirje, postilaatikko"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Newsletter Centered"
+msgstr "Uutiskirje, keskitetty"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Newsletter Grid"
+msgstr "Uutiskirje, ruudukko"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
 msgid "Newsletter Popup"
 msgstr "Uutiskirje-ponnahdusikkuna"
 
 #. module: website_mass_mailing
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option_plugin.js:0
 msgid ""
 "No mailing list found, do you want to create a new one? This will save all "
 "your changes, are you sure you want to proceed?"
@@ -193,6 +245,26 @@ msgstr ""
 "muutokset, haluatko varmasti jatkaa?"
 
 #. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.xml:0
+msgid "None"
+msgstr "Ei mitään"
+
+#. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form_options
+msgid "Placeholder"
+msgstr "Paikanpitäjä"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Popup"
+msgstr "Ponnahdusikkuna"
+
+#. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/website_builder/recaptcha_subscribe_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options_common
 msgid "Show reCaptcha Policy"
 msgstr "Näytä reCaptcha-käytänteet"
@@ -211,22 +283,20 @@ msgstr "Tilaa"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_default_template
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_centered
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_grid
 msgid "Subscribe to our newsletter"
 msgstr "Tilaa uutiskirjeemme"
 
 #. module: website_mass_mailing
 #. odoo-javascript
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/static/src/interactions/subscribe.js:0
 msgid "Success"
 msgstr "Onnistui"
 
 #. module: website_mass_mailing
-#. odoo-python
-#: code:addons/website_mass_mailing/controllers/main.py:0
-msgid "Suspicious activity detected by Google reCaptcha."
-msgstr "Google reCaptcha on havainnut epäilyttävää toimintaa."
-
-#. module: website_mass_mailing
+#. odoo-javascript
+#: code:addons/website_mass_mailing/static/src/website_builder/newsletter_layout_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Template"
 msgstr "Mallipohja"
@@ -235,6 +305,11 @@ msgstr "Mallipohja"
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "Thank you for subscribing!"
 msgstr "Kiitos tilauksesta!"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
+msgid "Thanks for registering!"
+msgstr "Kiitos, kun rekisteröidyit!"
 
 #. module: website_mass_mailing
 #. odoo-python
@@ -287,6 +362,37 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "johnsmith@example.com"
 msgstr "johnsmith@example.com"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-"
+"list, news"
+msgstr ""
+"päivitykset, tiivistelmä, tiedote, ilmoitukset, viestintä, mainos, "
+"sähköposti, hälytys, dialogi, kehote, tilaus, tilaa, postituslista, uutiset"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-"
+"list, news, box, image, picture"
+msgstr ""
+"päivitykset, kooste, uutiskatsaus, ilmoitukset, tiedotukset, viestintä, "
+"promootio, sähköposti, hälytys, dialogi, ehdotus, tilaus, tilaa, uutiskirje,"
+" uutiset, postilaatikko, kuva, kuvitus"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-"
+"list, news, grid, image, picture"
+msgstr ""
+"päivitykset, kooste, uutiskatsaus, ilmoitukset, tiedotukset, viestintä, "
+"promootio, sähköposti, hälytys, dialogi, ehdotus, tilaus, tilaa, uutiskirje,"
+" uutiset, ruudukko, kuva, kuvituskuva"

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -71,24 +71,6 @@ msgstr "4 kolumner"
 #: code:addons/html_editor/static/src/main/star_plugin.js:0
 msgid "5 Stars"
 msgstr "5 stjärnor"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "AI"
-msgstr "AI"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "AI Copywriter"
-msgstr "AI Copywriter"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "AI Tools"
-msgstr "AI-verktyg"
 
 #. module: html_editor
 #. odoo-javascript
@@ -175,6 +157,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin.js:0
 msgid "Add something inside this toggle"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/caption_plugin/caption_plugin.js:0
+msgid "Add/remove a caption"
 msgstr ""
 
 #. module: html_editor
@@ -321,6 +309,18 @@ msgstr "Stor sektionsrubrik"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Border"
+msgstr "Ram"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Border Size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/list/list_plugin.js:0
 msgid "Bulleted list"
 msgstr "Punktlista"
@@ -345,17 +345,10 @@ msgstr "Sekundär knapp"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
 msgid "Cancel"
 msgstr "Avbryt"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "ChatGPT"
-msgstr "ChattGPT"
 
 #. module: html_editor
 #. odoo-javascript
@@ -365,7 +358,7 @@ msgstr "Checklista"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
 msgid "Clear"
 msgstr "Rensa"
 
@@ -462,12 +455,6 @@ msgstr "Kopiera och klistra in din URL/infoga kod här"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Correct"
-msgstr "Korrekt"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_service.js:0
 msgid "Could not load the file \"%s\"."
 msgstr "Det gick inte att ladda filen \"%s\"."
@@ -522,7 +509,14 @@ msgstr "Beskrivning"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Direct download"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.xml:0
@@ -564,7 +558,7 @@ msgstr "ERROR: kan inte ladda ned url från mediabiblioteket."
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
 msgid "Edit"
 msgstr "Redigera"
 
@@ -573,6 +567,12 @@ msgstr "Redigera"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Redigera länk"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
+msgid "Edit Menu"
+msgstr "Ändra menyn"
 
 #. module: html_editor
 #. odoo-javascript
@@ -625,6 +625,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.js:0
 msgid "Error"
 msgstr "Fel"
 
@@ -648,15 +649,9 @@ msgstr "Filen är uppdaterad"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Fill"
-msgstr "Fyll"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Fill + Rounded"
-msgstr "Fyll + Avrunda"
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Fill Color"
+msgstr "Fyllningsfärg"
 
 #. module: html_editor
 #. odoo-javascript
@@ -681,36 +676,6 @@ msgstr "Vänd vertikalt"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Format"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Friendly"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Generate Text with AI"
-msgstr "Generera text med AI"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "Generate or transform content with AI"
-msgstr "Skapa eller omvandla innehåll med AI"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "Generating"
-msgstr "Generering"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "Generating an alternative..."
-msgstr "Generering av ett alternativ..."
 
 #. module: html_editor
 #. odoo-javascript
@@ -896,8 +861,6 @@ msgstr "Bilder"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 msgid "Insert"
 msgstr "Infoga"
@@ -1024,12 +987,6 @@ msgstr "Stor"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Lengthen"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Link"
@@ -1064,12 +1021,16 @@ msgstr "Ladda mer..."
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Loading..."
 msgstr "Laddar..."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Logout"
+msgstr "Logga ut"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1193,12 +1154,6 @@ msgid "Numbered list"
 msgstr "Numrerad lista"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.js:0
-msgid "OdooBot"
-msgstr "OdooBot"
-
-#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Oops, it looks like our AI is unreachable!"
@@ -1220,6 +1175,12 @@ msgstr "Öppna i en ny flik"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Open in new window"
+msgstr "Öppna i nytt fönster"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
 msgid "Optimized"
 msgstr "Optimerad"
@@ -1228,18 +1189,6 @@ msgstr "Optimerad"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__original_id
 msgid "Original (unoptimized, unresized) attachment"
 msgstr "Originalbilaga (ej optimerad, ej storleksanpassad)"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Outline"
-msgstr "Översikt"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Outline + Rounded"
-msgstr "Kontur + rundad"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1261,19 +1210,6 @@ msgstr "Klistra in som URL"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Paste or type your URL"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Persuasive"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Preview"
 msgstr "Förhandsgranskning"
@@ -1283,12 +1219,6 @@ msgstr "Förhandsgranskning"
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Preview image"
 msgstr "Förhandsgranska bild"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Professional"
-msgstr "Professionell"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1342,6 +1272,12 @@ msgstr "Byt ut"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Replace URL with its title"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Replace URL with its title?"
 msgstr ""
 
@@ -1366,8 +1302,20 @@ msgstr "Återställ bild"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
-msgid "Reset Size"
-msgstr "Återställ storlek"
+msgid "Reset column size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Reset row size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Reset table size"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1491,12 +1439,6 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Send a message"
-msgstr "Skicka ett meddelande"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "Separator"
 msgstr "Separator"
@@ -1533,9 +1475,9 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Shorten"
-msgstr ""
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Shape"
+msgstr "Form"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1548,6 +1490,12 @@ msgstr "Visa optimerade bilder"
 #: code:addons/html_editor/static/src/main/signature_plugin.js:0
 msgid "Signature"
 msgstr "Signatur"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Size"
+msgstr "Storlek"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1624,6 +1572,12 @@ msgstr "Text"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Text Color"
+msgstr "Textfärg"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "The URL does not seem to work."
 msgstr "URL:en verkar inte fungera."
@@ -1651,12 +1605,6 @@ msgstr "Den angivna webbadressen är ogiltig"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "The provided url is not valid"
 msgstr "Den angivna webbadressen är inte giltig"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Thinking..."
-msgstr "Tänker..."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1760,8 +1708,8 @@ msgstr "Förvandla bilden (klicka två gånger för att återställa förvandlin
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
+#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_plugin.js:0
 msgid "Translate with AI"
 msgstr "Översätt med AI"
 
@@ -1809,12 +1757,6 @@ msgstr "Ångra"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Upload File"
-msgstr "Ladda upp fil"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/document_selector.js:0
 msgid "Upload a document"
 msgstr "Ladda upp ett dokument"
@@ -1836,6 +1778,12 @@ msgstr "Ladda upp en bild"
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Uploaded image's format is not supported. Try with: %s"
 msgstr "Den uppladdade bildens format stöds inte. Försök med: %s"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_align_plugin.js:0
+msgid "Vertical align table cells content"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1891,15 +1839,29 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/caption_plugin/caption_plugin.js:0
+msgid "Write a caption..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Yes"
 msgstr "Ja"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.js:0
-msgid "You"
-msgstr "Du"
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.js:0
+msgid ""
+"You can not replace a field by this image. If you want to use this image, "
+"first save it on your computer and then upload it here."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
+msgid "You can not use this image in a field"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1973,27 +1935,9 @@ msgstr "Zooma ut"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "all"
-msgstr "alla"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "alternatives..."
-msgstr "alternativ..."
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "and"
 msgstr "och"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "database"
-msgstr "databas"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2003,15 +1947,15 @@ msgstr "dokument"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
-msgid "file"
-msgstr "fil"
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "e.g. https://www.odoo.com"
+msgstr "t.ex. https://www.odoo.com"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "media-library"
-msgstr "media-bibliotek"
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "file"
+msgstr "fil"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2021,24 +1965,12 @@ msgstr "eller"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "px"
+msgstr "px"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "videos"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.urlDescription}}"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.urlTitle}}"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.url}}"
-msgstr ""

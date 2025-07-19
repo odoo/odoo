@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"POT-Creation-Date: 2025-07-16 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -639,12 +639,6 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "An employee must always have at least one version."
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Application Settings"
 msgstr "模組設定"
@@ -1047,11 +1041,6 @@ msgid ""
 "Before creating a new contract, create a version that is set after the "
 "contract end date"
 msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Benefits"
-msgstr "福利"
 
 #. module: hr
 #. odoo-javascript
@@ -1711,7 +1700,7 @@ msgstr "撫養親屬"
 #: model:ir.model.fields,field_description:hr.field_hr_version__children
 #: model:ir.model.fields,field_description:hr.field_res_users__children
 msgid "Dependent Children"
-msgstr ""
+msgstr "供養子女"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -1906,7 +1895,7 @@ msgstr "緊急聯絡人"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Emergency Phone"
-msgstr ""
+msgstr "緊急電話"
 
 #. module: hr
 #. odoo-python
@@ -1933,6 +1922,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Employee"
 msgstr "員工"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid "Employee %s must always have at least one active version."
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
@@ -2008,7 +2003,7 @@ msgstr "員工資料更新權限"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_ids
 msgid "Employee Versions"
-msgstr ""
+msgstr "員工版本"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
@@ -2216,7 +2211,7 @@ msgstr "到期"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Expired Contracts"
-msgstr ""
+msgstr "已逾期合約"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2264,7 +2259,7 @@ msgstr "熟悉網站開發框架"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Family"
-msgstr ""
+msgstr "家庭"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
@@ -2356,7 +2351,7 @@ msgstr "未來活動"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Future Contracts"
-msgstr ""
+msgstr "未來合約"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sex

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -155,7 +155,15 @@ msgid "Discard"
 msgstr "취소"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -186,6 +194,11 @@ msgid ""
 msgstr "Outlook 캘린더 제한으로 인해 반복되는 일정은 Outlook 캘린더에서 직접 생성해야 합니다."
 
 #. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "일정 알림 관리자"
+
+#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "일정 반복 규칙"
@@ -211,7 +224,15 @@ msgid ""
 msgstr "행사에 다른 주최자를 추가하려면 주최자의 Odoo 캘린더가 Outlook 캘린더와 동기화되어 있어야 합니다."
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -404,12 +425,6 @@ msgid ""
 "The Outlook Synchronization needs to be configured before you can use it, do"
 " you want to do it now?"
 msgstr "Outlook 동기화를 사용하려면 먼저 설정을 해야 합니다. 지금 설정하시겠습니까?"
-
-#. module: microsoft_calendar
-#. odoo-python
-#: code:addons/microsoft_calendar/models/res_users.py:0
-msgid "The account for the Outlook Calendar service is not configured."
-msgstr "Outlook 캘린더 서비스의 계정이 설정되어 있지 않습니다."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy

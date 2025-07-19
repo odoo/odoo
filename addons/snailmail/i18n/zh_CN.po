@@ -3,13 +3,14 @@
 # 	* snailmail
 # 
 # Translators:
+# Chloe Wang, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -27,15 +28,15 @@ msgstr "ATTACHMENT_ERROR"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__snailmail_cover
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Add a Cover Page"
 msgstr "添加一个封面页"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "Address"
-msgstr "地址"
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr "使用“%(record_name)s”上的 “蜗牛邮件” 发送信件时发生错误"
 
 #. module: snailmail
 #. odoo-javascript
@@ -54,12 +55,6 @@ msgstr "发送文件时发生错误。<br>错误：%s"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "An unknown error happened. Please contact the support."
 msgstr "发生未知错误，请联系支持。"
-
-#. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "An unknown error occurred. Please contact our"
-msgstr "发生了一个未知的错误。请联系我们"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -88,12 +83,6 @@ msgid "Both sides"
 msgstr "双面"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "Buy credits"
-msgstr "购买信用"
-
-#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 msgid "CREDIT_ERROR"
 msgstr "CREDIT_ERROR"
@@ -104,23 +93,6 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
-msgid "Cancel Letter"
-msgstr "取消信"
-
-#. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "Cancel letter"
-msgstr "取消信件"
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
-msgid "Cancel notification in failure"
-msgstr "取消失败通知"
-
-#. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
@@ -129,18 +101,8 @@ msgstr "已取消"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__city
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__city
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "City"
 msgstr "城市"
-
-#. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "Close"
-msgstr "关闭"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
@@ -169,10 +131,14 @@ msgstr "联系人"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__country_id
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__country_id
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Country"
 msgstr "国家/地区"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Country Not Supported"
+msgstr "不支持的国家"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
@@ -180,23 +146,29 @@ msgid "Cover Page"
 msgstr "封面页"
 
 #. module: snailmail
+#: model:ir.model,website_form_label:snailmail.model_res_partner
+msgid "Create a Customer"
+msgstr "创建客户"
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_uid
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_date
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_date
 msgid "Created on"
 msgstr "创建日期"
 
 #. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_company__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_partner__display_name
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__display_name
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -230,31 +202,25 @@ msgid "FORMAT_ERROR"
 msgstr "格式错误"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-#: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
-msgid "Failed letter"
-msgstr "失败的邮件"
-
-#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
 msgid "Failure type"
 msgstr "失败类型"
 
 #. module: snailmail
-#: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Format Error"
 msgstr "格式错误"
 
 #. module: snailmail
-#: model:ir.model,name:snailmail.model_snailmail_letter_format_error
-msgid "Format Error Sending a Snailmail Letter"
-msgstr "发送蜗牛邮件格式错误"
-
-#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__id
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__id
+#: model:ir.model.fields,field_description:snailmail.field_mail_thread__id
+#: model:ir.model.fields,field_description:snailmail.field_res_company__id
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:snailmail.field_res_partner__id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__id
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__id
 msgid "ID"
 msgstr "ID"
 
@@ -269,6 +235,12 @@ msgid "Information"
 msgstr "信息"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Insufficient Credits"
+msgstr "信用不足"
+
+#. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Invalid recipient name."
@@ -276,22 +248,17 @@ msgstr "收件人名称无效。"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_uid
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_date
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_date
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_date
 msgid "Last Updated on"
 msgstr "上次更新日期"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
 msgid "Letter"
 msgstr "信"
 
@@ -313,7 +280,6 @@ msgstr "缺少必需的字段"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_message
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__message_id
 msgid "Message"
 msgstr "消息"
 
@@ -321,6 +287,12 @@ msgstr "消息"
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notifications"
 msgstr "消息通知"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Missing Required Fields"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -331,6 +303,12 @@ msgstr "模型"
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
 msgid "NO_PRICE_AVAILABLE"
 msgstr "NO_PRICE_AVAILABLE"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "No IAP Credits"
+msgstr ""
 
 #. module: snailmail
 #. odoo-python
@@ -360,22 +338,6 @@ msgid "Optional report to print and attach"
 msgstr "可选的打印和附加报表"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
-msgid ""
-"Our service cannot read your letter due to its format.<br/>\n"
-"                Please modify the format of the template or update your settings\n"
-"                to automatically add a blank cover page to all letters."
-msgstr ""
-"由于信的格式问题，我们的服务无法阅读您的信。<br/>\n"
-"                请修改模板的格式或更新设置\n"
-"                自动为所有信件添加空白封面。"
-
-#. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
-msgid "Partner"
-msgstr "合作伙伴"
-
-#. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Please use an A4 Paper format."
@@ -390,12 +352,6 @@ msgstr "双面打印"
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
 msgstr "彩色打印"
-
-#. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "Re-send letter"
-msgstr "重新发送信件"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -457,11 +413,15 @@ msgid "Snailmail Cover Readonly"
 msgstr "蜗牛邮件封面只读"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr "蜗牛信用错误"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr "蜗牛邮件失败：%(modelName)s"
 
 #. module: snailmail
 #. odoo-javascript
@@ -470,8 +430,6 @@ msgid "Snailmail Failures"
 msgstr "蜗牛邮件失败"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
 msgid "Snailmail Format Error"
 msgstr "蜗牛邮件格式错误"
@@ -489,15 +447,11 @@ msgid "Snailmail Letters"
 msgstr "蜗牛邮件"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
 msgid "Snailmail Missing Required Fields"
 msgstr "蜗牛邮件缺少必要的字段"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
 msgid "Snailmail No Price Available"
 msgstr "蜗居 没有提供价格"
@@ -508,15 +462,11 @@ msgid "Snailmail Status Message"
 msgstr "蜗牛邮件状态消息"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
 msgid "Snailmail Trial Error"
 msgstr "蜗牛邮件试用错误"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
 msgstr "蜗牛邮件未知错误"
@@ -539,8 +489,6 @@ msgstr "邮票"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
 msgstr "省/州"
 
@@ -551,23 +499,11 @@ msgstr "状态"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__street
 msgid "Street"
 msgstr "街道"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "Street 2..."
-msgstr "详细地址..."
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "Street..."
-msgstr "街道..."
-
-#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street2
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__street2
 msgid "Street2"
 msgstr "街道2"
 
@@ -597,33 +533,10 @@ msgid "The country of the partner is not covered by Snailmail."
 msgstr "Snailmail不包含合作伙伴所在的国家或地区。"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid ""
-"The country to which you want to send the letter is not supported by our "
-"service."
-msgstr "我们的服务不支持您要邮寄的国家/地区。"
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid ""
-"The customer address is not complete. Update the address here and re-send "
-"the letter."
-msgstr "客户地址不完整。 在此处更新地址，然后重新发送信件。"
-
-#. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
 msgstr "该文件被正确地邮寄出去了。<br>追踪ID是%s"
-
-#. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid ""
-"The letter could not be sent due to insufficient credits on your IAP "
-"account."
-msgstr "由于您的IAP账户上的信用不足，该信无法发送。"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -637,19 +550,10 @@ msgid "UNKNOWN_ERROR"
 msgstr "未知错误"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
-msgid "Update Config and Re-send"
-msgstr "更新配置并重新发送"
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "Update address and re-send"
-msgstr "更新地址并重新发送"
-
-#. module: snailmail
-#: model:ir.model,name:snailmail.model_snailmail_letter_missing_required_fields
-msgid "Update address of partner"
-msgstr "更新合作伙伴地址"
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Unknown Error"
+msgstr "未知错误"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
@@ -699,30 +603,6 @@ msgid ""
 msgstr "您没有足够的积分来执行此操作.<br>请转到您的<a href=%s target=\"new\">iap账户</a>。"
 
 #. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "You need credits on your IAP account to send a letter."
-msgstr "您需要在您的IAP账户上有点数才能发信。"
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "ZIP"
-msgstr "ZIP"
-
-#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__zip
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__zip
 msgid "Zip"
 msgstr "邮政编码"
-
-#. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "for further assistance."
-msgstr "以获得进一步协助。"
-
-#. module: snailmail
-#. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "support"
-msgstr "支持"

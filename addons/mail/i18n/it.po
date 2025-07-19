@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:06+0000\n"
+"POT-Creation-Date: 2025-07-16 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -2577,12 +2577,6 @@ msgstr "Chiudi pannello"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_pip.xml:0
-msgid "Close picture-in-picture"
-msgstr "Chiudi PiP"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
 msgid "Close search"
@@ -2876,6 +2870,12 @@ msgstr "Contenuti"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy Link"
 msgstr "Copia collegamento"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Copy to Clipboard"
+msgstr "Copia negli appunti"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -6776,6 +6776,18 @@ msgid "Message %(thread name)s…"
 msgstr "Messaggio %(thread name)s…"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Message Copied!"
+msgstr "Messaggio copiato!"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Message Copy Failed (Permission denied?)!"
+msgstr "Copia messaggio fallita (permesso negato?)!"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__message_has_error
 #: model:ir.model.fields,field_description:mail.field_ir_cron__message_has_error
@@ -7188,7 +7200,7 @@ msgstr "Richiede azione"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "New"
-msgstr "Nuova"
+msgstr "Nuovo"
 
 #. module: mail
 #. odoo-javascript
@@ -12526,6 +12538,15 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+"Non è possibile eliminare %(activity_names)s in quanto è richiesta da varie "
+"app."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -12533,6 +12554,16 @@ msgid ""
 msgstr ""
 "Non è possibile cancellare questi gruppi in quanto il gruppo Tutta l'Azienda"
 " è richiesto da altri moduli."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
+"Non è possibile modificare il modello target di %(activities_names)s in "
+"quanto sono richieste in varie app."
 
 #. module: mail
 #. odoo-python

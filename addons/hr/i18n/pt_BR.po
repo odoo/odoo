@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"POT-Creation-Date: 2025-07-16 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -655,12 +655,6 @@ msgstr ""
 "vigência."
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "An employee must always have at least one version."
-msgstr "Um funcionário deve sempre ter pelo menos uma versão."
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Application Settings"
 msgstr "Configurações do aplicativo"
@@ -1072,11 +1066,6 @@ msgid ""
 msgstr ""
 "Antes de criar um novo contrato, crie uma versão que seja definida após a "
 "data de término do contrato"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Benefits"
-msgstr "Benefícios"
 
 #. module: hr
 #. odoo-javascript
@@ -1965,6 +1954,12 @@ msgstr "Telefone de emergência"
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Employee"
 msgstr "Funcionário"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid "Employee %s must always have at least one active version."
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category

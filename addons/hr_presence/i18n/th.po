@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -30,26 +30,25 @@ msgstr "%(name)sได้รับการบันทึกเป็น %(stat
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter.\n"
-"                    <br>Best Regards,<br><br>\n"
+"                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div>\n"
-"                    เรียน <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    เรียน <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "เราทราบว่าขณะนี้คุณไม่ได้อยู่ที่ทำงาน และไม่มีบันทึกการขอลางานจากคุณ เราขออภัยหากการขาดงานครั้งนี้เกิดจากความผิดพลาดของเรา\n"
 "โปรดดำเนินการตามขั้นตอนที่จำเป็นเพื่อจัดการกับการลางานโดยไม่ได้วางแผนนี้ หากคุณมีคำถามหรือต้องการความช่วยเหลือ โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด\n"
 "ขอขอบคุณที่คุณได้ให้ความใส่ใจในเรื่องนี้อย่างรวดเร็ว\n"
-"                    <br>ขอแสดงความนับถือ<br><br>\n"
+"                    <br/>ขอแสดงความนับถือ<br/><br/>\n"
 "                </div>\n"
 "            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__absent
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Absent"
@@ -59,11 +58,6 @@ msgstr "ขาด"
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
 msgstr "เพิ่มหมายเหตุบันทึก"
-
-#. module: hr_presence
-#: model:ir.model,name:hr_presence.model_hr_employee_base
-msgid "Basic Employee"
-msgstr "พนักงานทั่วไป"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -86,11 +80,25 @@ msgid "Create a Time Off"
 msgstr "สร้างการลาหยุด"
 
 #. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
 msgstr "ส่งอีเมลแล้ว"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee
+msgid "Employee"
+msgstr "พนักงาน"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -125,10 +133,19 @@ msgstr "การคำนวณวันที่เข้างานของ
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
 msgstr "แสดงสถานะการเข้างานของ Hr"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -137,28 +154,24 @@ msgstr "ที่อยู่ IP"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
 msgstr "เชื่อมต่อ Ip"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
 msgstr "ตั้งค่าการแสดงตนด้วยตนเอง"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
 msgid "Manually Set Present"
 msgstr "ตั้งค่าปัจจุบันด้วยตนเอง"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Out of Working Hours"
@@ -182,10 +195,14 @@ msgstr "การแสดงตน/การขาดงาน"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
 msgstr "การมา"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee_public
+msgid "Public Employee"
+msgstr "ข้าราชการ"
 
 #. module: hr_presence
 #. odoo-python
@@ -220,6 +237,12 @@ msgstr "ตั้งค่าว่าเข้างาน"
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
 msgstr "การขาดโดยไม่คาดคิด"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr "การขาดงานโดยไม่ได้วางแผน"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

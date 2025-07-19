@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,26 +30,25 @@ msgstr "%(name)s is vandaag genoteerd als %(state)s"
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter.\n"
-"                    <br>Best Regards,<br><br>\n"
+"                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div>\n"
-"                    Beste <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Beste <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hopen dat deze e-mail je goed treft. We hebben vernomen dat je momenteel niet aanwezig bent op het werk terwijl er geen registratie is van enige verlofaanvraag Wij bieden graag onze oprechte excuses aan voor de eventuele verwarring mocht deze afwezigheid aan ons te wijten zijn.\n"
-"Gelieve de nodige stappen te ondernemen om deze ongeplande afwezigheid aan te pakken. Neem zo snel mogelijk contact op met je manager of de HR-afdeling als je vragen hebt of hulp nodig hebt.\n"
+"Graag de nodige stappen te ondernemen om deze ongeplande afwezigheid aan te pakken. Neem zo snel mogelijk contact op met je manager of de HR-afdeling als je vragen hebt of hulp nodig hebt.\n"
 "Hartelijk dank voor de snelle afhandeling van deze zaak.\n"
-"                    <br>Vriendelijke groeten,<br><br>\n"
+"                    <br/>Vriendelijke groeten,<br/><br/>\n"
 "                </div>\n"
 "            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__absent
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Absent"
@@ -59,11 +58,6 @@ msgstr "Afwezig"
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
 msgstr "Een logboeknotitie toevoegen"
-
-#. module: hr_presence
-#: model:ir.model,name:hr_presence.model_hr_employee_base
-msgid "Basic Employee"
-msgstr "Basis werknemer"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -86,11 +80,25 @@ msgid "Create a Time Off"
 msgstr "Maak verlof aan"
 
 #. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
 msgstr "E-mail verstuurd"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee
+msgid "Employee"
+msgstr "Werknemer"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -126,10 +134,19 @@ msgstr "HR aanwezigheid laatste datum berekend"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
 msgstr "HR aanwezigheid status tonen"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+msgid "ID"
+msgstr "ID"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -138,28 +155,24 @@ msgstr "IP-adres"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
 msgstr "IP verbonden"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
 msgstr "Aanwezigheid handmatig instellen"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
 msgid "Manually Set Present"
 msgstr "Handmatig ingesteld op aanwezig"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Out of Working Hours"
@@ -183,10 +196,14 @@ msgstr "Aanwezigheid/Absentie"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
 msgstr "Huidig"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Openbare werknemer"
 
 #. module: hr_presence
 #. odoo-python
@@ -222,6 +239,12 @@ msgstr "Set Aanwezig"
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
 msgstr "Onverwachte afwezigheid"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr "Ongeplande afwezigheid"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

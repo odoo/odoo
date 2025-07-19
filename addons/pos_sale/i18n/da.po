@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +24,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (Annulleret)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (Annulleret)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -51,24 +52,26 @@ msgstr "En ny ordre er blevet oprettet."
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Beløb, der stadig skal afregnes i kassesystemet"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Beløb, der stadig skal afregnes i kassesystemet for at undgå dobbeltbetaling"
+" eller dobbeltfakturering."
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
-msgstr "Anvend en forudbetaling (fast beløb)"
+msgstr "Anvend en acontobetaling (fast beløb)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (percentage)"
-msgstr "Anvend en forudbetaling (procent)"
+msgstr "Anvend en acontobetaling (procent)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -98,7 +101,7 @@ msgstr "Leveret fra"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr "Levering antal"
+msgstr "Leveret mængde"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -121,30 +124,31 @@ msgstr "Vis navn"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr "Ønsker du at indlæse SN/Lots knyttet til salgsordren?"
+msgstr ""
+"Ønsker du at indlæse serienumre eller partier knyttet til salgsordren?"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Down Payment"
-msgstr "Aconto betaling"
+msgstr "Acontobetaling"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr "Forudbetaling (POS)"
+msgstr "Acontobetaling (POS)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr "Download betalingsdetaljer"
+msgstr "Oplysninger om acontobetaling"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_down_payment_product_id
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Down Payment Product"
-msgstr "Produkt til aconto fakturering"
+msgstr "Produkt til acontofakturering"
 
 #. module: pos_sale
 #. odoo-python
@@ -153,6 +157,8 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Acontobetaling (reference: %(order_reference)s den \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -194,19 +200,19 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
-"Det ser ud til, at du ikke har konfigureret et produkt til forudbetaling i "
-"din kasse. Gå til kassekonfigurationen og vælg et produkt."
+"Det ser ud til, at du ikke har angivet et acontoprodukt i din kasse. Gå til "
+"kassekonfigurationen, og vælg et produkt til acontobetaling."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
 msgid "Journal Entry"
-msgstr "Journalbilag"
+msgstr "Journalpostering"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "Linked POS Orders"
-msgstr "Tilknyttede POS ordrer"
+msgstr "Tilknyttede POS-ordrer"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
@@ -223,7 +229,7 @@ msgstr "Tilknyttede salgsordrer"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "No down payment product"
-msgstr "Intet produkt til forudbetaling"
+msgstr "Intet produkt til acontobetaling"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
@@ -239,12 +245,12 @@ msgstr "Ordre"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr "Ordrelinjer overført til Point of Sale"
+msgstr "Ordrelinjer overført til POS"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr "POS ordre"
+msgstr "POS-ordre"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -254,22 +260,22 @@ msgstr "Betalt"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "POS konfiguration"
+msgstr "POS-konfiguration"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Point of Sale linjer"
+msgstr "POS-linjer"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "POS ordrer"
+msgstr "POS-ordrer"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
 msgid "Point of Sale Session"
-msgstr "PoS session"
+msgstr "POS-session"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
@@ -279,7 +285,7 @@ msgstr "POS"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
 msgid "Pos Order Count"
-msgstr "Pos Ordre antal"
+msgstr "Antal POS-ordrer"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
@@ -301,7 +307,7 @@ msgstr "Tilbud/Ordre"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "SN/Lots Loading"
-msgstr "SN/Lots Loading"
+msgstr "Serienumre og partier indlæses"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -312,7 +318,7 @@ msgstr "SO"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr "Salgsordre mængde"
+msgstr "Antal salgsordrer"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -322,7 +328,7 @@ msgstr "Salg"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "Analytisk salgsrapport"
+msgstr "Salgsanalyse"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_order
@@ -346,12 +352,12 @@ msgstr "Salgsteam"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr "Salgsteam (PoS)"
+msgstr "Salgsteam (POS)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales are reported to the following sales team"
-msgstr "Salg rapporteres til følgende salgs hold"
+msgstr "Salg rapporteres til følgende salgsteam"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -380,25 +386,27 @@ msgstr "Status"
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr "Valutakursen til valuta på kursen anvendelig på datoen for ordren"
+msgstr ""
+"Den valutakurs, der gælder på ordretidspunktet i forhold til den angivne "
+"valuta"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
-msgstr "Dette point of sales salg vil blive relateret til dette salgs hold."
+msgstr "Salget via dette kassesystem er tilknyttet dette salgsteam."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied when down payment is made"
-msgstr "Dette produkt tilføjes, når forudbetaling er lavet"
+msgstr "Dette produkt tilføjes, når en acontobetaling er registreret"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr "Dette produkt vil blive anvendt som forudbetaling på en salgsordre."
+msgstr "Produktet bruges til at registrere acontobetaling på en salgsordre."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
@@ -411,6 +419,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Overført<br/>\n"
+"                                fra Salg"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -418,6 +428,8 @@ msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"Overført<br/>\n"
+"                            til POS"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -429,7 +441,7 @@ msgstr "Advarsel for %s"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "What do you want to do?"
-msgstr "Hvad vil du gøre?"
+msgstr "Hvad vil du gerne gøre?"
 
 #. module: pos_sale
 #. odoo-python

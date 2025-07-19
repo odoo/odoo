@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
@@ -27,20 +27,20 @@ msgstr ""
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__survey_id
 #: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__display_type__certification
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Certification"
 msgstr "Osvedčenie"
 
 #. module: hr_skills_survey
-#: model:ir.ui.menu,name:hr_skills_survey.hr_employee_certication_report_menu
-msgid "Certifications"
-msgstr "Certifikácie"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__department_id
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Department"
 msgstr "Oddelenie"
+
+#. module: hr_skills_survey
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__display_name
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný Názov"
 
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__display_type
@@ -48,28 +48,12 @@ msgid "Display Type"
 msgstr "Zobrazovaný typ"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Employee"
-msgstr "Zamestnanec"
-
-#. module: hr_skills_survey
-#: model:ir.actions.act_window,name:hr_skills_survey.hr_employee_certification_report_action
-msgid "Employee Certifications"
-msgstr ""
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__expiration_status
 msgid "Expiration Status"
 msgstr ""
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Expiration date"
-msgstr ""
-
-#. module: hr_skills_survey
 #: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__expiration_status__expired
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Expired"
 msgstr "Ukončená platnosť"
 
@@ -79,9 +63,11 @@ msgid "Expiring"
 msgstr ""
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Expiring Soon"
-msgstr "Čoskoro vyprší platnosť"
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__id
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_user_input__id
+msgid "ID"
+msgstr "ID"
 
 #. module: hr_skills_survey
 #: model:hr.resume.line.type,name:hr_skills_survey.resume_type_certification
@@ -126,21 +112,6 @@ msgid "Valid"
 msgstr "Platný"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Valid Until"
-msgstr "Platné do"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__certification_validity_months
 msgid "Validity"
 msgstr "Platnosť"
-
-#. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
-msgid "Validity End"
-msgstr ""
-
-#. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
-msgid "Validity Start"
-msgstr ""

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -27,20 +27,20 @@ msgstr "AWS Cloud"
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__survey_id
 #: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__display_type__certification
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Certification"
 msgstr "認證"
 
 #. module: hr_skills_survey
-#: model:ir.ui.menu,name:hr_skills_survey.hr_employee_certication_report_menu
-msgid "Certifications"
-msgstr "認證"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__department_id
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Department"
 msgstr "部門"
+
+#. module: hr_skills_survey
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__display_name
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
 
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__display_type
@@ -48,28 +48,12 @@ msgid "Display Type"
 msgstr "顯示類型"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Employee"
-msgstr "員工"
-
-#. module: hr_skills_survey
-#: model:ir.actions.act_window,name:hr_skills_survey.hr_employee_certification_report_action
-msgid "Employee Certifications"
-msgstr "員工認證"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__expiration_status
 msgid "Expiration Status"
 msgstr "到期狀態"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Expiration date"
-msgstr "到期日期"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__expiration_status__expired
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Expired"
 msgstr "到期"
 
@@ -79,9 +63,11 @@ msgid "Expiring"
 msgstr "即將到期"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Expiring Soon"
-msgstr "即將過期"
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__id
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_user_input__id
+msgid "ID"
+msgstr "識別號"
 
 #. module: hr_skills_survey
 #: model:hr.resume.line.type,name:hr_skills_survey.resume_type_certification
@@ -126,21 +112,6 @@ msgid "Valid"
 msgstr "有效"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Valid Until"
-msgstr "有效期至"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__certification_validity_months
 msgid "Validity"
 msgstr "驗證"
-
-#. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
-msgid "Validity End"
-msgstr "有效期結束"
-
-#. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
-msgid "Validity Start"
-msgstr "有效起始"

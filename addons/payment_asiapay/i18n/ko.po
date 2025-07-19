@@ -3,13 +3,14 @@
 # 	* payment_asiapay
 # 
 # Translators:
+# Sarah Park, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-07-16 18:39+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -51,6 +52,12 @@ msgid "AsiaPay Secure Hash Secret"
 msgstr "AsiaPay 보안 해시 비밀"
 
 #. module: payment_asiapay
+#. odoo-python
+#: code:addons/payment_asiapay/models/payment_provider.py:0
+msgid "AsiaPay does not support the following currencies: %(currencies)s."
+msgstr "AsiaPay에서는 다음 통화가 지원되지 않습니다: %(currencies)s."
+
+#. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "Asiapay Brand"
 msgstr "Asiapay 브랜드"
@@ -69,6 +76,18 @@ msgstr "상표"
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__code
 msgid "Code"
 msgstr "코드"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form

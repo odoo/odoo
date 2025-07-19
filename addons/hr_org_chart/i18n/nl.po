@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-07-16 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,31 +21,62 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
-msgid "<span class=\"o_stat_text\">Org Chart</span>"
-msgstr "<span class=\"o_stat_text\">Organigram</span>"
+msgid ""
+"<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
+"                                <span class=\"fw-bolder\">Zoom</span>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid "<i style=\"font-size: 0.7rem;\">Zoom</i>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
+"13px\">Organization Chart</span>"
+msgstr ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
+"13px\">Organigram</span>"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
+msgid "Child All Count"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Child Count"
+msgstr ""
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
-msgid "Add a new employee"
-msgstr "Nieuwe werknemer toevoegen"
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Create an employee."
+msgstr "Maak een werknemer aan."
 
 #. module: hr_org_chart
-#: model:ir.model,name:hr_org_chart.model_hr_employee_base
-msgid "Basic Employee"
-msgstr "Basis werknemer"
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid ""
+"Define a manager or subordinates to see this employee in the org chart."
+msgstr ""
+"Wijs een manager of ondergeschikten toe om deze werknemer in het organigram "
+"te kunnen zien."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
 msgid "Department Color"
 msgstr "Kleur afdeling"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
 msgid "Direct Subordinates Count"
 msgstr "Aantal directe werknemers"
 
@@ -61,6 +93,12 @@ msgid "Direct subordinates"
 msgstr "Directe werknemers"
 
 #. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee
 msgid "Employee"
 msgstr "Werknemer"
@@ -71,26 +109,19 @@ msgid "Employees"
 msgstr "Werknemers"
 
 #. module: hr_org_chart
-#. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "In order to get an organigram, set a manager and save the record."
-msgstr ""
-"Om een organigram te verkrijgen, stel de manager in en sla het record op."
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Find all the information on employees."
+msgstr "Vind alle informatie over werknemers."
 
 #. module: hr_org_chart
-#. odoo-javascript
-#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
-msgid ""
-"In the Organigram you will have a clear overview of the hierarchy of "
-"employees."
-msgstr ""
-"In het organigram krijgt je een duidelijk overzicht van de hiërarchie van "
-"medewerkers."
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__id
+msgid "ID"
+msgstr "ID"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Indirect Subordinates Count"
 msgstr "Aantal indirecte werknemers"
 
@@ -114,48 +145,20 @@ msgstr "Meer managers"
 
 #. module: hr_org_chart
 #. odoo-javascript
-#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
-msgid "No Data"
-msgstr "Geen gegevens"
-
-#. module: hr_org_chart
-#. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "No hierarchy position."
-msgstr "Geen hiërarchische positie."
-
-#. module: hr_org_chart
-#. odoo-python
-#: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
-msgid "Operation not supported"
-msgstr "Bewerking niet ondersteund"
+msgid "No hierarchy defined."
+msgstr "Geen hiërarchie gedefinieerd."
 
 #. module: hr_org_chart
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
-#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_public_org_chart
 msgid "Org Chart"
-msgstr "Organigram"
-
-#. module: hr_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
-msgid "Organization Chart"
 msgstr "Organigram"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Openbare werknemer"
-
-#. module: hr_org_chart
-#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
-msgid ""
-"Quickly find all the information you need for your employees such as contact"
-" data, job position, availability, etc."
-msgstr ""
-"Vind snel alle informatie die je nodig hebt voor je werknemers, zoals "
-"contactgegevens, functies, beschikbaarheden, enz."
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -180,12 +183,6 @@ msgstr "Werknemers"
 #: code:addons/hr_org_chart/static/src/fields/hooks.js:0
 msgid "Team"
 msgstr "Team"
-
-#. module: hr_org_chart
-#. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "This employee has no manager or subordinate."
-msgstr "Deze werknemer heeft geen manager of ondergeschikte."
 
 #. module: hr_org_chart
 #. odoo-javascript
