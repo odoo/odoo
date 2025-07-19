@@ -16,6 +16,7 @@
         'data/report_layouts.xml',
         'data/report_layout_sale_order.xml',
         'data/report_invoice_compact.xml',
+        'data/report_saleorder_compact.xml',
     ],
     "installable": True,
     "application": False,

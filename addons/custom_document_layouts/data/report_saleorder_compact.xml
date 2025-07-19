@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="report_saleorder_compact"
+            inherit_id="sale.report_saleorder_document"
+            priority="20">
+
+    <!-- 1️⃣ Définir le seuil compact -->
+    <xpath expr="//t[@t-set='display_discount']" position="before">
+      <t t-set="line_count" t-value="len(lines_to_report)"/>
+      <t t-set="need_compact" t-value="line_count &gt; 15"/>
+
+    </xpath>
+
+    <!-- 2️⃣ Injecter le CSS juste avant le tableau -->
+    <xpath expr="//tbody[@class='sale_tbody']" position="before">
+      <t t-if="report_type == 'pdf' and need_compact">
+        <style>
+          .o_main_table.compact th,
+          .o_main_table.compact td {
+            padding: 2px 4px !important;
+            font-size: 9px !important;
+            line-height: 1.1 !important;
+          }
+        </style>
+      </t>
+    </xpath>
+
+    <!-- 3️⃣ Ajouter la classe `compact` dynamiquement sur le tableau principal -->
+    <xpath expr="//table[contains(@class, 'o_main_table')]" position="attributes">
+      <attribute name="t-attf-class">
+        o_has_total_table table o_main_table table-borderless {{ 'compact' if need_compact else '' }}
+      </attribute>
+    </xpath>
+
+  </template>
+</odoo>
