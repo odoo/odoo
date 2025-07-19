@@ -52,6 +52,8 @@ class Cart(PaymentPortal):
 
         values.update({
             'website_sale_order': order_sudo,
+            'order': order_sudo,
+            'shop_warnings': order_sudo._pop_shop_warnings(),
             'date': fields.Date.today(),
             'suggested_products': [],
         })
@@ -269,26 +271,33 @@ class Cart(PaymentPortal):
                 raise UserError(_("This line doesn't exist anymore."))
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
-
-        values['cart_quantity'] = order_sudo.cart_quantity
-        values['cart_ready'] = order_sudo._is_cart_ready()
-        values['amount'] = order_sudo.amount_total
-        values['minor_amount'] = payment_utils.to_minor_currency_units(
-            order_sudo.amount_total, order_sudo.currency_id
-        )
-        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
-            'website_sale.cart_lines', {
-                'website_sale_order': order_sudo,
-                'date': fields.Date.today(),
-                'suggested_products': order_sudo._cart_accessories()
-            }
-        )
-        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
-            'website_sale.total', {
-                'website_sale_order': order_sudo,
-            }
-        )
+        values.update(self._get_cart_update_values(order_sudo))
         return values
+
+    @staticmethod
+    def _get_cart_update_values(order_sudo):
+        return {
+            'cart_quantity': order_sudo.cart_quantity,
+            'cart_ready': order_sudo._is_cart_ready_for_checkout(),
+            'amount': order_sudo.amount_total,
+            'minor_amount': payment_utils.to_minor_currency_units(
+                order_sudo.amount_total, order_sudo.currency_id
+            ),
+            'website_sale.cart_lines': request.env['ir.ui.view']._render_template(
+                'website_sale.cart_lines', {
+                    'website_sale_order': order_sudo,
+                    'date': fields.Date.today(),
+                    'suggested_products': order_sudo._cart_accessories(),
+                    'order': order_sudo,
+                    'shop_warnings': order_sudo._pop_shop_warnings(),
+                }
+            ),
+            'website_sale.total': request.env['ir.ui.view']._render_template(
+                'website_sale.total', {
+                    'website_sale_order': order_sudo,
+                }
+            ),
+        }
 
     @route(
         route='/shop/cart/quantity',

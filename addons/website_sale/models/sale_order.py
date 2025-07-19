@@ -798,29 +798,78 @@ class SaleOrder(models.Model):
 
         return res
 
-    def _get_shop_warning(self, clear=True):
-        self.ensure_one()
-        warn = self.shop_warning
-        if clear:
-            self.shop_warning = ''
-        return warn
+    def _pop_shop_warnings(self):
+        """Clear and return the warnings associated to the current orders/carts.
 
-    def _is_cart_ready(self):
-        """ Whether the cart is valid and can be confirmed (and paid for)
+        Note: can be called with an empty recordset.
+
+        :return: A dict mapping the orders or order lines to a warning message, if any.
+        :rtype: dict[sale.order | sale.order.line, str]
+        """
+        warnings = {}
+        orders_with_warning = self.filtered('shop_warning')
+        for order in orders_with_warning:
+            warnings[order] = order.shop_warning
+        order_lines_with_warning = self.order_line.filtered('shop_warning')
+        for line in order_lines_with_warning:
+            warnings[line] = line.shop_warning
+
+        orders_with_warning.shop_warning = ''
+        order_lines_with_warning.shop_warning = ''
+        return warnings
+
+    def _is_cart_ready_for_checkout(self):
+        """Whether the cart is valid and the user can proceed to the checkout step.
+
+        This method is also intended to set the `shop_warning` with any relevant message that can
+        help the customer in completing their cart.
+
+        Note: self.ensure_one()
 
         :rtype: bool
         """
+        self.ensure_one()
+        if not self.order_line:
+            self.shop_warning = self.env._("Your cart is empty!")
+            return False
         return True
 
-    def _check_cart_is_ready_to_be_paid(self):
-        """ Whether the cart is valid and the user can proceed to the payment
+    def _is_cart_ready_for_payment(self):
+        """Whether the cart is ready to be confirmed and the user can proceed to the payment step.
+
+        By default, the cart must have a delivery method if it contains deliverable products.
+
+        This method is also intended to set the `shop_warning` with any relevant message that can
+        help the customer in completing their cart.
+
+        Note: self.ensure_one()
 
         :rtype: bool
         """
-        if not self._is_cart_ready():
-            raise ValidationError(_(
-                "Your cart is not ready to be paid, please verify previous steps."
-            ))
+        self.ensure_one()
 
-        if not self.only_services and not self.carrier_id:
-            raise ValidationError(_("No shipping method is selected."))
+        if self._has_deliverable_products():
+            if not self._get_delivery_methods():
+                self.shop_warning = self.env._(
+                    "Sorry, we are unable to ship your order.\n"
+                    "No shipping method is available for your current order and shipping address."
+                    " Please contact us for more information."
+                )
+                return False
+            if not self.carrier_id:
+                self.shop_warning = self.env._("No shipping method is selected.")
+                return False
+        return True
+
+    def _is_cart_ready_to_be_paid(self):
+        """Whether the cart is valid and can be paid for.
+
+        This method is also intended to set the `shop_warning` with any relevant message that can
+        help the customer in completing their cart.
+
+        Note: self.ensure_one()
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self._is_cart_ready_for_checkout() and self._is_cart_ready_for_payment()

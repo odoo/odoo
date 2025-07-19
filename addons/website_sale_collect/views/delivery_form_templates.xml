@@ -22,7 +22,9 @@
                 </div>
                 <div>
                     <t t-out="order_line.product_id.name"/>
-                    ( <t t-out="order_line.shop_warning"/> )
+                    <t t-if="order_line in shop_warnings">
+                        ( <t t-out="shop_warnings[order_line]"/> )
+                    </t>
                     <div name="o_wsale_unavailable_line_button_container">
                         <a
                             title="Remove from cart"
@@ -79,6 +81,15 @@
                 </t>
             </t>
         </div>
+    </template>
+
+    <template id="delivery_method_availability_badge" inherit_id="website_sale.delivery_method">
+        <label class="o_delivery_carrier_label" position="after">
+            <span t-if="order._can_be_delivered(dm)" class="s_badge badge text-bg-success m-0">
+                Available
+            </span>
+            <span t-else="" class="s_badge badge text-bg-danger m-0">Not available</span>
+        </label>
     </template>
 
 </odoo>

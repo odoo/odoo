@@ -203,6 +203,13 @@ PRODUCT_PAGE_STYLE_MAPPING = {
     },
 }
 
+# Mapping of (sub)routes inside the checkout flow to the corresponding step href
+CHECKOUT_STEP_HREF_MAPPING = {
+    '/shop/address': '/shop/cart',
+    '/shop/address/submit': '/shop/cart',
+    '/shop/payment': '/shop/confirm_order',
+}
+
 # Google Merchant Center
 
 GMC_SUPPORTED_UOM = {
