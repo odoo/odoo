@@ -15,6 +15,7 @@
 # tomerlayline, 2024
 # ExcaliberX <excaliberx@gmail.com>, 2025
 # or balmas, 2025
+# Yoram Lavi, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: or balmas, 2025\n"
+"Last-Translator: Yoram Lavi, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr "סוג עץ מוצר"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
 msgid "BoMs for which the Partner is one of the subcontractors"
-msgstr ""
+msgstr "עצי מוצר שבהם השותף הוא אחד מקבלני המשנה"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
@@ -112,7 +113,7 @@ msgstr "המשך"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Deadline Date"
-msgstr ""
+msgstr "תארך היעד"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -127,7 +128,7 @@ msgstr "תיאור"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
 msgid "Detail Component"
-msgstr ""
+msgstr "פירוט הרכיב"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -155,12 +156,12 @@ msgstr "בוצע"
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
 msgid "Facultative"
-msgstr ""
+msgstr "אופציונלי"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
 msgid "Has been recorded?"
-msgstr ""
+msgstr "האם נרשם?"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
@@ -175,11 +176,13 @@ msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
 msgstr ""
+"כדי לנהל את המלאי בצורה מדויקת, מיקומי קבלנות משנה חייבים להיות מסוג "
+"\"פנימי\" ומשויכים לחברה הרלוונטית."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
 msgid "Incoming transfer"
-msgstr ""
+msgstr "העברה נכנסת"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
@@ -189,7 +192,7 @@ msgstr "איתורי מלאי"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr ""
+msgstr "האם קבלן משנה"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__is_subcontracting_location
@@ -202,6 +205,8 @@ msgid ""
 "List of Products used in the BoM, used to filter the list of products in the"
 " subcontracting portal view"
 msgstr ""
+"רשימת המוצרים בעץ המוצר, משמשת לסינון רשימת המוצרים בתצוגת פורטל קבלנות "
+"המשנה. "
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -214,7 +219,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr ""
+msgstr "פקודות ייצור שבהן השותף הוא קבלן המשנה."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -231,6 +236,8 @@ msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
+"ודא שאתה מאשר או מתאים את איסוף האספקה הקשור לקבלן המשנה שלך, כדי למנוע חוסר"
+" התאמות במלאי."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -271,7 +278,7 @@ msgstr "החדש ביותר"
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to record"
-msgstr ""
+msgstr "אין מה לתעד"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -303,6 +310,8 @@ msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
 msgstr ""
+"משתמשי פורטל אינם יכולים ליצור תנועת מלאי במצב 'בוצע' או לשנות את המצב "
+"הנוכחי ל'בוצע'."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
@@ -437,7 +446,7 @@ msgstr "תנועת מלאי"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
 msgid "Stock Pickings for which the Partner is the subcontractor"
-msgstr ""
+msgstr "איסופי מלאי שבהם השותף הוא קבלן המשנה."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
@@ -449,7 +458,7 @@ msgstr "כלל מלאי "
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Subcontract"
-msgstr ""
+msgstr "קבלן משנה"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
@@ -466,7 +475,7 @@ msgstr "בוצע מיקור חוץ"
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "Subcontracted manufacturing orders cannot be merged."
-msgstr ""
+msgstr "לא ניתן למזג את הוראות היצור לקבלן המשנה"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -487,7 +496,7 @@ msgstr "איתור מיקור חוץ"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "מיקום קבלנות משנה"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -507,26 +516,26 @@ msgstr "סוג פעולת מיקור חוץ"
 #. module: mrp_subcontracting
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
 msgid "Subcontracting Portal"
-msgstr ""
+msgstr "פורטל קבלנות משנה"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "סוג פעולת קבלנות משנה"
 
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #, python-format
 msgid "Subcontracting:"
-msgstr ""
+msgstr "קבלנוצ משנה"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Subcontracting: %s"
-msgstr ""
+msgstr "קבלנות משנה: %s"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontractor_id
@@ -570,7 +579,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "There are currently no productions for your account."
-msgstr ""
+msgstr "כרגע אין פקודות ייצור בחשבונך."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -579,14 +588,14 @@ msgstr ""
 msgid ""
 "There shouldn't be multiple productions to record for the same subcontracted"
 " move."
-msgstr ""
+msgstr "לא צריך לרשום יותר מפעם אחת פקודת ייצור עבור אותה תנועת קבלנות משנה."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "This MO isn't related to a subcontracted move"
-msgstr ""
+msgstr "פקודת הייצור הזו לא קשורה לתנועת קבלנות משנה."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -598,7 +607,7 @@ msgstr "כדי לבצע מיקור חוץ, השתמש בהעברה מתוכננ�
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
-msgstr ""
+msgstr "סה\"כ השתמשו"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
@@ -614,7 +623,7 @@ msgstr "יחידת מידה"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
-msgstr ""
+msgstr "משמש להגבלת גישת משתמש הפורטל באמצעות כללי תיעוד."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
@@ -637,21 +646,21 @@ msgstr ""
 msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
-msgstr ""
+msgstr "אין באפשרותך להגדיר עץ מוצר הכולל פעולות או שורת מוצר קבלנות משנה."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
 #, python-format
 msgid "You cannot alter the company's subcontracting location"
-msgstr ""
+msgstr "אינך יכול לשנות את מיקום קבלן  המשנה של החברה."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
-msgstr ""
+msgstr "אינך יכול לכתוב בשדה %s בתוך mrp.production."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -665,14 +674,14 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for %s"
-msgstr ""
+msgstr "אתה חייב להכניס מיספר סידורי ל- %s"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for each line of %s"
-msgstr ""
+msgstr "אתה חייב להכניס מספר סידורי לכל שורה של  %s"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -681,7 +690,7 @@ msgstr ""
 msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
-msgstr ""
+msgstr "עליך לסמן כמות צריכה הגדולה מאפס לפחות עבור אחד מהרכיבים שלך."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
