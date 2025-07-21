@@ -77,7 +77,18 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
             name: "GroupChat",
         },
     ]);
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "<p>Test</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: groupChatId,
+    });
     await start();
+    await openDiscuss(groupChatId);
+    await contains(".o-mail-Message:contains('Test')");
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message:contains('Test')", { count: 0 });
     // simulate receiving new message (chat, outside discuss app)
     await withUser(userId, () =>
         rpc("/mail/message/post", {
