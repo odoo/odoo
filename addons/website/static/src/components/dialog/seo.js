@@ -604,6 +604,7 @@ export class SeoChecks extends Component {
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
             this.state.altAttributes = await this.getAltAttributes();
+            seoContext.updatedAlts = this.state.updatedAlts;
             this.state.headingsScan = this.getHeadingsScan();
         });
     }
