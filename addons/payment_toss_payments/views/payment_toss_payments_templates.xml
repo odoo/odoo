@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <template id="payment_toss_payments.method_form" inherit_id="payment.method_form">
+        <input name="o_payment_radio" position="attributes">
+            <attribute name="t-att-data-toss-payments-inline-form-values">
+                provider_sudo._toss_payments_get_inline_form_values(pm_sudo.code)
+            </attribute>
+        </input>
+    </template>
+
+</odoo>
