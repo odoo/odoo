@@ -2,6 +2,8 @@ import { Plugin, isValidTargetForDomListener } from "../plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
+import { omit } from "@web/core/utils/objects";
+import { escapeRegExp } from "@web/core/utils/strings";
 
 /**
  * @typedef {Object} Shortcut
@@ -28,7 +30,7 @@ import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 
 /**
  * @typedef {{
- *     pattern: RegExp;
+ *     literals: string[];
  *     commandId: string;
  *     commandParams?: object;
  * }[]} shorthands
@@ -49,19 +51,22 @@ export class ShortCutPlugin extends Plugin {
         ],
         shorthands: [
             {
-                pattern: /->$/,
+                literals: ["->"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2192" }, //→
+                inline: true,
             },
             {
-                pattern: /<-$/,
+                literals: ["<-"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2190" }, //←
+                inline: true,
             },
             {
-                pattern: /=>$/,
+                literals: ["=>"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2B95" }, //⮕
+                inline: true,
             },
         ],
     };
@@ -87,6 +92,15 @@ export class ShortCutPlugin extends Plugin {
                 }
             );
         }
+        this.shorthands = this.getResource("shorthands").map((shorthand) => {
+            const pattern = `${shorthand.inline ? "" : "^"}(${shorthand.literals
+                .map(escapeRegExp)
+                .join("|")})$`;
+            return {
+                ...omit(shorthand, "literals"),
+                pattern: new RegExp(pattern),
+            };
+        });
     }
 
     addShortcut(hotkey, action, { isAvailable, global }) {
@@ -135,7 +149,7 @@ export class ShortCutPlugin extends Plugin {
             leftLeaf = leftDOMPath.next().value;
         }
         const precedingText = blockEl.textContent.substring(lineOffset, spaceOffset - 1);
-        const matchedShortcut = this.getResource("shorthands").find(({ pattern }) =>
+        const matchedShortcut = this.shorthands.find(({ pattern }) =>
             pattern.test(precedingText.trimStart())
         );
         if (matchedShortcut) {

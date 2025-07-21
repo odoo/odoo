@@ -14,8 +14,11 @@
                     <div class="border rounded">
                         <i class="o-we-command-img d-flex align-items-center justify-content-center fa" t-att-class="command.icon"/>
                     </div>
-                    <div class="ms-3">
-                        <div class="o-we-command-name" t-esc="command.title"/>
+                    <div class="ms-3 flex-fill">
+                        <div class="d-flex justify-content-between">
+                            <div class="o-we-command-name" t-esc="command.title"/>
+                            <div t-if="command.shorthandLiteral" class="o-we-command-shorthand" t-esc="command.shorthandLiteral"/>
+                        </div>
                         <div class="o-we-command-description" t-esc="command.description"/>
                     </div>
                 </div>
