@@ -8,6 +8,31 @@ export class HrEmployee extends models.ServerModel {
     _load_pos_data_fields() {
         return ["name", "user_id", "work_contact_id"];
     }
-}
 
+    _records = [
+        {
+            id: 2,
+            name: "Administrator",
+            user_id: 2,
+            work_contact_id: 3,
+        },
+        {
+            id: 3,
+            name: "Employee1",
+            user_id: 3,
+            work_contact_id: 3,
+        },
+    ];
+
+    _post_read_pos_data(records) {
+        records.forEach((emp) => {
+            if (emp.id === 2) {
+                emp._role = "manager";
+            } else {
+                emp._role = "cashier";
+            }
+        });
+        return records;
+    }
+}
 patch(hootPosModels, [...hootPosModels, HrEmployee]);
