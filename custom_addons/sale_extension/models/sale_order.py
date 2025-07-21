@@ -31,6 +31,9 @@ class SaleOrder(models.Model):
 
     discount = fields.Float(string="Descuento (%)", default=0.0)
 
+    def _notify_get_email_layout_xmlid(self, message_type=None, subtype_xmlid=None, internal=False):
+        return 'sale_extension.custom_mail_notification_layout'
+
     def print_quotation_report(self):
         return self.env.ref('sale.action_report_saleorder').report_action(self)
 

@@ -20,6 +20,14 @@ class ProductExtension(models.Model):
         default=""
     )
 
+    item_category  = fields.Char(
+        string="Descripción",
+        readOnlu=False,
+        store=True,
+        help='Categoría',
+        default=""
+    )
+
     item_delivery_lead = fields.Integer(
         string='Días de entrega',
         readOnly=False,
