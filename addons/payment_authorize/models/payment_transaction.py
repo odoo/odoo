@@ -213,8 +213,9 @@ class PaymentTransaction(models.Model):
         )
         amount = tx_details.get('transaction', {}).get('authAmount')
         # Authorize supports only one currency per account.
-        currency_code = self.provider_id.available_currency_ids[0].name
-        self._validate_amount_and_currency(amount, currency_code)
+        currency = self.provider_id.available_currency_ids
+        if currency:  # The currency has not been removed from the provider.
+            self._validate_amount_and_currency(amount, currency.name)
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Authorize data.
