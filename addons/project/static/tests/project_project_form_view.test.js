@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { click, edit, animationFrame } from "@odoo/hoot-dom";
 import {
     mountView,
     contains,
@@ -54,4 +55,42 @@ test("project.project (form) show archive action for project manager", async () 
     await toggleActionMenu();
     expect(`.o-dropdown--menu span:contains(Unarchive)`).toHaveCount(1, { message: "Unarchive action should be visible" });
     await toggleMenuItem("UnArchive");
+});
+
+test.tags("desktop");
+test("project.project (form): removing analytic account shows confirm dialog and sets allow_timesheets to false on confirm", async () => {
+    await mountView({
+        resModel: "project.project",
+        resId: 1,
+        type: "form",
+        arch: `
+        <form js_class="project_project_form">
+            <group>
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="allow_timesheets"/>
+            </group>
+        </form>
+    `,
+    });
+
+    expect('.o_field_widget[name="allow_timesheets"] input[type="checkbox"]').toBeChecked();
+    expect('.o_field_widget[name="account_id"] input').toHaveValue("Test Analytic Account");
+
+    await click('.o_field_widget[name="account_id"] input');
+    await edit("");
+    await click('.o_field_widget[name="name"] input');
+
+    expect('.o_field_widget[name="account_id"] input').toHaveValue("");
+    expect('.o_field_widget[name="allow_timesheets"] input[type="checkbox"]').toBeChecked();
+
+    await animationFrame();
+
+    await contains(".o_form_button_save").click();
+
+    await contains('.o_dialog .btn-primary').click();
+    await animationFrame();
+
+    expect('.o_field_widget[name="allow_timesheets"] input[type="checkbox"]').not.toBeChecked();
+    expect('.o_field_widget[name="account_id"] input').toHaveValue("");
 });
