@@ -460,6 +460,19 @@
         />
     </record>
 
+    <record id="payment_provider_toss_payments" model="payment.provider">
+        <field name="name">Toss Payments</field>
+        <field name="image_128" type="base64" file="payment_toss_payments/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_toss_payments"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_mobile'),
+                         ref('payment.payment_method_bank_transfer'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_provider_transfer" model="payment.provider">
         <field name="name">Wire Transfer</field>
         <field name="sequence">30</field>

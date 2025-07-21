@@ -336,7 +336,7 @@
                          ref('base.USD'),
                      ])]"
         />
-    </record>    
+    </record>
 
     <record id="payment_method_appota" model="payment.method">
         <field name="name">Appota</field>
@@ -561,6 +561,7 @@
         <field name="support_refund">none</field>
     </record>
 
+    <!-- Generic payment method representing a bank payment -->
     <record id="payment_method_bank_transfer" model="payment.method">
         <field name="name">Bank Transfer</field>
         <field name="code">bank_transfer</field>
@@ -1583,6 +1584,7 @@
         />
     </record>
 
+    <!-- Generic payment method representing kiosk payments -->
     <record id="payment_method_kiosk" model="payment.method">
         <field name="name">Kiosk</field>
         <field name="code">kiosk</field>
@@ -1973,6 +1975,19 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/mercado_livre.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+    </record>
+
+    <!-- Generic payment method representing mobile payments -->
+    <record id="payment_method_mobile" model="payment.method">
+        <field name="name">Mobile</field>
+        <field name="code">mobile</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/mobile.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3606,6 +3621,7 @@
         <field name="support_refund">none</field>
     </record>
 
+    <!-- Generic payment method representing an unknown payment method -->
     <record id="payment_method_unknown" model="payment.method">
         <field name="name">Payment method</field>
         <field name="code">unknown</field>
