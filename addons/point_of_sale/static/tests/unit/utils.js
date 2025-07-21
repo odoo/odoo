@@ -1,5 +1,5 @@
 import { uuidv4 } from "@point_of_sale/utils";
-import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getService, makeDialogMockEnv } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -15,7 +15,7 @@ export const setupPosEnv = async () => {
         isEnterprise: true,
     };
 
-    await makeMockEnv();
+    await makeDialogMockEnv();
     const store = getService("pos");
     store.setCashier(store.user);
     return store;
