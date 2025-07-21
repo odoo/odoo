@@ -1240,6 +1240,20 @@
         />
     </record>
 
+    <record id="payment_method_gift_certificate" model="payment.method">
+        <field name="name">Gift Certificate</field>
+        <field name="code">gift_certificate</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/gift_certificate.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.kr')])]" />
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.KRW')])]" />
+    </record>
+
     <record id="payment_method_gopay" model="payment.method">
         <field name="name">GoPay</field>
         <field name="code">gopay</field>
@@ -1999,6 +2013,20 @@
                          ref('base.NOK'),
                      ])]"
         />
+    </record>
+
+    <record id="payment_method_mobile_phone" model="payment.method">
+        <field name="name">Mobile Phone Payment</field>
+        <field name="code">mobile_phone</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/mobile_phone.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.kr')])]" />
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.KRW')])]" />
     </record>
 
     <record id="payment_method_mobile_wallet_eg" model="payment.method">
@@ -3692,6 +3720,20 @@
                          ref('base.NOK'),
                      ])]"
         />
+    </record>
+
+    <record id="payment_method_virtual_account" model="payment.method">
+        <field name="name">Virtual Account</field>
+        <field name="code">virtual_account</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/virtual_account.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.kr')])]" />
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.KRW')])]" />
     </record>
 
     <record id="payment_method_vpay" model="payment.method">
