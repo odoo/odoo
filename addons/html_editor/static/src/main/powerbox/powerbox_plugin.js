@@ -157,7 +157,7 @@ export class PowerboxPlugin extends Plugin {
         return powerboxItems.map((/** @type {PowerboxItem} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
             return {
-                ...pick(command, "title", "description", "icon"),
+                ...pick(command, "title", "description", "icon", "shortcut"),
                 ...omit(item, "commandId", "commandParams"),
                 categoryName: categoryDict[item.categoryId].name,
                 run: () => command.run(item.commandParams),
