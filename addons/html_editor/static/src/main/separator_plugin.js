@@ -30,6 +30,7 @@ export class SeparatorPlugin extends Plugin {
             categoryId: "structure",
             commandId: "insertSeparator",
         }),
+        markdown_shortcuts: [{ pattern: /^---$/, commandId: "insertSeparator" }],
         /** Handlers */
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.handleSelectionInHr.bind(this),
