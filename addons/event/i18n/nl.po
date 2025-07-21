@@ -7,6 +7,7 @@
 # Martin Trigaux, 2024
 # Wil Odoo, 2025
 # Manon Rondou, 2025
+# Camille Dantinne <cmd@odoo.com>, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
@@ -1654,7 +1655,7 @@ msgstr ""
 "                                   <t t-out=\"object.event_id.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">6 mei 2021</t>\n"
 "                                     - <t t-out=\"object.event_id.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">17:00 PM</t>\n"
 "                                </div>\n"
-"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or ''\">(Europa/Brussel</t>)</i></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or ''\">Europa/Brussel</t>)</i></div>\n"
 "                            </td>\n"
 "                            <td style=\"vertical-align:top;\">\n"
 "                                <t t-if=\"event_address\">\n"
@@ -4462,7 +4463,7 @@ msgstr "Standaard"
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Date"
-msgstr "Begindatum"
+msgstr "Startdatum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin_located
@@ -4609,7 +4610,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr "De einddatum kan niet voor de begindatum vallen."
+msgstr "De einddatum kan niet voor de startdatum vallen."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled

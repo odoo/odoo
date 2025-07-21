@@ -39,7 +39,7 @@
             <button name="action_l10n_my_edi_reject_bill" position="replace">
             </button>
             <field name="l10n_my_edi_display_tax_exemption_reason" position="after">
-                    <field name="l10n_my_invoice_need_edi" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="l10n_my_invoice_need_edi" invisible="1"/>
             </field>
             <!-- Add the classification code to the invoice lines -->
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']" position="after">

@@ -224,15 +224,26 @@ class TestSalePurchaseStockFlow(TransactionCase):
             ],
         })
         so.action_confirm()
+        self.assertEqual(so.delivery_count, 1)
         delivery = so.picking_ids
+        # Both moves should have the procure_method set to 'make_to_order', as the products follow the MTO route
+        self.assertEqual(delivery.move_ids.mapped('procure_method'), ['make_to_order', 'make_to_order'])
+        # Since the products have two different vendors, two purchase orders should be created.
+        self.assertEqual(so.purchase_order_count, 2)
         po_2 = self.env['purchase.order'].search([('partner_id', '=', vendor_2.id)])
         po_2.button_cancel()
+        # As one PO has been canceled, one of the moves should switch to MTS, while the other should remain in MTO.
+        self.assertEqual(delivery.move_ids.mapped('procure_method'), ['make_to_order', 'make_to_stock'])
         line_2 = so.order_line.filtered(lambda sol: sol.product_id == product_2)
+        # Updating the SO line should trigger another delivery, as the product in the first picking is in MTS and not in MTO
         line_2.product_uom_qty = 0
-        self.assertEqual(delivery, so.picking_ids)
+        self.assertEqual(so.delivery_count, 2)
         self.assertRecordValues(delivery.move_ids, [
             {'product_id': product_1.id, 'product_uom_qty': 1.0},
-            {'product_id': product_2.id, 'product_uom_qty': 0.0},
+            {'product_id': product_2.id, 'product_uom_qty': 1.0},
+        ])
+        self.assertRecordValues(so.picking_ids[1].move_ids, [
+            {'product_id': product_2.id, 'product_uom_qty': 1.0},
         ])
 
     def test_mto_cancel_reset_to_quotation_and_update(self):
@@ -519,3 +530,29 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         deliveries.button_validate()
         self.assertEqual(sale_orders.order_line.mapped('qty_delivered'), [1.0, 1.0, 1.0])
+
+    def test_reservation_on_mto_product_after_po_cancellation(self):
+        """
+        Test that a reservation can be made on an MTO product after PO cancellation.
+        Create a sale order with an MTO product, confirm it, cancel the
+        related purchase order, and then check that the reservation can be done
+        on the picking move of the SO.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.mto_product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.picking_ids.state, 'waiting')
+        self.assertEqual(sale_order.picking_ids.move_ids.quantity, 0)
+        purchase_order = sale_order._get_purchase_orders()
+        purchase_order.button_cancel()
+        self.assertEqual(purchase_order.state, 'cancel')
+        # update the quantity on hand of the MTO product
+        self.env['stock.quant']._update_available_quantity(self.mto_product, sale_order.picking_ids.move_ids.location_id, 1)
+        sale_order.picking_ids.action_assign()
+        self.assertEqual(sale_order.picking_ids.move_ids.quantity, 1)

@@ -19,6 +19,10 @@ class AccountMove(models.Model):
         # In the Czech Republic, the currency rate should be based on the taxable supply date.
         super()._compute_invoice_currency_rate()
 
+    @api.depends('taxable_supply_date')
+    def _compute_expected_currency_rate(self):
+        super()._compute_expected_currency_rate()
+
     def _get_invoice_currency_rate_date(self):
         self.ensure_one()
         if self.country_code == 'CZ' and self.taxable_supply_date:

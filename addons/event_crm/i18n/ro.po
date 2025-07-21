@@ -5,6 +5,7 @@
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +67,7 @@ msgstr "Participanții sunt creați"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
 msgid "Attendees are registered"
-msgstr ""
+msgstr "Participanții sunt înregistrați"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
@@ -93,6 +94,8 @@ msgstr "Alocați automat potențialii creați acestui agent de vânzări."
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"Of! Nu s-au creat piste, verificați regulile de generare a pistelor și "
+"încercați din nou."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -117,7 +120,7 @@ msgstr "Creați o regulă de generare a pistei"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
-msgstr "Piste Create"
+msgstr "Piste create"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
@@ -132,7 +135,7 @@ msgstr "Creat pe"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Creation Type"
-msgstr "Tip Creare"
+msgstr "Tip creare"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
@@ -141,6 +144,9 @@ msgid ""
 "Registered: at attendee registration, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Creare: la crearea participantului;\n"
+"Înregistrat: la înregistrarea participantului, manual sau automat;\n"
+"Prezent: când prezența este confirmată și înregistrarea este finalizată;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
@@ -163,17 +169,17 @@ msgstr "Eveniment"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
-msgstr ""
+msgstr "CRM Eveniment: Generează piste pe baza regulilor"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "Cerere pistă eveniment"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
 msgid "Event Lead Rules"
-msgstr "Reguli Pistă Eveniment"
+msgstr "Reguli pistă eveniment"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_registration
@@ -183,12 +189,12 @@ msgstr "Înregistrare eveniment"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
 msgid "Event Templates"
-msgstr "Șabloane Eveniment"
+msgstr "Șabloane eveniment"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
 msgid "Event registrations"
-msgstr "Înregistrări Eveniment"
+msgstr "Înregistrări eveniment"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
@@ -221,9 +227,8 @@ msgid ""
 "Filter the attendees to include those of this specific event. If not set, no"
 " event restriction will be applied."
 msgstr ""
-"Filtrează participanții pentru a-i include pe cei din această categorie "
-"specifică de evenimente. Dacă nu este setat, nu se va aplica nicio "
-"restricție de categorie de evenimente."
+"Filtrează participanții pentru a-i include pe cei din acest eveniment "
+"specific. Dacă nu este setat, nu se va aplica nicio restricție de eveniment."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -233,13 +238,13 @@ msgstr "Pentru oricare dintre aceste evenimente"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "Generate Leads"
-msgstr "Generare Piste"
+msgstr "Generează piste"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
-msgstr ""
+msgstr "Am înțeles! Am notat cererea dvs. Pistele vor fi create în curând!"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
@@ -250,7 +255,7 @@ msgstr "ID"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "If the Attendees meet these Conditions"
-msgstr "Dacă Participanții îndeplinesc aceste Condiții"
+msgstr "Dacă participanții îndeplinesc aceste condiții"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
@@ -270,33 +275,33 @@ msgstr "Pistă"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Creation Type"
-msgstr "Tip Creare Pistă"
+msgstr "Tip creare pistă"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr "Valori Implicite Pistă"
+msgstr "Valori implicite pistă"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
 msgid "Lead Generation"
-msgstr "Generare Pistă"
+msgstr "Generare pistă"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Generation Rule"
-msgstr "Regulă Generare Pistă"
+msgstr "Regulă generare pistă"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr "Reguli Generare Pistă"
+msgstr "Reguli generare pistă"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
 msgid "Lead Type"
-msgstr "Tip Pistă"
+msgstr "Tip pistă"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_crm_lead
@@ -342,13 +347,13 @@ msgstr "Nu s-au găsit înregistrări"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
 msgid "Ongoing Generation Request"
-msgstr ""
+msgstr "Cerere de generare în curs"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
-msgstr ""
+msgstr "Doar managerii de evenimente pot regenera toate pistele."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -364,7 +369,7 @@ msgstr "Participanți"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
 msgid "Per Attendee"
-msgstr "Per Participant"
+msgstr "Per participant"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_basis
@@ -372,36 +377,38 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Per participant: Se creează o pistă pentru fiecare participant (B2C).\n"
+"Per comandă: Se creează o singură pistă pentru fiecare comandă/lot de bilete (B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
 msgid "Per Order"
-msgstr "Per Comandă"
+msgstr "Per comandă"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "Înregistrare procesată"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Registration Rule"
-msgstr "Regulă Înregistrare"
+msgstr "Regulă înregistrare"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
 msgid "Registration Rule:"
-msgstr "Regulă Înregistrare:"
+msgstr "Regulă înregistrare:"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Registrations Domain"
-msgstr "Domeniul Înregistrări"
+msgstr "Domeniu înregistrări"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
 msgid "Registrations triggering the rule that created this lead"
-msgstr "Înregistrări care declanșează regula care a creată această pistă"
+msgstr "Înregistrări care declanșează regula care a creat această pistă"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
@@ -420,12 +427,12 @@ msgstr "Numele regulii"
 #. module: event_crm
 #: model:event.lead.rule,name:event_crm.event_lead_rule_0
 msgid "Rule on @example.com"
-msgstr "Regula pe @ example.com"
+msgstr "Regula pe @example.com"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Rule that created this lead"
-msgstr "Regula care a creat acestă pistă"
+msgstr "Regula care a creat această pistă"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
@@ -440,22 +447,22 @@ msgstr "Agent de vânzări"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
-msgstr "Căutare Reguli Generare Pistă"
+msgstr "Căutare reguli generare pistă"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
 msgid "Set to True when a Lead Generation Request is currently running."
-msgstr ""
+msgstr "Setați pe Adevărat când o cerere de generare a pistelor este în curs."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
 msgid "Source Event"
-msgstr "Eveniment Sursă"
+msgstr "Eveniment sursă"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
 msgid "Source Registrations"
-msgstr "Înregistrări Sursă"
+msgstr "Înregistrări sursă"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
@@ -468,6 +475,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"ID-ul ultimei înregistrări procesate, folosit pentru a ști de unde să se "
+"reia."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -478,7 +487,7 @@ msgstr ""
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Trigger Type"
-msgstr "Tip Declanșare"
+msgstr "Tip declanșare"
 
 #. module: event_crm
 #. odoo-python
@@ -495,12 +504,13 @@ msgstr "Când"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "Yee-ha, %(leads_count)s piste au fost create!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
 msgstr ""
+"Puteți avea o singură cerere de generare per eveniment la un moment dat."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

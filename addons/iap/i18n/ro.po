@@ -3,11 +3,10 @@
 # 	* iap
 # 
 # Translators:
-# Lyall Kindmurr, 2024
-# Larisa_nexterp, 2024
 # Larisa Pop, 2024
 # Alin Miclea, 2024
 # Wil Odoo, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +28,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Cumpără credit"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -45,8 +46,8 @@ msgstr "Token cont"
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
-"Token-ul contului este cheia dvs. de autentificare pentru acest serviciu.Nu "
-"împărtăși acest lucru"
+"Token-ul contului este cheia dvs. de autentificare pentru acest serviciu. Nu"
+" îl împărtășiți."
 
 #. module: iap
 #. odoo-python
@@ -55,6 +56,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"A apărut o eroare la accesarea %s. Vă rugăm să contactați suportul Odoo dacă"
+" această eroare persistă."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -70,7 +73,7 @@ msgstr "Interzis"
 #. odoo-javascript
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 msgid "Buy credits"
-msgstr "Cumpărare credit"
+msgstr "Cumpără credite"
 
 #. module: iap
 #. odoo-javascript
@@ -93,7 +96,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
 #: model:ir.model.fields,field_description:iap.field_iap_service__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
@@ -115,12 +118,12 @@ msgstr "Nume afișat"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
 msgid "Email Alert Recipients"
-msgstr ""
+msgstr "Destinatari alertă e-mail"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr ""
+msgstr "Prag alertă e-mail"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -129,6 +132,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data"
 " of your opportunities."
 msgstr ""
+"Obțineți lead-uri și oportunități de calitate: transformați vizitatorii "
+"site-ului în lead-uri, generați lead-uri pe baza unor criterii și îmbogățiți"
+" datele companiilor din oportunitățile dvs."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -156,7 +162,7 @@ msgstr "API pentru îmbogățirea lead-urilor IAP"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "Serviciu IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -173,25 +179,25 @@ msgstr "Credit insuficient pentru a efectua acest serviciu."
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "Sold întreg"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
+msgstr "Ultima actualizare la"
 
 #. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "Gestionează serviciul & cumpără credite"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -211,17 +217,19 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"Unul dintre destinatarii alertei e-mail nu are o adresă de e-mail setată. "
+"Utilizatori: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "Poate exista un singur serviciu cu un anumit nume tehnic"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "Vă rugăm să setați un prag pozitiv pentru alerta e-mail."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -231,18 +239,18 @@ msgstr "Înregistrat"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
 msgid "Service"
-msgstr "Service"
+msgstr "Serviciu"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "Serviciu blocat"
 
 #. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 msgid "Start a Trial at Odoo"
-msgstr "Începeți un proces la Odoo"
+msgstr "Începeți o perioadă de probă la Odoo"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
@@ -253,7 +261,7 @@ msgstr "Județ"
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
 msgid "Technical Name"
-msgstr "Nume tehnic:"
+msgstr "Nume tehnic"
 
 #. module: iap
 #. odoo-python
@@ -262,6 +270,8 @@ msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
 msgstr ""
+"Cererea către serviciu a expirat. Vă rugăm să contactați autorul aplicației."
+" URL-ul la care s-a încercat conectarea a fost %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
@@ -271,14 +281,14 @@ msgstr "Numele unității"
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__unregistered
 msgid "Unregistered"
-msgstr "Neregistrat"
+msgstr "Neînregistrat"
 
 #. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View My Services"
-msgstr "Vizualizare Servicile mele"
+msgstr "Vizualizează serviciile mele"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form

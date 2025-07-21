@@ -7,7 +7,7 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <field name="country_id" position="after">
-                    <field name="country_code" column_invisible="True"/> <!-- TODO: to be removed in master -->
+                    <field name="country_code" column_invisible="True"/>
                     <field name="l10n_es_edi_facturae_tax_type" string="Spanish Tax Type" optional="hide"
                         invisible="country_code != 'ES'"/>
                 </field>

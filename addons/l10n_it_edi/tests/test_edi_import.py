@@ -89,6 +89,12 @@ class TestItEdiImport(TestItEdi):
                 'price_unit': 10.0,
                 'discount': 52.5,
                 'debit': 23.75,
+            },
+            {
+                'quantity': 1.0,
+                'price_unit': 0.0,
+                'discount': 0.0,
+                'debit': 0.0,
             }],
         }])
 

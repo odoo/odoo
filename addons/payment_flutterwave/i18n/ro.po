@@ -28,8 +28,8 @@ msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
 msgstr ""
-"O eroare a apărut pe durata procesării tranzacției (status %s). Vă rugăm să "
-"reîcercați."
+"O eroare a apărut în timpul procesării plății dumneavoastră (status %s). Vă "
+"rugăm să încercați din nou."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -50,33 +50,33 @@ msgstr "Flutterwave"
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "Flutterwave Customer Email"
-msgstr ""
+msgstr "Email client Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr ""
+msgstr "Cheie publică Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr ""
+msgstr "Cheie secretă Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr ""
+msgstr "Secret webhook Flutterwave"
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr "Nu s-a găsit nicio tranzacție care să se potrivească cu referința %s."
+msgstr "Nu a fost găsită nicio tranzacție care să corespundă referinței %s."
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_provider
 msgid "Payment Provider"
-msgstr "Procesator de plată"
+msgstr "Procesator de plăți"
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_token
@@ -86,7 +86,7 @@ msgstr "Token de plată"
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Tranzacție plată"
+msgstr "Tranzacție de plată"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
@@ -102,7 +102,7 @@ msgstr "Date primite fără referință."
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Secret Key"
-msgstr "Cheie Secret"
+msgstr "Cheie secretă"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -111,21 +111,23 @@ msgid ""
 "The communication with the API failed. Flutterwave gave us the following "
 "information: '%s'"
 msgstr ""
+"Comunicarea cu API-ul a eșuat. Flutterwave ne-a oferit următoarea "
+"informație: '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "The email of the customer at the time the token was created."
-msgstr ""
+msgstr "Emailul clientului la momentul creării tokenului."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
-msgstr ""
+msgstr "Cheia folosită exclusiv pentru identificarea contului la Flutterwave."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Cod tehnic al acestui procesator de plată"
+msgstr "Codul tehnic al acestui procesator de plăți"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -137,9 +139,9 @@ msgstr "Tranzacția nu este legată de un token."
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "Unknown payment status: %s"
-msgstr ""
+msgstr "Status plată necunoscut: %s"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Secret webhook"

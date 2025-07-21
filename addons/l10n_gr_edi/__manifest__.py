@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'author': 'Odoo',
-    'name': 'Greece - MyDATA',
+    'name': 'Greece - myDATA',
     'version': '1.0',
     'category': 'Accounting/Localizations',
-    'summary': """Connect to MyDATA API implementation for Greece""",
+    'summary': """Connect to myDATA API implementation for Greece""",
     'description': """
-        MyDATA is a platform created by Greece's tax authority,
+        myDATA is a platform created by Greece's tax authority,
         The Independent Authority for Public Revenue (IAPR),
         to digitize business tax and accounting information declaration.
     """,
@@ -22,6 +22,7 @@
         'views/product_template_views.xml',
         'views/report_invoice.xml',
         'views/res_company_views.xml',
+        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
     ],
     'installable': True,

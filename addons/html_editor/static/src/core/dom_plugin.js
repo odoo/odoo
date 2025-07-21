@@ -28,6 +28,7 @@ import {
     isUnprotecting,
     listElementSelector,
     paragraphRelatedElementsSelector,
+    isEditorTab,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -93,6 +94,7 @@ export class DomPlugin extends Plugin {
             }
         },
         normalize_handlers: this.normalize.bind(this),
+        functional_empty_node_predicates: [isSelfClosingElement, isEditorTab],
     };
     contentEditableToRemove = new Set();
 
@@ -118,7 +120,7 @@ export class DomPlugin extends Plugin {
             startNode = selection.startContainer;
         }
 
-        const container = this.document.createElement("fake-element");
+        let container = this.document.createElement("fake-element");
         const containerFirstChild = this.document.createElement("fake-element-fc");
         const containerLastChild = this.document.createElement("fake-element-lc");
 
@@ -134,6 +136,12 @@ export class DomPlugin extends Plugin {
             }
             container.replaceChildren(content);
         }
+
+        const block = closestBlock(selection.anchorNode);
+        for (const cb of this.getResource("before_insert_processors")) {
+            container = cb(container, block);
+        }
+
         const allInsertedNodes = [];
 
         // In case the html inserted starts with a list and will be inserted within
@@ -155,13 +163,9 @@ export class DomPlugin extends Plugin {
         }
 
         startNode = startNode || this.dependencies.selection.getEditableSelection().anchorNode;
-        const block = closestBlock(selection.anchorNode);
 
         const shouldUnwrap = (node) =>
-            (isParagraphRelatedElement(node) ||
-                isListItemElement(node) ||
-                // TODO remove: PRE should be a paragraphRelatedElement
-                node.nodeName === "PRE") &&
+            (isParagraphRelatedElement(node) || isListItemElement(node)) &&
             !isEmptyBlock(block) &&
             !isEmptyBlock(node) &&
             (isContentEditable(node) ||
@@ -170,10 +174,7 @@ export class DomPlugin extends Plugin {
             (node.nodeName === block.nodeName ||
                 (this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
                     this.dependencies.baseContainer.isCandidateForBaseContainer(block)) ||
-                // TODO add: when PRE is considered as a paragraphRelatedElement
-                // again, consider unwrapping in PRE by re-enabling the
-                // following condition:
-                // block.nodeName === "PRE" ||
+                block.nodeName === "PRE" ||
                 (block.nodeName === "DIV" && this.dependencies.split.isUnsplittable(block))) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
@@ -569,11 +570,7 @@ export class DomPlugin extends Plugin {
                 block.isContentEditable
         );
         for (const block of deepestSelectedBlocks) {
-            if (
-                isParagraphRelatedElement(block) ||
-                block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
-                isListItemElement(block)
-            ) {
+            if (isParagraphRelatedElement(block) || isListItemElement(block)) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }

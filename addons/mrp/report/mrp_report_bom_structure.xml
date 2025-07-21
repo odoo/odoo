@@ -71,7 +71,7 @@
                             <td class="text-end" t-esc="data['prod_cost']/data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                         </tr>
                         <t t-if="data['show_costs'] and data['byproducts']" t-foreach="data['byproducts']" t-as="byproduct">
-                            <tr>
+                            <tr t-if="byproduct['quantity'] &gt; 0">
                                 <td name="td_mrp_bom_byproducts_f" class="text-end" t-esc="byproduct['name']"/>
                                 <td class="text-end"><strong>Unit Cost</strong></td>
                                 <td class="text-start" groups="uom.group_uom" t-esc="byproduct['uom_name']"/>

@@ -4,12 +4,9 @@ import {
     isAllowedContent,
     isButton,
     isContentEditable,
-    isEditorTab,
     isEmpty,
     isInPre,
-    isMediaElement,
     isProtected,
-    isSelfClosingElement,
     isShrunkBlock,
     isTangible,
     isTextNode,
@@ -630,7 +627,11 @@ export class DeletePlugin extends Plugin {
             // The joinable in this case is its sibling (previous for the start
             // side, next for the end side), but only if inline.
             const sibling = childNodes(commonAncestor)[side === "start" ? offset - 1 : offset];
-            if (sibling && !isBlock(sibling) && !(sibling.nodeType === Node.TEXT_NODE && !isVisibleTextNode(sibling))) {
+            if (
+                sibling &&
+                !isBlock(sibling) &&
+                !(sibling.nodeType === Node.TEXT_NODE && !isVisibleTextNode(sibling))
+            ) {
                 return { node: sibling, type: "inline" };
             }
             // No fragment to join.
@@ -1126,9 +1127,10 @@ export class DeletePlugin extends Plugin {
         if (leaf.nodeName === "BR" && isFakeLineBreak(leaf)) {
             return true;
         }
-        // @todo: register these as resources by other plugins?
         if (
-            [isSelfClosingElement, isMediaElement, isEditorTab].some((predicate) => predicate(leaf))
+            this.getResource("functional_empty_node_predicates").some((predicate) =>
+                predicate(leaf)
+            )
         ) {
             return false;
         }

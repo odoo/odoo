@@ -324,6 +324,10 @@ export class Message extends Record {
         return candidates.has(this.subject?.toLowerCase());
     }
 
+    get persistent() {
+        return Number.isInteger(this.id);
+    }
+
     get resUrl() {
         return url(stateToUrl({ model: this.thread.model, resId: this.thread.id }));
     }
@@ -420,7 +424,8 @@ export class Message extends Record {
             !this.is_transient &&
                 this.thread &&
                 this.store.self.type === "partner" &&
-                this.store.self.isInternalUser
+                this.store.self.isInternalUser &&
+                this.persistent
         );
     }
 

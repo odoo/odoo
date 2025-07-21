@@ -179,6 +179,10 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             ProductScreen.isShown(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 

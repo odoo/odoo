@@ -6,6 +6,8 @@ import { isCSSColor } from "@web/core/utils/colors";
 import { isColorGradient } from "@html_editor/utils/color";
 import { GradientPicker } from "./gradient_picker";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
+import { useChildRef } from "@web/core/utils/hooks";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 const DEFAULT_COLORS = [
@@ -50,6 +52,8 @@ export class ColorSelector extends Component {
         this.dropdown = useDropdownState({
             onClose: () => this.props.applyColorResetPreview(),
         });
+        this.menuRef = useChildRef();
+        useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
 
         this.mode = this.props.type === "foreground" ? "color" : "backgroundColor";
 

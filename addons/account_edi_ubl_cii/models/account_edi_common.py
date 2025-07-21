@@ -7,6 +7,7 @@ from odoo.tools import float_is_zero, float_repr, format_list
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
+from datetime import datetime
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
@@ -510,6 +511,41 @@ class AccountEdiCommon(models.AbstractModel):
             logs.append(_("A payment of %s was detected.", formatted_amount))
         return logs
 
+    def _import_rounding_amount(self, invoice, tree, xpath, qty_factor):
+        """
+        Add an invoice line representing the rounding amount given in the document.
+        - The amount is assumed to be in document currency
+        """
+        logs = []
+        line_vals = []
+
+        currency = invoice.currency_id
+        rounding_amount_currency = currency.round(qty_factor * float(tree.findtext(xpath) or 0))
+
+        if invoice.currency_id.is_zero(rounding_amount_currency):
+            return line_vals, logs
+
+        inverse_rate = abs(invoice.amount_total_signed) / invoice.amount_total if invoice.amount_total else 0
+        rounding_amount = invoice.company_id.currency_id.round(rounding_amount_currency * inverse_rate)
+
+        line_vals.append({
+            'display_type': 'product',
+            'name': _('Rounding'),
+            'quantity': 1,
+            'product_id': False,
+            'price_unit': rounding_amount_currency,
+            'amount_currency': invoice.direction_sign * rounding_amount_currency,
+            'balance': invoice.direction_sign * rounding_amount,
+            'company_id': invoice.company_id.id,
+            'move_id': invoice.id,
+            'tax_ids': False,
+        })
+
+        formatted_amount = formatLang(self.env, rounding_amount_currency, currency_obj=currency)
+        logs.append(_("A rounding amount of %s was detected.", formatted_amount))
+
+        return line_vals, logs
+
     def _import_invoice_lines(self, invoice, tree, xpath, qty_factor):
         logs = []
         lines_values = []
@@ -527,14 +563,15 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
         # Start and End date (enterprise fields)
+        xpath_dict = self._get_invoice_line_xpaths(document_type, qty_factor)
         deferred_values = {}
         start_date = end_date = None
         if self.env['account.move.line']._fields.get('deferred_start_date'):
-            start_date_node = tree.find('./{*}InvoicePeriod/{*}StartDate')
-            end_date_node = tree.find('./{*}InvoicePeriod/{*}EndDate')
+            start_date_node = tree.find(xpath_dict['deferred_start_date'])
+            end_date_node = tree.find(xpath_dict['deferred_end_date'])
             if start_date_node is not None and end_date_node is not None:  # there is a constraint forcing none or the two to be set
-                start_date = start_date_node.text
-                end_date = end_date_node.text
+                start_date = datetime.strptime(start_date_node.text.strip(), xpath_dict['date_format'])
+                end_date = datetime.strptime(end_date_node.text.strip(), xpath_dict['date_format'])
             deferred_values = {
                 'deferred_start_date': start_date,
                 'deferred_end_date': end_date,

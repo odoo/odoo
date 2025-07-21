@@ -43,7 +43,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:47+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -9890,8 +9890,8 @@ msgid ""
 "storage space of your Odoo database."
 msgstr ""
 "Bu seçenek, e-posta gönderildikten sonra ayarlardaki Teknik menü dahil olmak"
-" üzere tüm izlerini kalıcı olarak siler; bu, Odoo veritabanınızdaki depolama"
-" alanını korumak içindir."
+" üzere tüm izlerini kalıcı olarak siler; bu, Odoo veri tabanınızdaki "
+"depolama alanını korumak içindir."
 
 #. module: mail
 #. odoo-javascript
@@ -11159,6 +11159,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -11166,6 +11173,14 @@ msgid ""
 msgstr ""
 "Bütün şirketin diğer modüller tarafından gerektiği şekilde bu gruplar "
 "silinemez."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
 
 #. module: mail
 #. odoo-python

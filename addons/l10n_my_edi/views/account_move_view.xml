@@ -25,7 +25,7 @@
                     <group>
                         <group>
                             <!-- Only displayed if the invoice contains a tax of type Exempt -->
-                            <field name="l10n_my_edi_display_tax_exemption_reason" invisible="1"/> <!-- TODO: to be removed in master -->
+                            <field name="l10n_my_edi_display_tax_exemption_reason" invisible="1"/>
                             <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state != False"/>
                             <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state != False"/>
                         </group>

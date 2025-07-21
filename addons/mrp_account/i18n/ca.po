@@ -17,8 +17,8 @@
 # Óscar Fonseca <tecnico@pyming.com>, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Harcogourmet, 2025
-# Noemi Pla, 2025
 # Wil Odoo, 2025
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,18 +37,18 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$1000"
-msgstr ""
+msgstr "1000 €"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$5000"
-msgstr ""
+msgstr "5000 €"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "%s - Labour"
-msgstr ""
+msgstr "%s - Mà d'obra"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -63,12 +63,12 @@ msgstr "<span class=\"o_stat_text\">Fabricat</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Valoració</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span style=\"margin-right: 15px;\">Total</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">Total</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -93,7 +93,7 @@ msgstr "<span>Quantitat</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span>Ref.</span>"
-msgstr ""
+msgstr "<span>Ref.</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -103,7 +103,7 @@ msgstr "<span>Unitat de mesura</span>"
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "Una mateixa línia no pot ser alhora deure i haver"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -119,11 +119,13 @@ msgstr "Línia de moviment del compte"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
 msgstr ""
+"Línia d'assentament comptable que es crearà en validar l'assentament del "
+"compte de producció en curs."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "Acme Corp."
-msgstr ""
+msgstr "Acme Corp."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
@@ -165,7 +167,7 @@ msgstr "Nombre de LdM"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 msgid "Bom"
-msgstr ""
+msgstr "LdM"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -195,7 +197,7 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
 msgid "Costs Hour Account"
-msgstr ""
+msgstr "Compte de costos per hora"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_uid
@@ -289,7 +291,7 @@ msgstr "Etiqueta"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "Laptop"
-msgstr ""
+msgstr "Portàtil"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
@@ -306,13 +308,13 @@ msgstr "Última actualització el"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Informe resum de les ordres de fabricació"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manual Entry"
-msgstr ""
+msgstr "Entrada manual"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -339,7 +341,7 @@ msgstr "Nombre d'ordres de fabricació"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "Producció en curs - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -357,21 +359,23 @@ msgstr "Línia de comptes de Mo Analytic"
 msgid ""
 "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
+"Assegura't que l'import total de l'haver sigui igual a l'import total del "
+"deure."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "Publicar producció en curs"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr ""
+msgstr "Publicar WIP"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "Publicar assentament comptable del treball en curs"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -401,7 +405,7 @@ msgstr "Compte de producció"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "REF123"
-msgstr ""
+msgstr "REF123"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -412,7 +416,7 @@ msgstr "Referència"
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr ""
+msgstr "Ordres de fabricació relacionades amb el treball en curs"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -423,7 +427,7 @@ msgstr "Data de reversió"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal date must be after the posting date."
-msgstr ""
+msgstr "La data de reversió ha de ser posterior a la data de registre."
 
 #. module: mrp_account
 #. odoo-python
@@ -453,6 +457,9 @@ msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
+"Les ordres de fabricació en les quals es basa aquesta entrada de producció "
+"en curs. S'espera que s'estableixin en el moment de la creació de l'entrada "
+"de producció en curs."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -461,6 +468,9 @@ msgid ""
 " If not set, it is the expense account of the final product that will be "
 "used instead."
 msgstr ""
+"La despesa es comptabilitza quan l'ordre de fabricació està marcada com a "
+"finalitzada. Si no s'estableix, s'utilitzarà el compte de despeses del "
+"producte final."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -468,6 +478,8 @@ msgid ""
 "This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
 "                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
 msgstr ""
+"Aquest compte s'utilitzarà com a contrapartida de valoració per als components i per als productes finals de les ordres de fabricació.\n"
+"                Si hi ha costos del centre de treball o dels empleats, aquest valor romandrà al compte un cop completada la producció."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -488,39 +500,39 @@ msgstr "Unitats"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "Treball en curs - Valor de component"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "Treball en curs - Despeses generals"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr ""
+msgstr "Ordres de fabricació de treball en curs de %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "WIP Report for"
-msgstr ""
+msgstr "Informe de treball en curs per"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
 msgid "WIP accounting lines"
-msgstr ""
+msgstr "Apunts comptables de treball en curs"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
 msgid "WIP accounting wizard"
-msgstr ""
+msgstr "Assistent de comptabilitat per al treball en curs"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
 msgid "WIP report"
-msgstr ""
+msgstr "Informe WIP"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
@@ -531,6 +543,7 @@ msgstr "Línia de comptes analítiques de Wc"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
 msgstr ""
+"Assistent per publicar els assentaments del treball de fabricació en curs"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

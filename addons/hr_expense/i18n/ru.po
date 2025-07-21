@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-05 00:43+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -272,7 +272,7 @@ msgstr "Сумма к оплате"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "An"
-msgstr ""
+msgstr " "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -539,7 +539,7 @@ msgstr "Создайте новый отчет о расходах"
 msgid "Create a report to submit one or more expenses to your manager."
 msgstr ""
 "Создайте отчет, чтобы отправить один или несколько расходов своему "
-"руководителю."
+"менеджеру."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -559,7 +559,7 @@ msgstr "Создайте новые расходы, чтобы получить 
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_date
@@ -569,7 +569,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -662,7 +662,7 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
-"Больше не храните чеки в карманах! Просто сфотографируйте чек, и Odoo "
+"Больше не храните чеки в карманах! Просто сфотографируйте чек, и Odoo "
 "распознает его: OCR и ИИ заполнят данные автоматически."
 
 #. module: hr_expense
@@ -905,7 +905,7 @@ msgstr "Причина отказа расхода"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved, entry created for accountant"
-msgstr "Отчет о расходах утвержден, создана проводка для бухгалтера"
+msgstr "Отчет о расходах согласован, создана проводка для бухгалтера"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
@@ -1237,7 +1237,7 @@ msgstr "Этикетка Курс валюты"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_date
@@ -1247,7 +1247,7 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1297,8 +1297,8 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"Здесь менеджер может утвердить отчет, а бухгалтер – провести бухгалтерские "
-"проводки."
+"Здесь менеджер может согласовать отчет, а бухгалтер – провести бухгалтерские"
+" проводки."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1722,7 +1722,7 @@ msgid ""
 "navigate."
 msgstr ""
 "Готово? Здесь можно сохранить вручную или отменить изменения. "
-"<em>Сохранять</em> не обязательно – Odoo сохраняет всё при навигации."
+"<em>Сохранять</em> необязательно – Odoo сохраняет всё при навигации."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1901,12 +1901,6 @@ msgstr "Показать предупреждение для коммерчес�
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Показать записи, у которых дата следующего действия раньше сегодняшней"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Show missing work email employees"
-msgstr "Показывайте сотрудникам электронную почту о пропущенной работе"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
@@ -2115,16 +2109,6 @@ msgstr "Сумма после разделения остается прежне
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The work email of some employees is missing. Please add it on the employee "
-"form"
-msgstr ""
-"У некоторых сотрудников не указан рабочий e‑mail адрес. Добавьте его в "
-"карточке сотрудника"
-
-#. module: hr_expense
-#. odoo-python
 #: code:addons/hr_expense/models/product_product.py:0
 msgid ""
 "There are unsubmitted expenses linked to this category. Updating the "
@@ -2146,7 +2130,8 @@ msgstr "Вот так - управление расходами в двух сл
 msgid ""
 "This expense report is empty. You cannot submit or approve an empty expense "
 "report."
-msgstr "Отчет о расходах пуст. Нельзя отправить или утвердить пустой отчет."
+msgstr ""
+"Отчет о расходах пуст. Вы не можете отправить или согласовать пустой отчет."
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2176,7 +2161,7 @@ msgstr "К Подтверждению"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To be Reimbursed"
-msgstr ""
+msgstr "Подлежит возмещению"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2405,7 +2390,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "You cannot cancel an expense sheet linked to a posted journal entry"
 msgstr ""
-"Нельзя отменить ведомость расходов, связанную с проведенной записью журнала"
+"Вы не можете отменить ведомость расходов, связанную с проведенной записью "
+"журнала"
 
 #. module: hr_expense
 #. odoo-python
@@ -2413,14 +2399,14 @@ msgstr ""
 msgid ""
 "You cannot create accounting entries for an expense report without expenses."
 msgstr ""
-"Нельзя создать бухгалтерские проводки по отчету о расходах, в котором не "
-"указаны расходы."
+"Вы не можете создать бухгалтерские проводки по отчету о расходах, в котором "
+"не указаны расходы."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot delete a posted or approved expense."
-msgstr "Вы не можете удалить опубликованные или утвержденные расходы."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2543,14 +2529,14 @@ msgstr ""
 msgid ""
 "You don't have the rights to bypass the validation process of this expense "
 "report."
-msgstr ""
+msgstr "У вас нет прав на обход процесса проверки этого отчета о расходах."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "You don't have the rights to bypass the validation process of this expense."
-msgstr ""
+msgstr "У вас нет прав на обход процесса проверки этого расхода."
 
 #. module: hr_expense
 #. odoo-python

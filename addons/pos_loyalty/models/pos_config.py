@@ -89,7 +89,7 @@ class PosConfig(models.Model):
         if (
             (coupon.expiration_date and coupon.expiration_date < check_date)
             or (program.date_to and program.date_to < today_date)
-            or (program.limit_usage and program.total_order_count >= program.max_usage)
+            or (program.limit_usage and program.sudo().total_order_count >= program.max_usage)
         ):
             error_message = _("This coupon is expired (%s).", code)
         elif program.date_from and program.date_from > today_date:

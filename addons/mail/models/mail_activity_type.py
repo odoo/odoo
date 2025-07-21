@@ -3,8 +3,9 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
+
 
 class MailActivityType(models.Model):
     """ Activity Types are used to categorize activities. Each type is a different
@@ -128,10 +129,39 @@ class MailActivityType(models.Model):
             else:
                 activity_type.chaining_type = 'suggest'
 
+    def write(self, values):
+        # Protect some master types against model change when they are used
+        # as default in apps, in business flows, plans, ...
+        if 'res_model' in values:
+            xmlid_to_model = {
+                xmlid: info['res_model']
+                for xmlid, info in self._get_model_info_by_xmlid().items()
+            }
+            modified = self.browse()
+            for xml_id, model in xmlid_to_model.items():
+                activity_type = self.env.ref(xml_id, raise_if_not_found=False)
+                # beware '' and False for void res_model
+                if activity_type and (values['res_model'] or False) != (model or False) and activity_type in self:
+                    modified += activity_type
+            if modified:
+                raise exceptions.UserError(
+                    _('You cannot modify %(activities_names)s target model as they are are required in various apps.',
+                      activities_names=', '.join(act.name for act in modified),
+                ))
+        return super().write(values)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_todo(self):
-        if self.env.ref('mail.mail_activity_data_todo') in self:
-            raise UserError(_("The 'To-Do' activity type is used to create reminders from the top bar menu and the command palette. Consequently, it cannot be archived or deleted."))
+        master_data = self.browse()
+        for xml_id in [xmlid for xmlid, info in self._get_model_info_by_xmlid().items() if info['unlink'] is False]:
+            activity_type = self.env.ref(xml_id, raise_if_not_found=False)
+            if activity_type and activity_type in self:
+                master_data += activity_type
+        if master_data:
+            raise exceptions.UserError(
+                _('You cannot delete %(activity_names)s as it is required in various apps.',
+                  activity_names=', '.join(act.name for act in master_data),
+            ))
 
     def action_archive(self):
         if self.env.ref('mail.mail_activity_data_todo') in self:
@@ -146,3 +176,19 @@ class MailActivityType(models.Model):
         else:
             base = fields.Date.context_today(self)
         return base + relativedelta(**{self.delay_unit: self.delay_count})
+
+    @api.model
+    def _get_model_info_by_xmlid(self):
+        """ Get model info based on xml ids. """
+        return {
+            # generic call, used notably in VOIP, ... no unlink, necessary for VOIP
+            'mail.mail_activity_data_call': {'res_model': False, 'unlink': False},
+            # generic meeting, used in calendar, hr, ... no unlink, necessary for appointment, appraisals
+            'mail.mail_activity_data_meeting': {'res_model': False, 'unlink': False},
+            # generic todo, used in plans, ... no unlink, basic generic fallback data
+            'mail.mail_activity_data_todo': {'res_model': False, 'unlink': False},
+            # generic upload, used in documents, accounting, ...
+            'mail.mail_activity_data_upload_document': {'res_model': False, 'unlink': True},
+            # generic warning, used in plans, business flows, ...
+            'mail.mail_activity_data_warning': {'res_model': False, 'unlink': True},
+        }

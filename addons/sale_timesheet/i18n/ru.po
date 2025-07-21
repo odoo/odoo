@@ -6,6 +6,7 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Wil Odoo, 2024
 # Ilya Rozhkov, 2024
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ilya Rozhkov, 2024\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +68,8 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"Необходимо указать аналитический план: %(missing_plan_names)s, связанный с "
+"позицией заказа на продажу %(so_line_name)s, используемой в табеле."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -111,12 +114,12 @@ msgstr "через 4 дня после собеседования"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Daily Cost: </b>"
-msgstr ""
+msgstr "<b>Ежедневная стоимость: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Unit Price: </b>"
-msgstr ""
+msgstr "<b>Цена за единицу: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -127,6 +130,11 @@ msgid ""
 "                            To bill the same service at a different rate, create separate sales order items.\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\"/>\n"
+"                        <span>\n"
+"                            Определите ставку, по которой оплачивается рабочее время сотрудника, исходя из его квалификации, навыков или опыта.\n"
+"                            Чтобы выставить счет за одну и ту же услугу по разным тарифам, создайте отдельные позиции в заказе на продажу.\n"
+"                        </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -142,6 +150,9 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Заказ на "
+"продажу, связанный с этой записью в табеле учета рабочего времени, был "
+"отменен.\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -203,7 +214,7 @@ msgstr "<strong>Заказ на продажу:</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "<strong>Time Remaining on SO: </strong>"
-msgstr ""
+msgstr "<strong>Оставшееся время в заказе на продажу: </strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -226,11 +237,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"В соответствии с конфигурацией продукта, количество поставляемого товара может быть автоматически рассчитано механизмом:\n"
-"  - Ручной: количество задается вручную на линии\n"
-"  - Аналитический из затрат: количество - это сумма количества из размещенных затрат\n"
-"  - Из таймшетов: количество - это сумма часов, записанных в заданиях, связанных с данной линией продаж\n"
-"  - Движение запасов: количество берется из подтвержденной выборки\n"
+"В зависимости от настроек товара, доставленное количество может рассчитываться автоматически по следующему принципу: \n"
+"- Вручную: количество указывается вручную в строке; \n"
+"- Аналитика из расходов: количество берется как сумма подтвержденных расходов; \n"
+"- По табелю учета рабочего времени: количество рассчитывается как сумма часов, зафиксированных по задачам, связанным с этой строкой продажи; \n"
+"- По складским перемещениям: количество берется из подтвержденных отгрузок\n"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -303,6 +314,15 @@ msgid ""
 "                        outside the box. We expect the candidate to be proactive and have a \"get it done\"\n"
 "                        spirit. To be successful, you will have solid solving problem skills."
 msgstr ""
+"Как сотрудник нашей компании, вы будете <b>взаимодействовать со всеми отделами\n"
+"                        для создания и внедрения революционных продуктов.</b> Приходите работать в развивающуюся компанию\n"
+"                        с отличными льготами, условиями для карьерного роста и возможностью обучения\n"
+"                        у ведущих лидеров. Мы ищем опытного и талантливого\n"
+"                        сотрудника.\n"
+"                        <br><br>\n"
+"                        Эта должность требует как <b>творческого подхода, так и строгость в выполнении задач</b>, поэтому мы ищем кандидата с\n"
+"                        нестандартным мышлением. Мы ожидаем от кандидата проактивности и стремления довести начатое\n"
+"                        до конца. Успешный кандидат должен обладать навыками решения сложных задач."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -451,13 +471,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_date
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__currency_id
@@ -530,6 +550,10 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Каждый сотрудник может увидеть результаты своей работы и внести реальный вклад в успех компании..\n"
+"                    <br>\n"
+"                    В течение года регулярно проводятся различные мероприятия  –  еженедельные\n"
+"                    спортивные занятия, тимбилдинги, ежемесячные встречи и не только"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -541,7 +565,7 @@ msgstr "Еда и напитки"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_elevator_installation_product_template
 msgid "Elevator Installation"
-msgstr ""
+msgstr "Монтаж лифта"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -612,7 +636,7 @@ msgstr "Отличная команда умных людей, дружелюб�
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_labour
 msgid "Handyman"
-msgstr ""
+msgstr "Специалист по бытовым услугам"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
@@ -650,12 +674,12 @@ msgstr "ID"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_interior_designer
 msgid "Interior Designer"
-msgstr ""
+msgstr "Дизайнер интерьеров"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_interior_designing_product_template
 msgid "Interior Designing"
-msgstr ""
+msgstr "Проектирование интерьеров"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -678,7 +702,7 @@ msgstr "Политика выставления счетов"
 #. odoo-python
 #: code:addons/sale_timesheet/models/product_template.py:0
 msgid "Invoice based on timesheets (delivered quantity)."
-msgstr ""
+msgstr "Счет на основе табелей (по отработанным часам)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -736,13 +760,13 @@ msgstr "Сборка кухни (этапы)"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_date
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -759,9 +783,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Задавайте количество в заказе вручную: акт на основе количества, введенного вручную, без создания аналитического счета.\n"
-"Табели учета рабочего времени в контракте: счет на основе записанных часов в соответствующем табеле.\n"
-"Создавайте задачи и вносите часы: Создайте задачу при подтверждении заказа и вносите в нее рабочие часы."
+"Ручной ввод количества: счет выставляется по вручную введенному количеству, без создания аналитического счета.\n"
+"Табельный учет по договору: счет выставляется по отработанным часам в связанном табеле учета рабочего времени.\n"
+"Создание задачи и учет времени: создается задача при подтверждении заказа на продажу, далее учитываются часы по задаче."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
@@ -871,7 +895,7 @@ msgstr "Не оплачиваемые"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Time"
-msgstr ""
+msgstr "Неоплачиваемое время"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1084,7 +1108,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_roofing_product_template
 msgid "Roofing"
-msgstr ""
+msgstr "Кровельные работы"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -1138,9 +1162,10 @@ msgid ""
 "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
 "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
 msgstr ""
-"Элемент заказа на продажу, который будет выбран по умолчанию в табеле учета рабочего времени соответствующего сотрудника. Он обходит элемент заказа на продажу, определенный для проекта и задачи, и при необходимости может быть изменен в каждой записи табеля учета рабочего времени. Другими словами, он определяет ставку, по которой оплачивается время сотрудника, исходя, например, из его знаний, навыков или опыта.\n"
-"Если вы хотите выставить счет за одну и ту же услугу по другой ставке, вам нужно создать два отдельных элемента заказа на продажу, поскольку каждый элемент заказа на продажу может иметь только одну единичную цену за один раз.\n"
-"Вы также можете определить почасовую стоимость сотрудников для их табелей учета рабочего времени в этом проекте. Она будет обходить стоимость табеля, установленную для сотрудника."
+"Позиция заказа на продажу, которая будет подставляться по умолчанию в табели соответствующего сотрудника. Она переопределяет позицию, указанную в проекте или задаче, и может быть изменена вручную в каждой записи табеля при необходимости.\n"
+"Проще говоря, она задает ставку, по которой время сотрудника будет учитываться и выставляться клиенту – например, в зависимости от квалификации, навыков или опыта.\n"
+"Если нужно выставить счет за одну и ту же услугу по разным тарифам, необходимо создать две разные позиции заказа, так как у каждой из них может быть только одна цена за единицу.\n"
+"Также можно задать почасовую себестоимость рабочего времени сотрудника для табелей в рамках конкретного проекта, которая заменит себестоимость, заданную в карточке сотрудника."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1212,12 +1237,12 @@ msgstr "Услуги"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
 msgid "Site Manager"
-msgstr ""
+msgstr "Руководитель проекта"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_solar_installation_product_template
 msgid "Solar Panel Installation"
-msgstr ""
+msgstr "Установка солнечных панелей"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1305,14 +1330,13 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
-"Ставка по заданию - идеальный вариант, если вы хотите выставлять счета за "
-"разные услуги разным клиентам по разным ставкам. Фиксированная ставка - "
-"идеальный вариант, если вы выставляете счет за услугу по фиксированной "
-"ставке за час или день работы, независимо от того, кто ее выполнил. Ставка "
-"для сотрудников предпочтительнее, если ваши сотрудники оказывают одну и ту "
-"же услугу по разным ставкам. Например, младшие и старшие консультанты будут "
-"оказывать одну и ту же услугу (= консультирование), но по разным расценкам в"
-" зависимости от уровня их стажа."
+"Ставка на задачу подойдет, если вы выставляете счета за разные услуги разным"
+" клиентам по разным ставкам. Фиксированная ставка подойдет, если услуга "
+"всегда оплачивается по одной цене за час или день, вне зависимости от того, "
+"кто ее выполнял. Ставка по сотруднику удобна, если ваши сотрудники оказывают"
+" одну и ту же услугу по разным ставкам. Например, младший и старший "
+"консультант оказывают одну услугу (консалтинг), но стоимость их времени "
+"различается из-за уровня квалификации."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1339,7 +1363,7 @@ msgstr "Биллинг времени"
 #: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__remaining_hours_so
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "Оставшееся время в заказе на продажу"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
@@ -1438,7 +1462,7 @@ msgstr "Временные таблицы (фиксированная цена)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Non-Billable)"
-msgstr ""
+msgstr "Табели (Неоплачиваемые)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1501,7 +1525,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
-msgstr ""
+msgstr "Табели без позиции заказа на продажу учитываются как"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1583,7 +1607,7 @@ msgstr "Значение не существует в типе ценообра�
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 msgid "View Timesheet"
-msgstr ""
+msgstr "Посмотреть табель"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit

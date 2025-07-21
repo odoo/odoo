@@ -19,7 +19,6 @@
 # ExcaliberX <excaliberx@gmail.com>, 2024
 # שהאב חוסיין <shhab89@gmail.com>, 2024
 # Roy Sayag, 2024
-# NoaFarkash, 2024
 # Moshe Flam <pashute@gmail.com>, 2024
 # david danilov, 2024
 # Martin Trigaux, 2024
@@ -29,20 +28,21 @@
 # Uri Segman, 2024
 # Mendi Soudry, 2024
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
-# MichaelHadar, 2025
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
 # tomerlayline, 2025
 # Hed Shefer <hed@laylinetech.com>, 2025
 # Yoram Lavi, 2025
 # or balmas, 2025
+# NoaFarkash, 2025
+# MichaelHadar, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: or balmas, 2025\n"
+"Last-Translator: MichaelHadar, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -768,6 +768,11 @@ msgid "<strong>Customer Address</strong>"
 msgstr "<strong>כתובת לקוח</strong>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivered</strong>"
+msgstr "<strong>נשלח</strong>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
 msgstr "<strong>כתובת אספקה</strong>"
@@ -807,6 +812,11 @@ msgstr "<strong>כמות מינימלית:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
 msgstr "<strong>הזמנה</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Ordered</strong>"
+msgstr "<strong>הוזמן</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -1899,6 +1909,13 @@ msgstr "חשב עלויות המשלוח ושלח באמצעות  DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "חשב עלויות המשלוח ושלח באמצעות Easypost"
 
@@ -1906,6 +1923,13 @@ msgstr "חשב עלויות המשלוח ושלח באמצעות Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "חשב עלויות המשלוח ושלח באמצעות FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1929,8 +1953,22 @@ msgstr "חשב עלויות המשלוח ושלח באמצעות UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "חשב עלויות המשלוח ושלח באמצעות USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2445,6 +2483,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
 msgstr ""
 
 #. module: stock
@@ -3116,6 +3159,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "אתה מאשר שאתה רוצה לפסול"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "תיעוד"
@@ -3342,6 +3386,7 @@ msgstr "פברואר"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "חיבור ל FedEx"
 
@@ -9901,11 +9946,13 @@ msgstr "סוג הפעילות החריגה ברשומה."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "חיבור ל UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "חיבור ל USPS"
 

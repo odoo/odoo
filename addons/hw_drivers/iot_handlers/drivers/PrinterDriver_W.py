@@ -15,6 +15,7 @@ from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.addons.hw_drivers.websocket_client import send_to_controller
+from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface_W import win32print_lock
 
 _logger = logging.getLogger(__name__)
 
@@ -107,37 +108,39 @@ class PrinterDriver(Driver):
         event_manager.device_changed(self)
 
     def print_raw(self, data):
-        win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
-        win32print.StartPagePrinter(self.printer_handle)
-        win32print.WritePrinter(self.printer_handle, data)
-        win32print.EndPagePrinter(self.printer_handle)
-        win32print.EndDocPrinter(self.printer_handle)
+        with win32print_lock:
+            win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
+            win32print.StartPagePrinter(self.printer_handle)
+            win32print.WritePrinter(self.printer_handle, data)
+            win32print.EndPagePrinter(self.printer_handle)
+            win32print.EndDocPrinter(self.printer_handle)
 
     def print_report(self, data):
-        helpers.write_file('document.pdf', data, 'wb')
-        file_name = helpers.path_file('document.pdf')
-        printer = self.device_name
+        with win32print_lock:
+            helpers.write_file('document.pdf', data, 'wb')
+            file_name = helpers.path_file('document.pdf')
+            printer = self.device_name
 
-        args = [
-            "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT",
-            "-q",
-            "-sDEVICE#mswinpr2",
-            f'-sOutputFile#%printer%{printer}',
-            f'{file_name}'
-        ]
+            args = [
+                "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT",
+                "-q",
+                "-sDEVICE#mswinpr2",
+                f'-sOutputFile#%printer%{printer}',
+                f'{file_name}'
+            ]
 
-        _logger.debug("Printing report with ghostscript using %s", args)
-        stderr_buf = io.BytesIO()
-        stdout_buf = io.BytesIO()
-        stdout_log_level = logging.DEBUG
-        try:
-            ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
-        except Exception:
-            _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
-            stdout_log_level = logging.ERROR # some stdout value might contains relevant error information
-            raise
-        finally:
-            _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
+            _logger.debug("Printing report with ghostscript using %s", args)
+            stderr_buf = io.BytesIO()
+            stdout_buf = io.BytesIO()
+            stdout_log_level = logging.DEBUG
+            try:
+                ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
+            except Exception:
+                _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
+                stdout_log_level = logging.ERROR  # some stdout value might contains relevant error information
+                raise
+            finally:
+                _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
 
     def print_receipt(self, data):
         _logger.debug("print_receipt called for printer %s", self.device_name)

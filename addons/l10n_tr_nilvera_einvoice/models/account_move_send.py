@@ -34,6 +34,18 @@ class AccountMoveSend(models.AbstractModel):
                 "action": tr_partners_missing_address._get_records_action(name=_("Check data on Partner(s)")),
             }
 
+        if tr_invalid_subscription_dates := moves.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_invalid_subscription_dates()
+        ):
+            alerts["critical_invalid_subscription_dates"] = {
+                "message": _("The following invoice(s) need to have the same Start Date and End Date on all their respective Invoice Lines."),
+                "action_text": _("View Invoice(s)"),
+                "action": tr_invalid_subscription_dates._get_records_action(
+                    name=_("Check data on Invoice(s)"),
+                ),
+                "level": "danger",
+            }
+
         if tr_einvoice_partners_missing_ref := moves.partner_id.filtered(
             lambda p: p.l10n_tr_nilvera_customer_status == "einvoice" and not p.ref
         ):

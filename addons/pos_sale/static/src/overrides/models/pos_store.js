@@ -69,7 +69,7 @@ patch(PosStore.prototype, {
     },
     async _getSaleOrder(id) {
         const sale_order = (await this.data.read("sale.order", [id]))[0];
-        const orderlines = this.models["sale.order.line"].readMany(sale_order.raw.order_line);
+        const orderlines = await this.data.read("sale.order.line", sale_order.raw.order_line);
         sale_order.order_line = orderlines;
         return sale_order;
     },
@@ -144,13 +144,13 @@ patch(PosStore.prototype, {
                 }
             }
 
-            line.has_valued_move_ids = await this.data.call(
+            converted_line.has_valued_move_ids = await this.data.call(
                 "sale.order.line",
                 "has_valued_move_ids",
-                [line.id]
+                [converted_line.id]
             );
-            newLine.setQuantityFromSOL(line);
-            newLine.set_unit_price(line.price_unit);
+            newLine.setQuantityFromSOL(converted_line);
+            newLine.set_unit_price(converted_line.price_unit);
             newLine.set_discount(line.discount);
 
             const product_unit = line.product_id.uom_id;

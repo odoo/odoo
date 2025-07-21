@@ -1285,7 +1285,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         to_clean, to_do, to_do_confirm_activity = self.env['hr.leave'], self.env['hr.leave'], self.env['hr.leave']
         activity_vals = []
         today = fields.Date.today()
-        model_id = self.env.ref('hr_holidays.model_hr_leave').id
+        model_id = self.env['ir.model']._get_id('hr.leave')
         confirm_activity = self.env.ref('hr_holidays.mail_act_leave_approval')
         approval_activity = self.env.ref('hr_holidays.mail_act_leave_second_approval')
         for holiday in self:
@@ -1304,12 +1304,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                             'Second approval request for %(leave_type)s',
                             leave_type=holiday.holiday_status_id.name,
                         )
-                        to_do_confirm_activity |= holiday
+                        to_do_confirm_activity += holiday
                     user_ids = holiday.sudo()._get_responsible_for_approval().ids
                     for user_id in user_ids:
                         date_deadline = (
                             (holiday.date_from -
-                             relativedelta(**{activity_type.delay_unit: activity_type.delay_count or 0})).date()
+                             relativedelta(**{activity_type.delay_unit or 'days': activity_type.delay_count or 0})).date()
                             if holiday.date_from else today)
                         if date_deadline < today:
                             date_deadline = today

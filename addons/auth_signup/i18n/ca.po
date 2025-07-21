@@ -11,13 +11,13 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Martin Trigaux, 2024
 # M Palau <mpalau@tda.ad>, 2024
-# Santiago Payà <santiagopim@gmail.com>, 2024
 # Arnau Ros, 2024
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
 # Ivan Espinola, 2024
 # marcescu, 2024
 # Wil Odoo, 2025
 # Josep Anton Belchi, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
 # Noemi Pla, 2025
 # 
 msgid ""
@@ -46,6 +46,9 @@ msgid ""
 "                                A password reset was requested for the Odoo account linked to this email.\n"
 "                                You may change your password by following this link which will remain valid during"
 msgstr ""
+",<br/><br/>\n"
+"                                S'ha demanat restablir la contrasenya del compte Odoo vinculat a aquest correu electrònic.\n"
+"                                Podeu canviar la contrasenya amb el següent enllaç que romandrà vàlid durant "
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -54,6 +57,9 @@ msgid ""
 "                        A new device was used to sign in to your account. <br/><br/>\n"
 "                        Here are some details about the connection:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"                        Hem detectat que s'ha iniciat sessió al teu compte amb un altre dispositiu. <br/><br/>\n"
+"                        Informació sobre aquesta nova connexió:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -76,6 +82,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                    Browser:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                    Navegador:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -181,7 +189,7 @@ msgstr ""
 "                        Faci seguiment perquè puguin accedir a la seva base de dades i comencin a treballar amb vostè.\n"
 "                        <br/><br/>\n"
 "                        Que tingui un bon dia!<br/>\n"
-"                        --<br/>L'equip de <t t-out=\"object.company_id.name or ''\">LaSevaEmpresa</t>\n"
+"                        --<br/>L'equip de <t t-out=\"object.company_id.name or ''\">LaTevaEmpresa</t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -326,7 +334,7 @@ msgstr ""
 "                        Faci una ullada al <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Tour d'Odoo</a> per descobrir aquesta eina.\n"
 "                        <br/><br/>\n"
 "                        Gaudeixi d'Odoo!<br/>\n"
-"                        --<br/>L'equip de <t t-out=\"object.company_id.name or ''\">LaSevaEmpresa</t> \n"
+"                        --<br/>L'equip de <t t-out=\"object.company_id.name or ''\">LaTevaEmpresa</t> \n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -507,7 +515,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    <t t-out=\"object.company_id.name or ''\">LaSevaEmpresa</t>\n"
+"                    <t t-out=\"object.company_id.name or ''\">LaTevaEmpresa</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
@@ -546,7 +554,7 @@ msgstr "S'ha enviat per correu un enllaç per restablir la contrasenya"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "A signup link was send by email"
-msgstr ""
+msgstr "S'ha enviat per correu un enllaç per iniciar sessió"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -614,6 +622,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"No ha estat possible contactar amb el servidor de correu. Si us plau, "
+"comprova la configuració del servidor dels correus sortints"
 
 #. module: auth_signup
 #. odoo-python
@@ -671,6 +681,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"Si no ho esperaves, pots ignorar aquest correu.<br/><br/>\n"
+"                                Gràcies,"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -678,6 +690,8 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
+"Si no ets tu, hauries de canviar la contrasenya immediatament per mitjà "
+"d'aquest enllaç:<br/>"
 
 #. module: auth_signup
 #. odoo-python
@@ -706,19 +720,19 @@ msgstr "Marc Demo"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "Hi ha diversos comptes associats a aquest inici de sessió"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Near %(city)s, %(region)s, %(country)s"
-msgstr ""
+msgstr "A prop de %(city)s, %(region)s, %(country)s"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Near %(region)s, %(country)s"
-msgstr ""
+msgstr "A prop de %(region)s, %(country)s"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
@@ -729,7 +743,7 @@ msgstr "Mai connectat"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "Nova connexió al teu compte"
 
 #. module: auth_signup
 #. odoo-python
@@ -762,7 +776,7 @@ msgstr "Per invitació "
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "En cas contrari, pots ignorar aquest correu."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -849,12 +863,12 @@ msgstr "Enviat a l'usuari del portal que s'ha registrat"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New Portal Sign Up"
-msgstr ""
+msgstr "Configuració: nou registre al portal"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New User Invite"
-msgstr "Arranjament: Convida a un usuari nou"
+msgstr "Configuració: invitació per a un nou usuari"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
@@ -882,7 +896,7 @@ msgstr "El registre no esta permès per usuari no convidats"
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
 msgid "Signup token '%s' is not valid or expired"
-msgstr ""
+msgstr "El token d'inici de sessió '%s' no és vàlid o ha expirat"
 
 #. module: auth_signup
 #. odoo-python
@@ -931,6 +945,8 @@ msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
 msgstr ""
+"S'ha produït un error en intentar lliurar el teu correu electrònic. Si us "
+"plau, comprova la configuració."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -978,12 +994,12 @@ msgstr "El vostre nom"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "YourCompany"
-msgstr "LaVostraEmpresa"
+msgstr "LaTevaEmpresa"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
-msgstr ""
+msgstr "dia, mes dd, aaaa - hh:mm:ss (GMT)"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -993,7 +1009,7 @@ msgstr "p. ex.: John Doe"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "hours:<br/>"
-msgstr ""
+msgstr "hores:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email

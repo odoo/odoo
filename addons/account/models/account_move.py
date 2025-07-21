@@ -472,9 +472,14 @@ class AccountMove(models.Model):
         required=True,
         compute='_compute_currency_id', inverse='_inverse_currency_id', store=True, readonly=False, precompute=True,
     )
+    expected_currency_rate = fields.Float(
+        compute="_compute_expected_currency_rate",
+        digits=0,
+    )
     invoice_currency_rate = fields.Float(
         string='Currency Rate',
         compute='_compute_invoice_currency_rate', store=True, precompute=True,
+        readonly=False,
         copy=False,
         digits=0,
         help="Currency rate from company currency to document currency.",
@@ -797,10 +802,10 @@ class AccountMove(models.Model):
             move.payment_reference = move._get_invoice_computed_reference()
         self._inverse_payment_reference()
 
-    @api.depends('invoice_date', 'company_id')
+    @api.depends('invoice_date', 'company_id', 'move_type')
     def _compute_date(self):
         for move in self:
-            if not move.invoice_date or not move.is_invoice():
+            if not move.invoice_date or not move.is_invoice(include_receipts=True):
                 if not move.date:
                     move.date = fields.Date.context_today(self)
                 continue
@@ -1050,18 +1055,23 @@ class AccountMove(models.Model):
         return self.invoice_date or fields.Date.context_today(self)
 
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
+    def _compute_expected_currency_rate(self):
+        for move in self:
+            if move.currency_id:
+                move.expected_currency_rate = move.env['res.currency']._get_conversion_rate(
+                    from_currency=move.company_currency_id,
+                    to_currency=move.currency_id,
+                    company=move.company_id,
+                    date=move._get_invoice_currency_rate_date(),
+                )
+            else:
+                move.expected_currency_rate = 1
+
+    @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
     def _compute_invoice_currency_rate(self):
         for move in self:
             if move.is_invoice(include_receipts=True):
-                if move.currency_id:
-                    move.invoice_currency_rate = self.env['res.currency']._get_conversion_rate(
-                        from_currency=move.company_currency_id,
-                        to_currency=move.currency_id,
-                        company=move.company_id,
-                        date=move._get_invoice_currency_rate_date(),
-                    )
-                else:
-                    move.invoice_currency_rate = 1
+                move.invoice_currency_rate = move.expected_currency_rate
 
     @api.depends('move_type')
     def _compute_direction_sign(self):
@@ -1402,6 +1412,7 @@ class AccountMove(models.Model):
                         'account_payment_id': counterpart_line.payment_id.id,
                         'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
                         'move_id': counterpart_line.move_id.id,
+                        'is_refund': counterpart_line.move_id.move_type in ['in_refund', 'out_refund'],
                         'ref': reconciliation_ref,
                         # these are necessary for the views to change depending on the values
                         'is_exchange': reconciled_partial['is_exchange'],
@@ -4239,7 +4250,7 @@ class AccountMove(models.Model):
 
         base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
-        tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
@@ -4257,7 +4268,7 @@ class AccountMove(models.Model):
 
         base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
-        tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = self._prepare_tax_lines_for_taxes_computation(tax_amls, round_from_tax_lines)
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         if postfix_function:
@@ -4354,7 +4365,7 @@ class AccountMove(models.Model):
 
         company = self.company_id
         payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
-        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_lines = self.line_ids.filtered('tax_repartition_line_id')
         invoice_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
         payment_term = self.invoice_payment_term_id
         early_pay_discount_computation = payment_term.early_pay_discount_computation
@@ -5147,6 +5158,21 @@ class AccountMove(models.Model):
                     ]
                 })
 
+    def get_currency_rate(self, company_id, to_currency_id, date):
+        company = self.env['res.company'].browse(company_id)
+        to_currency = self.env['res.currency'].browse(to_currency_id)
+
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=company.currency_id,
+            to_currency=to_currency,
+            company=company,
+            date=date,
+        )
+
+    def refresh_invoice_currency_rate(self):
+        for move in self:
+            move.invoice_currency_rate = move.expected_currency_rate
+
     def action_register_payment(self):
         if any(m.state != 'posted' for m in self):
             raise UserError(_("You can only register payment for posted journal entries."))
@@ -5276,7 +5302,7 @@ class AccountMove(models.Model):
 
         self._check_draftable()
         # We remove all the analytics entries for this journal
-        self.mapped('line_ids.analytic_line_ids').unlink()
+        self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         self.mapped('line_ids').remove_move_reconcile()
         self.state = 'draft'
 
@@ -5399,6 +5425,7 @@ class AccountMove(models.Model):
 
         if self.move_type != 'entry':
             local_msg_vals = dict(msg_vals or {})
+            partner_ids = local_msg_vals.get('partner_ids', []) if 'partner_ids' in local_msg_vals else message.partner_ids.ids
             self._portal_ensure_token()
             access_link = self._notify_get_action_link('view', **local_msg_vals, access_token=self.access_token)
 
@@ -5407,7 +5434,7 @@ class AccountMove(models.Model):
             button_access = {'url': access_link} if access_link else {}
             recipient_group = (
                 'additional_intended_recipient',
-                lambda pdata: pdata['id'] in local_msg_vals.get('partner_ids', []) and pdata['id'] != self.partner_id.id and pdata['type'] != 'user',
+                lambda pdata: pdata['id'] in partner_ids and pdata['id'] != self.partner_id.id and pdata['type'] != 'user',
                 {
                     'has_button_access': True,
                     'button_access': button_access,
@@ -5481,6 +5508,10 @@ class AccountMove(models.Model):
             [('sending_data', '!=', False)],
             limit=limit,
         )
+        total_to_process = self.env['account.move'].search_count(
+            [('sending_data', '!=', False)],
+        )
+
         need_retrigger = len(to_process) > job_count
         if not to_process:
             return
@@ -5497,6 +5528,8 @@ class AccountMove(models.Model):
             to_process,
             from_cron=True,
         )
+        self.env['ir.cron']._notify_progress(done=len(to_process),
+                                             remaining=total_to_process - len(to_process))
 
         for partner_id, partner_moves in moves_by_partner.items():
             partner = self.env['res.partner'].browse(partner_id)

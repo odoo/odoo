@@ -375,27 +375,6 @@ export class PosOrder extends Base {
         return this.lines.length === 0;
     }
 
-    generate_unique_id() {
-        // Generates a public identification number for the order.
-        // The generated number must be unique and sequential. They are made 12 digit long
-        // to fit into EAN-13 barcodes, should it be needed
-
-        function zero_pad(num, size) {
-            var s = "" + num;
-            while (s.length < size) {
-                s = "0" + s;
-            }
-            return s;
-        }
-        return (
-            zero_pad(this.session.id, 5) +
-            "-" +
-            zero_pad(this.session.login_number, 3) +
-            "-" +
-            zero_pad(this.sequence_number, 4)
-        );
-    }
-
     updateSavedQuantity() {
         this.lines.forEach((line) => line.updateSavedQuantity());
     }

@@ -27,7 +27,7 @@
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning mb-0" role="alert"
                      invisible="not l10n_hu_edi_messages or not l10n_hu_edi_messages.get('blocking_level') or l10n_hu_edi_messages.get('hide_banner')">
-                    <field name="l10n_hu_edi_messages" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="l10n_hu_edi_messages" invisible="1"/>
                     <field name="l10n_hu_edi_message_html" readonly="1"/>
                     <button name="l10n_hu_edi_button_hide_banner"
                             type="object"
@@ -58,7 +58,7 @@
                     <group>
                         <field name="l10n_hu_edi_message_html" readonly="1"/>
                         <field name="l10n_hu_edi_attachment" widget="binary" filename="l10n_hu_edi_attachment_filename" readonly="1"/>
-                        <field name="l10n_hu_edi_attachment_filename" invisible="1"/> <!-- TODO: to be removed in master -->
+                        <field name="l10n_hu_edi_attachment_filename" invisible="1"/>
                     </group>
                 </page>
             </xpath>

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import logging
 import re
 import textwrap
@@ -7,7 +8,7 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.osv import expression
 from odoo.tools import clean_context, format_list, groupby, SQL
 from odoo.tools.misc import OrderedSet
@@ -955,7 +956,7 @@ class Message(models.Model):
         # avoid useless queries when notifying Inbox right after a message_post
         scheduled_dt_by_msg_id = {}
         if msg_vals:
-            scheduled_dt_by_msg_id = {msg.id: msg_vals.get("scheduled_date") for msg in self}
+            scheduled_dt_by_msg_id = {msg.id: msg_vals.get("scheduled_date", False) for msg in self}
         elif self:
             schedulers = (
                 self.env["mail.message.schedule"]
@@ -988,8 +989,11 @@ class Message(models.Model):
         for record in records:
             thread_data = {}
             if record._name != "discuss.channel":
-                # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
-                thread_data["name"] = record.sudo().display_name
+                try:
+                    # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
+                    thread_data["name"] = record.sudo().display_name
+                except MissingError:
+                    continue  # related non mail.thread document deleted, still show message in history
             if self.env[record._name]._original_module:
                 thread_data["module_icon"] = modules.module.get_module_icon(
                     self.env[record._name]._original_module
@@ -1004,16 +1008,17 @@ class Message(models.Model):
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
             data = message._read_format(fields, load=False)[0]
             record = record_by_message.get(message)
+            record_name = False
+            default_subject = False
             if record:
-                # sudo: if mentionned in a non accessible thread, user should be able to see the name
-                record_name = record.sudo().display_name
-                default_subject = record_name
-                if hasattr(record, "_message_compute_subject"):
-                    # sudo: if mentionned in a non accessible thread, user should be able to see the subject
-                    default_subject = record.sudo()._message_compute_subject()
-            else:
-                record_name = False
-                default_subject = False
+                with contextlib.suppress(MissingError):
+                    # sudo: if mentionned in a non accessible thread, user should be able to see the name
+                    record_name = record.sudo().display_name
+                if record_name:
+                    default_subject = record_name
+                    if hasattr(record, "_message_compute_subject"):
+                        # sudo: if mentionned in a non accessible thread, user should be able to see the subject
+                        default_subject = record.sudo()._message_compute_subject()
             data["default_subject"] = default_subject
             vals = {
                 # sudo: mail.message - reading attachments on accessible message is allowed

@@ -253,3 +253,62 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         })
         self.env['account.chart.template'].try_loading('generic_coa', company=root_company.child_ids[0], install_demo=False)
         self.assertEqual(root_company.currency_id, root_company.child_ids[0].currency_id)
+
+    def test_switch_company_currency(self):
+        """
+        A user should not be able to switch the currency of another company
+        when that company already has posted account move lines.
+        """
+        # Create company A (user's company)
+        company_a = self.env['res.company'].create({
+            'name': "Company A",
+        })
+
+        # Get company B from test setup
+        company_b = self.company_data['company']
+
+        # Create a purchase journal for company B
+        journal = self.env['account.journal'].create({
+            'name': "Vendor Bills Journal",
+            'code': "VEND",
+            'type': "purchase",
+            'company_id': company_b.id,
+            'currency_id': company_b.currency_id.id,
+        })
+
+        # Create an invoice for company B
+        invoice = self.env['account.move'].create({
+            'move_type': "in_invoice",
+            'company_id': company_b.id,
+            'journal_id': journal.id,
+        })
+        invoice.currency_id = self.env.ref('base.USD').id
+
+        # Add a line to the invoice using an expense account
+        self.env['account.move.line'].create({
+            'move_id': invoice.id,
+            'account_id': self.company_data["default_account_expense"].id,
+            'name': "Test Invoice Line",
+            'company_id': company_b.id,
+        })
+
+        # Create a user that only belongs to company A
+        user = self.env['res.users'].create({
+            'name': "User A",
+            'login': "user_a@example.com",
+            'email': "user_a@example.com",
+            'company_id': company_a.id,
+            'company_ids': [Command.set([company_a.id])],
+            'groups_id': [Command.set([
+                self.env.ref('base.group_system').id,
+                self.env.ref('base.group_erp_manager').id,
+                self.env.ref('account.group_account_user').id,
+            ])],
+        })
+
+        # Try to change company B's currency as user A (should raise UserError)
+        user_env = self.env(user=user)
+        with self.assertRaises(UserError):
+            user_env['res.company'].browse(company_b.id).write({
+                'currency_id': self.env.ref('base.EUR').id,
+            })

@@ -216,7 +216,7 @@ class AccountEdiFormat(models.Model):
         AccountTax = self.env['account.tax']
         base_amls = invoice.line_ids.filtered(lambda x: x.display_type == 'product')
         base_lines = [invoice._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
-        tax_amls = invoice.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_amls = invoice.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [invoice._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
         AccountTax._add_tax_details_in_base_lines(base_lines, invoice.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, invoice.company_id, tax_lines=tax_lines)

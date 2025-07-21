@@ -842,7 +842,7 @@ class IrActionsServer(models.Model):
             record_cached = self._context['onchange_self']
             for field, new_value in res.items():
                 record_cached[field] = new_value
-        else:
+        elif self.update_path:
             starting_record = self.env[self.model_id.model].browse(self._context.get('active_id'))
             _, _, target_records = self._traverse_path(record=starting_record)
             target_records.write(res)

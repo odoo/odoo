@@ -107,6 +107,7 @@ class Http(models.AbstractModel):
             "support_url": "https://www.odoo.com/buy",
             "name": user.name,
             "username": user.login,
+            "quick_login": str2bool(IrConfigSudo.get_param('web.quick_login', default=True), True),
             "partner_write_date": fields.Datetime.to_string(user.partner_id.write_date),
             "partner_display_name": user.partner_id.display_name,
             "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
@@ -190,6 +191,7 @@ class Http(models.AbstractModel):
             'profile_params': request.session.profile_params,
             'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
             'currencies': self.get_currencies(),
+            'quick_login': str2bool(request.env['ir.config_parameter'].sudo().get_param('web.quick_login', default=True), True),
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },

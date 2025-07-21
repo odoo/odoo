@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.tools import plaintext2html
+from odoo.tools.sql import SQL
 
 
 class AlarmManager(models.AbstractModel):
@@ -137,6 +138,14 @@ class AlarmManager(models.AbstractModel):
             })
         return result
 
+    @api.model
+    def _get_notify_alert_extra_conditions(self):
+        """
+        To be overriden on inherited modules
+        adding extra conditions to extract only the unsynced events
+        """
+        return SQL("")
+
     def _get_events_by_alarm_to_notify(self, alarm_type):
         """
         Get the events with an alarm of the given type between the cron
@@ -148,20 +157,26 @@ class AlarmManager(models.AbstractModel):
         already.
         """
         lastcall = self.env.context.get('lastcall', False) or fields.date.today() - relativedelta(weeks=1)
+        extra_conditions = self._get_notify_alert_extra_conditions()
         now = fields.Datetime.now()
-        self.env.cr.execute('''
-            SELECT "alarm"."id", "event"."id"
-              FROM "calendar_event" AS "event"
-              JOIN "calendar_alarm_calendar_event_rel" AS "event_alarm_rel"
-                ON "event"."id" = "event_alarm_rel"."calendar_event_id"
-              JOIN "calendar_alarm" AS "alarm"
-                ON "event_alarm_rel"."calendar_alarm_id" = "alarm"."id"
-             WHERE (
-                   "alarm"."alarm_type" = %s
-               AND "event"."active"
-               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
-               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < %s
-             )''', [alarm_type, lastcall, now])
+        self.env.cr.execute(SQL("""
+            SELECT alarm.id, event.id
+              FROM calendar_event AS event
+              JOIN calendar_alarm_calendar_event_rel AS event_alarm_rel
+                ON event.id = event_alarm_rel.calendar_event_id
+              JOIN calendar_alarm AS alarm
+                ON event_alarm_rel.calendar_alarm_id = alarm.id
+             WHERE alarm.alarm_type = %s
+               AND event.active
+               AND event.start - CAST(alarm.duration || ' ' || alarm.interval AS Interval) >= %s
+               AND event.start - CAST(alarm.duration || ' ' || alarm.interval AS Interval) < %s
+               %s
+        """,
+            alarm_type,
+            lastcall,
+            now,
+            extra_conditions,
+        ))
 
         events_by_alarm = {}
         for alarm_id, event_id in self.env.cr.fetchall():

@@ -10,7 +10,7 @@ from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.osv.expression import AND
 from odoo.http import request
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, escape_psql
 from odoo.tools.misc import groupby
 
 
@@ -294,10 +294,10 @@ class WebsiteHrRecruitment(WebsiteForm):
                 and applicant.create_date >= (datetime.now() - relativedelta(months=6))
 
         field_domain = {
-            'name': [('partner_name', '=ilike', value)],
+            'name': [('partner_name', '=ilike', escape_psql(value))],
             'email': [('email_normalized', '=', email_normalize(value))],
             'phone': [('partner_phone', '=', value)],
-            'linkedin': [('linkedin_profile', '=ilike', value)],
+            'linkedin': [('linkedin_profile', '=ilike', escape_psql(value))],
         }.get(field, [])
 
         applications_by_status = http.request.env['hr.applicant'].sudo().search(AND([

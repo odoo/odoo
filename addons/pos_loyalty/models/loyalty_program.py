@@ -28,6 +28,15 @@ class LoyaltyProgram(models.Model):
             'portal_visible', 'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
         ]
 
+    @api.model
+    def _load_pos_data(self, data):
+        domain = self._load_pos_data_domain(data)
+        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
+        return {
+            'data': self.sudo().search_read(domain, fields, load=False),
+            'fields': fields,
+        }
+
     @api.depends("communication_plan_ids.pos_report_print_id")
     def _compute_pos_report_print_id(self):
         for program in self:

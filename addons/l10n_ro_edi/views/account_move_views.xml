@@ -24,8 +24,8 @@
                               decoration-danger="state == 'invoice_sending_failed'"
                               decoration-warning="state == 'invoice_sent'"
                               decoration-success="state == 'invoice_validated'">
-                            <field name="message" column_invisible="1"/> <!-- TODO: to be removed in master -->
-                            <field name="attachment_id" column_invisible="1"/> <!-- TODO: to be removed in master -->
+                            <field name="message" column_invisible="1"/>
+                            <field name="attachment_id" column_invisible="1"/>
                             <field name="datetime"/>
                             <field name="state" widget="account_document_state"/>
                             <field name="key_loading" optional="hide"/>
