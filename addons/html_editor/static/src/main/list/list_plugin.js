@@ -26,7 +26,6 @@ import {
     childNodes,
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
-import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
@@ -63,7 +62,7 @@ export class ListPlugin extends Plugin {
                 title: _t("Numbered list"),
                 description: _t("Create a list with numbering"),
                 icon: "fa-list-ol",
-                run: () => this.toggleListCommand({ mode: "OL" }),
+                run: ({ listStyle } = {}) => this.toggleListCommand({ mode: "OL", listStyle }),
             },
             {
                 id: "toggleListCL",
@@ -74,6 +73,30 @@ export class ListPlugin extends Plugin {
             },
         ],
         toolbar_groups: withSequence(30, { id: "list" }),
+        shorthands: [
+            {
+                pattern: /^1[.)]$/,
+                commandId: "toggleListOL",
+            },
+            {
+                pattern: /^a[.)]$/,
+                commandId: "toggleListOL",
+                commandParams: { listStyle: "lower-alpha" },
+            },
+            {
+                pattern: /^A[.)]$/,
+                commandId: "toggleListOL",
+                commandParams: { listStyle: "upper-alpha" },
+            },
+            {
+                pattern: /^[-*]$/,
+                commandId: "toggleListUL",
+            },
+            {
+                pattern: /^\[\]$/,
+                commandId: "toggleListCL",
+            },
+        ],
         toolbar_items: [
             {
                 id: "bulleted_list",
@@ -117,7 +140,6 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: "LI", text: _t("List") }],
 
         /** Handlers */
-        input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
 
         /** Overrides */
@@ -136,54 +158,9 @@ export class ListPlugin extends Plugin {
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
     }
 
-    toggleListCommand({ mode } = {}) {
-        this.toggleList(mode);
+    toggleListCommand({ mode, listStyle } = {}) {
+        this.toggleList(mode, listStyle);
         this.dependencies.history.addStep();
-    }
-
-    onInput(ev) {
-        if (ev.data !== " ") {
-            return;
-        }
-        const selection = this.dependencies.selection.getEditableSelection();
-        const blockEl = closestBlock(selection.anchorNode);
-        const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
-        let spaceOffset = selection.anchorOffset;
-        let leftLeaf = leftDOMPath.next().value;
-        while (leftLeaf) {
-            // Calculate spaceOffset by adding lengths of previous text nodes
-            // to correctly find offset position for selection within inline
-            // elements. e.g. <p>ab<strong>cd[]e</strong></p>
-            spaceOffset += leftLeaf.length;
-            leftLeaf = leftDOMPath.next().value;
-        }
-        const stringToConvert = blockEl.textContent.substring(0, spaceOffset);
-        const shouldCreateNumberList = /^(?:[1aA])[.)]\s$/.test(stringToConvert);
-        const shouldCreateBulletList = /^[-*]\s$/.test(stringToConvert);
-        const shouldCreateCheckList = /^\[\]\s$/.test(stringToConvert);
-        if (
-            (shouldCreateNumberList || shouldCreateBulletList || shouldCreateCheckList) &&
-            !closestElement(selection.anchorNode, "li")
-        ) {
-            this.dependencies.selection.setSelection({
-                anchorNode: blockEl.firstChild,
-                anchorOffset: 0,
-                focusNode: selection.focusNode,
-                focusOffset: selection.focusOffset,
-            });
-            this.dependencies.delete.deleteSelection();
-            if (shouldCreateNumberList) {
-                const listStyle = { a: "lower-alpha", A: "upper-alpha", 1: null }[
-                    stringToConvert.substring(0, 1)
-                ];
-                this.toggleList("OL", listStyle);
-            } else if (shouldCreateBulletList) {
-                this.toggleList("UL");
-            } else if (shouldCreateCheckList) {
-                this.toggleList("CL");
-            }
-            this.dependencies.history.addStep();
-        }
     }
 
     // --------------------------------------------------------------------------
