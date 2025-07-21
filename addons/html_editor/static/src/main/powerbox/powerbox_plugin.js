@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rotate } from "@web/core/utils/arrays";
 import { Powerbox } from "./powerbox";
 import { withSequence } from "@html_editor/utils/resource";
-import { omit, pick } from "@web/core/utils/objects";
+import { deepEqual, omit, pick } from "@web/core/utils/objects";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -40,6 +40,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @property {Function} run
  * @property {TranslatedString[]} [keywords]
  * @property { (selection: EditorSelection) => boolean } isAvailable
+ * @property {string} shorthandLiteral Optional
  */
 
 /**
@@ -166,12 +167,18 @@ export class PowerboxPlugin extends Plugin {
         const categoryDict = Object.fromEntries(
             categories.map((category) => [category.id, category])
         );
+        const shorthands = this.getResource("shorthands");
         return powerboxItems.map((/** @type {PowerboxItem} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
+            const shorthandLiteral = shorthands.find(
+                ({ commandId, commandParams }) =>
+                    commandId === command.id && deepEqual(commandParams, item.commandParams)
+            )?.literals[0];
             return {
                 ...pick(command, "title", "description", "icon"),
                 ...omit(item, "commandId", "commandParams"),
                 categoryName: categoryDict[item.categoryId].name,
+                ...(shorthandLiteral && { shorthandLiteral }),
                 run: (context) => command.run(item.commandParams, context),
                 isAvailable: (selection) =>
                     [command.isAvailable, item.isAvailable]

@@ -35,7 +35,7 @@ export class SeparatorPlugin extends Plugin {
         contenteditable_to_remove_selector: "hr[contenteditable]",
         shorthands: [
             {
-                pattern: /^---$/,
+                literals: ["---"],
                 commandId: "insertSeparator",
             },
         ],

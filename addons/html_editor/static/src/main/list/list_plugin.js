@@ -120,25 +120,25 @@ export class ListPlugin extends Plugin {
         ],
         shorthands: [
             {
-                pattern: /^1[.)]$/,
+                literals: ["1.", "1)"],
                 commandId: "toggleListOL",
             },
             {
-                pattern: /^a[.)]$/,
+                literals: ["a.", "a)"],
                 commandId: "toggleListOL",
                 commandParams: { listStyle: "lower-alpha" },
             },
             {
-                pattern: /^A[.)]$/,
+                literals: ["A.", "A)"],
                 commandId: "toggleListOL",
                 commandParams: { listStyle: "upper-alpha" },
             },
             {
-                pattern: /^[-*]$/,
+                literals: ["*", "-"],
                 commandId: "toggleListUL",
             },
             {
-                pattern: /^\[\]$/,
+                literals: ["[]"],
                 commandId: "toggleListCL",
             },
         ],

@@ -108,32 +108,9 @@ export class FontPlugin extends Plugin {
         user_commands: [
             {
                 id: "setTagHeading",
+                icon: "fa-header",
                 run: ({ level } = {}) =>
                     this.dependencies.dom.setBlock({ tagName: `H${level ?? 1}` }),
-                isAvailable: this.blockFormatIsAvailable.bind(this),
-            },
-            {
-                id: "setTagHeading1",
-                title: _t("Heading 1"),
-                description: _t("Big section heading"),
-                icon: "fa-header",
-                run: () => this.dependencies.dom.setBlock({ tagName: "H1" }),
-                isAvailable: this.blockFormatIsAvailable.bind(this),
-            },
-            {
-                id: "setTagHeading2",
-                title: _t("Heading 2"),
-                description: _t("Medium section heading"),
-                icon: "fa-header",
-                run: () => this.dependencies.dom.setBlock({ tagName: "H2" }),
-                isAvailable: this.blockFormatIsAvailable.bind(this),
-            },
-            {
-                id: "setTagHeading3",
-                title: _t("Heading 3"),
-                description: _t("Small section heading"),
-                icon: "fa-header",
-                run: () => this.dependencies.dom.setBlock({ tagName: "H3" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
@@ -222,18 +199,27 @@ export class FontPlugin extends Plugin {
         powerbox_categories: withSequence(5, { id: "format", name: _t("Format") }),
         powerbox_items: [
             {
+                title: _t("Heading 1"),
+                description: _t("Big section heading"),
                 categoryId: "format",
-                commandId: "setTagHeading1",
+                commandId: "setTagHeading",
+                commandParams: { level: 1 },
                 keywords: [_t("title")],
             },
             {
+                title: _t("Heading 2"),
+                description: _t("Medium section heading"),
                 categoryId: "format",
-                commandId: "setTagHeading2",
+                commandId: "setTagHeading",
+                commandParams: { level: 2 },
                 keywords: [_t("title")],
             },
             {
+                title: _t("Heading 3"),
+                description: _t("Small section heading"),
                 categoryId: "format",
-                commandId: "setTagHeading3",
+                commandId: "setTagHeading",
+                commandParams: { level: 3 },
                 keywords: [_t("title")],
             },
             {
@@ -251,41 +237,41 @@ export class FontPlugin extends Plugin {
         ],
         shorthands: [
             {
-                pattern: /^#$/,
+                literals: ["#"],
                 commandId: "setTagHeading",
                 commandParams: { level: 1 },
             },
             {
-                pattern: /^##$/,
+                literals: ["##"],
                 commandId: "setTagHeading",
                 commandParams: { level: 2 },
             },
             {
-                pattern: /^###$/,
+                literals: ["###"],
                 commandId: "setTagHeading",
                 commandParams: { level: 3 },
             },
             {
-                pattern: /^####$/,
+                literals: ["####"],
                 commandId: "setTagHeading",
                 commandParams: { level: 4 },
             },
             {
-                pattern: /^#####$/,
+                literals: ["#####"],
                 commandId: "setTagHeading",
                 commandParams: { level: 5 },
             },
             {
-                pattern: /^######$/,
+                literals: ["######"],
                 commandId: "setTagHeading",
                 commandParams: { level: 6 },
             },
             {
-                pattern: /^>$/,
+                literals: [">"],
                 commandId: "setTagQuote",
             },
             {
-                pattern: /^```$/,
+                literals: ["```"],
                 commandId: "setTagPre",
             },
         ],
