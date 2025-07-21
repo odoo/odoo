@@ -15,5 +15,11 @@ export class ResUsers extends MailResUsers {
             partner_id: 3,
             role: "manager",
         },
+        {
+            id: 3,
+            name: "User1",
+            partner_id: 4,
+            role: "cashier",
+        },
     ];
 }

@@ -32,7 +32,7 @@ The actual till still requires one user but an unlimited number of employees can
             'pos_hr/static/tests/tours/**/*',
         ],
         'web.assets_unit_tests': [
-            'pos_hr/static/tests/unit/data/**/*'
+            'pos_hr/static/tests/unit/**/*',
         ],
     },
     'author': 'Odoo S.A.',

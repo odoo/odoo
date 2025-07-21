@@ -409,4 +409,14 @@ export class ProductTemplate extends models.ServerModel {
             product_tag_ids: [],
         },
     ];
+    get_product_info_pos() {
+        return {
+            all_prices: { tax_details: [] },
+            pricelists: [],
+            warehouses: [],
+            suppliers: [],
+            variants: [],
+            optional_products: [],
+        };
+    }
 }
