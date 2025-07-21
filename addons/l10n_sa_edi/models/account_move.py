@@ -46,12 +46,12 @@ class AccountMove(models.Model):
             if move.country_code == 'SA' and move.move_type in ('out_invoice', 'out_refund') and zatca_document and move.state != 'draft':
                 qr_code_str = ''
                 if move._l10n_sa_is_simplified():
-                    x509_cert_sudo = move.journal_id.sudo().l10n_sa_production_csid_certificate_id
+                    x509_cert = move.journal_id.l10n_sa_production_csid_certificate_id
                     xml_content = self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_generate_zatca_template(move)
-                    qr_code_str = move._l10n_sa_get_qr_code(move.journal_id, xml_content, x509_cert_sudo,
+                    qr_code_str = move._l10n_sa_get_qr_code(move.journal_id, xml_content, x509_cert,
                                                             move.l10n_sa_invoice_signature, True)
                     qr_code_str = b64encode(qr_code_str).decode()
-                elif zatca_document.state == 'sent' and zatca_document.sudo().attachment_id.datas:
+                elif zatca_document.state == 'sent' and zatca_document.attachment_id.datas:
                     document_xml = zatca_document.attachment_id.with_context(bin_size=False).datas.decode()
                     root = etree.fromstring(b64decode(document_xml))
                     qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
