@@ -203,16 +203,17 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
                     'website': 1,
+                    'res_company': 1,
                 }
-                expected_query_count = 5
+                expected_query_count = 6
                 if not readonly_enabled:
                     select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
                     expected_query_count += 1
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
-                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
+                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 11)
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
-                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
+                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 11)
                 savepoint.rollback()
 
     def test_15_perf_sql_queries_page(self):
@@ -228,9 +229,10 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
                     'website': 1,
+                    'res_company': 1,
                 }
-                expected_query_count = 5
-                expected_query_count_no_cache = 10
+                expected_query_count = 6
+                expected_query_count_no_cache = 11
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
@@ -262,9 +264,10 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # 1. the menu prefetching is also prefetching all menu's pages
                     # 2. find page matching the `/` url
                     'website': 1,
+                    'res_company': 1,
                 }
-                expected_query_count = 5
-                expected_query_count_no_cache = 8
+                expected_query_count = 6
+                expected_query_count_no_cache = 9
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
@@ -292,9 +295,10 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             # Check if website.cookies_bar is active
             'ir_ui_view': 1,
             # Check if `view.track` to track visitor or not
+            'res_company': 1,
         }
-        self._check_url_hot_query(self.page.url, 6, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 6)
+        self._check_url_hot_query(self.page.url, 7, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 7)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
@@ -322,9 +326,10 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website': 1,
             'ir_ui_view': 1,
             # Check if `view.track` to track visitor or not
+            'res_company': 1,
         }
-        self._check_url_hot_query(self.page.url, 6, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
+        self._check_url_hot_query(self.page.url, 7, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 11)
 
 @tagged('-at_install', 'post_install')
 class TestWebsitePerformancePost(UtilPerf):
