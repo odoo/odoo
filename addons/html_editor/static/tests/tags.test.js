@@ -618,4 +618,35 @@ describe("transform", () => {
         await insertText(editor, " ");
         expect(getContent(el)).toBe(`<p># a<strong>b []cd</strong>e</p>`);
     });
+
+    test("should transform three dashes in an empty block to separator before the block", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
+        await insertText(editor, "--- ");
+        expect(getContent(el)).toBe(
+            `<hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        );
+    });
+
+    test("should transform three dashes at the start of text to separator before the block", async () => {
+        const { el, editor } = await setupEditor("<p>[]abc</p>");
+        await insertText(editor, "--- ");
+        expect(getContent(el)).toBe(`<hr contenteditable="false"><p>[]abc</p>`);
+    });
+
+    test("should transform space preceding by greater-than symbol to blockquote", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
+        await insertText(editor, "> ");
+        expect(getContent(el)).toBe(
+            `<blockquote o-we-hint-text="Quote" class="o-we-hint">[]<br></blockquote>`
+        );
+    });
+
+    test("should transform space preceding by a greater-than symbol at the starting of text to blockquote", async () => {
+        const { el, editor } = await setupEditor("<p>[]abc</p>");
+        await insertText(editor, "> ");
+        expect(getContent(el)).toBe(`<blockquote>[]abc</blockquote>`);
+
+        undo(editor);
+        expect(getContent(el)).toBe(`<p>> []abc</p>`);
+    });
 });

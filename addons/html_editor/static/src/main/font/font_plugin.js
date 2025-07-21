@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
-import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
+import { unwrapContents } from "@html_editor/utils/dom";
 import {
     isParagraphRelatedElement,
     isRedundantElement,
@@ -98,6 +97,12 @@ export class FontPlugin extends Plugin {
             withSequence(60, { name: _t("Quote"), tagName: "blockquote" }),
         ],
         user_commands: [
+            {
+                id: "setTagHeading",
+                run: ({ level } = {}) =>
+                    this.dependencies.dom.setBlock({ tagName: `H${level ?? 1}` }),
+                isAvailable: this.blockFormatIsAvailable.bind(this),
+            },
             {
                 id: "setTagHeading1",
                 title: _t("Heading 1"),
@@ -232,6 +237,42 @@ export class FontPlugin extends Plugin {
                 commandId: "setTagPre",
             },
         ],
+        shorthands: [
+            {
+                pattern: /^#$/,
+                commandId: "setTagHeading",
+                commandParams: { level: 1 },
+            },
+            {
+                pattern: /^##$/,
+                commandId: "setTagHeading",
+                commandParams: { level: 2 },
+            },
+            {
+                pattern: /^###$/,
+                commandId: "setTagHeading",
+                commandParams: { level: 3 },
+            },
+            {
+                pattern: /^####$/,
+                commandId: "setTagHeading",
+                commandParams: { level: 4 },
+            },
+            {
+                pattern: /^#####$/,
+                commandId: "setTagHeading",
+                commandParams: { level: 5 },
+            },
+            {
+                pattern: /^######$/,
+                commandId: "setTagHeading",
+                commandParams: { level: 6 },
+            },
+            {
+                pattern: /^>$/,
+                commandId: "setTagQuote",
+            },
+        ],
         hints: [
             { selector: "H1", text: _t("Heading 1") },
             { selector: "H2", text: _t("Heading 2") },
@@ -244,7 +285,6 @@ export class FontPlugin extends Plugin {
         ],
 
         /** Handlers */
-        input_handlers: this.onInput.bind(this),
         selectionchange_handlers: [
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
@@ -522,40 +562,6 @@ export class FontPlugin extends Plugin {
         closestHandledElement.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
         return true;
-    }
-
-    onInput(ev) {
-        if (ev.data !== " ") {
-            return;
-        }
-        const selection = this.dependencies.selection.getEditableSelection();
-        const blockEl = closestBlock(selection.anchorNode);
-        const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
-        let spaceOffset = selection.anchorOffset;
-        let leftLeaf = leftDOMPath.next().value;
-        while (leftLeaf) {
-            // Calculate spaceOffset by adding lengths of previous text nodes
-            // to correctly find offset position for selection within inline
-            // elements. e.g. <p>ab<strong>cd []e</strong></p>
-            spaceOffset += leftLeaf.length;
-            leftLeaf = leftDOMPath.next().value;
-        }
-        const precedingText = blockEl.textContent.substring(0, spaceOffset);
-        if (/^(#{1,6})\s$/.test(precedingText)) {
-            const numberOfHash = precedingText.length - 1;
-            const headingToBe = headingTags[numberOfHash - 1];
-            this.dependencies.selection.setSelection({
-                anchorNode: blockEl.firstChild,
-                anchorOffset: 0,
-                focusNode: selection.focusNode,
-                focusOffset: selection.focusOffset,
-            });
-            this.dependencies.selection.extractContent(
-                this.dependencies.selection.getEditableSelection()
-            );
-            fillEmpty(blockEl);
-            this.dependencies.dom.setBlock({ tagName: headingToBe });
-        }
     }
 
     updateFontSelectorParams() {
