@@ -28,12 +28,20 @@ class TestWebsiteSaleStockMeta(WebsiteSaleFeedCommon):
 
     def test_meta_stock_info_sold_out(self):
         """Ensure 'out of stock' and quantity 0 when sold out."""
-        info = self.blanket._prepare_meta_stock_info()
-        self.assertEqual(info['availability'], 'out of stock')
-        self.assertEqual(info['quantity_to_sell_on_facebook'], 0)
+        self.update_items()
+        self.assertEqual('in stock', self.blue_sofa_item['availability'])
+        self.assertEqual('out of stock', self.items[self.blanket]['availability'])
+        self.assertEqual('in stock', self.red_sofa_item['availability'])  # allow out_of_stock
 
     def test_meta_stock_info_in_stock_with_group(self):
-        """Should show quantity when user has stock access."""
-        info = self.blue_sofa._prepare_meta_stock_info()
-        self.assertEqual(info['availability'], 'in stock')
-        self.assertEqual(info['quantity_to_sell_on_facebook'], int(self.blue_sofa.qty_available))
+        self.blue_sofa.allow_out_of_stock_order = False
+        # setup second website with seperate stock
+        warehouse_2 = self.env['stock.warehouse'].create({'name': 'Stock 2', 'code': 'WH2'})
+        website_2 = self.env['website'].create({
+            'name': 'Website Test 2',
+            'domain': 'https://my-website.net',
+            'warehouse_id': warehouse_2.id,
+        })
+        self.update_items(website=website_2)
+
+        self.assertEqual('out of stock', self.red_sofa_item['availability'])

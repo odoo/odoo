@@ -16,7 +16,7 @@
                         <g:price t-out="item['price']"/>
                         <g:link t-out="item['link']"/>
                         <g:image_link t-out="item['image_link']"/>
-                        <g:quantity_to_sell_on_facebook t-out="item['quantity_to_sell_on_facebook']"/>
+                        <g:identifier_exists t-out="item['identifier_exists']"/>
                         
                         <!-- Optional Fields -->
                         <g:sale_price t-if="'sale_price' in item" t-out="item['sale_price']"/>
@@ -57,10 +57,6 @@
                             <currency t-out="item['unit_price']['currency']" />
                             <unit t-out="item['unit_price']['unit']" />
                         </unit_price>
-                        <rich_text_description
-                            t-if="'rich_text_description' in item"
-                            t-out="item['rich_text_description']"
-                        />
                     </item>
                 </t>
             </channel>

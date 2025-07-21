@@ -91,24 +91,12 @@ class ProductProduct(models.Model):
             markup_data['offers']['availability'] = availability
         return markup_data
 
-    def _prepare_gmc_stock_info(self):
-        """ Override of `website_sale` to check the stock level if the current product cannot be out
-        of stock.
+    def _prepare_feed_additional_info(self, format='gmc'):
+        """ Override of `website_sale` to check stock level for GMC/Meta feed.
 
         Note: self.ensure_one()
         """
-        gmc_info = super()._prepare_gmc_stock_info()
-        if self._is_sold_out():
-            gmc_info['availability'] = 'out_of_stock'
-        return gmc_info
-
-    def _prepare_meta_stock_info(self):
-        """ Override of `website_sale` to check stock level for Meta feed. """
-        self.ensure_one()
-        if self._is_sold_out():
-            return {'availability': 'out of stock', 'quantity_to_sell_on_facebook': 0}
-
-        meta_info = super()._prepare_meta_stock_info()
-        if self.env.user.has_group('stock.group_stock_user'):
-            meta_info['quantity_to_sell_on_facebook'] = int(self.qty_available)
-        return meta_info
+        info = super()._prepare_feed_additional_info(format=format)
+        if self._is_sold_out() and format in ('gmc', 'meta'):
+            info['availability'] = 'out_of_stock' if format == 'gmc' else 'out of stock'
+        return info

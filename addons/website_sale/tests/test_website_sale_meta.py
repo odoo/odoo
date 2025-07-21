@@ -50,7 +50,6 @@ class TestWebsiteSaleMeta(CommonProductFeedXmlFeed):
                     'price',
                     'link',
                     'image_link',
-                    'quantity_to_sell_on_facebook',
                 },
                 item.keys(),
             )  # subseteq
@@ -87,7 +86,7 @@ class TestWebsiteSaleMeta(CommonProductFeedXmlFeed):
 
         self._prepare_carrier(
             self._prepare_carrier_product(list_price=7.5),
-            name="Local Meta Shipping",
+            name="Local Shipping",
             country_ids=[Command.set(self.country_us.ids)],
             state_ids=[Command.set(self.env.ref('base.state_us_5').ids)],
             website_published=True,
@@ -95,7 +94,7 @@ class TestWebsiteSaleMeta(CommonProductFeedXmlFeed):
         )
         self.update_items()
         self.assertEqual(
-            [{'country': 'US', 'region': 'CA', 'service': '', 'price': '50.0 USD'}],
+            [{'country': 'US', 'region': 'CA', 'service': 'Local Shipping', 'price': '50.0 USD'}],
             self.red_sofa_item['shipping'],
         )
 
@@ -114,8 +113,8 @@ class TestWebsiteSaleMeta(CommonProductFeedXmlFeed):
         self.update_items()
 
         expected_shipping = [
-            {'country': 'US', 'region': '', 'service': '', 'price': '100.0 USD'},
-            {'country': 'BE', 'region': '', 'service': '', 'price': '100.0 USD'},
+            {'country': 'US', 'region': '', 'service': 'World Carrier', 'price': '100.0 USD'},
+            {'country': 'BE', 'region': '', 'service': 'World Carrier', 'price': '100.0 USD'},
         ]
 
         actual_shipping = sorted(self.red_sofa_item['shipping'], key=lambda s: s['country'])
@@ -144,27 +143,28 @@ class TestWebsiteSaleMeta(CommonProductFeedXmlFeed):
         # Force update using all countries — no filters
         self.update_items()
 
-        actual_shipping = sorted(self.red_sofa_item['shipping'], key=lambda x: (x['country'], x['region']))
+        actual_shipping = sorted(
+            self.red_sofa_item['shipping'], key=lambda x: (x['country'], x['region']),
+        )
         expected_shipping = sorted([
-            {'country': 'US', 'region': 'CA', 'service': '', 'price': '60.0 USD'},
-            {'country': 'US', 'region': 'NY', 'service': '', 'price': '60.0 USD'},
-            {'country': 'BE', 'region': 'VAN', 'service': '', 'price': '60.0 USD'},
+            {
+                'country': 'US',
+                'region': 'CA',
+                'service': 'State-based Carrier',
+                'price': '60.0 USD',
+            },
+            {
+                'country': 'US',
+                'region': 'NY',
+                'service': 'State-based Carrier',
+                'price': '60.0 USD',
+            },
+            {
+                'country': 'BE',
+                'region': 'VAN',
+                'service': 'State-based Carrier',
+                'price': '60.0 USD',
+            },
         ], key=lambda x: (x['country'], x['region']))
 
         self.assertEqual(expected_shipping, actual_shipping)
-
-    def test_meta_rich_text_description_is_escaped(self):
-        self.red_sofa.description = '<div>Div content</div><h1>Header</h1><p>Paragraph</p>'
-        self.update_items()
-        desc_str = self.red_sofa_item.get('rich_text_description')
-        desc = str(desc_str)
-
-        # Check that each HTML tag is correctly escaped
-        self.assertIn('&lt;div&gt;Div content&lt;/div&gt;', desc)
-        self.assertIn('&lt;h1&gt;Header&lt;/h1&gt;', desc)
-        self.assertIn('&lt;p&gt;Paragraph&lt;/p&gt;', desc)
-
-        # Raw HTML should not be present
-        self.assertNotIn('<div>', desc)
-        self.assertNotIn('<h1>', desc)
-        self.assertNotIn('<p>', desc)

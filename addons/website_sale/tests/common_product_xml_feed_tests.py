@@ -28,8 +28,7 @@ class CommonProductFeedXmlFeed(WebsiteSaleFeedCommon, HttpCase):
             self.WebsiteSaleFeedController._render_feed(
                 pricelist_name_ilike=None,
                 template=None,
-                item_fn=None,
-                enabled_feed=self.enabled_flag_name,
+                prepare_items_fn=None,
             )
 
     def test_correct_xml_format(self, response):

@@ -26,7 +26,7 @@ class DeliveryCarrier(models.Model):
                 'currency': 'res.currency', # the price currency
                 'free_over_threshold': Optional[float], # optionnaly, the dict can contain the best
                                                         # free over threshold for the country
-                'states': Optional[list], # list of states if available
+                'states': Optional['res.country.state'], # list of restricted states
             }
         :rtype: dict['res.country', dict[str, float | 'delivery.carrier' | 'res.country.state']]
         """
@@ -38,14 +38,14 @@ class DeliveryCarrier(models.Model):
             'order_line': [{'product_id': product.id, 'product_uom_qty': 1.0}],
         })
 
+        ResCountryState = self.env['res.country.state']
         best_delivery_by_country = defaultdict(lambda: {
             'price': float('inf'),
             'currency': tmp_order.currency_id,
-            'states': [],
+            'states': ResCountryState,
         })
-        CountryStates = self.env['res.country.state']
         all_filtered_countries = countries if any(not dm.country_ids for dm in self) else self.country_ids & countries
-        states_per_country = dict(CountryStates._read_group(
+        states_per_country = dict(ResCountryState._read_group(
             domain=[('country_id', 'in', all_filtered_countries.ids)],
             groupby=['country_id'],
             aggregates=['id:recordset'],
@@ -59,11 +59,12 @@ class DeliveryCarrier(models.Model):
             for country in filtered_countries:
                 # Filter only the states belonging to this country
                 filtered_states = (
-                    dm.state_ids & states_per_country.get(country, CountryStates)
+                    dm.state_ids & states_per_country.get(country, ResCountryState)
                     if dm.state_ids else []
                 )
                 tmp_partner.country_id = country
-                tmp_partner.state_id = filtered_states[:1] if filtered_states else None
+                # Only used to restrict on the address, therefore testing the first state is enough
+                tmp_partner.state_id = filtered_states[:1]
 
                 if not dm._match(tmp_partner, tmp_order):
                     continue
@@ -72,9 +73,7 @@ class DeliveryCarrier(models.Model):
                     continue
                 if shipment_rate['price'] < best_delivery_by_country[country]['price']:
                     best_delivery_by_country[country].update(
-                        price=shipment_rate['price'],
-                        delivery_method=dm,
-                        states=filtered_states,
+                        price=shipment_rate['price'], delivery_method=dm, states=filtered_states,
                     )
                 if (
                     dm.free_over
