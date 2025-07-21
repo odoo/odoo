@@ -114,10 +114,10 @@ class PaymentTransaction(models.Model):
 
         amount = payment_data.get('Amt')
         # AsiaPay supports only one currency per account.
-        currency_code = self.provider_id.available_currency_ids[0].name
+        currency = self.provider_id.available_currency_ids  # The currency has not been removed from the provider.
         return {
             'amount': float(amount),
-            'currency_code': currency_code,
+            'currency_code': currency.name,
         }
 
     def _apply_updates(self, payment_data):
