@@ -1,3 +1,4 @@
+import { AccountAnalyticAccount as BaseAnalyticAccount } from "@analytic/../tests/mock_server/mock_models/account_analytic_account";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
 
@@ -15,6 +16,7 @@ export class ProjectProject extends models.Model {
     allow_task_dependencies = fields.Boolean({ string: "Task Dependencies", default: false });
     allow_milestones = fields.Boolean({ string: "Milestones", default: false });
     allow_recurring_tasks = fields.Boolean({ string: "Recurring Tasks", default: false });
+    account_id = fields.Many2one({ relation: "account.analytic.account" });
 
     _records = [
         {
@@ -63,6 +65,10 @@ export class ProjectProject extends models.Model {
         }
         return { allow_task_dependencies, allow_milestones, allow_recurring_tasks };
     }
+}
+
+export class AccountAnalyticAccount extends BaseAnalyticAccount {
+    _records = [{ id: 101, name: "Test Analytic Account" }];
 }
 
 export class ProjectProjectStage extends models.Model {
@@ -185,6 +191,7 @@ export function defineProjectModels() {
 }
 
 export const projectModels = {
+    AccountAnalyticAccount,
     ProjectProject,
     ProjectProjectStage,
     ProjectTask,
