@@ -947,6 +947,19 @@ class Website(Home):
 
         return request.redirect('/')
 
+    @http.route(['/sale_order_display/data'], type='json', auth='public', website=True)
+    def sale_order_data(self, offset=0, limit=3, confirmed_only=False):
+        domain = [('state', 'in', ['sale', 'draft', 'sent'])]
+        if confirmed_only:
+            domain = [('state', '=', 'sale')]
+        orders = request.env['sale.order'].sudo().search(domain, offset=offset, limit=limit, order='id asc')
+
+        return [{
+            'name': so.name,
+            'partner_name': so.partner_id.name,
+            'state': so.state,
+        } for so in orders]
+
 
 class WebsiteBinary(Binary):
 
