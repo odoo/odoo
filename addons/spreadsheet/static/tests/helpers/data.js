@@ -259,6 +259,11 @@ export class SpreadsheetMixin extends models.Model {
                 display_name: "Spreadsheets",
                 allow_create: true,
             },
+            {
+                model: "spreadsheet.dashboard",
+                display_name: "Dashboards",
+                allow_create: true,
+            },
         ];
     }
 }
