@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getColorHex, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
+import { getColorHex, getTag, isFirefox, isInstanceOf, isIterable } from "../hoot_dom_utils";
 import {
     getActiveElement,
     getDocument,
@@ -136,6 +136,7 @@ const {
     Event,
     File,
     FocusEvent,
+    HashChangeEvent,
     KeyboardEvent,
     Math: { ceil: $ceil, max: $max, min: $min },
     MouseEvent,
@@ -230,25 +231,22 @@ function constrainScrollY(target, y) {
  * @param {DataTransferOptions} options
  */
 function createDataTransfer(options) {
-    const dataTransfer =
-        options?.dataTransfer instanceof DataTransfer ? options.dataTransfer : new DataTransfer();
-    const types = new Set();
+    const dataTransfer = isInstanceOf(options?.dataTransfer, DataTransfer)
+        ? options.dataTransfer
+        : new DataTransfer();
     for (const file of options?.files || []) {
-        if (!(file instanceof File)) {
+        if (!isInstanceOf(file, File)) {
             throw new TypeError(`'DataTransfer.files' list only accepts 'File' objects`);
         }
         dataTransfer.items.add(file);
-        types.add("Files");
     }
     for (const [data, type] of options?.items || []) {
         dataTransfer.items.add(data, type);
-        types.add(type);
     }
 
     $defineProperties(dataTransfer, {
         dropEffect: { value: options?.dropEffect || "none", writable: true },
         effectAllowed: { value: options?.effectAllowed || "all", writable: true },
-        types: { value: [...types], writable: true },
     });
 
     return dataTransfer;
@@ -536,6 +534,10 @@ function getEventConstructor(eventType) {
         case "unload":
             return [Event, mapEvent];
 
+        // URL events
+        case "hashchange":
+            return [HashChangeEvent, mapEvent];
+
         // Default: base Event constructor
         default:
             return [Event, mapEvent, BUBBLES];
@@ -566,9 +568,10 @@ function getFirstCommonParent(a, b) {
 
 /**
  * @param {HTMLElement} element
+ * @param {Target} originalTarget
  * @param {QueryOptions} options
  */
-function getPointerTarget(element, options) {
+function getPointerTarget(element, originalTarget, options) {
     if (options?.interactive === false) {
         // Explicit 'interactive: false' option
         // -> element can be a non-interactive element
@@ -576,7 +579,7 @@ function getPointerTarget(element, options) {
     }
     const interactiveElement = getInteractiveNode(element);
     if (!interactiveElement) {
-        queryAny(element, { ...options, interactive: true }); // Will throw if no elements are found
+        queryAny(originalTarget, { ...options, interactive: true }); // Will throw if no elements are found
     }
     return interactiveElement;
 }
@@ -833,9 +836,11 @@ async function registerForChange(target, initialValue, confirmAction) {
 
     switch (confirmAction) {
         case "blur": {
-            await _hover(getDocument(target).body, {
-                position: { x: 0, y: 0 },
-            });
+            await _hover(
+                getDocument(target).body,
+                { position: { x: 0, y: 0 } },
+                { originalTarget: target }
+            );
             await _click();
             break;
         }
@@ -1220,10 +1225,10 @@ async function _fill(target, value, options) {
 /**
  * @param {EventTarget | null} target
  * @param {PointerOptions | null} options
- * @param {{ implicit?: boolean }} [hoverOptions]
+ * @param {{ implicit?: boolean, originalTarget: AsyncTarget }} hoverOptions
  */
 async function _hover(target, options, hoverOptions) {
-    const pointerTarget = target && getPointerTarget(target, options);
+    const pointerTarget = target && getPointerTarget(target, hoverOptions.originalTarget, options);
     const position = target && getPosition(target, options);
 
     const previousPT = runTime.pointerTarget;
@@ -1930,6 +1935,7 @@ function mapPointerEvent(eventInit) {
     return {
         ...mapMouseEvent(eventInit),
         button: btn.LEFT,
+        isPrimary: eventInit?.btn ? eventInit.btn === btn.LEFT : true,
         pointerId: 1,
         pointerType: hasTouch() ? "touch" : "mouse",
         ...eventInit,
@@ -2018,7 +2024,7 @@ export async function check(target, options) {
 
     const checkTarget = getTag(element) === "label" ? element.control : element;
     if (!checkTarget.checked) {
-        await _hover(element, options, { implicit: true });
+        await _hover(element, options, { implicit: true, originalTarget: target });
         await _click(options);
 
         if (!checkTarget.checked) {
@@ -2100,7 +2106,7 @@ export async function click(target, options) {
     const finalizeEvents = setupEvents("click", options);
     const element = queryAny(await target, options);
 
-    await _hover(element, options, { implicit: true });
+    await _hover(element, options, { implicit: true, originalTarget: target });
     await _click(options);
 
     return finalizeEvents();
@@ -2121,7 +2127,7 @@ export async function dblclick(target, options) {
     const element = queryAny(await target, options);
 
     options = { ...options, button: btn.LEFT };
-    await _hover(element, options, { implicit: true });
+    await _hover(element, options, { implicit: true, originalTarget: target });
     await _click(options);
     await _click(options);
 
@@ -2266,7 +2272,7 @@ export async function drag(target, options) {
             const finalizeEvents = setupEvents("drag & drop: move", options);
 
             const nextElement = to ? queryAny(await to, options) : runTime.pointerTarget;
-            await _hover(nextElement, options);
+            await _hover(nextElement, options, { originalTarget: to });
 
             dragEvents.push(...finalizeEvents());
 
@@ -2281,7 +2287,7 @@ export async function drag(target, options) {
     let dragEndReason = null;
 
     // Pointer down on main target
-    await _hover(dragStartTarget, options, { implicit: true });
+    await _hover(dragStartTarget, options, { implicit: true, originalTarget: target });
     await _pointerDown(options);
 
     const dragEvents = finalizeEvents();
@@ -2385,7 +2391,7 @@ export async function hover(target, options) {
     const finalizeEvents = setupEvents("hover", options);
     const element = queryAny(await target, options);
 
-    await _hover(element, options);
+    await _hover(element, options, { originalTarget: target });
 
     return finalizeEvents();
 }
@@ -2464,7 +2470,7 @@ export async function keyUp(keyStrokes, options) {
 export async function leave(options) {
     const finalizeEvents = setupEvents("leave", options);
 
-    await _hover(null, options);
+    await _hover(null, options, { originalTarget: window });
 
     return finalizeEvents();
 }
@@ -2484,7 +2490,7 @@ export async function middleClick(target, options) {
     const element = queryAny(await target, options);
 
     options = { ...options, button: btn.MIDDLE };
-    await _hover(element, options, { implicit: true });
+    await _hover(element, options, { implicit: true, originalTarget: target });
     await _click(options);
 
     return finalizeEvents();
@@ -2540,7 +2546,7 @@ export async function pointerDown(target, options) {
     const finalizeEvents = setupEvents("pointerDown", options);
     const element = queryAny(await target, options);
 
-    await _hover(element, options, { implicit: true });
+    await _hover(element, options, { implicit: true, originalTarget: target });
     await _pointerDown(options);
 
     return finalizeEvents();
@@ -2564,7 +2570,7 @@ export async function pointerUp(target, options) {
     const finalizeEvents = setupEvents("pointerUp", options);
     const element = queryAny(await target, options);
 
-    await _hover(element, options, { implicit: true });
+    await _hover(element, options, { implicit: true, originalTarget: target });
     await _pointerUp(options);
 
     return finalizeEvents();
@@ -2644,7 +2650,7 @@ export async function rightClick(target, options) {
     const element = queryAny(await target, options);
 
     options = { ...options, button: btn.RIGHT };
-    await _hover(element, options, { implicit: true });
+    await _hover(element, options, { implicit: true, originalTarget: target });
     await _click(options);
 
     return finalizeEvents();
@@ -2749,7 +2755,8 @@ export async function scroll(target, position, options) {
  */
 export async function select(value, options) {
     const finalizeEvents = setupEvents("select", options);
-    const element = options?.target ? queryAny(await options.target) : getActiveElement();
+    const target = options?.target || getActiveElement();
+    const element = queryAny(await target);
 
     if (!hasTagName(element, "select")) {
         throw new HootInteractionError(
@@ -2758,7 +2765,7 @@ export async function select(value, options) {
     }
 
     if (options?.target) {
-        await _hover(element, null, { implicit: true });
+        await _hover(element, null, { implicit: true, originalTarget: target });
         await _pointerDown();
     }
     await _select(element, value);
@@ -2811,7 +2818,7 @@ export async function setInputRange(target, value, options) {
     const finalizeEvents = setupEvents("setInputRange", options);
     const element = queryAny(await target, options);
 
-    await _hover(element, options, { implicit: true });
+    await _hover(element, options, { implicit: true, originalTarget: target });
     await _pointerDown(options);
     await _fill(element, value, options);
     await _pointerUp(options);
@@ -2875,7 +2882,7 @@ export async function uncheck(target, options) {
 
     const checkTarget = getTag(element) === "label" ? element.control : element;
     if (checkTarget.checked) {
-        await _hover(element, options, { implicit: true });
+        await _hover(element, options, { implicit: true, originalTarget: target });
         await _click(options);
 
         if (checkTarget.checked) {

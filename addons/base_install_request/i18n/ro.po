@@ -3,9 +3,9 @@
 # 	* base_install_request
 # 
 # Translators:
-# Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Alin Miclea, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Alin Miclea, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +46,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Buna ziua,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/>a solicitat activarea <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> modulului. Acest modul este inclus în abonamentul dumneavoastră. Nu are <span style=\"color: #875A7B; font-weight: bold;\">costuri suplimentare</span>, dar este necesar un rol de administrator pentru a-l activa.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}\">Cerere de revizuire</a>\n"
+"        <br/><br/>\n"
+"        Mulţumesc,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
 msgid "Activation Request of \"%s\""
-msgstr "Solicitare de activare a \"%s”"
+msgstr "Cerere de activare a \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -74,12 +95,12 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_date
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
 msgid "Depending Apps"
-msgstr "Aplicații dependende"
+msgstr "Aplicații dependente"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
@@ -96,7 +117,7 @@ msgstr "ID"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "Install App"
-msgstr "Instalați aplicația"
+msgstr "Instalează aplicația"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
@@ -157,7 +178,7 @@ msgstr "Niciun modul selectat."
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr "Solicitați acces"
+msgstr "Solicită acces"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -187,9 +208,9 @@ msgid ""
 "This app is included in your subscription. It's free to activate, but only "
 "an administrator can do it. Fill this form to send an activation request."
 msgstr ""
-"Această aplicație este inclusă în abonamentul dvs. Activarea este gratuită, "
-"dar numai un administrator o poate face. Completați acest formular pentru a "
-"trimite o cerere de activare."
+"Această aplicație este inclusă în abonamentul dumneavoastră. Activarea este "
+"gratuită, dar doar un administrator o poate face. Completați acest formular "
+"pentru a trimite o cerere de activare."
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -210,7 +231,7 @@ msgstr "Sunteți pe cale să instalați o aplicație suplimentară"
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 msgid "Your request has been successfully sent"
-msgstr "Cererea ta a fost trimisa cu succes"
+msgstr "Cererea ta a fost trimisă cu succes"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form

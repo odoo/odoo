@@ -3,7 +3,7 @@ import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
-class UseSuggestion {
+export class UseSuggestion {
     constructor(comp) {
         this.comp = comp;
         this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), 250);

@@ -6,6 +6,7 @@
 # Irina Fedulova <istartlin@gmail.com>, 2024
 # Wil Odoo, 2024
 # Ilya Rozhkov, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ilya Rozhkov, 2025\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +89,12 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"Позволяет делиться документом с клиентами в рамках продажи.\n"
+"Оставьте это поле пустым, если не хотите предоставлять документ покупателям.\n"
+"Коммерческое предложение: документ будет отправлен клиентам и доступен им в любое время.\n"
+"Например, эта настройка полезна для передачи файлов с описанием товара.\n"
+"Подтвержденный заказ: документ будет отправлен клиентам и доступен для просмотра. Например, это удобно для передачи руководств пользователя или цифрового контента, приобретенного через интернет-магазин.\n"
+"В составе КП: документ будет включен в PDF коммерческого предложения между заголовком и таблицей."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -142,13 +149,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_uid
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_date
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
@@ -389,13 +396,13 @@ msgstr "Ключ"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_uid
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_date
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
@@ -517,7 +524,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Quote Builder"
-msgstr ""
+msgstr "Конструктор коммерческих предложений"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
@@ -552,7 +559,7 @@ msgstr "Название Ресурса"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Продажа : отображается в"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server

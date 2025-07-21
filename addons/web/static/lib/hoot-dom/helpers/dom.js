@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getTag, isFirefox, isIterable, parseRegExp } from "../hoot_dom_utils";
+import { getTag, isFirefox, isInstanceOf, isIterable, parseRegExp } from "../hoot_dom_utils";
 import { waitUntil } from "./time";
 
 /**
@@ -414,7 +414,11 @@ function isNodeHidden(node) {
 
 /** @type {NodeFilter} */
 function isNodeInteractive(node) {
-    return getStyle(node).pointerEvents !== "none";
+    return (
+        getStyle(node).pointerEvents !== "none" &&
+        !node.closest?.("[inert]") &&
+        !getParentFrame(node)?.inert
+    );
 }
 
 /**
@@ -484,7 +488,7 @@ function makePatternBasedPseudoClass(pseudoClass, getContent) {
         } catch (err) {
             throw selectorError(pseudoClass, err.message);
         }
-        if (regex instanceof RegExp) {
+        if (isInstanceOf(regex, RegExp)) {
             return function containsRegExp(node) {
                 return regex.test(String(getContent(node)));
             };
@@ -1078,12 +1082,8 @@ const customPseudoClasses = new Map();
 
 customPseudoClasses
     .set("contains", makePatternBasedPseudoClass("contains", getNodeText))
-    .set("displayed", () => {
-        return isNodeDisplayed;
-    })
-    .set("empty", () => {
-        return isEmpty;
-    })
+    .set("displayed", () => isNodeDisplayed)
+    .set("empty", () => isEmpty)
     .set("eq", (strIndex) => {
         const index = $parseInt(strIndex);
         if (!$isInteger(index)) {
@@ -1091,49 +1091,21 @@ customPseudoClasses
         }
         return index;
     })
-    .set("first", () => {
-        return 0;
-    })
-    .set("focusable", () => {
-        return isNodeFocusable;
-    })
-    .set("has", (selector) => {
-        return isNodeHaving.bind(null, selector);
-    })
-    .set("hidden", () => {
-        return isNodeHidden;
-    })
-    .set("iframe", () => {
-        return getNodeIframe;
-    })
-    .set("interactive", () => {
-        return isNodeInteractive;
-    })
-    .set("last", () => {
-        return -1;
-    })
-    .set("not", (selector) => {
-        return isNodeNotMatching.bind(null, selector);
-    })
-    .set("only", () => {
-        return isOnlyNode;
-    })
-    .set("scrollable", (axis) => {
-        return isNodeScrollable.bind(null, axis);
-    })
-    .set("selected", () => {
-        return isNodeSelected;
-    })
-    .set("shadow", () => {
-        return getNodeShadowRoot;
-    })
+    .set("first", () => 0)
+    .set("focusable", () => isNodeFocusable)
+    .set("has", (selector) => isNodeHaving.bind(null, selector))
+    .set("hidden", () => isNodeHidden)
+    .set("iframe", () => getNodeIframe)
+    .set("interactive", () => isNodeInteractive)
+    .set("last", () => -1)
+    .set("not", (selector) => isNodeNotMatching.bind(null, selector))
+    .set("only", () => isOnlyNode)
+    .set("scrollable", (axis) => isNodeScrollable.bind(null, axis))
+    .set("selected", () => isNodeSelected)
+    .set("shadow", () => getNodeShadowRoot)
     .set("value", makePatternBasedPseudoClass("value", getNodeValue))
-    .set("viewPort", () => {
-        return isNodeInViewPort;
-    })
-    .set("visible", () => {
-        return isNodeVisible;
-    });
+    .set("viewPort", () => isNodeInViewPort)
+    .set("visible", () => isNodeVisible);
 
 const rCustomPseudoClass = compilePseudoClassRegex();
 

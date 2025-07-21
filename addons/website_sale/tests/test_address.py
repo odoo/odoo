@@ -614,6 +614,50 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             so._compute_payment_term_id()
             self.assertFalse(so.payment_term_id, "The website default payment term should not be set on a sale order not coming from the website")
 
+    def test_12_recompute_taxes_on_address_change(self):
+        self.env.company.country_id = self.env.ref('base.us')
+        tax_15_incl, tax_0 = self.env['account.tax'].create([
+            {
+                'name': "15% excl",
+                'amount': 15,
+                'price_include_override': 'tax_included',
+            },
+            {
+                'name': "0%",
+                'amount': 0,
+            },
+        ])
+        fpos_be = self.env['account.fiscal.position'].create({
+            'name': "Fiscal Position BE",
+            'auto_apply': True,
+            'country_id': self.country_id,
+            'tax_ids': [Command.create({
+                'tax_src_id': tax_15_incl.id,
+                'tax_dest_id': tax_0.id,
+            })],
+        })
+        self.product.taxes_id = [Command.set(tax_15_incl.ids)]
+        self.partner.country_id = self.country_id
+
+        cart = self.empty_cart
+        cart.order_line = [Command.create({'product_id': self.product.id})]
+        amount_untaxed = cart.amount_untaxed
+
+        self.assertEqual(cart.fiscal_position_id, fpos_be)
+        self.assertEqual(cart.order_line.tax_id, tax_0)
+
+        self.partner.country_id = self.env.company.country_id
+        self.assertNotEqual(cart.fiscal_position_id, fpos_be)
+        self.assertEqual(cart.order_line.tax_id, tax_15_incl)
+        self.assertEqual(cart.amount_untaxed, amount_untaxed, "Untaxed amount should not change")
+
+        cart.action_confirm()
+        self.partner.country_id = self.country_id
+        self.assertEqual(
+            cart.order_line.tax_id, tax_15_incl,
+            "Tax should no longer change after order confirmation",
+        )
+
     def test_imported_user_with_trailing_name_can_checkout(self):
         """Ensure that an imported user with trailing spaces in their name can complete checkout without error."""
 

@@ -80,7 +80,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>İşe Alım'a Gidin"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -125,6 +125,8 @@ msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
 msgstr ""
+"Bu iş pozisyonu için bir mülakat formu seçerek bu işe başvuran tüm adayların"
+" mülakatlarını yazdırıp yanıtlayabilirsiniz"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -139,7 +141,7 @@ msgstr "Eğitim"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "Hangi üniversiteden mezun oldunuz/olacaksınız?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -181,7 +183,7 @@ msgstr "Görüşme Formu"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "Mülakat Formu: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -224,7 +226,7 @@ msgstr "Ofis konumu"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "{{ object.survey_id.display_name }} mülakat anketine katılın"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
@@ -261,12 +263,16 @@ msgstr "Lütfen başvuranın adını girin."
 msgid ""
 "Please summarize your education history: schools, location, diplomas, ..."
 msgstr ""
+"Lütfen eğitim geçmişinizi özetleyin: gittiğiniz okullar, konumları, "
+"aldığınız diplomalar, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid ""
 "Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
+"Lütfen bize kendinizden biraz daha detaylı olarak bahsedin: ana "
+"faaliyetleriniz nelerdir, ..."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
@@ -291,13 +297,13 @@ msgstr "Görüşme raporuna bakın"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "Mülakat Bağlantısı Gönder"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send an interview"
-msgstr ""
+msgstr "Bir mülakat bağlantısı gönderin"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -326,7 +332,8 @@ msgstr "Anket Kullanıcı Girişi"
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
 msgstr ""
-"Bu anketi cevapladığınız için teşekkür ederiz. Yakında size geri döneceğiz."
+"Bu anketi yanıtladığınız için teşekkür ederiz. Size kısa zamanda geri dönüş "
+"yapacağız."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -353,7 +360,7 @@ msgstr "Bir çalışan tarafından yönlendirildiniz mi?"
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr ""
+msgstr "Başvurduğunuz işe dair temel bilgileriniz nelerdir?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
@@ -376,3 +383,5 @@ msgid ""
 "You can create surveys used for recruitments. Design easily your interview,\n"
 "                send invitations and analyze answers."
 msgstr ""
+"İşe alımlar için kullanılacak anketler oluşturabilirsiniz. Mülakatı kolayca tasarlayın,\n"
+"                davetiyeler gönderin ve cevapları analiz edin."

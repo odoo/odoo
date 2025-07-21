@@ -108,12 +108,15 @@ class AccountMove(models.Model):
         """ Create the xml file (if needed) to be sent to the platform.
         This will replace what is done in send & print.
         """
+        self._l10n_my_edi_send_invoice()
+
+    def _l10n_my_edi_send_invoice(self, commit=True):
         # Gather the moves that have to be sent and the xml for each of them.
         moves, xml_contents = self._l10n_my_edi_prepare_moves_to_send()
         # We then push the moves to myinvois.
-        self._l10n_my_edi_send_to_myinvois(moves, xml_contents)
+        self._l10n_my_edi_send_to_myinvois(moves, xml_contents, commit)
         # We need to see if the validation status is already available; otherwise it will be fetched via a cron.
-        self._l10n_my_edi_get_status(moves)
+        errors = self._l10n_my_edi_get_status(moves, commit)
         # Finally, we update the move attachments
         for move, xml_content in xml_contents.items():
             if xml_content:
@@ -126,6 +129,7 @@ class AccountMove(models.Model):
                     'res_field': 'l10n_my_edi_file',  # Binary field
                 })
                 move.invalidate_recordset(fnames=['l10n_my_edi_file_id', 'l10n_my_edi_file'])
+        return errors
 
     def _l10n_my_edi_prepare_moves_to_send(self):
         AccountMoveSend = self.env['account.move.send']
@@ -150,10 +154,10 @@ class AccountMove(models.Model):
             xml_contents[move] = xml_content
         return moves, xml_contents
 
-    def _l10n_my_edi_send_to_myinvois(self, moves, xml_contents):
+    def _l10n_my_edi_send_to_myinvois(self, moves, xml_contents, commit=True):
         AccountMoveSend = self.env['account.move.send']
         if moves and xml_contents:
-            errors = moves._l10n_my_edi_submit_documents(xml_contents)
+            errors = moves._l10n_my_edi_submit_documents(xml_contents, commit)
 
             for move in moves.filtered(lambda m: m in errors):
                 move.message_post(body=AccountMoveSend._format_error_html({
@@ -162,7 +166,7 @@ class AccountMove(models.Model):
                 }))
 
             # At this point we will need to commit as we reached the api, and we could have a mix of failed and valid invoice.
-            if moves._can_commit():
+            if commit and moves._can_commit():
                 self._cr.commit()
 
             # We already logged the details on the invoice(s) and saved the api results. If we send a single invoice, we can safely raise now.
@@ -172,13 +176,14 @@ class AccountMove(models.Model):
                     'errors': errors[moves],
                 }))
 
-    def _l10n_my_edi_get_status(self, moves):
+    def _l10n_my_edi_get_status(self, moves, commit=True):
         AccountMoveSend = self.env['account.move.send']
         retry = 0
-        errors, any_in_progress = moves._l10n_my_edi_fetch_updated_statuses()
-        while any_in_progress and retry < 2:
-            time.sleep(1)  # We wait a second before retrying.
-            errors, any_in_progress = moves._l10n_my_edi_fetch_updated_statuses()
+        errors, any_in_progress = moves._l10n_my_edi_fetch_updated_statuses(commit)
+        while any_in_progress and retry < 3:
+            if self._can_commit():
+                time.sleep(1 + retry)  # We wait a while before retrying, only when not in test mode
+            errors, any_in_progress = moves._l10n_my_edi_fetch_updated_statuses(commit)
             retry += 1
         # While technically an in_progress status is not an error, it won't hurt much to display it as such.
         # The "error" message in this case should be clear enough.
@@ -188,5 +193,7 @@ class AccountMove(models.Model):
                 'errors': errors[move],
             }))
         # We commit again if possible, to ensure that the invoice status is set in the database in case of errors later.
-        if self._can_commit():
+        if commit and self._can_commit():
             self._cr.commit()
+
+        return errors

@@ -407,7 +407,7 @@ export class ImageSelector extends FileSelector {
         const mediaUrl = imgEl.src;
         try {
             const response = await fetch(mediaUrl);
-            if (response.headers.get("content-type") === "image/svg+xml") {
+            if (response.headers.get("content-type").startsWith("image/svg+xml")) {
                 let svg = await response.text();
                 const dynamicColors = {};
                 const combinedColorsRegex = new RegExp(

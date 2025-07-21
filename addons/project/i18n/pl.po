@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:46+0000\n"
+"POT-Creation-Date: 2025-06-27 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -108,7 +108,6 @@ msgstr "# Ocen"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
-#: model:ir.model.fields,field_description:project.field_project_milestone__task_count
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
 msgstr "# zadań"
@@ -131,7 +130,7 @@ msgstr "#{task.stage_id.name}"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s z %(totalCount)s podzadań zamknięto"
 
 #. module: project
 #. odoo-python
@@ -488,6 +487,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">Prośba o ocenę będzie wysłana jak tylko zadanie zostanie przeniesione do fazy, w której jest zdefiniowany szablon email oceny.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">Prośby o ocenę będą wysłane, jeśli tylko zadanie zostanie w fazie, w której jest zdefiniowany szablon email oceny.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -709,6 +713,8 @@ msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
 msgstr ""
+"W zadaniach dodawaj pola właściwości specyficzne dla projektu, aby "
+"dostosować swój proces zarządzania projektami."
 
 #. module: project
 #. odoo-javascript
@@ -837,6 +843,7 @@ msgstr "Analizuj postępy swoich projektów i wydajność pracowników."
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read mode."
 msgstr ""
+"Ktokolwiek z tym linkiem może uzyskać dostęp do projektu w trybie odczytu."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -1001,7 +1008,7 @@ msgstr "Załączniki"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message"
-msgstr ""
+msgstr "Załączniki, które nie pochodzą z wiadomości."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
@@ -1194,6 +1201,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
 msgstr ""
+"Wybierz jeden z poniższych trybów dostępu dla swoich współpracowników:"
 
 #. module: project
 #. odoo-javascript
@@ -1579,6 +1587,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"Klienci proponują informacje zwrotne przez e-mail; Odoo automatycznie tworzy zadania, a Ty możesz\n"
+"       bezpośrednio komunikować się w sprawie zadania."
 
 #. module: project
 #. odoo-python
@@ -2473,7 +2483,7 @@ msgstr "Zafakturowano"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "Jest zamknięty (Wykres burn-up)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -3279,17 +3289,18 @@ msgstr ""
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
+"Firma partnerska nie może być różna od firmy jej przypisanych projektów"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "Firma partnerska nie może być różna od firmy jej przypisanych zadań"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "Zadania partnera"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3862,7 +3873,7 @@ msgstr "Powtarzalny"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr "Powtarzajace sie zadania"
+msgstr "Powtarzające się zadania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4097,7 +4108,7 @@ msgstr "Token uprawnień"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr ""
+msgstr "Wybierz przypisanego z menu"
 
 #. module: project
 #. odoo-javascript
@@ -4239,6 +4250,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Niektóre z wybranych kont analitycznych są powiązane z projektem:\n"
+"%(accountList)s\n"
+"\n"
+"Zarchiwizowanie tych kont usunie opcję do logowania czasu pracy dla ich powiązanych projektów.\n"
+"\n"
+"Czy na pewno chcesz kontynuować?"
 
 #. module: project
 #. odoo-python
@@ -4300,7 +4317,7 @@ msgstr "Etap"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr ""
+msgstr "Etap (Wykres burndown)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4593,7 +4610,7 @@ msgstr "Zadanie:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Zadanie: Prośba o ocenę"
 
 #. module: project
 #. odoo-python
@@ -4755,6 +4772,10 @@ msgid ""
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these"
 " groupings applied, the report will not provide relevant information."
 msgstr ""
+"Raport powinien być pogrupowany według \"Etapu\", aby reprezentował wykres "
+"Burndown, lub według \"Jest zamknięty\", aby reprezentował wykres Burnup. "
+"Bez zastosowania jednej z tych metod grupowania, raport nie dostarczy "
+"istotnych informacji."
 
 #. module: project
 #. odoo-python
@@ -4767,7 +4788,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "Zadanie i powiązany partner muszą być powiązane z tą samą firmą."
 
 #. module: project
 #. odoo-python
@@ -4777,6 +4798,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to "
 "'%(visibility)s' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Zadania nie można udostępnić odbiorcy (odbiorcom), ponieważ prywatność "
+"projektu jest zbyt ograniczona. Ustaw prywatność projektu na "
+"\"%(visibility)s\", aby udostępnić go odbiorcy (odbiorcom)."
 
 #. module: project
 #. odoo-javascript
@@ -4791,6 +4815,8 @@ msgid ""
 "The view must be grouped by date and by Stage - Burndown chart or Is Closed "
 "- Burnup chart"
 msgstr ""
+"Widok musi być pogrupowany według daty i etapu - wykres Burndown lub według "
+"zamknięcia - wykres Burnup."
 
 #. module: project
 #. odoo-javascript
@@ -4861,6 +4887,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"To konto analityczne jest powiązane z następującymi projektami:\n"
+"%(projectList)s\n"
+"\n"
+"Zarchiwizowanie tych kont usunie opcję do logowania czasu pracy dla tych projektów.\n"
+"\n"
+"Czy na pewno chcesz kontynuować?"
 
 #. module: project
 #. odoo-javascript
@@ -4869,6 +4901,8 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"Ten obserwujący jest aktualnie współpracownikiem projektu. Usunięcie go "
+"cofnie jego dostęp do projektu. Czy na pewno chcesz kontynuować?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4889,6 +4923,11 @@ msgid ""
 " stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
+"Ten projekt jest powiązany z %(project_company)s, natomiast wybrany etap "
+"jest częścią %(stage_company)s. Jest kilka opcji, do rozważenia: możesz "
+"usunąć oznaczenie firmy z projektu lub z etapu. Alternatywnie, możesz "
+"zaktualizować informacje o firmie dla tych zapisów, aby dopasować je do tej "
+"samej firmy."
 
 #. module: project
 #. odoo-python
@@ -4912,6 +4951,10 @@ msgid ""
 " the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
+"Ten projekt nie jest powiązany z żadną firmą, podczas gdy etap jest "
+"powiązany z %s. Istnieje kilka opcji do rozważenia: Zmień firmę projektu, "
+"aby dopasować go do firmy związanej z etapem, lub usuń oznaczenie firmy z "
+"etapu."
 
 #. module: project
 #. odoo-python
@@ -4965,13 +5008,13 @@ msgstr "Porada: Twórz zadania z emaili przychodzących"
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "Wskazówka: Pola specyficzne dla projektu"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
-msgstr ""
+msgstr "Wskazówka: Korzystaj ze stanów zadań, aby śledzić ich postęp"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_2
@@ -5254,6 +5297,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Korzystaj z czatu, aby <b>wysyłać wiadomości e-mail</b> i skutecznie "
+"komunikować się z klientami. Dodaj nowe osoby do listy obserwujących, aby "
+"poinformować je o głównych zmianach w tym zadaniu."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5448,6 +5494,9 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"Nie możesz zmienić firmy tego etapu na %(company_name)s, ponieważ właśnie "
+"zawiera projekty związane z %(project_company_name)s. Upewnij się, że ten "
+"etap zawiera jedynie projekty powiązane z %(company_name)s."
 
 #. module: project
 #. odoo-javascript
@@ -5465,7 +5514,7 @@ msgstr "Scenę osobistą można ustawić tylko w zadaniu prywatnym."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can open sub-tasks from the kanban card!"
-msgstr ""
+msgstr "Możesz otworzyć podzadania z karty kanban!"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5705,7 +5754,7 @@ msgstr "widok menu Moje zadania"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "okresowo"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5722,7 +5771,7 @@ msgstr "gotowy do oznaczenia jako osiągnięty"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
-msgstr ""
+msgstr "stan wskazujący na prośbę o zmiany lub potrzebę omówienia zadania."
 
 #. module: project
 #. odoo-javascript
@@ -5730,12 +5779,14 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"stan służący do informowania współpracowników, że zadanie jest zaakceptowane"
+" do przejścia do następnego etapu."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr ""
+msgstr "stan, aby oznaczyć zadanie jako anulowane."
 
 #. module: project
 #. odoo-javascript

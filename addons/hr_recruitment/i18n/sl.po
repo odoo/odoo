@@ -44,25 +44,26 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "1 Meeting"
-msgstr ""
+msgstr "1 Sestanek"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "<b>Click to view</b> the application."
-msgstr ""
+msgstr "<b>Kliknite za ogled</b> aplikacije."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
+"<b>Ste se prijavili po elektronski pošti?</b> Preverite prejete prijave."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
-msgstr ""
+msgstr "<b>Povlecite to kartico</b>, da ga kvalificirate za prvi razgovor."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -71,11 +72,13 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
+"<div><b>Poskusite poslati e-pošto</b>prosilcu.</div><div><i>Nasveti: Vsa "
+"poslana ali prejeta e-poštna sporočila se shranjujejo v zgodovini tukaj.</i>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -86,7 +89,7 @@ msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -94,6 +97,8 @@ msgid ""
 "<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: "
 "1px;\">to</span>"
 msgstr ""
+"<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: "
+"1px;\">do</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -109,7 +114,7 @@ msgstr "<span class=\"o_stat_text\">Sledilci</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span invisible=\"address_id\" class=\"oe_read_only\">Remote</span>"
-msgstr ""
+msgstr "<span invisible=\"address_id\" class=\"oe_read_only\">Daljinsko</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -122,16 +127,23 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"not is_warning_visible\">\n"
+"                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    Vse prijave bodo izgubile datum zaposlitve in status zaposlitve.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span invisible=\"not salary_expected_extra\"> + </span>"
-msgstr ""
+msgstr "<span invisible=\"not salary_expected_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span invisible=\"not salary_proposed_extra\"> + </span>"
-msgstr ""
+msgstr "<span invisible=\"not salary_proposed_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -417,13 +429,13 @@ msgstr "Aktivnosti"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_overdue
 msgid "Activities Overdue"
-msgstr ""
+msgstr "Zamujene dejavnosti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "Dejavnosti danes"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -434,7 +446,7 @@ msgstr "Izjema pri oznaki aktivnosti"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr ""
+msgstr "Načrt aktivnosti"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.hr_recruitment_menu_config_activity_plan
@@ -465,6 +477,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Language Test\", \"Prepare Offer\", ...)"
 msgstr ""
+"Načrti aktivnosti se uporabljajo za dodelitev seznama aktivnosti z le nekaj kliki\n"
+"(npr. »Jezikovni test«, »Priprava ponudbe«, ...)"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_schedule
@@ -515,7 +529,7 @@ msgstr "Vzdevek za E-mail"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__alias_id
 msgid "Alias ID"
-msgstr ""
+msgstr "ID vzdevka"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_name
@@ -540,7 +554,7 @@ msgstr "Model vzdevka"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__all_application_count
 msgid "All Application Count"
-msgstr ""
+msgstr "Število vseh aplikacij"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
@@ -567,12 +581,12 @@ msgstr "Kandidat"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Applicant Degree"
-msgstr ""
+msgstr "Diploma kandidata"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_emails
 msgid "Applicant Emails"
-msgstr ""
+msgstr "E-poštni naslovi prijaviteljev"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -583,12 +597,12 @@ msgstr "Kandidat najet"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_notes
 msgid "Applicant Notes"
-msgstr ""
+msgstr "Opombe prosilca"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
 msgid "Applicant Properties"
-msgstr ""
+msgstr "Nepremičnine prosilca"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
@@ -603,7 +617,7 @@ msgstr "Kandidat ustvarjen"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr ""
+msgstr "Prijavitelj(i) nima(jo) e-pošte"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
@@ -615,7 +629,7 @@ msgstr "Kandidati"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "Zaposleni kandidati"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -625,6 +639,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"Kandidati in njihov priloženi življenjepis se ustvarijo samodejno, ko je poslano e-poštno sporočilo.\n"
+"Če namestite module za upravljanje dokumentov, se vsi življenjepisi samodejno indeksirajo,\n"
+"tako da lahko preprosto iščete po njihovi vsebini."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -640,12 +657,12 @@ msgstr "Število prošenj"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
+msgstr "Stanje aplikacije"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
-msgstr ""
+msgstr "E-poštni naslov za prijavo"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
@@ -672,11 +689,13 @@ msgid ""
 "Applications received from this Email won't be linked to a contact.There "
 "will be no email address set on the Applicant either."
 msgstr ""
+"Prijave, prejete s tega e-poštnega naslova, ne bodo povezane s stikom. Prav "
+"tako ne bo nastavljen noben e-poštni naslov za prijavitelja."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
 msgid "Applied on"
-msgstr ""
+msgstr "Uporabljeno na"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -702,7 +721,7 @@ msgstr "Arhivirano"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_form_controller.js:0
 msgid "Are you sure that you want to archive this job position?"
-msgstr ""
+msgstr "Ali ste prepričani, da želite arhivirati to delovno mesto?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -716,6 +735,8 @@ msgid ""
 "At least one applicant doesn't have a email; you can't use send email "
 "option."
 msgstr ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -797,7 +818,7 @@ msgstr "Odboj"
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position_interviewer
 msgid "By Job Positions"
-msgstr ""
+msgstr "Po delovnih mestih"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -807,6 +828,10 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
+"Z nastavitvijo vzdevka za delovno mesto se e-poštna sporočila, poslana na ta"
+" naslov, samodejno ustvarijo za prijavo. Za pridobitev statistike glede na "
+"vir prijave lahko uporabite celo več sledilnikov: LinkedIn, Monster, Indeed "
+"itd."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -863,7 +888,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
 msgid "Candidates"
-msgstr ""
+msgstr "Kandidati"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__similar_candidates_count
@@ -889,7 +914,7 @@ msgstr "Kategorija kandidata"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Choose an application email."
-msgstr ""
+msgstr "Izberite e-poštni naslov za prijavo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__color
@@ -927,6 +952,7 @@ msgstr "Nastavitve"
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Confirmation email sent to all new job applications"
 msgstr ""
+"Potrditveno e-poštno sporočilo, poslano vsem novim prijavam za zaposlitev"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -968,6 +994,8 @@ msgstr "Podpisana pogodba"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
+"Kopirajte ta e-poštni naslov, da ga prilepite v sestavljalnik e-poštnih "
+"sporočil in se prijavite."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_bounce
@@ -994,18 +1022,20 @@ msgstr "Ustvari delovno mesto"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Create a Recruitment Activity Plan"
-msgstr ""
+msgstr "Ustvarite načrt zaposlitvenih dejavnosti"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Create a new rule to process emails from specific job boards."
 msgstr ""
+"Ustvarite novo pravilo za obdelavo e-poštnih sporočil z določenih oglasnih "
+"desk."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Create your first Job Position."
-msgstr ""
+msgstr "Ustvarite si svoje prvo delovno mesto."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1079,6 +1109,8 @@ msgid ""
 "Define a regex: Extract the applicant's name from the email's subject or "
 "body."
 msgstr ""
+"Definirajte regularni izraz: Izvlecite ime prosilca iz zadeve ali telesa "
+"e-poštnega sporočila."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1098,6 +1130,9 @@ msgid ""
 "                    qualification call, first interview, second interview, refused,\n"
 "                    hired."
 msgstr ""
+"Tukaj opredelite faze postopka zaposlovanja, na primer:\n"
+"                    kvalifikacijski klic, prvi razgovor, drugi razgovor, zavrnitev,\n"
+"                    zaposlitev."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__type_id
@@ -1110,7 +1145,7 @@ msgstr "Univerzitetna diploma"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
 msgid "Degree Name"
-msgstr ""
+msgstr "Ime diplome"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1166,17 +1201,18 @@ msgstr "Povzemanje"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your résumé to extract name and email automatically."
 msgstr ""
+"Digitalizirajte svoj življenjepis, da samodejno izvlečete ime in e-pošto."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Directly"
-msgstr ""
+msgstr "Neposredno"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Directly Available"
-msgstr ""
+msgstr "Neposredno na voljo"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1186,7 +1222,7 @@ msgstr "Opusti"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_applicant_cv_display
 msgid "Display CV on application form"
-msgstr ""
+msgstr "Prikaži življenjepis na prijavnem obrazcu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
@@ -1206,7 +1242,7 @@ msgstr "Prikazani naziv"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display résumé on application form"
-msgstr ""
+msgstr "Prikaži življenjepis na prijavnem obrazcu"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1238,7 +1274,7 @@ msgstr "Dokumenti"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Does not fit the job requirements"
-msgstr ""
+msgstr "Ne ustreza zahtevam delovnega mesta"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1246,6 +1282,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "                is different according to the job position."
 msgstr ""
+"Ne pozabite navesti oddelka, če se vaš postopek zaposlovanja razlikuje\n"
+"                glede na delovno mesto."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
@@ -1260,7 +1298,7 @@ msgstr "Podvojeni"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
-msgstr ""
+msgstr "Število dvojnikov"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1309,7 +1347,7 @@ msgstr "E-poštna domena, npr. »example.com« v »odoo@example.com«"
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 msgid "Email template must be selected to send a mail"
-msgstr ""
+msgstr "Za pošiljanje e-pošte je treba izbrati predlogo e-pošte"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_platforms
@@ -1330,7 +1368,7 @@ msgstr "Kader"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_is_active
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__emp_is_active
 msgid "Employee Active"
-msgstr ""
+msgstr "Aktivni zaposleni"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__employee_name
@@ -1341,7 +1379,7 @@ msgstr "Ime zaposlenega"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_hired_template
 msgid "Employee created:"
-msgstr ""
+msgstr "Zaposleni je ustvaril:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
@@ -1363,7 +1401,7 @@ msgstr "Tip zaposlitve"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__priority
 msgid "Evaluation"
-msgstr ""
+msgstr "Vrednotenje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
@@ -1380,7 +1418,7 @@ msgstr "Pričakovano"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
 msgid "Expected Employee"
-msgstr ""
+msgstr "Pričakovani zaposleni"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected_extra
@@ -1395,12 +1433,12 @@ msgstr "Razširjeni filtri"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
 msgid "Extended Interviewer"
-msgstr ""
+msgstr "Razširjeni anketar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_user_ids
 msgid "Favorite User"
-msgstr ""
+msgstr "Priljubljeni uporabnik"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_sanitized
@@ -1429,7 +1467,7 @@ msgstr "Prepognjeno v Kanban"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "Folded in Recruitment Pipe:"
-msgstr ""
+msgstr "Zložena cev za zaposlovanje:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
@@ -1457,12 +1495,12 @@ msgstr "Bodoče aktivnosti"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Generate Email"
-msgstr ""
+msgstr "Ustvari e-pošto"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr ""
+msgstr "Pridobi razlog za zavrnitev"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -1478,7 +1516,7 @@ msgstr "Srednješolska izobrazba"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Great job! You hired a new colleague!"
-msgstr ""
+msgstr "Odlično delo! Zaposlili ste novega sodelavca!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__done
@@ -1503,7 +1541,7 @@ msgstr "Siva kanban oznaka"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
 msgid "Group Applicant Cv Display"
-msgstr ""
+msgstr "Prikaz življenjepisa za skupinske kandidate"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1515,7 +1553,7 @@ msgstr "Združi po"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
 msgid "Has Domain"
-msgstr ""
+msgstr "Ima domeno"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
@@ -1530,11 +1568,13 @@ msgid ""
 "Have you tried to <a>add skills to your job position</a> and search into the"
 " Reserve ?"
 msgstr ""
+"Ste že poskusili <a>dodati znanja in spretnosti svojemu delovnemu mestu</a> "
+"in jih poiskati v rezervi?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
 msgid "Hire Date"
-msgstr ""
+msgstr "Datum najema"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__no_of_hired_employee
@@ -1544,17 +1584,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Hired"
-msgstr ""
+msgstr "Zaposljen/a"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
 msgid "Hired Stage"
-msgstr ""
+msgstr "Najeto oder"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Hiring Date"
-msgstr ""
+msgstr "Datum zaposlitve"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1611,6 +1651,8 @@ msgstr "Če je označeno, nekatera sporočila vsebujejo napako pri dostavi."
 msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
+"Če je označeno, se ta faza uporablja za določitev datuma zaposlitve "
+"kandidata."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1690,6 +1732,9 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job offers on LinkedIn, Monster, etc."
 msgstr ""
+"Dohodna e-poštna sporočila samodejno ustvarijo prijave. Uporabite to za "
+"neposredne prijave ali pri objavljanju ponudb za delo na LinkedInu, "
+"Monsterju itd."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__mobile_blacklisted
@@ -1736,13 +1781,13 @@ msgstr "Intervju obrazci"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Interviewer"
-msgstr ""
+msgstr "Anketar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "Anketarji"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -1764,7 +1809,7 @@ msgstr "Je sledilec"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
 msgid "Is Warning Visible"
-msgstr ""
+msgstr "Je opozorilo vidno"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__date_from
@@ -1796,7 +1841,7 @@ msgstr "Prošnje za zaposlitev"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_boards
 msgid "Job Boards"
-msgstr ""
+msgstr "Oglasne deske"
 
 #. module: hr_recruitment
 #: model:utm.campaign,title:hr_recruitment.utm_campaign_job
@@ -1811,7 +1856,7 @@ msgstr "Lokacija zaposlitve"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
 msgid "Job Platforms"
-msgstr ""
+msgstr "Platforme za zaposlitev"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -1846,17 +1891,17 @@ msgstr "Objava delovnih mest"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__job_properties_definition
 msgid "Job Properties"
-msgstr ""
+msgstr "Lastnosti opravila"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Job Specific"
-msgstr ""
+msgstr "Specifično za delo"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
 msgid "Job already fulfilled"
-msgstr ""
+msgstr "Naloga je že opravljena"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1872,12 +1917,12 @@ msgstr "Obrazec zaposlovanja"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
 msgid "Kanban Blocked"
-msgstr ""
+msgstr "Kanban blokiran"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
 msgid "Kanban Ongoing"
-msgstr ""
+msgstr "Kanban v teku"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__kanban_state
@@ -1887,12 +1932,14 @@ msgstr "Kanban stanje"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_done
 msgid "Kanban Valid"
-msgstr ""
+msgstr "Veljaven Kanban"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
 msgid "Kpi Hr Recruitment New Colleagues Value"
 msgstr ""
+"Ključni kazalniki uspešnosti - Kadrovska služba Zaposlovanje Novi sodelavci "
+"Vrednost"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__lang
@@ -1968,18 +2015,20 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
+"Ustvarimo delovno mesto. Za prijave bo nastavljen e-poštni naslov in javno "
+"objavljen opis delovnega mesta, če uporabljate aplikacijo spletnega mesta."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
-msgstr ""
+msgstr "Poglejmo si, kako <b>izboljšati</b> vaš<b>postopek zaposlovanja</b>."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Let’s create this new employee now."
-msgstr ""
+msgstr "Ustvarimo tega novega zaposlenega zdaj."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1991,7 +2040,7 @@ msgstr "Vrnimo se na nadzorno ploščo."
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__linkedin_profile
 msgid "LinkedIn Profile"
-msgstr ""
+msgstr "Profil na LinkedInu"
 
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.action_load_demo_data
@@ -2002,7 +2051,7 @@ msgstr "Naložite demo podatke"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "Nalaganje vzorčnih podatkov"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -2060,7 +2109,7 @@ msgstr "Datum prikaza sestanka"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__meeting_display_text
 msgid "Meeting Display Text"
-msgstr ""
+msgstr "Prikazno besedilo sestanka"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
@@ -2088,7 +2137,7 @@ msgstr "Sporočila"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Mission Dates"
-msgstr ""
+msgstr "Datumi misij"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
@@ -2114,7 +2163,7 @@ msgstr "Moje priljubljene"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_search_view
 msgid "My Job Positions"
-msgstr ""
+msgstr "Moja delovna mesta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__name
@@ -2161,7 +2210,7 @@ msgstr "Novo zaposlenih"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
 msgid "New Hired Employee"
-msgstr ""
+msgstr "Novo zaposleni zaposleni"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
@@ -2210,7 +2259,7 @@ msgstr "Ni sestanka"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "No application found. Let's create one !"
-msgstr ""
+msgstr "Ni najdene aplikacije. Ustvarimo jo!"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -2238,7 +2287,7 @@ msgstr "Podatkov še ni!"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "No rules have been defined."
-msgstr ""
+msgstr "Nobena pravila niso bila določena."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2274,12 +2323,12 @@ msgstr "Število prilog"
 msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
-msgstr ""
+msgstr "Število novih aplikacij v toku (običajno na prvem koraku toka)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Število dni do zaprtja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
@@ -2318,12 +2367,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer: Manage all applicants"
-msgstr ""
+msgstr "Uradnik: Upravljajte vse kandidate"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
 msgid "Old Application"
-msgstr ""
+msgstr "Stara aplikacija"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__ongoing
@@ -2372,7 +2421,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Or talk about this applicant privately with your colleagues."
-msgstr ""
+msgstr "Ali pa se o tem kandidatu pogovorite na samem s sodelavci."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2393,7 +2442,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other benefits"
-msgstr ""
+msgstr "Druge ugodnosti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -2476,7 +2525,7 @@ msgstr "Lastnosti"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Proposed"
-msgstr ""
+msgstr "Predlagano"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
@@ -2486,12 +2535,12 @@ msgstr "Predlagani dodatek k plači"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Provide an email"
-msgstr ""
+msgstr "Navedite e-poštni naslov"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish job offers on your website"
-msgstr ""
+msgstr "Objavite ponudbe za delo na svoji spletni strani"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
@@ -2533,7 +2582,7 @@ msgstr "ID niti zapisov"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
 msgid "Recruiter"
-msgstr ""
+msgstr "Rekruter"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -2562,7 +2611,7 @@ msgstr "Analiza zaposlovanja"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Recruitment Plans"
-msgstr ""
+msgstr "Načrti zaposlovanja"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -2572,22 +2621,22 @@ msgstr "Stopnje zaposlovanja"
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Recruitment: Application Acknowledgement"
-msgstr ""
+msgstr "Zaposlovanje: Potrditev prijave"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Recruitment: Interest"
-msgstr ""
+msgstr "Zaposlovanje: Zanimanje"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
 msgid "Recruitment: Not interested anymore"
-msgstr ""
+msgstr "Zaposlovanje: Ne zanima me več"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_refuse
 msgid "Recruitment: Refuse"
-msgstr ""
+msgstr "Zaposlovanje: Zavrnitev"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__blocked
@@ -2610,7 +2659,7 @@ msgstr "Zavrni"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_date
 msgid "Refuse Date"
-msgstr ""
+msgstr "Datum zavrnitve"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2623,23 +2672,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Refuse Reason"
-msgstr ""
+msgstr "Razlog zavrnitve"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr ""
+msgstr "Razlog zavrnitve prosilca"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
-msgstr ""
+msgstr "Razlogi za zavrnitev"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Refuse the"
-msgstr ""
+msgstr "Zavrni"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -2658,26 +2707,27 @@ msgid ""
 "Refused automatically because this application has been identified as a "
 "duplicate of %(link)s"
 msgstr ""
+"Samodejno zavrnjeno, ker je bila ta vloga prepoznana kot dvojnik %(link)s"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by applicant: job fit"
-msgstr ""
+msgstr "Zavrnil kandidat: primeren za delo"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by applicant: salary"
-msgstr ""
+msgstr "Zavrnil prosilec: plača"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "Daljinsko"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
@@ -2716,22 +2766,22 @@ msgstr "Obnovi"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Resume's content"
-msgstr ""
+msgstr "Vsebina življenjepisa"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Running Applicants"
-msgstr ""
+msgstr "Kandidati, ki se prijavljajo"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Digitization (OCR)"
-msgstr ""
+msgstr "Digitalizacija življenjepisa (OCR - optično prepoznavanje znakov)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Display"
-msgstr ""
+msgstr "Prikaz življenjepisa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2752,7 +2802,7 @@ msgstr "Plača, ki jo kandidat pričakuje in dodatki"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Salary Package"
-msgstr ""
+msgstr "Paket plač"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
@@ -2773,13 +2823,13 @@ msgstr "Sanitized Number"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone_sanitized
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_phone_sanitized
 msgid "Sanitized Phone Number"
-msgstr ""
+msgstr "Sanizirana telefonska številka"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Save it!"
-msgstr ""
+msgstr "Shrani!"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
@@ -2795,7 +2845,7 @@ msgstr "Iskanje kandidatov"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
 msgid "Search Source"
-msgstr ""
+msgstr "Iskanje vira"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -2808,6 +2858,8 @@ msgid ""
 "Select the location where the applicant will work. Addresses listed here are"
 " defined on the company's contact information."
 msgstr ""
+"Izberite lokacijo, kjer bo kandidat delal. Navedeni naslovi so navedeni v "
+"kontaktnih podatkih podjetja."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -2819,6 +2871,8 @@ msgstr "Pošlji"
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
 msgid "Send CV to OCR to fill applications"
 msgstr ""
+"Pošljite življenjepis (OCR-optično prepoznavanje znakov) za izpolnitev "
+"prijav"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2833,7 +2887,7 @@ msgstr "Pošlji e-pošto"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send Interview Survey"
-msgstr ""
+msgstr "Pošlji anketo za intervju"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2844,12 +2898,12 @@ msgstr "Pošlji SMS"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Send an Interview Survey to the applicant during the recruitment process"
-msgstr ""
+msgstr "Med postopkom zaposlovanja pošljite kandidatu anketo za razgovor"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "Pošljite e-pošto prijaviteljem"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_candidate_send_mail
@@ -2866,6 +2920,7 @@ msgstr "Pošlji sporočila svojim kontaktom"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Send your email. Followers will get a copy of the communication."
 msgstr ""
+"Pošljite svoje e-poštno sporočilo. Sledilci bodo prejeli kopijo sporočila."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__sequence
@@ -2880,6 +2935,8 @@ msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
 msgstr ""
+"Nastavite to predlogo na fazo zaposlovanja, da se pošlje, ko prijave "
+"dosežejo to fazo"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2908,13 +2965,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__single_applicant_email
 msgid "Single Applicant Email"
-msgstr ""
+msgstr "E-pošta posameznega prijavitelja"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Some values do not exist in the application status"
-msgstr ""
+msgstr "Nekatere vrednosti ne obstajajo v stanju aplikacije"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -2940,17 +2997,19 @@ msgstr "Viri kandidatov"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Sourcing"
-msgstr ""
+msgstr "Izvor"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_7
 msgid "Spam"
-msgstr ""
+msgstr "Neželena pošta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Specific jobs that use this stage. Other jobs will not use this stage."
 msgstr ""
+"Določena opravila, ki uporabljajo to stopnjo. Druga opravila te stopnje ne "
+"bodo uporabljala."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3049,6 +3108,8 @@ msgid ""
 "The Email must be unique, this one already corresponds to another Job "
 "Platform."
 msgstr ""
+"E-poštni naslov mora biti edinstven, saj se ta že nanaša na drugo platformo "
+"za zaposlitev."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__interviewer_ids
@@ -3058,6 +3119,9 @@ msgid ""
 "they can refuse him. You don't need to have Recruitment rights to be set as "
 "an interviewer."
 msgstr ""
+"Anketarji, ki so določeni za delovno mesto, lahko vidijo vse kandidate na "
+"njem. Imajo dostop do informacij, prilog, upravljanja sestankov in ga lahko "
+"zavrnejo. Za določitev anketarja ne potrebujete pravic do zaposlovanja."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__user_id
@@ -3066,6 +3130,8 @@ msgid ""
 "             position. The Recruiter is automatically added to all meetings "
 "with the Applicant."
 msgstr ""
+"Zaposlovalec bo privzeta vrednost za vse kandidate na tem delovnem mestu. "
+"Zaposlovalec se samodejno doda na vse sestanke s kandidatom."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3074,6 +3140,8 @@ msgid ""
 "The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
 "process."
 msgstr ""
+"Kampanje UTM '%s' ni mogoče izbrisati, ker se uporablja v postopku "
+"zaposlovanja."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3087,13 +3155,13 @@ msgstr ""
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "Datum, ko bo kandidat na voljo za začetek dela"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "Naslednjim kandidatom manjka e-poštni naslov: %s."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3132,6 +3200,9 @@ msgid ""
 "The regex facilitates to extract information from the subject or body of the"
 " received email to autopopulate the Applicant's name field"
 msgstr ""
+"Regularni izraz omogoča pridobivanje informacij iz zadeve ali telesa "
+"prejetega e-poštnega sporočila za samodejno izpolnjevanje polja z imenom "
+"prosilca."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3140,6 +3211,7 @@ msgid ""
 "These job positions and all related applicants will be archived. Are you "
 "sure?"
 msgstr ""
+"Ta delovna mesta in vsi povezani kandidati bodo arhivirani. Ste prepričani?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
@@ -3147,6 +3219,8 @@ msgid ""
 "This displays how the applicant has reached out, e.g. via Email, LinkedIn, "
 "Website, etc."
 msgstr ""
+"To prikazuje, kako se je prosilec obrnil na vas, npr. prek e-pošte, "
+"LinkedIna, spletne strani itd."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3183,6 +3257,7 @@ msgstr ""
 msgid ""
 "This job position and all related applicants will be archived. Are you sure?"
 msgstr ""
+"To delovno mesto in vsi povezani kandidati bodo arhivirani. Ste prepričani?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -3197,12 +3272,12 @@ msgstr ""
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
-msgstr ""
+msgstr "Nasvet: Kandidati se lahko prijavijo po e-pošti"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "Zaposliti"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3212,19 +3287,19 @@ msgstr "Današnje aktivnosti"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Tooltips"
-msgstr ""
+msgstr "Opisi orodij"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
-msgstr ""
+msgstr "Sledilniki"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Try creating an application by sending an email to"
-msgstr ""
+msgstr "Poskusite ustvariti aplikacijo tako, da pošljete e-pošto na"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3234,7 +3309,7 @@ msgstr "Try sending an email"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Try the Website app to publish job offers online."
-msgstr ""
+msgstr "Preizkusite aplikacijo Website za objavo ponudb za delo na spletu."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3242,6 +3317,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Poskusite dodati nekaj zapisov ali pa se prepričajte, da v iskalni vrstici "
+"ni aktivnega filtra."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -3262,7 +3339,7 @@ msgstr "UTM vir"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm
 msgid "UTMs"
-msgstr ""
+msgstr "UTM-ji (moduli za sledenje Urchin)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
@@ -3288,11 +3365,13 @@ msgstr "Neprebrana sporočila"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the Résumr or the file itself"
 msgstr ""
+"Uporabite OCR za izpolnjevanje podatkov iz slike življenjepisa ali same "
+"datoteke"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
-msgstr ""
+msgstr "Uporabite sledilnike e-pošte in povezav"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -3301,6 +3380,10 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on the Survey app."
 msgstr ""
+"Med postopkom zaposlovanja uporabite obrazce za razgovor, prilagojene "
+"posameznemu delovnemu mestu. V obrazcu s podrobnostmi o delovnem mestu "
+"izberite obrazec, ki ga želite uporabiti. To je odvisno od aplikacije "
+"Anketa."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_users
@@ -3326,7 +3409,7 @@ msgstr "V čakanju"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Want to analyse where applications come from ?"
-msgstr ""
+msgstr "Želite analizirati, od kod prihajajo prijave?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
@@ -3344,13 +3427,13 @@ msgstr "Kronologija komunikacij spletne strani"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "What do you want to recruit today? Choose a job title..."
-msgstr ""
+msgstr "Kaj želite danes zaposliti? Izberite naziv delovnega mesta ..."
 
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_refuse
 msgid "When you refuse an application, you can choose this template"
-msgstr ""
+msgstr "Ko zavrnete vlogo, lahko izberete to predlogo"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3360,7 +3443,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Without a regex: The applicant's name will be the email's subject."
-msgstr ""
+msgstr "Brez regularnega izraza: Ime prosilca bo zadeva e-poštnega sporočila."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3372,7 +3455,7 @@ msgstr "Tukaj napišite svoje sporočilo ..."
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "Tega dejanja ni dovoljeno izvesti."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -3380,6 +3463,8 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                            of the default labels."
 msgstr ""
+"Tukaj lahko določite oznake, ki bodo prikazane za stanje kanbana namesto\n"
+"                            privzetih oznak."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -3387,6 +3472,8 @@ msgid ""
 "You can define the requirements here. They will be displayed when you hover "
 "over the stage title."
 msgstr ""
+"Zahteve lahko določite tukaj. Prikazane bodo, ko boste z miško zadržali "
+"naslov odra."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3395,6 +3482,8 @@ msgid ""
 "You can't select Send email option.\n"
 "The email will not be sent to the following applicant(s) as they don't have an email address:"
 msgstr ""
+"Možnosti »Pošlji e-pošto« ne morete izbrati.\n"
+"E-pošta ne bo poslana naslednjim prijaviteljem, ker nimajo e-poštnega naslova:"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3410,24 +3499,29 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"Možnosti »Pošlji e-pošto« ne morete izbrati.\n"
+"E-pošta ne bo poslana naslednjim prijaviteljem, ker nimajo e-poštnega naslova:\n"
+"%(recruitment_sources)s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for %s"
-msgstr ""
+msgstr "Dodeljeni ste bili kot anketar za %s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for the Applicant %s"
 msgstr ""
+"Dodeljeni ste bili kot anketar za kandidata.\n"
+"%s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You must define a Contact Name for this applicant."
-msgstr ""
+msgstr "Za tega prijavitelja morate določiti kontaktno ime."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3441,7 +3535,7 @@ msgstr ""
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
-msgstr ""
+msgstr "Vaša prijava za delo: {{ object.job_id.name }}"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.quick_create_applicant_form
@@ -3451,17 +3545,17 @@ msgstr "npr. Janez Novak"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "e.g. LinkedIn"
-msgstr ""
+msgstr "npr. LinkedIn"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. Linkedin"
-msgstr ""
+msgstr "npr. LinkedIn"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Masters"
-msgstr ""
+msgstr "npr. Masters"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3471,32 +3565,32 @@ msgstr "npr. Vodja prodaje"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. ^New application:.*from (.*)"
-msgstr ""
+msgstr "e.g. ^Nova prijava:.*od (.*)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "npr. domena.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. https://www.linkedin.com/in/..."
-msgstr ""
+msgstr "npr. https://www.linkedin.com/in/..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. jobs"
-msgstr ""
+msgstr "npr. delovna mesta"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. jobs-listings@linkedin.com"
-msgstr ""
+msgstr "npr. jobs-listings@linkedin.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. john.doe@example.com"
-msgstr ""
+msgstr "npr. john.doe@example.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3506,7 +3600,7 @@ msgstr "npr. mycompany.si"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr ""
+msgstr "npr. vodja prodaje"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3517,4 +3611,4 @@ msgstr "ali"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "other application(s)"
-msgstr ""
+msgstr "druge aplikacije"

@@ -277,7 +277,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         company_1_all = user_admin.company_id
         company_2_admin_only = self.company_2
         test_model_name = 'mail.test.multi.company.with.activity'
-        activity_type_todo = 'test_mail.mail_act_test_todo'
+        activity_type_todo = 'test_mail.mail_act_test_todo_generic'
 
         def _mock_check_access(records, operation):
             """ To avoid creating a new test model not accessible by employee user, we modify the access rules. """

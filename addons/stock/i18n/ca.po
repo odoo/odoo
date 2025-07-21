@@ -35,14 +35,15 @@
 # Josep Anton Belchi, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
 # Noemi Pla, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Noemi Pla, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -795,6 +796,11 @@ msgid "<strong>Customer Address</strong>"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivered</strong>"
+msgstr "<strong>Lliurat</strong>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
 msgstr ""
@@ -835,6 +841,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
 msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Ordered</strong>"
+msgstr "<strong>Ordenat</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -1107,7 +1118,7 @@ msgstr "Adreça on s'ha de lliurar la mercaderia. Opcional."
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_adjustments
 msgid "Adjustments"
-msgstr "Ajustaments"
+msgstr "Ajustos"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -1951,6 +1962,13 @@ msgstr "Calcular despeses d'enviament amb DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Calcular despeses d'enviament i envia-ho amb Easypost"
 
@@ -1958,6 +1976,13 @@ msgstr "Calcular despeses d'enviament i envia-ho amb Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Calcular despeses d'enviament amb FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1981,8 +2006,22 @@ msgstr "Calcular despeses d'enviament amb UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Calcular despeses d'enviament amb USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2093,7 +2132,7 @@ msgstr "Continuar"
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 msgid "Control panel buttons"
-msgstr "Botons del panel de control"
+msgstr "Botons del panell de control"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
@@ -2502,6 +2541,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
 msgstr ""
 
 #. module: stock
@@ -3182,6 +3226,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "confirmeu que voleu repartir"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Documentació "
@@ -3414,6 +3459,7 @@ msgstr "Febrer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Connector FedEx"
 
@@ -4199,7 +4245,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Import Template for Inventory Adjustments"
-msgstr "Importa una plantilla per als ajustaments de l'inventari"
+msgstr "Importa una plantilla per als ajustos de l'inventari"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -4456,7 +4502,7 @@ msgstr "Avís d' ajust d' inicialització"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Inventory Adjustments"
-msgstr "Ajustaments d'inventari"
+msgstr "Ajustos d'inventari"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -4525,7 +4571,7 @@ msgstr "Rutes d'inventari"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Inventory Valuation"
-msgstr "Valoració del inventari"
+msgstr "Valoració de l'inventari"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_at_date
@@ -4709,7 +4755,7 @@ msgstr "Etiquetes a imprimir"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Laptop"
-msgstr ""
+msgstr "Portàtil"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -7834,7 +7880,7 @@ msgstr "Retorna albarà"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Retorn de la línia de recollida"
+msgstr "Línia de devolució de l'albarà"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7898,7 +7944,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
 msgid "Revert Inventory Adjustment"
-msgstr "Reverteix l'ajustament de l'inventari"
+msgstr "Reverteix l'ajust de l'inventari"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -8201,7 +8247,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr "Vendre i Comprar productes en diferents unitats de mesuara"
+msgstr "Vendre i Comprar productes en diferents unitats de mesura"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8675,7 +8721,7 @@ msgstr "Productes destacats"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Connector Starshipit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8818,7 +8864,7 @@ msgstr "Informe de la recuperació d'estoc"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr "La pila principal sol·licita un comptador d'inventoris"
+msgstr "Sol·licitar un recompte d'inventari"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -10069,11 +10115,13 @@ msgstr "Tipus d'activitat d'excepció registrada."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Connector UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Connector USPS"
 
@@ -10419,7 +10467,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Stock"
-msgstr ""
+msgstr "WH/Stock"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed

@@ -26,16 +26,16 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2024
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2025
-# Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,55 +97,57 @@ msgstr "%(employee)s çalışanı, %(duration)s süreyle İzinde"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee_name)s - from %(date_from)s to %(date_to)s - %(state)s"
 msgstr ""
+"Çalışanın adı: %(employee_name)s; tarih aralığı: %(date_from)s- %(date_to)s "
+";%(state)s"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(holiday_name)s has been refused."
-msgstr ""
+msgstr "%(holiday_name)s reddedilmiştir."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
-msgstr ""
+msgstr "%(leave_name)s iptal edilmiştir. İptal sebebi: <br/>%(reason)s."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(leave_type)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(leave_type)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "%(name)s (%(duration)s %(request_unit)s(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s %(request_unit)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s day(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s gün)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s hour(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s saat)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g days)"
-msgstr ""
+msgstr "%(name)s(%(maximum)ggünden geriye kalan süre: %(time)g)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
-msgstr ""
+msgstr "%(name)s(%(maximum)g saatten geriye kalan süre: %(time)g)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -158,12 +160,13 @@ msgstr "%(name)s: %(duration)s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s on %(leave_type)s: %(duration)s (%(start)s)"
 msgstr ""
+"Çalışan: %(person)s; izin türü: %(leave_type)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(person)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -430,7 +433,9 @@ msgstr "Bugün İzinliler"
 msgid ""
 "Absent Employee(s), Whose time off requests are either confirmed or "
 "validated on today"
-msgstr "İzin talepleri bugün onaylanmış veya doğrulanmış İzinli Personel(ler)"
+msgstr ""
+"İzin talepleri bugün onaylanmış veya doğrulanmış olan, İş Yerinde Olmayan "
+"Çalışan(lar)"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -572,6 +577,11 @@ msgstr "Etkinlik İstisna Dekorasyonu"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_state
 msgid "Activity State"
 msgstr "Aktivite Durumu"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Aktivite Türü"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
@@ -2255,7 +2265,8 @@ msgstr "Hadi doğrulayalım"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's try to create a Sick Time Off, select it in the list"
-msgstr "Bir Hastalık İzni oluşturmayı deneyelim, listeden seçelim"
+msgstr ""
+"Bir Hastalık İzni başvurusu oluşturmayı dneyelim; listeden seçebilirsiniz"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
@@ -3617,7 +3628,8 @@ msgstr ""
 msgid ""
 "This area is automatically filled by the user who validate the time off"
 msgstr ""
-"Bu alan, izni doğrulayan kullanıcı tarafından otomatik olarak doldurulur"
+"Bu alan, izin süresini onaylayan kullanıcı tarafından otomatik olarak "
+"doldurulur"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
@@ -3658,7 +3670,7 @@ msgstr "Bu alan, tahakkukun başlayacağı zaman birimini tanımlar."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
 msgid "This indicates if it is still possible to use this type of leave"
 msgstr ""
-"Bu, bu tür izinlerin kullanılmasının hala mümkün olup olmadığını gösterir"
+"Bu, bu tür bir iznin kullanılmasının hala mümkün olup olmadığını gösterir"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3920,7 +3932,8 @@ msgstr "Yöneticisi olduğunuz kişilerin izin süresi"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
-msgstr "İzin talebini onaylamak için doğrulanmış (\"Onaylanacak\") olmalıdır."
+msgstr ""
+"İzin talebinin onaylanması için onaylanmış (\"Onaylanacak\") olması gerekir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3932,7 +3945,9 @@ msgstr "İzin talebini onaylamak için doğrulanmış olmalıdır."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed or validated in order to refuse it."
-msgstr "İzin talebini reddetmek için doğrulanmış olmalıdır."
+msgstr ""
+"İzin talebinin reddedilebilmesi için onaylanmış veya geçerliliğinin "
+"doğrulanmış olması gerekir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4498,8 +4513,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
-"Başlamış olan bir izni değiştirmek/doğrulamak için yönetici haklarına sahip "
-"olmalısınız"
+"Başlamış olan bir izni değiştirmek/onaylamak için yönetici haklarına sahip "
+"olmanız gerekir"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4627,7 +4642,7 @@ msgstr "gün)"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "örn. Ekstra iyileşme süresi, Şirketin uygun olmaması, ..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4636,13 +4651,13 @@ msgstr ""
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
 "örn. İzin türü (Geçerlilik başlangıcından geçerlilik sonuna kadar / "
-"limitsiz)"
+"sınırsız)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "from %(date_from)s to %(date_to)s - %(state)s"
-msgstr ""
+msgstr "Tarih araığı: %(date_from)s - %(date_to)s; %(state)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4736,7 +4751,7 @@ msgstr "alındı"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "the accruated amount is insufficient for that duration."
-msgstr ""
+msgstr "hak kazanılmış olan tutar bu süre için yetersizdir."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary

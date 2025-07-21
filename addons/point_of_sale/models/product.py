@@ -208,7 +208,7 @@ class ProductProduct(models.Model):
         else:
             pricelists = config.pricelist_id
         price_per_pricelist_id = pricelists._price_get(self, quantity) if pricelists else False
-        pricelist_list = [{'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
+        pricelist_list = [{'id': pl.id, 'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
 
         # Warehouses
         warehouse_list = [
@@ -261,6 +261,11 @@ class ProductAttribute(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['name', 'display_type', 'template_value_ids', 'attribute_line_ids', 'create_variant']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        loaded_attribute_ids = {ptal['attribute_id'] for ptal in data['product.template.attribute.line']['data']}
+        return [('id', 'in', list(loaded_attribute_ids))]
 
 
 class ProductAttributeCustomValue(models.Model):

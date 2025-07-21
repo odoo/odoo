@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { Deferred, on, setFrameRate } from "@odoo/hoot-dom";
+import { on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
-import { exposeHelpers, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { exposeHelpers, isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
     Callbacks,
@@ -120,6 +120,7 @@ const {
         freeze: $freeze,
         fromEntries: $fromEntries,
         keys: $keys,
+        values: $values,
     },
     performance,
     Promise,
@@ -222,7 +223,7 @@ function handleConsoleIssues(test, shouldSuppress) {
         return logger.suppressIssues(`suppressed by "test.todo"`);
     } else {
         const cleanups = [];
-        if (globalThis.console instanceof EventTarget) {
+        if (isInstanceOf(globalThis.console, EventTarget)) {
             cleanups.push(
                 on(globalThis.console, "error", () => test.logs.error++),
                 on(globalThis.console, "warn", () => test.logs.warn++)
@@ -281,14 +282,15 @@ export class Runner {
     expect;
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
+    headless = false;
     /** @type {Record<string, Preset>} */
-    presets = reactive({
+    presets = {
         [""]: { label: "No preset" },
-    });
+    };
     reporting = createReporting();
     /** @type {Suite[]} */
     rootSuites = [];
-    state = reactive({
+    state = {
         /** @type {Test | null} */
         currentTest: null,
         /**
@@ -315,12 +317,11 @@ export class Runner {
          *  - +1/-1: included/excluded by URL
          *  - +2/-2: included/excluded by explicit test tag (readonly)
          *  - +3/-3: included/excluded by preset (readonly)
-         * @type {Record<Exclude<SearchFilter, "filter">, Record<string, number>>}
+         * @type {Record<"id" | "tag", Record<string, number>>}
          */
         includeSpecs: {
-            suite: {},
+            id: {},
             tag: {},
-            test: {},
         },
         /** @type {"ready" | "running" | "done"} */
         status: "ready",
@@ -334,7 +335,7 @@ export class Runner {
          * @type {Test[]}
          */
         tests: [],
-    });
+    };
     /** @type {Map<string, Suite>} */
     suites = new Map();
     /** @type {Suite[]} */
@@ -353,7 +354,19 @@ export class Runner {
      * @type {boolean}
      */
     get hasFilter() {
-        return this._hasRemovableFilter > 0;
+        for (const includeValues of $values(this.state.includeSpecs)) {
+            if ($keys(includeValues).length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @type {boolean}
+     */
+    get hasRemovableFilter() {
+        return this._removableFilterCount > 0;
     }
 
     // Private properties
@@ -361,16 +374,16 @@ export class Runner {
     /** @type {Job[]} */
     _currentJobs = [];
     _failed = 0;
-    _hasRemovableFilter = 0;
-    _hasIncludeFilter = 0;
+    _includeFilterCount = 0;
     /** @type {(() => MaybePromise<void>)[]} */
     _missedCallbacks = [];
     _populateState = false;
     _prepared = false;
     /** @type {() => void} */
-    _pushPendingTest;
+    _pushPendingTest = () => {};
     /** @type {(test: Test) => void} */
-    _pushTest;
+    _pushTest = () => {};
+    _removableFilterCount = 0;
     _started = false;
     _startTime = 0;
 
@@ -387,25 +400,30 @@ export class Runner {
         this.test = this._addConfigurators(this.addTest, false);
 
         this.initialConfig = { ...DEFAULT_CONFIG, ...config };
-        const reactiveConfig = reactive({ ...this.initialConfig }, () => {
-            setParams(
-                $fromEntries(
-                    $entries(this.config).map(([key, value]) => [
-                        key,
-                        deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
-                    ])
-                )
-            );
-        });
+        // Headless cannot be configured while running since it retains much less
+        // information/state that cannot be retrieved after construction.
+        this.headless = this.initialConfig.headless;
+        if (this.headless) {
+            this.config = { ...this.initialConfig };
+        } else {
+            this.presets = reactive(this.presets);
+            this.state = reactive(this.state);
+            this.config = reactive({ ...this.initialConfig }, () => {
+                setParams(
+                    $fromEntries(
+                        $entries(this.config).map(([key, value]) => [
+                            key,
+                            deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
+                        ])
+                    )
+                );
+            });
 
-        [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test), 10);
-        [this.expect, this.expectHooks] = makeExpect({
-            get headless() {
-                return reactiveConfig.headless;
-            },
-        });
+            [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test));
+        }
 
-        this.config = reactiveConfig;
+        [this.expect, this.expectHooks] = makeExpect({ headless: this.headless });
+
         for (const key in this.config) {
             this.config[key];
         }
@@ -422,22 +440,18 @@ export class Runner {
                     this.queryInclude.push(queryPart);
                 }
             }
-            this._hasIncludeFilter += this.queryInclude.length;
+            this._filterCount += this.queryInclude.length;
+            this._includeFilterCount += this.queryInclude.length;
         }
 
-        // Suites
-        if (this.config.suite?.length) {
-            this._include(this.state.includeSpecs.suite, this.config.suite, INCLUDE_LEVEL.url);
+        // Jobs (suites or tests)
+        if (this.config.id?.length) {
+            this._include(this.state.includeSpecs.id, this.config.id, INCLUDE_LEVEL.url);
         }
 
         // Tags
         if (this.config.tag?.length) {
             this._include(this.state.includeSpecs.tag, this.config.tag, INCLUDE_LEVEL.url);
-        }
-
-        // Tests
-        if (this.config.test?.length) {
-            this._include(this.state.includeSpecs.test, this.config.test, INCLUDE_LEVEL.url);
         }
 
         if (this.config.networkDelay) {
@@ -502,6 +516,10 @@ export class Runner {
         this.suiteStack.push(suite);
 
         this._applyTagModifiers(suite);
+        if (suite.config.skip && this.headless) {
+            // Do not register skipped jobs in headless
+            return this._erase(suite, true);
+        }
 
         let error, result;
         if (!this._prepared || suite.currentJobs.length) {
@@ -552,7 +570,7 @@ export class Runner {
         const runFn = this.dry ? null : fn;
         let test = markRaw(new Test(parentSuite, name, config));
         const originalTest = this.tests.get(test.id);
-        if (originalTest) {
+        if (originalTest && !originalTest.isMinimized) {
             if (this.dry || originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
@@ -563,6 +581,9 @@ export class Runner {
             }
             test = originalTest;
         } else {
+            if (!this.dry && this._prepared) {
+                return null;
+            }
             parentSuite.addJob(test);
             this.tests.set(test.id, test);
         }
@@ -570,6 +591,10 @@ export class Runner {
         test.setRunFn(runFn);
 
         this._applyTagModifiers(test);
+        if (test.config.skip && this.headless) {
+            // Do not register skipped jobs in headless
+            return this._erase(test, true);
+        }
 
         return test;
     }
@@ -758,14 +783,11 @@ export class Runner {
 
         await callback();
 
-        this._prepareRunner();
+        const result = this._prepareRunner();
 
         this.dry = false;
 
-        return {
-            suites: this.state.suites,
-            tests: this.state.tests,
-        };
+        return result;
     }
 
     /**
@@ -801,7 +823,7 @@ export class Runner {
     }
 
     manualStart() {
-        this._canStartPromise.resolve(true);
+        this._canStartDef.resolve(true);
     }
 
     /**
@@ -821,36 +843,27 @@ export class Runner {
     }
 
     /**
-     * @param {Partial<Record<SearchFilter, Iterable<string>>>} ids
+     * @param {Partial<Record<SearchFilter, Iterable<string>>>} specs
      */
-    simplifyUrlIds(ids) {
-        if (!ids) {
+    simplifyUrlIds(specs) {
+        if (!specs) {
             return {};
         }
-        const specs = {
-            suite: {},
-            tag: {},
-            test: {},
-        };
+        const ids = {};
         let items = 0;
-        for (const key in specs) {
-            if (ids[key]) {
-                for (const id of ensureArray(ids[key])) {
-                    items++;
-                    specs[key][id] = INCLUDE_LEVEL.url;
-                }
+        if (specs.id) {
+            for (const id of ensureArray(specs.id)) {
+                items++;
+                ids[id] = INCLUDE_LEVEL.url;
             }
         }
         if (items > 1) {
-            this._simplifyIncludeSpecs(specs, {
-                test: this.tests,
-                suite: this.suites,
-            });
+            this._simplifyIncludeSpecs(ids);
         }
-        for (const key in specs) {
-            specs[key] = $keys(specs[key]);
-        }
-        return specs;
+        return {
+            ...specs,
+            id: $keys(ids),
+        };
     }
 
     /**
@@ -868,6 +881,7 @@ export class Runner {
      * @param {...Job} jobs
      */
     async start(...jobs) {
+        jobs = jobs.filter(Boolean);
         if (!this._started) {
             this._started = true;
             this._prepareRunner();
@@ -884,8 +898,8 @@ export class Runner {
             this._currentJobs = filterReady(jobs);
         }
 
-        if (this._canStartPromise) {
-            await this._canStartPromise;
+        if (this._canStartDef) {
+            await this._canStartDef.promise;
         }
 
         this.state.status = "running";
@@ -902,7 +916,7 @@ export class Runner {
 
                 /** @type {Suite} */
                 const suite = job;
-                if (!suite.config.skip) {
+                if (!suite.config.skip && suite.currentJobs.length) {
                     if (suite.currentJobIndex <= 0) {
                         // before suite code
                         this.suiteStack.push(suite);
@@ -926,13 +940,17 @@ export class Runner {
                         suite.runCount++;
                         if (suite.willRunAgain()) {
                             suite.reset();
+                            continue;
+                        } else if (this.headless) {
+                            this._erase(suite);
                         } else {
                             suite.cleanup();
                         }
-                        if (suite.runCount < (suite.config.multi || 0)) {
-                            continue;
-                        }
                     }
+                } else if (this.headless) {
+                    this._erase(suite);
+                } else {
+                    suite.minimize();
                 }
                 job = this._nextJob(jobs, job);
                 continue;
@@ -1081,6 +1099,8 @@ export class Runner {
 
             if (test.willRunAgain()) {
                 test.reset();
+            } else if (this.headless) {
+                this._erase(test);
             } else {
                 test.cleanup();
             }
@@ -1128,8 +1148,8 @@ export class Runner {
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
             const errorMessage = ["Some tests failed: see above for details"];
-            if (this.config.headless) {
-                const ids = this.simplifyUrlIds({ test: this.state.failedIds });
+            if (this.headless) {
+                const ids = this.simplifyUrlIds({ id: this.state.failedIds });
                 const link = createUrlFromId(ids, { debug: true });
                 // Tweak parameters to make debugging easier
                 link.searchParams.set("debug", "assets");
@@ -1140,7 +1160,7 @@ export class Runner {
             }
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
-                `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
+                `Failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
             // Do not use logger to not apply the [HOOT] prefix and allow the CI
             // to stop the test run browser.
@@ -1148,11 +1168,11 @@ export class Runner {
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
-                `passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`
+                `Passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`
             );
             // This statement acts as a success code for the server to know when
             // all suites have passed.
-            logger.logRun("test suite succeeded");
+            logger.logRun("Test suite succeeded");
         }
 
         return false;
@@ -1327,11 +1347,7 @@ export class Runner {
                             )}. This is not suitable for CI`
                         );
                     }
-                    this._include(
-                        this.state.includeSpecs[job instanceof Suite ? "suite" : "test"],
-                        [job.id],
-                        INCLUDE_LEVEL.tag
-                    );
+                    this._include(this.state.includeSpecs.id, [job.id], INCLUDE_LEVEL.tag);
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
@@ -1396,6 +1412,29 @@ export class Runner {
     }
 
     /**
+     * @param {Job} job
+     * @param {boolean} [canEraseParent]
+     */
+    _erase(job, canEraseParent = false) {
+        job.minimize();
+        if (job instanceof Suite) {
+            this.suites.delete(job.id);
+        } else {
+            this.tests.delete(job.id);
+        }
+        if (canEraseParent && job.parent) {
+            const jobIndex = job.parent.jobs.indexOf(job);
+            if (jobIndex >= 0) {
+                job.parent.jobs.splice(jobIndex, 1);
+            }
+            if (!job.parent.jobs.length) {
+                this._erase(job.parent);
+            }
+        }
+        return job;
+    }
+
+    /**
      * Executes a given callback when not in debug mode.
      * @param {() => Promise<void>} callback
      */
@@ -1427,9 +1466,7 @@ export class Runner {
      * @param {Job} job
      */
     _getExplicitIncludeStatus(job) {
-        const includeSpec =
-            job instanceof Suite ? this.state.includeSpecs.suite : this.state.includeSpecs.test;
-        const explicitInclude = includeSpec[job.id] || 0;
+        const explicitInclude = this.state.includeSpecs.id[job.id] || 0;
         return [explicitInclude > 0, explicitInclude < 0];
     }
 
@@ -1444,11 +1481,12 @@ export class Runner {
         const shouldInclude = !!includeLevel;
         let applied = 0;
         for (const id of ids) {
+            let idLevel = includeLevel;
             let nId = normalize(id.toLowerCase());
             if (nId.startsWith(EXCLUDE_PREFIX)) {
                 nId = nId.slice(EXCLUDE_PREFIX.length);
-                if (includeLevel > 0) {
-                    includeLevel *= -1;
+                if (idLevel > 0) {
+                    idLevel *= -1;
                 }
             }
             const previousValue = values[nId] || 0;
@@ -1457,22 +1495,22 @@ export class Runner {
                 applied++;
             }
             if (shouldInclude) {
-                if (previousValue === includeLevel) {
+                if (previousValue === idLevel) {
                     continue;
                 }
-                values[nId] = includeLevel;
+                values[nId] = idLevel;
                 if (noIncrement) {
                     continue;
                 }
-                if (previousValue <= 0 && includeLevel > 0) {
-                    this._hasIncludeFilter++;
-                } else if (previousValue > 0 && includeLevel <= 0) {
-                    this._hasIncludeFilter--;
+                if (previousValue <= 0 && idLevel > 0) {
+                    this._includeFilterCount++;
+                } else if (previousValue > 0 && idLevel <= 0) {
+                    this._includeFilterCount--;
                 }
                 if (!wasRemovable && isRemovable) {
-                    this._hasRemovableFilter++;
+                    this._removableFilterCount++;
                 } else if (wasRemovable && !isRemovable) {
-                    this._hasRemovableFilter--;
+                    this._removableFilterCount--;
                 }
             } else {
                 delete values[nId];
@@ -1480,10 +1518,10 @@ export class Runner {
                     continue;
                 }
                 if (previousValue > 0) {
-                    this._hasIncludeFilter--;
+                    this._includeFilterCount--;
                 }
                 if (wasRemovable) {
-                    this._hasRemovableFilter--;
+                    this._removableFilterCount--;
                 }
             }
         }
@@ -1558,7 +1596,7 @@ export class Runner {
      * @param {boolean} [implicitInclude] fallback include value for sub-jobs
      * @returns {Job[]}
      */
-    _prepareJobs(jobs, implicitInclude = !this._hasIncludeFilter) {
+    _prepareJobs(jobs, implicitInclude = !this._includeFilterCount) {
         if (typeof this.debug !== "boolean") {
             // Special case: test (or suite with 1 test) with "debug" tag
             let debugTest = this.debug;
@@ -1629,7 +1667,7 @@ export class Runner {
 
     _prepareRunner() {
         if (this._prepared) {
-            return;
+            return {};
         }
         this._prepared = true;
 
@@ -1651,11 +1689,7 @@ export class Runner {
         }
 
         // Cleanup invalid IDs and tags from URL
-        const hasChanged = this._simplifyIncludeSpecs(this.state.includeSpecs, {
-            test: this.tests,
-            suite: this.suites,
-            tag: this.tags,
-        });
+        const hasChanged = this._simplifyIncludeSpecs(this.state.includeSpecs.id);
         if (hasChanged) {
             this._updateConfigFromSpecs();
         }
@@ -1684,6 +1718,39 @@ export class Runner {
         if (!this.state.tests.length) {
             throw new HootError(`no tests to run`);
         }
+
+        // Reduce non-included suites & tests info to a miminum
+        const includedSuites = new Set(this.state.suites);
+        for (const suite of this.suites.values()) {
+            if (!includedSuites.has(suite)) {
+                if (this.headless) {
+                    this._erase(suite, true);
+                } else {
+                    suite.minimize();
+                }
+            }
+        }
+        const includedTests = new Set(this.state.tests);
+        for (const test of this.tests.values()) {
+            if (!includedTests.has(test)) {
+                if (this.headless) {
+                    this._erase(test, true);
+                } else {
+                    test.minimize();
+                }
+            }
+        }
+
+        if (this.headless) {
+            this.rootSuites.length = 0;
+            this.state.suites.length = 0;
+            this.state.tests.length = 0;
+        }
+
+        return {
+            suites: [...includedSuites],
+            tests: [...includedTests],
+        };
     }
 
     /**
@@ -1700,7 +1767,7 @@ export class Runner {
         }
         handledErrors.add(error);
 
-        if (!(ev instanceof Event)) {
+        if (!isInstanceOf(ev, Event)) {
             ev = new ErrorEvent("error", { error });
         }
 
@@ -1786,7 +1853,7 @@ export class Runner {
     async _setupStart() {
         this._startTime = $now();
         if (this.config.manual) {
-            this._canStartPromise = new Deferred();
+            this._canStartDef = Promise.withResolvers();
         }
 
         // Config log
@@ -1853,56 +1920,43 @@ export class Runner {
     }
 
     /**
-     * @param {Runner["state"]["includeSpecs"]} includeSpecs
-     * @param {Partial<Record<keyof includeSpecs, Map<string, Job>>>} valuesMaps
+     * @param {Runner["state"]["includeSpecs"]["id"]} idSpecs
      */
-    _simplifyIncludeSpecs(includeSpecs, valuesMaps) {
+    _simplifyIncludeSpecs(idSpecs) {
         let hasChanged = false;
-        const ignored = [];
-        const removed = [];
-        for (const [configKey, valuesMap] of $entries(valuesMaps)) {
-            const specs = includeSpecs[configKey];
-            let remaining = $keys(specs);
-            while (remaining.length) {
-                const id = remaining.shift();
-                if (specs[id] !== INCLUDE_LEVEL.url) {
-                    continue;
-                }
-                const item = valuesMap.get(id);
-                if (!item) {
-                    const applied = this._include(specs, [id], 0, true);
-                    if (applied) {
-                        removed.push(`\n- ${configKey} "${id}"`);
-                    } else {
-                        ignored.push(`\n- ${configKey} "${id}"`);
-                    }
-                    hasChanged = true;
-                }
-                if (!item?.parent || item.parent.jobs.length < 1) {
-                    // No parent or no need to simplify
-                    continue;
-                }
-                const siblingIds = item.parent.jobs.map((job) => job.id);
-                if (
-                    siblingIds.every(
-                        (siblingId) => siblingId === id || remaining.includes(siblingId)
-                    )
-                ) {
-                    remaining = remaining.filter((id) => !siblingIds.includes(id));
-                    this._include(includeSpecs.suite, [item.parent.id], INCLUDE_LEVEL.url, true);
-                    this._include(specs, siblingIds, 0, true);
-                    hasChanged = true;
-                }
+        let remaining = $keys(idSpecs);
+        while (remaining.length) {
+            const id = remaining.shift();
+            if ($abs(idSpecs[id]) !== INCLUDE_LEVEL.url) {
+                continue;
             }
-        }
-        if (removed.length) {
-            logger.warn(
-                `The following IDs were not found and and have been removed from URL filters:`,
-                ...removed
-            );
-        }
-        if (ignored.length) {
-            logger.warn(`The following IDs were not found and and have been ignored:`, ...ignored);
+            const item = this.suites.get(id) || this.tests.get(id);
+            if (!item) {
+                const applied = this._include(idSpecs, [id], 0);
+                if (applied) {
+                    logger.warn(
+                        `Test runner did not find job with ID "${id}": it has been removed from the URL`
+                    );
+                } else {
+                    logger.warn(
+                        `Test runner did not find job with ID "${id}": it has been ignored from the current run`
+                    );
+                }
+                hasChanged = true;
+            }
+            if (!item?.parent || item.parent.jobs.length < 1) {
+                // No parent or no need to simplify
+                continue;
+            }
+            const siblingIds = item.parent.jobs.map((job) => job.id);
+            if (
+                siblingIds.every((siblingId) => siblingId === id || remaining.includes(siblingId))
+            ) {
+                remaining = remaining.filter((id) => !siblingIds.includes(id));
+                this._include(idSpecs, [item.parent.id], INCLUDE_LEVEL.url, true);
+                this._include(idSpecs, siblingIds, 0, true);
+                hasChanged = true;
+            }
         }
         return hasChanged;
     }

@@ -3,8 +3,8 @@
 # 	* auth_ldap
 # 
 # Translators:
-# Lyall Kindmurr, 2024
 # Wil Odoo, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +36,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filtru folosit pentru a căuta conturi de utilizator în baza de date LDAP. Este un    filtru LDAP arbitrar sub formă de șir de caractere. Orice placeholder `%s`    va fi înlocuit cu login-ul (identificatorul) furnizat de utilizator, filtrul    trebuie să conțină cel puțin un astfel de placeholder.\n"
+"\n"
+"    Filtrul trebuie să returneze exact un (1) rezultat, altfel autentificarea va    fi considerată invalidă.\n"
+"\n"
+"    Exemplu (atributele reale depind de serverul și configurația LDAP):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    sau\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -43,8 +55,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Creeaza automat conturi de utilizatori locali pentru utilizatorii care se "
-"autentifica prin intermediul LDAP"
+"Creează automat conturi de utilizatori locali pentru utilizatorii care se "
+"autentifică prin intermediul LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -59,7 +71,7 @@ msgstr "Companie"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr "Configurare Companie LDAP"
+msgstr "Configurație LDAP companie"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -69,7 +81,7 @@ msgstr "Setări de configurare"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr "Creați utilizator"
+msgstr "Creează utilizator"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -79,7 +91,7 @@ msgstr "Creat de"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
@@ -87,6 +99,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN al domeniului de căutare a utilizatorilor: toți descendenții acestei baze"
+" vor fi căutați pentru utilizatori."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -102,7 +116,7 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr "Configurare LDAP"
+msgstr "Configurație LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
@@ -118,22 +132,22 @@ msgstr "Server LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "Adresa Server LDAP"
+msgstr "Adresă server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "Port Server LDAP"
+msgstr "Port server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr "Baza LDAP"
+msgstr "Bază LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP sistem binddn"
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
@@ -143,35 +157,35 @@ msgstr "Filtru LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr "Parola LDAP"
+msgstr "Parolă LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
+msgstr "Ultima actualizare la"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Informații de autentificare"
+msgstr "Informații autentificare"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
-"Niciun utilizator local nu a fost găsit pentru autentificarea LDAP și nu a "
-"fost configurat pentru a crea unul"
+"Nu a fost găsit niciun utilizator local pentru autentificarea LDAP și nu "
+"este configurat să creeze unul"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr "Parametri proces"
+msgstr "Parametru proces"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
@@ -180,8 +194,8 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"Solicită criptare TLS/SSL pentru conexiunea la serverul LDAP. Această "
-"opțiune necesită un server cu STARTTLS activat, altfel toate încercările de "
+"Solicită criptare TLS/SSL la conectarea la serverul LDAP. Această opțiune "
+"necesită un server cu STARTTLS activat, altfel toate încercările de "
 "autentificare vor eșua."
 
 #. module: auth_ldap
@@ -192,17 +206,17 @@ msgstr "Secvență"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr "Informații Server"
+msgstr "Informații server"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Configurati-va Serverul d-voastra LDAP"
+msgstr "Configurați serverul dumneavoastră LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr "Șablon utilizator"
+msgstr "Utilizator șablon"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
@@ -210,8 +224,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
-"Parola contului de utilizator al serverului LDAP folosit pentru a căuta în "
-"director."
+"Parola contului de utilizator de pe serverul LDAP folosit pentru a interoga "
+"directorul."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -219,8 +233,8 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"Contul de utilizator al serverului LDAP care este folosit pentru a căuta în "
-"director. Lăsați necompletat pentru a vă conecta anonim."
+"Contul de utilizator de pe serverul LDAP folosit pentru a interoga "
+"directorul. Lăsați necompletat pentru conectare anonimă."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
@@ -240,4 +254,4 @@ msgstr "Informații utilizator"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr "Utilizator de copiat atunci când se creează utilizatori noi"
+msgstr "Utilizator de copiat la crearea utilizatorilor noi"

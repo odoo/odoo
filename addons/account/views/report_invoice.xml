@@ -106,7 +106,7 @@
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
-                        <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
+                        <table class="o_has_total_table table o_main_table table-borderless mb-0" name="invoice_line_table">
                             <thead>
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
@@ -135,8 +135,8 @@
                                             <td name="account_invoice_line_name">
                                                 <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
                                             </td>
-                                            <td name="td_quantity" class="text-end text-nowrap">
-                                                <span t-field="line.quantity">3.00</span>
+                                            <td name="td_quantity" class="o_td_quantity text-end">
+                                                <span t-field="line.quantity" class="text-nowrap">3.00</span>
                                                 <span t-field="line.product_uom_id"  groups="uom.group_uom">units</span>
                                             </td>
                                             <td name="td_price_unit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
@@ -181,9 +181,9 @@
                                 </t>
                             </tbody>
                         </table>
-                        <div>
+                        <div class="overflow-hidden">
                             <div id="right-elements" t-attf-class="#{'col-5 mt-5' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
-                                <div id="total" class="clearfix row mt-n3">
+                                <div id="total" class="clearfix row">
                                     <div class="ms-auto">
                                         <table class="o_total_table table table-borderless avoid-page-break-inside">
 
@@ -200,7 +200,11 @@
                                                     <t t-foreach="payments_vals" t-as="payment_vals">
                                                         <tr t-if="payment_vals['is_exchange'] == 0">
                                                             <td>
-                                                                <i class="oe_form_field text-end oe_payment_label">Paid on <t t-out="payment_vals['date']" t-options='{"widget": "date"}'>2021-09-19</t></i>
+                                                                <i class="oe_form_field text-end oe_payment_label">
+                                                                    <t t-if="payment_vals['is_refund']">Reversed on </t>
+                                                                    <t t-else="">Paid on </t>
+                                                                    <t t-out="payment_vals['date']" t-options='{"widget": "date"}'>2021-09-19</t>
+                                                                </i>
                                                             </td>
                                                             <td class="text-end">
                                                                 <span t-out="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>20.00</span>
@@ -236,7 +240,7 @@
                                     <div class="oe_structure"/>
                                 </t>
                             </div>
-                            <div id="payment_term" class="clearfix">
+                            <div id="payment_term" class="clearfix mt-3">
                                 <div class="justify-text">
                                     <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
                                         <span t-field="o.fiscal_position_id.note"/>

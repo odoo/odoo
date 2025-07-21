@@ -549,6 +549,9 @@ msgid ""
 "- Register as a PEPPOL participant\n"
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 msgstr ""
+"\n"
+"- Register as a PEPPOL participant\n"
+"- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -1306,6 +1309,14 @@ msgid ""
 "It adds a new button \"EDI VAT\" on the French vat report and a new menu item \"EDI exports\" (below \"Reporting\",\n"
 "in the \"Statement Reports\" section).\n"
 msgstr ""
+"\n"
+"Accounting reports for France\n"
+"================================\n"
+"\n"
+"This module also allows exporting the French vat report and send it to the DGFiP, an OGA or an expert accountant.\n"
+"\n"
+"It adds a new button \"EDI VAT\" on the French vat report and a new menu item \"EDI exports\" (below \"Reporting\",\n"
+"in the \"Statement Reports\" section).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
@@ -1563,6 +1574,11 @@ msgid ""
 "Allows to send the tax report via the\n"
 "MTD-VAT API to HMRC.\n"
 msgstr ""
+"\n"
+"Accounting reports for UK\n"
+"\n"
+"Allows to send the tax report via the\n"
+"MTD-VAT API to HMRC.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_reports
@@ -3298,6 +3314,9 @@ msgid ""
 "Construction Industry Scheme for United Kingdom\n"
 "================================================\n"
 msgstr ""
+"\n"
+"Construction Industry Scheme for United Kingdom\n"
+"================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -3521,10 +3540,17 @@ msgid ""
 "this event.\n"
 msgstr ""
 "\n"
-"Satış siparişleri ile kayıt oluşturma.\n"
-"Bu modül, kayıt oluşturma işleminizi ana satış akışınızla otomatikleştirmenize ve bağlamanıza ve böylece kayıtların faturalama özelliğini etkinleştirmenize olanak tanır.\n"
-"Size, kendisiyle ilişkili bir etkinlik kategorisi seçme olanağını sunan yeni bir tür hizmet ürünü tanımlar.\n"
-"Bu ürün için bir satış siparişini kodladığınızda, o kategorinin mevcut bir etkinliğini seçebileceksiniz ve satış siparişinizi onayladığınızda bu etkinlik için otomatik olarak bir kayıt oluşturacaktır.\n"
+"Satış siparişleriyle kayıt oluşturma.\n"
+"========================================\n"
+"\n"
+"Bu modül, kayıt oluşturma sürecinizi ana satış akışınıza entegre ederek \n"
+"otomatikleştirmenizi ve böylece kayıtlar için faturalandırma özelliğini etkinleştirmenizi sağlar.\n"
+"\n"
+"Kendiyle ilişkili bir etkinlik kategorisi seçme imkânı sunan yeni bir hizmet ürün türü\n"
+"tanımlar. Bu ürüne yönelik bir satış siparişi oluşturduğunuzda,\n"
+"ilgili kategoriye ait mevcut bir etkinliği seçebilirsiniz ve \n"
+"satış siparişini onayladığınızda, sistem otomatik olarak bu etkinlik için bir\n"
+"kayıt oluşturur.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -3931,6 +3957,12 @@ msgid ""
 "\n"
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 msgstr ""
+"\n"
+"EDI Mexican Localization\n"
+"========================\n"
+"Allow the user to generate the EDI document for Mexican invoicing.\n"
+"\n"
+"This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi
@@ -4058,7 +4090,7 @@ msgstr ""
 "=======================================\n"
 "- Temel maaş hesaplaması\n"
 "- Kıdem tazminatı hesaplaması\n"
-"- Diğer girdiler (fazla mesai, maaş ekleri vb.)\n"
+"- Diğer girdiler (fazla mesai, maaş kesintileri vb.)\n"
 "- Sosyal sigorta hesaplaması\n"
 "- Kıdem tazminatı karşılıkları\n"
 "- Vergi muafiyetleri ve kesintileri\n"
@@ -4096,6 +4128,12 @@ msgid ""
 "\n"
 "DIOT Report\n"
 msgstr ""
+"\n"
+"Electronic accounting reports\n"
+"    - COA\n"
+"    - Trial Balance\n"
+"\n"
+"DIOT Report\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_reports
@@ -4136,6 +4174,24 @@ msgid ""
 "the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
 "Pro rules and show the errors.\n"
 msgstr ""
+"\n"
+"Electronic invoicing module\n"
+"===========================\n"
+"\n"
+"Allows to export and import formats: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"When generating the PDF on the invoice, the PDF will be embedded inside the xml for all UBL formats. This allows the\n"
+"receiver to retrieve the PDF with only the xml file. Note that **EHF3 is fully implemented by UBL Bis 3** (`reference\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"The formats can be chosen from the journal (Journal > Advanced Settings) linked to the invoice.\n"
+"\n"
+"Note that E-FFF, NLCIUS and XRechnung (UBL) are only available for Belgian, Dutch and German companies,\n"
+"respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"Note also that in order for Chorus Pro to automatically detect the \"PDF/A-3 (Factur-X)\" format, you need to activate\n"
+"the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
+"Pro rules and show the errors.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_edi_ubl
@@ -4837,6 +4893,8 @@ msgid ""
 "\n"
 "Generates Intrastat XML report (DEBWEB2) for declaration based on invoices for France.\n"
 msgstr ""
+"\n"
+"Generates Intrastat XML report (DEBWEB2) for declaration based on invoices for France.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -4918,6 +4976,9 @@ msgid ""
 "HMRC API for the United Kingdom\n"
 "================================================\n"
 msgstr ""
+"\n"
+"HMRC API for the United Kingdom\n"
+"================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -5039,17 +5100,16 @@ msgid ""
 msgstr ""
 "\n"
 "Amazon siparişlerinizi Odoo'ya aktarın ve teslimatları senkronize edin\n"
-"================================================= ==========\n"
+"============================================================\n"
 "\n"
 "Ana Özellikler\n"
 "------------\n"
-"* Birden fazla hesaptan ve pazar yerinden siparişleri içe aktarın.\n"
-"* Siparişler, dahili referanslarına (Amazon'da SKU) göre Odoo ürünleriyle eşleştirilir.\n"
+"* Birden fazla hesap ve pazardan siparişleri içe aktarın.\n"
+"* Siparişler, iç referanslarına (Amazon'da SKU) göre Odoo ürünleriyle eşleştirilir.\n"
 "* Odoo'da onaylanan teslimatlar Amazon'da senkronize edilir.\n"
-"* Hem Amazon Lojistik (FBA) hem de Satıcıdan Gönderim (FBM) desteği:\n"
-"     * FBA: Bir stok konumu ve stok hareketleri, Amazon Lojistik Merkezlerinde stoklarınızı izlemenize olanak tanır.\n"
-"     * FBM: Onaylanan her toplama işlemi için Amazon'a teslimat bildirimleri gönderilir (kısmi teslimat dostu).\n"
-"\n"
+"* Amazon tarafından yerine getirme (FBA) ve satıcı tarafından yerine getirme (FBM) için destek:\n"
+"    * FBA: Stok konumu ve stok hareketleri, Amazon Fulfilment Merkezlerindeki stoğunuzu izlemenizi sağlar.\n"
+"    * FBM: Onaylanan her toplama işlemi için Amazon'a teslimat bildirimleri gönderilir (kısmi teslimata uygun).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -5827,15 +5887,19 @@ msgid ""
 "procure.\n"
 msgstr ""
 "\n"
-"Ana Üretim Çizelgesi\n"
+"Ana Üretim Programı\n"
+"==========================\n"
 "\n"
-"Bazen yalnızca daha sonra oluşturulacak üretim siparişlerinin bileşenleri için satınalma siparişlerini oluşturmanız gerekir.\n"
-"Ya da sadece satış siparişlerini alacağınız üretim siparişleri için.\n"
-"Çözüm, satış tahminlerinizi tahmin etmek ve zaten bazı üretim siparişleri veya satın alma siparişleri oluşturacağınızı temel almaktır.\n"
+"Bazen, daha sonra oluşturulacak üretim siparişlerinin bileşenleri için\n"
+"satın alma siparişleri oluşturmanız gerekir.  Ya da satış siparişlerini daha sonra\n"
+"alacağınız üretim siparişleri için. Çözüm, satış tahminlerinizi \n"
+"öngörmek ve buna dayanarak bazı üretim siparişleri veya\n"
+"satın alma siparişleri oluşturmaktır.\n"
 "\n"
-"Rapora eklemek istediğiniz ürünleri seçmeniz gerekiyor\n"
-"Rapor için dönem seçebilirsiniz: gün, hafta, ay,...\n"
-"Ayrıca, tedarik edilecek olan stok miktarını, min / max değerini tanımlamak ve tedarik edeceğiniz miktarı manuel olarak geçersiz kılmak da mümkündür.\n"
+"Rapora eklemek istediğiniz ürünleri seçmeniz gerekir.  Raporun dönemini\n"
+"seçebilirsiniz: gün, hafta, ay, ... Güvenlik stoğunu, \n"
+"tedarik için minimum/maksimum miktarı tanımlamak ve tedarik edeceğiniz miktarı manuel \n"
+"olarak geçersiz kılmak da mümkündür.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
@@ -5886,6 +5950,24 @@ msgid ""
 "\n"
 ".. _SAT: http://www.sat.gob.mx/\n"
 msgstr ""
+"\n"
+"Minimal accounting configuration for Mexico.\n"
+"============================================\n"
+"\n"
+"This Chart of account is a minimal proposal to be able to use OoB the\n"
+"accounting feature of Odoo.\n"
+"\n"
+"This doesn't pretend be all the localization for MX it is just the minimal\n"
+"data required to start from 0 in mexican localization.\n"
+"\n"
+"This modules and its content is updated frequently by openerp-mexico team.\n"
+"\n"
+"With this module you will have:\n"
+"\n"
+" - Minimal chart of account tested in production environments.\n"
+" - Minimal chart of taxes, to comply with SAT_ requirements.\n"
+"\n"
+".. _SAT: http://www.sat.gob.mx/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports_2024
@@ -6002,6 +6084,22 @@ msgid ""
 "https://github.com/DGFiP/Test-Compta-Demat\n"
 "\n"
 msgstr ""
+"\n"
+"Module for the import of FEC standard files, useful for importing accounting history.\n"
+"\n"
+"FEC files (fichier des écritures comptables) are the standard accounting reports that French businesses have to submit to the tax authorities.\n"
+"This module allows the import of accounts, journals, partners and moves from these files.\n"
+"\n"
+"Only the CSV format of FEC is implemented.\n"
+"'utf-8', 'utf-8-sig' and 'iso8859_15' are the only allowed encodings.\n"
+"Several delimiters are allowed: ';' or '|' or ',' or '\t'.\n"
+"\n"
+"Official Technical Specification (fr)\n"
+"https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"FEC Testing tool from the tax authorities\n"
+"https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_saft_import
@@ -6104,21 +6202,6 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
-"\n"
-"Çok seviyeli geri çağırmalarla ödenmemiş faturalar için mektupları otomatikleştirme modülü.\n"
-"=========================================================================\n"
-"\n"
-"Birden fazla geri çağırma düzeyinizi menüden tanımlayabilirsiniz:\n"
-"---------------------------------------------------------------\n"
-"    Konfigürasyon / Takip / Takip Seviyeleri\n"
-"\n"
-"Tanımlandıktan sonra, sadece menüye tıklayarak her gün geri çağırmaları otomatik olarak yazdırabilirsiniz:\n"
-"------------------------------------------------------------------------------------------------------\n"
-"    Ödeme Takibi / E-posta ve mektup gönderme\n"
-"\n"
-"Bir PDF oluşturacak / e-posta gönderecek / farklı seviyelere göre etkinlikleri ayarlayacaktır.\n"
-"geri çağırma tanımlanmıştır. Farklı şirketler için farklı ilkeler tanımlayabilirsiniz.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -6234,13 +6317,16 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"CSV hesap özetlerini içe aktarım modülü\n"
+"CSV banka ekstrelerini içe aktarmaya yarayan modül.\n"
+"======================================\n"
 "\n"
-"Bu modül, CSV dosyalarını Odoo'ya atmanıza izin verir: Muhasebe ve Banka / Kasa ve Hesap özetleri insan tarafından okunabilir formatta ayrıştırılır ve depolanır.\n"
+"Bu modül, Odoo’ya CSV dosyalarını aktarmanıza olanak tanır: dosyalar ayrıştırılır ve \n"
+"Muhasebe \\ Banka ve Kasa \\ Banka Ekstreleri menüsünde okunabilir formatta saklanır.\n"
 "\n"
 "Önemli Not\n"
-"\n"
-"CSV formatının sınırlılığından dolayı aynı işlemlerin birkaç defa içe aktarılmadığından yada çoklu para birimi ileişlemediğinden emin olamıyoruz.. Mümkün olunca, OFX gibi daha uygun bir format kullanmalısınız.\n"
+"---------------------------------------------\n"
+"CSV formatının kısıtlamaları nedeniyle aynı işlemlerin birden fazla kez içe aktarılmaması veya çoklu döviz işlemlerinin düzgün yönetilmesi garanti edilemez.\n"
+"Mümkünse, OFX gibi daha uygun bir dosya formatı kullanmanız önerilir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -6272,13 +6358,16 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"QIF hesap özetlerini içe aktarım modülü\n"
+"QIF banka ekstrelerini içe aktarma modülü.\n"
+"======================================\n"
 "\n"
-"Bu modül, QIF dosyalarını Odoo'ya atmanıza izin verir: Muhasebe ve Banka / Kasa ve Hesap özetleri insan tarafından okunabilir formatta ayrıştırılır ve depolanır.\n"
+"Bu modül, Odoo’ya makine tarafından okunabilir QIF dosyalarını içe aktarmanıza olanak tanır: dosyalar ayrıştırılır ve\n"
+"Muhasebe \\ Banka ve Kasa \\ Banka Ekstreleri bölümünde okunabilir biçimde saklanır.\n"
 "\n"
 "Önemli Not\n"
-"\n"
-"QIF formatının sınırlılığından dolayı aynı işlemlerin birkaç defa içe aktarılmadığından yada çoklu para birimi ileişlemediğinden emin olamıyoruz.. Mümkün olunca, OFX gibi daha uygun bir format kullanmalısınız.\n"
+"---------------------------------------------\n"
+"QIF formatının kısıtlamaları nedeniyle, aynı işlemlerin birden fazla kez içe aktarılmaması veya çoklu para birimi işlemlerinin yönetilmesi garanti edilemez.\n"
+"Mümkün olduğunda OFX gibi daha uygun bir dosya formatı kullanmanız önerilir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_soda
@@ -7507,6 +7596,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -7514,6 +7605,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Japan is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Japan is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_ubl_pint
@@ -7521,6 +7614,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Malaysia is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Malaysia is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_ubl_pint
@@ -7528,6 +7623,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -7573,6 +7670,12 @@ msgid ""
 "It is only when a delivery order is validated that you can create the delivery\n"
 "guide.\n"
 msgstr ""
+"\n"
+"The delivery guide (Complemento XML Carta de Porte) is needed as a proof\n"
+"that you are sending goods between A and B.\n"
+"\n"
+"It is only when a delivery order is validated that you can create the delivery\n"
+"guide.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi_stock
@@ -8036,13 +8139,18 @@ msgid ""
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 msgstr ""
 "\n"
-"Lüksemburg hesap planı yönetmek için temel modül.\n"
+"Bu modül, Lüksemburg için muhasebe hesap planını yönetmeye yönelik temel modüldür.\n"
+"======================================================================\n"
 "\n"
-"*Lüksemburg Resmi Hesap Planı (Haziran 2009 + 2015 çizelgesi ve Vergiler kanunu),\n"
-"* Lüksemburg'da kullanılan ana vergiler\n"
-"* Yerel, intracom, extracom için varsayılan mali pozisyon\n"
+"    * Lüksemburg Resmî Hesap Planı (Haziran 2009 yasası + 2015 planı ve vergi yapısı),\n"
+"    * Lüksemburg Vergi Kodu Planı,\n"
+"    * Lüksemburg’da kullanılan temel vergiler,\n"
+"    * yerel, AB içi ve AB dışı işlemler için varsayılan mali konumlar\n"
 "\n"
-"Not: *2015 vergisi grafiği büyük ölçüde uygulanmaktadır, vergi şablonunun grafiğini güncellemek, tax.xls dosyasını güncellemek ve tax2csv.py'yi çalıştırmak için kapsam bilgilerinin detayları için tax.xls ilk sayfasına bakınız.\n"
+"Notlar:\n"
+"    * 2015 vergi planı büyük ölçüde uygulanmıştır,\n"
+"      kapsama detayları için tax.xls dosyasının ilk sayfasına bakınız\n"
+"    * vergi şablonunu güncellemek için tax.xls dosyasını güncelleyin ve tax2csv.py betiğini çalıştırın\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my
@@ -8303,6 +8411,27 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"This is the module to manage the accounting chart for France in Odoo.\n"
+"========================================================================\n"
+"\n"
+"This module applies to companies based in France mainland. It doesn't apply to\n"
+"companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).\n"
+"\n"
+"This localisation module creates the VAT taxes of type 'tax included' for purchases\n"
+"(it is notably required when you use the module 'hr_expense'). Beware that these\n"
+"'tax included' VAT taxes are not managed by the fiscal positions provided by this\n"
+"module (because it is complex to manage both 'tax excluded' and 'tax included'\n"
+"scenarios in fiscal positions).\n"
+"\n"
+"This localisation module doesn't properly handle the scenario when a France-mainland\n"
+"company sells services to a company based in the DOMs. We could manage it in the\n"
+"fiscal positions, but it would require to differentiate between 'product' VAT taxes\n"
+"and 'service' VAT taxes. We consider that it is too 'heavy' to have this by default\n"
+"in l10n_fr_account; companies that sell services to DOM-based companies should update the\n"
+"configuration of their taxes and fiscal positions manually.\n"
+"\n"
+"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -8371,6 +8500,9 @@ msgid ""
 "This module adds 2 useful fields on the taxes for electronic invoicing: the tax category code and the tax exemption reason code.\n"
 "These fields will be read when generating Peppol Bis 3 or Factur-X xml, for instance.\n"
 msgstr ""
+"\n"
+"This module adds 2 useful fields on the taxes for electronic invoicing: the tax category code and the tax exemption reason code.\n"
+"These fields will be read when generating Peppol Bis 3 or Factur-X xml, for instance.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -8460,6 +8592,13 @@ msgid ""
 "- Encryption features allows to decrypt all the user's data when receiving it from the proxy.\n"
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"This module adds generic features to register an Odoo DB on the proxy responsible for receiving data (via requests from web-services).\n"
+"- An edi_proxy_user has a unique identification on a specific proxy type (e.g. l10n_it_edi, peppol) which\n"
+"allows to identify him when receiving a document addressed to him. It is linked to a specific company on a specific\n"
+"Odoo database.\n"
+"- Encryption features allows to decrypt all the user's data when receiving it from the proxy.\n"
+"- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -8744,7 +8883,7 @@ msgstr ""
 "\n"
 "**Partner yayımlayın**\n"
 "\n"
-"Partner yayımlamak için iletişim formunda (İş Ortağı Ataması bölümünde) bir *Seviye* belirleyin ve *Yayımla* düğmesine tıklayın.\n"
+"Partner yayımlamak için iletişim formunda (Partner Ataması bölümünde) bir *Seviye* belirleyin ve *Yayımla* düğmesine tıklayın.\n"
 "\n"
 "**Müşteri adaylarını iletin**\n"
 "\n"
@@ -8855,6 +8994,14 @@ msgid ""
 "\n"
 "Forecast shifts and keep an eye on the hours consumed on your plannable products.\n"
 msgstr ""
+"\n"
+"Bu modül, ürün yapılandırmasına göre Satış Siparişinizi planlamanıza olanak tanır.\n"
+"\n"
+"“Plan Hizmetleri” seçeneğinin etkinleştirildiği ürünler için, vardiyayı alabilecek çalışanlar\n"
+"(yani, üründe yapılandırılan rolle aynı role sahip çalışanlar) için vardiyaları otomatik \n"
+"olarak tahmin etme imkanına sahip olacaksınız.\n"
+"\n"
+"Değişikliklerini tahmin edin ve planlanabilir ürünlerinizde harcanan saatleri izleyin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_planning
@@ -9017,6 +9164,12 @@ msgid ""
 "\n"
 "This module follows the implementation guidelines issued by the Bacs Payment Schemes Limited (BPSL). For more information about the BACS standards: https://www.bacs.co.uk/\n"
 msgstr ""
+"\n"
+"This module enables generating payment orders as required by the BACS Direct Debit and Direct Credit standards. The generated plain text files can then be uploaded to your bank for processing.\n"
+"\n"
+"Direct Debit allows businesses to collect payments directly from the bank accounts of customers, whereas the Direct Credit functionality enables businesses to make payments directly to bank accounts of individuals or other businesses.\n"
+"\n"
+"This module follows the implementation guidelines issued by the Bacs Payment Schemes Limited (BPSL). For more information about the BACS standards: https://www.bacs.co.uk/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft
@@ -9724,6 +9877,19 @@ msgid ""
 "We also test that generating xml from odoo with given parameters gives exactly the same xml as the expected,\n"
 "valid ones.\n"
 msgstr ""
+"\n"
+"This module tests the module 'account_edi_ubl_cii', it is separated since dependencies to some\n"
+"localizations were required. Its name begins with 'l10n' to not overload runbot.\n"
+"\n"
+"The test files are separated by sources, they were taken from:\n"
+"\n"
+"* the factur-x doc (form the FNFE)\n"
+"* the peppol-bis-invoice-3 doc (the github repository: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples contains examples)\n"
+"* odoo, these files pass all validation tests (using ecosio or the FNFE validator)\n"
+"\n"
+"We test that the external examples are correctly imported (currency, total amount and total tax match).\n"
+"We also test that generating xml from odoo with given parameters gives exactly the same xml as the expected,\n"
+"valid ones.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website_slides_full
@@ -10112,19 +10278,19 @@ msgstr ""
 "\n"
 "Araç, kiralama, sigortalar, maliyet\n"
 "==================================\n"
-"Bu modül ile Odoo tüm araçlarınızı yönetmenize yardımcı olur,\n"
-"Bu araçlarla ilgili sözleşmelerin yanı sıra hizmetler, maliyetler\n"
-"ve filonuzun yönetimi için gerekli diğer birçok özellik\n"
-"araç(lar)ın sayısı\n"
+"Bu modül sayesinde Odoo, tüm araçlarınızı, bu araçlara ait sözleşmeleri,\n"
+"hizmetleri, maliyetleri ve filo yönetimi için\n"
+"gerekli birçok özelliği kolayca yönetmenizi\n"
+"sağlar\n"
 "\n"
-"Ana Özellikler\n"
+"Temel Özellikler\n"
 "-------------\n"
 "* Filonuza araç ekleyin\n"
-"* Araçlar için sözleşmeleri yönetin\n"
-"* Bir sözleşme sona erme tarihine ulaştığında hatırlatma\n"
-"* Tüm araçlar için hizmetler, kilometre sayacı değerleri ekleyin\n"
-"* Bir araçla veya bir hizmet türüyle ilgili tüm maliyetleri göster\n"
-"* Maliyetler için analiz grafiği\n"
+"* Araçlara ait sözleşmeleri yönetin\n"
+"* Sözleşmenin sona erme tarihine ulaşıldığında hatırlatıcı alın\n"
+"* Tüm araçlara ait hizmetleri ve kilometre bilgilerini kaydedin\n"
+"* Bir araca veya hizmet türüne bağlı tüm maliyetleri görüntüleyin\n"
+"* Maliyetlere ilişkin analiz grafikleri\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_edi_viettel
@@ -10330,7 +10496,7 @@ msgstr "%(company_currency_name)s başına %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr ""
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -13090,7 +13256,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/timbuktu
 msgid "Africa/Timbuktu"
-msgstr ""
+msgstr "Africa/Timbuktu"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/tripoli
@@ -13996,7 +14162,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/nuuk
 msgid "America/Nuuk"
-msgstr ""
+msgstr "America/Nuuk"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/ojinaga
@@ -16958,7 +17124,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_sale
 msgid "CFDI 4.0 fields for sale orders"
-msgstr ""
+msgstr "CFDI 4.0 fields for sale orders"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_cis
@@ -17149,7 +17315,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/yukon
 msgid "Canada/Yukon"
-msgstr ""
+msgstr "Canada/Yukon"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca_check_printing
@@ -17320,7 +17486,7 @@ msgstr ""
 #: model:res.currency,currency_subunit_label:base.NIO
 #: model:res.currency,currency_subunit_label:base.PHP
 msgid "Centavos"
-msgstr ""
+msgstr "Centavos"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PAB
@@ -17444,12 +17610,13 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
-"Bazı ülkeler, kendi iç mevzuatlarına uygun olarak fatura tutarları üzerinden"
-" kaynakta stopaj uygular. Kaynakta herhangi bir stopaj, müşteri tarafından "
-"vergi makamlarına ödenecektir. Hiçbir koşulda My Company (San Francisco) bir"
-" ülkenin mevzuatıyla ilgili maliyetlere dahil olamaz. Bu nedenle fatura "
-"tutarı My Company (San Francisco)'ya tamamen ödenecektir ve müşterinin "
-"bulunduğu ülkenin mevzuatıyla ilgili herhangi bir maliyeti içermez."
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (San Francisco) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(San Francisco) in its entirety and does not include any costs relating to "
+"the legislation of the country in which the client is located."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_certificate
@@ -21265,7 +21432,7 @@ msgstr "Ekvator Ginesi"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_maintenance
 msgid "Equipment, Assets, Internal Hardware, Allocation Tracking"
-msgstr "Ekipman, Demirbaş, Dahili Donanım, Tahsis Takibi"
+msgstr "Ekipman, Varlıklar, Dahili Donanım, Tahsis Takibi"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -22220,7 +22387,7 @@ msgstr "Ödemeleri ABA Kredi Transferi dosyaları olarak dışa aktarma"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_uk_bacs
 msgid "Export payments as BACS Direct Debit and Direct Credit files"
-msgstr ""
+msgstr "Export payments as BACS Direct Debit and Direct Credit files"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_payment_cpa005
@@ -23216,7 +23383,7 @@ msgstr "Fransız Guyanası"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_intrastat
 msgid "French Intrastat Declaration"
-msgstr ""
+msgstr "French Intrastat Declaration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_intrastat_services
@@ -23471,7 +23638,7 @@ msgstr "Genel Ayarlar"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
 msgid "Generate Electronic Invoice with custom numbers"
-msgstr ""
+msgstr "Generate Electronic Invoice with custom numbers"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_mine
@@ -26253,15 +26420,15 @@ msgid ""
 "                    mainly by governmental and international agencies as well\n"
 "                    as industries."
 msgstr ""
-"Sıvı alanında araştırma yapmayı taahhüt eder ve teşvik eder\n"
-"                    Dynamics. Yaklaşık elli farklı rüzgar tüneline sahiptir,\n"
-"                    turbo makineler ve diğer özel test tesisleri, bazıları\n"
-"                    bunlardan benzersiz veya dünyanın en büyüğü. Yaygın\n"
-"                    deneysel, hesaplamalı ve teorik araştırmalar\n"
-"                    gaz ve sıvı akışlarının yönleri\n"
-"                    fakülte ve araştırma mühendislerinin yönetimi, sponsorlu\n"
-"                    esas olarak hükümet ve uluslararası kuruluşlar tarafından\n"
-"                    endüstriler olarak."
+"Akışkanlar mekaniği alanında araştırma yapmayı ve bu alanı teşvik etmeyi\n"
+"                    amaçlamaktadır. Bunların arasında dünyada benzersiz veya en büyük olanların da\n"
+"                    bulunduğu yaklaşık elli farklı rüzgar tüneli, türbomakine ve\n"
+"                    diğer özel test tesislerine sahiptir. Gaz ve sıvı\n"
+"                    akışlarının deneysel, hesaplamalı ve teorik yönleri \n"
+"                    üzerine kapsamlı araştırmalar, fakülte üyeleri ve\n"
+"                    araştırma mühendisleri gözetiminde yürütülmekte; bu çalışmalar\n"
+"                    ağırlıklı olarak kamu kurumları, uluslararası kuruluşlar ve sanayi \n"
+"                    tarafından desteklenmektedir."
 
 #. module: base
 #: model:res.country,name:base.it
@@ -28536,7 +28703,7 @@ msgstr "EDI Belgeleri için Meksika Yerelleştirmesi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_website_sale
 msgid "Mexican Localization for eCommerce"
-msgstr ""
+msgstr "Mexican Localization for eCommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_pos
@@ -28561,7 +28728,7 @@ msgstr "Meksika - Elektronik Teslimat Rehberi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
 msgid "Mexico - Month 13 Trial Balance"
-msgstr ""
+msgstr "Mexico - Month 13 Trial Balance"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
@@ -28581,7 +28748,7 @@ msgstr "Meksika - Muhasebe ile Bordro"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
 msgid "Mexico Month 13 Trial Balance Report"
-msgstr ""
+msgstr "Mexico Month 13 Trial Balance Report"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__mexico/bajanorte
@@ -29270,13 +29437,12 @@ msgid ""
 "required by the client to appear as a third party in the context of any "
 "claim for damages filed against the client by an end consumer."
 msgstr ""
-"Şirketim (San Francisco), kararlaştırılan zaman dilimlerine uygun olarak "
-"zamanında performanslı hizmetler sunmak için elinden gelenin en iyisini "
-"yapmayı taahhüt eder. Bununla birlikte, yükümlülüklerinin hiçbiri, sonuç "
-"elde etmek için bir yükümlülük olarak kabul edilemez. Şirketim (San "
-"Francisco) hiçbir koşulda, müşteri tarafından bir son tüketici tarafından "
-"müşteriye karşı açılan herhangi bir tazminat talebi bağlamında üçüncü taraf "
-"olarak görünmesi istenemez."
+"My Company (San Francisco), üzerinde mutabık kalınan zaman çizelgesine uygun"
+" şekilde, zamanında ve etkin hizmetler sunmak için elinden gelenin en "
+"iyisini yapmayı taahhüt eder. Ancak, hiçbir yükümlülüğü sonuç garantisi "
+"olarak kabul edilemez. My Company (San Francisco), hiçbir koşulda, son "
+"kullanıcı tarafından müşteriye karşı açılan herhangi bir tazminat davasında "
+"üçüncü taraf olarak yer almak zorunda bırakılamaz."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -30780,6 +30946,114 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Odoo Satış Noktası\n"
+"-----------------------------\n"
+"\n"
+"Odoo'nun <a href=\"https://www.odoo.com/app/point-of-sale-shop\">Satış Noktası</a>; \n"
+"kurulum gerektirmeyen, modern donanımlarda çevrim içi ve çevrim dışı olarak çalışan\n"
+"son derece temiz bir arayüz sunar.\n"
+"\n"
+"Şirket envanteri ve muhasebesi ile tam entegrasyonu sayesinde \n"
+"birkaç uygulamayı birden entegre etme zahmetine girmeden tüm \n"
+"mağazalarda gerçek zamanlı istatistikler ve bütünleşme elde edebilirsiniz.\n"
+"\n"
+"Mevcut donanımınızla çalışın\n"
+"---------------------------------------\n"
+"\n"
+"### Web tarayıcınızda\n"
+"\n"
+"Odoo POS, web sitelerini görüntüleyebilen herhangi bir cihazda çalışabilen ve neredeyse hiç kurulum\n"
+"gerektirmeyen bir web uygulamasıdır.\n"
+"\n"
+"### Dokunmatik Ekran veya Klavye?\n"
+"\n"
+"Satış Noktası, iPad gibi çoklu dokunmatik tabletler veya klavyesiz dirençli dokunmatik ekranlı\n"
+"terminaller gibi her türlü dokunmatik cihazda mükemmel şekilde\n"
+"çalışır.\n"
+"\n"
+"### Teraziler ve Yazıcılar\n"
+"Barkod tarayıcılar ve yazıcılar, kurulum gerektirmeden kullanıma hazırdır.\n"
+"Teraziler, kasa kutuları ve diğer çevre birimleri proxy API ile \n"
+"kullanılabilir.\n"
+"\n"
+"Çevrim İçi ve Çevrim Dışı\n"
+"------------------\n"
+"\n"
+"### Bağlantınızın kesintisiz olmadığı zamanlarda bile Odoo POS kesintisizdir\n"
+"\n"
+"Sadece internet bağlantısı ile yeni mağazalar kurun: **kurulum gerektirmez, özel donanım \n"
+"gerektirmez**. Herhangi bir **iPad, Tablet PC, dizüstü bilgisayar**\n"
+"veya endüstriyel POS makinesinde çalışır.\n"
+"\n"
+"Satış Noktası'nı başlatmak için internet bağlantısı gerekli olmakla birlikte, bağlantı\n"
+"tamamen kesilse bile çalışmaya devam eder.\n"
+"\n"
+"\n"
+"Son derece temiz bir kullanıcı arayüzü\n"
+"----------------------------\n"
+"\n"
+"### Sade ve estetik\n"
+"\n"
+"Çirkin, modası geçmiş POS yazılımlarına veda edin ve modern perakendeciler için\n"
+"tasarlanmış Odoo web arayüzünün keyfini çıkarın.\n"
+"\n"
+"### Üretkenlik için Tasarlandı\n"
+"\n"
+"Uygulamayı ister restoran ister mağazada kullanıyor olun, müşterilerinizi bekletmemek için \n"
+"birden fazla siparişi aynı anda etkinleştirebilirsiniz.\n"
+"\n"
+"### Işık hızında arama\n"
+"\n"
+"Ürünleri tarayın, hiyerarşik kategorileri inceleyin veya tüm ürünlerinizde hızlı filtreleme\n"
+"özelliği ile ürünler hakkında hızlı bilgi edinin..\n"
+"\n"
+"Entegre Stok Yönetimi\n"
+"-------------------------------\n"
+"\n"
+"Tüm satış ekiplerini gerçek zamanlı olarak birleştirin:\n"
+"mağazalar, e-ticaret, satış ekipleri. Stokları gerçek zamanlı olarak kontrol edin ve\n"
+"satın almayı yönetmek için doğru tahminler elde edin.\n"
+"\n"
+"Parmaklarınızın ucunda eksiksiz bir depo yönetim sistemi: ürünlerin stok durumları hakkında \n"
+"bilgi alın, satın alma talepleri oluşturun vb.\n"
+"\n"
+"Mağaza içi müşteri hizmetleri sunun\n"
+"----------------------------------\n"
+"\n"
+"Mağaza içi müşteri hizmetlerini entegre ederek müşterilerinize güçlü bir deneyim sunun.\n"
+"Onarımları yönetin, garantileri takip edin, müşteri şikayetlerini izleyin, \n"
+"teslimat siparişlerini planlayın vb.\n"
+"\n"
+"Faturalama ve Muhasebe Entegrasyonu\n"
+"----------------------------------\n"
+"\n"
+"Müşteri faturalarını sadece birkaç tıklamayla oluşturun. Satışları ve nakit akışını gerçek \n"
+"zamanlı olarak kontrol edin ve Odoo'nun güçlü raporlama özelliğini kullanarak \n"
+"mağazanızın verimliliğini artırmak için daha akılcı kararlar alın.\n"
+"\n"
+"Artık yazılımları entegre etmekle uğraşmanıza gerek yok: tüm satış ve envanter \n"
+"işlemleriniz otomatik olarak genel muhasebe defterinize kaydedilir.\n"
+"\n"
+"Tüm Mağazalarda Birleştirilmiş Veriler\n"
+"------------------------------\n"
+"\n"
+"Seçilen mağazalara yeni ürünler, fiyatlandırma stratejileri ve promosyonlar \n"
+"otomatik olarak uygulanır. Tek bir müşteri tabanında çalışın. Tüm mağazalarınızda \n"
+"küresel bir stratejiyi uygulamak için karmaşık bir arayüz gerekmez.\n"
+"\n"
+"Odoo'yu arka uç olarak kullanarak hem küçük mağazalar hem büyük çok uluslu şirketler için \n"
+"son derece uygun olduğu kanıtlanmış bir sisteme sahip olursunuz.\n"
+"\n"
+"İster çevrim içi, ister çevrim dışı; müşterilerinizi tanıyın\n"
+"--------------------------------------\n"
+"\n"
+"Başarılı markalar, tüm kanallarında müşteri ilişkilerini entegre ederek doğru müşteri profilleri \n"
+"oluşturur ve müşteriler mağazada veya çevrim içi olarak satın alma kararlarını verirken \n"
+"onlarla iletişim kurar.\n"
+"\n"
+"Odoo ile, çapraz kanal satışları, etkileşim geçmişi, profiller ve daha fazlasını içeren\n"
+"360° müşteri görünümü elde edersiniz.\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -31397,13 +31671,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Yalnızca bu görünüm diğerinden devir alınırsa uygulanır (inherit_id False / Null değil).\n"
+"Yalnızca bu görünüm başka bir görünümden miras alıyorsa geçerlidir (inherit_id False/Null değilse).\n"
 "\n"
-"* eğer uzantı (varsayılan), bu görünüm gerekirse en yakın birincil görünüm\n"
-"aranır (via inherit_id), daha sonra bu görünüm modeliyle devralınan tüm görünümler uygulanır.\n"
-"* birincil ise, en yakın ana görünüm tam olarak çözülür\n"
-" (bundan farklı bir model kullanılıyor olsa bile), daha sonra bu görüşün devralma özellikleri\n"
-"(<xpath/>) uygulanır, ve sonuç, bu görünümün asıl arch gibi kullanılır.\n"
+"* Uzantıysa (varsayılan), bu görünüm istendiğinde en yakın birincil görünüm\n"
+" (inherit_id aracılığıyla) bulunur, ardından bu görünümün\n"
+"modeliyle miras alınan tüm görünümler uygulanır\n"
+"* Birincil ise, en yakın birincil görünüm tamamen çözülür (bu görünümden farklı bir \n"
+"model kullansa bile), ardından bu görünümün miras kuralları (<xpath/>) uygulanır ve \n"
+"sonuç, sanki bu görünümün gerçek mimarisiymiş\n"
+" gibi kullanılır.\n"
 
 #. module: base
 #. odoo-python
@@ -31758,6 +32034,120 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
+"Etkinlikler, Eğitimler ve Web Seminerleri Düzenleyin\n"
+"-------------------------------------\n"
+"\n"
+"### Planlayın, Tanıtın, Satın, Düzenleyin\n"
+"\n"
+"Etkinlikleri çevrim içi olarak düzenleyin, tanıtın ve satın. Siz toplantılar, konferanslar, eğitimler veya web seminerleri düzenlerken Odoo, etkinliklerinizi yönetmek için ihtiyaç duyduğunuz tüm özellikleri size sunar.\n"
+"\n"
+"Harika Etkinlik Sayfaları Oluşturun\n"
+"--------------------------\n"
+"\n"
+"### Eski WYSIWYG (Ne Görürsen Onu Alırsın) Editörlerinden Kurtulun\n"
+"\n"
+"Etkileyici tasarıa sahip *‘Yapı Taşlarını’* sürükleyip bırakarak güzel görünümlü etkinlik sayfaları oluşturun. Etkinlik fotoğraflarını, konuşmacıları, programı vb. yayımlayın.\n"
+"\n"
+"Odoo'nun benzersiz *‘satır içi düzenleme’* yaklaşımı, web sitesi oluşturmayı şaşırtıcı derecede kolay hale getirir. “Bir konuşmacı mı tanıtmak istiyorsunuz? Bilet fiyatını değiştirmek mi? Bir afişi güncellemek mi? Sponsorları tanıtmak mı?” Sadece tıklayın ve değiştirin.\n"
+"\n"
+"Çevrim İçi Bilet Satışı Yapın\n"
+"-------------------\n"
+"\n"
+"### Kayıt ve ödeme sürecini otomatikleştirin \n"
+"\n"
+"Çoklu biletleme özelliği ile etkinlik kayıtlarını satışa sunun. Etkinlikler dilerseniz ücretsiz, dilerseniz ücretli olabilir. Katılımcılar, yapılandırmanıza bağlı olarak kredi kartı ile çevrim içi olarak veya fatura ile ödeme yapabilir.\n"
+"\n"
+"Erken rezervasyon fiyatları, üyeler için özel koşullar veya çoklu biletlerle ekstra hizmetler sunarak satışlarınızı artırın.\n"
+"\n"
+"Sorunsuz Google Analytics entegrasyonu\n"
+"------------------------------------\n"
+"\n"
+"### Satış huninizi Google Analytics ile kontrol edin\n"
+"\n"
+"Satış huninizin net bir görünürlüğünü elde edin. Odoo'nun Google Analytics izleyicileri, alışveriş sepetleri, eylem çağrıları vb. ile ilgili her türlü olayı izlemek için varsayılan olarak yapılandırılmıştır.\n"
+"\n"
+"Odoo pazarlama araçları (toplu e-posta gönderimi, kampanyalar vb.) Google Analytics ile de bağlantılı olduğundan, işletmenizin tam bir görünümünü elde edersiniz.\n"
+"\n"
+"Verimli Etkinlik Tanıtımı\n"
+"--------------------------\n"
+"\n"
+"### Toplu Posta ve Sosyal Medya\n"
+"\n"
+"Segmentasyon, sosyal ağ entegrasyonu ve toplu e-posta gönderme özelliklerini kullanarak etkinliklerinizi doğru hedef kitleye tanıtın. Katılımcılara son dakika ayrıntılarını göndermek için otomatik e-postalar ayarlayın.\n"
+"\n"
+"Tasarımcı Dostu Temalar\n"
+"------------------------\n"
+"\n"
+"### Tasarımcılar Odoo ile çalışmaya bayılıyor\n"
+"\n"
+"Temalar harikadır, üstelik tasarımları da kolaydır. Yeni sayfalar, temalar veya yapı taşları oluşturmak için geliştirme yapmanız gerekmez. Temiz bir HTML yapısı, [bootstrap](http://getbootstrap.com/) CSS kullanıyoruz. Ayrıca, modüler yapımız sayesinde temalarınızı kolayca dağıtabilirsiniz..\n"
+"\n"
+"Yapı taşı yaklaşımı, son kullanıcılar yeni içerikler oluşturmaya başladıktan sonra web sitesinin temiz kalmasını sağlar.\n"
+"\n"
+"Etkinliğinizi Daha Görünür Hale Getirin\n"
+"----------------------------\n"
+"\n"
+"### SEO araçları parmaklarınızın ucunda\n"
+"SEO araçları kullanıma hazırdır ve herhangi bir yapılandırma gerektirmez. Odoo, Google'da en çok aranan terimlere göre anahtar kelimeler önerir, Google Analytics alışveriş sepeti etkinliklerinizi izler ve site haritası otomatik olarak oluşturulur.\n"
+"\n"
+"Etkinliklerinizi ve ürünlerinizi Google'da verimli bir şekilde tanıtmak için yapılandırılmış içeriği bile otomatik olarak oluşturuyoruz.\n"
+"\n"
+"Sosyal Medyadan Faydalanın\n"
+"---------------------\n"
+"\n"
+"### Optimizasyon: Reklamlardan Dönüşümlere\n"
+"\n"
+"Odoo'nun satır içi düzenleme özelliği ile yeni açılış sayfalarını kolayca oluşturun. Farklı pazarlama kampanyalarınızın ziyaretçilerini etkinlik açılış sayfalarına yönlendirerek dönüşümleri optimize edin.\n"
+"\n"
+"Ve Çok Daha Fazlası...\n"
+"----------------\n"
+"\n"
+"### Planlama\n"
+"\n"
+"-   Etkinlik Takvimi\n"
+"-   İlgili belgeleri yayımlayın\n"
+"-   Kaynak tahsisi\n"
+"-   Satın alımları otomatikleştirin (catering...)\n"
+"-   Birden fazla konum ve organizatör\n"
+"-   Mobil Arayüz\n"
+"\n"
+"### Satış\n"
+"\n"
+"-   Çevrim içi/ çevrim dışı satış\n"
+"-   Otomatik faturalama\n"
+"-   İptal politikaları\n"
+"-   Üyelere özel fiyatlar\n"
+"-   Gösterge panelleri ve raporlama\n"
+"\n"
+"### Düzenleme\n"
+"\n"
+"-   Gelişmiş Planlama\n"
+"-   Rozet Yazdırma\n"
+"-   Otomatize Takeip E-Postaları\n"
+"-   Min/Maks kapasiteleri\n"
+"-   Sınıfları ve kaynakları yönetme\n"
+"-   Katılımcı grubu oluşturma\n"
+"-   Otomatize memnuniyet anketleri\n"
+"\n"
+"Diğer Uygulamalar ile Tamamen Entegre\n"
+"---------------------------------\n"
+"\n"
+"### Yüzlerce açık kaynaklı uygulamayı ücretsiz olarak edinin\n"
+"\n"
+"\n"
+"### eTicaret\n"
+"\n"
+"Ürünleri tanıtın, çevrim içi satış yapın, ziyaretçilerin alışveriş deneyimlerini optimize edin.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Haber yazın, yeni ziyaretçiler çekin, müşteri sadakati oluşturun.\n"
+"\n"
+"\n"
+"### Ekibimiz\n"
+"\n"
+"Ekibinizi etkili bir şekilde tanıtarak harika bir “Hakkımızda” sayfası oluşturun.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -31877,13 +32267,12 @@ msgid ""
 "due. My Company (San Francisco) will be authorized to suspend any provision "
 "of services without prior warning in the event of late payment."
 msgstr ""
-"Faturalarımız, faturada veya siparişte başka bir ödeme zaman dilimi "
-"belirtilmediği sürece 21 iş günü içinde ödenir. Son ödeme tarihine kadar "
-"ödeme yapılmaması durumunda, Şirketim (San Francisco), ödenmesi gereken "
-"tutarın 10% o tutarında sabit faizli bir ödeme talep etme hakkını saklı "
-"tutar. Şirketim (San Francisco), ödemenin gecikmesi durumunda önceden "
-"bildirimde bulunmaksızın herhangi bir hizmet sunumunu askıya alma yetkisine "
-"sahip olacaktır."
+"Faturalarımız, fatura veya siparişte farklı bir ödeme süresi belirtilmediği "
+"sürece, 21 iş günü içinde ödenmelidir. Son ödeme tarihinde ödeme yapılmaması"
+" durumunda, My Company (San Francisco), kalan borç tutarının %10’u oranında "
+"sabit faiz talep etme hakkını saklı tutar. Geç ödeme halinde, My Company "
+"(San Francisco), önceden bildirimde bulunmaksızın herhangi bir hizmet "
+"sağlamayı durdurma yetkisine sahiptir."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_outdoor_activities
@@ -32200,7 +32589,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/chuuk
 msgid "Pacific/Chuuk"
-msgstr ""
+msgstr "Pacific/Chuuk"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/easter
@@ -32380,7 +32769,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/truk
 msgid "Pacific/Truk"
-msgstr ""
+msgstr "Pacific/Truk"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/wake
@@ -32993,7 +33382,7 @@ msgstr ""
 #: model:res.currency,currency_unit_label:base.DOP
 #: model:res.currency,currency_unit_label:base.MXN
 msgid "Pesos"
-msgstr ""
+msgstr "Pesos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pharmacy_retail
@@ -35303,7 +35692,7 @@ msgstr "S - DİĞER HİZMET FAALİYETLERİ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft_import
 msgid "SAF-T Import"
-msgstr ""
+msgstr "Partnerleri Görüntüle"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sbr
@@ -35318,7 +35707,7 @@ msgstr "SEPA Ülkeleri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_iso20022
 msgid "SEPA Credit Transfer / ISO20022"
-msgstr ""
+msgstr "SEPA Havale / ISO20022"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
@@ -39814,13 +40203,13 @@ msgstr "Bu modül, çevrim içi banka senkronizasyonu için kullanılır."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_peppol
 msgid "This module is used to send/receive documents with PEPPOL"
-msgstr ""
+msgstr "This module is used to send/receive documents with PEPPOL"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_appointment
 msgid "This module lets you manage online reservations for restaurant tables"
 msgstr ""
-"Bu modül, restoran masaları için çevrimiçi rezervasyonları yönetmenizi "
+"Bu modül, restoran masaları için çevrim içi rezervasyonları yönetmenizi "
 "sağlar"
 
 #. module: base
@@ -40431,17 +40820,17 @@ msgstr "Birleşik Krallık - Muhasebe Raporları"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports_cis
 msgid "UK - Construction Industry Scheme"
-msgstr ""
+msgstr "UK - Construction Industry Scheme"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_hmrc
 msgid "UK - HMRC API"
-msgstr ""
+msgstr "UK - HMRC API"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_bacs
 msgid "UK BACS Payment Files"
-msgstr ""
+msgstr "UK BACS Payment Files"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_unspsc
@@ -41771,15 +42160,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
-"Dünya çapındaki müşterilerimiz için gelişmiş yazılımlar kullanarak değer "
-"artırıcı çözümler üreten bir teknoloji danışmanlığı ve stratejik danışmanlık"
-" firmasıyız. <br> <br>Lumber Inc'de operasyonel deneyimi teknolojik zekayla "
-"birleştiriyoruz. İş operasyonlarını destekleyen herhangi bir yazılımın, "
-"kritik operasyonel süreçlerin yürütülmesini kolaylaştıracak ve kullanıcılara"
-" bir engel yerine bir araç olarak hizmet edecek şekilde tasarlanması "
-"gerektiğini anlıyoruz. Yaklaşımımız önce sürece odaklanır, şirketin "
-"hedeflerine katkıda bulunmasını sağlar, daha sonra optimize eder ve yazılım "
-"çözümlerini en iyi şekilde destekleyecek şekilde tasarlarız."
+"Biz, dünya çapındaki müşterilerimiz için gelişmiş yazılımlar kullanarak değer artırıcı çözümler üreten bir teknoloji danışmanlığı ve stratejik danışmanlık şirketiyiz.\n"
+" <br> <br>\n"
+"Lumber Inc olarak, operasyonel deneyimimizi teknolojik bilgimizle birleştiriyoruz. İş operasyonlarını destekleyen herhangi bir yazılımın, kritik operasyonel süreçlerin yürütülmesini kolaylaştıracak şekilde tasarlanması ve kullanıcılar için bir engel değil, bir araç olarak hizmet sunması gerektiğini biliyoruz. Yaklaşımımız öncelikle sürece odaklanarak şirketin hedeflerine katkıda bulunmasını sağlar; ardından süreci optimize eder ve onu en iyi şekilde destekleyecek yazılım çözümlerini tasarlarız."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -42385,6 +42768,8 @@ msgid ""
 "XML Export of the Journal Entries for the Mexican Tax Authorities for a "
 "compulsory audit."
 msgstr ""
+"XML Export of the Journal Entries for the Mexican Tax Authorities for a "
+"compulsory audit."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.VND

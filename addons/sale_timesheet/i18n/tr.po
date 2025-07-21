@@ -79,6 +79,8 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"'%(missing_plan_names)s' çalışma çizelgesine bağlı satış siparişi öğesinin "
+"'%(so_line_name)s' analitik dağılımı için gerekli analitik plan(lar)."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -975,6 +977,8 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
+"'Yukarı satış fırsatı' eyleminin tetiklenmesi için ulaşılması gereken ön "
+"ödemeli tutara kıyasla teslim edilen sürenin yüzdesi."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1323,13 +1327,13 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
-"Farklı hizmetleri farklı müşterilere farklı oranlarda faturalandırmak "
-"istiyorsanız, görev oranı mükemmeldir. Bir hizmeti, onu yapan çalışandan "
-"bağımsız olarak çalışılan saat veya gün başına sabit bir ücret üzerinden "
-"faturalandırırsanız, sabit ücret mükemmeldir. Çalışanlarınız aynı hizmeti "
-"farklı bir oranda veriyorsa, çalışan oranı tercih edilir. Örneğin, ast ve "
-"kıdemli danışmanlar aynı hizmeti (= danışmanlık) sunacaklardır, ancak kıdem "
-"seviyeleri nedeniyle farklı bir oranda gerçekleşecektir."
+"Görev bazlı oran, farklı müşterilere farklı hizmetleri farklı oranlarla "
+"faturalandırmak istediğinizde idealdir. Sabit oran, hizmeti gerçekleştiren "
+"çalışandan bağımsız olarak saatlik veya günlük sabit bir ücretle "
+"faturalandırmak için uygundur. Çalışan bazlı oran ise aynı hizmeti farklı "
+"çalışanların farklı ücretlerle sunması durumunda tercih edilir. Örneğin, "
+"kıdemli ve kıdemsiz danışmanlar aynı danışmanlık hizmetini sunsalar da kıdem"
+" seviyeleri nedeniyle farklı oranlardan ücretlendirilirler."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1356,7 +1360,7 @@ msgstr "Saat Faturalaması"
 #: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__remaining_hours_so
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "Satış siparişinde kalan süre"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date

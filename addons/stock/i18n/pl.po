@@ -3,14 +3,14 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -787,6 +787,11 @@ msgid "<strong>Customer Address</strong>"
 msgstr "<strong>Adres klienta</strong>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivered</strong>"
+msgstr "<strong>Dostarczone</strong>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
 msgstr "<strong>Adres dostawy</strong>"
@@ -826,6 +831,11 @@ msgstr "<strong>Minimalna ilość:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
 msgstr "<strong>Zamówienie</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Ordered</strong>"
+msgstr "<strong>Zamówiono</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -1952,6 +1962,13 @@ msgstr "Oblicz koszty wysyłki i prześlij kurierem DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Oblicz koszty wysyłki i prześlij kurierem Easypost"
 
@@ -1959,6 +1976,13 @@ msgstr "Oblicz koszty wysyłki i prześlij kurierem Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Oblicz koszty wysyłki i prześlij kurierem FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1982,8 +2006,22 @@ msgstr "Oblicz koszty wysyłki i prześlij kurierem UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Oblicz koszty wysyłki i prześlij kurierem USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2505,6 +2543,11 @@ msgstr "DEMO_SOURCE_DISPLAY_NAME"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -3187,6 +3230,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "Czy potwierdzasz, że chcesz scrapować?"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Dokumentacja"
@@ -3421,6 +3465,7 @@ msgstr "Luty"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Łącznik FedEx"
 
@@ -6666,6 +6711,8 @@ msgid ""
 "Press the \"New\" button to define the quantity for a product in your stock "
 "or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
+"Kliknij przycisk \"Nowy\", aby zdefiniować ilość produktu w Twoim magazynie "
+"lub zaimportuj ilości z arkusza kalkulacyjnego przez menu Akcji."
 
 #. module: stock
 #. odoo-javascript
@@ -10149,11 +10196,13 @@ msgstr "Typ wyjątku działania na rekordzie."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Łącznik UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Łącznik USPS"
 
@@ -10170,6 +10219,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: "
 "%(serial_numbers_to_locations)s"
 msgstr ""
+"Niedostępne numery seryjne. Prosimy o poprawienie zakodowanych numerów "
+"seryjnych: %(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -10341,6 +10392,9 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"Zaktualizowanie lokalizacji tego transferu spowoduje anulowanie rezerwacji aktualnie przypisanych elementów. Zostanie przeprowadzona próba rezerwacji elementów w nowej lokalizacji  a powiązanie z poprzednimi transferami zostanie anulowane.\n"
+"\n"
+"Aby tego uniknąć, odrzuć zmianę lokalizacji źródłowej przed zapisaniem."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10796,6 +10850,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"Kiedy ustawione na True lokacja docelowa ruchu magazynowego będzie regułą. W"
+" przeciwnym razie, zostanie ona pobrana z typu kompletacji."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10814,6 +10870,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"Kiedy wirtualny stan zapasów spadnie poniżej ilości minimalnej, Odoo "
+"wygeneruje zamówienie, aby prognozowana ilość została zwiększona powyżej "
+"minimalnej ilości określonej w tym polu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10822,6 +10881,10 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"Kiedy wirtualny stan zapasów spadnie poniżej ilości minimalnej, Odoo "
+"wygeneruje zamówienie, aby prognozowana ilość została zwiększona do (lub "
+"zbliżona do) maksymalnej ilości określonej dla tego pola (lub minimalnej "
+"ilości, w zależności, która z tych wartości jest większa)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10906,6 +10969,8 @@ msgid ""
 "You are about to move quantities in a package without moving the full package.\n"
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
+"Zamierzasz przenieść ilości w pakiecie bez przenoszenia całego pakietu.\n"
+"                    Te ilości mogą zostać usunięte z następujących pakietów:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -11218,6 +11283,8 @@ msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"Nie można ustawić lokacji jako lokalizacji złomu, gdy jest ona przypisana "
+"jako lokalizacja docelowa dla operacji typu produkcja."
 
 #. module: stock
 #. odoo-python
@@ -11299,6 +11366,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"Masz produkty w magazynie, które mają włączone śledzenie numeru partii/serii.\n"
+"Wyłącz śledzenie we wszystkich produktach przed wyłączeniem tego ustawienia."
 
 #. module: stock
 #. odoo-python

@@ -145,8 +145,10 @@ class PurchaseOrder(models.Model):
         for order_line in order_lines:
             moves_to_cancel_ids.update(order_line.move_ids.ids)
             if order_line.move_dest_ids:
-                move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped
-                                                                  and move.rule_id.route_id == move.location_dest_id.warehouse_id.reception_route_id)
+                move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped)
+                moves_to_mts = move_dest_ids.filtered(lambda move: move.rule_id.route_id != move.location_dest_id.warehouse_id.reception_route_id)
+                move_dest_ids -= moves_to_mts
+                moves_to_recompute_ids.update(moves_to_mts.ids)
                 moves_to_unlink = move_dest_ids.filtered(lambda m: len(m.created_purchase_line_ids.ids) > 1)
                 if moves_to_unlink:
                     moves_to_unlink.created_purchase_line_ids = [Command.unlink(order_line.id)]

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:47+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -10500,10 +10500,10 @@ msgid ""
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
 "Art der Serveraktion. Die folgenden Werte sind verfügbar:\n"
-"- „Einen Datensatz aktualieren“: Aktualisieren Sie die Werte eines Datensatzes.\n"
+"- „Einen Datensatz aktualisieren“: Aktualisieren Sie die Werte eines Datensatzes.\n"
 "- „Aktivität erstellen“: Erstellen Sie eine Aktivität (Dialog)\n"
 "- „E-Mail versenden“: Hinterlassen Sie eine Nachricht, oder Notiz oder senden Sie eine E-Mail (Dialog)\n"
-"- „SMS versenden“: Senden Sie eine SMS, protokollieren Sie diese in Dokumenten (SMS), log them on documents (SMS)\n"
+"- „SMS versenden“: Senden Sie eine SMS, protokollieren Sie diese in Dokumenten (SMS),\n"
 "- „Follower hinzufügen/entfernen“: Fügen Sie einem Datensatz Follower hinzu oder entfernen Sie sie (Dialog)\n"
 "- „Datensatz erstellen“: Erstellen Sie einen neuen Datensatz mit neuen Werten\n"
 "- „Code ausführen“: ein Block Python-Code, der ausgeführt wird\n"
@@ -11447,6 +11447,15 @@ msgstr "Sie können diese Nachricht getrost ignorieren"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+"Sie können %(activity_names)s nicht löschen, da sie in mehreren Apps "
+"verwendet wird."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -11454,6 +11463,16 @@ msgid ""
 msgstr ""
 "Sie können diese Gruppen nicht einfach löschen, da die Gruppe für das "
 "Gesamtunternehmen in anderen Modulen benötigt wird."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
+"Sie können das Zielmodell %(activities_names)s nicht bearbeiten, da es in "
+"mehreren Apps verwendet wird."
 
 #. module: mail
 #. odoo-python

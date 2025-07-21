@@ -12,18 +12,18 @@
 # Manuela Silva <mmsrs@sky.com>, 2025
 # Marta Marouço, 2025
 # Arxi, 2025
-# Maitê Dietze, 2025
 # Nuno Silva <nuno.silva@arxi.pt>, 2025
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # J Ponte, 2025
 # Wil Odoo, 2025
+# Maitê Dietze, 2025
 # Daniel Reis, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:47+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Daniel Reis, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
@@ -482,6 +482,18 @@ msgid ""
 "                                notifying all followers. It will appear in the messaging history.\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                A mensagem será enviada como e-mail para os destinatários do\n"
+"                                modelo e não aparecerá no histórico de mensagens.\n"
+"                            </span>\n"
+"                            <span invisible=\"mail_post_method != 'note'\">\n"
+"                                A mensagem será publicada como anotação interna visível para os usuários\n"
+"                                internos no histórico de mensagens.\n"
+"                            </span>\n"
+"                            <span invisible=\"mail_post_method != 'comment'\">\n"
+"                                A mensagem será publicada como uma mensagem no registro,\n"
+"                                notificando todos os seguidores. Será exibida no histórico de mensagens.\n"
+"                            </span>"
 
 #. module: mail
 #: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
@@ -1776,7 +1788,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -9412,6 +9424,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Número de identificação fiscal (NIF). Os valores neste campo serão validados"
+" com base no formato do país. Use \"/\" para indicar que o contacto não está"
+" sujeito a impostos."
 
 #. module: mail
 #. odoo-python
@@ -10971,6 +10986,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -10978,6 +11000,14 @@ msgid ""
 msgstr ""
 "Não pode eliminar esses grupos, porque o grupo 'Empresa Completa' é "
 "necessário por outros módulos."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
 
 #. module: mail
 #. odoo-python

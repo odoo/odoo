@@ -254,7 +254,7 @@ export class PosStore extends Reactive {
     }
 
     async closingSessionNotification(data) {
-        if (data.login_number == this.session.login_number) {
+        if (data.login_number == odoo.login_number) {
             return;
         }
 
@@ -837,7 +837,7 @@ export class PosStore extends Reactive {
         if (values.product_id.to_weight && this.config.iface_electronic_scale && configure) {
             if (values.product_id.isScaleAvailable) {
                 this.scale.setProduct(values.product_id, this.getProductPrice(values.product_id));
-                const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
+                const weight = await this.weighProduct();
                 if (weight) {
                     values.qty = weight;
                 } else if (weight !== null) {
@@ -1038,7 +1038,7 @@ export class PosStore extends Reactive {
         return (
             zero_pad(this.session.id, 5) +
             "-" +
-            zero_pad(this.session.login_number, 3) +
+            zero_pad(parseInt(odoo.login_number), 3) +
             "-" +
             zero_pad(this.getNextSequenceNumber(), 4)
         );
@@ -1149,7 +1149,7 @@ export class PosStore extends Reactive {
     getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
-            login_number: this.session.login_number,
+            login_number: parseInt(odoo.login_number),
             ...(options.context || {}),
         };
     }
@@ -1626,24 +1626,25 @@ export class PosStore extends Reactive {
                     true,
                     diningModeUpdate
                 );
+                changes.new = [];
                 if (!printed) {
                     unsuccedPrints.push("Detailed Receipt");
                 }
-            } else {
-                // Print all receipts related to line changes
-                const toPrintArray = this.preparePrintingData(order, changes);
-                for (const [key, value] of Object.entries(toPrintArray)) {
-                    const printed = await this.printReceipts(order, printer, key, value, false);
-                    if (!printed) {
-                        unsuccedPrints.push(key);
-                    }
+            }
+
+            // Print all receipts related to line changes
+            const toPrintArray = this.preparePrintingData(order, changes);
+            for (const [key, value] of Object.entries(toPrintArray)) {
+                const printed = await this.printReceipts(order, printer, key, value, false);
+                if (!printed) {
+                    unsuccedPrints.push(key);
                 }
-                // Print Order Note if changed
-                if (orderChange.generalNote) {
-                    const printed = await this.printReceipts(order, printer, "Message", []);
-                    if (!printed) {
-                        unsuccedPrints.push("General Message");
-                    }
+            }
+            // Print Order Note if changed
+            if (orderChange.generalNote && anyChangesToPrint) {
+                const printed = await this.printReceipts(order, printer, "Message", []);
+                if (!printed) {
+                    unsuccedPrints.push("General Message");
                 }
             }
         }
@@ -2218,6 +2219,10 @@ export class PosStore extends Reactive {
     async isSessionDeleted() {
         const session = await this.data.read("pos.session", [this.session.id]);
         return session[0] === undefined;
+    }
+
+    weighProduct() {
+        return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 }
 

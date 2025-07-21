@@ -41,6 +41,7 @@ class L10nPEWebsiteSale(WebsiteSale):
             can_edit_vat = rendering_values['can_edit_vat']
             LatamIdentificationType = request.env['l10n_latam.identification.type'].sudo()
             rendering_values.update({
+                "identification": partner_sudo.l10n_latam_identification_type_id or request.env.ref('l10n_pe.it_DNI').id,
                 'identification_types': LatamIdentificationType.search([
                     '|', ('country_id', '=', False), ('country_id.code', '=', 'PE')
                 ]) if can_edit_vat else LatamIdentificationType,

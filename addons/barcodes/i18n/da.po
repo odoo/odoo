@@ -6,14 +6,15 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Martin Trigaux, 2024
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"POT-Creation-Date: 2025-05-23 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' er ikke et gyldigt Regex-stregkodemønster. Mente du '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -125,7 +126,7 @@ msgstr "Scannet stregkode"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
-msgstr ""
+msgstr "Stregkode: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -182,6 +183,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_events_mixin.py:0
+msgid ""
+"In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
+"must be implemented"
+msgstr ""
+"For at kunne bruge barcodes.barcode_events_mixin skal method "
+"on_barcode_scanned være implementeret"
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
 msgid "Last Updated by"
@@ -213,6 +224,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Mønstre kan også definere, hvordan numeriske værdier – som vægt eller pris – kan være\n"
+"                                er indkodet i stregkoden. De angives med formatet <code>{NNN}</code> hvor N'erne\n"
+"                                angiver, hvor mange cifre tallet består af. Flydende tal understøttes også ved hjælp af\n"
+"                                decimaler, som markeres med D’er, for eksempel <code>{NNNDD}</code>. I disse tilfælde\n"
+"                                <i>skal</i> stregkoden på det tilhørende registreringsfelt vise disse tal med\n"
+"                                nuller."
 
 #. module: barcodes
 #. odoo-javascript
@@ -257,6 +274,7 @@ msgstr "Stregkode matchende mønster"
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
 msgstr ""
+"Stregkodemønsteret %(pattern)s danner ikke et gyldigt regulært udtryk."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -345,7 +363,7 @@ msgstr "Stk. produkt"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Unknown barcode command"
-msgstr ""
+msgstr "Ukendt stregkodekommando"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence

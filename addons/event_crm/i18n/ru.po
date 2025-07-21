@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +93,8 @@ msgstr "Автоматически назначайте созданные ли�
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"Упс! Лиды не были созданы. Проверьте правила лидогенерации и попробуйте "
+"снова."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -121,12 +124,12 @@ msgstr "Созданные лиды"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -165,12 +168,12 @@ msgstr "Событие"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
-msgstr ""
+msgstr "CRM мероприятий: Генерация лидов на основе правил"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "Запрос на лиды по мероприятию"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -241,7 +244,7 @@ msgstr "Генерировать лиды"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
-msgstr ""
+msgstr "Принято! Мы зафиксировали ваш запрос. Лиды скоро будут созданы."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
@@ -257,12 +260,12 @@ msgstr "Если участники отвечают этим условиям"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
@@ -344,13 +347,14 @@ msgstr "Регистрация не найдена"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
 msgid "Ongoing Generation Request"
-msgstr ""
+msgstr "Идет генерация лидов"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
 msgstr ""
+"Только менеджеры мероприятий могут повторно запускать генерацию всех лидов."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -385,7 +389,7 @@ msgstr "За заказ"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "Обработанная регистрация"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -450,6 +454,8 @@ msgstr "Правила генерации поиска лидов"
 #: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
 msgid "Set to True when a Lead Generation Request is currently running."
 msgstr ""
+"Устанавливается в значении True, если в данный момент выполняется запрос на "
+"генерацию лидов."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -472,6 +478,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"ID последней обработанной регистрации на мероприятие, используется для "
+"продолжения обработки с нужного места."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -498,12 +506,14 @@ msgstr "Когда"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "Ура! Создано лидов: %(leads_count)s!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
 msgstr ""
+"На одно мероприятие одновременно может приходиться только один запрос на "
+"генерацию."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

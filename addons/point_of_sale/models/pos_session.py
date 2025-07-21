@@ -137,8 +137,8 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config_id):
         return ['pos.config', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
-                        'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.product', 'product.attribute', 'product.attribute.custom.value',
-            'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
+                        'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.product', 'product.template.attribute.line', 'product.attribute',
+            'product.attribute.custom.value', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
             'decimal.precision', 'uom.uom', 'uom.category', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
             'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'product.tag', 'ir.module.module']
 
@@ -160,6 +160,7 @@ class PosSession(models.Model):
         data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
         data[0]['_server_version'] = exp_version()
         data[0]['_base_url'] = self.get_base_url()
+        data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         return {
@@ -631,10 +632,10 @@ class PosSession(models.Model):
     def _get_diff_account_move_ref(self, payment_method):
         return _('Closing difference in %(payment_method)s (%(session)s)', payment_method=payment_method.name, session=self.name)
 
-    def _get_diff_vals(self, payment_method_id, diff_amount):
+    def _get_diff_vals(self, payment_method_id, diff_amount, outstanding_account=False):
         payment_method = self.env['pos.payment.method'].browse(payment_method_id)
         diff_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
-        source_account = payment_method.outstanding_account_id
+        source_account = payment_method.outstanding_account_id or outstanding_account
         destination_account = self.env['account.account']
 
         if (diff_compare_to_zero > 0):
@@ -1084,7 +1085,7 @@ class PosSession(models.Model):
         destination_account = self._get_receivable_account(payment_method)
 
         account_payment = self.env['account.payment'].with_context(pos_payment=True).create({
-            'amount': abs(amounts['amount']) + diff_amount,
+            'amount': abs(amounts['amount']),
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
             'destination_account_id': destination_account.id,
@@ -1116,7 +1117,7 @@ class PosSession(models.Model):
         return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == self._get_receivable_account(payment_method))
 
     def _apply_diff_on_account_payment_move(self, account_payment, payment_method, diff_amount):
-        diff_vals = self._get_diff_vals(payment_method.id, diff_amount)
+        diff_vals = self._get_diff_vals(payment_method.id, diff_amount, account_payment.outstanding_account_id)
         if not diff_vals:
             return
         source_vals, dest_vals = diff_vals
@@ -1132,6 +1133,9 @@ class PosSession(models.Model):
                     'credit': new_balance_compare_to_zero < 0 and -new_balance or 0.0
                 })
             ]
+        })
+        account_payment.write({
+            'amount': abs(new_balance),
         })
         account_payment.move_id.action_post()
 
@@ -1757,7 +1761,7 @@ class PosSession(models.Model):
             for session in sessions
         ]
 
-        self.env['account.bank.statement.line'].sudo().create(vals_list)
+        self.env['account.bank.statement.line'].create(vals_list)
 
     def _get_attributes_by_ptal_id(self):
         # performance trick: prefetch fields with search_fetch() and fetch()

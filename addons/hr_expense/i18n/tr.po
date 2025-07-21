@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -1922,12 +1922,6 @@ msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Show missing work email employees"
-msgstr "İş e-postası eksik olan çalışanları göster"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2133,15 +2127,6 @@ msgstr "Tüm mevcut masraflarınızın durumu buradan görülebilir."
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
 msgstr "Bölündükten sonraki kapanış toplamı aynı kalır"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The work email of some employees is missing. Please add it on the employee "
-"form"
-msgstr ""
-"Bazı çalışanların iş e-postaları eksik. Lütfen çalışan formuna ekleyin"
 
 #. module: hr_expense
 #. odoo-python
@@ -2555,6 +2540,21 @@ msgid ""
 msgstr ""
 "Onaylanmış veya ödenmiş bir gider raporuna herhangi bir gider ekleme veya "
 "rapordan gider çıkarma hakkınız yoktur."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr "Bu gider raporunun doğrulama sürecini atlama hakkınız yoktur."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr "Bu giderin doğrulama sürecini atlama hakkınız yoktur."
 
 #. module: hr_expense
 #. odoo-python

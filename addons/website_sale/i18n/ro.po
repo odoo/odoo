@@ -5,16 +5,16 @@
 # Translators:
 # Lyall Kindmurr, 2024
 # Maria Muntean, 2024
-# Wil Odoo, 2025
 # Corina Calin, 2025
 # nierodoo, 2025
+# Wil Odoo, 2025
 # Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -926,7 +926,7 @@ msgstr "BeNeLux"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_beds
 msgid "Beds"
-msgstr ""
+msgstr "Paturi"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
@@ -1220,14 +1220,14 @@ msgstr "Alegeți o metodă de livrare"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "Alegeți un punct de ridicare"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
-msgstr ""
+msgstr "Alegeți această locație"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1322,7 +1322,7 @@ msgstr "Coloane"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_combos
 msgid "Combo Choices"
-msgstr ""
+msgstr "Opțiuni combo"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1373,23 +1373,31 @@ msgstr "Calculați costul de expediere și expediați cu Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Calculați costurile de transport și expediați cu DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calculați costurile de transport și expediați cu FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Calculați costurile de transport și expediați cu UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Calculați costurile de transport și expediați cu USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1400,6 +1408,12 @@ msgstr "Calculați costurile de transport și expediați cu bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "Calculați costurile de transport la comenzi"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/checkout.js:0
+msgid "Computed after delivery"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1637,13 +1651,8 @@ msgstr "Personalizați șabloanele de e-mail"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "Conector DHL Express"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "DHL  Metode de expediere"
+msgid "DHL"
+msgstr "DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1879,6 +1888,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Doriți să ștergeți coșul înainte de a adăuga produse în el?"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Documentație"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Documents"
 msgstr "Documente"
@@ -2099,11 +2113,6 @@ msgstr "Recomandate"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "FedEx Metode de expediere"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -2712,7 +2721,7 @@ msgstr "Obligatoriu (nu permite cumpărături fără cont)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
-msgstr ""
+msgstr "Vizualizare hartă"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_medicine
@@ -3043,7 +3052,7 @@ msgstr "Open Source eCommerce"
 #: code:addons/website_sale/static/src/js/location_selector/location/location.js:0
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
-msgstr ""
+msgstr "Program"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -4119,7 +4128,7 @@ msgstr "Mic"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_sofas
 msgid "Sofas"
-msgstr ""
+msgstr "Canapele"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.sold_out_ribbon
@@ -4401,7 +4410,7 @@ msgstr "Nu există încă o comandă neplătită de pe site-ul web"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
-msgstr ""
+msgstr "A apărut o eroare la încărcarea hărții"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -4554,11 +4563,6 @@ msgstr "Adresa URL a unui videoclip pentru prezentarea produsului dvs."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
 msgstr "USPS"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "USPS Metode de expediere"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
@@ -5009,7 +5013,7 @@ msgstr "Plata dvs. a fost autorizată."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Your postal code"
-msgstr ""
+msgstr "Codul tău poștal"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

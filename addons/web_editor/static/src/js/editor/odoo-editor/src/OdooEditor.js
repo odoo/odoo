@@ -3293,6 +3293,10 @@ export class OdooEditor extends EventTarget {
         }
 
         const sel = this.document.getSelection();
+        if (sel === null) {
+            // The iframe is no longer in the document => no need to do anything.
+            return;
+        }
         if (!hasTableSelection(this.editable)) {
             if (this.editable.classList.contains('o_col_resize') || this.editable.classList.contains('o_row_resize')) {
                 show = false;
@@ -4214,7 +4218,7 @@ export class OdooEditor extends EventTarget {
     _onKeyDown(ev) {
         delete this._isNavigatingByMouse;
         const selection = this.document.getSelection();
-        if (selection.anchorNode && isProtected(selection.anchorNode)) {
+        if ((!selection?.anchorNode) || (isProtected(selection.anchorNode))) {
             return;
         }
         if (this.document.querySelector(".transfo-container")) {
@@ -4273,13 +4277,13 @@ export class OdooEditor extends EventTarget {
             const sel = this.document.getSelection();
             const closestUnbreakable = closestElement(sel.anchorNode, isUnbreakable);
             const closestTableOrLi = closestElement(sel.anchorNode, 'table, li');
-            const closestUnbreakableOrLi = closestElement(sel.anchorNode, ["li", closestUnbreakable.nodeName].join(","));
+            const closestUnbreakableOrLi = closestElement(sel.anchorNode, ["li", closestUnbreakable?.nodeName].join(","));
             if (closestTableOrLi && closestTableOrLi.nodeName === 'TABLE') {
                 this._onTabulationInTable(ev);
             } else if (
                 !ev.shiftKey &&
                 sel.isCollapsed &&
-                closestUnbreakableOrLi.nodeName !== 'LI'
+                closestUnbreakableOrLi?.nodeName !== 'LI'
             ) {
                 // Indent text (collapsed selection).
                 this.execCommand('insert', parseHTML(this.document, tabHtml));

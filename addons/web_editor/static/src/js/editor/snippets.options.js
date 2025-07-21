@@ -9012,10 +9012,17 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
         this.$overlayContent.offset(targetOffset);
 
-        this.$bgDragger.css({
-            width: `${this.$target.innerWidth()}px`,
-            height: `${this.$target.innerHeight()}px`,
-        });
+        this.$bgDragger[0].style.setProperty(
+            "width",
+            `${this.$target.innerWidth()}px`,
+            "important"
+        );
+
+        this.$bgDragger[0].style.setProperty(
+            "height",
+            `${this.$target.innerHeight()}px`,
+            "important"
+        );
 
         const topPos = Math.max(0, $(window).scrollTop() - this.$target.offset().top);
         this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);

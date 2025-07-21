@@ -224,6 +224,8 @@ class StockMove(models.Model):
             location_dest = False
             if move.picking_id:
                 location_dest = move.picking_id.location_dest_id
+            elif move.rule_id.location_dest_from_rule:
+                location_dest = move.rule_id.location_dest_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
@@ -1142,25 +1144,25 @@ Please change the quantity done or the rounding precision of your unit of measur
             candidate_moves_set.add(picking.move_ids)
 
     def _merge_move_itemgetter(self, distinct_fields, excluded_fields=None):
-        field_names = [
-            f_name for f_name in distinct_fields
-            if f_name != 'price_unit' and (excluded_fields is None or f_name not in excluded_fields)
-        ]
-        base_getter = itemgetter(*field_names)
+        fields = set(distinct_fields or []) - set(excluded_fields or [])
+        float_fields = {f_name for f_name in fields if self.env['stock.move']._fields[f_name].type == 'float'}
+        base_getter = itemgetter(*fields - float_fields)
 
-        if 'price_unit' not in distinct_fields:
+        if not float_fields:
             return base_getter
 
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-        currency_prec = self.company_id.currency_id.decimal_places
-        price_precision = min(currency_prec, price_unit_prec)
+        float_precision = {f_name: (self.env['stock.move']._fields[f_name].get_digits(self.env) or (False, 2))[1] for f_name in float_fields}
+        if 'price_unit' in float_fields:
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+            currency_precision = self.company_id.currency_id.decimal_places
+            float_precision['price_unit'] = min(currency_precision, price_unit_prec) if currency_precision else price_unit_prec
 
-        def _get_formatted_price_unit(move):
-            # Round and Cast the price_unit into a string so that rounding errors do not prevent the merge
-            rounded_price_unit = float_round(move.price_unit, precision_digits=price_precision)
-            return "{:.{p}f}".format(rounded_price_unit, p=price_precision)
+        def _get_formatted_float_fields(move, f_name, precision):
+            # Round and cast the value of move.f_name into a string so that rounding errors do not prevent the merge
+            rounded_value = float_round(move[f_name], precision_digits=precision[f_name])
+            return "{:.{precision}f}".format(rounded_value, precision=precision[f_name])
 
-        return lambda move: base_getter(move) + (_get_formatted_price_unit(move),)
+        return lambda move: base_getter(move) + tuple(_get_formatted_float_fields(move, f_name, float_precision) for f_name in float_fields)
 
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
@@ -1402,7 +1404,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         if any(picking.partner_id != m.partner_id for m in self):
             vals['partner_id'] = False
         if any(picking.origin != m.origin for m in self):
-            vals['origin'] = False
+            current_origins = set(picking.origin.split(',') + [False]) if picking.origin else {False}
+            vals['origin'] = picking.origin
+            for move in self:
+                if move.origin not in current_origins:
+                    if not vals['origin']:
+                        vals['origin'] = move.origin
+                    else:
+                        vals['origin'] += f',{move.origin}'
         return vals
 
     def _assign_picking_post_process(self, new=False):

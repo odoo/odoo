@@ -8,6 +8,7 @@
         </div>
         <ActionSwiper t-else="" onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative rounded-0"
+                t-att-data-persistent="message.persistent"
                 t-att-class="attClass"
                 role="group"
                 t-att-aria-label="messageTypeText"
@@ -41,7 +42,7 @@
                             </small>
                             <small t-if="isPersistentMessageFromAnotherThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
                                 <t t-if="message.thread.model !== 'discuss.channel'">
-                                    on <a t-att-href="message.resUrl"><t t-esc="message.thread.displayName"/></a>
+                                    on <a t-if="message.thread.displayName" t-att-href="message.resUrl" t-esc="message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
                                 </t>
                                 <t t-else="">
                                     (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.thread.displayName or message.default_subject"/></a>)

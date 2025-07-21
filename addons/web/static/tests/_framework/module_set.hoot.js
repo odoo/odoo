@@ -3,7 +3,6 @@
 import { describe, dryRun, globals, start, stop } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-dom";
 import { watchKeys, watchListeners } from "@odoo/hoot-mock";
-import { whenReady } from "@odoo/owl";
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
@@ -665,10 +664,7 @@ export async function runTests(options) {
     await Promise.all(Object.values(defs));
 
     // Dry run
-    const [{ suites }] = await Promise.all([
-        dryRun(() => describeDrySuite(fileSuffix, testModuleNames)),
-        whenReady(),
-    ]);
+    const { suites } = await dryRun(() => describeDrySuite(fileSuffix, testModuleNames));
 
     // Run all test files
     const filteredSuitePaths = new Set(suites.map((s) => s.fullName));

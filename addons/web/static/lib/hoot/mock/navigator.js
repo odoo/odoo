@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import { createMock, HootError, MIME_TYPE, MockEventTarget } from "../hoot_utils";
 import { getSyncValue, setSyncValue } from "./sync_values";
 
@@ -26,7 +27,7 @@ const { userAgent: $userAgent } = navigator;
 //-----------------------------------------------------------------------------
 
 function getBlobValue(value) {
-    return value instanceof Blob ? value.text() : value;
+    return isInstanceOf(value, Blob) ? value.text() : value;
 }
 
 /**
@@ -36,7 +37,7 @@ function getBlobValue(value) {
  * @param {string} type
  */
 function getClipboardValue(value, type) {
-    return getBlobValue(value instanceof ClipboardItem ? value.getType(type) : value);
+    return getBlobValue(isInstanceOf(value, ClipboardItem) ? value.getType(type) : value);
 }
 
 function getMockValues() {

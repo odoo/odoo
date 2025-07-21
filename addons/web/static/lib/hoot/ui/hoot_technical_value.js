@@ -9,7 +9,7 @@ import {
     useState,
 } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
-import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { logger } from "../core/logger";
 import {
     getTypeOf,
@@ -207,10 +207,10 @@ export class HootTechnicalValue extends Component {
     }
 
     getLabelAndSize() {
-        if (this.value instanceof Date) {
+        if (isInstanceOf(this.value, Date)) {
             return [this.value.toISOString(), null];
         }
-        if (this.value instanceof RegExp) {
+        if (isInstanceOf(this.value, RegExp)) {
             return [String(this.value), null];
         }
         return [this.value.constructor.name, this.getSize()];
@@ -218,7 +218,7 @@ export class HootTechnicalValue extends Component {
 
     getSize() {
         for (const Class of INVARIABLE_OBJECTS) {
-            if (this.value instanceof Class) {
+            if (isInstanceOf(this.value, Class)) {
                 return null;
             }
         }
@@ -249,7 +249,7 @@ export class HootTechnicalValue extends Component {
     }
 
     wrapPromiseValue(promise) {
-        if (!(promise instanceof Promise)) {
+        if (!isInstanceOf(promise, Promise)) {
             return;
         }
         this.state.promiseState = ["pending", null];

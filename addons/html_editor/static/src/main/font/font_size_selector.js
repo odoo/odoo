@@ -4,6 +4,10 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { cookie } from "@web/core/browser/cookie";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
+import { useChildRef } from "@web/core/utils/hooks";
 
 const MAX_FONT_SIZE = 144;
 
@@ -14,6 +18,7 @@ export class FontSizeSelector extends Component {
         getDisplay: Function,
         onFontSizeInput: Function,
         onSelected: Function,
+        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         ...toolbarButtonProps,
     };
     static components = { Dropdown, DropdownItem };
@@ -22,6 +27,8 @@ export class FontSizeSelector extends Component {
         this.items = this.props.getItems();
         this.state = useState(this.props.getDisplay());
         this.dropdown = useDropdownState();
+        this.menuRef = useChildRef();
+        useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = useRef("iframeContent");
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
 
@@ -37,6 +44,13 @@ export class FontSizeSelector extends Component {
                 }
 
                 this.fontSizeInput = iframeDoc.createElement("input");
+                const isDarkMode = cookie.get("color_scheme") === "dark";
+                const htmlStyle = getHtmlStyle(this.props.document);
+                const backgroundColor = getCSSVariableValue(
+                    isDarkMode ? "gray-200" : "white",
+                    htmlStyle
+                );
+                const color = getCSSVariableValue("black", htmlStyle);
                 Object.assign(iframeDoc.body.style, {
                     padding: "0",
                     margin: "0",
@@ -47,6 +61,8 @@ export class FontSizeSelector extends Component {
                     border: "none",
                     outline: "none",
                     textAlign: "center",
+                    backgroundColor: backgroundColor,
+                    color: color,
                 });
                 this.fontSizeInput.type = "text";
                 this.fontSizeInput.name = "font-size-input";

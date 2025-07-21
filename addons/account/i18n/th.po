@@ -6,38 +6,22 @@
 # Martin Trigaux, 2024
 # Tana Chan, 2024
 # Rasareeyar Lappiam, 2025
-# Wil Odoo, 2025
 # Thomas Becquevort, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thomas Becquevort, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"การเคลื่อนไหว (%(move)s) ไม่สมดุล\n"
-"ยอดเดบิตทั้งหมดเท่ากับ %(debit_total)s และยอดรวมเครดิตเท่ากับ %(credit_total)s\n"
-"คุณอาจต้องการระบุบัญชีเริ่มต้นในสมุดรายวัน \"%(journal)s\" เพื่อให้สมดุลแต่ละการเคลื่อนไหวโดยอัตโนมัติ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -350,11 +334,6 @@ msgstr ""
 "    <br/>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ". Please make sure that this is a wanted behavior."
-msgstr " โปรดตรวจสอบว่าเป็นพฤติกรรมที่ต้องการ"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
@@ -597,6 +576,13 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> งวดที่ <b>%(amount)s</b> ครบกำหนดชำระวันที่ <b "
 "style='color: #704A66;'>%(date)s</b>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<br/>\n"
+"                        <span>Please make sure that this is a wanted behavior.</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -955,22 +941,9 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
-"                                        <span groups=\"base.group_multi_currency\">in </span>\n"
-"                                    </span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
-"                                        <span groups=\"base.group_multi_currency\">ใน </span>\n"
-"                                    </span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
-"or invoice_payment_term_id\"> or </span>"
-msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
-"or invoice_payment_term_id\"> หรือ </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1213,11 +1186,6 @@ msgid "<span> (DR)</span>"
 msgstr "<span> (DR)</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span> = </span>"
-msgstr "<span> = </span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
 msgstr "<span>ใบเรียกเก็บเงิน</span>"
@@ -1250,8 +1218,8 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span>1 </span>"
-msgstr "<span>1 </span>"
+msgid "<span>1</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1263,6 +1231,11 @@ msgstr "<span>5.00</span>"
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
 "<span><b>ทำได้ดีมาก!</b> คุณได้ผ่านทุกขั้นตอนของการทัวร์นี้แล้ว</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span>=</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1313,6 +1286,13 @@ msgid "<span>New</span>"
 msgstr "<span>ใหม่</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<span>One or more Bank Accounts set on this partner are also used by "
+"others:</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
 msgstr "<span>การดำเนินงาน</span>"
@@ -1343,6 +1323,11 @@ msgstr "<span>ภาษี 0%</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
 msgstr "<span>ภาษี</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+msgid "<span>The Bank Account could be a duplicate of</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2905,12 +2890,6 @@ msgstr ""
 "งบดุลและงบกำไรขาดทุน (บัญชีกำไรขาดทุน)\n"
 "กฎหมายกำหนดให้บัญชีประจำปีของ\n"
 "บริษัทต้องเปิดเผยข้อมูลจำนวนหนึ่ง"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "เกิดข้อผิดพลาดขึ้น"
 
 #. module: account
 #. odoo-python
@@ -6721,6 +6700,14 @@ msgid "Due Terms"
 msgstr "เงื่อนไขครบกำหนด"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
+msgid "Duplicate Bank Partner"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_payment_ids
 msgid "Duplicate Payment"
@@ -7123,6 +7110,12 @@ msgstr "รายการส่วนต่างของการแลกเ
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
 msgstr "ไม่รวมสมุดรายวัน"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
+#: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
+msgid "Expected Currency Rate"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -11209,11 +11202,6 @@ msgid "Once your invoice is ready, confirm it."
 msgstr "เมื่อใบแจ้งหนี้ของคุณพร้อมแล้ว โปรดยืนยัน"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid "One or more Bank Accounts set on this partner are also used by other"
-msgstr "บัญชีธนาคารตั้งแต่หนึ่งบัญชีขึ้นไปที่พาร์ทเนอร์รายนี้ใช้โดยบุคคลอื่น"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
@@ -11806,7 +11794,6 @@ msgstr "พาร์ทเนอร์ควรมีที่อยู่อี
 #: code:addons/account/models/partner.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners"
 msgstr "พาร์ทเนอร์"
 
@@ -11820,6 +11807,12 @@ msgstr "พาร์ทเนอร์ไม่มีบัญชีธนาค
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr "พาร์ทเนอร์ที่ใช้ในรายการแฮชไม่สามารถรวมเข้าด้วยกันได้"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Partners with same bank"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -12216,6 +12209,12 @@ msgstr "ความเสี่ยงของการหลอกลวงท
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk: Medium"
 msgstr "ความเสี่ยงของการหลอกลวงทางอินเทอร์เน็ต (Phishing) : ปานกลาง"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
+msgid "Pick the rate on a certain date"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -12880,6 +12879,11 @@ msgid ""
 msgstr ""
 "การอ้างอิงของเอกสารที่ใช้ในการออกการชําระเงินนี้ เช่น หมายเลขเช็ค ชื่อไฟล์ "
 "และอื่นๆ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Refresh currency rate to the invoice date"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -15481,6 +15485,14 @@ msgstr "รายการสมุดรายวันต่อไปนี้
 #: code:addons/account/models/account_account.py:0
 msgid "The following accounts must be assigned to at least one company:"
 msgstr "บัญชีต่อไปนี้จะต้องได้รับมอบหมายให้กับบริษัทอย่างน้อยหนึ่งแห่ง:"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18903,6 +18915,11 @@ msgstr "ได้ถูกนำไปใช้"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "ที่นี้"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "in"
+msgstr "in"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount

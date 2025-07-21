@@ -7,6 +7,7 @@ import {
     getCurrentDimensions,
 } from "@web/../lib/hoot-dom/helpers/dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { isInstanceOf } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
@@ -54,7 +55,7 @@ let shouldPrepareNextFixture = true; // Prepare setup for first test
  * @param {App | import("@odoo/owl").Component} target
  */
 export function destroy(target) {
-    const app = target instanceof App ? target : target.__owl__.app;
+    const app = isInstanceOf(target, App) ? target : target.__owl__.app;
     if (destroyed.has(app)) {
         return;
     }
@@ -83,7 +84,7 @@ export function makeFixtureManager(runner) {
         if (!currentFixture) {
             // Prepare fixture once to not force layouts/reflows
             currentFixture = document.createElement(HootFixtureElement.TAG_NAME);
-            if (runner.debug || runner.config.headless) {
+            if (runner.debug || runner.headless) {
                 currentFixture.show();
             }
 

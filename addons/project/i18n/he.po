@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:46+0000\n"
+"POT-Creation-Date: 2025-06-27 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Yoram Lavi, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -188,7 +188,6 @@ msgstr "# דירוגים"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
-#: model:ir.model.fields,field_description:project.field_project_milestone__task_count
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
 msgstr "מס' משימות"
@@ -1759,12 +1758,14 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"לקוחות יכולים לשלוח משוב במייל; Odoo יוצרת משימות באופן אוטומטי, ואתה יכול\n"
+"      לתקשר ישירות מתוך המשימה ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Customers will be added to the followers of their project and tasks."
-msgstr ""
+msgstr "לקוחות יתווספו לעוקבים של הפרויקט ושל המשימות שלהם."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1794,6 +1795,8 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"התאריך שבו עודכן לאחרונה מצב המשימה.\n"
+"בהתבסס על מידע זה, ניתן לזהות משימות שנתקעו ולקבל סטטיסטיקות על הזמן שלוקח בדרך כלל להעביר משימות בין שלבים/מצבים."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1869,7 +1872,7 @@ msgstr "הגדירו את השלבים שהפרויקטים שלכם עוברי�
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
-msgstr ""
+msgstr "הגדירו את השלבים שהמשימות  שלכם עוברים מהיצירה ועד ההשלמה."
 
 #. module: project
 #. odoo-javascript
@@ -2017,7 +2020,7 @@ msgstr "שם לתצוגה"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Display the sub-task in your pipeline"
-msgstr ""
+msgstr "הצג את תת־המשימה במשפך  המשימות שלך."
 
 #. module: project
 #. odoo-python
@@ -2089,6 +2092,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"עריכה: שותפים יכולים לצפות בכל המשימות ולערוך אותן בתצוגת הקאנבן. בנוסף, הם "
+"יכולים לבחור אילו משימות לעקוב אחריהן."
 
 #. module: project
 #. odoo-javascript
@@ -2113,6 +2118,8 @@ msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
 msgstr ""
+"כתובות האימייל שהיו בשדה CC של המיילים הנכנסים הקשורים למשימה זו, ואינן "
+"מקושרות כרגע ללקוח קיים."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -2240,7 +2247,7 @@ msgstr "במעקב"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Followed Updates"
-msgstr ""
+msgstr "עדכונים במעקב"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -2299,7 +2306,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
-msgstr ""
+msgstr "קבל משוב מלקוחות והערך את ביצועי העובדים שלך"
 
 #. module: project
 #. odoo-javascript
@@ -2330,6 +2337,9 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"הענק למשתמשי פורטל גישה לפרויקט שלך על ידי הוספתם כעוקבים (משימות הפרויקט לא"
+" כלולות). כדי להעניק גישה למשימות למשתמש פורטל, הוסף אותם כעוקבים למשימות "
+"אלה."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2345,6 +2355,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
 msgstr ""
+"נהל את אוסף הרעיונות שלך בתוך המשימות של הפרויקט החדש שלך ודון בהם בצ'אט של "
+"המשימות."
 
 #. module: project
 #. odoo-javascript
@@ -2380,7 +2392,7 @@ msgstr "הסתר משימות סגורות"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hide the sub-task in your pipeline"
-msgstr ""
+msgstr "הסתר את תת-המשימה בתוך המשפך."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -2513,6 +2525,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
+"אם מוגדר, בקשת דירוג תישלח אוטומטית במייל ללקוח כאשר המשימה מגיעה לשלב זה.\n"
+"כחלופה, הבקשה תישלח בפרקי זמן קבועים כל עוד המשימה נשארת בשלב זה, בהתאם להגדרות הפרויקט שלך.\n"
+"כדי להשתמש בתכונה זו, ודא כי אפשרות 'דירוג לקוחות' מופעלת בפרויקט שלך."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2598,7 +2613,7 @@ msgstr "הערות פנימיות מוצגות רק למשתמשים פנימי�
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "פעולה לא חוקית: %s"
 
 #. module: project
 #. odoo-python
@@ -2625,7 +2640,7 @@ msgstr "חויב"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "האם סגור  (Burn-up תרשים)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2640,7 +2655,7 @@ msgstr "עוקב"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 msgid "Is toggle mode"
-msgstr ""
+msgstr "האם במצב מתג "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2662,6 +2677,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"עקוב אחרי התקדמות המשימות שלך מיצירתם ועד השלמתם.<br>\n"
+"                    שתף פעולה באפקטיביות באמצעות צ'אט בזמן אמת או במייל."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2670,6 +2687,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"עקוב אחרי התקדמות המשימות שלך מיצירתם ועד השלמתם.<br>\n"
+"                    שתף פעולה באפקטיביות באמצעות צ'אט בזמן אמת או במייל."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
@@ -2853,6 +2872,8 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
 "      assign them and use the"
 msgstr ""
+"נהל את מחזור החיים של הפרויקט שלך באמצעות תצוגת הקאנבן. הוסף פרויקטים חדשים שנרכשו. ,\n"
+"      הקצה אותם והשצמש ב-"
 
 #. module: project
 #. odoo-javascript
@@ -2896,6 +2917,8 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"מדוד את שביעות רצון הלקוחות שלך על ידי שליחת בקשות דירוג כאשר המשימות שלך "
+"מגיעות לשלב מסוים."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_15
@@ -3025,6 +3048,8 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr ""
+"השם שבו נעשה שימוש להתייחסות למשימות בפרויקט שלך, למשל: משימות, קריאות "
+"שירות, ספרינטים וכו'."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3321,7 +3346,7 @@ msgstr "משימות פתוחות"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Open sub-tasks notebook section"
-msgstr ""
+msgstr "פתח את מקטע תת־המשימות בפנקס המשימות."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
@@ -3348,7 +3373,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "ארגן סדרי עדיפויות בין ההזמנות באמצעות ה־"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3358,6 +3383,8 @@ msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"ארגן את המשימות שלך על ידי פיזורן לאורך צינור המשימות (Pipeline). <br>\n"
+"                    שתף באפקטיביות באמצעות צ'אט בזמן אמת או במייל."
 
 #. module: project
 #. odoo-python
@@ -3415,24 +3442,24 @@ msgstr ""
 #: code:addons/project/models/res_partner.py:0
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
-msgstr ""
+msgstr "חברה שותפה לא יכולה להיות שונה מהחברה שאליה הוקצו הפרויקטים."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "חברה שותפה לא יכולה להיות שונה מהחברה שאליה הוקצו המשימות."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "משימות השותף העיסקי"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
-msgstr ""
+msgstr "אנשים שהוזמנו להשתתף בפרויקט יקבלו הרשאות גישה לפורטל."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3453,6 +3480,19 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"האנשים שלהם יוצג הפרויקט והמשימות שלו.\n"
+"\n"
+"- משתמשים פנימיים שהוזמנו: כאשר הם עוקבים אחרי הפרויקט, משתמשים פנימיים יקבלו גישה לכל המשימות שלו ללא הבדל. אחרת, הם יקבלו גישה רק למשימות הספציפיות שהם עוקבים אחריהן. .\n"
+"משתמש עם הרשאת  \"מנהל פרויקט\" יכול לגשת לפרויקט ולמשימותיו, גם אם אינו חלק מהעוקבים.. \n"
+"\n"
+"- כל המשתמשים הפנימיים: כל המשתמשים הפנימיים יכולים לגשת לפרויקט ולכל משימותיו ללא הבדל. \n"
+"- משתמשי פורטל שהוזמנו וכל המשתמשים הפנימיים: כל המשתמשים הפנימיים יכולים לגשת לפרויקט ולכל משימותיו ללא הבדל.\n"
+"משתמשי פורטל, כאשר הם עוקבים אחרי פרויקט, יקבלו גישה רק למשימות הספציפיות שהם עוקבים אחריהן.. \n"
+"\n"
+"כאשר הפרויקט משותף במצב קריאה בלבד, משתמש הפורטל מנותב אל הפורטל שלו. הוא יכול לצפות במשימות שהוא עוקב אחריהן, אך לא לערוך אותן. \n"
+"כאשר הפרויקט משותף במצב עריכה, משתמש הפורטל מנותב לתצוגות הקאנבן והרשימה של המשימות. הוא יכול לשנות מספר שדות נבחרים במשימות.  \n"
+"\n"
+"בכל מקרה, משתמש פנימי ללא הרשאות גישה לפרויקט יכול עדיין לגשת למשימה, בתנאי שהוא מקבל את כתובת ה-URL המתאימה (ושנמצא ברשימת העוקבים אם הפרויקט פרטי)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3549,7 +3589,7 @@ msgstr "קְדִימוּת"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
 msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
-msgstr ""
+msgstr "עדיפות: {{'חשוב' if task.priority == '1' else 'רגיל'}}"
 
 #. module: project
 #. odoo-javascript
@@ -3573,6 +3613,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project on "
 "the task to gain access to this feature."
 msgstr ""
+"לא ניתן להמיר משימות פרטיות לתת־משימות. יש להגדיר פרויקט עבור המשימה כדי "
+"להשתמש בפונקציה זו."
 
 #. module: project
 #. odoo-javascript
@@ -3651,12 +3693,12 @@ msgstr "שיתוף פרויקטים"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "אשף שיתוף פרויקט עם שותפים"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "תדירות שיתוף הפרויקט"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3725,7 +3767,7 @@ msgstr "תיאור פרויקט..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "שיתוף הפרויקט עם השותפים שלך."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3745,7 +3787,7 @@ msgstr "פרויקט: פרויקט הושלם "
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Project: Request Acknowledgment"
-msgstr ""
+msgstr "פרויקט: אישור קבלת בקשה"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -3926,7 +3968,7 @@ msgstr "קריאה"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "קריאה בלבד: שותפים יכולים לצפות במשימות אך אינם יכולים לערוך אותן."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3935,6 +3977,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"קריאה בלבד: שותפים יכולים לצפות במשימות אך לא לערוך אותן.\n"
+"עריכה עם גישה מוגבלת: שותפים יכולים לצפות ולערוך משימות שהם עוקבים אחריהן בתצוגת קנבן.\n"
+"עריכה: שותפים יכולים לצפות ולערוך את כל המשימות בתצוגת קנבן, וגם לבחור באילו משימות לעקוב."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4004,7 +4049,7 @@ msgstr "דגם מסמך קשור"
 #. odoo-javascript
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "הסר משתף פעולה"
 
 #. module: project
 #. odoo-javascript
@@ -4083,7 +4128,7 @@ msgstr "שחזר"
 msgid ""
 "Restoring will replace the current content with the selected version. Any "
 "unsaved changes will be lost."
-msgstr ""
+msgstr "שחזור יחליף את התוכן הנוכחי בגרסה שנבחרה. כל שינוי שלא נשמר יאבד."
 
 #. module: project
 #. odoo-javascript
@@ -4115,19 +4160,19 @@ msgstr "פרצוף עצוב"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to drag images in description"
-msgstr ""
+msgstr "שמור את המשימה כדי שתוכל לגרור תמונות לתוך התיאור."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to paste images in description"
-msgstr ""
+msgstr "שמור את המשימה כדי שתוכל להדביק תמונות בתוך התיאור."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Schedule your activity once it is ready."
-msgstr ""
+msgstr "תזמן את הפעילות שלך כאשר היא תהיה מוכנה."
 
 #. module: project
 #. odoo-javascript
@@ -4191,7 +4236,7 @@ msgstr "חפש בסטטוס"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "חיפוש%(left)s משימות%(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4203,7 +4248,7 @@ msgstr "אסימון אבטחה"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr ""
+msgstr "בחר מבצע מהתפריט."
 
 #. module: project
 #. odoo-javascript
@@ -4250,7 +4295,7 @@ msgstr "הגדר תבנית דוא\"ל דירוג של שלבים"
 msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
-msgstr ""
+msgstr "הגדר בשלבי הפרויקט כדי לעדכן לקוחות כאשר הפרויקט מגיע לשלב זה."
 
 #. module: project
 #. odoo-javascript
@@ -4262,7 +4307,7 @@ msgstr "הגדר עדיפות כ %s"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 msgid "Set state as..."
-msgstr ""
+msgstr "הגדר מצב כ..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4341,6 +4386,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"חלק מהחשבונות האנליטיים שנבחרו משויכים לפרויקט:\n"
+"%(accountList)s\n"
+"\n"
+"העברת החשבונות האלה לארכיון תבטל את האפשרות לרשום דוחות שעות בפרויקטים המשויכים אליהם..\n"
+"\n"
+"האם אתה בטוח שברצונך להמשיך?"
 
 #. module: project
 #. odoo-python
@@ -4463,7 +4514,7 @@ msgstr "סטטוס"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "עדכון סטטוס - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4508,6 +4559,8 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
+"סך שעות העבודה שהוקצו לכל תת־המשימות (ולכל תת־המשימות שלהן) המקושרות למשימה "
+"זו. לרוב סכום זה קטן או שווה לשעות שהוקצו למשימה הראשית."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4572,7 +4625,7 @@ msgstr "משימה בוטלה"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "המשימה הומרה מרשימת מטלות (To-Do)"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4657,7 +4710,7 @@ msgstr "שם משימה..."
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
-msgstr ""
+msgstr "משימה מעברת מפרויקט %(source_project)s ל-%(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4759,7 +4812,7 @@ msgstr "בדיקות"
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid "The Burndown Chart must be grouped by Date"
-msgstr ""
+msgstr "יש לקבץ את תרשים ה־Burndown לפי תאריך."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -4782,7 +4835,7 @@ msgstr "הקובץ המצורף לא קיים או שאין לך הרשאות א
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 msgid "The end date should be in the future"
-msgstr ""
+msgstr "תאריך הסיום צריך להיות בעתיד."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4798,7 +4851,7 @@ msgstr "אבן הדרך הבאה נוספה:"
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "המרווח צריך להיות גדול מ־0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4824,7 +4877,7 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "הפרויקט והשותף המשויך חייבים להיות מקושרים לאותה חברה."
 
 #. module: project
 #. odoo-python
@@ -4857,7 +4910,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
-msgstr ""
+msgstr "החיפוש לא תומך באופרטור%(operator)s או ערך %(value)s."
 
 #. module: project
 #. odoo-python
@@ -4874,6 +4927,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to "
 "'%(visibility)s' in order to make it accessible by the recipient(s)."
 msgstr ""
+"הגדרת הפרטיות של הפרויקט מגבילה את השיתוף, ולכן לא ניתן לשתף את המשימה עם "
+"הנמענים.שנה את הגדרת הפרטיות של הפרויקט ל־: '%(visibility)s' כדי לאפשר לנמען"
+" (ים) גישה ."
 
 #. module: project
 #. odoo-javascript
@@ -4959,6 +5015,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"החשבון ///האנליטי הזה משויך לפרויקטים הבאים:\n"
+"%(projectList)s\n"
+"\n"
+"העברת החשבון לאכיב ימנע את האפשרות לרשום דוחות שעות עבור הפרויקטים הללו.\n"
+"\n"
+"האם אתה בטוח שברצונך להמשיך?"
 
 #. module: project
 #. odoo-javascript
@@ -4989,6 +5051,10 @@ msgid ""
 " stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
+"הפרויקט הזה משויך ל- %(project_company)s, עוד שהשלב שנבחר שייך "
+"ל-%(stage_company)s. יש כמה אפשרויות לטיפול בכך: ניתן להסיר את שיוך החברה "
+"מהפרויקט או מהשלב, או לעדכן את פרטי החברה בשני הרשומות כדי ששתיהן יהיו תחת "
+"אותה חברה."
 
 #. module: project
 #. odoo-python
@@ -5011,6 +5077,9 @@ msgid ""
 " the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
+"-הפרויקט הזה לא משויך לאף חברה, בעוד שהשלב משויך ל %s. Tיש כמה אפשרויות "
+"לשקול: ניתן לשנות את שיוך החברה של הפרויקט כך שיתאים לזה של השלב, או להסיר "
+"את שיוך החברה מהשלב."
 
 #. module: project
 #. odoo-python
@@ -5346,6 +5415,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"השתמש בצ'אט כדי לשלוח<b> מיילים </b>ולתקשר ביעילות עם הלקוחות שלך.הוסף אנשים"
+" חדשים לרשימת העוקבים כדי לגרום להם להיות מודעים לשינויים העיקריים במשימה "
+"זו."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5359,6 +5431,13 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"השתמש במילות המפתח האלה בכותרת כדי ליצור משימות חדשות.:\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags הגדר תווית למשימה\n"
+"        @user הקצה את המשימה למשתמש\n"
+"        ! הגדראת המשימה בעדיפות גבוהה\n"
+"\n"
+"       ודא שאתה משתמש בפורמט ובסדר הנכונים. e.g. שפר את מסך ההגדרות 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -5485,7 +5564,7 @@ msgstr "זמן עבודה לסגירה"
 msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
-msgstr ""
+msgstr "רוצה לשחזר גם את כל הפרויקטים שנמצאים בשלב זה?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
@@ -5526,6 +5605,9 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"אינך יכול לשנות את שיוך החברה של שלב זה ל־ %(company_name)s מכיוון שהוא כולל"
+" כעת פרויקטים המשויכים ל־ %(project_company_name)s. אנא ודא שהשלב הזה כולל "
+"אך ורק פרויקטים המשויכים ל־%(company_name)s."
 
 #. module: project
 #. odoo-javascript

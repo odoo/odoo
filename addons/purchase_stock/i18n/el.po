@@ -89,6 +89,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
 msgid "A storable product is a product for which you manage stock."
 msgstr ""
+"Ένα υποθηκεύσιμο προϊόν είναι ένα προϊόν για το οποίο διαχειρίζεστε απόθεμα."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
@@ -386,7 +387,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "Επόμενη(-ες) μεταφορά(-ές) που επηρεάζονται:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -706,12 +707,12 @@ msgstr "Αναφορά Κανόνων Αποθέματος"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr ""
+msgstr "Πληροφορίες Ανατροφοδότησης Αποθέματος από Προμηθευτή"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_option
 msgid "Stock warehouse replenishment option"
-msgstr ""
+msgstr "Επιλογή Ανατροφοδότησης Αποθέματος στην Αποθήκη"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
@@ -791,6 +792,12 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Αυτό προσθέτει μια διαδρομή dropshipping που εφαρμόζεται στα προϊόντα για να"
+" ζητήσετε από τους προμηθευτές σας να παραδώσουν απευθείας στους πελάτες "
+"σας. Ένα προϊόν για dropshipping θα δημιουργήσει αίτημα προσφοράς αγοράς "
+"μόλις επιβεβαιωθεί η παραγγελία πώλησης. Πρόκειται για ροή κατόπιν ζήτησης. "
+"Η ζητούμενη διεύθυνση παράδοσης θα είναι η διεύθυνση παράδοσης του πελάτη "
+"και όχι η αποθήκη σας."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id

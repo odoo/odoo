@@ -5,9 +5,9 @@
      <t t-name="account.JournalDashboardActivity">
         <t t-foreach="info.activities" t-as="activity" t-key="activity_index">
             <div class="row">
-                <div class="col o_mail_activity">
+                <div class="col-auto o_mail_activity">
                     <a href="#"
-                       t-att-class="(activity.status == 'late' ? 'text-danger ' : ' ') + (activity.activity_category == 'tax_report' ? 'o_open_vat_report' : 'see_activity')"
+                       t-attf-class="{{ activity.status == 'late' ? 'text-danger' : '' }}"
                        t-att-data-res-id="activity.res_id" t-att-data-id="activity.id" t-att-data-model="activity.res_model"
                        t-on-click.stop.prevent="() => this.openActivity(activity)">
                         <t t-out="activity.name"/>

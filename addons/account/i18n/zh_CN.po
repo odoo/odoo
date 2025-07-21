@@ -8,41 +8,26 @@
 # Zhongbo Zhao, 2024
 # kunqing shi, 2025
 # huang jun, 2025
-# Wil Odoo, 2025
 # 何彬 <vnsoft.he@gmail.com>, 2025
 # Jeffery CHEN <jeffery9@gmail.com>, 2025
 # Chloe Wang, 2025
 # Raymond Yu <cl_yu@hotmail.com>, 2025
+# liAnGjiA <liangjia@qq.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"该分录（%(move)s）未平。\n"
-"借方总额为 %(debit_total)s；贷方总额为 %(credit_total)s。\n"
-"您可以考虑为日记账“%(journal)s” 设定默认科目，以便自动找平每一张分录。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -350,11 +335,6 @@ msgstr ""
 "    <br/>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ". Please make sure that this is a wanted behavior."
-msgstr "。请确保您想要执行此操作。"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
@@ -595,6 +575,15 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b>安装<b>%(amount)s</b>到期日<b style='color: "
 "#704A66;'>%(date)s</b>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<br/>\n"
+"                        <span>Please make sure that this is a wanted behavior.</span>"
+msgstr ""
+"<br/>\n"
+"                        <span>老哥，你确定要这么干吗？</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -947,22 +936,9 @@ msgstr "<span class=\"figure-caption\">通过自动报表和警报，绝不会�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
-"                                        <span groups=\"base.group_multi_currency\">in </span>\n"
-"                                    </span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
-"                                        <span groups=\"base.group_multi_currency\">在 </span>\n"
-"                                    </span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
-"or invoice_payment_term_id\"> or </span>"
-msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
-"or invoice_payment_term_id\">或 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1201,11 +1177,6 @@ msgid "<span> (DR)</span>"
 msgstr "<span>（借方）</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span> = </span>"
-msgstr "<span> = </span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
 msgstr "<span>账单</span>"
@@ -1238,8 +1209,8 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span>1 </span>"
-msgstr "<span>1 </span>"
+msgid "<span>1</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1250,6 +1221,11 @@ msgstr "<span>5.00</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr "<span><b>干得好！</b> 您完成了所有步骤！</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span>=</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1300,6 +1276,13 @@ msgid "<span>New</span>"
 msgstr "<span>新建</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<span>One or more Bank Accounts set on this partner are also used by "
+"others:</span>"
+msgstr "<span>该合作伙伴上设置的一个或多个银行账户也被其他方使用了：</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
 msgstr "<span>操作</span>"
@@ -1330,6 +1313,11 @@ msgstr "<span>税率 0%</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
 msgstr "<span>税项</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+msgid "<span>The Bank Account could be a duplicate of</span>"
+msgstr "<span>该银行账户可能是以下账户的重复项：</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2899,12 +2887,6 @@ msgstr ""
 "                balance sheet and the income statement (profit and loss\n"
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "An error has occurred."
 
 #. module: account
 #. odoo-python
@@ -6740,6 +6722,14 @@ msgid "Due Terms"
 msgstr "到期期限"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
+msgid "Duplicate Bank Partner"
+msgstr "重复的银行账户持有人"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_payment_ids
 msgid "Duplicate Payment"
@@ -7142,6 +7132,12 @@ msgstr "Exchange difference entries:"
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
 msgstr "已排除的日记账"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
+#: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
+msgid "Expected Currency Rate"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -11252,11 +11248,6 @@ msgid "Once your invoice is ready, confirm it."
 msgstr "发票就绪后，按“确认”。"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid "One or more Bank Accounts set on this partner are also used by other"
-msgstr "为该合作伙伴设置的一个或多个银行科目被其他合作伙伴使用"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
@@ -11849,7 +11840,6 @@ msgstr "Partner(s) should have an email address."
 #: code:addons/account/models/partner.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners"
 msgstr "合作伙伴"
 
@@ -11863,6 +11853,12 @@ msgstr "合作伙伴缺少银行账户"
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr "Partners that are used in hashed entries cannot be merged."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Partners with same bank"
+msgstr "具有相同银行账户的合作伙伴"
 
 #. module: account
 #. odoo-python
@@ -12259,6 +12255,12 @@ msgstr "网络钓鱼风险：高"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk: Medium"
 msgstr "网络钓鱼风险：中"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
+msgid "Pick the rate on a certain date"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -12927,6 +12929,11 @@ msgid ""
 msgstr ""
 "Reference of the document used to issue this payment. Eg. check number, file"
 " name, etc."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Refresh currency rate to the invoice date"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -15559,6 +15566,16 @@ msgstr "The following accounts must be assigned to at least one company:"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
+"以下凭证不平：\n"
+"\n"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
@@ -18132,7 +18149,7 @@ msgstr ""
 msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
-msgstr ""
+msgstr "您无法为属于不同分支机构的凭证创建付款，除非拥有对母公司/总部的访问权限。"
 
 #. module: account
 #. odoo-python
@@ -19044,6 +19061,11 @@ msgstr "已套用。"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "此处"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "in"
+msgstr "在"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount

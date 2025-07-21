@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-07-11 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -37,6 +37,8 @@ msgid ""
 "%s should have a KVK or OIN number set in Company ID field or as Peppol "
 "e-address (EAS code 0106 or 0190)."
 msgstr ""
+"%s ha de tenir un número KVK o OIN establert al camp «ID de l'empresa» o com"
+" l'adreça electrònica de Peppol (codi EAS 0106 o 0190)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -55,6 +57,12 @@ msgid "A payment of %s was detected."
 msgstr "S'ha detectat un pagament de %s."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "A rounding amount of %s was detected."
+msgstr "S'ha detectat un import d'arrodoniment de %s."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "Facturació A-NZ BIS 3.0"
@@ -62,7 +70,7 @@ msgstr "Facturació A-NZ BIS 3.0"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
 msgid "AS2 exchange"
-msgstr ""
+msgstr "Intercanvi AS2"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -204,7 +212,7 @@ msgstr "Descompte condicional per pagament anticipat"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Configure"
-msgstr "Configura"
+msgstr "Configurar"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
@@ -330,7 +338,7 @@ msgstr "Cada línia de factura hauria de tenir almenys un impost."
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__em
 msgid "Electronic mail"
-msgstr ""
+msgstr "Correu electrònic"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -351,6 +359,12 @@ msgstr "Estònia VAT"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "Exempt from tax"
+msgstr "Exempció fiscal"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Export outside the EU"
 msgstr "Exporta fora de la UE"
 
@@ -367,7 +381,7 @@ msgstr "Factur-x/XRechnung CII 2.2.0"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
 msgid "File Transfer Protocol"
-msgstr ""
+msgstr "Protocol de transferència de fitxers"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0037
@@ -607,7 +621,7 @@ msgstr "Noruega - Org.nr."
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
 msgid "O.F.T.P. (ODETTE File Transfer Protocol)"
-msgstr ""
+msgstr "O.F.T.P. (Protocol de transferència de fitxers ODETTE)"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -673,6 +687,12 @@ msgstr "Acció d'informe"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
 msgid "Romania VAT"
 msgstr "Romania - IVA"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "Rounding"
+msgstr "Arrodoniment"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9918
@@ -913,7 +933,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
 msgid "X.400 address for mail text"
-msgstr ""
+msgstr "Adreça X.400 per al text del correu"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

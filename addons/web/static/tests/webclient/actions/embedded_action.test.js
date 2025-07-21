@@ -281,22 +281,21 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
     ).click();
     expect(".o_control_panel .breadcrumb-item").toHaveCount(0);
     expect(".o_control_panel .o_breadcrumb .active").toHaveText("Partners Action 1");
+    expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-1");
     await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
     await runAllTimers();
+    expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-3");
     expect(router.current.action).toBe(3, {
         message: "the current action should be the one of the embedded action previously clicked",
     });
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners Action 1",
-        "Favorite Ponies",
-    ]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Favorite Ponies"]);
     await contains(".o_embedded_actions > button > span:contains('Embedded Action 3')").click();
     await runAllTimers();
+    expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-4");
     expect(router.current.action).toBe(4, {
         message: "the current action should be the one of the embedded action previously clicked",
     });
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners Action 1",
         "Favorite Ponies from python action",
     ]);
 });

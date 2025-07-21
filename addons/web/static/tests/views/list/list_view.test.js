@@ -3454,6 +3454,20 @@ test(`selection box is properly displayed (multi pages)`, async () => {
     });
 });
 
+test(`selection box shows '+' suffix on selection count beyond count_limit`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2" count_limit="3"><field name="foo"/><field name="bar"/></list>`,
+    });
+    // select all records of first page
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_list_selection_box`).toHaveText("2\nselected\n Select all 3+");
+    // select all domain
+    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    expect(`.o_list_selection_box`).toHaveText("All 3+ selected");
+});
+
 test(`selection box is properly displayed (group list)`, async () => {
     await mountView({
         resModel: "foo",
@@ -9035,18 +9049,11 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     defineModels([MyFoo]);
 
     let moves = 0;
-    const context = {
-        lang: "en",
-        tz: "taht",
-        uid: 7,
-        allowed_company_ids: [1],
-    };
     onRpc("/web/dataset/resequence", async (request) => {
         expect.step("resequence");
         const { params } = await request.json();
         if (moves === 0) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [4, 3],
                 offset: 13,
@@ -9054,8 +9061,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
             });
         }
         if (moves === 1) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [4, 2],
                 offset: 12,
@@ -9063,8 +9069,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
             });
         }
         if (moves === 2) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [2, 4],
                 offset: 12,
@@ -9072,8 +9077,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
             });
         }
         if (moves === 3) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [4, 2],
                 offset: 12,

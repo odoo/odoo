@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -24,21 +24,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Die Buchungszeile (%(move)s) ist nicht ausgeglichen. Die Summe der Belastungen liegt bei %(debit_total)s und die Summe der Gutschriften liegt bei %(credit_total)s. \n"
-"Sie können ein Standardkonto im Journal „%(journal)s“ angeben, um jede Buchungszeile automatisch auszugleichen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -355,11 +340,6 @@ msgstr ""
 "    <br/>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ". Please make sure that this is a wanted behavior."
-msgstr ". Bitte stellen Sie sicher, dass dieses Verhalten erwünscht ist."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
@@ -602,6 +582,15 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> Teilzahlung von <b>%(amount)s</b> fällig am <b "
 "style='color: #704A66;'>%(date)s</b>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<br/>\n"
+"                        <span>Please make sure that this is a wanted behavior.</span>"
+msgstr ""
+"<br/>\n"
+"                        <span>Stellen Sie sicher, dass diese gewollt ist.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -958,22 +947,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
-"                                        <span groups=\"base.group_multi_currency\">in </span>\n"
-"                                    </span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
-"                                        <span groups=\"base.group_multi_currency\">in </span>\n"
-"                                    </span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
-"or invoice_payment_term_id\"> or </span>"
-msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
-"or invoice_payment_term_id\"> oder </span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">oder</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1217,11 +1195,6 @@ msgid "<span> (DR)</span>"
 msgstr "<span> (DR)</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span> = </span>"
-msgstr "<span> = </span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
 msgstr "<span> Rechnung</span>"
@@ -1254,8 +1227,8 @@ msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span>1 </span>"
-msgstr "<span>1 </span>"
+msgid "<span>1</span>"
+msgstr "<span>1</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1268,6 +1241,11 @@ msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
 "<span><b>Gut gemacht!</b> Sie haben alle Schritte dieser Tour "
 "absolviert.</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span>=</span>"
+msgstr "<span>=</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1318,6 +1296,15 @@ msgid "<span>New</span>"
 msgstr "<span>Neu</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<span>One or more Bank Accounts set on this partner are also used by "
+"others:</span>"
+msgstr ""
+"<span>Ein oder mehrere Bankkonten, die auf diesem Partner eingestellt sind, "
+"werden auch von anderen genutzt:</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
 msgstr "<span>Geschäftsvorfälle</span>"
@@ -1348,6 +1335,11 @@ msgstr "<span>Steuer 0 %</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
 msgstr "<span>Steuern</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+msgid "<span>The Bank Account could be a duplicate of</span>"
+msgstr "<span>Das Bankkonto könnte ein Duplikat sein von</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2960,12 +2952,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Es ist ein Fehler aufgetreten."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
 msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
@@ -4098,7 +4084,7 @@ msgstr "Abgebrochen"
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__cancel
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
-msgstr "Storniert"
+msgstr "Abgebrochen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6836,6 +6822,14 @@ msgid "Due Terms"
 msgstr "Fälligkeitsfristen"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
+msgid "Duplicate Bank Partner"
+msgstr "Bankpartner duplizieren"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_payment_ids
 msgid "Duplicate Payment"
@@ -7245,6 +7239,12 @@ msgstr "Kursdifferenzposten:"
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
 msgstr "Ausgeschlossene Journale"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
+#: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
+msgid "Expected Currency Rate"
+msgstr "Erwarteter Wechselkurs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -11399,13 +11399,6 @@ msgid "Once your invoice is ready, confirm it."
 msgstr "Sobald Ihre Rechnung bereit ist, bestätigen Sie sie."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid "One or more Bank Accounts set on this partner are also used by other"
-msgstr ""
-"Ein oder mehrere Bankkonten, die auf diesem Partner eingestellt sind, werden"
-" auch genutzt von anderen"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
@@ -12004,7 +11997,6 @@ msgstr "Partner sollten eine E-Mail-Adresse haben."
 #: code:addons/account/models/partner.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners"
 msgstr "Partner"
 
@@ -12020,6 +12012,12 @@ msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
 "Partner, die in Hash-Einträgen verwendet werden, können nicht "
 "zusammengeführt werden."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Partners with same bank"
+msgstr "Partner mit derselben Bank"
 
 #. module: account
 #. odoo-python
@@ -12420,6 +12418,12 @@ msgstr "Phishing-Risiko: Hoch"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk: Medium"
 msgstr "Phishing-Risiko: Mittel"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
+msgid "Pick the rate on a certain date"
+msgstr "Wählen Sie den Kurs an einem bestimmten Datum aus."
 
 #. module: account
 #. odoo-python
@@ -13097,6 +13101,11 @@ msgid ""
 msgstr ""
 "Referenz auf das die Zahlung auslösende Dokument, z. B. Schecknummer, "
 "Dateiname usw."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Refresh currency rate to the invoice date"
+msgstr "Wechselkurs zum Rechnungsdatum aktualisieren"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -14520,7 +14529,7 @@ msgstr "Anfangssaldo"
 #: model:ir.model.fields,field_description:account.field_account_payment__state
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -15776,6 +15785,16 @@ msgstr "Die folgenden Journalbuchungen werden erstellt"
 msgid "The following accounts must be assigned to at least one company:"
 msgstr ""
 "Die folgenden Konten müssen mindestens einem Unternehmen zugewiesen sein:"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
+"Die folgenden Buchungen sind nicht ausgeglichen:\n"
+"\n"
 
 #. module: account
 #. odoo-python
@@ -19363,6 +19382,11 @@ msgstr "wurde angewandt."
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "hier"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "in"
+msgstr "in"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount

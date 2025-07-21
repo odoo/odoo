@@ -1,9 +1,5 @@
-import { registry } from "@web/core/registry";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
-const mockRegistry = registry.category("mock_rpc");
-
-mockRegistry.add("get_installed", ({ model }) => {
-    if (model === "res.lang") {
-        return [["en_US", "English (US)"]];
-    }
+onRpc("res.lang", "get_installed", function getInstalled() {
+    return [["en_US", "English (US)"]];
 });

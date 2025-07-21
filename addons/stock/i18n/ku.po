@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Raz Omer Hussein, 2025\n"
 "Language-Team: Kurdish (https://app.transifex.com/odoo/teams/41243/ku/)\n"
@@ -687,6 +687,11 @@ msgid "<strong>Customer Address</strong>"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivered</strong>"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
 msgstr ""
@@ -723,6 +728,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Ordered</strong>"
 msgstr ""
 
 #. module: stock
@@ -1262,7 +1272,7 @@ msgstr "ژمارەی هاوپێچەکان"
 #: model:ir.ui.menu,name:stock.menu_attribute_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Attributes"
-msgstr ""
+msgstr "سیفاتەکان"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__8
@@ -1523,7 +1533,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
-msgstr ""
+msgstr "بینینی ساڵنامە"
 
 #. module: stock
 #. odoo-python
@@ -1803,12 +1813,26 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
 msgstr ""
 
 #. module: stock
@@ -1833,7 +1857,21 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
 msgstr ""
 
 #. module: stock
@@ -2340,6 +2378,11 @@ msgid "DEMO_UOM"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr ""
@@ -2503,7 +2546,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_storage_category_capacity__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "یەکەى پێوانەى پێشوەختە بەکاردێت بۆ هەموو کارەکانى پشکەکان."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
@@ -2992,6 +3035,7 @@ msgid "Do you confirm you want to scrap"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr ""
@@ -3211,6 +3255,7 @@ msgstr "شوبات"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr ""
 
@@ -3564,7 +3609,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr ""
+msgstr "گروپ لەلایەن..."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4981,7 +5026,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 msgid "Manual"
-msgstr ""
+msgstr "بەدەستی"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__manual
@@ -5318,13 +5363,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "چالاکییەکانی داهاتووی ڕووداوی ساڵنامە"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "دوا وادەی چالاکییەکانی داهاتوو"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_summary
@@ -5378,7 +5423,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
 msgid "No Message"
-msgstr ""
+msgstr "بێ پەیام"
 
 #. module: stock
 #. odoo-python
@@ -5429,7 +5474,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr ""
+msgstr "هیچ بەرهەمێک نەدۆزراوەتەوە. با یەکێک دروست بکەین!"
 
 #. module: stock
 #. odoo-python
@@ -5488,7 +5533,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__0
 msgid "Normal"
-msgstr ""
+msgstr "ئاسایی"
 
 #. module: stock
 #. odoo-javascript
@@ -5775,7 +5820,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order"
-msgstr ""
+msgstr "داواکای"
 
 #. module: stock
 #. odoo-javascript
@@ -5834,7 +5879,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
-msgstr ""
+msgstr "زانیاری تر"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -6113,7 +6158,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
 msgid "Packaging"
-msgstr ""
+msgstr "پاکەتکردن"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -6391,7 +6436,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__priority
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__sequence
 msgid "Priority"
-msgstr ""
+msgstr "ئەولەویەت"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__delay_alert_date
@@ -6547,7 +6592,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_product_packaging
 msgid "Product Packaging"
-msgstr ""
+msgstr "پاکەتکردنی بەرهەم"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
@@ -6628,7 +6673,7 @@ msgstr "جۆری بەرهەم"
 #: model:ir.actions.act_window,name:stock.stock_product_normal_action
 #: model:ir.ui.menu,name:stock.product_product_menu
 msgid "Product Variants"
-msgstr ""
+msgstr "جۆرەکانی بەرهەم"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -7163,7 +7208,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Received Qty"
-msgstr ""
+msgstr "بڕی وەرگیراو"
 
 #. module: stock
 #: model:ir.actions.client,name:stock.stock_reception_action
@@ -7694,7 +7739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "هەڵەی گەیاندنی کورتەنامە"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -7731,7 +7776,7 @@ msgstr "نمونەی داتا"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr ""
+msgstr "بەرواری بەرنامە بۆ داڕێژراو"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -9617,11 +9662,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr ""
 

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,13 +121,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_date
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: certificate
 #: model:ir.model,name:certificate.model_certificate_key
@@ -197,13 +198,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_uid
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_date
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__loading_error
@@ -350,7 +351,19 @@ msgstr ""
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
 msgid "The private key could not be loaded."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
 msgstr ""
 
 #. module: certificate

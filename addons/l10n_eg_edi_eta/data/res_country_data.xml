@@ -7,12 +7,12 @@
         <field name="arch" type="xml">
             <form>
                 <div class="o_address_format">
-                    <field name="parent_id" invisible="1"/> <!-- TODO: to be removed in master -->
-                    <field name="type" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="l10n_eg_building_no" placeholder="Building Number..." class="o_address_street"/>
                     <field name="street" placeholder="Street" class="o_address_street"
                            readonly="type == 'contact' and parent_id"/>
-                    <field name="street2" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="street2" invisible="1"/>
                     <field name="city"/>
                     <field name="state_id" class="o_address_state" placeholder="State..." options='{"no_open": True}'
                            readonly="type == 'contact' and parent_id"/>

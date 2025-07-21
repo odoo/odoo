@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { click, queryAll, queryAllProperties, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import {
+    click,
+    queryAll,
+    queryAllProperties,
+    queryAllTexts,
+    queryOne,
+    queryText,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -489,11 +496,13 @@ describe("DebugMenu", () => {
             _name = "custom";
 
             name = fields.Char();
+            raw = fields.Binary();
 
             _records = [
                 {
                     id: 1,
                     name: "custom1",
+                    raw: "<raw>",
                 },
             ];
         }
@@ -511,9 +520,17 @@ describe("DebugMenu", () => {
         await contains(".o_debug_manager button").click();
         await contains(".dropdown-menu .dropdown-item:contains(/^Data/)").click();
         expect(".modal").toHaveCount(1);
-        expect(".modal-body pre").toHaveText(
-            '{\n "create_date": "2019-03-11 09:30:00",\n "display_name": "custom1",\n "id": 1,\n "name": "custom1",\n "write_date": "2019-03-11 09:30:00"\n}'
-        );
+        const data = queryText(".modal-body pre");
+        expect(data).not.toMatch(/"raw"/, { message: "binary fields should not be displayed" });
+        const lines = data.split("\n");
+        expect(lines.shift()).toMatch(/\{$/);
+        expect(lines.shift()).toMatch(/"create_date": "\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"/);
+        expect(lines.shift()).toMatch(/"display_name": "custom1"/);
+        expect(lines.shift()).toMatch(/"id": 1/);
+        expect(lines.shift()).toMatch(/"name": "custom1"/);
+        expect(lines.shift()).toMatch(/"write_date": "\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"/);
+        expect(lines.shift()).toMatch(/\}$/);
+        expect(lines).toBeEmpty();
     });
 
     test("view metadata: basic rendering", async () => {

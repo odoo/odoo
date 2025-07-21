@@ -3,18 +3,17 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Larisa Pop, 2024
 # Lyall Kindmurr, 2024
 # Cozmin Candea <office@terrabit.ro>, 2025
 # Dorin Hongu <dhongu@gmail.com>, 2025
-# Maria Muntean, 2025
+# Larisa_nexterp, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -28,7 +27,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid " to %(date_to_utc)s"
-msgstr ""
+msgstr " până la %(date_to_utc)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -71,7 +70,7 @@ msgstr "%(allocation_name)s (de la %(date_from)s fără limită)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee)s on Time Off : %(duration)s"
-msgstr ""
+msgstr "%(employee)s în concediu : %(duration)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -97,37 +96,37 @@ msgstr "%(leave_name)s a fost anulată cu justificarea: <br/> %(reason)s."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(leave_type)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(leave_type)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "%(name)s (%(duration)s %(request_unit)s(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s %(request_unit)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s day(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s zi(le))"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s hour(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s oră/ore)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g days)"
-msgstr ""
+msgstr "%(name)s (%(time)g rămase din %(maximum)g zile)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
-msgstr ""
+msgstr "%(name)s (%(time)g rămase din %(maximum)g ore)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -139,13 +138,13 @@ msgstr "%(name)s: %(duration)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s on %(leave_type)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(person)s în %(leave_type)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(person)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -203,12 +202,12 @@ msgstr "(valabil până la"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "- Valid for"
-msgstr ""
+msgstr "- Valabil pentru"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -224,7 +223,7 @@ msgid ""
 "'confirm'\"/>"
 msgstr ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
+"title=\"Săgeată\" invisible=\"allocation_type == 'accrual' or state != "
 "'confirm'\"/>"
 
 #. module: hr_holidays
@@ -235,12 +234,12 @@ msgid ""
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 msgstr ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
+"title=\"Săgeată\" invisible=\"allocation_type == 'accrual'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "<i class=\"fa fa-long-arrow-right\" title=\"to\"/>"
-msgstr "<i class=\"fa fa-long-arrow-right\" title=\"to\"/>"
+msgstr "<i class=\"fa fa-long-arrow-right\" title=\"către\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -259,6 +258,8 @@ msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
 "                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
 msgstr ""
+"<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Zile</span>\n"
+"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Ore</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -278,6 +279,9 @@ msgid ""
 "                            Back On\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Înapoi la\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -300,13 +304,13 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                           Timp liber\n"
+"                           Concediu\n"
 "                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Accruals</span>"
-msgstr "<span class=\"o_stat_text\">Angajamente</span>"
+msgstr "<span class=\"o_stat_text\">Acumulări</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -316,12 +320,12 @@ msgstr "<span class=\"o_stat_text\">Alocări</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr "<span class=\"o_stat_text\">Libere</span>"
+msgstr "<span class=\"o_stat_text\">Concedii</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\"> to </span>"
-msgstr "<span class=\"text-muted\"> la </span>"
+msgstr "<span class=\"text-muted\"> până la </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -334,6 +338,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>Angajatul are un fus orar diferit față de al tău! Aici datele și orele sunt afișate în fusul orar al angajatului</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -341,9 +347,8 @@ msgid ""
 "<span>You can only take this time off in whole days, so if your schedule has"
 " half days, it won't be used efficiently.</span>"
 msgstr ""
-"<span>Puteți lua acest timp liber doar în zile întregi, astfel încât, dacă "
-"programul dvs. are jumătăți de zile, acesta nu va fi utilizat "
-"eficient.</span>"
+"<span>Puteți lua acest concediu doar în zile întregi, astfel încât, dacă "
+"programul dvs. are jumătăți de zi, acesta nu va fi utilizat eficient.</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -354,7 +359,7 @@ msgstr "<strong>Departamente și angajați</strong>"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A cancelled leave cannot be modified."
-msgstr ""
+msgstr "Un concediu anulat nu poate fi modificat."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -373,14 +378,14 @@ msgid ""
 "A great way to keep track on your time off requests, sick days, and approval"
 " status."
 msgstr ""
-"O modalitate excelentă de a vă urmări cererile de concediu, concediu medical"
-" și starea de aprobare."
+"O modalitate excelentă de a vă urmări cererile de concediu, zilele de boală "
+"și starea de aprobare."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A time off cannot be duplicated."
-msgstr "O pauză nu poate fi duplicată."
+msgstr "Un concediu nu poate fi duplicat."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
@@ -388,7 +393,7 @@ msgstr "O pauză nu poate fi duplicată."
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__show_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__show_leaves
 msgid "Able to see Remaining Time Off"
-msgstr "Capacitatea de a vedea concediul rămas"
+msgstr "Poate vedea concediul rămas"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__leave
@@ -399,7 +404,7 @@ msgstr "Absență"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__absence_of_today
 msgid "Absence by Today"
-msgstr "Absența de Astăzi"
+msgstr "Absență astăzi"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
@@ -407,7 +412,7 @@ msgid ""
 "Absent Employee(s), Whose time off requests are either confirmed or "
 "validated on today"
 msgstr ""
-"Angajat(i) absenti, ale căror cereri de concediu sunt fie confirmate, fie "
+"Angajat(ți) absenți, ale căror cereri de concediu sunt fie confirmate, fie "
 "validate astăzi"
 
 #. module: hr_holidays
@@ -428,18 +433,18 @@ msgstr "Absent astăzi"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Accrual (Future):"
-msgstr "Acumulare (viitoare):"
+msgstr "Acumulare (viitor):"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr "Alocare Angajare"
+msgstr "Alocare acumulare"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual Level"
-msgstr "Nivel de acumulare"
+msgstr "Nivel acumulare"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
@@ -448,12 +453,12 @@ msgstr "Nivel de acumulare"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__accrual_plan_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Accrual Plan"
-msgstr "Plan de acumulare"
+msgstr "Plan acumulare"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr "Nivel plan acumulat"
+msgstr "Nivel plan acumulare"
 
 #. module: hr_holidays
 #. odoo-python
@@ -471,22 +476,22 @@ msgstr "Planuri de acumulare"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
 msgid "Accrual Time Off: Updates the number of time off"
-msgstr "Timp de acumulare oprit: Actualizează numărul de pauze"
+msgstr "Acumulare concediu: Actualizează numărul de concedii"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity
 msgid "Accrual Validity"
-msgstr ""
+msgstr "Valabilitate acumulare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid "Accrual Validity Count"
-msgstr ""
+msgstr "Număr valabilitate acumulare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "Accrual Validity Type"
-msgstr ""
+msgstr "Tip valabilitate acumulare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -496,7 +501,7 @@ msgstr "Acumulări"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual_count
 msgid "Accruals count"
-msgstr "Numărul de acumulări"
+msgstr "Număr acumulări"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrued_gain_time
@@ -519,7 +524,7 @@ msgstr "Activ"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Active Allocations"
-msgstr "Alocări Active"
+msgstr "Alocări active"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__active_employee
@@ -531,7 +536,7 @@ msgstr "Angajat activ"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 msgid "Active but on leave"
-msgstr ""
+msgstr "Activ, dar în concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_ids
@@ -543,7 +548,7 @@ msgstr "Activități"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decorator Excepție Activitate"
+msgstr "Decorare excepție activitate"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_state
@@ -552,10 +557,15 @@ msgid "Activity State"
 msgstr "Stare activitate"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tip activitate"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Pictograma tipului de activitate"
+msgstr "Pictogramă tip activitate"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -572,19 +582,19 @@ msgstr "Adaugă o descriere..."
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Add a reason..."
-msgstr "Adăugați un motiv..."
+msgstr "Adaugă un motiv..."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Add some description for the people that will validate it"
-msgstr "Adăugați o descriere pentru persoanele care o vor valida"
+msgstr "Adaugă o descriere pentru persoanele care vor valida"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__added_value_type
 msgid "Added Value Type"
-msgstr "Tipul de valoare adăugată"
+msgstr "Tip valoare adăugată"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -599,18 +609,18 @@ msgstr "După această perioadă de acumulare"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_date_from_period__pm
 msgid "Afternoon"
-msgstr "După amiază"
+msgstr "După-amiază"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_all
 msgid "All Allocations"
-msgstr "Toate Alocările"
+msgstr "Toate alocările"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_approve_department
 msgid "All Time Off"
-msgstr "Toate Concediile"
+msgstr "Toate concediile"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__all
@@ -645,7 +655,7 @@ msgstr "Alocare"
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Allocation Approval"
-msgstr "Aprobare Alocare"
+msgstr "Aprobare alocare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
@@ -653,18 +663,18 @@ msgstr "Aprobare Alocare"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
 msgid "Allocation Display"
-msgstr "Afișare Alocare"
+msgstr "Afișare alocare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_mode
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__allocation_mode
 msgid "Allocation Mode"
-msgstr "Mod Alocare"
+msgstr "Mod alocare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
 msgid "Allocation Notification Subtype"
-msgstr "Subtip Ntificare Alocare"
+msgstr "Subtip notificare alocare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_remaining_display
@@ -672,7 +682,7 @@ msgstr "Subtip Ntificare Alocare"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_remaining_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_remaining_display
 msgid "Allocation Remaining Display"
-msgstr "Afișarea alocării rămase"
+msgstr "Afișare alocare rămasă"
 
 #. module: hr_holidays
 #. odoo-python
@@ -683,7 +693,7 @@ msgstr "Afișarea alocării rămase"
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Allocation Request"
-msgstr "Cerere Alocare"
+msgstr "Cerere de alocare"
 
 #. module: hr_holidays
 #. odoo-python
@@ -698,14 +708,14 @@ msgstr "Cereri de alocare"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approval"
-msgstr ""
+msgstr "A doua aprobare alocare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_type
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Allocation Type"
-msgstr "Tip Alocare"
+msgstr "Tip alocare"
 
 #. module: hr_holidays
 #. odoo-python
@@ -714,17 +724,19 @@ msgid ""
 "Allocation must be confirmed \"To Approve\" or validated once \"Second "
 "Approval\" in order to approve it."
 msgstr ""
+"Alocarea trebuie să fie confirmată („De aprobat”) sau validată o dată („A "
+"doua aprobare”) pentru a putea fi aprobată."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s"
-msgstr "Alocare a  %(leave_type)s: %(amount).2f %(unit)s la %(target)s"
+msgstr "Alocare de %(leave_type)s: %(amount).2f %(unit)s către %(target)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
 msgid "Allocation on"
-msgstr "Alocare pe"
+msgstr "Alocare în"
 
 #. module: hr_holidays
 #. odoo-python
@@ -733,12 +745,16 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
+"Cererea de alocare trebuie să fie confirmată, să aibă a doua aprobare sau să"
+" fie validată pentru a putea fi refuzată."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
+"Starea alocării trebuie să fie „Refuzat” pentru a putea fi resetată la „De "
+"aprobat”."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -761,7 +777,7 @@ msgstr "Permite limita negativă"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Allow To Attach Supporting Document"
-msgstr "Permiteți atașarea unui document justificativ"
+msgstr "Permite atașarea documentului justificativ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_mode
@@ -773,16 +789,16 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
-"Permiteți crearea de solicitări în loturi:\n"
-"- După angajat: pentru un anumit angajat\n"
+"Permite crearea de cereri în loturi:\n"
+"- După angajat: pentru un angajat specific\n"
 "- După companie: toți angajații companiei specificate\n"
 "- După departament: toți angajații departamentului specificat\n"
-"- După eticheta angajaților: toți angajații din categoria grupului de angajați specific"
+"- După eticheta angajatului: toți angajații din categoria de grup specificată"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
 msgid "Already Accrued"
-msgstr "Acumulat deja"
+msgstr "Deja acumulat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -794,18 +810,18 @@ msgstr "Sumă"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "An employee already booked time off which overlaps with this period:%s"
 msgstr ""
-"Un angajat a rezervat deja timp liber care se suprapune cu această "
-"perioadă:%s"
+"Un angajat a rezervat deja concediu care se suprapune cu această perioadă: "
+"%s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Analyze from"
-msgstr "Analiza de la"
+msgstr "Analizează de la"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_evaluation_report_graph
 msgid "Appraisal Analysis"
-msgstr "Analiza Evaluarilor"
+msgstr "Analiză evaluare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
@@ -831,7 +847,7 @@ msgstr "Aprobă"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr "Alocare Aprobare"
+msgstr "Aprobă alocări"
 
 #. module: hr_holidays
 #. odoo-python
@@ -851,12 +867,12 @@ msgstr "Alocare Aprobare"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Approved"
-msgstr "Aprobat(a)"
+msgstr "Aprobat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Approved Requests"
-msgstr "Cereri Aprobate"
+msgstr "Cereri aprobate"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -925,7 +941,7 @@ msgstr "La muncă"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids
 msgid "Attach File"
-msgstr "Atașează fișiere"
+msgstr "Atașează fișier"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_attachment_count
@@ -952,6 +968,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"Împărțirea automată a concediului în timpul generării în lot nu este gestionată pentru concediile suprapuse declarate în ore. Concedii conflictuale:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -964,7 +982,7 @@ msgstr "Disponibil"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid "Available Time Off Days"
-msgstr ""
+msgstr "Zile de concediu disponibile"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -976,20 +994,20 @@ msgstr "Disponibil:"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
 msgid "Away"
-msgstr "Absent"
+msgstr "Plecat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Back On"
-msgstr ""
+msgstr "Înapoi la"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/persona_model_patch.js:0
 msgid "Back on %s"
-msgstr ""
+msgstr "Înapoi la %s"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_balance
@@ -1010,24 +1028,24 @@ msgstr "Pe baza timpului lucrat"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "BAngajat de bază"
+msgstr "Angajat de bază"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
 msgid "Both Approved and Confirmed"
-msgstr "Atat Aprobat cat si Confirmat"
+msgstr "Atât aprobat cât și confirmat"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__company
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_generate_multi_wizard__allocation_mode__company
 msgid "By Company"
-msgstr "De Companie"
+msgstr "După companie"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__department
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_generate_multi_wizard__allocation_mode__department
 msgid "By Department"
-msgstr "De Departament"
+msgstr "După departament"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__employee
@@ -1039,7 +1057,7 @@ msgstr "După angajat"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__category
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_generate_multi_wizard__allocation_mode__category
 msgid "By Employee Tag"
-msgstr "Dupa Eticheta Angajatului"
+msgstr "După eticheta angajatului"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__manager
@@ -1051,19 +1069,18 @@ msgstr "De către aprobatorul angajatului"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr ""
-"De către aprobatorul și ofițerul responsabil cu timpul liber al angajatului"
+msgstr "De către aprobatorul angajatului și responsabilul de concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "De responsabilul de concediu"
+msgstr "De către responsabilul de concediu"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
 msgid "Calendar Event"
-msgstr "Eveniment Calendar"
+msgstr "Eveniment calendar"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_approve
@@ -1079,7 +1096,7 @@ msgstr "Poate anula"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__can_modify_value_type
 msgid "Can Modify Value Type"
-msgstr "Poate modifica tipul de valoare"
+msgstr "Poate modifica tipul valorii"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
@@ -1088,6 +1105,7 @@ msgstr "Poate reseta"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
@@ -1101,12 +1119,12 @@ msgstr "Anulează"
 #: code:addons/hr_holidays/static/src/views/hooks.js:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Cancel Time Off"
-msgstr "Anulați timpul liber"
+msgstr "Anulează concediul"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 msgid "Cancel Time Off Wizard"
-msgstr "Expert pentru anulares timpului liber"
+msgstr "Asistent anulare concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1126,12 +1144,12 @@ msgstr "Anulat"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Cancelled Time Off"
-msgstr ""
+msgstr "Concediu anulat"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
 msgid "Cap accrued time"
-msgstr "Plafon de timp acumulat"
+msgstr "Plafon timp acumulat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -1141,12 +1159,12 @@ msgstr "Plafon:"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
 msgid "Carried over days expiration date"
-msgstr ""
+msgstr "Data expirării zilelor reportate"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Validity"
-msgstr ""
+msgstr "Valabilitate reportare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -1157,7 +1175,7 @@ msgstr "Reportare"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__maximum
 msgid "Carry over with a maximum"
-msgstr "Se reportează cu o valoare maximă"
+msgstr "Reportare cu o valoare maximă"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -1172,17 +1190,17 @@ msgstr "Data reportării"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_date
 msgid "Carry-Over Time"
-msgstr "Timpul reportării"
+msgstr "Timp reportare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_day
 msgid "Carryover Day"
-msgstr "Ziua reportării"
+msgstr "Zi reportare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_day_display
 msgid "Carryover Day Display"
-msgstr "Afișarea zilei reportării"
+msgstr "Afișare zi reportare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_month
@@ -1198,15 +1216,15 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
-"Modificarea acestui program de lucru are ca rezultat faptul că angajatul "
-"(angajații) afectat (afectați) nu are (au) suficiente concedii alocate "
-"pentru a compensa concediile deja ocupate pe viitor. Vă rugăm să revizuiți "
-"concediile acestui angajat și să ajustați alocarea lor în consecință."
+"Modificarea acestui program de lucru duce la faptul că angajatul(ii) "
+"afectat(i) nu are(au) suficiente concedii alocate pentru a acoperi "
+"concediile deja luate în viitor. Vă rugăm să verificați concediile acestui "
+"angajat și să ajustați alocarea corespunzător."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
 msgid "Choose a cap for this accrual."
-msgstr "Alegeți un nivel maxim pentru această acumulare."
+msgstr "Alegeți un plafon pentru această acumulare."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_ids
@@ -1214,16 +1232,16 @@ msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
 msgstr ""
-"Alegeți responsabilii de concediu de odihnă care vor fi notificați pentru a "
-"aproba alocarea sau cererea de concediu de odihnă. Dacă este gol, nimeni nu "
-"va fi notificat"
+"Alegeți responsabilii de concediu care vor fi notificați pentru a aproba "
+"alocarea sau cererea de concediu. Dacă nu este completat, nimeni nu va fi "
+"notificat."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Click on any date or on this button to request a time-off"
 msgstr ""
-"Faceți clic pe orice dată sau pe acest buton pentru a solicita un concediu"
+"Faceți clic pe orice dată sau pe acest buton pentru a solicita concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__color
@@ -1281,17 +1299,17 @@ msgstr "Confirmat"
 #. odoo-python
 #: code:addons/hr_holidays/report/holidays_summary_report.py:0
 msgid "Confirmed and Approved"
-msgstr ""
+msgstr "Confirmat și aprobat"
 
 #. module: hr_holidays
 #: model_terms:web_tour.tour,rainbow_man_message:hr_holidays.hr_holidays_tour
 msgid "Congrats, we can see that your request has been validated."
-msgstr "Felicitări, se confirmă validarea cererii dumneavoastră."
+msgstr "Felicitări, cererea dumneavoastră a fost validată."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
 msgid "Contact"
-msgstr "Contactați"
+msgstr "Contact"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1299,8 +1317,8 @@ msgid ""
 "Count of allocations for this time off type (approved or waiting for "
 "approbation) with a validity period starting this year."
 msgstr ""
-"Numărul de alocări pentru acest tip de concediu (aprobat sau în așteptare de"
-" aprobare) cu o perioadă de valabilitate începând din acest an."
+"Numărul de alocări pentru acest tip de concediu (aprobate sau în așteptare "
+"de aprobare) cu o perioadă de valabilitate care începe în acest an."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1313,8 +1331,8 @@ msgid ""
 "Count of time off requests for this time off type (approved or waiting for "
 "approbation) with a start date in the current year."
 msgstr ""
-"Numărul de cereri de concediu pentru acest tip de concediu (aprobat sau în "
-"așteptare pentru aprobare) cu o dată de începere în anul curent."
+"Numărul de cereri de concediu pentru acest tip de concediu (aprobate sau în "
+"așteptare de aprobare) cu o dată de început în anul curent."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__country_id
@@ -1329,23 +1347,23 @@ msgstr "Cod țară"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__icon_id
 msgid "Cover Image"
-msgstr "Imagine Copertă"
+msgstr "Imagine copertă"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
-msgstr ""
+msgstr "Creează alocări"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "Creați o nouă alocare de concediu"
+msgstr "Creează o nouă alocare de concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "Creați o nouă solicitare de alocare de concediu"
+msgstr "Creează o nouă cerere de alocare concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -1373,7 +1391,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_mandatory_day__create_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
@@ -1381,12 +1399,12 @@ msgstr "Creat pe"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__current_leave_state
 msgid "Current Time Off Status"
-msgstr "Stare Concediu Curent"
+msgstr "Stare concediu curentă"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
 msgid "Current Time Off Type"
-msgstr "Tipul actual de concediu"
+msgstr "Tip concediu curent"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1402,7 +1420,7 @@ msgstr "Valabil în prezent"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
 msgid "Custom Hours"
-msgstr "Ore Personalizate"
+msgstr "Ore personalizate"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__daily
@@ -1423,17 +1441,17 @@ msgstr "Dată"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from_period
 msgid "Date Period Start"
-msgstr "Dată Începere Perioadă"
+msgstr "Dată început perioadă"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__lastcall
 msgid "Date of the last accrual allocation"
-msgstr "Data ultimei alocări de angajare"
+msgstr "Data ultimei alocări de acumulare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__nextcall
 msgid "Date of the next accrual allocation"
-msgstr "Data următoarei alocări de angajare"
+msgstr "Data următoarei alocări de acumulare"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
@@ -1473,11 +1491,12 @@ msgid ""
 "Define the maximum level of negative days this kind of time off can reach. "
 "Value must be at least 1."
 msgstr ""
-"Definiți nivelul maxim de zile negative pe care îl poate atinge acest tip de"
-" concediu. Valoarea trebuie să fie cel puțin 1."
+"Definește nivelul maxim de zile negative pe care acest tip de concediu îl "
+"poate atinge. Valoarea trebuie să fie cel puțin 1."
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -1512,7 +1531,7 @@ msgstr "Departamente"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr "Asistent Plecare"
+msgstr "Asistent plecare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__name
@@ -1534,7 +1553,7 @@ msgstr "Descriere cu valabilitate"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Discard"
-msgstr "Abandonează"
+msgstr "Renunță"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__display_name
@@ -1556,12 +1575,12 @@ msgstr "Nume afișat"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Display Option"
-msgstr "Opțiuni afișare"
+msgstr "Opțiune afișare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
 msgid "Display Time Off in Calendar"
-msgstr "Afișare concediu în calendar"
+msgstr "Afișează concediul în calendar"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1570,9 +1589,9 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"Din cauza unei modificări a concediilor globale, %s zi(e) suplimentară(e) au"
-" fost luate din alocarea dvs. Vă rugăm să revizuiți acest concediu dacă "
-"aveți nevoie să fie modificat."
+"Din cauza unei modificări a concediilor globale, %s zi(le) suplimentare au "
+"fost luate din alocarea dumneavoastră. Vă rugăm să revizuiți acest concediu "
+"dacă aveți nevoie să fie modificat."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1582,9 +1601,9 @@ msgid ""
 "amount of available allocation and has been set to refused. Please review "
 "this leave."
 msgstr ""
-"Ca urmare a unei modificări a concediilor de odihnă globale, acest concediu "
-"nu mai are cantitatea necesară de alocare disponibilă și a fost setat la "
-"\"refuzat\". Vă rugăm să revizuiți acest concediu."
+"Din cauza unei modificări a concediilor globale, acest concediu nu mai are "
+"cantitatea necesară de alocare disponibilă și a fost setat ca refuzat. Vă "
+"rugăm să revizuiți acest concediu."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1592,8 +1611,8 @@ msgstr ""
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr ""
-"Ca urmare a unei modificări a concediilor de odihnă globale, vi s-au "
-"restituit %s zi(e)."
+"Din cauza unei modificări a concediilor globale, vi s-au restituit %s "
+"zi(le)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
@@ -1611,7 +1630,7 @@ msgstr "Durată (Zile)"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
 msgid "Duration (Hours)"
-msgstr "Durata (Ore)"
+msgstr "Durată (Ore)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -1626,19 +1645,17 @@ msgstr "Durată (ore)"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days
 msgid "Duration in days. Reference field to use when necessary."
-msgstr ""
-"Durata în zile. Câmp de referință pe care trebuie să îl folosești atunci "
-"când este necesar."
+msgstr "Durata în zile. Câmp de referință de utilizat când este necesar."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 msgid "Edit Allocation"
-msgstr "Editare Alocare"
+msgstr "Editează alocarea"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Edit Time Off"
-msgstr "Editare Concediu"
+msgstr "Editează concediul"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -1662,34 +1679,34 @@ msgstr "Angajat activ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_company_id
 msgid "Employee Company"
-msgstr "Angajat Companie"
+msgstr "Compania angajatului"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_requests
 msgid "Employee Requests"
-msgstr "Cererile angajaților"
+msgstr "Cereri angajați"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__category_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__category_id
 msgid "Employee Tag"
-msgstr "Eticheta Angajat"
+msgstr "Etichetă angajat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Employee accrue"
-msgstr "Angajați acumulați"
+msgstr "Angajat acumulează"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban_approve_department
 msgid "Employee's image"
-msgstr ""
+msgstr "Imaginea angajatului"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__emp
 msgid "Employee(s)"
-msgstr "Salariat(i)"
+msgstr "Angajat(ți)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__employees_count
@@ -1717,7 +1734,7 @@ msgstr "Dată sfârșit"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
 msgid "Extra Days Requests Allowed"
-msgstr "Se admit cereri de zile suplimentare"
+msgstr "Cereri de zile suplimentare permise"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__employee_requests
@@ -1726,9 +1743,9 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
-"Solicitările de zile suplimentare sunt permise: Utilizatorul poate solicita o alocare pentru sine.\n"
+"Cererile pentru zile suplimentare sunt permise: Utilizatorul poate solicita o alocare pentru sine.\n"
 "\n"
-"        Nepermisă: Utilizatorul nu poate solicita o alocare."
+"        Nepermis: Utilizatorul nu poate solicita o alocare."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
@@ -1743,8 +1760,8 @@ msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
 msgstr ""
-"Câmpul care permite vizualizarea duratei de alocare în zile sau ore în "
-"funcție de type_request_unit"
+"Câmp care permite vizualizarea duratei alocării în zile sau ore, în funcție "
+"de type_request_unit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -1752,7 +1769,7 @@ msgid ""
 "Field allowing to see the leave request duration in days or hours depending "
 "on the leave_type_request_unit"
 msgstr ""
-"Câmp care vă permite să vedeți durata cererii de concediu în zile sau ore, "
+"Câmp care permite vizualizarea duratei cererii de concediu în zile sau ore, "
 "în funcție de leave_type_request_unit"
 
 #. module: hr_holidays
@@ -1804,7 +1821,7 @@ msgstr "Urmăritori (Parteneri)"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Pictogramă Font awesome, de ex. fa-sarcini"
+msgstr "Pictogramă Font awesome, ex. fa-tasks"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -1814,9 +1831,9 @@ msgid ""
 "given to the employee, due to a previous start date, on the first run of the"
 " plan. This can be manually edited."
 msgstr ""
-"Pentru o alocare de angajare, acest câmp conține cantitatea teoretică de "
-"timp acordată angajatului, datorită unei date de începere anterioare, la "
-"prima execuție a planului. Acesta poate fi editat manual."
+"Pentru o alocare de acumulare, acest câmp conține cantitatea teoretică de "
+"timp acordată angajatului, datorită unei date de început anterioare, la "
+"prima rulare a planului. Aceasta poate fi editată manual."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
@@ -1840,7 +1857,7 @@ msgstr "De la"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_date_from
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_from
 msgid "From Date"
-msgstr "De la data de"
+msgstr "De la data"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1851,37 +1868,37 @@ msgstr "Activități viitoare"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr ""
+msgstr "Generează concediu"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "Generează alocări de concediu pentru mai mulți angajați"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "Generează concediu pentru mai mulți angajați"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "Generated Allocations"
-msgstr ""
+msgstr "Alocări generate"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid "Generated Time Off"
-msgstr ""
+msgstr "Concediu generat"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Grant Time"
-msgstr "Timp de acordare"
+msgstr "Acordă timp"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_search
@@ -1905,7 +1922,7 @@ msgstr "Aprobare HR"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Time Off Summary Report By Employee"
-msgstr "Raport HR sumar privind concediile în funcție de angajat"
+msgstr "Raport sumar HR concedii după angajat"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
@@ -1917,12 +1934,12 @@ msgstr "Jumătate de zi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "Are acces la managerul departamentului"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_mandatory_day
 msgid "Has Mandatory Day"
-msgstr "Are zi de lucru obligatorie"
+msgstr "Are zi obligatorie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_message
@@ -1933,7 +1950,7 @@ msgstr "Are mesaj"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__has_valid_allocation
 msgid "Has Valid Allocation"
-msgstr "Are alocare valabilă"
+msgstr "Are alocare validă"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_hatched
@@ -1944,12 +1961,12 @@ msgstr "Hatched"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__holiday_status
 msgid "Holiday Status"
-msgstr "Stare Concediu"
+msgstr "Stare concediu"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "Holidays Summary Report"
-msgstr "Raport Sumar Sărbători"
+msgstr "Raport sumar concedii"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_from
@@ -1959,7 +1976,7 @@ msgstr "Ora de la"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_to
 msgid "Hour to"
-msgstr "Ora la"
+msgstr "Ora până la"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__hourly
@@ -2011,7 +2028,7 @@ msgstr "Pictogramă"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Pictograma care indică o activitate de excepție."
+msgstr "Pictogramă care indică o activitate de excepție."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2025,7 +2042,7 @@ msgstr "Inactiv"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Dacă este bifat, mesaje noi necesită atenția dumneavoastră."
+msgstr "Dacă este bifat, mesajele noi necesită atenția dumneavoastră."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
@@ -2033,7 +2050,7 @@ msgstr "Dacă este bifat, mesaje noi necesită atenția dumneavoastră."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Dacă este bifată, există mesaje cu eroare de livrare."
+msgstr "Dacă este bifat, unele mesaje au eroare de livrare."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
@@ -2041,8 +2058,8 @@ msgid ""
 "If checked, the accrual period will be calculated according to the work "
 "days, not calendar days."
 msgstr ""
-"Dacă este bifată, perioada de acumulare va fi calculată în funcție de zilele"
-" lucrătoare, nu de zilele calendaristice."
+"Dacă este bifat, perioada de acumulare va fi calculată în funcție de zilele "
+"lucrătoare, nu de zilele calendaristice."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allows_negative
@@ -2050,7 +2067,7 @@ msgid ""
 "If checked, users request can exceed the allocated days and balance can go "
 "in negative."
 msgstr ""
-"Dacă este bifată, solicitarea utilizatorilor poate depăși numărul de zile "
+"Dacă este bifat, utilizatorii pot solicita mai multe zile decât cele "
 "alocate, iar soldul poate deveni negativ."
 
 #. module: hr_holidays
@@ -2069,15 +2086,15 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
 msgstr ""
-"Dacă câmpul activ este setat pe fals, acesta vă va permite să ascundeți "
-"tipul de timp fără să îl eliminați."
+"Dacă câmpul activ este setat pe fals, vă permite să ascundeți tipul de "
+"concediu fără să îl ștergeți."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
 msgstr ""
-"Dacă doriți să modificați numărul de zile, ar trebui să utilizați modul "
+"Dacă doriți să modificați numărul de zile, ar trebui să folosiți modul "
 "„perioadă”"
 
 #. module: hr_holidays
@@ -2089,7 +2106,7 @@ msgstr "Imediat"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Incorrect state for new allocation"
-msgstr "Situatie incorecta pentru noua alocare"
+msgstr "Stare incorectă pentru noua alocare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
@@ -2100,7 +2117,7 @@ msgstr "Este urmăritor"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "Este nume personalizat"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2110,7 +2127,7 @@ msgstr "Este responsabil"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
 msgid "Is Unpaid"
-msgstr "E neplătit"
+msgstr "Este neplătit"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jan
@@ -2122,7 +2139,7 @@ msgstr "Ianuarie"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__job_id
 msgid "Job"
-msgstr "Loc de munca"
+msgstr "Loc de muncă"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2166,7 +2183,7 @@ msgstr "Tip de concediu"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_mandatory_day__write_uid
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de către"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__write_date
@@ -2180,7 +2197,7 @@ msgstr "Ultima actualizare făcută de"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_mandatory_day__write_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
+msgstr "Ultima actualizare la"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2191,17 +2208,17 @@ msgstr "Activități întârziate"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__leave_id
 msgid "Leave"
-msgstr "Părăsește"
+msgstr "Concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_increases_duration
 msgid "Leave Type Increases Duration"
-msgstr "Crește durata concediului"
+msgstr "Tipul de concediu crește durata"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
 msgid "Left"
-msgstr "Stânga"
+msgstr "Plecat"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2213,13 +2230,13 @@ msgstr "Legendă"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's approve it"
-msgstr "Să aprobăm"
+msgstr "Să-l aprobăm"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's discover the Time Off application"
-msgstr "Să descoperim aplicația Concedii"
+msgstr "Să descoperim aplicația de concedii"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2231,17 +2248,17 @@ msgstr "Să-l validăm"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's try to create a Sick Time Off, select it in the list"
-msgstr "Să încercăm să creăm un concediu medical, să îl selectăm din listă"
+msgstr "Să încercăm să creăm un concediu medical, selectați-l din listă"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
 msgid "Levels"
-msgstr "Nivele"
+msgstr "Niveluri"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave
 msgid "Limit to"
-msgstr "Limita la"
+msgstr "Limitează la"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
@@ -2263,13 +2280,13 @@ msgstr "Manager"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_manager_approval
 msgid "Manager Approval"
-msgstr "Aprobare a Managerului"
+msgstr "Aprobare Manager"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_mandatory_day
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
 msgid "Mandatory Day"
-msgstr "Zi de lucru obligatorie"
+msgstr "Zi obligatorie"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2277,7 +2294,7 @@ msgstr "Zi de lucru obligatorie"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_mandatory_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_mandatory_day_menu_configuration
 msgid "Mandatory Days"
-msgstr "Zile de lucru obligatorii"
+msgstr "Zile obligatorii"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__mar
@@ -2289,27 +2306,27 @@ msgstr "Martie"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "Marchează ca gata de aprobare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
 msgid "Max Leaves"
-msgstr "Maxim Libere"
+msgstr "Maxim concedii"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Time Off:"
-msgstr "Timpul Maxim de Concediu:"
+msgstr "Concediu maxim:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
 msgid "Maximum Allowed"
-msgstr "Maximul Permis"
+msgstr "Maxim permis"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
 msgid "Maximum Excess Amount"
-msgstr ""
+msgstr "Valoare maximă excedent"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2317,13 +2334,12 @@ msgid ""
 "Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
 "Approval"
 msgstr ""
-"Timpul Maxim de Concediu Aprobat - Concediu deja luat - Așteptare Aprobare "
-"Concediu"
+"Concediu maxim permis - Concediu deja luat - Concediu în așteptare aprobare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Maximum amount of accruals to transfer"
-msgstr "Valoarea maximă a acumulărilor de transferat"
+msgstr "Valoare maximă acumulări de transferat"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__may
@@ -2336,7 +2352,7 @@ msgstr "Mai"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid "Meet the time off dashboard."
-msgstr "Vizualizare timp liber de pe tabloul de bord."
+msgstr "Vizualizează tabloul de bord pentru concedii."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
@@ -2347,12 +2363,12 @@ msgstr "Întâlnire"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
-msgstr "Eroare de livrare a mesajului"
+msgstr "Eroare livrare mesaj"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_mail_message_subtype
 msgid "Message subtypes"
-msgstr "Subtipuri de Mesaje"
+msgstr "Subtipuri mesaje"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_ids
@@ -2363,17 +2379,17 @@ msgstr "Mesaje"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_ids
 msgid "Milestone"
-msgstr "Etapa de referință"
+msgstr "Etapă"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__transition_mode
 msgid "Milestone Transition"
-msgstr "Etapa tranzitorie"
+msgstr "Tranziție etapă"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
 msgid "Milestone cap"
-msgstr ""
+msgstr "Plafon etapă"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -2389,7 +2405,7 @@ msgstr "Luni"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Month"
-msgstr "Luna"
+msgstr "Lună"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__monthly
@@ -2413,13 +2429,13 @@ msgstr "Dimineața"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "Cereri multiple"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Data limită a activității mele"
+msgstr "Termen limită activitate proprie"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_my
@@ -2458,7 +2474,7 @@ msgstr "Timpul meu"
 #: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Time Off"
-msgstr "Concediul Meu"
+msgstr "Concediul meu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__name
@@ -2471,7 +2487,7 @@ msgstr "Nume"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Negative Cap"
-msgstr "Limită salarială negativă"
+msgstr "Plafon negativ"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2483,7 +2499,7 @@ msgstr "Nou"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "New %(leave_type)s Request created by %(user)s"
-msgstr "Cerere nouă %(leave_type)s creată de %(user)s"
+msgstr "Cerere nouă de %(leave_type)s creată de %(user)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2495,7 +2511,7 @@ msgstr "Alocare nouă"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "New Allocation Request"
-msgstr "Cerere Alocare Nouă"
+msgstr "Cerere nouă de alocare"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2503,18 +2519,20 @@ msgstr "Cerere Alocare Nouă"
 msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
-msgstr "Cerere nouă creată de %(user)s: %(count)s Zile de%(allocation_type)s"
+msgstr ""
+"Cerere nouă de alocare creată de %(user)s: %(count)s zile de "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "New Milestone"
-msgstr "O etapă de referință nouă"
+msgstr "Etapă nouă"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 msgid "New Time Off"
-msgstr "Concediu Nou"
+msgstr "Concediu nou"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
@@ -2526,19 +2544,19 @@ msgstr "Următoarea activitate din calendar"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Data limită pentru următoarea activitate"
+msgstr "Termen limită pentru următoarea activitate"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_summary
 msgid "Next Activity Summary"
-msgstr "Sumarul următoarei activități"
+msgstr "Sumar următoarei activități"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_id
 msgid "Next Activity Type"
-msgstr "Următorul tip de activitate"
+msgstr "Tipul următoarei activități"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__requires_allocation__no
@@ -2546,20 +2564,20 @@ msgstr "Următorul tip de activitate"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "No Limit"
-msgstr "Fără Limită"
+msgstr "Fără limită"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__no_validation
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__no_validation
 msgid "No Validation"
-msgstr "Fără Validare"
+msgstr "Fără validare"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_leave_report
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
 msgid "No data to display"
-msgstr "Nu sunt date de afișat"
+msgstr "Nu există date de afișat"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_report_action
@@ -2589,12 +2607,14 @@ msgid ""
 "Non-visible allocations can still be selected when taking a leave, but will "
 "simply not be displayed on the leave dashboard."
 msgstr ""
+"Alocările care nu sunt vizibile pot fi selectate la luarea unui concediu, "
+"dar nu vor fi afișate pe tabloul de bord al concediilor."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "None"
-msgstr "Fără"
+msgstr "Niciuna"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
@@ -2604,12 +2624,12 @@ msgstr "Niciuna. Timpul acumulat se resetează la 0"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
 msgid "Not Allowed"
-msgstr "Nu este permis"
+msgstr "Nepermis"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr "Responsabil notificat"
+msgstr "Responsabil concediu notificat"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -2638,19 +2658,19 @@ msgstr "Număr de zile"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__number_of_hours
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
 msgid "Number of Hours"
-msgstr "Numar de Ore"
+msgstr "Număr de ore"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leaves_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leaves_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leaves_count
 msgid "Number of Time Off"
-msgstr "Număr Concedii"
+msgstr "Număr de concedii"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
 msgid "Number of days of the time off request. Used in the calculation."
-msgstr "Numărul de zile din cererea de concediu. Folosit în calcul."
+msgstr "Numărul de zile din cererea de concediu. Folosit la calcul."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2661,7 +2681,7 @@ msgstr "Număr de erori"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours
 msgid "Number of hours of the time off request. Used in the calculation."
-msgstr "Numărul de ore din cererea de concediu. Utilizat în calcul."
+msgstr "Numărul de ore din cererea de concediu. Folosit la calcul."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -2685,19 +2705,19 @@ msgstr "Octombrie"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Off Today"
-msgstr "Liber azi"
+msgstr "Liber astăzi"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "Officer: Manage all requests"
-msgstr "Responsabil: Gestionați toate cererile"
+msgstr "Responsabil: Gestionează toate cererile"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "On Time Off"
-msgstr "În timpul liber"
+msgstr "În concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
@@ -2713,7 +2733,7 @@ msgstr "În concediu"
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 #: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
 msgid "Online"
-msgstr "Activ"
+msgstr "Online"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2728,6 +2748,8 @@ msgid ""
 "Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
 " can approve or refuse allocation requests."
 msgstr ""
+"Doar aprobatorul de concediu al lui %s, un responsabil de concediu sau un "
+"administrator poate aproba sau refuza cererile de alocare."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2745,7 +2767,7 @@ msgstr "Doar un manager de concediu poate reseta un concediu început."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset other people leaves."
-msgstr "Doar un manager de concediu poate reseta concediile altor oameni."
+msgstr "Doar un manager de concediu poate reseta concediile altor persoane."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2753,20 +2775,21 @@ msgstr "Doar un manager de concediu poate reseta concediile altor oameni."
 msgid ""
 "Only a Time Off Officer or Manager can approve/refuse its own requests."
 msgstr ""
-"Numai un responsabil de concediu de odihnă sau un manager poate "
-"aproba/refuza propriile sale cereri."
+"Numai un responsabil de concediu sau un manager poate aproba/refuza "
+"propriile sale cereri."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a manager can modify a canceled leave."
-msgstr ""
+msgstr "Doar un manager poate modifica un concediu anulat."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve their own requests."
 msgstr ""
+"Numai un administrator de concediu poate aproba propriile sale cereri."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2775,12 +2798,14 @@ msgid ""
 "Only a time off Officer/Responsible or Administrator can approve or refuse "
 "allocation requests."
 msgstr ""
+"Numai un responsabil de concediu sau un administrator poate aproba sau "
+"refuza cererile de alocare."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid "Operation not supported"
-msgstr "Operațiunea nu este acceptată"
+msgstr "Operațiunea nu este suportată"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__other
@@ -2799,12 +2824,12 @@ msgstr "În afara biroului"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Overview"
-msgstr "Imagine de ansamblu"
+msgstr "Prezentare generală"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
 msgid "Paid Time Off"
-msgstr "Concediu Plătit"
+msgstr "Concediu plătit"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
@@ -2815,7 +2840,7 @@ msgstr "Concedii pentru creșterea copilului"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Pending Requests"
-msgstr ""
+msgstr "Cereri în așteptare"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
@@ -2826,30 +2851,30 @@ msgstr "Perioadă"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__planned
 msgid "Planned"
-msgstr "Planificată"
+msgstr "Planificat"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Planned:"
-msgstr "Planificate:"
+msgstr "Planificat:"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_present
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__hr_icon_display__presence_holiday_present
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__hr_icon_display__presence_holiday_present
 msgid "Present but on leave"
-msgstr "Prezent dar plecat"
+msgstr "Prezent, dar în concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
 msgid "Print"
-msgstr "Tipăriți"
+msgstr "Tipărește"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "Furnizați un motiv pentru anularea unui concediu aprobat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -2859,7 +2884,7 @@ msgstr "Public"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
-msgstr ""
+msgstr "Sărbători legale incluse"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2875,6 +2900,8 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr ""
+"Sărbătorile legale trebuie să fie incluse în durata concediului la "
+"solicitare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -2885,7 +2912,7 @@ msgstr "Rată"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
 msgid "Ratings"
-msgstr "Ratings"
+msgstr "Evaluări"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -2913,7 +2940,7 @@ msgstr "Motive"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Refuse"
-msgstr "Refuzați"
+msgstr "Refuză"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2932,7 +2959,7 @@ msgstr "Refuzați"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Refused"
-msgstr "Respins"
+msgstr "Refuzat"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2944,7 +2971,7 @@ msgstr "Concediu refuzat"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__regular
 msgid "Regular Allocation"
-msgstr "Alocare Regulată"
+msgstr "Alocare regulată"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
@@ -2954,7 +2981,7 @@ msgstr "Zile rămase"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
 msgid "Remaining Hours"
-msgstr "Ore ramase"
+msgstr "Ore rămase"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -2970,22 +2997,22 @@ msgstr "Raportare"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Allocation"
-msgstr "Cerere Alocare"
+msgstr "Solicită alocare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
-msgstr "Data de încheiere a solicitării"
+msgstr "Data de sfârșit a cererii"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
-msgstr "Solicitați data de început"
+msgstr "Data de început a cererii"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Time off"
-msgstr "Cerere Concediu"
+msgstr "Solicită concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
@@ -2995,12 +3022,12 @@ msgstr "Tip cerere"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
 msgid "Requested (Days/Hours)"
-msgstr "Cerere (Zile/Ore)"
+msgstr "Solicitat (Zile/Ore)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
 msgid "Requires allocation"
-msgstr "Necesare alocare"
+msgstr "Necesită alocare"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -3015,17 +3042,17 @@ msgstr "Calendar resurse"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
 msgid "Resource Time Off"
-msgstr "Timp resursă oprit"
+msgstr "Concediu resurse"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Detaliu Timp Resurse"
+msgstr "Detaliu concediu resurse"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar
 msgid "Resource Working Time"
-msgstr "Timpul Lucru Resurse"
+msgstr "Timp de lucru resurse"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -3066,17 +3093,17 @@ msgstr "Salvează"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Search Time Off"
-msgstr "Căutare Concediu"
+msgstr "Căutare concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Search Time Off Type"
-msgstr "Tipul Căutare Concediu"
+msgstr "Căutare tip concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Search allocations"
-msgstr "Căutare Alocări"
+msgstr "Căutare alocări"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__second_approver_id
@@ -3099,12 +3126,12 @@ msgstr "A doua zi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day_display
 msgid "Second Day Display"
-msgstr "Afișare ziua a doua"
+msgstr "Afișare a doua zi"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month
 msgid "Second Month"
-msgstr "Luna a doua"
+msgstr "A doua lună"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month_day
@@ -3114,7 +3141,7 @@ msgstr "A doua zi din lună"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month_day_display
 msgid "Second Month Day Display"
-msgstr "Afișare zilei a doua din lună"
+msgstr "Afișare a doua zi din lună"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3137,7 +3164,7 @@ msgstr "Selectează concediu"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
 msgid "Select Time Off Type"
-msgstr "Selectare Tip Concediu"
+msgstr "Selectează tip concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__validation_type
@@ -3148,12 +3175,16 @@ msgid ""
 "            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
+"Selectați nivelul de aprobare necesar în cazul unei cereri de la angajat\n"
+"            #     - Nu este necesară validarea: Cererea angajatului este aprobată automat.\n"
+"            #     - Aprobat de responsabilul de concediu: Cererea angajatului trebuie aprobată manual\n"
+"            #       de către responsabilul de concediu, aprobatorul angajatului sau amândoi."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Select the request you just created"
-msgstr "Selectați cererea pe care tocmai ați creat-o"
+msgstr "Selectează cererea pe care tocmai ai creat-o"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id
@@ -3165,8 +3196,8 @@ msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
-"Selectați utilizatorul responsabil pentru aprobare „Concediu” a acestui angajat.\n"
-"Dacă este gol, aprobarea este făcută de un administrator sau aprobator (determinat în setări / utilizatori)."
+"Selectați utilizatorul responsabil pentru aprobarea \"Concediului\" acestui angajat.\n"
+"Dacă este gol, aprobarea se face de către un administrator sau aprobator (stabilit în setări/utilizatori)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__sep
@@ -3183,47 +3214,47 @@ msgstr "Secvență"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__sequence
 msgid "Sequence is generated automatically by start time delta."
-msgstr "Secvența este generată automat din momentul de pornire."
+msgstr ""
+"Secvența este generată automat în funcție de diferența de timp de start."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Set a maximum of accruals an allocation keeps at the end of the year."
 msgstr ""
-"Stabiliți un număr maxim de acumulări pe care o alocare le păstrează la "
+"Setați un număr maxim de acumulări pe care o alocare le păstrează la "
 "sfârșitul anului."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__show_on_dashboard
 msgid "Show On Dashboard"
-msgstr "Afișați pe tabloul de bord"
+msgstr "Afișează pe tabloul de bord"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__show_transition_mode
 msgid "Show Transition Mode"
-msgstr "Afișați modul de tranziție"
+msgstr "Afișează modul de tranziție"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Afișați toate înregistrările care au data următoarei acțiuni înainte de data"
-" de astăzi"
+"Afișează toate înregistrările care au data următoarei acțiuni înainte de "
+"astăzi"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_sl
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
-msgstr "Concediu Medical"
+msgstr "Concediu medical"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
 msgstr ""
-"Unele concedii nu pot fi asociate cu nicio alocare. Pentru a vedea aceste "
-"concedii,"
+"Unele concedii nu pot fi asociate cu nicio alocare. Pentru a le vedea,"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3232,6 +3263,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"Unele dintre planurile de acumulare pe care încercați să le ștergeți sunt "
+"legate de o alocare existentă. Ștergeți-le sau anulați-le mai întâi."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3239,8 +3272,8 @@ msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
 "                Leave empty if this accrual plan can be used with any Time Off Type."
 msgstr ""
-"Specificați dacă acest plan de acumulare poate fi utilizat numai cu acest tip de concediu.\n"
-"                Lăsați gol dacă acest plan de acumulare poate fi utilizat cu orice tip de concediu."
+"Specificați dacă acest plan de acumulare poate fi folosit doar cu acest tip de concediu.\n"
+"                Lăsați gol dacă planul poate fi folosit cu orice tip de concediu."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__transition_mode
@@ -3254,15 +3287,15 @@ msgid ""
 msgstr ""
 "Specificați ce se întâmplă dacă o tranziție de nivel are loc în mijlocul unei perioade de plată.\n"
 "\n"
-"                \"Imediat\" va trece angajatul la noul nivel de acumulare la data exactă din timpul perioadei de plată în curs.\n"
+"                „Imediat” va trece angajatul la noul nivel de acumulare la data exactă din perioada de plată curentă.\n"
 "\n"
-"                \"După această perioadă de acumulare\" va menține angajatul la același nivel de acumulare până la încheierea perioadei de plată în curs.\n"
-"                După încheierea acesteia, noul nivel va intra în vigoare atunci când începe următoarea perioadă de plată."
+"                „După această perioadă de acumulare” va menține angajatul la același nivel până la finalul perioadei de plată curente.\n"
+"                După finalizare, noul nivel va intra în vigoare la începutul următoarei perioade de plată."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Start Accruing"
-msgstr ""
+msgstr "Începe acumularea"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3283,12 +3316,12 @@ msgstr "Dată început"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid "Start after"
-msgstr "Start după"
+msgstr "Începe după"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__state
 msgid "State"
-msgstr "Județ"
+msgstr "Stare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__state
@@ -3310,7 +3343,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data activitații este deja trecută\n"
+"Întârziată: data activității este deja trecută\n"
 "Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
@@ -3318,13 +3351,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_striked
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_striked
 msgid "Striked"
-msgstr "Striked"
+msgstr "Tăiat"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Submit your request"
-msgstr "Trimiteți cererea dvs"
+msgstr "Trimiteți cererea dvs."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -3339,7 +3372,7 @@ msgstr "Duminică"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids_count
 msgid "Supported Attachment Ids Count"
-msgstr "Număr de ID-uri de atașament acceptate"
+msgstr "Număr atașamente suportate"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_support_document
@@ -3359,14 +3392,14 @@ msgstr "Documente justificative"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
 msgid "Take Time Off in"
-msgstr "Luați Concediu în"
+msgstr "Ia concediu în"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__taken
 msgid "Taken"
-msgstr "Luat"
+msgstr "Luate"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__country_code
@@ -3375,7 +3408,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "Codul ISO al țării din două caractere.\n"
-"Puteți utiliza acest câmp pentru căutări rapide."
+"Puteți folosi acest câmp pentru căutare rapidă."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3383,8 +3416,8 @@ msgstr ""
 msgid ""
 "The Start Date of the Validity Period must be anterior to the End Date."
 msgstr ""
-"Data de începere a perioadei de valabilitate trebuie să fie anterioară datei"
-" de încheiere."
+"Data de început a perioadei de valabilitate trebuie să fie anterioară datei "
+"de sfârșit."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
@@ -3393,9 +3426,9 @@ msgid ""
 "This field defines the number of days, months or years after which accrual "
 "is used."
 msgstr ""
-"Acumularea începe după o perioadă definită de la data de începere a "
-"alocării. Acest câmp definește numărul de zile, luni sau ani după care se "
-"utilizează acumularea."
+"Acumularea începe după o perioadă definită de la data de început a alocării."
+" Acest câmp definește numărul de zile, luni sau ani după care se folosește "
+"acumularea."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3404,6 +3437,9 @@ msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
 msgstr ""
+"Cerința de alocare pentru un tip de concediu nu poate fi modificată după ce "
+"au fost luate concedii de acel tip. Ar trebui să creați un nou tip de "
+"concediu."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3411,14 +3447,13 @@ msgstr ""
 msgid ""
 "The color selected here will be used in every screen with the time off type."
 msgstr ""
-"Culoarea selectată aici va fi utilizată în fiecare ecran cu tipul de "
-"concediu."
+"Culoarea selectată aici va fi folosită pe toate ecranele pentru acest tip de"
+" concediu."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_check_dates
 msgid "The dates you've set up aren't correct. Please check them."
-msgstr ""
-"Datele pe care le-ați configurat nu sunt corecte. Vă rugăm să le verificați."
+msgstr "Datele setate nu sunt corecte. Vă rugăm să le verificați."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
@@ -3426,8 +3461,8 @@ msgid ""
 "The distinction between working time (ex. Attendance) and absence (ex. "
 "Training) will be used in the computation of Accrual's plan rate."
 msgstr ""
-"Distincția între timpul de lucru (ex. prezență) și absență (ex. formare) va "
-"fi utilizată la calcularea ratei planului de acumulări."
+"Distincția între timp lucrat (ex. prezență) și absență (ex. training) va fi "
+"folosită la calculul ratei planului de acumulare."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
@@ -3438,7 +3473,7 @@ msgstr "Durata trebuie să fie mai mare decât 0."
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid "The employee no longer works in the company"
-msgstr ""
+msgstr "Angajatul nu mai lucrează în companie"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3466,6 +3501,8 @@ msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
 msgstr ""
+"Valoarea maximă excedentă trebuie să fie mai mare decât 0. Dacă doriți să "
+"setați 0, dezactivați plafonul negativ."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -3473,6 +3510,8 @@ msgid ""
 "The number of carried over days that will expire on "
 "carried_over_days_expiration_date"
 msgstr ""
+"Numărul de zile reportate care vor expira la data "
+"carried_over_days_expiration_date"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3480,7 +3519,7 @@ msgid ""
 "The number of hours/days that will be incremented in the specified Time Off "
 "Type for every period"
 msgstr ""
-"Numărul de ore/zile care vor fi majorate în tipul de concediu specificat "
+"Numărul de ore/zile care vor fi adăugate la tipul de concediu specificat "
 "pentru fiecare perioadă"
 
 #. module: hr_holidays
@@ -3509,6 +3548,9 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Starea este „De aprobat” când se creează o cerere de alocare.\n"
+"Starea este „Refuzat” când cererea de alocare este refuzată de manager.\n"
+"Starea este „Aprobat” când cererea de alocare este aprobată de manager."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -3518,22 +3560,22 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
-"Starea este setată pe „Înscriere”, atunci când este creată o cerere de concediu.\n"
-"Starea este pe „Aprobare”, când solicitarea este confirmată de utilizator.\n"
-"Starea este pe „Refuzare”, atunci când solicitarea este refuzată de către manager.\n"
-"Starea este pe „Aprobare”, când cererea de concediu este aprobată de manager."
+"Starea este setată pe „De trimis” când se creează o cerere de concediu.\n"
+"Starea este „De aprobat” când cererea de concediu este confirmată de utilizator.\n"
+"Starea este „Refuzat” când cererea de concediu este refuzată de manager.\n"
+"Starea este „Aprobat” când cererea de concediu este aprobată de manager."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "The time off has been automatically approved"
-msgstr "Concediu Aprobat Automat"
+msgstr "Concediul a fost aprobat automat"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "The time off has been cancelled: %s"
-msgstr ""
+msgstr "Concediul a fost anulat: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3551,13 +3593,13 @@ msgid ""
 "the correct company."
 msgstr ""
 "Nu există niciun angajat setat pe concediu. Vă rugăm să vă asigurați că "
-"sunteți înregistrat în compania corectă."
+"sunteți autentificat în compania corectă."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "There is no valid allocation to cover that request."
-msgstr "Nu există nicio alocare valabilă pentru a acoperi această cerere."
+msgstr "Nu există o alocare validă pentru a acoperi această cerere."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3567,17 +3609,17 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
-"Această alocare a fost deja executată o dată, orice modificare nu va fi "
-"valabilă pentru zilele alocate angajatului. Dacă trebuie să modificați "
-"configurația alocării, ștergeți și creați una nouă."
+"Această alocare a fost deja rulată o dată, orice modificare nu va afecta "
+"zilele alocate angajatului. Dacă trebuie să schimbați configurația alocării,"
+" ștergeți și creați una nouă."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validate the time off"
 msgstr ""
-"Această zonă este completată automat de către utilizatorul care validează "
-"perioada de concediu"
+"Această zonă este completată automat de utilizatorul care validează "
+"concediul"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
@@ -3585,17 +3627,16 @@ msgid ""
 "This area is automatically filled by the user who validate the time off with"
 " second level (If time off type need second validation)"
 msgstr ""
-"Această zonă este completată automat de către utilizatorul care validează "
-"perioada de concediu cu al doilea nivel (Dacă tipul de concediu necesită a "
-"doua validare)"
+"Această zonă este completată automat de utilizatorul care validează "
+"concediul la al doilea nivel (dacă tipul de concediu necesită a doua "
+"validare)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
 msgstr ""
-"Această zonă este completată automat de către utilizatorul care validează "
-"alocarea"
+"Această zonă este completată automat de utilizatorul care validează alocarea"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -3603,11 +3644,14 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
 msgstr ""
+"Această zonă este completată automat de utilizatorul care validează alocarea"
+" la al doilea nivel (dacă tipul de concediu necesită a doua validare)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
 msgstr ""
+"Acest câmp definește unitatea de timp după care acumularea se încheie."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3618,7 +3662,7 @@ msgstr "Acest câmp definește unitatea de timp după care începe acumularea."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
 msgid "This indicates if it is still possible to use this type of leave"
 msgstr ""
-"Acest lucru indică dacă este încă posibil să utilizați acest tip de concediu"
+"Aceasta indică dacă este încă posibil să folosiți acest tip de concediu"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3630,7 +3674,7 @@ msgstr "Această modificare nu este permisă în starea actuală."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "This time off cannot be cancelled."
-msgstr ""
+msgstr "Acest concediu nu poate fi anulat."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3638,8 +3682,8 @@ msgid ""
 "This value is given by the sum of all time off requests with a negative "
 "value."
 msgstr ""
-"Această valoare este dată de suma tuturor solicitarilor de concediu cu o "
-"valoare negativă."
+"Această valoare este dată de suma tuturor cererilor de concediu cu valoare "
+"negativă."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
@@ -3647,8 +3691,8 @@ msgid ""
 "This value is given by the sum of all time off requests with a positive "
 "value."
 msgstr ""
-"Această valoare este dată de suma tuturor solicitărilor de concediu cu o "
-"valoare pozitivă."
+"Această valoare este dată de suma tuturor cererilor de concediu cu valoare "
+"pozitivă."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__thu
@@ -3678,7 +3722,7 @@ msgstr "Concediu"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr "Alocare Concediu"
+msgstr "Alocare concediu"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3687,44 +3731,44 @@ msgstr "Alocare Concediu"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_report
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_report_action
 msgid "Time Off Analysis"
-msgstr "Analiză Concediu"
+msgstr "Analiză concedii"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Time Off Approval"
-msgstr "Aprobare Concediu"
+msgstr "Aprobare concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_tree_inherit_leave
 msgid "Time Off Approver"
-msgstr "Aprobator Timp Liber"
+msgstr "Aprobator concediu"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_report_calendar
 msgid "Time Off Calendar"
-msgstr "Calender Concediu"
+msgstr "Calendar concedii"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__associated_leaves_count
 msgid "Time Off Count"
-msgstr "Numărătoarea concediilor"
+msgstr "Număr concedii"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_employee.py:0
 msgid "Time Off Dashboard"
-msgstr "Tablou de bord privind concediile"
+msgstr "Tablou de bord concedii"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
 msgid "Time Off Description"
-msgstr "Descriere Concediu"
+msgstr "Descriere concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
 msgid "Time Off Notification Subtype"
-msgstr "Notificare Subtype Concediu"
+msgstr "Subtip notificare concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -3734,8 +3778,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"Responsabilii de concediu alocă timp liber angajaților (de exemplu, concediu de plată).<br>\n"
-"                Angajații solicită alocări către ofițeri concediu (de exemplu, zile de recuperare)."
+"Responsabilii de concediu alocă zile de concediu angajaților (de exemplu, concediu plătit).<br>\n"
+"                Angajații solicită alocări către responsabilii de concediu (de exemplu, zile de recuperare)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3751,24 +3795,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Time Off Request"
-msgstr "Cerere Concediu"
+msgstr "Cerere concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Time Off Requests"
-msgstr "Cereri Concediu"
+msgstr "Cereri concediu"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_responsible
 msgid "Time Off Responsible"
-msgstr "Responsabil concedii"
+msgstr "Responsabil concediu"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
 msgid "Time Off Second Approve"
-msgstr "A doua aprobare a concediului"
+msgstr "A doua aprobare concediu"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -3779,18 +3823,18 @@ msgstr "A doua aprobare a concediului"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_pivot
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
 msgid "Time Off Summary"
-msgstr "Rezumat Concediu"
+msgstr "Sumar concedii"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_employee_type_report
 #: model:ir.model,name:hr_holidays.model_hr_leave_report
 msgid "Time Off Summary / Report"
-msgstr "Rezumat / Raport Concediu"
+msgstr "Sumar / Raport concedii"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Time Off Taken:"
-msgstr "Concediu Luat:"
+msgstr "Concediu luat:"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_type
@@ -3809,29 +3853,29 @@ msgstr "Concediu Luat:"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off Type"
-msgstr "Tip Concediu"
+msgstr "Tip concediu"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Time Off Types"
-msgstr "Tipuri de Concediu"
+msgstr "Tipuri de concediu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Time Off Validation"
-msgstr "Validarea concediului"
+msgstr "Validare concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off of Your Team Member"
-msgstr "Concediul unui membru al echipei tale"
+msgstr "Concediu membru echipă"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
 msgid "Time Off to Approve"
-msgstr "Concediu pentru aprobare"
+msgstr "Concediu de aprobat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -3841,7 +3885,7 @@ msgstr "Concediu."
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_cron_cancel_invalid_ir_actions_server
 msgid "Time Off: Cancel invalid leaves"
-msgstr "Concediu: Anularea concediilor invalide"
+msgstr "Concediu: Anulează concediile invalide"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -3856,7 +3900,7 @@ msgstr "Concediu deja luat"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
 msgid "Time off Analysis by Employee and Time Off Type"
-msgstr "Analiza concediului în funcție de angajat și de tipul de concediu"
+msgstr "Analiză concedii după angajat și tip concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
@@ -3867,7 +3911,7 @@ msgstr "Sumar concedii"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Time off Taken"
-msgstr "Concediu efectuat deja"
+msgstr "Concediu efectuat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3881,20 +3925,22 @@ msgstr "Concediul persoanelor la care ești manager"
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
-"Cererea de închidere trebuie confirmată („To Approve”) pentru a o aproba."
+"Cererea de concediu trebuie să fie confirmată („De aprobat”) pentru a o "
+"aproba."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed in order to approve it."
-msgstr "Cererea de concediu trebuie confirmată pentru a o aproba."
+msgstr "Cererea de concediu trebuie să fie confirmată pentru a o aproba."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Cererea de concediu trebuie confirmată sau validată pentru a o refuza."
+"Cererea de concediu trebuie să fie confirmată sau validată pentru a o "
+"refuza."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3903,6 +3949,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"Cancelled\" in order to be "
 "reset to \"Confirmed\"."
 msgstr ""
+"Starea cererii de concediu trebuie să fie „Refuzat” sau „Anulat” pentru a "
+"putea fi resetată la „Confirmat”."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -3983,12 +4031,12 @@ msgid ""
 msgstr ""
 "Numărul total de concedii plătite alocate acestui angajat, modificați "
 "această valoare pentru a crea o solicitare de alocare / cerere concediu. "
-"Total bazat pe toate tipurile de pauză fără limită superioară."
+"Total bazat pe toate tipurile de concediu fără limită superioară."
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
 msgid "Training Time Off"
-msgstr "Timpul liber pentru formare"
+msgstr "Concediu pentru formare"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -4031,23 +4079,23 @@ msgstr "Tip"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
 msgid "Type Request Unit"
-msgstr "Tip Cerere Unitate"
+msgstr "Tip unitate cerere"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_decoration
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipul de activitate de excepție înregistrată."
+msgstr "Tipul activității de excepție înregistrate."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
 msgid "Tz"
-msgstr "Tz"
+msgstr "Fus orar"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
 msgid "Tz Mismatch"
-msgstr "Nepotrivire Tz"
+msgstr "Nepotrivire fus orar"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4129,7 +4177,7 @@ msgstr "Validat"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
 msgid "Validation Type"
-msgstr "Tip Validare"
+msgstr "Tip validare"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4138,6 +4186,8 @@ msgid ""
 "Validity End date has been updated because Employee no longer works in the "
 "company"
 msgstr ""
+"Data de sfârșit a valabilității a fost actualizată deoarece angajatul nu mai"
+" lucrează în companie"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4149,12 +4199,12 @@ msgstr "Perioadă de valabilitate"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Start"
-msgstr "Început de valabilitate"
+msgstr "Început valabilitate"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Stop"
-msgstr "Sfârșit de valabilitate"
+msgstr "Sfârșit valabilitate"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -4166,7 +4216,7 @@ msgstr "Concediu virtual rămas"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__confirm
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__confirm
 msgid "Waiting Approval"
-msgstr "Asteapta aprobare"
+msgstr "Așteaptă aprobare"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4179,7 +4229,7 @@ msgstr "În așteptarea mea"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate1
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate1
 msgid "Waiting Second Approval"
-msgstr "Se asteapta a doua aprobare"
+msgstr "Așteaptă a doua aprobare"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -4190,13 +4240,13 @@ msgstr "În așteptarea aprobării"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__website_message_ids
 msgid "Website Messages"
-msgstr "Mesaje de pe site-ul web"
+msgstr "Mesaje site web"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__website_message_ids
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__website_message_ids
 msgid "Website communication history"
-msgstr "Istoricul comunicării pe site-ul web"
+msgstr "Istoric comunicare site web"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
@@ -4216,6 +4266,10 @@ msgid ""
 "to zero), All accrued time carried over to the next period; or Carryover "
 "with a maximum)."
 msgstr ""
+"Când se ajunge la timpul de reportare, conform setărilor planului, selectați"
+" ce doriți să se întâmple cu timpul de concediu neutilizat: Niciunul (timpul"
+" va fi resetat la zero), Tot timpul acumulat se reportează în perioada "
+"următoare sau Reportare cu o valoare maximă."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -4223,6 +4277,8 @@ msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
 msgstr ""
+"Când acest câmp este bifat, soldul unei alocări care folosește acest plan de"
+" acumulare nu va depăși niciodată valoarea specificată."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
@@ -4230,6 +4286,8 @@ msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
 msgstr ""
+"Când acest câmp este bifat, suma totală acumulată anual va fi plafonată la "
+"valoarea specificată"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -4264,7 +4322,7 @@ msgstr "Lună anuală"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave_yearly
 msgid "Yearly limit to"
-msgstr ""
+msgstr "Limită anuală la"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
@@ -4283,7 +4341,7 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
-"Da: Cererile de concediu trebuie să aibă o alocare valabilă.\n"
+"Da: Cererile de concediu trebuie să aibă o alocare validă.\n"
 "\n"
 "              Fără limită: Cererile de concediu pot fi luate fără nicio alocare prealabilă."
 
@@ -4291,7 +4349,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You are not allowed to request time off on a Mandatory Day"
-msgstr ""
+msgstr "Nu aveți permisiunea să solicitați concediu într-o zi obligatorie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
@@ -4299,6 +4357,7 @@ msgid ""
 "You can define a period of time where the days carried over will be "
 "available"
 msgstr ""
+"Puteți defini o perioadă de timp în care zilele reportate vor fi disponibile"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4318,7 +4377,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You cannot delete a time off which is in %s state"
-msgstr "Nu puteți șterge un concediu care este în %s vigoare"
+msgstr "Nu puteți șterge un concediu care este în starea %s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4332,13 +4391,13 @@ msgstr "Nu puteți șterge un concediu care este în trecut"
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
-"Nu puteți șterge o cerere de alocare care are unele zile libere validate."
+"Nu puteți șterge o cerere de alocare care are unele concedii validate."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr "Nu puteți șterge o cerere de alocare care se află în %s stare."
+msgstr "Nu puteți șterge o cerere de alocare care este în starea %s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4347,8 +4406,8 @@ msgid ""
 "You cannot first approve a time off for %s, because you are not his time off"
 " manager"
 msgstr ""
-"Nu puteți aproba un concediu liber pentru %s, deoarece nu sunteți managerul "
-"său de concediu"
+"Nu puteți aproba inițial un concediu pentru %s, deoarece nu sunteți "
+"managerul său de concediu"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4356,7 +4415,7 @@ msgstr ""
 msgid ""
 "You cannot have a cap on accrued time without setting a maximum amount."
 msgstr ""
-"Nu puteți stabili un plafon pentru timpul acumulat fără a stabili o sumă "
+"Nu puteți stabili un plafon pentru timpul acumulat fără a seta o valoare "
 "maximă."
 
 #. module: hr_holidays
@@ -4365,6 +4424,8 @@ msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
 msgstr ""
+"Nu puteți stabili un plafon pentru timpul acumulat anual fără a seta o "
+"valoare maximă."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4375,6 +4436,10 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"Nu puteți modifica setarea „Sărbători legale incluse” deoarece unul sau mai "
+"multe concedii pentru acest tip de concediu se suprapun cu sărbători legale,"
+" ceea ce înseamnă că soldul acelor angajați ar fi afectat de această "
+"modificare."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4382,7 +4447,7 @@ msgstr ""
 msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by"
 " the employee."
-msgstr ""
+msgstr "Nu puteți reduce durata sub durata concediilor deja luate de angajat."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4393,7 +4458,7 @@ msgid ""
 msgstr ""
 "Nu puteți refuza această cerere de alocare deoarece angajatul a luat deja "
 "concedii pentru aceasta. Vă rugăm să refuzați sau să ștergeți mai întâi "
-"aceste concedii."
+"acele concedii."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4401,7 +4466,8 @@ msgstr ""
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr ""
-"Nu aveți drepturile de a aplica a doua aprobare la o cerere de concediu"
+"Nu aveți drepturile necesare pentru a aplica a doua aprobare la o cerere de "
+"concediu"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4416,6 +4482,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "validate this allocation request."
 msgstr ""
+"Trebuie să fiți fie aprobatorul de concediu al lui %s, fie administratorul "
+"de concediu pentru a valida această cerere de alocare."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4433,8 +4501,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
 msgstr ""
-"Pentru a aproba acest concediu, trebuie să fiți responsabil de concediu sau "
-"manager de concediu"
+"Trebuie să fiți responsabil de concediu sau manager de concediu pentru a "
+"aproba acest concediu"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4488,7 +4556,7 @@ msgstr "Concediul dumneavoastră"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 msgid "Your time off has been cancelled."
-msgstr ""
+msgstr "Concediul dumneavoastră a fost anulat."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4580,7 +4648,7 @@ msgstr "zile)"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "de exemplu, recuperare suplimentară, indisponibilitate companie, ..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4601,7 +4669,7 @@ msgstr "de la %(date_from)s la %(date_to)s - %(state)s"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "hour(s)"
-msgstr ""
+msgstr "oră/ore"
 
 #. module: hr_holidays
 #. odoo-javascript

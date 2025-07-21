@@ -39,15 +39,15 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Wil Odoo, 2025
 # Dylan Kiss, 2025
+# Wil Odoo, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-13 18:37+0000\n"
+"POT-Creation-Date: 2025-07-11 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -717,6 +717,54 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"       <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Hei,\n"
+"       <br/><br/>\n"
+"        Sinun\n"
+"       <t t-if=\"ctx.get('proforma')\">\n"
+"            Pro forma -lasku <t t-out=\"doc_name or ''\">tarjouksesta</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"           <t t-if=\"object.origin\">\n"
+"                (viite: <t t-out=\"object.origin or ''\"/> ),\n"
+"           </t>\n"
+"            jonka määrä on <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span>, on valmis.\n"
+"       </t>\n"
+"       <t t-else=\"\">\n"
+"           <t t-out=\"doc_name or ''\">tarjous</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"           <t t-if=\"object.origin\">\n"
+"                (viite: <t t-out=\"object.origin or ''\">S00052</t>),\n"
+"           </t>\n"
+"            jonka summa on <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span>, on valmis tarkastettavaksi.\n"
+"       </t>\n"
+"       <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-if=\"documents\">\n"
+"            <br/> \n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                Tässä on joitakin muita asiakirjoja, jotka saattavat kiinnostaa sinua:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Tässä on lisäasiakirja, joka saattaa kiinnostaa sinua:\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"       <br/>\n"
+"        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"       <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -1698,8 +1746,12 @@ msgstr "Yrityksen asiakirjan asettelu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Laske toimituskulut ja lähetä DHL:llä"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä DHL:llä<br/>\n"
+"                                      <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1708,8 +1760,12 @@ msgstr "Laske kuljetuskustannukset ja lähetä Easypostilla"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Laske toimituskulut ja lähetä FedEx:llä"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä FedExillä<br/>\n"
+"                                    <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1728,13 +1784,21 @@ msgstr "Laske toimituskulut ja lähetä Starshipitillä"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Laske toimituskulut ja lähetä UPS:llä"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä UPS:llä<br/>\n"
+"                                 <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Laske toimituskulut ja lähetä USPS:llä"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä USPS:llä<br/>\n"
+"                                 <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2024,6 +2088,11 @@ msgid "Customers"
 msgstr "Asiakkaat"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "DHL-liitin"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "DHL Express Liitin"
@@ -2275,6 +2344,11 @@ msgid "Distribution Analytic Account"
 msgstr "Jakelun analyyttinen tili"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentaatio"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Documents"
 msgstr "Dokumentit"
@@ -2469,6 +2543,7 @@ msgstr "Lisärivi, jossa %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "FedEx Connector"
 
@@ -5461,11 +5536,13 @@ msgstr "Kirjoita löytääksesi tuotteen..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "UPS-liitin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "USPS-liitin"
 

@@ -1663,7 +1663,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             self._include_country_and_state_in_address(shipping_address)
             shipping_address, _side_values = self._parse_form_data(shipping_address)
 
-            if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+            if order_sudo.name in order_sudo.partner_shipping_id.name:
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
                 # means that the partner is missing information, so we update it.
                 order_sudo.partner_shipping_id.write(shipping_address)
@@ -1839,7 +1839,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'shipping_info_required': order._has_deliverable_products(),
             # Todo: remove in master
             'delivery_amount': payment_utils.to_minor_currency_units(
-                order.order_line.filtered(lambda l: l.is_delivery).price_total, order.currency_id
+                order.amount_total - order._compute_amount_total_without_delivery(), order.currency_id
             ),
             'shipping_address_update_route': self._express_checkout_delivery_route,
         })

@@ -4,12 +4,9 @@ import {
     isAllowedContent,
     isButton,
     isContentEditable,
-    isEditorTab,
     isEmpty,
     isInPre,
-    isMediaElement,
     isProtected,
-    isSelfClosingElement,
     isShrunkBlock,
     isTangible,
     isTextNode,
@@ -630,7 +627,11 @@ export class DeletePlugin extends Plugin {
             // The joinable in this case is its sibling (previous for the start
             // side, next for the end side), but only if inline.
             const sibling = childNodes(commonAncestor)[side === "start" ? offset - 1 : offset];
-            if (sibling && !isBlock(sibling) && !(sibling.nodeType === Node.TEXT_NODE && !isVisibleTextNode(sibling))) {
+            if (
+                sibling &&
+                !isBlock(sibling) &&
+                !(sibling.nodeType === Node.TEXT_NODE && !isVisibleTextNode(sibling))
+            ) {
                 return { node: sibling, type: "inline" };
             }
             // No fragment to join.
@@ -917,21 +918,33 @@ export class DeletePlugin extends Plugin {
      * @returns {Range}
      */
     expandRangeToIncludeNonEditables(range) {
-        const { startContainer, endContainer, commonAncestorContainer: commonAncestor } = range;
+        const {
+            startContainer,
+            startOffset,
+            endContainer,
+            endOffset,
+            commonAncestorContainer: commonAncestor,
+        } = range;
         const isNonEditable = (node) => !isContentEditable(node);
-        const startUneditable = findFurthest(startContainer, commonAncestor, isNonEditable);
+        const startUneditable =
+            startOffset === 0 &&
+            !previousLeaf(startContainer, closestBlock(startContainer)) &&
+            findFurthest(startContainer, commonAncestor, isNonEditable);
         if (startUneditable) {
             // @todo @phoenix: Review this spec. I suggest this instead (no block merge after removing):
             // startContainer = startUneditable.parentElement;
             // startOffset = childNodeIndex(startUneditable);
-            const leaf = previousLeaf(startUneditable);
+            const leaf = previousLeaf(startUneditable, this.editable);
             if (leaf) {
                 range.setStart(leaf, nodeSize(leaf));
             } else {
                 range.setStart(commonAncestor, 0);
             }
         }
-        const endUneditable = findFurthest(endContainer, commonAncestor, isNonEditable);
+        const endUneditable =
+            endOffset === nodeSize(endContainer) &&
+            !nextLeaf(endContainer, closestBlock(endContainer)) &&
+            findFurthest(endContainer, commonAncestor, isNonEditable);
         if (endUneditable) {
             range.setEndAfter(endUneditable);
         }
@@ -1114,9 +1127,10 @@ export class DeletePlugin extends Plugin {
         if (leaf.nodeName === "BR" && isFakeLineBreak(leaf)) {
             return true;
         }
-        // @todo: register these as resources by other plugins?
         if (
-            [isSelfClosingElement, isMediaElement, isEditorTab].some((predicate) => predicate(leaf))
+            this.getResource("functional_empty_node_predicates").some((predicate) =>
+                predicate(leaf)
+            )
         ) {
             return false;
         }

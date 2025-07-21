@@ -3,16 +3,16 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-07-11 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid ""
 "%s should have a KVK or OIN number set in Company ID field or as Peppol "
 "e-address (EAS code 0106 or 0190)."
-msgstr ""
+msgstr "%s 應已在公司識別碼欄位中，設定 KVK 或 OIN 號碼，或已設定為 Peppol 電子地址（EAS 代碼 0106 或 0190）。"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -45,6 +45,12 @@ msgid "A payment of %s was detected."
 msgstr "偵測到 %s 的付款。"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "A rounding amount of %s was detected."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "澳洲紐西蘭 BIS 賬單 3.0"
@@ -52,7 +58,7 @@ msgstr "澳洲紐西蘭 BIS 賬單 3.0"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
 msgid "AS2 exchange"
-msgstr ""
+msgstr "AS2 交換"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -330,6 +336,12 @@ msgstr "愛沙尼亞增值稅"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "Exempt from tax"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Export outside the EU"
 msgstr "出口歐盟以外地區"
 
@@ -346,7 +358,7 @@ msgstr "Factur-x / XRechnung CII 2.2.0"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
 msgid "File Transfer Protocol"
-msgstr ""
+msgstr "檔案傳輸協定（FTP）"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0037
@@ -643,6 +655,12 @@ msgstr "報表動作"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
 msgid "Romania VAT"
 msgstr "羅馬尼亞增值稅"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid "Rounding"
+msgstr "四捨五入"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9918

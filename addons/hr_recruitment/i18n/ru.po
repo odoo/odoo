@@ -6,6 +6,7 @@
 # Alena Vlasova, 2024
 # Wil Odoo, 2024
 # Ilya Rozhkov, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ilya Rozhkov, 2025\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,17 +25,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__accepted_applications_count
 msgid "# Accepted Offers"
-msgstr ""
+msgstr "# Принятые предложения"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__applications_count
 msgid "# Offers"
-msgstr ""
+msgstr "# Предложения"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__refused_applications_count
 msgid "# Refused Offers"
-msgstr ""
+msgstr "# Отклоненные предложения"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -678,6 +679,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Language Test\", \"Prepare Offer\", ...)"
 msgstr ""
+"Планы дел позволяют назначать список дел в несколько кликов\n"
+"                    (например, «Тест на знание языка», «Подготовить оффер» и т. п.)"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_schedule
@@ -796,7 +799,7 @@ msgstr "Кандидат принят на работу"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_notes
 msgid "Applicant Notes"
-msgstr ""
+msgstr "Заметки по кандидату"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
@@ -838,6 +841,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"Заявки и прикрепленные резюме создаются автоматически при получении электронного письма.\n"
+"                Если установлены модули управления документами, все резюме индексируются автоматически,\n"
+"                 что позволяет легко выполнять поиск по содержимому."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -863,7 +869,7 @@ msgstr "Еmail"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Application in Progress"
-msgstr ""
+msgstr "Заявка в обработке"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -885,6 +891,8 @@ msgid ""
 "Applications received from this Email won't be linked to a contact.There "
 "will be no email address set on the Applicant either."
 msgstr ""
+"Заявки, поступившие с этого e-mail адреса, не будут связаны с контактом. "
+"E-mail адрес кандидата также не будет указан."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
@@ -915,7 +923,7 @@ msgstr "Архивировано"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_form_controller.js:0
 msgid "Are you sure that you want to archive this job position?"
-msgstr ""
+msgstr "Вы уверены, что хотите архивировать эту вакансию?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -929,6 +937,8 @@ msgid ""
 "At least one applicant doesn't have a email; you can't use send email "
 "option."
 msgstr ""
+"По крайней мере у одного кандидата не указан e-mail адрес, отправка писем "
+"невозможна."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -1055,22 +1065,22 @@ msgstr "Отменить"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__candidate_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Candidate"
-msgstr ""
+msgstr "Кандидат"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__user_id
 msgid "Candidate Manager"
-msgstr ""
+msgstr "Менеджер, ответственный за кандидата"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__candidate_properties_definition
 msgid "Candidate Properties"
-msgstr ""
+msgstr "Свойства кандидата"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Candidate's Name"
-msgstr ""
+msgstr "Имя кандидата"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_candidate
@@ -1080,17 +1090,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
 msgid "Candidates"
-msgstr ""
+msgstr "Кандидаты"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__similar_candidates_count
 msgid "Candidates with the same email or phone or mobile"
-msgstr ""
+msgstr "Кандидаты с таким же e-mail адресом, телефоном или мобильным"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_name
 msgid "Candidates's Name"
-msgstr ""
+msgstr "Имя кандидата"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -1214,12 +1224,14 @@ msgstr "Создать вакансию"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Create a Recruitment Activity Plan"
-msgstr ""
+msgstr "Создать план подбора персонала"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Create a new rule to process emails from specific job boards."
 msgstr ""
+"Создайте новое правило для обработки писем с определенных сайтов по поиску "
+"работы."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1240,7 +1252,7 @@ msgstr "Создайте свою первую должность."
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_date
@@ -1254,7 +1266,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1299,6 +1311,7 @@ msgid ""
 "Define a regex: Extract the applicant's name from the email's subject or "
 "body."
 msgstr ""
+"Укажите регулярное выражение: извлечь имя кандидата из темы или тела письма."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1390,6 +1403,8 @@ msgstr "Обзор"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your résumé to extract name and email automatically."
 msgstr ""
+"Используйте распознавание текста резюме для автоматического извлечения имени"
+" и электронной почты."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1430,7 +1445,7 @@ msgstr "Отображаемое имя"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display résumé on application form"
-msgstr ""
+msgstr "Показывать резюме в заявке"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1462,7 +1477,7 @@ msgstr "Документы"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Does not fit the job requirements"
-msgstr ""
+msgstr "Не соответствует требованиям вакансии"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1486,7 +1501,7 @@ msgstr "Дубли"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
-msgstr ""
+msgstr "Количество дублей"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1573,7 +1588,7 @@ msgstr "Сотрудник создан:"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__employee_id
 msgid "Employee linked to the candidate."
-msgstr ""
+msgstr "Сотрудник, связанный с кандидатом."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_employees
@@ -1655,7 +1670,7 @@ msgstr "Сложенные в канбан"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "Folded in Recruitment Pipe:"
-msgstr ""
+msgstr "Свернуто в воронке найма:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
@@ -1704,7 +1719,7 @@ msgstr "Выпускник"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Great job! You hired a new colleague!"
-msgstr ""
+msgstr "Отлично! Вы наняли нового сотрудника!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__done
@@ -1756,6 +1771,8 @@ msgid ""
 "Have you tried to <a>add skills to your job position</a> and search into the"
 " Reserve ?"
 msgstr ""
+"Пробовали <a>добавить навыки к вакансии</a> и найти подходящего кандидата в "
+"резерве?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
@@ -1921,6 +1938,9 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job offers on LinkedIn, Monster, etc."
 msgstr ""
+"Входящие письма автоматически создают заявки. Используйте это для прямого "
+"отклика или при размещении вакансий на сайтах, таких как LinkedIn, Monster и"
+" др."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__mobile_blacklisted
@@ -2001,7 +2021,7 @@ msgstr "Видно ли предупреждение"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__date_from
 msgid ""
 "Is set, update candidates availability once hired for that specific mission."
-msgstr ""
+msgstr "Если установлено, обновите доступность кандидатов после найма."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__duration_tracking
@@ -2044,7 +2064,7 @@ msgstr "Месторасположение"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
 msgid "Job Platforms"
-msgstr ""
+msgstr "Платформы для поиска работы"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -2079,7 +2099,7 @@ msgstr "Объявление о вакансии"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__job_properties_definition
 msgid "Job Properties"
-msgstr ""
+msgstr "Свойства вакансии"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
@@ -2089,7 +2109,7 @@ msgstr "Конкретная вакансия"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
 msgid "Job already fulfilled"
-msgstr ""
+msgstr "Вакансия уже закрыта"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2164,7 +2184,7 @@ msgstr "Последнее обновление этапа"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_date
@@ -2179,7 +2199,7 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2237,7 +2257,7 @@ msgstr "Загрузка демонстрационных данных"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "Загрузить пример данных"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -2323,7 +2343,7 @@ msgstr "Сообщения"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Mission Dates"
-msgstr ""
+msgstr "Сроки проекта"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
@@ -2339,7 +2359,7 @@ msgstr "Мои кандидаты"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "My Candidates"
-msgstr ""
+msgstr "Мои кандидаты"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
@@ -2456,7 +2476,7 @@ msgstr "Кандидатов пока нет"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_candidate
 msgid "No candidates yet"
-msgstr ""
+msgstr "Кандидаты пока не добавлены"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -2473,7 +2493,7 @@ msgstr "Пока нет данных!"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "No rules have been defined."
-msgstr ""
+msgstr "Правила не заданы."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2613,12 +2633,12 @@ msgstr "Или обсудите этого кандидата с коллега�
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Other Applications"
-msgstr ""
+msgstr "Другие заявки"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__other_applications_count
 msgid "Other Applications Count"
-msgstr ""
+msgstr "Количество других заявок"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2628,7 +2648,7 @@ msgstr "Другие приложения"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other benefits"
-msgstr ""
+msgstr "Дополнительные льготы"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -2676,7 +2696,7 @@ msgstr "Текст над номером в хедере для мобильны
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "Please provide an candidate name."
-msgstr ""
+msgstr "Пожалуйста, укажите имя кандидата."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2711,7 +2731,7 @@ msgstr "Свойства"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Proposed"
-msgstr ""
+msgstr "Предложение сделано"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
@@ -2721,12 +2741,12 @@ msgstr "Предлагаемая дополнительная зарплата"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Provide an email"
-msgstr ""
+msgstr "Укажите e-mail адрес"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish job offers on your website"
-msgstr ""
+msgstr "Размещайте вакансии на вашем сайте"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
@@ -2797,7 +2817,7 @@ msgstr "Анализ набора персонала"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Recruitment Plans"
-msgstr ""
+msgstr "План подбора персонала"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -2845,7 +2865,7 @@ msgstr "Отказаться"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_date
 msgid "Refuse Date"
-msgstr ""
+msgstr "Дата отклонения предложения"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2874,7 +2894,7 @@ msgstr "Причины отказа"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Refuse the"
-msgstr ""
+msgstr "Отклонить"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -2893,21 +2913,23 @@ msgid ""
 "Refused automatically because this application has been identified as a "
 "duplicate of %(link)s"
 msgstr ""
+"Отклонено автоматически, так как заявка была определена как дубликат заявки "
+"%(link)s"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by applicant: job fit"
-msgstr ""
+msgstr "Отказ со стороны кандидата: неинтересна вакансия"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by applicant: salary"
-msgstr ""
+msgstr "Отказ со стороны кандидата: не устраивает уровень оплаты"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
 msgid "Regex"
-msgstr ""
+msgstr "Регулярное выражение"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -2961,12 +2983,12 @@ msgstr "Бегущие кандидаты"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Digitization (OCR)"
-msgstr ""
+msgstr "Распознавание резюме (OCR)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Display"
-msgstr ""
+msgstr "Отображение резюме"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2987,7 +3009,7 @@ msgstr "Заработная плата, ожидаемая соискателе
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Salary Package"
-msgstr ""
+msgstr "Заработная плата и льготы"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
@@ -3094,7 +3116,7 @@ msgstr "Отправляйте письма соискателям"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_candidate_send_mail
 msgid "Send mails to candidates"
-msgstr ""
+msgstr "Отправить письма кандидатам"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -3141,23 +3163,23 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Similar Candidates"
-msgstr ""
+msgstr "Похожие кандидаты"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__similar_candidates_count
 msgid "Similar Candidates Count"
-msgstr ""
+msgstr "Количество похожих кандидатов"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__single_applicant_email
 msgid "Single Applicant Email"
-msgstr ""
+msgstr "Электронная почта одного кандидата"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Some values do not exist in the application status"
-msgstr ""
+msgstr "Некоторые значения отсутствуют в статусе заявки"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -3183,7 +3205,7 @@ msgstr "Источники кандидатов"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Sourcing"
-msgstr ""
+msgstr "Источники подбора"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_7
@@ -3194,6 +3216,8 @@ msgstr "Спам"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Specific jobs that use this stage. Other jobs will not use this stage."
 msgstr ""
+"Стадия используется только для этих вакансий. Остальные вакансии не будут "
+"использовать данную стадию."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3292,6 +3316,8 @@ msgid ""
 "The Email must be unique, this one already corresponds to another Job "
 "Platform."
 msgstr ""
+"E-mail адрес должен быть уникальным, данный e-mail уже используется на "
+"другой платформе для поиска работы."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__interviewer_ids
@@ -3333,6 +3359,8 @@ msgid ""
 "The candidate is linked to an employee, to avoid losing information, archive"
 " it instead."
 msgstr ""
+"Кандидат уже связан с сотрудником. Чтобы не потерять информацию, лучше "
+"архивировать его."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -3350,7 +3378,7 @@ msgstr "Следующим кандидатам не хватает адреса
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/candidate_send_mail.py:0
 msgid "The following candidates are missing an email address: %s."
-msgstr ""
+msgstr "У следующих кандидатов не указан e-mail адрес: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -3383,6 +3411,8 @@ msgid ""
 "The regex facilitates to extract information from the subject or body of the"
 " received email to autopopulate the Applicant's name field"
 msgstr ""
+"Регулярное выражение позволяет извлекать данные из темы или тела письма для "
+"автоматического заполнения имени кандидата"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3391,13 +3421,14 @@ msgid ""
 "These job positions and all related applicants will be archived. Are you "
 "sure?"
 msgstr ""
+"Выбранные вакансии и все связанные заявки будут архивированы. Продолжить?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
 msgid ""
 "This displays how the applicant has reached out, e.g. via Email, LinkedIn, "
 "Website, etc."
-msgstr ""
+msgstr "Способ отклика: E-mail, LinkedIn, сайт и т. п."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3436,6 +3467,8 @@ msgstr ""
 msgid ""
 "This job position and all related applicants will be archived. Are you sure?"
 msgstr ""
+"Эта вакансия и все связанные с ней заявки будут архивированы. Вы уверены, "
+"что хотите продолжить?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -3477,7 +3510,7 @@ msgstr "Трекеры"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Try creating an application by sending an email to"
-msgstr ""
+msgstr "Попробуйте создать заявку, отправив e-mail на"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3487,7 +3520,7 @@ msgstr "Попробуйте отправить письмо"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Try the Website app to publish job offers online."
-msgstr ""
+msgstr "Используйте модуль Вебсайт для публикации вакансий онлайн."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3542,7 +3575,7 @@ msgstr "Непрочитанные сообщения"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the Résumr or the file itself"
-msgstr ""
+msgstr "Используйте OCR для извлечения данных из резюме или его скана"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3613,12 +3646,14 @@ msgstr "При отклонении заявки вы можете выбрат�
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Who can access candidates"
-msgstr ""
+msgstr "Кто имеет доступ к кандидатам"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Without a regex: The applicant's name will be the email's subject."
 msgstr ""
+"Если не указано регулярное выражение, в качестве имени кандидата будет "
+"использоваться тема письма."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3647,6 +3682,8 @@ msgid ""
 "You can define the requirements here. They will be displayed when you hover "
 "over the stage title."
 msgstr ""
+"Здесь можно указать требования. Они будут показаны при наведении курсора на "
+"стадию."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3655,6 +3692,8 @@ msgid ""
 "You can't select Send email option.\n"
 "The email will not be sent to the following applicant(s) as they don't have an email address:"
 msgstr ""
+"Вы не можете выбрать опцию «Отправить письмо».\n"
+"E-mail не будет отправлен следующим кандидатам, так как у них не указан адрес электронной почты:"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3662,6 +3701,8 @@ msgstr ""
 msgid ""
 "You cannot create an applicant in a different company than the candidate"
 msgstr ""
+"Создание заявки в другой компании невозможно, поскольку кандидат уже связан "
+"с определенной компанией"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3677,13 +3718,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for %s"
-msgstr ""
+msgstr "Вы назначены интервьюером для %s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for the Applicant %s"
-msgstr ""
+msgstr "Вы назначены интервьюером для кандидата %s"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3695,7 +3736,7 @@ msgstr "Вы должны определить контактное имя дл�
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "You must define a Contact Name for this candidate."
-msgstr ""
+msgstr "Необходимо указать имя контакта для этого кандидата."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -3718,12 +3759,12 @@ msgstr "например, LinkedIn"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. Linkedin"
-msgstr ""
+msgstr "например, LinkedIn"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Masters"
-msgstr ""
+msgstr "например, магистратура"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3733,7 +3774,7 @@ msgstr "нап. Менеджер по продажам"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. ^New application:.*from (.*)"
-msgstr ""
+msgstr "например, ^New application:.*from (.*)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -3743,22 +3784,22 @@ msgstr "например, domain.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. https://www.linkedin.com/in/..."
-msgstr ""
+msgstr "например, https://www.linkedin.com/in/..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. jobs"
-msgstr ""
+msgstr "например, вакансии"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. jobs-listings@linkedin.com"
-msgstr ""
+msgstr "например, jobs-listings@linkedin.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. john.doe@example.com"
-msgstr ""
+msgstr "например, john.doe@example.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3779,4 +3820,4 @@ msgstr "или"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "other application(s)"
-msgstr ""
+msgstr "другие заявки"

@@ -29,15 +29,15 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Wil Odoo, 2025
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
+# Wil Odoo, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1469,23 +1469,39 @@ msgstr "Laske toimituskustannukset ja lähetä Shiprocketilla"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Laske toimituskulut ja lähetä DHL:llä"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä DHL:llä<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Laske toimituskulut ja lähetä FedEx:llä"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä FedEx<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Laske toimituskulut ja lähetä UPS:llä"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä UPS:llä<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Laske toimituskulut ja lähetä USPS:llä"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä USPS:llä<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1496,6 +1512,12 @@ msgstr "Laske toimituskulut ja lähetä bpostilla"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "Laske toimituskulut tilauksille"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/checkout.js:0
+msgid "Computed after delivery"
+msgstr "Laske toimituksen jälkeen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1733,13 +1755,8 @@ msgstr "Mukauta sähköpostimalleja"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "DHL Express Liitin"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "DHL Toimitusmenetelmät"
+msgid "DHL"
+msgstr "DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1974,6 +1991,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Haluatko tyhjentää ostoskorisi ennen tuotteiden lisäämistä siihen?"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentaatio"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Documents"
 msgstr "Dokumentit"
@@ -2195,11 +2217,6 @@ msgstr "Suosituimmat"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "FedEx Toimitusmenetelmät"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -4652,11 +4669,6 @@ msgstr "Tuotettasi esittelevän videon URL-osoite."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
 msgstr "USPS"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "USPS Toimitusmenetelmät"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed

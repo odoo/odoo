@@ -72,6 +72,7 @@ class Delivery(WebsiteSale):
         return {
             'success': True,
             'is_free_delivery': not bool(order.amount_delivery),
+            'compute_price_after_delivery': order.carrier_id.invoice_policy == 'real',
             'amount_delivery': Monetary.value_to_html(
                 order.amount_delivery, {'display_currency': currency}
             ),
@@ -112,6 +113,7 @@ class Delivery(WebsiteSale):
                 rate['price'], {'display_currency': order.currency_id}
             )
             rate['is_free_delivery'] = not bool(rate['price'])
+            rate['compute_price_after_delivery'] = delivery_method.invoice_policy == 'real'
         else:
             rate['amount_delivery'] = Monetary.value_to_html(
                 0.0, {'display_currency': order.currency_id}
@@ -179,7 +181,7 @@ class Delivery(WebsiteSale):
             # already accepted the amount and validated the payment.
             with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
-        elif order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+        elif order_sudo.name in order_sudo.partner_shipping_id.name:
             order_sudo.partner_shipping_id.write(partial_delivery_address)
             # TODO VFE TODO VCR do we want to trigger cart recomputation here ?
             # order_sudo._update_address(

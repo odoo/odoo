@@ -129,6 +129,10 @@ class AccountMove(models.Model):
         # In Hungary, the currency rate should be based on the delivery date.
         super()._compute_invoice_currency_rate()
 
+    @api.depends('delivery_date')
+    def _compute_expected_currency_rate(self):
+        super()._compute_expected_currency_rate()
+
     def _get_invoice_currency_rate_date(self):
         self.ensure_one()
         if self.country_code == 'HU' and self.delivery_date:
@@ -833,6 +837,9 @@ class AccountMove(models.Model):
         supplier = self.company_id.partner_id
         customer = self.partner_id.commercial_partner_id
 
+        supplier_bank = self.partner_bank_id if self.partner_bank_id and self.move_type == "out_invoice" else supplier.bank_ids[:1]
+        customer_bank = self.partner_bank_id if self.partner_bank_id and self.move_type == "out_refund" else customer.bank_ids[:1]
+
         currency_huf = self.env.ref('base.HUF')
         currency_rate = self._l10n_hu_get_currency_rate()
 
@@ -846,12 +853,12 @@ class AccountMove(models.Model):
             'base_invoice': base_invoice if base_invoice != self else None,
             'supplier': supplier,
             'supplier_vat_data': get_vat_data(supplier, self.fiscal_position_id.foreign_vat),
-            'supplierBankAccountNumber': format_bank_account_number(self.partner_bank_id or supplier.bank_ids[:1]),
+            'supplierBankAccountNumber': format_bank_account_number(supplier_bank),
             'individualExemption': self.company_id.l10n_hu_tax_regime == 'ie',
             'customer': customer,
             'customerVatStatus': (not customer.is_company and 'PRIVATE_PERSON') or (customer.country_code == 'HU' and 'DOMESTIC') or 'OTHER',
             'customer_vat_data': get_vat_data(customer) if customer.is_company else None,
-            'customerBankAccountNumber': format_bank_account_number(customer.bank_ids[:1]),
+            'customerBankAccountNumber': format_bank_account_number(customer_bank),
             'smallBusinessIndicator': self.company_id.l10n_hu_tax_regime == 'sb',
             'exchangeRate': currency_rate,
             'cashAccountingIndicator': self.company_id.l10n_hu_tax_regime == 'ca',

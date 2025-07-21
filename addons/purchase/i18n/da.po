@@ -5,11 +5,11 @@
 # Translators:
 # Morten Paaske, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2024
-# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Mads Søndergaard, 2024
 # Ejner Sønniksen <ejner@vkdata.dk>, 2025
 # Martin Trigaux, 2025
+# Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Kira Petersen, 2025
 # 
 msgid ""
@@ -97,7 +97,7 @@ msgstr "3-vejs matching"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr "3-vejs matching: køb, modtagelser, og regninger"
+msgstr "3-vejs udligning: indøb, modtagelser, og fakturaer"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder
@@ -232,6 +232,9 @@ msgid ""
 "Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
 "Waiting for Bill</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
+"Afventer faktura</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -282,7 +285,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Bill Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Udlign faktura</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -301,6 +304,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(bekræftet af leverandør)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -547,7 +552,7 @@ msgstr "Aktivitetstype ikon"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "Add Down Payment"
-msgstr ""
+msgstr "Tilføj acontobetaling"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -789,7 +794,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
 msgid "Bill to Purchase Order"
-msgstr ""
+msgstr "Faktura til indkøbsordre"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
@@ -800,7 +805,7 @@ msgstr "Faktureret"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "Faktureret beløb ubeskattet"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1042,7 +1047,7 @@ msgstr "Opret faktura"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Create Bills"
-msgstr "Opret Regninger"
+msgstr "Opret fakturaer"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_batch_bills
@@ -1248,7 +1253,7 @@ msgstr "Dobbelt godkendelse mængde"
 #. odoo-python
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid "Down Payment (ref: %(ref)s)"
-msgstr ""
+msgstr "Acontobetaling (reference: %(ref)s)"
 
 #. module: purchase
 #. odoo-python
@@ -2213,7 +2218,7 @@ msgstr "Indkøbsanalyse"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Purchase Bill Lines"
-msgstr ""
+msgstr "Indkøbsfakturalinjer"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3109,6 +3114,7 @@ msgstr ""
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
 msgstr ""
+"Ingen produkter kan tilføjes til ordren. Er der tale om en acontobetaling?"
 
 #. module: purchase
 #. odoo-python
@@ -3228,7 +3234,7 @@ msgstr "I alt"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Billed"
-msgstr ""
+msgstr "Faktureret i alt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree

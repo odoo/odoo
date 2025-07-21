@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -1868,12 +1868,6 @@ msgid "Show all records which has next action date is before today"
 msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Show missing work email employees"
-msgstr "누락된 직원 업무용 이메일 표시"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2073,14 +2067,6 @@ msgstr "여기에서 현재 모든 비용의 상태를 확인할 수 있습니�
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
 msgstr "분할 후의 합계는 동일하게 유지됩니다."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The work email of some employees is missing. Please add it on the employee "
-"form"
-msgstr "일부 직원의 업무용 이메일이 누락되어 있습니다. 직원 양식에 추가하세요."
 
 #. module: hr_expense
 #. odoo-python
@@ -2474,6 +2460,21 @@ msgid ""
 "You do not have the rights to add or remove any expenses on an approved or "
 "paid expense report."
 msgstr "승인 또는 지급된 경비 보고서에서 비용을 추가하거나 제거할 수 있는 권한이 없습니다."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr "이 경비 보고서의 승인 단계를 우회할 권한이 없습니다."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr "이 경비의 승인 단계를 우회할 권한이 없습니다."
 
 #. module: hr_expense
 #. odoo-python

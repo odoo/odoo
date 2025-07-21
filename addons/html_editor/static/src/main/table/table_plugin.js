@@ -411,10 +411,11 @@ export class TablePlugin extends Plugin {
         }
 
         for (const td of selectedTds) {
-            // @todo @phoenix this replaces paragraphs by inline content. Is this intended?
-            td.replaceChildren(this.document.createElement("br"));
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.appendChild(this.document.createElement("br"));
+            td.replaceChildren(baseContainer);
         }
-        this.dependencies.selection.setCursorStart(selectedTds[0]);
+        this.dependencies.selection.setCursorStart(selectedTds[0].firstChild);
     }
 
     /**

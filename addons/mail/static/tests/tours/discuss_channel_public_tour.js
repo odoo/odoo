@@ -101,8 +101,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
         },
         {
-            trigger: ".o-mail-Message-textContent:contains(cheese)",
-            run: "hover && click .o-mail-Message [title='Add a Reaction']",
+            trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
+            run: "hover && click .o-mail-Message:contains(cheese) [title='Add a Reaction']",
         },
         {
             trigger: ".o-EmojiPicker .o-Emoji:contains('🙂')",
@@ -122,18 +122,18 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Reload page (fetch reactions)",
-            trigger: ".o-mail-Message",
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
             run() {
                 location.reload();
             },
         },
         {
-            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction))",
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
         },
         {
             content: "Click on more menu",
-            trigger: ".o-mail-Message-textContent:contains(cheese)",
-            run: "hover && click .o-mail-Message [title='Expand']",
+            trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
+            run: "hover && click .o-mail-Message:contains(cheese) [title='Expand']",
         },
         {
             content: "Click on edit",

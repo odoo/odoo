@@ -194,3 +194,79 @@ class TestMrpReplenish(TestMrpCommon):
         lead_days_date = datetime.strptime(
             loads(repl_info.json_lead_days)['lead_days_date'], '%m/%d/%Y').date()
         self.assertEqual(lead_days_date, fields.Date.today() + timedelta(days=365))
+
+    def test_replenish_multi_level_bom_with_pbm_sam(self):
+        """
+        Ensure that in a 3-step manufacturing flow ('pbm_sam') with MTO + reordering rule,
+        a multi-level BOM triggers separate MOs for each level without constraint errors.
+        1.) Set warehouse manufacture to (manufacture_steps == 'pbm_sam')
+        2.) Product_1 (enable manufacture and mto routes)
+        3.) Product_4 (enable manufacture)
+        4.) Add Product_1 as bom for product_4
+        5.) Add a reordering rule (manufacture) for product_4
+        6.) trigger replenishment for product_4
+        """
+        self.warehouse = self.env.ref('stock.warehouse0')
+        self.warehouse.write({'manufacture_steps': 'pbm_sam'})
+        self.warehouse.mto_pull_id.route_id.active = True
+
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+
+        self.product_1.write({
+            'route_ids': [(6, 0, [route_mto, route_manufacture])]
+        })  # Component
+        self.product_4.write({
+            'route_ids': [(6, 0, [route_manufacture])],
+            'bom_ids': [(6, 0, [self.bom_1.id])]
+        })  # Finished Product
+
+        # Create reordering rule
+        self.env['stock.warehouse.orderpoint'].create({
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': self.product_4.id,
+            'route_id': route_manufacture,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+        })
+        self.product_4.orderpoint_ids.action_replenish()
+
+        # Check both MOs were created
+        mo_final = self.env['mrp.production'].search([('product_id', '=', self.product_4.id)])
+        mo_component = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)])
+
+        self.assertEqual(len(mo_final), 1, "Expected one MO for the final product.")
+        self.assertEqual(len(mo_component), 1, "Expected one MO for the manufactured BOM component.")
+
+    def test_orderpoint_onchange_reordering_rule(self):
+        """ Ensure onchange logic works properly when editing a reordering rule
+            linked to a confirmed MO, which is started but not finished by the
+            end of the stock forecast.
+        """
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+
+        self.product_4.route_ids = [Command.set([route_manufacture.id])]
+        self.product_4.bom_ids.produce_delay = 2
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_4.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+
+        orderpoint.action_replenish()
+
+        prod = self.env['mrp.production'].search([('origin', '=', orderpoint.name)])
+        # Error is triggered for date_start <= lead_days_date < date_finished
+        prod.date_start = fields.Date.today() + timedelta(days=1)
+
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 3
+        self.assertEqual(orderpoint.qty_to_order, 1)
+
+        orderpoint.trigger = 'manual'
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 10
+            self.assertEqual(form.qty_to_order, 0)
+        self.assertEqual(form.qty_to_order, 8)
+        self.assertEqual(orderpoint.qty_to_order, 8)

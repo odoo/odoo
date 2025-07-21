@@ -16,11 +16,11 @@ import {
     isNodeVisible,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
-import { Deferred } from "@web/../lib/hoot-dom/helpers/time";
 import {
     addInteractionListener,
     getColorHex,
     isFirefox,
+    isInstanceOf,
     isIterable,
     R_WHITE_SPACE,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
@@ -100,9 +100,8 @@ import { Test } from "./test";
 
 /**
  * @template T
- * @typedef {T & {
- *  deferred: Deferred<boolean>;
- *  options: VerifierOptions
+ * @typedef {T & ReturnType<Promise.withResolvers> & {
+ *  options: VerifierOptions;
  *  timeout: number;
  * }} AsyncResolver
  */
@@ -360,7 +359,7 @@ function valueMatches(value, matcher) {
     if (matcher === S_ANY) {
         return !isNil(value);
     }
-    if (matcher instanceof RegExp) {
+    if (isInstanceOf(matcher, RegExp)) {
         return matcher.test(value);
     }
     if (typeof matcher === "number") {
@@ -801,15 +800,15 @@ export function makeExpect(params) {
         }
 
         currentResult.errorResolver = {
+            ...Promise.withResolvers(),
             errors,
             options,
-            deferred: new Deferred(),
             timeout: setTimeout(
                 () => checkErrors(currentResult.errorResolver, true),
                 options?.timeout ?? 2000
             ),
         };
-        return currentResult.errorResolver.deferred;
+        return currentResult.errorResolver.promise;
     }
 
     /**
@@ -842,15 +841,15 @@ export function makeExpect(params) {
         }
 
         currentResult.stepResolver = {
+            ...Promise.withResolvers(),
             steps,
             options,
-            deferred: new Deferred(),
             timeout: setTimeout(
                 () => checkSteps(currentResult.stepResolver, true),
                 options?.timeout ?? 2000
             ),
         };
-        return currentResult.stepResolver.deferred;
+        return currentResult.stepResolver.promise;
     }
 
     /**
@@ -949,7 +948,7 @@ export class CaseResult {
     consumeErrors() {
         if (this.errorResolver) {
             clearTimeout(this.errorResolver.timeout);
-            this.errorResolver.deferred.resolve(true);
+            this.errorResolver.resolve(true);
             this.errorResolver = null;
         }
         this.currentErrors = [];
@@ -958,7 +957,7 @@ export class CaseResult {
     consumeSteps() {
         if (this.stepResolver) {
             clearTimeout(this.stepResolver.timeout);
-            this.stepResolver.deferred.resolve(true);
+            this.stepResolver.resolve(true);
             this.stepResolver = null;
         }
         this.currentSteps = [];
@@ -1256,7 +1255,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toBeInstanceOf",
             acceptedType: "any",
-            predicate: (received) => received instanceof cls,
+            predicate: (received) => isInstanceOf(received, cls),
             message: options?.message,
             onPass: () => [this._received, r`is[! not] an instance of`, cls],
             onFail: () => [r`expected value[! not] to be an instance of the given class`],
@@ -2146,11 +2145,11 @@ export class Matcher {
                     if (this._flags & FLAGS.rejects) {
                         this._result.registerEvent("assertion", {
                             label: "rejects",
-                            message: [
+                            pass: false,
+                            reportMessage: [
                                 r`expected promise to reject, instead resolved with:`,
                                 result,
                             ],
-                            pass: false,
                         });
                         return false;
                     } else {
@@ -2163,11 +2162,11 @@ export class Matcher {
                     if (this._flags & FLAGS.resolves) {
                         this._result.registerEvent("assertion", {
                             label: "resolves",
-                            message: [
+                            pass: false,
+                            reportMessage: [
                                 r`expected promise to resolve, instead rejected with:`,
                                 reason,
                             ],
-                            pass: false,
                         });
                         return false;
                     } else {
@@ -2258,7 +2257,7 @@ export class Matcher {
      */
     _toHaveHTML(name, property, expected, options) {
         options = { type: "html", ...options };
-        if (!(expected instanceof RegExp)) {
+        if (!isInstanceOf(expected, RegExp)) {
             expected = formatXml(expected, options);
         }
 

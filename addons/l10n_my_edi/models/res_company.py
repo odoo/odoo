@@ -85,3 +85,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         if not self.l10n_my_edi_proxy_user_id:
             self.env['account_edi_proxy_client.user']._register_proxy_user(self, 'l10n_my_edi', self.l10n_my_edi_mode)
+
+    def _l10n_my_edi_enabled(self):
+        self.ensure_one()
+        return bool(self.sudo().l10n_my_edi_proxy_user_id)

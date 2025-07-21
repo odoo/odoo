@@ -30,6 +30,31 @@ class TestBoM(TestMrpCommon):
             set([line[0].id for line in lines]),
             set((self.bom_2 | self.bom_3).mapped('bom_line_ids').filtered(lambda line: not line.child_bom_id or line.child_bom_id.type != 'phantom').ids))
 
+    def test_02_explode_rounding(self):
+        fns, cmp1, cmp2 = self.env['product.product'].create([{'name': 'FNS'}, {'name': 'CMP1'}, {'name': 'CMP2'}])
+        self.uom_unit.rounding = 0.01
+
+        fns_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': fns.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': cmp1.id, 'product_qty': 10})],
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': cmp1.product_tmpl_id.id,
+            'product_qty': 5000,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': cmp2.id, 'product_qty': 50})],
+        })
+
+        # FNS BoM Structure:
+        # 1 Unit of FNS:
+        #  - 10 Units of CMP1:
+        #    - 0.10 Units of CMP2  (50 / 5000 * 10)
+
+        _, lines = fns_bom.explode(fns, 1)
+        self.assertEqual(lines[0][1]['qty'], 0.10)
+
     def test_10_variants(self):
         test_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_7_template.id,
@@ -2683,6 +2708,29 @@ class TestBoM(TestMrpCommon):
         self.assertTrue(bom_overview['byproducts'])
         self.assertFalse(bom_overview['product'])
         self.assertTrue(bom_overview['components'])
+
+    def test_copy_bom_with_operations(self):
+        """
+        Check that copying a bom with operations reassign the component and by
+        product lines to the appropirate operations.
+        """
+        bom = self.bom_2
+        bom.bom_line_ids.operation_id = bom.operation_ids
+        bom.byproduct_ids = [Command.create({
+            'product_id': self.product_2.id,
+            'product_qty': 1,
+            'operation_id': bom.operation_ids.id,
+        })]
+        copied_bom = bom.copy()
+        # check that a new operation was created and linked to th copied lines
+        copied_operation = copied_bom.operation_ids
+        self.assertEqual(len(copied_operation), 1)
+        self.assertNotEqual(bom.operation_ids, copied_operation)
+        self.assertEqual(copied_bom.bom_line_ids.operation_id, copied_operation)
+        self.assertEqual(copied_bom.byproduct_ids.operation_id, copied_operation)
+        # Archive the operation of the copied bom and check that the operation linked are removed
+        copied_operation.action_archive()
+        self.assertFalse(copied_bom.bom_line_ids.operation_id | copied_bom.byproduct_ids.operation_id)
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):

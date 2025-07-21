@@ -4,7 +4,7 @@ import { queryOne } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { dispatchCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
@@ -102,11 +102,7 @@ export async function setupEditor(content, options = {}) {
     // awaiting for mountWithCleanup is not enough when mounted in an iframe,
     // @see Wysiwyg.onMounted
     const editor = await attachedEditor;
-    const plugins = new Map(
-        editor.plugins.map((plugin) => {
-            return [plugin.constructor.id, plugin];
-        })
-    );
+    const plugins = new Map(editor.plugins.map((plugin) => [plugin.constructor.id, plugin]));
     if (plugins.get("embeddedComponents")) {
         // await an extra animation frame for embedded components mounting
         // TODO @phoenix: would be more accurate to register mounting
@@ -149,7 +145,7 @@ export async function testEditor(config) {
     if (!compareFunction) {
         compareFunction = (content, expected, phase) => {
             expect(content).toBe(expected, {
-                message: `(testEditor) ${phase} is strictly equal to %actual%"`,
+                message: `(testEditor) ${phase} should be strictly equal to ${expected}`,
             });
         };
     }
@@ -182,7 +178,7 @@ export async function testEditor(config) {
     }
 
     // Wait for selectionchange handlers to react before any actual testing.
-    await Promise.resolve();
+    await tick();
 
     if (contentBeforeEdit) {
         // we should do something before (sanitize)

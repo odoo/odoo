@@ -75,6 +75,11 @@ class ResPartnerBank(models.Model):
              LEFT JOIN res_partner_bank other ON this.acc_number = other.acc_number
                                              AND this.id != other.id
                  WHERE this.id = ANY(%(ids)s)
+                   AND (
+                        ((this.company_id = other.company_id) OR (this.company_id IS NULL AND other.company_id IS NULL))
+                        OR
+                        other.company_id IS NULL
+                        )
               GROUP BY this.id
             """,
             ids=self.ids,

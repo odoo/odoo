@@ -12,11 +12,12 @@ from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePay
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.osv.expression import AND
 from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.exceptions import UserError
 
 import odoo.tests
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
     def _get_url(self):
@@ -285,6 +286,49 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
     def test_customer_display_online_payment(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}",
                         'CustomerDisplayTourOnlinePayment', login="pos_user")
+
+    def test_refuse_online_payment_without_accounting_payment(self):
+        """
+        Test that a an order can not be paid through an online payment method from the backend
+        when no accounting payment are set for this payment method. Ensure that it will raise
+        an error as soon as it is tried as it is not supported yet. Also ensures that we can still
+        close the session afterwards, as it is a side effect of not throwing the error.
+        """
+        self.main_pos_config.open_ui()
+        session = self.main_pos_config.current_session_id
+        try:
+            self.env["pos.order"].sync_from_ui([{
+                "amount_paid": 1180,
+                "amount_tax": 180,
+                "amount_return": 0,
+                "amount_total": 1180,
+                "lines": [
+                    Command.create({
+                        "price_unit": 1000.0,
+                        "product_id": self.letter_tray.id,
+                        "price_subtotal": 1000.0,
+                        "price_subtotal_incl": 1180.0,
+                        "qty": 1,
+                    }),
+                ],
+                "name": "Order 12345-123-1234",
+                "session_id": session.id,
+                "payment_ids": [
+                    Command.create({
+                        "amount": 1180,
+                        "name": fields.Datetime.now(),
+                        "payment_method_id": self.online_payment_method.id,
+                    }),
+                ],
+                "uuid": "12345-123-1234",
+            }])
+            self.fail("An error should be raised if no accounting payment has been set")
+        except UserError as e:
+            self.assertIn("Cannot create a POS online payment without an accounting payment", str(e))
+            # Make sure that we can close the session
+            session.order_ids.filtered(lambda o: o.state == 'draft').unlink()
+            session.action_pos_session_close()
+            self.assertEqual(session.state, 'closed')
 
     @classmethod
     def tearDownClass(cls):

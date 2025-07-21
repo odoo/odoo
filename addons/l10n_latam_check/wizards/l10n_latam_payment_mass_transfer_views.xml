@@ -5,9 +5,9 @@
         <field name="model">l10n_latam.payment.mass.transfer</field>
         <field name="arch" type="xml">
             <form>
-                <field name="check_ids" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="journal_id" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="company_id" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="check_ids" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
                 <group>
                     <group name="destination_journal_group">
                         <field name="destination_journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>

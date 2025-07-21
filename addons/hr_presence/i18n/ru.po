@@ -3,7 +3,8 @@
 # 	* hr_presence
 # 
 # Translators:
-# Wil Odoo, 2024
+# Anastasiia Koroleva, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "%(name)s has been noted as %(state)s today"
-msgstr ""
+msgstr "Сегодня статус сотрудника %(name)s был отмечен как: %(state)s"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -37,6 +38,14 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Уважаемая <t t-out=\"object.name or ''\">Эбигейл Питерсон</t>,<br/><br/>\n"
+"мы заметили, что в настоящее время вас нет на работе, и нет никаких записей о том, что вы запрашивали отгул. Если ваше отсутствие связано с нашей ошибкой, приносим искренние извинения за возможную путаницу.\n"
+"Пожалуйста, примите необходимые меры для устранения этого незапланированного отсутствия. Если у вас возникнут какие-либо вопросы или вам понадобится помощь, не стесняйтесь обращаться к своему менеджеру или в отдел кадров при первой возможности.\n"
+"Благодарим вас за оперативное внимание к этому вопросу.\n"
+"                    <br/>С уважением,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -44,12 +53,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Absent"
-msgstr "Нет"
+msgstr "Отсутствует"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
-msgstr ""
+msgstr "Добавьте примечание"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
@@ -69,7 +78,7 @@ msgstr "Параметры конфигурации"
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr "Создать идентификатор"
+msgstr "Создать UID"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
@@ -91,12 +100,12 @@ msgstr "Сотрудник: Напоминание о присутствии"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 msgid "HR Presence: cron"
-msgstr "Присутствие HR: cron"
+msgstr "Присутствие отдел кадров: cron"
 
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
-msgstr "HR: электронное письмо об отсутствии сотрудника"
+msgstr "Отдел кадров: электронное письмо об отсутствии сотрудника"
 
 #. module: hr_presence
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
@@ -105,44 +114,48 @@ msgid ""
 "an oversight from us, we apologize. Please contact your manager or HR ASAP. "
 "Thanks"
 msgstr ""
+"Привет! Мы заметили, что в настоящее время вас нет на работе, и нет никаких "
+"записей о том, что вы запрашивали отгул. Если ваше отсутствие связано с "
+"нашей ошибкой, приносим искренние извинения. Пожалуйста, свяжитесь со своим "
+"менеджером или отделом кадров как можно скорее. Спасибо!"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr "HR присутствие на последней отчетной дате"
+msgstr "Hr посещаемость дата последнего расчета"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
-msgstr "HR Просмотр Статуса Присутствия"
+msgstr "Hr посещаемость отображение статуса"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
 msgid "IP Address"
-msgstr "IP адрес"
+msgstr "IP-адрес"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
-msgstr "Ip подключен"
+msgstr "Подключен"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
-msgstr ""
+msgstr "Установить статус присутствия вручную"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
 msgid "Manually Set Present"
-msgstr "Установить Присутствие в Ручную"
+msgstr "Вручную установить статус «На месте»"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
@@ -150,7 +163,7 @@ msgstr "Установить Присутствие в Ручную"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "Вне рабочего времени"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
@@ -166,25 +179,25 @@ msgstr "Контроль присутствия"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence/Absence"
-msgstr ""
+msgstr "Присутствие/Отсутствие"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
-msgstr "Сейчас"
+msgstr "На месте"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Send SMS"
-msgstr "Отправить SMS"
+msgstr "Отправить СМС"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
 msgid "Send a SMS"
-msgstr ""
+msgstr "Отправить СМС"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
@@ -192,18 +205,18 @@ msgid ""
 "Sent manually in presence module when an employee wasn't working despite not"
 " being off"
 msgstr ""
-"Отправляли вручную в модуле присутствия, когда сотрудник не работал, "
+"Отправляется вручную через модуль Посещаемость, когда сотрудник не работал, "
 "несмотря на то, что не был в отпуске"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
 msgid "Set Absent"
-msgstr ""
+msgstr "Отметить как «Нет на месте»"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
 msgid "Set Present"
-msgstr ""
+msgstr "Отметить как «На месте»"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
@@ -214,12 +227,12 @@ msgstr "Неожиданное отсутствие"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "Незапланированное отсутствие"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
 msgid "Users Log"
-msgstr "Лог  пользователей"
+msgstr "Журнал пользователей"
 
 #. module: hr_presence
 #. odoo-python
@@ -229,15 +242,19 @@ msgid ""
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter."
 msgstr ""
+"Мы заметили, что в настоящее время вас нет на работе, и нет никаких записей о том, что вы запрашивали отгул. Если ваше отсутствие связано с нашей ошибкой, приносим искренние извинения за возможную путаницу.\n"
+"Пожалуйста, примите необходимые меры для устранения этого незапланированного отсутствия. Если у вас возникнут какие-либо вопросы или вам понадобится помощь, не стесняйтесь обращаться к своему менеджеру или в отдел кадров при первой возможности.\n"
+"Благодарим вас за оперативное внимание к этому вопросу."
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
-"Вы не имеете права это делать. Пожалуйста, свяжитесь с администратором."
+"У вас нет прав доступа для совершения этого действия. Пожалуйста, обратитесь"
+" к администратору."
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr "обработка сообщений в сокетах"
+msgstr "обработка сообщений в веб-сокетах"

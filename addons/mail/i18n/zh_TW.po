@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:47+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -531,7 +531,7 @@ msgstr "<span>我們建議你首先</span>"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
-msgstr "<strong>儲存</strong>此頁面並返回此處以設定該功能。"
+msgstr "請<strong>儲存</strong>變更，然後返回此處，進一步設定功能。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_document_unfollowed
@@ -9699,7 +9699,7 @@ msgstr "此欄位供範本用途的內部描述使用。"
 msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
-msgstr "此欄位用於搜索電子郵件地址，因為主電子郵件欄位可以包含的不僅僅是電子郵件地址。"
+msgstr "此欄位用於搜尋電郵地址，因為主要電郵地址的欄位，可以包括純粹電郵地址以外的資料。"
 
 #. module: mail
 #. odoo-python
@@ -10347,13 +10347,13 @@ msgstr "上載："
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "Uploaded"
-msgstr "已上傳"
+msgstr "已上載"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "Uploading"
-msgstr "上傳中"
+msgstr "上載中"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
@@ -10990,11 +10990,26 @@ msgstr "你可以忽略此訊息"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr "您不能刪除這些群，因為整個公司群被其它模組引用。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
 
 #. module: mail
 #. odoo-python

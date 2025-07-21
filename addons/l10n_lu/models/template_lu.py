@@ -30,7 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'lu_2011_account_40111',
                 'income_currency_exchange_account_id': 'lu_2020_account_7561',
                 'expense_currency_exchange_account_id': 'lu_2020_account_6561',
-                'account_journal_suspense_account_id': 'lu_2011_account_485',
+                'account_journal_suspense_account_id': 'lu_2011_account_484',
                 'account_journal_early_pay_discount_loss_account_id': 'lu_2020_account_65562',
                 'account_journal_early_pay_discount_gain_account_id': 'lu_2020_account_75562',
                 'account_sale_tax_id': 'lu_2015_tax_VP-PA-17',

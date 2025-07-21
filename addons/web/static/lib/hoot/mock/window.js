@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { EventBus, whenReady } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 import { getCurrentDimensions, getDocument, getWindow } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     mockedCancelAnimationFrame,
@@ -11,7 +11,7 @@ import {
     mockedSetTimeout,
 } from "@web/../lib/hoot-dom/helpers/time";
 import { interactor } from "../../hoot-dom/hoot_dom_utils";
-import { MockEventTarget, strictEqual } from "../hoot_utils";
+import { MockEventTarget, strictEqual, waitForDocument } from "../hoot_utils";
 import { getRunner } from "../main_runner";
 import {
     MockAnimation,
@@ -602,7 +602,7 @@ export function patchWindow(view = getWindow()) {
     // Window (doesn't need to be ready)
     applyPropertyDescriptors(view, WINDOW_MOCK_DESCRIPTORS);
 
-    whenReady(() => {
+    waitForDocument(view.document).then(() => {
         // Document
         applyPropertyDescriptors(view.document, DOCUMENT_MOCK_DESCRIPTORS);
 

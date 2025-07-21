@@ -268,6 +268,7 @@ export class Message extends Record {
      * the cookie-authenticated persona and the partner authenticated with the
      * portal token in the context of the related thread.
      *
+     * @deprecated
      * @returns {import("models").Persona[]}
      */
     get selves() {
@@ -279,7 +280,7 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this.selves.some((s) => s.in(this.recipients));
+        return this.effectiveSelf.in(this.recipients);
     }
 
     get isHighlightedFromMention() {
@@ -291,7 +292,7 @@ export class Message extends Record {
             if (!this.author) {
                 return false;
             }
-            return this.author.in(this.selves);
+            return this.author.eq(this.effectiveSelf);
         },
     });
 
@@ -321,6 +322,10 @@ export class Message extends Record {
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
         const candidates = new Set([defaultSubject, threadName]);
         return candidates.has(this.subject?.toLowerCase());
+    }
+
+    get persistent() {
+        return Number.isInteger(this.id);
     }
 
     get resUrl() {
@@ -419,7 +424,8 @@ export class Message extends Record {
             !this.is_transient &&
                 this.thread &&
                 this.store.self.type === "partner" &&
-                this.store.self.isInternalUser
+                this.store.self.isInternalUser &&
+                this.persistent
         );
     }
 

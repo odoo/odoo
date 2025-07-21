@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 from lxml import html
 from unittest.mock import patch
 
@@ -187,6 +188,40 @@ class TestMarketingCardRender(MarketingCardCommon):
             # match with card
             self.static_campaign.preview_record_ref = self.partners[0]
             self.assertEqual(self.static_campaign.res_model, 'res.partner')
+
+    @mock_image_render
+    def test_fetch_datetime(self):
+        """Fetching a datetime field should attempt to translate it in the relevant timezone."""
+        freeze_dt = datetime(2020, 5, 5, 12, 0, 0)
+        campaign = self.campaign.with_user(self.env.user)
+        campaign.write({
+            'content_header': False,
+            'content_header_dyn': True,
+            'content_header_path': 'write_date',
+        })
+        with self.mock_datetime_and_now(freeze_dt):
+            campaign.preview_record_ref.name = 'test_fetch_datetime'
+        timezones = [None, 'Europe/Brussels', 'Asia/Tokyo']
+        timezone_result_headers = []
+        for tz in timezones:
+            # force find different timezones to check the returned time
+            with patch(
+                    'odoo.addons.mail.models.models.BaseModel._mail_get_timezone_with_default',
+                    lambda model, default_tz: tz
+            ):
+                timezone_result_headers.append(
+                    campaign._get_card_element_values(campaign.preview_record_ref)['header']
+                )
+        utc_header, brussels_header, tokyo_header = timezone_result_headers
+        self.assertEqual(
+            utc_header, datetime(2020, 5, 5, 12, 0, 0)
+        )
+        self.assertEqual(
+            brussels_header, datetime(2020, 5, 5, 14, 0, 0)
+        )
+        self.assertEqual(
+            tokyo_header, datetime(2020, 5, 5, 21, 0, 0)
+        )
 
 
 @tagged('post_install', '-at_install')

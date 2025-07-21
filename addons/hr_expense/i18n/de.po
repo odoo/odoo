@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -1915,12 +1915,6 @@ msgid "Show all records which has next action date is before today"
 msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Show missing work email employees"
-msgstr "Fehlende Arbeitsmails von Mitarbeitern anzeigen"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2135,16 +2129,6 @@ msgstr "Sie können hier den Status all Ihrer aktuellen Spesen einsehen."
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
 msgstr "Die Summe nach der Aufteilung bleibt gleich"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The work email of some employees is missing. Please add it on the employee "
-"form"
-msgstr ""
-"Die Arbeitsmailadresse einiger Mitarbeiter fehlt. Bitte geben Sie sie auf "
-"dem Mitarbeiterformular an."
 
 #. module: hr_expense
 #. odoo-python
@@ -2573,6 +2557,25 @@ msgid ""
 msgstr ""
 "Sie sind nicht berechtigt, Ausgaben zu einer genehmigten oder bezahlten "
 "Spesenabrechnung hinzuzufügen oder sie zu entfernen."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr ""
+"Sie haben nicht die Berechtigung, den Validierungsprozess dieser "
+"Spesenabrechnung zu umgehen."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr ""
+"Sie haben nicht die Berechtigung, den Validierungsprozess dieser Ausgabe zu "
+"umgehen."
 
 #. module: hr_expense
 #. odoo-python

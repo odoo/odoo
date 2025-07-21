@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Fernanda Alvarez, 2024
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -788,6 +788,11 @@ msgid "<strong>Customer Address</strong>"
 msgstr "<strong>Dirección del cliente</strong>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivered</strong>"
+msgstr "<strong>Entregado</strong>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
 msgstr "<strong>Dirección de entrega</strong>"
@@ -828,6 +833,11 @@ msgstr "<strong>Ctd. mín.:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
 msgstr "<strong>Pedido</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Ordered</strong>"
+msgstr "<strong>Ordenado</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -1962,6 +1972,15 @@ msgstr "Calcule los costes de envío y envíe con DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calcule los gastos de envío y envíe con DHL<br/>\n"
+"                                    <strong>(vaya a Inicio&gt;Aplicaciones para instalar el módulo)</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Calcule los costes de envío y envíe con Easypost"
 
@@ -1969,6 +1988,15 @@ msgstr "Calcule los costes de envío y envíe con Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Calcule los costes de envío y envíe con FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calcule los gastos de envío y envíe con FedEx<br/>\n"
+"                                    <strong>(vaya a Inicio&gt;Aplicaciones para instalar el módulo)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1992,8 +2020,26 @@ msgstr "Calcule los costes de envío y envíe con UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calcule los gastos de envío y envíe con UPS<br/>\n"
+"                                    <strong>(vaya a Inicio&gt;Aplicaciones para instalar el módulo)</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Calcule los costes de envío y envíe con USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calcule los gastos de envío y envíe con USPS<br/>\n"
+"                                    <strong>(vaya a Inicio&gt;Aplicaciones para instalar el módulo)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2515,6 +2561,11 @@ msgstr "DEMO_SOURCE_DISPLAY_NAME"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "Conector de DHL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -3195,6 +3246,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "¿Confirme que desea desechar?"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Documentación"
@@ -3429,6 +3481,7 @@ msgstr "Febrero"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Conector de FedEx"
 
@@ -7703,7 +7756,7 @@ msgstr "Reponer cantidades"
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.route,name:stock.route_warehouse0_mto
 msgid "Replenish on Order (MTO)"
-msgstr "Obtener bajo pedido (fabricación sobre pedido)"
+msgstr "Reposición bajo pedido (fabricación sobre pedido)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -10183,11 +10236,13 @@ msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Conector de UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Conector de USPS"
 

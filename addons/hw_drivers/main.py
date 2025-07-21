@@ -33,32 +33,75 @@ iot_devices = {}
 class Manager(Thread):
     server_url = None
 
+    def __init__(self):
+        super().__init__()
+        self.hostname = helpers.get_hostname()
+        self.mac_address = helpers.get_mac_address()
+        self.domain = self._get_domain()
+        self.token = helpers.get_token()
+        self.version = helpers.get_version(detailed_version=True)
+        self.previous_iot_devices = {}
+
+    def _get_domain(self):
+        """
+        Get the iot box domain based on the IP address and subject.
+        """
+        subject = helpers.get_conf('subject')
+        ip_addr = helpers.get_ip()
+        if subject and ip_addr:
+            return ip_addr.replace('.', '-') + subject.strip('*')
+        return ip_addr or '127.0.0.1'
+
+    def _get_changes_to_send(self):
+        """
+        Check if the IoT Box information has changed since the last time it was sent.
+        Returns True if any tracked property has changed.
+        """
+        changed = False
+
+        if iot_devices != self.previous_iot_devices:
+            self.previous_iot_devices = iot_devices.copy()
+            changed = True
+
+        # Mac address can change if the user has multiple network interfaces
+        new_mac_address = helpers.get_mac_address()
+        if self.mac_address != new_mac_address:
+            self.mac_address = new_mac_address
+            changed = True
+        # IP address change
+        new_domain = self._get_domain()
+        if self.domain != new_domain:
+            self.domain = new_domain
+            changed = True
+        # Version change
+        new_version = helpers.get_version(detailed_version=True)
+        if self.version != new_version:
+            self.version = new_version
+            changed = True
+
+        return changed
+
     def send_alldevices(self, iot_client=None):
         """
         This method send IoT Box and devices information to Odoo database
         """
         if self.server_url:
-            subject = helpers.get_conf('subject')
-            if subject:
-                domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
-            else:
-                domain = helpers.get_ip()
             iot_box = {
-                'name': helpers.get_hostname(),
-                'identifier': helpers.get_mac_address(),
-                'ip': domain,
-                'token': helpers.get_token(),
-                'version': helpers.get_version(detailed_version=True),
+                'name': self.hostname,
+                'identifier': self.mac_address,
+                'ip': self.domain,
+                'token': self.token,
+                'version': self.version,
             }
             devices_list = {}
-            for device in iot_devices:
-                identifier = iot_devices[device].device_identifier
+            for device in self.previous_iot_devices.values():
+                identifier = device.device_identifier
                 devices_list[identifier] = {
-                    'name': iot_devices[device].device_name,
-                    'type': iot_devices[device].device_type,
-                    'manufacturer': iot_devices[device].device_manufacturer,
-                    'connection': iot_devices[device].device_connection,
-                    'subtype': iot_devices[device].device_subtype if iot_devices[device].device_type == 'printer' else '',
+                    'name': device.device_name,
+                    'type': device.device_type,
+                    'manufacturer': device.device_manufacturer,
+                    'connection': device.device_connection,
+                    'subtype': device.device_subtype if device.device_type == 'printer' else '',
                 }
             devices_list_to_send = {
                 key: value for key, value in devices_list.items() if key != 'distant_display'
@@ -133,8 +176,7 @@ class Manager(Thread):
         self.previous_iot_devices = []
         while 1:
             try:
-                if iot_devices != self.previous_iot_devices:
-                    self.previous_iot_devices = iot_devices.copy()
+                if self._get_changes_to_send():
                     self.send_alldevices(iot_client)
                 time.sleep(3)
                 schedule and schedule.run_pending()

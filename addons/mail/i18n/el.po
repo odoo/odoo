@@ -11,20 +11,20 @@
 # Giota Dandidou <giotadandidou@gmail.com>, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Gerasimos Kanelatos, 2025
-# Maria Chalepiadou, 2025
 # Agapi Psyllou, 2025
 # Anastasia Mimou, 2025
 # Leonidas Chiotis, 2025
 # Martin Trigaux, 2025
 # Kostas Goutoudis <goutoudis@gmail.com>, 2025
 # Charalampos Loukas, 2025
+# Maria Chalepiadou, 2025
 # Iasonas Polydoros <j.polydoros@dileanity.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:47+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Iasonas Polydoros <j.polydoros@dileanity.com>, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
@@ -3267,7 +3267,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Download:"
-msgstr ""
+msgstr "Λήψη:"
 
 #. module: mail
 #. odoo-javascript
@@ -5377,7 +5377,7 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "Τελευταία Χρήση"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_seen_dt
@@ -8699,7 +8699,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr ""
+msgstr "Αποστολή email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__force_send
@@ -10149,7 +10149,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Unassign"
-msgstr ""
+msgstr "Αφαίρεση Ανάθεσης"
 
 #. module: mail
 #. odoo-javascript
@@ -10438,7 +10438,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Used In"
-msgstr ""
+msgstr "Χρησιμοποιείται σε"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
@@ -10988,6 +10988,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -10995,6 +11002,14 @@ msgid ""
 msgstr ""
 "Δεν μπορείτε να διαγράψετε αυτές τις ομάδες, όπως η ομάδα \"Όλη η Εταιρεία\""
 " απαιτείται από άλλες μονάδες."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
 
 #. module: mail
 #. odoo-python

@@ -326,6 +326,8 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             if orderpoint.trigger == 'auto':
                 orderpoint.qty_to_order_manual = 0
+            elif not orderpoint.qty_to_order_manual and not orderpoint.qty_to_order:
+                orderpoint.qty_to_order = orderpoint.qty_to_order_computed
             elif orderpoint.qty_to_order != orderpoint.qty_to_order_computed:
                 orderpoint.qty_to_order_manual = orderpoint.qty_to_order
 
@@ -339,28 +341,37 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
-        for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.qty_to_order_computed = False
-                continue
-            orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=orderpoint._quantity_in_progress())
+        def to_compute(orderpoint):
+            rounding = orderpoint.product_uom.rounding
+            # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
+            # there is a already something to ressuply base on lead times.
+            return (
+                orderpoint.id
+                and float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0
+            )
 
-    def _get_qty_to_order(self, force_visibility_days=False, qty_in_progress_by_orderpoint={}):
+        orderpoints = self.filtered(to_compute)
+        qty_in_progress_by_orderpoint = orderpoints._quantity_in_progress()
+        for orderpoint in orderpoints:
+            orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=qty_in_progress_by_orderpoint)
+        (self - orderpoints).qty_to_order_computed = False
+
+    def _get_qty_to_order(self, force_visibility_days=False, qty_in_progress_by_orderpoint=None):
         self.ensure_one()
-        if not self.product_id or not self.location_id:
-            return False
         visibility_days = self.visibility_days
         if force_visibility_days is not False:
             # Accepts falsy values such as 0.
             visibility_days = force_visibility_days
         qty_to_order = 0.0
+        qty_in_progress_by_orderpoint = qty_in_progress_by_orderpoint or {}
+        qty_in_progress = qty_in_progress_by_orderpoint.get(self.id)
+        if qty_in_progress is None:
+            qty_in_progress = self._quantity_in_progress()[self.id]
         rounding = self.product_uom.rounding
         # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
         # there is a already something to ressuply base on lead times.
         if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
-            # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
             product_context = self._get_product_context(visibility_days=visibility_days)
-            qty_in_progress = qty_in_progress_by_orderpoint.get(self.id) or self._quantity_in_progress()[self.id]
             qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
             qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
             remainder = (self.qty_multiple > 0.0 and qty_to_order % self.qty_multiple) or 0.0

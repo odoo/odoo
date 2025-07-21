@@ -399,6 +399,7 @@ class AccountMoveLine(models.Model):
                     tax_line.tax_line_id AS tax_id,
                     tax_line.group_tax_id,
                     tax_line.tax_repartition_line_id,
+                    tax_line.analytic_distribution,
 
                     tax_line.company_id,
                     tax_line.display_type AS display_type,
@@ -469,6 +470,7 @@ class AccountMoveLine(models.Model):
                 sub.tax_line_id,
                 sub.display_type,
                 sub.src_line_id,
+                sub.analytic_distribution,
 
                 sub.tax_id,
                 sub.group_tax_id,

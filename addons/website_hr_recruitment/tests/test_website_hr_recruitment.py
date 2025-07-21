@@ -11,13 +11,16 @@ from odoo.addons.website_hr_recruitment.controllers.main import WebsiteHrRecruit
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
     def test_tour(self):
+        department = self.env['hr.department'].create({'name': 'guru team'})
         job_guru = self.env['hr.job'].create({
             'name': 'Guru',
             'is_published': True,
+            'department_id': department.id,
         })
         job_intern = self.env['hr.job'].create({
             'name': 'Internship',
             'is_published': True,
+            'department_id': department.id,
         })
         self.start_tour(self.env['website'].get_client_action_url('/jobs'), 'model_required_field_should_have_action_name', login='admin')
 

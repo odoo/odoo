@@ -18,14 +18,15 @@
 # Martin Trigaux, 2024
 # Valics Lehel, 2025
 # gezza <geza.nagy@oregional.hu>, 2025
+# Pammer József, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:46+0000\n"
+"POT-Creation-Date: 2025-06-27 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
+"Last-Translator: Pammer József, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +122,6 @@ msgstr "# értékelés"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
-#: model:ir.model.fields,field_description:project.field_project_milestone__task_count
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
 msgstr "# Feladatok száma"
@@ -426,7 +426,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Ügyfél</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -794,7 +794,7 @@ msgstr "Minden belső felhasználó"
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "Kiosztott idő"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1042,12 +1042,12 @@ msgstr "Avatár"
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Átlag Értékelés"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Átlag Értékelés (%)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
@@ -1241,7 +1241,7 @@ msgstr "Közreműködők"
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "Együttműködők megosztott projektben"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1703,6 +1703,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
+"Kapcsolja a mérföldkövet vevői rendelés tételhez és teljesítse "
+"szolgáltatásait automatikusan a mérföldkő elérésekor."
 
 #. module: project
 #. odoo-javascript
@@ -2180,12 +2182,12 @@ msgstr "Előzmények"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history
 msgid "History data"
-msgstr ""
+msgstr "Előzmény adatok"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history_metadata
 msgid "History metadata"
-msgstr ""
+msgstr "Előzmény metaadat"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_13
@@ -5113,6 +5115,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Használja ezeket a kulcsszavakat a címben új feladatok megadásához:\n"
+"\n"
+"        30h : 30 óra kiosztása a feladatra\n"
+"        #tags : címkék megadása a feladathoz\n"
+"        @user : feladat hozzárendelése felhasználóhoz\n"
+"        ! : magas prioritás megadása\n"
+"\n"
+"        MFigyeljen arra, hogy a helyes formátumot és sorrendet használjah pl.: Képernyő konfiguráció fejlesztése 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user

@@ -3,15 +3,15 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Duy BQ <duybq86@gmail.com>, 2025
+# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -744,7 +744,7 @@ msgstr "<span>Hiện có: </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "<span>Package Type: </span>"
-msgstr "<span>Kiểu đóng gói: </span>"
+msgstr "<span>Loại kiện hàng: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
@@ -782,6 +782,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Customer Address</strong>"
 msgstr "<strong>Địa chỉ khách hàng</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivered</strong>"
+msgstr "<strong>Đã giao</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -826,6 +831,11 @@ msgid "<strong>Order</strong>"
 msgstr "<strong>Đơn hàng</strong>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Ordered</strong>"
+msgstr "<strong>Đã đặt hàng</strong>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Pack Date:</strong>"
 msgstr "<strong>Ngày đóng hàng:</strong>"
@@ -833,7 +843,7 @@ msgstr "<strong>Ngày đóng hàng:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr "<strong>Kiểu đóng gói:</strong>"
+msgstr "<strong>Loại kiện hàng:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -922,7 +932,7 @@ msgstr "? Điều này có thể dẫn đến thiếu nhất quán trong tồn k
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type!"
-msgstr "Mỗi mã vạch chỉ có thể được gán cho một kiểu đóng gói!"
+msgstr "Mỗi mã vạch chỉ có thể được gán cho một loại kiện hàng!"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1469,7 +1479,7 @@ msgstr "Sản phẩm còn hàng"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Available Quantity"
-msgstr "Số lượng hiện có"
+msgstr "Số lượng có sẵn"
 
 #. module: stock
 #. odoo-python
@@ -1477,7 +1487,7 @@ msgstr "Số lượng hiện có"
 msgid ""
 "Available quantity should be set to zero before changing inventory tracking"
 msgstr ""
-"Số lượng hiện có phải được đặt là 0 trước khi thay đổi theo dõi hàng tồn kho"
+"Số lượng có sẵn phải được đặt là 0 trước khi thay đổi theo dõi hàng tồn kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -1943,6 +1953,13 @@ msgstr "Tính toán phí giao hàng và giao bằng DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Tính toán phí giao hàng và giao bằng Easypost"
 
@@ -1950,6 +1967,13 @@ msgstr "Tính toán phí giao hàng và giao bằng Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Tính toán phí giao hàng và giao bằng FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1973,8 +1997,22 @@ msgstr "Tính toán phí giao hàng và giao bằng UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Tính toán phí giao hàng và giao bằng USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2495,6 +2533,11 @@ msgstr "DEMO_SOURCE_DISPLAY_NAME"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "Liên kết DHL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -3173,6 +3216,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "Bạn có xác nhận muốn loại bỏ"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Tài liệu"
@@ -3407,6 +3451,7 @@ msgstr "Tháng 2"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Liên kết FedEx"
 
@@ -5476,7 +5521,7 @@ msgstr "Nhiều số lượng"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
 msgid "Multiple capacity rules for one package type."
-msgstr "Nhiều quy tắc về sức chứa cho một kiểu đóng gói."
+msgstr "Nhiều quy tắc về sức chứa cho một loại kiện hàng."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_product
@@ -6355,24 +6400,24 @@ msgstr "Lệnh chuyển hàng kiện hàng"
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Package Type"
-msgstr "Kiểu đóng gói"
+msgstr "Loại kiện hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type Demo"
-msgstr "Demo kiểu đóng gói"
+msgstr "Demo loại kiện hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr "Kiểu đóng gói:"
+msgstr "Loại kiện hàng:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_type_view
 #: model:ir.ui.menu,name:stock.menu_packaging_types
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_tree
 msgid "Package Types"
-msgstr "Kiểu đóng gói"
+msgstr "Loại kiện hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_use
@@ -6393,7 +6438,7 @@ msgstr "Tên kiện hàng là SSCC hợp lệ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Package type"
-msgstr "Kiểu đóng gói"
+msgstr "Loại kiện hàng"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -7264,7 +7309,7 @@ msgstr "Số lượng được dự trữ"
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 msgid "Quantity available too low"
-msgstr "Số lượng hiện có quá thấp"
+msgstr "Số lượng có sẵn quá thấp"
 
 #. module: stock
 #. odoo-python
@@ -8890,7 +8935,7 @@ msgstr "Các điều chuyển tồn kho đã được xử lý"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr "Kiểu đóng gói tồn kho"
+msgstr "Loại kiện hàng tồn kho"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -10118,11 +10163,13 @@ msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Liên kết UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Liên kết USPS"
 
@@ -10682,7 +10729,7 @@ msgstr "Khối lượng vận chuyển"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr "Khối lượng của loại bao bì"
+msgstr "Khối lượng của loại kiện hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
@@ -11204,9 +11251,6 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
-"Bạn không thể đóng gói các sản phẩm vào cùng một kiện hàng khi chúng được "
-"chuyển đến từ các lệnh chuyển hàng khác nhau với các loại hoạt động khác "
-"nhau."
 
 #. module: stock
 #. odoo-python
