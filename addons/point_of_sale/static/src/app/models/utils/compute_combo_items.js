@@ -4,7 +4,8 @@ export const computeComboItems = (
     pricelist,
     decimalPrecision,
     productTemplateAttributeValueById,
-    childLineExtra = []
+    childLineExtra = [],
+    currency_id = false
 ) => {
     const comboItems = [];
     const parentLstPrice = parentProduct.getPrice(pricelist, 1, 0, false, parentProduct);
@@ -19,7 +20,7 @@ export const computeComboItems = (
             .reduce((acc, price) => acc + price, 0);
 
     let remainingTotal = parentLstPrice;
-    const ProductPrice = decimalPrecision.find((dp) => dp.name === "Product Price");
+    const ProductPrice = currency_id || decimalPrecision.find((dp) => dp.name === "Product Price");
     for (const conf of childLineConf) {
         const comboItem = conf.combo_item_id;
         const combo = comboItem.combo_id;
