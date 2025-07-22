@@ -2,6 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { FormModelRequiredFieldAlert } from "./form_model_required_field_alert";
+import { FormFieldAlert } from "./form_field_alert";
 import { getDependencyEl, getFieldName, getMultipleInputs, isFieldCustom } from "./utils";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
@@ -14,7 +15,7 @@ export class FormFieldOption extends BaseOptionComponent {
         loadFieldOptionData: Function,
         redrawSequence: { type: Number, optional: true },
     };
-    static components = { FormActionFieldsOption, FormModelRequiredFieldAlert };
+    static components = { FormActionFieldsOption, FormModelRequiredFieldAlert, FormFieldAlert };
 
     setup() {
         super.setup();

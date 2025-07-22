@@ -11,6 +11,9 @@
         </BuilderSelect>
     </BuilderRow>
     <FormActionFieldsOption activeForm="state.activeForm" prepareFormModel="props.prepareFormModel"/>
+    <BuilderRow label.translate="Send a Copy" tooltip.translate="Email a copy of the answers to the visitor.">
+        <BuilderCheckbox action="'prepareEmailField'" classAction="'o_send_a_copy'" preview="false" dataAttributeAction="'makeEmailMandatory'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
     <BuilderRow label.translate="Marked Fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
@@ -87,6 +90,9 @@
 <t t-name="website.s_website_form_field_option">
     <t t-if="domState.elClassList.includes('s_website_form_model_required')">
         <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" fetchModels="props.fetchModels"/>
+    </t>
+    <t t-elif="domState.elClassList.includes('s_send_a_copy_field')">
+        <FormFieldAlert message='`The field "${ domState.fieldName }" is mandatory when the option "Send a Copy" is enabled`'/>
     </t>
     <BuilderRow label.translate="Type">
         <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"
@@ -186,7 +192,7 @@
         />
     </BuilderRow>
     <BuilderRow label.translate="Required">
-        <BuilderCheckbox t-if="!domState.elClassList.includes('s_website_form_model_required')"
+        <BuilderCheckbox t-if="!domState.elClassList.includes('s_website_form_model_required', 's_send_a_copy_field')"
             id="'required_opt'" preview="false"
             action="'toggleRequired'" actionParam="'s_website_form_required'"
         />
@@ -345,6 +351,12 @@
 </t>
 
 <t t-name="website.s_website_form_model_required_field_alert">
+    <div class="alert alert-info">
+        <span t-out="state.message"/>
+    </div>
+</t>
+
+<t t-name="website.s_website_form_field_alert">
     <div class="alert alert-info">
         <span t-out="state.message"/>
     </div>

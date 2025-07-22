@@ -96,6 +96,9 @@ export class FormOptionPlugin extends Plugin {
                     )
                 );
             }
+            if (el.classList.contains("s_send_a_copy_field")) {
+                reasons.push(_t("This field is mandatory for the option 'Send a Copy'."));
+            }
             if (el.classList.contains("s_website_form_submit")) {
                 reasons.push(_t("You can't remove the submit button of the form"));
             }
@@ -156,6 +159,7 @@ export class FormOptionPlugin extends Plugin {
             SetVisibilityDependencyAction,
             SetFormCustomFieldValueListAction,
             PropertyAction,
+            PrepareEmailFieldAction,
         },
         system_classes: ["o_builder_form_show_message"],
         normalize_handlers: (el) => {
@@ -1253,6 +1257,17 @@ class PropertyAction extends BuilderAction {
 
     apply({ editingElement, params: { property, format } = {}, value }) {
         editingElement[property] = format ? format(value) : value;
+    }
+}
+
+export class PrepareEmailFieldAction extends BuilderAction {
+    static id = "prepareEmailField";
+    apply({ editingElement: el, value }) {
+        const emailInputEl = el.querySelector("input[name='email_from']");
+        if (emailInputEl) {
+            const emailFieldEl = emailInputEl.closest("div[data-name='Field']");
+            emailFieldEl.classList.add("s_website_form_model_required", "s_send_a_copy_field");
+        }
     }
 }
 
