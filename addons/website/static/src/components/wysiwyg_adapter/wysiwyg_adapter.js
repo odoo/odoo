@@ -748,6 +748,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      */
     _websiteRootEvent(type, eventData = {}) {
         const websiteRootInstance = this.websiteService.websiteRootInstance;
+        if(websiteRootInstance == undefined) return;
         // If the websiteRootInstance is gone but an event still tries to reach it
         // prevent a traceback by denying the event.
         // TODO we should investigate if this is normal the websiteRootInstance
