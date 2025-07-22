@@ -1025,11 +1025,14 @@ class CalendarEvent(models.Model):
         # Sub query user settings from calendars that are not private ('public' and 'confidential').
         public_calendars_settings = self.env['res.users.settings'].sudo()._where_calc([('calendar_default_privacy', '!=', 'private')]).select('user_id')
         # display public, confidential events and events with default privacy when owner's default privacy is not private
-        return [
-            '|',
-                '|', ('privacy', 'in', ['public', 'confidential']), ('user_id', '=', self.env.user.id),
-                '&', ('privacy', '=', False), ('user_id', 'in', public_calendars_settings)
-        ]
+        return ['|', '|',
+            ('privacy', 'in', ['public', 'confidential']),
+            ('user_id', '=', self.env.user.id),
+            '&',
+                ('privacy', '=', False),
+                '|',
+                    ('user_id', '=', False),
+                    ('user_id', 'in', public_calendars_settings)]
 
     def _is_event_over(self):
         """Check if the event is over. This method is used to check if the event
