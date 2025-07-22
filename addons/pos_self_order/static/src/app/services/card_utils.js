@@ -158,7 +158,8 @@ export function getOrderLineValues(
             order.pricelist_id,
             models["decimal.precision"].getAll(),
             models["product.template.attribute.value"].getAllBy("id"),
-            extraItems
+            extraItems,
+            selfOrder.currency
         );
 
         values.price_unit = 0;
