@@ -29,6 +29,11 @@ msgid ""
 "                        <option value=\"businessChecking\">Business Checking</option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Bireysel Vadesiz</option>\n"
+"                        <option value=\"savings\">Bireysel Vadeli</option>\n"
+"                        <option value=\"businessChecking\">Ticari Vadesiz</option>\n"
+"                    </select>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -112,6 +117,8 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
+"İşlem ayrıntıları alınamadı. (hata kodu: %(error_code)s; hata_ayrıntıları: "
+"%(error_message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
@@ -173,6 +180,7 @@ msgstr "Referans %s eşleşen bir işlem bulunamadı."
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Only one currency can be selected by Authorize.Net account."
 msgstr ""
+"Authorize.Net hesabı yalnızca tek bir para birimi seçimine izin verir."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -193,7 +201,7 @@ msgstr "Ödeme İşlemi"
 #. odoo-javascript
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Ödeme işleme başarısız oldu"
 
 #. module: payment_authorize
 #. odoo-python
@@ -238,6 +246,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
+"İşlem, iade edilebilir bir durumda değil. (durum: %(status)s, detay: "
+"%(message)s)"
 
 #. module: payment_authorize
 #. odoo-python
@@ -258,7 +268,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
+msgstr "Bu işlem, sağlayıcı devre dışıyken gerçekleştirilemez."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form

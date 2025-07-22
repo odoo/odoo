@@ -261,7 +261,7 @@ msgstr "Quantidade livre para uso"
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.js:0
 msgid "Fresh Free Stock"
-msgstr ""
+msgstr "Estoque gratuito fresco"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -335,6 +335,9 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore.It will be computed on the lot/serial number."
 msgstr ""
+"Número de dias antes da Data de Vencimento após o qual as mercadorias devem "
+"ser removidas do estoque e não devem mais ser contadas no Estoque de "
+"Produtos Frescos em Mão, que será computado no número do lote/série."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -365,7 +368,7 @@ msgstr "Separação"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except expired"
-msgstr ""
+msgstr "Proceder, exceto se vencido"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -463,6 +466,9 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore. This date will be used in FEFO removal strategy."
 msgstr ""
+"Essa é a data em que as mercadorias com esse número de série devem ser "
+"removidas do estoque e não devem mais ser contadas no estoque fresco em "
+"mãos. Essa data será usada na estratégia de remoção PVPS."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
@@ -477,19 +483,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_header.xml:0
 msgid "To Remove"
-msgstr ""
+msgstr "A remover"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove now"
-msgstr ""
+msgstr "A remover agora"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove on"
-msgstr ""
+msgstr "A remover em"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -539,6 +545,8 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired or should at least be removed from stock.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Você vai entregar o produto %(product_name)s, %(lot_name)s que expirou ou deve, pelo menos, ser removido do estoque.\n"
+"Você confirma que quer continuar?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
