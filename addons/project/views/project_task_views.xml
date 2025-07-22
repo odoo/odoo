@@ -7,7 +7,7 @@
             <field name="priority">999</field>
             <field name="arch" type="xml">
                 <search string="Tasks">
-                    <field name="name" string="Tasks" filter_domain="['|', ('name', 'ilike', self), ('id', 'ilike', self)]"/>
+                    <field name="name" string="Tasks" filter_domain="[('name', 'ilike', self)]"/>
                     <field name="tag_ids"/>
                     <field name="stage_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
