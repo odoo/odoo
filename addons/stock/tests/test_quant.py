@@ -1600,3 +1600,25 @@ class StockQuantRemovalStrategy(TransactionCase):
             ('package_id', '=', package.id),
             ('location_id', '=', self.stock_location.id),
         ]))
+
+    def test_update_available_qty_to_zero(self):
+        """
+        Test that a quant is created when a non-zero qty is set on product.qty_available.
+        Then verify that setting product.qty_available to 0.0 only updates the quant
+        to zero if a quant already exists (i.e., there was a previous quantity set).
+        """
+        self.assertEqual(self.product.qty_available, 0.0)
+        self.product.qty_available = 0.0
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.product.id),
+        ])
+        self.assertFalse(quant)
+        self.product.qty_available = 10.0
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.product.id),
+            ('on_hand', '=', True)
+        ])
+        self.assertEqual(quant.quantity, 10.0)
+        self.product.qty_available = 0.0
+
+        self.assertEqual(quant.quantity, 0.0)

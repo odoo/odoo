@@ -10,7 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, check_barcode_encoding
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.mail import html2plaintext, is_html_empty
 from odoo.tools.misc import groupby
 
@@ -234,11 +234,17 @@ class ProductProduct(models.Model):
             return
         for product in self:
             if (
-                product.type == "consu" and product.is_storable and product.qty_available > 0
+                product.type == "consu" and product.is_storable and float_compare(product.qty_available, 0.0, precision_rounding=product.uom_id.rounding) >= 0
             ):
                 warehouse = self.env['stock.warehouse'].search(
                     [('company_id', '=', self.env.company.id)], limit=1
                 )
+                if float_is_zero(product.qty_available, precision_rounding=product.uom_id.rounding):
+                    if not self.env['stock.quant'].search_count([
+                        ('product_id', '=', product.id),
+                        ('location_id', '=', warehouse.lot_stock_id.id),
+                    ], limit=1):
+                        continue
                 self.env['stock.quant'].with_context(inventory_mode=True).create({
                     'product_id': product.id,
                     'location_id': warehouse.lot_stock_id.id,
