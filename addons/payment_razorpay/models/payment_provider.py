@@ -6,8 +6,8 @@ import uuid
 from datetime import timedelta
 from urllib.parse import urlencode
 
-from odoo import _, fields, models
-from odoo.exceptions import RedirectWarning
+from odoo import _, api, fields, models
+from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
@@ -62,6 +62,22 @@ class PaymentProvider(models.Model):
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
         return supported_currencies
+
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('state')
+    def _check_razorpay_credentials_are_set_before_enabling(self):
+        """ Check that the Razorpay credentials are valid when the provider is enabled.
+
+        :raise ValidationError: If the Razorpay credentials are not valid.
+        """
+        for provider in self.filtered(lambda p: p.code == 'razorpay' and p.state != 'disabled'):
+            if not provider.razorpay_account_id:
+                if not provider.razorpay_key_id or not provider.razorpay_key_secret:
+                    raise ValidationError(_(
+                        "Razorpay credentials are missing. Click the \"Connect\" button to set up"
+                        " your account"
+                    ))
 
     # === CRUD METHODS === #
 
