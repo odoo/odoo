@@ -118,7 +118,7 @@ callActionsRegistry
             }
         },
         isActive: (component) => component.rtc?.state.isPipMode,
-        icon: "oi oi-launch",
+        icon: "oi-launch",
         select: (component) => {
             const isPipMode = component.rtc?.state.isPipMode;
             if (isPipMode) {
