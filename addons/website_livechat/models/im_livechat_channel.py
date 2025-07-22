@@ -37,7 +37,16 @@ class Im_LivechatChannel(models.Model):
     def create(self, vals_list):
         channels = super().create(vals_list)
         if self.env.context.get("create_from_website"):
+            website = self.env['website'].get_current_website()
+            welcome_bot = self.env['chatbot.script'].search([('title', '=', 'Welcome Bot')], limit=1)
             for channel in channels:
+                website.channel_id = channel.id
+                self.env['im_livechat.channel.rule'].create({
+                    'channel_id': channel.id,
+                    'action': 'display_button',
+                    'chatbot_script_id': welcome_bot.id if welcome_bot else False,
+                    'chatbot_enabled_condition': 'always',
+                })
                 self.env.user._bus_send(
                     "simple_notification",
                     {
