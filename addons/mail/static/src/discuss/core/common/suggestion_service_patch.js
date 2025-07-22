@@ -38,8 +38,8 @@ const suggestionServicePatch = {
             // from inadvertently leaking the private message to the
             // mentioned partner.
             let partners = thread.channel_member_ids
-                .map((member) => member.persona)
-                .filter((persona) => persona.type === "partner");
+                .filter((m) => m.partner_id)
+                .map((m) => m.partner_id);
             if (thread.channel_type === "channel") {
                 const group = (thread.parent_channel_id || thread).group_public_id;
                 partners = new Set([...partners, ...(group?.partners ?? [])]);

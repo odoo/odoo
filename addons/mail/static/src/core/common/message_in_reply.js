@@ -16,7 +16,8 @@ export class MessageInReply extends Component {
         if (
             this.props.message.message_type &&
             this.props.message.message_type.includes("email") &&
-            !["partner", "guest"].includes(this.props.message.author?.type)
+            !this.props.message.author_id &&
+            !this.props.message.author_guest_id
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }

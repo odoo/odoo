@@ -254,7 +254,8 @@ export class Message extends Component {
         if (
             this.message.message_type &&
             this.message.message_type.includes("email") &&
-            !["partner", "guest"].includes(this.message.author?.type)
+            !this.message.author_id &&
+            !this.message.author_guest_id
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
