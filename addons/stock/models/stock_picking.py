@@ -416,7 +416,6 @@ class StockPickingType(models.Model):
         if self:
             action['display_name'] = self.display_name
             context.update({
-                'search_default_picking_type_id': [self.id],
                 'default_picking_type_id': self.id,
                 'default_company_id': self.company_id.id,
             })
@@ -430,6 +429,7 @@ class StockPickingType(models.Model):
         action_context = literal_eval(action['context'])
         context = {**action_context, **context}
         action['context'] = context
+        action['domain'] = [('picking_type_id', '=', self.id)]
 
         action['help'] = self.env['ir.ui.view']._render_template(
             'stock.help_message_template', {
@@ -459,6 +459,12 @@ class StockPickingType(models.Model):
         return action
 
     def get_stock_picking_action_picking_type(self):
+        if self.code == 'incoming':
+            return self._get_action('stock.action_picking_tree_incoming')
+        if self.code == 'outgoing':
+            return self._get_action('stock.action_picking_tree_outgoing')
+        if self.code == 'internal':
+            return self._get_action('stock.action_picking_tree_internal')
         return self._get_action('stock.stock_picking_action_picking_type')
 
     def get_action_picking_type_ready_moves(self):
