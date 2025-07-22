@@ -32,7 +32,7 @@ const messagePatch = {
             /** @this {import("models").Message} */
             compute() {
                 return this.thread?.membersThatCanSeen
-                    .filter(({ persona }) => !persona.eq(this.author))
+                    .filter((member) => member.persona.notEq(this.author))
                     .some((m) => m.hasSeen(this));
             },
         });

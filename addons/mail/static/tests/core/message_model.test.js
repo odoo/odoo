@@ -42,6 +42,6 @@ test("Message model properties", async () => {
     expect(message.attachment_ids[0].name).toBe("test.txt");
     expect(message.thread.id).toBe(serverState.partnerId);
     expect(message.thread.name).toBe("general");
-    expect(message.author.id).toBe(5);
-    expect(message.author.name).toBe("Demo");
+    expect(message.author_id.id).toBe(5);
+    expect(message.author_id.name).toBe("Demo");
 });

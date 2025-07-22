@@ -129,8 +129,8 @@ export class DiscussCoreCommon {
             channel.markAsRead();
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
-        const authorMember = channel.channel_member_ids.find(({ persona }) =>
-            persona?.eq(message.author)
+        const authorMember = channel.channel_member_ids.find((member) =>
+            member.persona?.eq(message.author)
         );
         if (authorMember) {
             authorMember.seen_message_id = message;

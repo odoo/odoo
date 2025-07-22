@@ -254,10 +254,7 @@ export class Message extends Record {
 
     isSelfAuthored = fields.Attr(false, {
         compute() {
-            if (!this.author) {
-                return false;
-            }
-            return this.author.eq(this.effectiveSelf);
+            return Boolean(this.author?.eq(this.effectiveSelf));
         },
     });
 
