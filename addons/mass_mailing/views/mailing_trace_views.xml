@@ -20,7 +20,7 @@
                 <filter string="Replied" name="filter_replied" domain="[('trace_status', '=', 'reply')]"/>
                 <filter string="Bounced" name="filter_bounced" domain="[('trace_status', '=', 'bounce')]"/>
                 <filter string="Failed" name="filter_failed" domain="[('trace_status', '=', 'error')]"/>
-                <filter string="Test Traces" name="filter_is_test_trace" domain="[('is_test_trace', '=', 'True')]"/>
+                <filter string="Test Traces" name="filter_is_test_trace" domain="[('is_test_trace', '=', True)]"/>
                 <group>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'trace_status'}"/>
                     <filter string="Open Date" name="group_open_date" domain="[('trace_status', 'in', ['open', 'reply'])]" context="{'group_by': 'open_datetime:day'}"/>

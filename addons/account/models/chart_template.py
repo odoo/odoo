@@ -46,7 +46,7 @@ def preserve_existing_tags_on_taxes(env, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
     xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
     if xml_records:
-        env.cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
+        env.cr.execute("update ir_model_data set noupdate = TRUE where id in %s", [tuple(xml_records.ids)])
 
 
 def template(template=None, model='template_data', *, demo=False):

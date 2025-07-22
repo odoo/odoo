@@ -20,7 +20,7 @@ class EventBooth(models.Model):
         readonly=False, index='btree_not_null',
         groups='sales_team.group_sale_salesman', copy=False)
     sale_order_id = fields.Many2one(
-        related='sale_order_line_id.order_id', store='True', readonly=True, index='btree_not_null',
+        related='sale_order_line_id.order_id', store=True, readonly=True, index='btree_not_null',
         groups='sales_team.group_sale_salesman')
     is_paid = fields.Boolean('Is Paid', copy=False)
 

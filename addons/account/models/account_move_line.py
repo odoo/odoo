@@ -600,7 +600,7 @@ class AccountMoveLine(models.Model):
                            ON account_companies.account_account_id = account.id
                      WHERE account_companies.res_company_id = ANY(%(company_ids)s)
                        AND account.account_type IN ('asset_receivable', 'liability_payable')
-                       AND account.active = 't'
+                       AND account.active IS TRUE
                 )
                 SELECT * FROM previous
                 UNION ALL

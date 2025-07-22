@@ -6115,7 +6115,7 @@ class AccountMove(models.Model):
         domain = [('model', '=', 'account.move')]
 
         if is_invoice_report:
-            domain += [('is_invoice_report', '=', 'True')]
+            domain += [('is_invoice_report', '=', True)]
 
         model_reports = self.env['ir.actions.report'].search(domain)
 
