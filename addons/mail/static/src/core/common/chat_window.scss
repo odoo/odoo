@@ -18,7 +18,21 @@
         }
     }
     &.o-actionsMenu {
-        background-color: inherit !important;
+        border-top-left-radius: $border-radius-xl - $border-radius-lg / 3 !important; // to match chat window roundness
+        border-bottom-left-radius: 0 !important;
+        &:not(.o-active) {
+            background-color: inherit !important;
+        }
+        &:hover {
+            background-color: var(--mail-DiscussSidebarChannelActions-bgColor, mix($gray-100, $gray-200, 75%)) !important;
+            outline: 1px solid $gray-200;
+            outline-offset: -1px;
+        }
+        &.o-active {
+            background-color: var(--mail-DiscussSidebarChannelActions-bgColor, mix($gray-100, $gray-200)) !important;
+            outline: 1px solid mix($gray-200, $gray-300);
+            outline-offset: -1px;
+        }
     }
     &:not(.o-actionsMenu) {
         padding: map-get($spacers, 1) / 2;
@@ -65,6 +79,10 @@
 .o-mail-ChatWindow-imStatus {
     bottom: 2px;
     right: -2px;
+}
+
+.o-mail-ChatWindow-moreActions {
+    margin-right: 2px;
 }
 
 .o-mail-ChatWindow-typing {

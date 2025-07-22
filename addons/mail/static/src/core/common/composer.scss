@@ -6,6 +6,13 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr auto;
 
+    &.o-discussApp {
+        --border-opacity: .75;
+        backdrop-filter: blur(8px);
+        background-color: rgba($body-bg, .75);
+        z-index: $o-mail-NavigableList-zIndex - 1;
+    }
+
     &.o-hasSelfAvatar {
         grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
     }
@@ -120,7 +127,6 @@
 
 .o-mail-Composer-bg {
     background-color: var(--mail-Composer-bg, $o-view-background-color);
-    --border-opacity: .5;
 }
 
 .o-mail-Composer-inputStyle {

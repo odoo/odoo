@@ -5,8 +5,8 @@
         <div class="o-mail-ThreadIcon d-flex justify-content-center flex-shrink-0" t-att-class="props.className">
             <t t-set="largeClass" t-value="props.size === 'large' ? 'fa-lg' : ''"/>
             <t t-if="props.thread.channel_type === 'channel'">
-                <div t-if="props.thread.authorizedGroupFullName" class="fa fa-fw fa-hashtag" t-att-class="largeClass" t-att-title="props.thread.accessRestrictedToGroupText"/>
-                <div t-if="!props.thread.authorizedGroupFullName" class="fa fa-fw fa-globe" t-att-class="largeClass" title="Public Channel"/>
+                <div t-if="props.thread.authorizedGroupFullName" class="fa fa-fw fa-hashtag opacity-75" t-att-class="largeClass" t-att-title="props.thread.accessRestrictedToGroupText"/>
+                <div t-if="!props.thread.authorizedGroupFullName" class="fa fa-fw fa-globe opacity-75" t-att-class="largeClass" title="Public Channel"/>
             </t>
             <t t-elif="props.thread.channel_type?.includes('chat') and correspondent">
                 <t name="chat">

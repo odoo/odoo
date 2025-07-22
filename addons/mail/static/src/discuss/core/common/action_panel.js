@@ -25,7 +25,8 @@ export class ActionPanel extends Component {
             "o-mail-ActionPanel-chatter": this.env.inChatter,
             "o-chatWindow": this.env.inChatWindow,
             "px-2": !this.env.inChatter,
-            rounded: !this.props.resizable,
+            "rounded-4": !this.props.resizable,
+            "rounded-4 shadow-sm": this.env.inDiscussApp,
         };
         return Object.entries(attClass)
             .filter(([classNames, value]) => value)

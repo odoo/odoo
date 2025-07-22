@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.DiscussActions">
+    <div class="o-mail-DiscussActions flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': inline, 'flex-column': !inline, 'p-1': !inline }">
+        <span t-if="quick?.length" class="o-mail-DiscussActions-group btn-group rounded-4" t-att-class="{ 'flex-column w-100': !inline, 'shadow-sm o-inline': inline }">
+            <t t-set="groupBefore" t-value="true"/>
+            <t t-foreach="quick" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+                <t t-set="action" t-value="action"/>
+            </t>
+        </span>
+        <t t-else="" t-set="groupBefore" t-value="false"/>
+        <t t-if="groupBefore" t-call="mail.DiscussActions.groupSeparator"/>
+        <span t-if="other?.length" class="o-mail-DiscussActions-group btn-group rounded-4" t-att-class="{ 'flex-column w-100': !inline, 'shadow-sm o-inline': inline }">
+            <t t-set="groupBefore" t-value="true"/>
+            <t t-foreach="other" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+                <t t-set="action" t-value="action"/>
+            </t>
+        </span>
+        <t t-else="" t-set="groupBefore" t-value="false"/>
+        <t t-if="groupBefore" t-call="mail.DiscussActions.groupSeparator"/>
+        <t t-if="inline" t-set="group" t-value="(group ?? []).slice().reverse()"/>
+        <t t-else="" t-set="group" t-value="(group ?? [])"/>
+        <t t-foreach="group" t-as="group" t-key="group_index">
+            <span t-if="group.length" class="o-mail-DiscussActions-group btn-group rounded-4" t-att-class="{ 'flex-column w-100': !inline, 'shadow-sm o-inline': inline }">
+                <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+                    <t t-set="action" t-value="action"/>
+                </t>
+            </span>
+            <t t-if="!group_last" t-call="mail.DiscussActions.groupSeparator"/>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.DiscussActions.groupSeparator">
+    <span t-if="inline" class="text-muted align-self-stretch ms-2 me-1"/>
+    <hr t-else="" class="mx-2 my-1 rounded-4"/>
+</t>
+
+<t t-name="mail.DiscussActions.action">
+    <t t-set="btnClass" t-value="Object.entries({
+        'btn btn-secondary bg-inherit m-0 border border-transparent btn-group-item rounded-4': true,
+        'o-first': action_first,
+        'o-last': action_last,
+        'rounded-start-0': !action_first and inline,
+        'rounded-end-0': !action_last and inline,
+        'px-1 o-inline': inline,
+        'text-start px-2 o-py-0_5 rounded-4 o-fs-small': !inline,
+        'o-isActive': action.isActive,
+        'o-mail-ChatWindow-command': env.inChatWindow,
+        'o-danger': action.danger,
+        'o-success': action.success,
+    }).filter(([_, val]) => val).map(([key, _]) => key).join(' ')"/>
+    <t t-set="attrs" t-value="{
+        'disabled': action.disabledCondition,
+        'title': action.name,
+        'name': action.id,
+    }"/>
+    <DropdownItem t-if="dropdown" class="btnClass" tag="'button'" onSelected="(ev) => action.onSelected(ev)">
+        <t t-call="mail.DiscussActions.actionContent"/>
+    </DropdownItem>
+    <button t-else="" t-att-class="btnClass" t-attf-class="{{ env.inCallActionList ? 'o-discuss-CallActionList-dropdownItem' : '' }}" t-att="attrs" t-on-click="(ev) => action.onSelected(ev)">
+        <t t-call="mail.DiscussActions.actionContent"/>
+    </button>
+</t>
+
+<t t-name="mail.DiscussActions.actionContent">
+    <i t-if="inline and action.iconLarge" t-att-class="action.iconLarge" class="fa-fw"/><i t-elif="action.icon" t-att-class="action.icon" class="fa-fw"/> <span t-if="action.text" t-esc="action.text"/>
+    <span t-if="!inline" class="o-mail-DiscussActions-actionLabel fw-bold mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
+</t>
+
+</templates>

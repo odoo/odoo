@@ -1,7 +1,12 @@
 $o-discuss-talkingColor: lighten($success, 10%);
 
-.o-mail-discussSidebarBgColor {
-    background-color: $white !important;
+
+.o-mail-DiscussMenu-bgColor {
+    background-color: mail-DiscussMenu-bgColor() !important;
+}
+
+.o-mail-DiscussPanel-bgColor {
+    background-color: mail-DiscussPanel-bgColor() !important;
 }
 
 .o-mail-brighter {
@@ -13,16 +18,16 @@ $o-discuss-talkingColor: lighten($success, 10%);
     line-height: $display-line-height;
 }
 
+.o-bg-125 {
+    background-color: mix($gray-100, $gray-200, 75%) !important;
+}
+
 .o-bg-black {
     background-color: rgba(0, 0, 0, var(--bg-opacity, 1));
 }
 
 .o-bg-body {
     background-color: $body-bg !important;
-}
-
-.o-border-opacity-50 {
-    --border-opacity: 0.5;
 }
 
 .o-discuss-badge {
@@ -91,6 +96,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
     margin-top: map-get($spacers, 1) / 2;
 }
 
+.o-ps-0_5 {
+    padding-left: map-get($spacers, 1) / 2 !important;
+}
+
 .o-px-0_5 {
     padding-left: map-get($spacers, 1) / 2;
     padding-right: map-get($spacers, 1) / 2;
@@ -116,6 +125,11 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-pt-0_5 {
     padding-top: map-get($spacers, 1) / 2;
+}
+
+.o-my-1_5 {
+    margin-top: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
+    margin-bottom: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
 }
 
 .o-hover-text-underline:hover {
@@ -146,6 +160,30 @@ $o-discuss-talkingColor: lighten($success, 10%);
     border-top-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
 }
 
+.o-rounded-bubble-2 {
+    border-radius: $border-radius-xl !important;
+}
+
+.o-rounded-top-bubble-2 {
+    border-top-left-radius: $border-radius-xl !important;
+    border-top-right-radius: $border-radius-xl !important;
+}
+
+.o-rounded-end-bubble-2 {
+    border-top-right-radius: $border-radius-xl !important;
+    border-bottom-right-radius: $border-radius-xl !important;
+}
+
+.o-rounded-bottom-bubble-2 {
+    border-bottom-right-radius: $border-radius-xl !important;
+    border-bottom-left-radius: $border-radius-xl !important;
+}
+
+.o-rounded-start-bubble-2 {
+    border-bottom-left-radius: $border-radius-xl !important;
+    border-top-left-radius: $border-radius-xl !important;
+}
+
 .o-scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: $gray-400 transparent;
@@ -153,6 +191,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-text-white {
     color: #FFF !important;
+}
+
+.o-fs-small {
+    font-size: $o-font-size-base-small !important;
 }
 
 .o-xsmaller {

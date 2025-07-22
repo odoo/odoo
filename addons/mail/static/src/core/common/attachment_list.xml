@@ -89,19 +89,21 @@
     </t>
 
     <t t-name="mail.ImageActions">
-        <div class="position-absolute top-0 bottom-0 start-0 end-0 p-1 text-white o-opacity-hoverable opacity-100-hover d-flex align-items-end flax-wrap flex-column" t-att-class="{ 'opacity-0': !actionsMenuState.isOpen }">
-            <button t-if="props.actions.length === 1 and props.imagesHeight gt 75" class="btn btn-sm btn-light rounded px-1 py-0" t-att-class="{ 'opacity-75 opacity-100-hover': !isMobileOS }" tabindex="0" t-att-aria-label="props.actions[0].label" t-att-title="props.actions[0].label" role="menuitem" t-on-click.stop="props.actions[0].onSelect">
+        <div class="o-mail-ImageActions position-absolute top-0 bottom-0 start-0 end-0 p-1 text-white o-opacity-hoverable opacity-100-hover d-flex align-items-end flax-wrap flex-column" t-att-class="{ 'opacity-0': !actionsMenuState.isOpen }">
+            <button t-if="props.actions.length === 1 and props.imagesHeight gt 75" class="btn btn-sm btn-light rounded px-1 py-0 shadow-sm" t-att-class="{ 'opacity-75 opacity-100-hover': !isMobileOS }" tabindex="0" t-att-aria-label="props.actions[0].label" t-att-title="props.actions[0].label" role="menuitem" t-on-click.stop="props.actions[0].onSelect">
                 <i t-att-class="props.actions[0].icon"/>
             </button>
-            <Dropdown t-else="" menuClass="'d-flex flex-column py-0' + (props.actions.length gt 1 ? ' py-0' : '')" state="actionsMenuState" position="'right-start'">
-                <button class="btn btn-sm btn-light rounded px-1 py-0" t-att-class="{ 'opacity-75 opacity-100-hover': !isMobileOS }" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">
-                    <i class="oi oi-chevron-down"/>
+            <Dropdown t-else="" menuClass="'d-flex flex-column py-0 o-rounded-bubble o-mail-DiscussMenu-bgColor border border-secondary shadow-sm' + (props.actions.length gt 1 ? ' py-0' : '')" state="actionsMenuState" position="'right-start'">
+                <button class="btn btn-sm btn-light rounded-circle px-1 py-0" t-att-class="{ 'o-mobile': isMobileOS }" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">
+                    <i class="oi oi-ellipsis-h oi-lg"/>
                 </button>
                 <t t-set-slot="content">
-                    <DropdownItem t-foreach="props.actions" t-as="action" t-key="action_index" class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onSelect">
-                        <i class="fa-fw" t-att-class="action.icon"/>
-                        <span class="mx-2" t-esc="action.label"/>
-                    </DropdownItem>
+                    <t t-set-slot="content">
+                        <t t-call="mail.DiscussActions">
+                            <t t-set="dropdown" t-value="true"/>
+                            <t t-set="group" t-value="[props.actions]"/>
+                        </t>
+                    </t>
                 </t>
             </Dropdown>
         </div>

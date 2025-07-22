@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -23,5 +24,19 @@ export class DiscussSidebar extends Component {
 
     get discussSidebarItems() {
         return discussSidebarItemsRegistry.getAll();
+    }
+
+    get optionActions() {
+        return [
+            {
+                id: "toggle-size",
+                name: this.store.discuss.isSidebarCompact
+                    ? _t("Expand panel")
+                    : _t("Collapse panel"),
+                icon: this.store.discuss.isSidebarCompact ? "fa fa-expand" : "fa fa-compress",
+                onSelected: () =>
+                    (this.store.discuss.isSidebarCompact = !this.store.discuss.isSidebarCompact),
+            },
+        ];
     }
 }

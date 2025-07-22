@@ -10,7 +10,7 @@
     </t>
 
     <t t-name="mail.Mailbox">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-2 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-mail-DiscussMenu-bgColor border border-secondary p-2 mx-2 my-2 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
             <t t-call="mail.Mailbox.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden" t-ref="floating">
@@ -23,11 +23,11 @@
 
     <t t-name="mail.Mailbox.main">
         <button
-            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-baseline px-0 mx-2 border-0 rounded-3 fw-normal text-reset"
+            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-baseline px-0 mx-2 border-0 o-rounded-bubble fw-normal text-reset position-relative"
             t-att-class="{
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
-                'justify-content-center position-relative o-compact': store.discuss.isSidebarCompact,
+                'justify-content-center o-compact': store.discuss.isSidebarCompact,
                 'o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': mailbox.counter,
             }"
