@@ -18,6 +18,17 @@ export class PosConfig extends models.ServerModel {
         };
     }
 
+    _load_pos_data_read(data) {
+        data[0]["_partner_commercial_fields"] = [];
+        data[0]["_server_version"] = "18.3+e";
+        data[0]["_base_url"] = "http://localhost:4444";
+        data[0]["_data_server_date"] = "2025-07-03 12:40:15";
+        data[0]["_has_cash_move_perm"] = true;
+        data[0]["_has_available_products"] = true;
+        data[0]["_pos_special_products_ids"] = [];
+        return data;
+    }
+
     _records = [
         {
             id: 1,

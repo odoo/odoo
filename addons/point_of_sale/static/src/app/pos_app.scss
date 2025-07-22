@@ -37,18 +37,10 @@ html {
     font-family: sans-serif;
 }
 
-table {
-    border-spacing: 0px;
-    border-collapse: collapse;
-}
-td {
-    padding: 0px;
-}
-
-.oe_invisible{
+.pos .oe_invisible{
     visibility: hidden !important;
 }
-.clearfix:after {
+.pos .clearfix:after {
     content:" ";
     display: block;
     visibility: hidden;
@@ -57,8 +49,8 @@ td {
     clear: both;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+.pos input::-webkit-outer-spin-button,
+.pos input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
@@ -76,7 +68,7 @@ input::-webkit-inner-spin-button {
     .pos .modal-body{
         overflow: auto;
     }
-    .modal-dialog-centered {
+    .pos .modal-dialog-centered {
         position: fixed;
         inset: auto 0 0 0;
         min-height: unset;
