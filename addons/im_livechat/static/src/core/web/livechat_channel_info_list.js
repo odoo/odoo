@@ -41,14 +41,12 @@ export class LivechatChannelInfoList extends Component {
     }
 
     get expertiseTags() {
-        return this.props.thread.livechat_expertise_ids.map((expertise) => {
-            return {
-                id: expertise.id,
-                text: expertise.name,
-                colorIndex: 0,
-                className: "me-1 mb-1",
-            };
-        });
+        return this.props.thread.livechat_expertise_ids.map((expertise) => ({
+            id: expertise.id,
+            text: expertise.name,
+            colorIndex: 0,
+            className: "me-1 mb-1",
+        }));
     }
 
     onBlurNote() {
@@ -66,10 +64,10 @@ export class LivechatChannelInfoList extends Component {
     }
 
     get visitorProfileURL() {
-        const visitorPersona = this.props.thread?.livechatVisitorMember?.persona;
-        if (visitorPersona?.type === "partner") {
-            return url(`/${startUrl()}/res.partner/${visitorPersona.id}`);
+        const visitorMember = this.props.thread?.livechatVisitorMember;
+        if (visitorMember?.partner_id) {
+            return url(`/${startUrl()}/res.partner/${visitorMember.partner_id.id}`);
         }
-        return null;
+        return undefined;
     }
 }
