@@ -249,7 +249,8 @@ export class SelfOrder extends Reactive {
                 comboValues,
                 this.currentOrder.pricelist_id,
                 this.models["decimal.precision"].getAll(),
-                this.models["product.template.attribute.value"].getAllBy("id")
+                this.models["product.template.attribute.value"].getAllBy("id"),
+                this.currency
             );
 
             values.price_unit = 0;
