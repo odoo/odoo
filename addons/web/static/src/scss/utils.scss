@@ -371,7 +371,7 @@
             @content;
         }
     } @else {
-        @warn "'media-only()' - missing argument"
+        @warn "'media-only()' - missing argument";
     }
 }
 
@@ -390,3 +390,21 @@
         cursor: pointer;
     }
 }
+
+// ----------------------------------------------------------------------------
+// Input type number
+// ----------------------------------------------------------------------------
+// Remove arrows/spinners from input type number.
+@mixin o-input-number-no-arrows() {
+    // => Chrome, Safari, Edge, Opera
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    // => Firefox
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+};
