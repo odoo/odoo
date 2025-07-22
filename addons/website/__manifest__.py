@@ -37,6 +37,7 @@
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
         'data/digest_data.xml',
+        'data/mail_template_data.xml',
         'views/website_technical_views.xml',
         'views/website_templates.xml',
         'views/snippets/snippets.xml',
