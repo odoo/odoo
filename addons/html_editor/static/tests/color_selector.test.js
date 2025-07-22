@@ -506,7 +506,7 @@ test("gradient picker correctly shows the current selected gradient", async () =
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
     expect(".o_rgba_div input").toHaveCount(0);
-    expect("input[name='angle']").toHaveValue("2");
+    expect("input[name='angle']").toHaveValue(2);
     expect("input[name='custom gradient percentage color 1']").toHaveValue(10);
     expect("input[name='custom gradient percentage color 2']").toHaveValue(90);
 });
