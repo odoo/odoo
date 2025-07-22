@@ -830,7 +830,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_total': 0.0,
         }])
         self.assert_invoice_tax_totals_summary(final_invoice, {
-            'same_tax_base': False,  # <- This is a bug because we end up with 0.0 & -0.0 as base. Remove this comment when fixed.
+            'same_tax_base': True,
             'currency_id': other_currency.id,
             'company_currency_id': self.env.company.currency_id.id,
             'base_amount_currency': 0.0,
