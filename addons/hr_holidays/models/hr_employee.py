@@ -137,7 +137,7 @@ class HrEmployee(models.Model):
         else:
             domain += [('department_ids', '=', False)]
 
-        return self.env['hr.leave.mandatory.day'].search(domain)
+        return self.env['hr.leave.mandatory.day'].sudo().search(domain)
 
     def _get_hours_per_day(self, date_from):
         ''' Return 24H to handle the case of Fully Flexible (ones without a working calendar)'''
