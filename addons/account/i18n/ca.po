@@ -247,13 +247,13 @@ msgstr "%s (còpia)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part"
-msgstr ""
+msgstr "%s - part privada"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part (taxes)"
-msgstr ""
+msgstr "%s - part privada (impostos)"
 
 #. module: account
 #. odoo-python
@@ -2148,6 +2148,7 @@ msgstr "Compte utilitzat per moure el període d'una despesa"
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
 msgstr ""
+"Compte utilitzar per registrar la part privada de les despeses mixtes."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -2530,13 +2531,13 @@ msgstr "Import d'ajust"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Adjusting Entries"
-msgstr ""
+msgstr "Assentaments d'ajust"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_count
 msgid "Adjusting Entries Count"
-msgstr ""
+msgstr "Nombre d'assentaments d'ajust"
 
 #. module: account
 #. odoo-python
@@ -2554,19 +2555,19 @@ msgstr "Ajust d'entrada"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_label
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_label
 msgid "Adjusting Entry Origin Label"
-msgstr ""
+msgstr "Etiqueta d'origen d'assentaments d'ajust"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_move_ids
 msgid "Adjusting Entry Origin Moves"
-msgstr ""
+msgstr "Moviments d'origen d'assentaments d'ajust"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_moves_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_moves_count
 msgid "Adjusting Entry Origin Moves Count"
-msgstr ""
+msgstr "Nombre de moviments d'origen d'assentaments d'ajust"
 
 #. module: account
 #. odoo-python
@@ -5119,7 +5120,7 @@ msgstr "Crear un client"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_wizard.py:0
 msgid "Create a Mail Template"
-msgstr ""
+msgstr "Crear una plantilla de correu"
 
 #. module: account
 #. odoo-javascript
@@ -5270,7 +5271,7 @@ msgstr "Crea manualment"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create new account"
-msgstr ""
+msgstr "Crear un nou compte"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -5287,7 +5288,7 @@ msgstr "Crea el producte."
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_move_ids
 msgid "Created Adjusting Entries"
-msgstr ""
+msgstr "Assentaments d'ajust creats"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -14088,7 +14089,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Select a type"
-msgstr ""
+msgstr "Seleccionar un tipus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14144,7 +14145,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "Ven i compra productes en diferents untats de mesura o embalatges"
 
 #. module: account
 #. odoo-python
@@ -15207,6 +15208,8 @@ msgid ""
 "Tax names must be unique!\n"
 "%(taxes)s"
 msgstr ""
+"Els noms dels impostos han de ser únics!\n"
+"%(taxes)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
@@ -15843,7 +15846,7 @@ msgstr "Els dies afegits han d'estar entre 0 i 31."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The deductibility must be a value between 0 and 100."
-msgstr ""
+msgstr "La deduïbilitat ha de ser un valor entre 0 i 100."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -15868,7 +15871,7 @@ msgstr "L'assentament %(name)s (id %(id)s) ha de ser un esborrany."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry is not balanced."
-msgstr ""
+msgstr "L'assentament no està equilibrat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -15936,6 +15939,8 @@ msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
 msgstr ""
+"Els següents comptes han d'assignar-se, com a mínim, a una empresa:\n"
+"%(accounts)s"
 
 #. module: account
 #. odoo-python
@@ -16642,13 +16647,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "There is no template that applies to invoices."
-msgstr ""
+msgstr "No hi ha cap plantilla que s'apliqui a les factures."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "There is no template that applies to this move type."
-msgstr ""
+msgstr "No hi ha cap plantilla que s'apliqui a aquest tipus d'assentament."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -17022,7 +17027,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_country_group__exclude_state_ids
 msgid "Those states are ignored by the fiscal positions"
-msgstr ""
+msgstr "Aquests estats s'ignoren a l'hora d'aplicar les posicions fiscals"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
@@ -17526,7 +17531,7 @@ msgstr "Estats Units d'Amèrica (genèric)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Unitats i embalatges"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17964,6 +17969,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
 msgid "Values that created the draft cash-basis entry"
 msgstr ""
+"Valors que van crear l'assentament provisional segons criteri de caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -18389,7 +18395,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You can not reconcile cancelled entries."
-msgstr ""
+msgstr "No és possible conciliar assentaments cancel·lats."
 
 #. module: account
 #. odoo-python
@@ -19336,7 +19342,7 @@ msgstr "degut si es paga abans de"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "e-Invoicing & Email"
-msgstr ""
+msgstr "Facturació electrònica i correu electrònic"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -19481,7 +19487,7 @@ msgstr "en percentatge"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "in_invoice"
-msgstr ""
+msgstr "in_invoice"
 
 #. module: account
 #. odoo-javascript
@@ -19539,13 +19545,13 @@ msgstr "que s'indiquen a continuació per a aquest proveïdor."
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "move_id"
-msgstr ""
+msgstr "move_id"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "move_type"
-msgstr ""
+msgstr "move_type"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19583,7 +19589,7 @@ msgstr "fora de"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "out_invoice"
-msgstr ""
+msgstr "out_invoice"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -19610,13 +19616,13 @@ msgstr "posposant fins {new_date}"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "private part"
-msgstr ""
+msgstr "part privada"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "private part (taxes)"
-msgstr ""
+msgstr "part privada (impostos)"
 
 #. module: account
 #. odoo-python
@@ -19646,7 +19652,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "reversed"
-msgstr ""
+msgstr "revertit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
