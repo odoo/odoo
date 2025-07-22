@@ -15,6 +15,7 @@ from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.tools.translate import LazyTranslate
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
+from .mail_message import _find_allowed_doc_ids
 
 _logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
@@ -219,15 +220,19 @@ class MailActivity(models.Model):
         model_docid_actids = defaultdict(lambda: defaultdict(list))
         forbidden_ids = []
         for activity in activities.sudo():
-            if activity.res_model:
+            if activity.res_model and activity.res_id:
                 model_docid_actids[activity.res_model][activity.res_id].append(activity.id)
             elif activity.user_id.id != self.env.uid:
                 forbidden_ids.append(activity.id)
 
-        for doc_model, docid_actids in model_docid_actids.items():
-            allowed = self.env['mail.message']._filter_records_for_message_operation(doc_model, docid_actids, operation)
-            for document_id in [doc_id for doc_id in docid_actids if doc_id not in allowed.ids]:
-                forbidden_ids.extend(docid_actids[document_id])
+        allowed = _find_allowed_doc_ids(self.env, model_docid_actids, operation)
+        forbidden_ids.extend(
+            act_id
+            for docid_actids in model_docid_actids.values()
+            for act_ids in docid_actids.values()
+            for act_id in act_ids
+            if act_id not in allowed
+        )
 
         if forbidden_ids:
             forbidden = self.browse(forbidden_ids)

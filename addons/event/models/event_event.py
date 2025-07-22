@@ -667,7 +667,7 @@ class EventEvent(models.Model):
             # allow the registration desk users to post messages on Event
             # can not be done with "_mail_post_access" otherwise public user will be
             # able to post on published Event (see website_event)
-            return dict.fromkeys(self, 'read')
+            return [(Domain.TRUE, 'read')]
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
     def _set_tz_context(self):

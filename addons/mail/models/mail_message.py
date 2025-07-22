@@ -21,6 +21,51 @@ _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
 
 
+def _find_allowed_doc_ids(env, model_ids, operation):
+    """ Filter out communication records (messages, activities) that user cannot
+    read due to missing document access.
+
+    :param dict model_ids: dictionary giving messages IDs per model / doc ids {
+        'document_model_name': {
+            document_id_1: set(message IDs),
+            document_id_2: set(message IDs),
+        },
+        [...]
+    }
+
+    :return: set of allowed message IDs to read, based on document check
+    :rtype: set
+    """
+    allowed_ids = set()
+    for doc_model, doc_dict in model_ids.items():
+        documents = env[doc_model].browse(doc_dict)
+        try:
+            # Check that records really exist;
+            # lengthy way of checking first in cache and avoiding exists() call.
+            # see test_record_unlinked_orphan_activities
+            for field in documents._fields.values():
+                if (
+                    field.store and field.column_type
+                    and field.prefetch is True
+                    and documents._has_field_access(field, 'read')
+                ):
+                    documents.sudo().mapped(field.name)
+                    break
+            else:
+                documents = documents.exists()
+        except MissingError:
+            documents = documents.exists()
+        for document_domain, operation_res_ids in documents._mail_get_operation_for_mail_message_operation(operation):
+            if not documents:
+                break
+            records = documents.sudo().filtered_domain(document_domain).with_env(env)
+            documents -= records
+            accessible_doc_ids = records._filtered_access(operation_res_ids)._ids
+            for document_id in accessible_doc_ids:
+                allowed_ids.update(doc_dict[document_id])
+    return allowed_ids
+
+
 class MailMessage(models.Model):
     """ Message model (from notifications to user input).
 
@@ -384,7 +429,7 @@ class MailMessage(models.Model):
             elif model and res_id and message_type != 'user_notification':
                 model_ids[model][res_id].add(id_)
 
-        allowed_ids.update(self._find_allowed_doc_ids(model_ids))
+        allowed_ids.update(_find_allowed_doc_ids(self.env, model_ids, 'read'))
         allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
         return allowed._as_query(order)
 
@@ -392,73 +437,6 @@ class MailMessage(models.Model):
         if self.env.user._is_internal():
             return Domain.TRUE
         return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
-
-    def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
-        """ Helper returning records on which 'operation' on mail.message is
-        allowed, based on '_get_mail_message_access' behavior and potential
-        model override. """
-        documents_all = self.env[doc_model].with_context(active_test=False).browse(doc_res_ids)
-        operation_res_ids = documents_all._mail_group_by_operation_for_mail_message_operation(operation)
-
-        # group documents per operation to check, based on mail.message access
-        # note that some ids may be filtered out if (e.g. group limitation, ...)
-        allowed_ids = []
-        for record_operation, records in operation_res_ids.items():
-            forbidden_doc_ids = set()
-            try:
-                operation_result = records._check_access(record_operation)
-                # Check that records really exist;
-                # lengthy way of checking first in cache and avoiding exists() call.
-                # see test_record_unlinked_orphan_activities
-                for field in records._fields.values():
-                    if (
-                        field.store and field.column_type
-                        and field.prefetch is True
-                        and records._has_field_access(field, 'read')
-                    ):
-                        records.mapped(field.name)
-                        break
-                else:
-                    if records.exists() != records:
-                        raise MissingError(self.env._("Missing records"))  # noqa: TRY301
-            except MissingError:
-                existing = records.exists()
-                forbidden_doc_ids = set((records - existing).ids)
-                operation_result = existing._check_access(record_operation)
-            forbidden_doc_ids |= set((operation_result or [self.env[doc_model]])[0]._ids)
-            # keep actually returned records for the opration, that are not forbidden
-            allowed_ids += [
-                record.id for record in records
-                if record.id not in forbidden_doc_ids
-            ]
-
-        return self.env[doc_model].browse(allowed_ids)
-
-    @api.model
-    def _find_allowed_doc_ids(self, model_ids):
-        """ Filter out message user cannot read due to missing document access.
-
-        :param dict model_ids: dictionary giving messages IDs per model / doc ids {
-            'document_model_name': {
-                'document_id_1': set(message IDs),
-                'document_id_2': set(message IDs),
-            },
-            [...]
-        }
-
-        :return: set of allowed message IDs to read, based on document check
-        :rtype: set
-        """
-        IrModelAccess = self.env['ir.model.access']
-        allowed_ids = set()
-        for doc_model, doc_dict in model_ids.items():
-            if not IrModelAccess.check(doc_model, 'read', False):
-                continue
-            allowed_documents = self._filter_records_for_message_operation(doc_model, list(doc_dict), 'read')
-            allowed_ids |= {
-                msg_id for document_id in allowed_documents.ids for msg_id in doc_dict[document_id]
-            }
-        return allowed_ids
 
     def _check_access(self, operation: str) -> tuple | None:
         """ Access rules of mail.message:
@@ -596,12 +574,8 @@ class MailMessage(models.Model):
             ):
                 model_docid_msgids[model][res_id].append(mid)
 
-        for model, docid_msgids in model_docid_msgids.items():
-            allowed = self._filter_records_for_message_operation(model, docid_msgids, operation)
-            for doc_id, msg_ids in docid_msgids.items():
-                if doc_id in allowed.ids:
-                    for mid in msg_ids:
-                        messages_to_check.pop(mid)
+        for mid in _find_allowed_doc_ids(self.env, model_docid_msgids, operation):
+            messages_to_check.pop(mid)
 
         if not messages_to_check:
             return forbidden
@@ -667,9 +641,11 @@ class MailMessage(models.Model):
 
         if message.model and message.res_id:
             thread_su = self.env[message.model].browse(message.res_id).sudo()
-            access_mode = thread_su._mail_get_operation_for_mail_message_operation(mode)[thread_su]
-            if access_mode and self.env[message.model]._get_thread_with_access(message.res_id, mode=access_mode, **kwargs):
-                return message
+            for domain, access_mode in thread_su._mail_get_operation_for_mail_message_operation(mode):
+                if thread_su.filtered_domain(domain):
+                    if self.env[message.model]._get_thread_with_access(message.res_id, mode=access_mode, **kwargs):
+                        return message
+                    break
 
         return self.browse()
 
