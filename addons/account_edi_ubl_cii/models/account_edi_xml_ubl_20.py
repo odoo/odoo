@@ -871,6 +871,9 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         line_node['cac:Item'] = {
             'cbc:Description': {'_text': product.description_sale},
             'cbc:Name': {'_text': product.name},
+            'cac:SellersItemIdentification': {
+                'cbc:ID': {'_text': product.default_code},
+            },
             'cac:StandardItemIdentification': {
                 'cbc:ID': {
                     '_text': product.barcode,
