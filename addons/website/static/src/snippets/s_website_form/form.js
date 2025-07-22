@@ -360,6 +360,18 @@ export class Form extends Interaction {
             formData.append(key, value);
         }
 
+        // If "send copy" is enabled and an email is provided,
+        // appends field data and recipient address to formData.
+        const isSendCopyEnabled = this.el.classList.contains("o_website_form_copy_enabled");
+        const sendCopyEmail = this.el
+            .querySelector(".s_website_form_copy_email input")
+            ?.value.trim();
+        if (isSendCopyEnabled && sendCopyEmail) {
+            const emailTemplateFields = this.getFormFieldsWithLabels(this.el);
+            formData.append("_send_copy_fields", JSON.stringify(emailTemplateFields));
+            formData.append("_send_copy_mail_address", sendCopyEmail);
+        }
+
         // Post form and handle result
         return post(this.el.getAttribute("action") + (this.el.dataset.force_action || this.el.dataset.model_name), formData)
             .then(async (resultData) => {
@@ -474,6 +486,48 @@ export class Form extends Interaction {
             inputEl.classList.remove("d-none");
             delete inputEl.fileList;
         });
+    }
+
+    /**
+     * Builds an array of form fields with their labels and values.
+     *
+     * Collects visible, non-empty inputs (including one2many),
+     * skips files/hidden fields, and pairs each value with its label.
+     *
+     * @param {HTMLElement} formEl the form element
+     * @returns {Array<{label: string, value: string}>} list of labeled field
+     *      values
+     */
+    getFormFieldsWithLabels(formEl) {
+        const fieldsWithLabels = [];
+        const formData = new FormData(formEl);
+        const seenKeys = new Set();
+
+        for (const [key, value] of formData) {
+            const inputEl = formEl.querySelector(`[name="${CSS.escape(key)}"]`);
+            const fieldWrapperEl = inputEl?.closest(
+                ".s_website_form_field:not(.s_website_form_dnone)"
+            );
+            const labelEl = fieldWrapperEl?.querySelector(
+                ".s_website_form_label:not(.d-none) .s_website_form_label_content"
+            );
+            const label = labelEl?.innerText?.trim() || "[Unnamed]";
+            const isOne2Many = fieldWrapperEl?.dataset.type === "one2many";
+            if (!fieldWrapperEl || (seenKeys.has(key) && isOne2Many)) {
+                continue;
+            }
+            seenKeys.add(key);
+
+            const rawValues = isOne2Many ? formData.getAll(key) : [value];
+            const values = rawValues.filter((v) => !(v instanceof File) && v.trim() !== "");
+            if (values.length) {
+                fieldsWithLabels.push({
+                    label: label,
+                    value: values.join(", "),
+                });
+            }
+        }
+        return fieldsWithLabels;
     }
 
     checkErrorFields(errorFields) {
