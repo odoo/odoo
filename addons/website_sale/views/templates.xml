@@ -737,7 +737,7 @@
 
                             <header
                                 id="o_wsale_products_header"
-                                t-attf-class="d-flex flex-column gap-2 {{_header_has_content and 'py-3' or (not _header_has_content and not opt_wsale_design_grid and 'py-3')}}"
+                                t-attf-class="d-flex flex-column gap-2 {{_header_has_content and 'pt-4 pb-3' or (not _header_has_content and not opt_wsale_design_grid and 'py-3')}}"
                                 >
                                 <t t-if="category and not search" t-call="website_sale.products_breadcrumb">
                                     <t
@@ -1515,12 +1515,12 @@
         <div
             t-if="entries"
             id="o_wsale_categories_filmstrip"
-            class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch w-100 overflow-hidden"
+            class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch overflow-hidden"
             role="navigation"
         >
             <div class="o_wsale_filmstrip_wrapper position-relative w-100 overflow-auto z-1">
                 <ul
-                    class="o_wsale_filmstrip d-flex align-items-stretch mb-0 w-100 list-unstyled overflow-visible"
+                    class="o_wsale_filmstrip d-flex align-items-stretch mb-0 list-unstyled overflow-visible"
                     role="menu"
                     aria-label="Categories"
                 >
@@ -1566,7 +1566,7 @@
                                     role="img"
                                     aria-label="Category image"
                                 />
-                                <span class="lh-1" t-field="c.name"/>
+                                <span class="w-100" t-field="c.name"/>
                             </div>
                         </a>
                     </li>
