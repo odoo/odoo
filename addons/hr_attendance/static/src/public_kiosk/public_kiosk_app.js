@@ -68,6 +68,12 @@ class kioskAttendanceApp extends Component{
         });
     }
 
+    getAllowedCompaniesParams() {
+        const url = new URL(window.location.href)
+        const companyIds =  url.searchParams.get("allowed_company_ids");
+        return companyIds ? companyIds : false;
+    }
+
     async setBadgeID() {
         let barcode = this.state.barcode;
         if (barcode) {
@@ -108,11 +114,15 @@ class kioskAttendanceApp extends Component{
     }
 
     async kioskConfirm(employeeId){
-        const employee = await rpc('attendance_employee_data',
-            {
-                'token': this.props.token,
-                'employee_id': employeeId
-            })
+        const companyIds = this.getAllowedCompaniesParams();
+        const params = {
+            'token': this.props.token,
+            'employee_id': employeeId
+        };
+        if (companyIds) {
+            params["allowed_company_ids"] = companyIds;
+        }
+        const employee = await rpc('attendance_employee_data', params)
         if (employee && employee.employee_name){
             if (employee.use_pin){
                 this.employeeData = employee
@@ -172,12 +182,16 @@ class kioskAttendanceApp extends Component{
     }
 
     async onManualSelection(employeeId, enteredPin) {
-        const result = await this.makeRpcWithGeolocation('manual_selection',
-            {
-                'token': this.props.token,
-                'employee_id': employeeId,
-                'pin_code': enteredPin
-            })
+        const companyIds = this.getAllowedCompaniesParams();
+        const params = {
+            'token': this.props.token,
+            'employee_id': employeeId,
+            'pin_code': enteredPin
+        };
+        if (companyIds) {
+            params['allowed_company_ids'] = companyIds;
+        }
+        const result = await this.makeRpcWithGeolocation('manual_selection', params)
         if (result && result.attendance) {
             this.employeeData = result
             this.switchDisplay('greet')

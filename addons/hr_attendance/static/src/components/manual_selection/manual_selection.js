@@ -46,6 +46,12 @@ export class KioskManualSelection extends Component {
         })
     }
 
+    getAllowedCompaniesParams() {
+        const url = new URL(window.location.href)
+        const companyIds =  url.searchParams.get("allowed_company_ids");
+        return companyIds ? companyIds : false;
+    }
+
     calculateLimit() {
         // This function calculates the maximum number of employee cards that can fit on the screen based on his size,
         // font size, and the number of cards per row.
@@ -89,12 +95,17 @@ export class KioskManualSelection extends Component {
 
     async _fetchEmployeeData() {
         const domain = Domain.and([this.state.departmentDomain, this.state.searchDomain]).toList();
-        const results = await rpc("/hr_attendance/employees_infos", {
+        const companyIds = this.getAllowedCompaniesParams();
+        const params = {
             token: this.props.token,
             limit: this.state.limit,
             offset: this.state.offset,
             domain: domain,
-        });
+        };
+        if (companyIds) {
+            params["allowed_company_ids"] = companyIds;
+        }
+        const results = await rpc("/hr_attendance/employees_infos", params);
         this.state.employeesData.records = results.records;
         this.state.employeesData.count = results.length;
     }
