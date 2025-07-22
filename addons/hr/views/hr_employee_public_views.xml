@@ -36,7 +36,10 @@
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
                 <form string="Employee" create="0" write="0" js_class="hr_employee_form">
-                    <header/>
+                    <header>
+                        <button name="action_send_email" string="Send Email" type="object"
+                            groups="hr.group_hr_user"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <!-- Used by other modules-->
@@ -106,6 +109,9 @@
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
                 <list string="Employees" sample="1" expand="context.get('expand', False)">
+                    <header>
+                        <button name="action_send_email" string="Send Email" type="object"/>
+                    </header>
                     <field name="name"/>
                     <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
@@ -126,6 +132,9 @@
                 <kanban class="o_hr_employee_kanban" sample="1">
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
+                    <header>
+                        <button name="action_send_email" string="Send Email" type="object"/>
+                    </header>
                     <templates>
                         <t t-name="card" class="flex-row">
                             <aside class="o_kanban_aside_full">
@@ -292,6 +301,5 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="hr.hr_employee_public_action"/>
         </record>
-
     </data>
 </odoo>

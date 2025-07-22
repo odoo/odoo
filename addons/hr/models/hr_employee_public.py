@@ -11,6 +11,8 @@ class HrEmployeePublic(models.Model):
     _name = 'hr.employee.public'
     _description = 'Public Employee'
     _order = 'name'
+    _inherit = ['mail.thread.main.attachment']
+    _mail_post_access = 'read'
     _auto = False
     _log_access = True  # Include magic fields
 
@@ -214,3 +216,19 @@ class HrEmployeePublic(models.Model):
 
     def get_avatar_card_data(self, fields):
         return self.read(fields)
+
+    def action_send_email(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [[self.env.ref('hr.mail_compose_message_view_form').id, 'form']],
+            'target': 'new',
+            'context': {
+                'default_email_layout_xmlid': 'mail.mail_notification_light',
+                'default_model': 'hr.employee.public',
+                'default_partner_ids': self.work_contact_id.ids,
+                'default_composition_mode': 'mass_mail',
+                'default_reply_to': self.env.user.employee_id.work_contact_id.email
+            },
+        }

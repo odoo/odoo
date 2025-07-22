@@ -91,6 +91,8 @@
                                 context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
+                        <button name="action_send_email" string="Send Email" type="object"
+                            groups="hr.group_hr_user"/>
                         <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
                     <sheet>
@@ -381,6 +383,8 @@
                 <list string="Employees" expand="context.get('expand', False)" multi_edit="1" duplicate="false" sample="1" js_class="hr_employee_list">
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
+                        <button name="action_send_email" string="Send Email" type="object"
+                            groups="hr.group_hr_user"/>
                     </header>
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>
@@ -438,6 +442,10 @@
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
                     <field name="company_id"/>
+                    <header>
+                        <button name="action_send_email" string="Send Email" type="object"
+                            groups="hr.group_hr_user"/>
+                    </header>
                     <templates>
                         <t t-name="card" class="flex-row">
                             <aside class="o_kanban_aside_full">
@@ -761,6 +769,15 @@ employees = env['hr.employee'].browse(env.context.get('selected_ids', []))
 if employees:
     action = employees.action_create_users()
             </field>
+        </record>
+
+        <record id="action_hr_employee_send_mail" model="ir.actions.server">
+            <field name="name">Send Mail</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_view_types">list,kanban,form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_send_email()</field>
         </record>
     </data>
 </odoo>

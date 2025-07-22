@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr.mail_compose_message_view_form" model="ir.ui.view">
+            <field name="name">mail.compose.message.view.form.inherit.hr</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_ids'][1]" position="attributes">
+                    <attribute name="domain">
+                        [
+                            ('employee', '=', True),
+                            ('employee_ids', 'any',
+                                [('company_id', 'in', allowed_company_ids)]
+                            )
+                        ]
+                    </attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_ids'][2]" position="attributes">
+                    <attribute name="domain">
+                        [
+                            ('employee', '=', True),
+                            ('employee_ids', 'any',
+                                [('company_id', 'in', allowed_company_ids)]
+                            )
+                        ]
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
