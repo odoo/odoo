@@ -61,6 +61,7 @@ export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone exte
         await this.env.bus.trigger("change_file_input", {
             files: ev.dataTransfer.files,
         });        
+        this.dragState.showDragZone = false;
     }
 };
 
@@ -80,6 +81,7 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
 
         useBus(this.env.bus, "change_file_input", async (ev) => {
             this.fileInput.el.files = ev.detail.files;
+            this.uploadsProcessing++;
             await this.onChangeFileInput();
         });
 
@@ -103,8 +105,10 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
                 const actionName = _t("Generate Expenses");
                 const currentAction = this.actionService.currentController.action;
                 let domain = [['id', 'in', this.createdExpenseIds]];
+                let options = {}
                 if (currentAction.name === actionName) {
                     domain = Domain.or([domain, currentAction.domain]).toList();
+                    options['stackPosition'] = 'replaceCurrentAction';
                 }
                 await this.actionService.doAction({
                     'name': actionName,
@@ -112,9 +116,8 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
                     'type': 'ir.actions.act_window',
                     'views': [[false, this.env.config.viewType], [false, 'form']],
                     'domain': domain,
-                    'target': 'main',
                     'context': this.props.context,
-                });
+                }, options);
             }
         } finally {
             this.uploadsProcessing--;
