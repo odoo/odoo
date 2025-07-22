@@ -1903,7 +1903,7 @@ def _get_translation_upgrade_queries(cr, field):
 
     # upgrade model_terms translation: one update per field per record
     if callable(field.translate):
-        cr.execute("SELECT code FROM res_lang WHERE active = 't'")
+        cr.execute("SELECT code FROM res_lang WHERE active IS TRUE")
         languages = {l[0] for l in cr.fetchall()}
         query = f"""
             SELECT t.res_id, m."{field.name}", t.value, t.noupdate

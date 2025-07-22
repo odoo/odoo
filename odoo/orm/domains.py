@@ -1453,9 +1453,7 @@ def _optimize_boolean_in(condition, model):
         condition._raise("Cannot compare %r to %s which is not a collection of length 1", condition.field_expr, type(value))
     if not all(isinstance(v, bool) for v in value):
         # parse the values
-        if any(isinstance(v, str) for v in value):
-            # TODO make a warning
-            _logger.debug("Comparing boolean with a string in %s", condition)
+        warnings.warn(f"Since 20.0, compare booleans only with booleans in {condition!r}", DeprecationWarning)
         value = {
             str2bool(v.lower(), False) if isinstance(v, str) else bool(v)
             for v in value

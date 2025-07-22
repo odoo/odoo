@@ -576,18 +576,6 @@ class TestDomainOptimize(TransactionCase):
             Domain.FALSE,
         )
         self.assertEqual(
-            Domain('important', 'in', [True, "yes"]).optimize(model),
-            is_important,
-        )
-        self.assertEqual(
-            Domain('important', 'in', ["yes"]).optimize(model),
-            is_important,
-        )
-        self.assertEqual(
-            Domain('important', 'in', [0, 2]).optimize_full(model),
-            Domain.TRUE,
-        )
-        self.assertEqual(
             list(Domain('active', 'in', [True, False]).optimize(model)),
             [('active', 'in', [True, False])],
             "the condition should not be reduced to a constant for active record",

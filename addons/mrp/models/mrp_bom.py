@@ -723,7 +723,7 @@ class MrpBomLine(models.Model):
     def _compute_attachments_count(self):
         for line in self:
             nbr_attach = self.env['product.document'].search_count([
-                '&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', 't'),
+                '&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', True),
                 '|',
                 '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
                 '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_tmpl_id.id)])
