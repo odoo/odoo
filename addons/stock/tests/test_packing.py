@@ -2040,3 +2040,31 @@ class TestPackagePropagation(TestPackingCommon):
         # action_assign => On move lines, result_package_id is not set.
         self.assertEqual(partial_deliveries.move_line_ids.package_id, package, "The package should be used as source.")
         self.assertFalse(partial_deliveries.move_line_ids.result_package_id, "If the contents of a single pack are reserved by multiple picks, the entire pack can't reproduce on each pick.")
+
+    def test_cancel_package_is_done_resets_move_picked(self):
+        delivery_order_type = self.env.ref('stock.picking_type_out')
+        delivery_order_type.show_entire_packs = True
+
+        product = self.env['product.product'].create({'name': 'Test product', 'is_storable': True})
+        package = self.env['stock.quant.package'].create({})
+        self.env['stock.quant']._update_available_quantity(product, delivery_order_type.default_location_src_id, 10.0, package_id=package)
+
+        picking_form = Form(self.env['stock.picking'].with_context(default_picking_type_id=delivery_order_type.id))
+        with picking_form.move_ids_without_package.new() as move_form:
+            move_form.product_id = product
+            move_form.product_uom_qty = 10.0
+        picking = picking_form.save()
+
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(picking.state, 'assigned')
+        self.assertEqual(picking.package_level_ids.package_id, package)
+        self.assertFalse(picking.move_ids.picked)
+
+        picking.package_level_ids.is_done = True
+        self.assertTrue(picking.move_ids.picked)
+
+        picking.package_level_ids.is_done = False
+        self.assertEqual(picking.state, 'confirmed')
+        self.assertFalse(picking.package_level_ids)
+        self.assertFalse(picking.move_ids.picked)
