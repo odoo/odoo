@@ -211,6 +211,10 @@ registry.category("web_tour.tours").add("test_indexed_db_draft_order", {
             refresh(),
             inLeftSide(ProductScreen.orderLineHas("Desk Organizer", "1")),
             ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
+            {
+                content: "check increment",
+                trigger: `article.product .product-content:has(.product-name:contains("Desk pad")) .product-cart-qty:contains("1")`,
+            },
             refresh(),
             inLeftSide([
                 ...ProductScreen.orderLineHas("Desk Organizer", "1"),
