@@ -13,6 +13,22 @@ export function selectNthOrder(n) {
     ];
 }
 
+export function settleSaleOrderByPrice(price) {
+    return [
+        ...ProductScreen.clickControlButton("Quotation/Order"),
+        {
+            content: `select sale order with price ${price}`,
+            trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row td:contains('${price}')`,
+            run: "click",
+        },
+        {
+            content: `Choose to settle the order`,
+            trigger: `.modal:not(.o_inactive_modal) .selection-item:contains('Settle the order')`,
+            run: "click",
+        },
+    ];
+}
+
 export function settleNthOrder(n, options = {}) {
     const { loadSN } = options;
     const step = [
