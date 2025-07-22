@@ -13,23 +13,23 @@
 }
 
 .o-we-linkpopover {
-    .custom-fill-color, .custom-text-color, .custom-border-color, .input-group {
+    .custom-fill-color, .custom-text-color, .custom-border, .input-group {
         label {
             width: 70px;
-            &:not(:first-child) {
-                margin-left: 15px;
-            }
         }
     }
 }
 
 .custom-border {
-    padding-left: 70px;
+    @include o-input-number-no-arrows();
+
     input.form-control {
-        width: 40px;
+        width: 35px;
+    }
+    .input-group-text {
+        padding: 0 0.35rem;
     }
     select.form-select {
-        width: 110px;
-        margin-left: 15px;
+        width: 60px;
     }
 }
