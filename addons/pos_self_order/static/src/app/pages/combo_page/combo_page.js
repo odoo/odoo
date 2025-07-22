@@ -113,8 +113,10 @@ export class ComboPage extends Component {
         const selection = (selectedItems[item.id] ||= { item });
         selection.item = item;
         selection.qty = 1;
-
-        if (product.attribute_line_ids.length > 0) {
+        if (
+            product.attribute_line_ids.length > 0 &&
+            product.product_template_attribute_value_ids?.length === 0
+        ) {
             this.currentChoiceState.displayAttributesOfItem = item;
         } else if (!this.hasMultiItemSelection) {
             this.next();
@@ -286,7 +288,10 @@ export class ComboPage extends Component {
             if (selectedItem) {
                 // Display attributes of the selected item, if any are available
                 const hasAttributes = selectedItem.item.product_id.attribute_line_ids.length > 0;
-                if (hasAttributes) {
+                // Should not display the variant choices if it is a specific variant
+                const isVariant =
+                    selectedItem.item.product_id.product_template_attribute_value_ids?.length > 0;
+                if (hasAttributes && !isVariant) {
                     this.currentChoiceState.displayAttributesOfItem = selectedItem.item;
                     newSectionDisplayed = true;
                 }
