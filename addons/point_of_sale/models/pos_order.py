@@ -335,6 +335,8 @@ class PosOrder(models.Model):
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Monetary(string='Tip Amount', readonly=True)
+    tip_type = fields.Selection([('fixed', 'Fixed Amount'), ('percentage', 'Percentage')], string='Tip Type', readonly=True, help="Type of tip applied to the order")
+    tip_value = fields.Float(string='Tip Value', readonly=True, help="Orginal value before computation of the tip amount")
     refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields', help="Number of orders where items from this order were refunded")
     refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')

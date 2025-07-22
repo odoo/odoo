@@ -4,23 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(PaymentScreen.prototype, {
-    get nextPage() {
-        const order = this.currentOrder;
-        if (!this.pos.config.set_tip_after_payment || order.is_tipped) {
-            return super.nextPage;
-        }
-        // Take the first payment method as the main payment.
-        const mainPayment = order.payment_ids[0];
-        if (mainPayment && mainPayment.canBeAdjusted()) {
-            return {
-                page: "TipScreen",
-                params: {
-                    orderUuid: order.uuid,
-                },
-            };
-        }
-        return super.nextPage;
-    },
     async afterOrderValidation(suggestToSync = true) {
         const changedTables = this.currentOrder?.table_id?.children?.map((table) => table.id);
         // After the order has been validated the tables have no reason to be merged anymore.

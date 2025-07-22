@@ -102,6 +102,7 @@ class ResConfigSettings(models.TransientModel):
     pos_ship_later = fields.Boolean(related='pos_config_id.ship_later', readonly=False)
     pos_tax_regime_selection = fields.Boolean(related='pos_config_id.tax_regime_selection', readonly=False)
     pos_tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_pos_tip_product_id', readonly=False, store=True)
+    pos_set_tip_after_payment = fields.Boolean(compute='_compute_pos_set_tip_after_payment', store=True, readonly=False)
     pos_use_pricelist = fields.Boolean(related='pos_config_id.use_pricelist', readonly=False)
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
@@ -285,6 +286,14 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_tip_product_id = res_config.pos_config_id.tip_product_id
             else:
                 res_config.pos_tip_product_id = False
+
+    @api.depends('pos_iface_tipproduct', 'pos_config_id')
+    def _compute_pos_set_tip_after_payment(self):
+        for res_config in self:
+            if res_config.pos_iface_tipproduct:
+                res_config.pos_set_tip_after_payment = res_config.pos_config_id.set_tip_after_payment
+            else:
+                res_config.pos_set_tip_after_payment = False
 
     @api.depends('pos_use_pricelist', 'pos_config_id', 'pos_journal_id')
     def _compute_pos_pricelist_id(self):
