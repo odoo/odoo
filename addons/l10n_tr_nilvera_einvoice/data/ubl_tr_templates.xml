@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="ubl_tr_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceType" primary="True">
+    <template id="ubl_tr_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
         <!-- the placement of <cac:AllowanceCharge> node is improper for Nilvera, so it is replaced. -->
         <xpath expr="//*[local-name()='AllowanceCharge']" position="replace"/>
         <xpath expr="//*[local-name()='PaymentTerms']" position="after">
