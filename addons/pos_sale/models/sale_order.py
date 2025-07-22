@@ -37,11 +37,14 @@ class SaleOrder(models.Model):
         sale_order_read = self.read(sale_order_fields, load=False)
         sale_order_line_fields = self.order_line._load_pos_data_fields(config_id)
         sale_order_line_read = self.order_line.read(sale_order_line_fields, load=False)
+        sale_order_fp_fields = self.env['account.fiscal.position']._load_pos_data_fields(config_id)
+        sale_order_fp_read = self.fiscal_position_id.read(sale_order_fp_fields, load=False)
         partner_fields = self.env['res.partner']._load_pos_data_fields(config_id)
 
         return {
             'sale.order': sale_order_read,
             'sale.order.line': sale_order_line_read,
+            'account.fiscal.position': sale_order_fp_read,
             'res.partner': self.partner_id.read(partner_fields, load=False),
             **product_tmpls,
         }
