@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="form_send_copy_email" name="Website Form: Send Copy Body">
+        Hello <t t-out="visitor_name">Visitor</t>,<br/><br/>
+        Thank you for filling in the form.<br/><br/>
+        <t t-foreach="form_submission_values" t-as="field">
+            <b><t t-out="field['label']"/>:</b> <t t-out="field['value']"/><br/>
+        </t>
+        <br/>
+        Completed on <t t-out="formatted_current_date"/>.
+    </template>
+</odoo>

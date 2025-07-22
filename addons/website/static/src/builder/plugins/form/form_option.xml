@@ -11,6 +11,10 @@
         </BuilderSelect>
     </BuilderRow>
     <FormActionFieldsOption activeForm="this.state.activeForm"/>
+    <BuilderRow label.translate="Send a Copy" tooltip.translate="Email a copy of the answers to the visitor if an email address is provided. We strongly recommend enabling CAPTCHA in your settings if you enable this option.">
+        <BuilderCheckbox action="'toggleSendCopy'"/>
+        <DocumentationLink path="'/applications/websites/website/configuration/spam_protection.html'" icon="'fa-external-link'" class="'btn'"/>
+    </BuilderRow>
     <BuilderRow label.translate="Marked Fields" tooltip.translate="Add an icon to the labels of required or optional fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
@@ -110,7 +114,7 @@
 
 <t t-name="website.s_website_form_field_option">
     <BuilderRow label.translate="Type">
-        <BuilderSelect t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
+        <BuilderSelect t-if="!this.domState.elClassList.includes('s_website_form_model_required') and !this.domState.elClassList.includes('s_website_form_copy_email')"
             id="'type_opt'" preview="false"
         >
             <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Custom Field</div>
@@ -139,7 +143,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Input Type">
-        <BuilderSelect t-if="!this.domState.elClassList.includes('s_website_form_custom') and ['char', 'email', 'tel', 'url'].includes(this.domState.elDataset.type) and !this.domState.elClassList.includes('s_website_form_model_required')"
+        <BuilderSelect t-if="!this.domState.elClassList.includes('s_website_form_custom') and ['char', 'email', 'tel', 'url'].includes(this.domState.elDataset.type) and !this.domState.elClassList.includes('s_website_form_model_required') and !this.domState.elClassList.includes('s_website_form_copy_email')"
             id="'char_input_type_opt'" preview="false" action="'selectType'"
         >
             <BuilderSelectItem actionValue="'char'">Text</BuilderSelectItem>
