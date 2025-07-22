@@ -18,6 +18,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import float_to_time
 from odoo.fields import Command, Date, Domain
 from odoo.tools.float_utils import float_round, float_compare
+from odoo.tools.intervals import Intervals
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _
 
@@ -553,11 +554,26 @@ Contracts:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
                 if leave.employee_id.sudo().is_flexible and leave.date_to.date() == leave.date_from.date():
-                    hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    if not leave.request_unit_hours:
+                    public_holidays = self.env['resource.calendar.leaves'].search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<', leave.date_to),
+                        ('date_to', '>', leave.date_from),
+                        ('calendar_id', 'in', [False, calendar.id]),
+                        ('company_id', '=', leave.company_id.id)
+                    ])
+                    if public_holidays:
+                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
+                        real_leave_intervals = leave_intervals - public_holidays_intervals
+                        hours = 0
+                        for start, stop, meta in real_leave_intervals:
+                            hours += (stop - start).total_seconds() / 3600
+                    else:
+                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    if not leave.request_unit_hours and not public_holidays:
                         days = 1 if not leave.request_unit_half else 0.5
                     else:
-                        days = (leave.date_to - leave.date_from).total_seconds() / 3600 / 24
+                        days = hours / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
                     work_time_per_day_list = work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
