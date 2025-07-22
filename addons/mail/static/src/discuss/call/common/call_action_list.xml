@@ -18,7 +18,9 @@
                         <t t-set-slot="content">
                             <div class="d-flex flex-column py-0">
                                 <span t-foreach="callActions.actions.slice(isMobileOS ? 3 : 4)" t-as="action" t-key="action_index" class="o-discuss-CallActionList-dropdownItem cursor-pointer rounded-1 d-flex align-items-center px-2 py-2 m-0" t-att-title="action.name" t-on-click="action.select">
-                                    <i class="fa fa-fw" t-att-class="{
+                                    <i t-att-class="{
+                                        'fa fa-fw': (action.isActive or !action.inactiveIcon ? action.icon : action.inactiveIcon).includes('fa-'), 
+                                        'oi oi-fw': (action.isActive or !action.inactiveIcon ? action.icon : action.inactiveIcon).includes('oi-'),
                                         [action.inactiveIcon]: !action.isActive,
                                         [action.icon]: action.isActive or !action.inactiveIcon,
                                     }"/>
