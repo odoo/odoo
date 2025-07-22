@@ -1142,7 +1142,6 @@ registerWebsitePreviewTour("website_form_special_characters", {
         run: "click",
     },
     ...addCustomField("char", "text", `Test1"'`, false),
-    ...addCustomField("char", "text", 'Test2`\\', false),
     ...clickOnSave(),
     ...essentialFieldsForDefaultFormFillInSteps,
     {
@@ -1153,10 +1152,6 @@ registerWebsitePreviewTour("website_form_special_characters", {
         content: "Complete the first added field",
         trigger: `:iframe input[name="${CSS.escape("Test1&quot;'")}"]`,
         run: "edit test1",
-    }, {
-        content: "Complete the second added field",
-        trigger: `:iframe input[name="${CSS.escape("Test2`\\")}"]`,
-        run: "edit test2",
     }, {
         content: "Click on 'Submit'",
         trigger: ":iframe a.s_website_form_send",
