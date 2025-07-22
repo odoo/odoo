@@ -6,6 +6,7 @@ import { ProductNameWidget } from "@pos_self_order/app/components/product_name_w
 import { ComboStepper } from "@pos_self_order/app/components/combo_stepper/combo_stepper";
 import { computeTotalComboPrice } from "../../services/card_utils";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
+import { formatProductName } from "../../utils";
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
@@ -124,12 +125,20 @@ export class ComboPage extends Component {
         const selection = (selectedItems[item.id] ||= { item });
         selection.item = item;
         selection.qty = 1;
-
-        if (product.attribute_line_ids.length > 0) {
+        if (this.hasAttribute(product)) {
             this.currentChoiceState.displayAttributesOfItem = item;
         } else if (!this.hasMultiItemSelection) {
             this.next();
         }
+    }
+
+    hasAttribute(product) {
+        return (
+            product.attribute_line_ids.length > 0 &&
+            product.attribute_line_ids.some(
+                (line) => line.attribute_id?.create_variant === "no_variant"
+            )
+        );
     }
 
     getSelectedItems(choiceState = undefined) {
@@ -216,13 +225,24 @@ export class ComboPage extends Component {
         const product = comboItem.product_id;
         const selection = this.state.selectedValues[product.id];
 
-        if (product.attribute_line_ids.length === 0) {
+        const attributeLines = product.attribute_line_ids.filter(
+            (line) => line.attribute_id?.create_variant === "no_variant"
+        );
+
+        if (attributeLines.length === 0) {
             return false;
         }
         if (!selection) {
             return true;
         }
+<<<<<<< fdf536bfc9cd2ff86aa98dcedd9e84dca505b5d4
         return Boolean(selection.getMissingAttributeValue(product.attribute_line_ids));
+||||||| 22d2f80c5b24c60c39241c0c6b433964a1da73f9
+        return selection.hasMissingAttributeValues(product.attribute_line_ids);
+=======
+
+        return selection.hasMissingAttributeValues(attributeLines);
+>>>>>>> 273e4b2cdccc810fe8e2bec75fc53829ea22f139
     }
 
     changeQuantity(increase) {
@@ -295,9 +315,7 @@ export class ComboPage extends Component {
         } else if (!isAttributeSelection && !hasMultiItemSelection) {
             const selectedItem = this.getSelectedItems()[0];
             if (selectedItem) {
-                // Display attributes of the selected item, if any are available
-                const hasAttributes = selectedItem.item.product_id.attribute_line_ids.length > 0;
-                if (hasAttributes) {
+                if (this.hasAttribute(selectedItem.item.product_id)) {
                     this.currentChoiceState.displayAttributesOfItem = selectedItem.item;
                     newSectionDisplayed = true;
                 }
@@ -451,6 +469,7 @@ export class ComboPage extends Component {
         this.router.navigate("product_list");
     }
 
+<<<<<<< fdf536bfc9cd2ff86aa98dcedd9e84dca505b5d4
     scrollUpToRequired() {
         const selectedItem = this.currentChoiceState.displayAttributesOfItem.product_id;
         const selection = this.state.selectedValues[selectedItem.id];
@@ -462,6 +481,13 @@ export class ComboPage extends Component {
             ?.scrollIntoView({ behavior: "smooth" });
     }
 
+||||||| 22d2f80c5b24c60c39241c0c6b433964a1da73f9
+=======
+    formatProductName(product) {
+        return formatProductName(product);
+    }
+
+>>>>>>> 273e4b2cdccc810fe8e2bec75fc53829ea22f139
     /*
      // TODO
      get editableProductLine() {
