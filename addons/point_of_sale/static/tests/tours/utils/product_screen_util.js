@@ -367,6 +367,18 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
 
     return [...step, { ...back(), isActive: ["mobile"] }];
 }
+export function checkFiscalPosition(name) {
+    return [
+        clickReview(),
+        ...clickControlButtonMore(),
+        {
+            content: `check fiscal position '${name}' is selected`,
+            trigger: `.o_fiscal_position_button:contains("${name}")`,
+            run: () => {},
+        },
+        Dialog.cancel(),
+    ];
+}
 export function closeWithCashAmount(val) {
     return [
         {
