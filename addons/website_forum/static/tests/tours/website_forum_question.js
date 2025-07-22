@@ -32,6 +32,34 @@ registry.category("web_tour.tours").add('forum_question', {
     },
     ...stepUtils.editSelectMenuInput(".o_select_menu_input", "Tag"),
     {
+        content: "Create a new tag.",
+        trigger: ".o-dropdown-item:contains(Create option)",
+        run: "click",
+    },
+    {
+        content: "Check that the 'Tag' tag is added.",
+        trigger: ".o_tag_badge_text:contains('Tag')",
+    },
+    {
+        content: "Insert tags related to your question.",
+        trigger: ".o_select_menu_toggler",
+        run: "click",
+    },
+    ...stepUtils.editSelectMenuInput(".o_select_menu_input", "tag, test tag"),
+    {
+        content: "Create multiple new tags.",
+        trigger: ".o-dropdown-item:contains(Create option)",
+        run: "click",
+    },
+    {
+        content: "Check that the 'tag' tag is added.",
+        trigger: ".o_tag_badge_text:contains('tag')",
+    },
+    {
+        content: "Check that the 'test tag' tag is added.",
+        trigger: ".o_tag_badge_text:contains('test tag')",
+    },
+    {
         content: "Click to post your question.",
         trigger: 'button:contains("Post")',
         run: "click",
