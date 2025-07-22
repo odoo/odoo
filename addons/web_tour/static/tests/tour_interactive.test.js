@@ -691,6 +691,8 @@ test("Tour backward when the pointed element disappear", async () => {
 
     await contains("button.fool").click();
     await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+    await advanceTime(1000);
     expect(".o_tour_pointer").toHaveCount(1);
 
     await contains("button.foo").click();
@@ -738,6 +740,8 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
 
     await contains("button.fool").click();
     await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+    await advanceTime(1000);
     expect(".o_tour_pointer").toHaveCount(1);
 
     await contains("button.foo").click();

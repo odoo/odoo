@@ -455,12 +455,17 @@ export class TourInteractive {
                 this.setActionListeners();
             } else if (!tempAnchors.length && this.anchorEls.length) {
                 this.pointer.hide();
-                if (
-                    !hoot.queryFirst(".o_home_menu", { visible: true }) &&
-                    !hoot.queryFirst(".dropdown-item.o_loading", { visible: true })
-                ) {
-                    this.backward();
-                }
+                setTimeout(() => {
+                    const tempAnchors = this.findTriggers();
+                    if (!tempAnchors.length) {
+                        if (
+                            !hoot.queryFirst(".o_home_menu", { visible: true }) &&
+                            !hoot.queryFirst(".dropdown-item.o_loading", { visible: true })
+                        ) {
+                            this.backward();
+                        }
+                    }
+                }, 1000);
                 return;
             }
             this.updatePointer();
