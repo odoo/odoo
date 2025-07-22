@@ -5239,6 +5239,63 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(unbuild_order.state, 'done')
         self.assertEqual(unbuild_order.product_qty, 1.23456)
 
+    def test_bom_selection_based_on_picking_type(self):
+        """
+        Check that the right BOM is selected when picking type field is passed explicitly
+        """
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True,
+        })
+
+        default_manu_type = self.env.ref('stock.warehouse0').manu_type_id
+        default_bom = self.env['mrp.bom'].create(
+            {
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'picking_type_id': default_manu_type.id,
+                'code': 'DEFAULT',
+            }
+        )
+
+        other_manu_type = self.env['stock.picking.type'].create(
+            {
+                'name': 'Other Manufacturing',
+                'code': 'mrp_operation',
+                'sequence_code': 'OMO',
+            }
+        )
+        other_bom = self.env['mrp.bom'].create(
+            {
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'picking_type_id': other_manu_type.id,
+                'code': 'OTHER',
+            }
+        )
+
+        # MO created without explicit picking type, BOM should match the first BOM found
+        mo_without_picking_type = self.env['mrp.production'].create({
+            'product_id': product.id,
+        })
+        self.assertEqual(mo_without_picking_type.bom_id, default_bom)
+
+        # MO created with default picking type, BOM should match default picking type
+        mo_with_default_manu_type = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'picking_type_id': default_manu_type.id,
+        })
+        self.assertEqual(mo_with_default_manu_type.bom_id, default_bom)
+
+        # MO created with other picking type, BOM should match other picking type
+        mo_with_other_manu_type = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'picking_type_id': other_manu_type.id,
+        })
+        self.assertEqual(mo_with_other_manu_type.bom_id, other_bom)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
