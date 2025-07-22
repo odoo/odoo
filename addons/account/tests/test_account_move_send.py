@@ -1107,3 +1107,14 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         }
         results = wizard._get_sending_settings()
         self.assertDictEqual(results, expected_results)
+
+    def test_invoice_email_subtitle(self):
+        """ Test email notification subtitle for Invoice with and without partner name. """
+        partner = self.env['res.partner'].create({'type': 'invoice', 'parent_id': self.partner_a.id})
+        invoice = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], invoice.name)
+
+        invoice.partner_id.name = "Test Partner"
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], f"{invoice.name} - Test Partner")
