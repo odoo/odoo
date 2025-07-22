@@ -865,6 +865,7 @@ export class ListPlugin extends Plugin {
         if (!closestLIendContainer.classList.contains("oe-nested")) {
             // Remove LI marker on first backspace.
             closestLIendContainer.classList.add("oe-nested");
+            closestLIendContainer.classList.remove("o_checked");
         } else {
             // Fully outdent the LI but keep its direction.
             const list = closestElement(closestLIendContainer, "ul[dir], ol[dir]");
