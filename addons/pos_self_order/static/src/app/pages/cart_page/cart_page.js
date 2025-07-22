@@ -10,6 +10,7 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { formatProductName } from "../../utils";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -265,6 +266,10 @@ export class CartPage extends Component {
     }
     get displayTaxes() {
         return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+
+    formatProductName(product) {
+        return formatProductName(product);
     }
 
     /*
