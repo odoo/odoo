@@ -44,7 +44,7 @@
                             <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
                         </t>
                         <t t-else="">
-                            <t t-if="not answer.is_session_answer and survey.questions_selection == 'random'">
+                            <t t-if="not answer.is_session_answer and survey.questions_selection != 'all'">
                                 <t t-set="page_ids" t-value="answer.predefined_question_ids.ids"/>
                             </t>
                             <t t-else="">
@@ -207,7 +207,7 @@
             <!-- Questions with section -->
             <t t-foreach="survey.page_ids" t-as="page">
                 <t t-set="display_section" t-value="page.description or any(not q.triggering_answer_ids for q in page.question_ids)
-                    or (survey.questions_selection == 'random' and page.question_ids and page.random_questions_count > 0)"/>
+                    or (survey.questions_selection != 'all' and page.question_ids and page.random_questions_count > 0)"/>
                 <div t-attf-class="js_section_wrapper #{'d-none' if not display_section else ''}">
                     <h2 t-field="page.title" class="o_survey_title pb16 text-break"/>
                     <div t-field="page.description" class="o_survey_description text-break"/>
@@ -347,7 +347,7 @@
     <template id="question_container" name="Survey: question container">
         <t t-set="display_question"
            t-value="survey.questions_layout == 'page_per_question'
-                    or survey.questions_selection == 'random'
+                    or survey.questions_selection != 'all'
                     or (survey.questions_layout == 'one_page' and not question.triggering_answer_ids)
                     or (survey.questions_layout == 'page_per_section' and (not question.triggering_answer_ids
                         or any(triggering_answer in selected_answers for triggering_answer in triggering_answers_by_question[question.id])))"/>

@@ -380,7 +380,7 @@ class Survey(http.Controller):
                 })
             elif survey_sudo.questions_layout == 'page_per_question':
                 page_ids = (answer_sudo.predefined_question_ids.ids
-                            if not answer_sudo.is_session_answer and survey_sudo.questions_selection == 'random'
+                            if not answer_sudo.is_session_answer and survey_sudo.questions_selection != 'all'
                             else survey_sudo.question_ids.ids)
                 survey_progress = IrQweb._render('survey.survey_progression', {
                     'survey': survey_sudo,

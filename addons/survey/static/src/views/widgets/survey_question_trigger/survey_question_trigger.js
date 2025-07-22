@@ -30,7 +30,7 @@ export class SurveyQuestionTriggerWidget extends Component {
                 } else if (triggerError === "WRONG_QUESTIONS_SELECTION_WARNING") {
                     this.state.surveyIconWarning = true;
                     this.state.triggerTooltip = '⚠ ' + _t(
-                        "Conditional display is not available when questions are randomly picked."
+                        "Conditional display is not available when questions or sections are randomly picked."
                     );
                 } else if (triggerError === "MISSING_TRIGGER_ERROR") {
                     // This case must be handled to not temporarily render the "normal" icon if previously
@@ -78,7 +78,7 @@ export class SurveyQuestionTriggerWidget extends Component {
         if (!record.data.triggering_question_ids.records.length) {
             return { triggerError: "", misplacedTriggerQuestionRecords: [] };
         }
-        if (this.props.record.data.questions_selection === 'random') {
+        if (['random', 'random_sections_order'].includes(this.props.record.data.questions_selection)) {
             return { triggerError: 'WRONG_QUESTIONS_SELECTION_WARNING', misplacedTriggerQuestionRecords: [] };
         }
 

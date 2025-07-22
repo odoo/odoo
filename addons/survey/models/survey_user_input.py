@@ -559,7 +559,7 @@ class SurveyUser_Input(models.Model):
         triggering_answers_by_question = {}
         triggered_questions_by_answer = {}
         # Ignore conditional configuration if randomised questions selection
-        if self.survey_id.questions_selection != 'random':
+        if self.survey_id.questions_selection == 'all':
             triggering_answers_by_question, triggered_questions_by_answer = self.survey_id._get_conditional_maps()
         selected_answers = self._get_selected_suggested_answers()
 

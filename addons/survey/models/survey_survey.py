@@ -79,9 +79,11 @@ class SurveySurvey(models.Model):
         string="Pagination", required=True, default='page_per_question')
     questions_selection = fields.Selection([
         ('all', 'All questions'),
-        ('random', 'Randomized per Section')],
+        ('random', 'Randomized per Section'),
+        ('random_sections_order', 'Randomized Sections Order'),
+    ],
         string="Question Selection", required=True, default='all',
-        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.")
+        help="If 'Randomized per Section' is selected, you can configure the number of random questions by section. All randomizations are ignored in live session.")
     progression_mode = fields.Selection([
         ('percent', 'Percentage left'),
         ('number', 'Number')], string='Display Progress as', default='percent',
@@ -631,15 +633,16 @@ class SurveySurvey(models.Model):
                 questions |= question
 
         # Then, questions in sections
+        pages = self.page_ids
+        if self.questions_selection == 'random_sections_order':
+            pages = self.env["survey.question"].concat(*random.sample(self.page_ids, len(self.page_ids)))
 
-        for page in self.page_ids:
-            if self.questions_selection == 'all':
+        for page in pages:
+            if self.questions_selection != 'random' or page.random_questions_count == 0:
                 questions |= page.question_ids
             else:
-                if 0 < page.random_questions_count < len(page.question_ids):
-                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
-                else:
-                    questions |= page.question_ids
+                page_questions_count = min(page.random_questions_count, len(page.question_ids))
+                questions = questions.concat(*random.sample(page.question_ids, page_questions_count))
 
         return questions
 
@@ -705,7 +708,7 @@ class SurveySurvey(models.Model):
         if self.questions_layout == 'page_per_section':
             result = self.page_ids
         elif self.questions_layout == 'page_per_question':
-            if self.questions_selection == 'random' and not self.session_state:
+            if self.questions_selection != 'all' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
                 result = self._get_pages_and_questions_to_show()
