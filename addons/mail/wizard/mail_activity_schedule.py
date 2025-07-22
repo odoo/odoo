@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import html2plaintext
 from odoo.tools.misc import format_date
@@ -436,10 +436,13 @@ class MailActivitySchedule(models.TransientModel):
         activity_user = self.activity_user_id
         model = self.res_model
         if model and activity_user:
-            try:
-                thread = self.with_user(activity_user).env[model].browse(self._evaluate_res_ids())
-                thread.check_access(thread._mail_get_operation_for_mail_message_operation('create')[thread])
-            except AccessError:
+            accessible = False
+            thread = self.with_user(activity_user).env[model].browse(self._evaluate_res_ids())
+            for domain, operation in thread._mail_get_operation_for_mail_message_operation('create'):
+                if thread.sudo().filtered_domain(domain):
+                    accessible = thread.has_access(operation)
+                    break
+            if not accessible:
                 raise UserError(_("Selected user '%(user)s' cannot upload documents on model '%(model)s'",
                                     model=model,
                                     user=activity_user.display_name))
