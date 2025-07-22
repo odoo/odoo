@@ -337,9 +337,6 @@ export class AnalyticDistribution extends Component {
 
     async percentageChanged(dist_tag, ev) {
         dist_tag.percentage = this.parse(ev.target.value);
-        if (dist_tag.percentage == 0) {
-            this.deleteTag(dist_tag.id, dist_tag.group_id);
-        }
         this.autoFill();
     }
 
@@ -449,7 +446,7 @@ export class AnalyticDistribution extends Component {
     }
 
     tagIsReady({analytic_account_id, percentage}) {
-        return !!analytic_account_id && !!percentage;
+        return !!analytic_account_id;
     }
 
     sumByGroup(id) {
