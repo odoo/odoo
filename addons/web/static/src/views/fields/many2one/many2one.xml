@@ -8,9 +8,9 @@
             </t>
             <t t-elif="!props.readonly">
                 <span class="o_avatar o_m2o_avatar d-flex">
-                    <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabindex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
+                    <button class="o_quick_assign btn-link d-flex align-items-center text-dark" role="button" tabindex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
                         <i class="fa fa-user-plus"/>
-                    </a>
+                    </button>
                 </span>
             </t>
         </div>

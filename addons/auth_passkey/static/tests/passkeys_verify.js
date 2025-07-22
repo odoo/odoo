@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('passkeys_tour_verify', {
             run: 'click',
         }, {
             content: "Switch to security tab",
-            trigger: 'a[role=tab]:contains("Account Security")',
+            trigger: 'button[role=tab]:contains("Account Security")',
             run: 'click',
         }, {
             content: "Ensure there is one passkey",

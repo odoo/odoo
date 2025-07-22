@@ -37,20 +37,19 @@
                     t-att-class="{'position-relative ms-1' : tag.img}"
                     t-out="tag.text"/>
 
-                <a
+                <button
                     t-if="tag.onDelete"
                     t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)"
-                    class="o_delete d-flex align-items-center opacity-100-hover"
+                    class="o_delete d-flex align-items-center opacity-100-hover border-0 bg-transparent pe-0"
                     t-att-class="{
                             'btn btn-link position-relative py-0 px-1 text-danger opacity-0': tag.img,
                             'ps-1 opacity-75': !tag.img
                         }"
                     data-tooltip="Delete"
                     aria-label="Delete"
-                    tabIndex="-1"
-                    href="#">
+                    tabIndex="-1">
                         <i class="oi oi-close align-text-top"/>
-                </a>
+                </button>
             </span>
         </t>
         <span t-if="otherTags.length" class="o_m2m_avatar_empty rounded text-center fw-bold cursor-default" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo" t-on-click.stop="">

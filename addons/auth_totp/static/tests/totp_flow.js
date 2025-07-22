@@ -28,7 +28,7 @@ function openUserProfileAtSecurityTab() {
         run: 'click',
     }, {
         content: "Switch to security tab",
-        trigger: 'a[role=tab]:contains("Account Security")',
+        trigger: 'button[role=tab]:contains("Account Security")',
         run: 'click',
     }];
 }
@@ -52,7 +52,7 @@ function closeProfileDialog({content, totp_state}) {
     return [{
         content,
         //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
-        trigger: 'a[role=tab]:contains("Account Security").active',
+        trigger: 'button[role=tab]:contains("Account Security").active',
         async run(helpers) {
             await waitFor(trigger, { timeout: 5000 });
             const modal = document.querySelector(".o_dialog");
@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
-    trigger: 'a[role=tab]:contains("Account Security").active',
+    trigger: 'button[role=tab]:contains("Account Security").active',
     async run(actions) {
         const el = await waitFor('button[name=action_totp_enable_wizard]', { timeout: 5000 });
         await actions.click(el);
@@ -286,7 +286,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 ...openUserProfileAtSecurityTab(),
 {
     content: "Open totp wizard",
-    trigger: 'a[role=tab]:contains("Account Security").active',
+    trigger: 'button[role=tab]:contains("Account Security").active',
 },
 {
     trigger: "button[name=action_totp_disable]",
@@ -407,7 +407,7 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     run: "click",
 }, {
     content: "go to Account security Tab",
-    trigger: "a.nav-link:contains(Account Security)",
+    trigger: "button.nav-link:contains(Account Security)",
     run: "click",
 }, {
     content: "check 2FA button",

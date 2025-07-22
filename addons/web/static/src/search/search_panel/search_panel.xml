@@ -168,11 +168,11 @@
                         <t t-call="web.SearchPanel.Section"/>
                     </div>
                     <div t-if="section.type !== 'category' and hasSelection(section.id)" class="text-end">
-                        <a href="#" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection(section.id)">CLEAR ALL</a>
+                        <button title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection(section.id)">CLEAR ALL</button>
                     </div>
                 </t>
             </Dropdown>
-            <a href="#" t-if="hasSelection()" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection()">CLEAR ALL</a>
+            <button t-if="hasSelection()" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection()">CLEAR ALL</button>
         </div>
     </div>
 </t>

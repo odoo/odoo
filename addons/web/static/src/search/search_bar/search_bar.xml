@@ -65,6 +65,7 @@
                 onSelected="() => this.selectItem(item)"
                 closingMode="'none'"
             >
+                <!-- TODO -->
                 <t t-if="item.isParent">
                     <a t-att-class="{ o_expand: true, 'ms-4': item.isFieldProperty}"
                         href="#"

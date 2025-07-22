@@ -4,11 +4,11 @@
         <div id="developer_tool">
             <SettingsBlock title.translate="Developer Tools">
                 <Setting addLabel="false">
-                        <a t-if="!isDebug" class="d-block" t-on-click="() => this.activateDebug(1)" href="#">Activate the developer mode</a>
-                        <a t-if="!isAssets" class="d-block" t-on-click="() => this.activateDebug('assets')" href="#">Activate the developer mode (with assets)</a>
-                        <a t-if="!isTests" class="d-block" t-on-click="() => this.activateDebug('assets,tests')" href="#">Activate the developer mode (with tests assets)</a>
-                        <a t-if="isDebug" class="d-block" t-on-click="() => this.activateDebug(0)" href="#">Deactivate the developer mode</a>
-                        <a t-if="isDebug and !isDemoDataActive" t-on-click.prevent="onClickForceDemo" class="o_web_settings_force_demo" href="#">Load demo data</a>
+                        <button t-if="!isDebug" class="d-block btn btn-link p-0 fw-normal" t-on-click="() => this.activateDebug(1)">Activate the developer mode</button>
+                        <button t-if="!isAssets" class="d-block btn btn-link p-0 fw-normal" t-on-click="() => this.activateDebug('assets')">Activate the developer mode (with assets)</button>
+                        <button t-if="!isTests" class="d-block btn btn-link p-0 fw-normal" t-on-click="() => this.activateDebug('assets,tests')">Activate the developer mode (with tests assets)</button>
+                        <button t-if="isDebug" class="d-block btn btn-link p-0 fw-normal" t-on-click="() => this.activateDebug(0)">Deactivate the developer mode</button>
+                        <button t-if="isDebug and !isDemoDataActive" t-on-click.prevent="onClickForceDemo" class="o_web_settings_force_demo btn btn-link p-0 fw-normal">Load demo data</button>
                 </Setting>
             </SettingsBlock>
         </div>

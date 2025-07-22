@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a",
+        trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add button",
         content: _t("Add a line to your invoice"),
         run: "click",
     },

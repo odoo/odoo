@@ -1750,7 +1750,7 @@ export class ListRenderer extends Component {
                             c.classList.contains("o_group_field_row_add")
                         );
                         if (addCell) {
-                            const toFocus = addCell.querySelector("a");
+                            const toFocus = addCell.querySelector("button");
                             this.focus(toFocus);
                             return true;
                         }

@@ -516,7 +516,7 @@ test("input field: change value before pending onchange returns", async () => {
     let def;
     onRpc("onchange", () => def);
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
         message: "should contain the default value",
     });
@@ -608,7 +608,7 @@ test("input field: change value before pending onchange returns (with fieldDebou
 
     onRpc("onchange", () => def);
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
         message: "should contain the default value",
     });
@@ -808,7 +808,7 @@ test("input field: set and remove value, then wait for onchange", async () => {
             </field>
         </form>`,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget[name=name] input").toHaveValue("");
     await fieldInput("name").edit("test", { confirm: false });
     await fieldInput("name").clear({ confirm: false });

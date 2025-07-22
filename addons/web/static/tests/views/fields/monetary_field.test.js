@@ -529,7 +529,7 @@ test("should keep the focus when being edited in x2many lists", async () => {
     });
 
     // test the monetary field inside the one2many
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_field_widget[name=float_field] input").edit("22", { confirm: "blur" });
 
     expect(".o_field_widget[name=p] .o_field_widget[name=float_field] span").toHaveInnerHTML(

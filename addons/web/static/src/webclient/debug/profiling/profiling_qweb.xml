@@ -4,12 +4,12 @@
 <t t-name="web.ProfilingQwebView">
     <div class="oe_form_field o_ace_view_editor oe_ace_open o_profiling_qweb_view">
         <div class="o_select_view_profiling" t-ref="selector">
-            <a role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="#"><MenuItem view="state.view" t-if="state.view"/></a>
+            <button role="button" class="dropdown-toggle btn btn-link fw-normal p-0" data-bs-toggle="dropdown" aria-expanded="false"><MenuItem view="state.view" t-if="state.view"/></button>
             <div class="dropdown-menu" role="menu">
                 <t t-foreach="viewObjects" t-as="view" t-key="view_index">
-                    <a role="menuitem" href="#" t-att-data-id="view.id" t-on-click.prevent="_onSelectView">
+                    <button class="btn btn-link p-0 fw-normal" role="menuitem" t-att-data-id="view.id" t-on-click.prevent="_onSelectView">
                         <MenuItem view="view"/>
-                    </a>
+                    </button>
                 </t>
             </div>
         </div>

@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "edit Privi Foo",
         },
         {
-            trigger: ".o_field_x2many_list_row_add a",
+            trigger: ".o_field_x2many_list_row_add button",
             content: "add groups (open modal)",
             run: "click",
         },
@@ -56,12 +56,12 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "edit Bar Manager",
         },
         {
-            trigger: 'a[name="inherit_groups"]',
+            trigger: 'button[name="inherit_groups"]',
             content: "get implied groups",
             run: "click",
         },
         {
-            trigger: 'div[name="implied_ids"] .o_field_x2many_list_row_add a',
+            trigger: 'div[name="implied_ids"] .o_field_x2many_list_row_add button',
             content: "switch to implied",
             run: "click",
         },
@@ -130,7 +130,7 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
-            trigger: '.o_popover:contains("Privi Foo") a:contains("Bar Manager")',
+            trigger: '.o_popover:contains("Privi Foo") button:contains("Bar Manager")',
             content: "open the group from the info button",
             run: "click",
         },

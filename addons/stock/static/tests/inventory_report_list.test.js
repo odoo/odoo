@@ -146,7 +146,7 @@ test("Work in grouped list", async function () {
     expect(".o_data_row").toHaveCount(1);
 
     // Create a new record...
-    await contains(".o_group_field_row_add a").click();
+    await contains(".o_group_field_row_add button").click();
     await contains("[name=name] input").edit("Del Tutorial", { confirm: false });
     await contains("[name=age] input").edit("32", { confirm: false });
     await contains(".o_control_panel_main_buttons .o_list_button_save").click();
@@ -154,7 +154,7 @@ test("Work in grouped list", async function () {
     expect(".o_data_row").toHaveCount(2);
 
     // Create an existing record...
-    await contains(".o_group_field_row_add a").click();
+    await contains(".o_group_field_row_add button").click();
     await contains("[name=name] input").edit("Samuel Oak", { confirm: false });
     await contains("[name=age] input").edit("55", { confirm: false });
     await contains(".o_control_panel_main_buttons .o_list_button_save").click();
@@ -162,7 +162,7 @@ test("Work in grouped list", async function () {
     expect(".o_data_row").toHaveCount(2);
 
     // Create an existing but not displayed record...
-    await contains(".o_group_field_row_add a").click();
+    await contains(".o_group_field_row_add button").click();
     await contains("[name=name] input").edit("Daniel Fortesque", { confirm: false });
     await contains("[name=age] input").edit("55", { confirm: false });
     await contains("[name=job] input").edit("Soldier", { confirm: false }); // let it in its original group

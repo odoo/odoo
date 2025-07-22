@@ -38,16 +38,16 @@
                         <t t-if="currency_index > 0">
                             -
                         </t>
-                        <a t-if="currency" class="px-1" t-out="getCurrency(currency)" href="#" t-on-click="() => this.filterCurrency(currency)"/>
+                        <button class="btn btn-link px-1 py-0" t-out="getCurrency(currency)" t-on-click="() => this.filterCurrency(currency)"/>
                     </t>
                 </div>
             </t>
             <t t-if="model.data.exceeds">
                 <div class="alert alert-info text-center o_graph_alert m-3 mb-2" role="status">
                     There are too many data. The graph only shows a sample. Use the filters to refine the scope.
-                    <a class="o_graph_load_all_btn" href="#" t-on-click="() => this.loadAll()">
+                    <button class="o_graph_load_all_btn btn btn-link p-0" t-on-click="() => this.loadAll()">
                         Load everything anyway.
-                    </a>
+                    </button>
                 </div>
             </t>
             <div class="d-flex d-print-none gap-1 flex-shrink-0 mt-2 mx-3 mb-3 overflow-x-auto">

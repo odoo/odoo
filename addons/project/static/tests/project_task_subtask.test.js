@@ -262,7 +262,7 @@ test("project.task (form): check that the subtask of another project can be adde
         type: "form",
     });
 
-    await click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add button");
     await animationFrame();
     await click(".o_field_project input");
     await animationFrame();
@@ -281,7 +281,7 @@ test("project.task (form): check focus on new subtask's name", async () => {
         type: "form",
     });
 
-    await click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add button");
     await animationFrame();
     expect(".o_field_char input").toBeFocused({
         message: "Upon clicking on 'Add a line', the new subtask's name should be focused.",
