@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
-# Wil Odoo, 2025
 # Jessica Jakara, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-04 18:37+0000\n"
+"POT-Creation-Date: 2025-07-18 18:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2917,6 +2917,12 @@ msgstr "Sisältö"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy Link"
 msgstr "Kopioi linkki"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Copy to Clipboard"
+msgstr "Kopioi leikepöydälle"
 
 #. module: mail
 #. odoo-python
@@ -6813,6 +6819,18 @@ msgstr "Viesti #%(threadName)s…"
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message %(thread name)s…"
 msgstr "Viesti %(thread name)s…"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Message Copied!"
+msgstr "Viesti on kopioitu!"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Message Copy Failed (Permission denied?)!"
+msgstr "Viestin kopioiminen epäonnistui (lupaa ei myönnetty)!"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
@@ -12573,6 +12591,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+"Et voi poistaa kohdetta %s, koska sitä tarvitaan useissa sovelluksissa."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -12580,6 +12606,16 @@ msgid ""
 msgstr ""
 "Näitä ryhmiä ei voi poistaa, koska muut moduulit tarvitsevat Koko yritys "
 "-ryhmää."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
+"Et voit muokata kohteen %(activities_names)s kohdemoduulia, sillä ne "
+"vaaditaan useissa sovelluksissa."
 
 #. module: mail
 #. odoo-python

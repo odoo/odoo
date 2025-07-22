@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-04 18:37+0000\n"
+"POT-Creation-Date: 2025-07-18 18:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -2950,6 +2950,12 @@ msgstr "Inhalte"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy Link"
 msgstr "Link kopieren"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Copy to Clipboard"
+msgstr "In Zwischenablage kopieren"
 
 #. module: mail
 #. odoo-python
@@ -6871,6 +6877,18 @@ msgstr "Nachricht an #%(threadName)s…"
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message %(thread name)s…"
 msgstr "Nachricht an %(thread name)s…"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Message Copied!"
+msgstr "Nachricht kopiert"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Message Copy Failed (Permission denied?)!"
+msgstr "Kopie des Nachricht fehlgeschlagen (Berechtigung verweigert?)!"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
@@ -12684,6 +12702,15 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+"Sie können %(activity_names)s nicht löschen, da sie in mehreren Apps "
+"verwendet wird."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -12691,6 +12718,16 @@ msgid ""
 msgstr ""
 "Sie können diese Gruppen nicht einfach löschen, da die Gruppe für das "
 "Gesamtunternehmen in anderen Modulen benötigt wird."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required"
+" in various apps."
+msgstr ""
+"Sie können das Zielmodell %(activities_names)s nicht bearbeiten, da es in "
+"mehreren Apps verwendet wird."
 
 #. module: mail
 #. odoo-python
