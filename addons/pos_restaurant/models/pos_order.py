@@ -25,4 +25,3 @@ class PosOrder(models.Model):
         result = super().read_pos_data(data, config_id)
         result['restaurant.order.course'] = self.course_ids.read(self.course_ids._load_pos_data_fields(config_id), load=False) if config_id else []
         return result
-    
