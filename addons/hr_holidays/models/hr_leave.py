@@ -426,6 +426,17 @@ class HolidaysRequest(models.Model):
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 if leave.employee_id.is_flexible and leave.date_to.date() == leave.date_from.date():
+                    public_holidays = self.env['resource.calendar.leaves'].search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<=', leave.date_from),
+                        ('date_to', '>=', leave.date_to),
+                        ('calendar_id', 'in', [False, calendar.id]),
+                        ('company_id', '=', leave.company_id.id)
+                    ])
+                    if public_holidays:
+                        # If there is a public holiday on the same day, we set the duration to 0
+                        result[leave.id] = (0, 0)
+                        continue
                     hours = (leave.date_to - leave.date_from).total_seconds() / 3600
                     if not leave.request_unit_hours:
                         days = 1 if not leave.request_unit_half else 0.5
