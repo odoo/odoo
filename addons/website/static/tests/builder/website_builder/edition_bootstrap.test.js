@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
@@ -40,7 +40,6 @@ test("Opening an offcancas should not add mutations to the history", async () =>
     );
     await contains(":iframe .toggleCanvas").click();
     const editor = getEditor();
-    await animationFrame();
-    expect(":iframe .offcanvas").toHaveClass("show");
+    await waitFor(":iframe .offcanvas.show");
     expect(editor.shared.history.addStep()).toBe(false);
 });
