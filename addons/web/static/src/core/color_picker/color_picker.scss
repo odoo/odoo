@@ -12,6 +12,7 @@
 }
 
 .o_font_color_selector {
+    @include o-input-number-no-arrows();
     --bg: #{$o-we-toolbar-bg};
     --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
     --border-rgb: var(--text-rgb);

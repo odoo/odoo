@@ -90,14 +90,21 @@ export class GradientPicker extends Component {
     onAngleChange(ev) {
         const angle = parseInt(ev.target.value);
         if (!isNaN(angle)) {
-            this.state.angle = angle;
+            const clampedAngle = Math.min(Math.max(angle, 0), 360);
+            ev.target.value = clampedAngle;
+            this.state.angle = clampedAngle;
             this.onColorGradientChange();
         }
     }
 
     onPositionChange(position, ev) {
-        this.positions[position] = ev.target.value;
-        this.onColorGradientChange();
+        const inputValue = parseFloat(ev.target.value);
+        if (!isNaN(inputValue)) {
+            const clampedValue = Math.min(Math.max(inputValue, 0), 100);
+            ev.target.value = clampedValue;
+            this.positions[position] = clampedValue;
+            this.onColorGradientChange();
+        }
     }
 
     onColorChange(color) {
