@@ -317,6 +317,7 @@ describe("formatFloat", () => {
         expect(formatFloat(-1e21, options)).toBe("-1e+21");
         expect(formatFloat(-1.0045e22, options)).toBe("-1e+22");
         expect(formatFloat(-1.012e43, options)).toBe("-1.01e+43");
+        expect(formatFloat(-0.0000001, options)).toBe("0.00");
 
         Object.assign(options, { decimals: 2, minDigits: 2 });
         expect(formatFloat(1020000, options)).toBe("1,020k");
@@ -341,5 +342,8 @@ describe("formatFloat", () => {
             expect(value.toFixed(decimals)).toBe(resFixed);
             expect(formatFloat(value, options)).toBe(resHuman);
         });
+
+        Object.assign(options, { humanReadable: false });
+        expect(formatFloat(-0.0000001, options)).toBe("0.00");
     });
 });
