@@ -113,7 +113,7 @@ export default class DevicesSynchronisation {
             );
 
             this.processStaticRecords(staticR);
-            this.processDynamicRecords(dynamicR);
+            await this.processDynamicRecords(dynamicR);
         }
 
         if (Object.keys(response.deleted_record_ids).length) {
@@ -135,7 +135,7 @@ export default class DevicesSynchronisation {
      * This method will process the dynamic records to update the records in the frontend.
      * @param {Object} dynamicRecords - Record write dates by ids and models.
      */
-    processDynamicRecords(dynamicRecords) {
+    async processDynamicRecords(dynamicRecords) {
         return this.models.connectNewData(dynamicRecords);
     }
 

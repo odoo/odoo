@@ -22,7 +22,17 @@ export class PosOrder extends models.ServerModel {
     }
 
     sync_from_ui(data) {
-        const orderIds = this.create(data);
+        const orderIds = [];
+        for (const record of data) {
+            if (record.id) {
+                this.write([record.id], record);
+                orderIds.push(record.id);
+            } else {
+                const id = this.create(record);
+                orderIds.push(id);
+            }
+        }
+
         return this.read_pos_data(orderIds, data, this.config_id);
     }
 
