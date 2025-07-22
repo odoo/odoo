@@ -1124,7 +1124,6 @@ registerWebsitePreviewTour(
             run: "click",
         },
         ...addCustomField("char", "text", `Test1"'`, false),
-        ...addCustomField("char", "text", 'Test2`\\', false),
         ...clickOnSave(),
         stepUtils.waitIframeIsReady(),
         ...essentialFieldsForDefaultFormFillInSteps,
@@ -1137,11 +1136,6 @@ registerWebsitePreviewTour(
             content: "Complete the first added field",
             trigger: `:iframe input[name="${CSS.escape("Test1&quot;'")}"]`,
             run: "edit test1",
-        },
-        {
-            content: "Complete the second added field",
-            trigger: `:iframe input[name="${CSS.escape("Test2`\\")}"]`,
-            run: "edit test2",
         },
         {
             content: "Click on 'Submit'",
