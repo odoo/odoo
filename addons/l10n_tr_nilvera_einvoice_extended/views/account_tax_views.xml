@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_tax_form_view_l10n_tr_nilvera_extended" model="ir.ui.view">
+        <field name="name">account.tax.form.view.inherit.l10n_tr_nilvera_extended</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_scope']" position="after">
+                <field name="l10n_tr_tax_withholding_code_id" invisible="country_code != 'TR' or amount_type != 'percent' or amount &gt;= 0"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
