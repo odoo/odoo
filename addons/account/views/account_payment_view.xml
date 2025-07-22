@@ -103,8 +103,8 @@
                     <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="In Process" name="state_in_process" domain="[('state', '=', 'in_process')]"/>
                     <separator/>
-                    <filter string="Sent" name="state_sent" domain="[('is_sent', '=', 'True')]"/>
-                    <filter string="Not Sent" name="state_sent" domain="[('is_sent', '=', 'False')]"/>
+                    <filter string="Sent" name="state_sent" domain="[('is_sent', '=', True)]"/>
+                    <filter string="Not Sent" name="state_sent" domain="[('is_sent', '=', False)]"/>
                     <filter string="No Bank Matching" name="unmatched" domain="[('is_matched', '=', False)]"/>
                     <filter string="Reconciled" name="reconciled" domain="[('is_reconciled', '=', True)]"/>
                     <separator/>
