@@ -660,6 +660,36 @@ export const accountTaxHelpers = {
         }
     },
 
+    distribute_delta_amount_smoothly(precision_digits, delta_amount, target_factors) {
+        const precision_rounding = Number(`1e-${precision_digits}`);
+        const amounts_to_distribute = target_factors.map((x) => 0.0);
+        if (floatIsZero(delta_amount, precision_digits)) {
+            return amounts_to_distribute;
+        }
+
+        const sign = delta_amount < 0.0 ? -1 : 1;
+        const nb_of_errors = Math.round(Math.abs(delta_amount / precision_rounding));
+        let remaining_errors = nb_of_errors;
+
+        for (let i = 0; i < target_factors.length; i++) {
+            const factor = target_factors[i].factor;
+            if (remaining_errors === 0) {
+                break;
+            }
+
+            const nb_of_amount_to_distribute = Math.min(
+                Math.ceil(Math.abs(factor * nb_of_errors)),
+                remaining_errors
+            );
+
+            remaining_errors -= nb_of_amount_to_distribute;
+            const amount_to_distribute = sign * nb_of_amount_to_distribute * precision_rounding;
+            amounts_to_distribute[i] += amount_to_distribute;
+        }
+
+        return amounts_to_distribute;
+    },
+
     round_base_lines_tax_details(base_lines, company) {
         const total_per_tax = {};
         const total_per_base = {};
@@ -941,41 +971,32 @@ export const accountTaxHelpers = {
                 continue;
             }
 
-            const delta_tax_amount_currency =
-                tax_amounts.raw_tax_amount_currency - tax_amounts.tax_amount_currency;
-            const delta_tax_amount = tax_amounts.raw_tax_amount - tax_amounts.tax_amount;
-            for (const [delta, delta_field, delta_currency] of [
-                [delta_tax_amount_currency, "tax_amount_currency", currency],
-                [delta_tax_amount, "tax_amount", company.currency_id],
+            for (const [delta_field, delta_currency] of [
+                ["tax_amount_currency", currency],
+                ["tax_amount", company.currency_id],
             ]) {
-                if (floatIsZero(delta, delta_currency.decimal_places)) {
-                    continue;
-                }
-
-                const sign = delta < 0.0 ? -1 : 1;
-                const nb_of_errors = Math.round(Math.abs(delta / delta_currency.rounding));
-                let remaining_errors = nb_of_errors;
-
-                for (const [base_line, index_tax_data] of tax_amounts.sorted_base_line_x_tax_data) {
-                    const tax_details = base_line.tax_details;
-                    if (!remaining_errors || !index_tax_data) {
-                        break;
-                    }
-
-                    const index = index_tax_data[0];
-                    const tax_data = index_tax_data[1];
-                    const nb_of_amount_to_distribute = Math.min(
-                        Math.ceil(
-                            Math.abs(
-                                (tax_details.total_included_currency * nb_of_errors) /
-                                    tax_amounts.total_included_currency
-                            )
+                const delta_amount = tax_amounts[`raw_${delta_field}`] - tax_amounts[delta_field];
+                const target_factors = tax_amounts.sorted_base_line_x_tax_data
+                    .filter(([base_line, index_tax_data]) => index_tax_data)
+                    .map(([base_line, index_tax_data]) => ({
+                        factor: Math.abs(
+                            base_line.tax_details.total_included_currency /
+                                tax_amounts.total_included_currency
                         ),
-                        remaining_errors
-                    );
-                    remaining_errors -= nb_of_amount_to_distribute;
-                    const amount_to_distribute =
-                        sign * nb_of_amount_to_distribute * delta_currency.rounding;
+                        base_line: base_line,
+                        index_tax_data: index_tax_data,
+                    }));
+                const amounts_to_distribute = this.distribute_delta_amount_smoothly(
+                    delta_currency.decimal_places,
+                    delta_amount,
+                    target_factors
+                );
+                for (let i = 0; i < target_factors.length; i++) {
+                    const target_factor = target_factors[i];
+                    const amount_to_distribute = amounts_to_distribute[i];
+
+                    const base_line = target_factor.base_line;
+                    const [index, tax_data] = target_factor.index_tax_data;
                     tax_data[delta_field] += amount_to_distribute;
                     tax_amounts[delta_field] += amount_to_distribute;
 
@@ -1005,52 +1026,44 @@ export const accountTaxHelpers = {
                 continue;
             }
 
-            let delta_base_amount_currency;
-            let delta_base_amount;
-            if (country_code === "PT") {
-                delta_base_amount_currency =
-                    tax_amounts.raw_total_amount_currency -
-                    tax_amounts.base_amount_currency -
-                    tax_amounts.tax_amount_currency;
-                delta_base_amount =
-                    tax_amounts.raw_total_amount - tax_amounts.base_amount - tax_amounts.tax_amount;
-            } else {
-                delta_base_amount_currency =
-                    tax_amounts.raw_base_amount_currency - tax_amounts.base_amount_currency;
-                delta_base_amount = tax_amounts.raw_base_amount - tax_amounts.base_amount;
-            }
-
-            for (const [delta, delta_currency_indicator, delta_currency] of [
-                [delta_base_amount_currency, "_currency", currency],
-                [delta_base_amount, "", company.currency_id],
+            for (const [delta_currency_indicator, delta_currency] of [
+                ["_currency", currency],
+                ["", company.currency_id],
             ]) {
-                if (floatIsZero(delta, delta_currency.decimal_places)) {
-                    continue;
+                let delta_amount;
+                if (country_code === "PT") {
+                    delta_amount =
+                        tax_amounts[`raw_total_amount${delta_currency_indicator}`] -
+                        tax_amounts[`base_amount${delta_currency_indicator}`] -
+                        tax_amounts[`tax_amount${delta_currency_indicator}`];
+                } else {
+                    delta_amount =
+                        tax_amounts[`raw_base_amount${delta_currency_indicator}`] -
+                        tax_amounts[`base_amount${delta_currency_indicator}`];
                 }
 
-                const sign = delta < 0.0 ? -1 : 1;
-                const nb_of_errors = Math.round(Math.abs(delta / delta_currency.rounding));
-                let remaining_errors = nb_of_errors;
-
-                for (const [base_line, index_tax_data] of tax_amounts.sorted_base_line_x_tax_data) {
-                    const tax_details = base_line.tax_details;
-                    if (!remaining_errors) {
-                        break;
-                    }
-
-                    const nb_of_amount_to_distribute = Math.min(
-                        Math.ceil(
-                            Math.abs(
-                                (tax_details.total_included_currency * nb_of_errors) /
-                                    tax_amounts.total_included_currency
-                            )
+                const target_factors = tax_amounts.sorted_base_line_x_tax_data.map(
+                    ([base_line, index_tax_data]) => ({
+                        factor: Math.abs(
+                            base_line.tax_details.total_included_currency /
+                                tax_amounts.total_included_currency
                         ),
-                        remaining_errors
-                    );
-                    remaining_errors -= nb_of_amount_to_distribute;
-                    const amount_to_distribute =
-                        sign * nb_of_amount_to_distribute * delta_currency.rounding;
+                        base_line: base_line,
+                        index_tax_data: index_tax_data,
+                    })
+                );
+                const amounts_to_distribute = this.distribute_delta_amount_smoothly(
+                    delta_currency.decimal_places,
+                    delta_amount,
+                    target_factors
+                );
+                for (let i = 0; i < target_factors.length; i++) {
+                    const target_factor = target_factors[i];
+                    const amount_to_distribute = amounts_to_distribute[i];
 
+                    const base_line = target_factor.base_line;
+                    const tax_details = base_line.tax_details;
+                    const index_tax_data = target_factor.index_tax_data;
                     if (index_tax_data) {
                         const tax_data = index_tax_data[1];
                         tax_data[`base_amount${delta_currency_indicator}`] += amount_to_distribute;
