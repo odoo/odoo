@@ -986,7 +986,6 @@ class TestPurchase(AccountTestInvoicingCommon):
     def test_purchase_order_uom(self):
         fuzzy_drink = self.env['product.product'].create({
             'name': 'Fuzzy Drink',
-            'is_storable': True,
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'seller_ids': [Command.create({
                 'partner_id': self.partner_a.id,
