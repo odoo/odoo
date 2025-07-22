@@ -322,7 +322,7 @@ export async function hideTab() {
  */
 export async function editSelectMenu(selector, { value, index }) {
     async function selectItem(value) {
-        const elementToSelect = queryFirst(`.o_select_menu_menu :contains(${value})`);
+        const elementToSelect = queryFirst(`.o_select_menu_item:contains(${value})`);
         if (elementToSelect) {
             await click(elementToSelect);
             return;
@@ -348,7 +348,7 @@ export async function editSelectMenu(selector, { value, index }) {
         // Because this helper must work even when no input is editable (searchable=false),
         // we unselect the currently selected value with the 'X' button
         const clearButton = queryFirst(
-            `.o_select_menu[data-id='${selectMenuId}'] .o_select_menu_toggler_clear`
+            `.o_select_menu[data-id='${selectMenuId}'] .o_select_menu_toggler_clear, .o_select_menu_menu .o_clear_button`
         );
         if (clearButton) {
             await click(clearButton);

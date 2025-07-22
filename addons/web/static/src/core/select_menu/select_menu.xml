@@ -39,9 +39,6 @@
                             <TagsList t-if="props.value.length" tags="multiSelectChoices"/>
                         </t>
                         <t t-call="web.SelectMenu.search" />
-                        <span t-if="!props.searchable and canDeselect" t-on-click.stop="onInputClear" class="o_select_menu_toggler_clear position-absolute top-50 end-0 me-3">
-                            <i class="fa fa-times"></i>
-                        </span>
                         <span class="o_select_menu_caret align-self-center" />
                     </div>
                 </t>
@@ -49,8 +46,7 @@
                     <button type="button" t-attf-class="o_select_menu_toggler d-flex border btn btn-light w-100 bg-light {{ props.togglerClass }}" t-att-disabled="props.disabled">
                         <span class="o_select_menu_toggler_slot text-start text-truncate">
                             <span t-if="props.placeholder and !props.value" class="text-muted" t-out="props.placeholder"/>
-                            <t t-if="!props.slots or !props.slots.default" t-esc="displayValue" />
-                            <t t-else="" t-slot="default" />
+                            <t t-slot="default" />
                         </span>
                         <span t-if="canDeselect" t-on-click.stop="onInputClear" class="o_select_menu_toggler_clear position-absolute top-50 end-0 me-3">
                             <i class="fa fa-times"></i>
@@ -59,6 +55,7 @@
                     </button>
                 </t>
                 <t t-set-slot="content">
+                    <button t-if="isBottomSheet and canDeselect" class="btn o_clear_button px-4 d-block ms-auto" t-on-click="onInputClear">Clear</button>
                     <div class="o_select_menu_searchbox position-sticky start-0 d-empty-none" t-att-data-id="selectMenuId">
                         <t t-if="displayInputInDropdown">
                             <t t-set="inputClass" t-value="'o_select_menu_input dropdown-item'"/>
