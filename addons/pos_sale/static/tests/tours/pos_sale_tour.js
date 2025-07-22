@@ -479,3 +479,27 @@ registry.category("web_tour.tours").add("test_down_payment_displayed", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_sale_order_fp_different_from_partner_one", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleSaleOrderByPrice("20.00"),
+            ProductScreen.checkTaxAmount("10.00"),
+            ProductScreen.checkFiscalPosition("Partner FP"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.settleSaleOrderByPrice("10.00"),
+            ProductScreen.checkTaxAmount("0.00"),
+            ProductScreen.checkFiscalPosition("Sale Order FP"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
