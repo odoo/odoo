@@ -112,7 +112,7 @@ export class SelectMenu extends Component {
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
             }
-            const searchString = ev.target.value || "";
+            const searchString = ev.target.value;
             this.state.searchValue = searchString;
             this.onInput(searchString);
         }, DEBOUNCED_DELAY);
