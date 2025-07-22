@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
+import inspect
+
 from collections import defaultdict
 from datetime import date, datetime
 from functools import wraps
@@ -12,6 +14,39 @@ from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.tools import groupby
 from odoo.addons.bus.websocket import wsrequest
+
+
+def bus_rpc(func):
+    """Sends a 'bus_rpc/end' message after function execution if 'bus_rpc_uuid' is provided.
+
+    This is used by the `bus_rpc_service` on the client side to wait for both the RPC result
+    and any subsequent notifications.
+    """
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        bus_rpc_uuid = kwargs.pop("bus_rpc_uuid", None)
+        try:
+            result = func(self, *args, **kwargs)
+        finally:
+            if bus_rpc_uuid:
+                partner, guest = request.env["res.partner"]._get_current_persona()
+                (partner or guest)._bus_send("bus_rpc/end", bus_rpc_uuid)
+        return result
+
+    # Change the signature of the function to add the `bus_rpc_uuid` parameter. Otherwise, the
+    # parameter would be skipped by the `route` decorator.
+    sig = inspect.signature(func)
+    params = list(sig.parameters.values())
+    bus_rpc_param = inspect.Parameter(
+        "bus_rpc_uuid", kind=inspect.Parameter.KEYWORD_ONLY, default=None
+    )
+    if params and params[-1].kind == inspect.Parameter.VAR_KEYWORD:
+        params.insert(len(params) - 1, bus_rpc_param)
+    else:
+        params.append(bus_rpc_param)
+    wrapper.__signature__ = sig.replace(parameters=params)
+    return wrapper
+
 
 def add_guest_to_context(func):
     """ Decorate a function to extract the guest from the request.

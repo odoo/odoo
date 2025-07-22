@@ -3,7 +3,7 @@
 from odoo.http import route
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.im_livechat.tools.misc import force_guest_env
-
+from odoo.addons.mail.tools.discuss import bus_rpc
 
 class LivechatThreadController(ThreadController):
     @route("/im_livechat/cors/message/post", methods=["POST"], type="jsonrpc", auth="public", cors="*")
@@ -12,6 +12,7 @@ class LivechatThreadController(ThreadController):
         return self.mail_message_post(thread_model, thread_id, post_data, context, **kwargs)
 
     @route("/im_livechat/cors/message/update_content", methods=["POST"], type="jsonrpc", auth="public", cors="*")
+    @bus_rpc
     def livechat_message_update_content(
         self, guest_token, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None
     ):

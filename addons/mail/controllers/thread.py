@@ -6,8 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import frozendict
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context, bus_rpc, Store
 
 
 class ThreadController(http.Controller):
@@ -205,6 +204,7 @@ class ThreadController(http.Controller):
         return store.add(message).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
+    @bus_rpc
     @add_guest_to_context
     def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()

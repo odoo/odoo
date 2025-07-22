@@ -20,6 +20,17 @@ import { groupBy } from "@web/core/utils/arrays";
 const mockRpcRegistry = registry.category("mail.mock_rpc");
 export const DISCUSS_ACTION_ID = 104;
 
+export function bus_rpc(func) {
+    return async function () {
+        const kwargs = getKwArgs(arguments, "bus_rpc_uuid");
+        const result = await func.call(this, ...arguments);
+        if (kwargs.bus_rpc_uuid) {
+            const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
+            this.env["bus.bus"]._sendone(partner, "bus_rpc/end", kwargs.bus_rpc_uuid);
+        }
+        return result;
+    };
+}
 /**
  * @template [T={}]
  * @typedef {import("@web/../tests/web_test_helpers").RouteCallback<T>} RouteCallback
@@ -662,7 +673,7 @@ registerRoute("/mail/message/translate", translate);
 /** @type {RouteCallback} */
 async function translate(request) {}
 
-registerRoute("/mail/message/update_content", mail_message_update_content);
+registerRoute("/mail/message/update_content", bus_rpc(mail_message_update_content));
 /** @type {RouteCallback} */
 async function mail_message_update_content(request) {
     /** @type {import("mock_models").BusBus} */

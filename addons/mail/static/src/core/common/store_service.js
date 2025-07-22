@@ -483,6 +483,11 @@ export class Store extends BaseStore {
         return validMentions;
     }
 
+    /** @returns {import("services")["mail.busRpc"]} */
+    get busRpc() {
+        return this.env.services["mail.busRpc"];
+    }
+
     /**
      * Get the parameters to pass to the message post route.
      */

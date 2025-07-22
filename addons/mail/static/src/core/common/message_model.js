@@ -531,7 +531,7 @@ export class Message extends Record {
             mentionedRoles,
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
-        const data = await rpc("/mail/message/update_content", {
+        const data = await this.store.busRpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.id),
