@@ -109,7 +109,7 @@
                         </div>
                         <!-- Attributes -->
                         <div class="">
-                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" />
+                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" isCombo="true" />
                         </div>
                     </div>
 
@@ -128,7 +128,8 @@
                                         </div>
                                         <div class="d-flex flex-column gap-1">
                                             <div class="fs-4 fw-bold text-break">
-                                                <span t-if="item_qty &gt; 1" class="fw-normal"><t t-esc="item_qty"/>x </span><t t-esc="product.name"/>
+                                                <span t-if="item_qty &gt; 1" class="fw-normal"><t t-esc="item_qty"/>x </span>
+                                                    <span t-esc="formatProductName(product)"/>
                                             </div>
                                             <div class="text-muted fw-medium" t-foreach="attributes" t-as="attrVal" t-key="attrVal.attribute_line_id.id">
                                                 <t t-esc="attrVal.attribute_line_id.attribute_id.name" />:
