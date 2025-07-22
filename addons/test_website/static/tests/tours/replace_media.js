@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
+import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 import {
     changeOption,
     insertSnippet,
@@ -46,13 +46,17 @@ registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "ensure image size is displayed",
-        trigger: "#oe_snippets we-title:contains('Image') .o_we_image_weight:contains('kb')",
+        trigger: ".o_customize_tab [data-container-title='Image'] .options-container-header:contains('kb')",
     },
-    changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
-    changeOption("ImageTools", "we-button[data-set-img-shape]"),
+    changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
     {
-        content: "replace image",
-        trigger: "#oe_snippets we-button[data-replace-media]",
+        content: "Click on the first image shape",
+        trigger: "button[data-action-id='setImageShape']",
+        run: "click",
+    },
+    {
+        content: "Open MediaDialog from an image",
+        trigger: "button[data-action-id='replaceMedia']",
         run: "click",
     },
     {
@@ -61,16 +65,16 @@ registerWebsitePreviewTour('test_replace_media', {
         run: "click",
     },
     {
-        content: "ensure the svg doesn't have a shape",
-        trigger: ":iframe .s_picture figure img:not([data-shape])",
+        content: "ensure the svg does have a shape",
+        trigger: ":iframe .s_picture figure img[data-shape]",
     },
     {
-        content: "ensure image size is not displayed",
-        trigger: "#oe_snippets we-title:contains('Image'):not(:has(.o_we_image_weight:visible))",
+        content: "ensure image size is displayed",
+        trigger: ".o_customize_tab [data-container-title='Image'] span[title='Size']",
     },
     {
         content: "replace image",
-        trigger: "#oe_snippets we-button[data-replace-media]",
+        trigger: "button[data-action-id='replaceMedia']",
         run: "click",
     },
     {
@@ -80,12 +84,12 @@ registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "select an icon",
-        trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-lemon-o",
+        trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
         run: "click",
     },
     {
         content: "ensure icon block is displayed",
-        trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
+        trigger: ".o_customize_tab [data-container-title='Icon']",
     },
     {
         content: "select footer",
@@ -94,16 +98,16 @@ registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "select icon",
-        trigger: ":iframe .s_picture figure span.fa-lemon-o",
+        trigger: ":iframe .s_picture figure span.fa-heart",
         run: "click",
     },
     {
         content: "ensure icon block is still displayed",
-        trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
+        trigger: ".o_customize_tab [data-container-title='Icon']",
     },
     {
         content: "replace icon",
-        trigger: "#oe_snippets we-button[data-replace-media]",
+        trigger: "button[data-action-id='replaceMedia']",
         run: "click",
     },
     {
@@ -129,11 +133,11 @@ registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "ensure video option block is displayed",
-        trigger: "#oe_snippets we-customizeblock-options we-title:contains('Video')",
+        trigger: ".o_customize_tab [data-container-title='Video']",
     },
     {
         content: "replace image",
-        trigger: "#oe_snippets we-button[data-replace-media]",
+        trigger: ".btn-success[data-action-id='replaceMedia']",
         run: "click",
     },
     {
@@ -143,12 +147,12 @@ registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "select an icon",
-        trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-lemon-o",
+        trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
         run: "click",
     },
     {
         content: "ensure icon block is displayed",
-        trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
+        trigger: ".o_customize_tab [data-container-title='Icon']",
     },
     {
         content: "select footer",
@@ -157,11 +161,11 @@ registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "select icon",
-        trigger: ":iframe .s_picture figure span.fa-lemon-o",
+        trigger: ":iframe .s_picture figure span.fa-heart",
         run: "click",
     },
     {
         content: "ensure icon block is still displayed",
-        trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
+        trigger: ".o_customize_tab [data-container-title='Icon']",
     },
 ]);

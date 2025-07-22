@@ -7,7 +7,13 @@ import { insertSnippet, registerWebsitePreviewTour } from '@website/js/tours/tou
 const selectImageSteps = [{
     content: "select block",
     trigger: ":iframe #wrapwrap .s_text_image",
-    run: "click",
+    async run(helpers) {
+        await helpers.click();
+        const el = this.anchor;
+        const sel = el.ownerDocument.getSelection();
+        sel.collapse(el, 0);
+        el.focus();
+    },
 }, {
     content: "check link popover disappeared",
     trigger: ":iframe body:not(:has(.o_edit_menu_popover))",
@@ -29,52 +35,52 @@ registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "enable link",
-        trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-customizeblock-option:has(we-title:contains(Media)) we-button.fa-link",
+        trigger: ".o_customize_tab [data-container-title='Image'] button[data-action-id='setLink']",
         run: "click",
     }, {
         content: "enter site URL",
-        trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
+        trigger: ".o_customize_tab [data-container-title='Image'] div[data-action-id='setUrl'] input",
         run: "edit odoo.com && click body",
     },
     ...selectImageSteps,
     {
         content: "check popover content has site URL",
-        trigger: ":iframe .o_edit_menu_popover a.o_we_url_link[href='http://odoo.com/']:contains(http://odoo.com/)",
+        trigger: ".o-we-linkpopover a.o_we_url_link[href='http://odoo.com']:contains(http://odoo.com)",
     }, {
         content: "remove URL",
-        trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
+        trigger: ".o_customize_tab [data-container-title='Image'] div[data-action-id='setUrl'] input",
         run: "clear && click body",
     },
     ...selectImageSteps,
     {
         content: "check popover content has no URL",
-        trigger: ":iframe .o_edit_menu_popover a.o_we_url_link:not([href]):contains(No URL specified)",
+        trigger: ".o-we-linkpopover .o_we_href_input_link:value()",
     }, {
         content: "enter email URL",
-        trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
+        trigger: ".o_customize_tab [data-container-title='Image'] div[data-action-id='setUrl'] input",
         run: "edit mailto:test@test.com && click body",
     },
     ...selectImageSteps,
     {
         content: "check popover content has mail URL",
-        trigger: ":iframe .o_edit_menu_popover:has(.fa-envelope-o) a.o_we_url_link[href='mailto:test@test.com']:contains(mailto:test@test.com)",
+        trigger: ".o-we-linkpopover:has(.fa-envelope-o) a.o_we_url_link[href='mailto:test@test.com']:contains(mailto:test@test.com)",
     }, {
         content: "enter phone URL",
-        trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
+        trigger: ".o_customize_tab [data-container-title='Image'] div[data-action-id='setUrl'] input",
         run: "edit tel:555-2368 && click body",
     },
     ...selectImageSteps,
     {
         content: "check popover content has phone URL",
-        trigger: ":iframe .o_edit_menu_popover:has(.fa-phone) a.o_we_url_link[href='tel:555-2368']:contains(tel:555-2368)",
+        trigger: ".o-we-linkpopover:has(.fa-phone) a.o_we_url_link[href='tel:555-2368']:contains(tel:555-2368)",
     }, {
         content: "remove URL",
-        trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
+        trigger: ".o_customize_tab [data-container-title='Image'] div[data-action-id='setUrl'] input",
         run: "clear && click body",
     },
     ...selectImageSteps,
     {
         content: "check popover content has no URL",
-        trigger: ":iframe .o_edit_menu_popover a.o_we_url_link:not([href]):contains(No URL specified)",
+        trigger: ".o-we-linkpopover .o_we_href_input_link:value()",
     },
 ]);
