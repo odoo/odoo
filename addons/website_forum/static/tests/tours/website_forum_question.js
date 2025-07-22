@@ -36,6 +36,11 @@ registry.category("web_tour.tours").add('forum_question', {
         run: 'edit Tag',
     },
     {
+        content: "press enter to add tags",
+        trigger: '.o_popover .o_select_menu_sticky',
+        run: 'press Enter',
+    },
+    {
         trigger: "#wrap:not(:has(.o_popover input.o_select_menu_sticky:not(:contains(''))))",
     },
     {
@@ -107,5 +112,55 @@ registry.category("web_tour.tours").add('forum_question', {
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '.o_wforum_validate_toggler',
+    }]
+});
+
+registry.category("web_tour.tours").add('multiple_new_tags', {
+    url: '/forum/help-1',
+    steps: () => [
+    {
+        content: "Ask the question in this forum by clicking on the button.",
+        trigger: ".o_wforum_ask_btn",
+        run: "click",
+        expectUnloadPage: true,
+    }, {
+        content: "Give your question content.",
+        trigger: "input[name=post_name]",
+        run: "edit First Question Title",
+    },
+    {
+        trigger: "#wrap:not(:has(input[name=post_name]:value('')))",
+    },
+    {
+        content: "Put your question here.",
+        trigger: ".note-editable p",
+        run: "editor First Question <p>code here</p>",
+    },
+    {
+        trigger: ".note-editable:not(:has(br))",
+    },
+    {
+        content: "Insert tags related to your question.",
+        trigger: ".o_select_menu_toggler",
+        run: "click",
+    },
+    {
+        content: "Insert multiple comma-separated tags",
+        trigger: ".o_popover .o_select_menu_sticky",
+        run: "edit tag, test tag",
+    },
+    {
+        content: "press enter to add tags",
+        trigger: ".o_popover .o_select_menu_sticky",
+        run: "press Enter",
+    },
+    {
+        trigger: "#wrap:not(:has(.o_popover input.o_select_menu_sticky:not(:contains(''))))",
+    },
+    {
+        content: "Click to post your question.",
+        trigger: 'button:contains("Post")',
+        run: "click",
+        expectUnloadPage: true,
     }]
 });

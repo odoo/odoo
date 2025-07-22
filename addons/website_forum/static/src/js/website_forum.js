@@ -54,7 +54,10 @@ class WebsiteForumTagsWrapper extends Component {
     onCreateOption(string) {
         const choice = {
             label: string.trim(),
-            value: `_${string.trim()}`,
+            value: string
+                .split(",")
+                .map(part => `_${part.trim()}`)
+                .join(","),
         };
         this.state.choices.push(choice);
         this.onSelect([...this.state.value, choice.value]);
