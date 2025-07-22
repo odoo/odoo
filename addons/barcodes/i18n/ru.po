@@ -26,8 +26,8 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
 msgstr ""
-" '*' не является действительным шаблоном штрих-кода Regex. Вы имели в виду "
-"'.*'?"
+" '*' Недопустимый шаблон для регулярного выражения штрихкода. Возможно, вы "
+"имели в виду '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -37,10 +37,10 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
-"<i>Номенклатура штрих-кодов</i>> определяет, как штрих-коды распознаются и классифицируются.\n"
-"                                 Когда штрих-код сканируется, он ассоциируется с правилом <i>первый</i> с соответствием\n"
-"                                 шаблона. Синтаксис шаблона - это регулярное выражение, и штрих-код сопоставляется\n"
-"                                 если регулярное выражение совпадает с префиксом штрих-кода."
+"<i>Номенклатуры штрихкодов</i> определяют, как штрихкоды распознаются и классифицируются.\n"
+"                                При сканировании штрихкод сопоставляется с <i>первым</i> правилом, подходящим по\n"
+"                                шаблону. Синтаксис шаблона соответствует регулярному выражению; штрихкод считается совпавшим,\n"
+"                                если префикс кода соответствует шаблону."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -48,8 +48,8 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
-"Номенклатура штрих-кодов определяет, как точка продажи идентифицирует и "
-"интерпретирует штрих-коды"
+"Номенклатура штрихкодов определяет, как POS распознает и интерпретирует "
+"штрихкоды"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -99,7 +99,7 @@ msgstr "Миксин событий штрихкода"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "Номенклатура штрих-кодов"
+msgstr "Номенклатура штрихкодов"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
@@ -110,7 +110,7 @@ msgstr "Номенклатуры штрихкодов"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
 msgid "Barcode Pattern"
-msgstr "Узор штрих-кода"
+msgstr "Шаблон штрихкода"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
@@ -121,13 +121,13 @@ msgstr "Правило штрихкода"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Barcode Scanned"
-msgstr "Сканирование штрих-кода"
+msgstr "Штрихкод отсканирован"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
-msgstr ""
+msgstr "Штрихкод: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -190,6 +190,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"Для использования barcodes.barcode_events_mixin необходимо реализовать метод"
+" on_barcode_scanned"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -223,12 +225,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
-"Шаблоны также могут определять, как числовые значения, такие как вес или цена, могут быть\n"
-"                                закодированы в штрихкоде. Они обозначаются <code>{NNN}</code> где N\n"
-"                                определяют, где кодируются цифры числа. Также поддерживаются плавающие числа, где\n"
-"                                десятичные числа обозначаются буквами D, например <code>{NNNDD}</code>. В этих случаях\n"
-"                                поле штрих-кода в соответствующих записях <i>должно</i> отображать эти цифры как\n"
-"                                нули."
+"Шаблоны также могут определять, как числовые значения, такие как вес или цена,\n"
+"                                кодируются в штрихкоде. Для этого используется синтаксис вида <code>{NNN}</code>, где N указывает\n"
+"                                позиции для цифр. Также поддерживаются дробные значения с указанием\n"
+"                                десятичных знаков через символы D, например: <code>{NNNDD}</code>. В таких случаях\n"
+"                                поле штрихкода в соответствующих записях <i>должно</i> содержать эти цифры в виде\n"
+"                                нулей."
 
 #. module: barcodes
 #. odoo-javascript
@@ -265,7 +267,7 @@ msgstr "Нажмите для сканирования"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr "Шаблон совпадения штрих-кодов"
+msgstr "Шаблон сопоставления штрихкодов"
 
 #. module: barcodes
 #. odoo-python
@@ -282,7 +284,7 @@ msgstr "Список правил штрихового кодирования"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr "Совпавший шаблон будет иметь псевдоним этого штрих-кода"
+msgstr "Совпавший шаблон будет сопоставлен с этим штрихкодом"
 
 #. module: barcodes
 #. odoo-python
@@ -291,8 +293,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
-"В шаблоне штрих-кода %(pattern)s допущена синтаксическая ошибка: правило "
-"может содержать только одну пару скобок."
+"Ошибка синтаксиса в шаблоне штрихкода %(pattern)s: правило может содержать "
+"только одну пару фигурных скобок."
 
 #. module: barcodes
 #. odoo-python
@@ -301,8 +303,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
-"В шаблоне штрих-кода %(pattern)s допущена синтаксическая ошибка: скобки "
-"могут содержать только N, за которыми следуют D."
+"Ошибка синтаксиса в шаблоне штрихкода %(pattern)s: внутри скобок допускаются"
+" только символы N, за которыми следуют D."
 
 #. module: barcodes
 #. odoo-python
@@ -310,8 +312,7 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
-"В шаблоне штрих-кода %(pattern)s допущена синтаксическая ошибка: пустые "
-"скобки."
+"Ошибка синтаксиса в шаблоне штрихкода %(pattern)s: пустые фигурные скобки."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -319,8 +320,8 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
-"Это правило применяется только в том случае, если штрих-код закодирован с "
-"указанной кодировкой"
+"Это правило будет применяться только если штрихкод закодирован с указанной "
+"кодировкой"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -334,9 +335,9 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"Коды UPC можно преобразовать в EAN, поставив перед ними нуль. Этот параметр "
-"определяет, должен ли штрих-код UPC/EAN автоматически преобразовываться так "
-"или иначе при попытке сопоставить правило с другой кодировкой."
+"Коды UPC могут быть преобразованы в EAN добавлением нуля в начале. Этот "
+"параметр определяет, следует ли автоматически преобразовывать штрихкод "
+"UPC/EAN при попытке сопоставления с правилом, использующим другую кодировку."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca

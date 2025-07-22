@@ -1558,6 +1558,39 @@ class ComputeMember(models.Model):
             member.container_id = container.search([('name', '=', member.name)], limit=1)
 
 
+class ComputeCreator(models.Model):
+    """ This model has a computed field that creates a new record. """
+    _name = _description = 'test_new_api.compute.creator'
+
+    name = fields.Char()
+    created_id = fields.Many2one('test_new_api.compute.created', compute='_compute_created', store=True)
+
+    @api.depends('name')
+    def _compute_created(self):
+        model = self.env['test_new_api.compute.created']
+        for record in self:
+            record.created_id = (
+                model.search([('name', '=', record.name)], limit=1)
+                or model.create({'name': record.name})
+            )
+
+
+class ComputeCreated(models.Model):
+    """ This model has records created by another model, and has a stored
+    computed field. The purpose of that field is to make sure that flushing the
+    field above creates a record here and also flushes its computed field.
+    """
+    _name = _description = 'test_new_api.compute.created'
+
+    name = fields.Char()
+    value = fields.Integer(compute='_compute_value', store=True)
+
+    @api.depends('name')
+    def _compute_value(self):
+        for record in self:
+            record.value = len(record.name or "")
+
+
 class User(models.Model):
     _name = _description = 'test_new_api.user'
     _allow_sudo_commands = False

@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:37+0000\n"
+"POT-Creation-Date: 2025-07-18 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -408,7 +408,7 @@ msgstr "S'ha trobat un cupó amb el mateix codi."
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
 msgid "A coupon/loyalty card must have a unique code."
-msgstr "Una targeta cupó/lleial ha de tenir un codi únic."
+msgstr "Un cupó/targeta de fidelització ha de tenir un codi únic."
 
 #. module: loyalty
 #. odoo-python
@@ -879,7 +879,7 @@ msgstr "Descompte"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr "Lleialtat del descompte"
+msgstr "Descomptes i Fidelització"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -1393,17 +1393,17 @@ msgstr "Targeta de fidelització"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.res_partner_form
 msgid "Loyalty Cards"
-msgstr "Targetes lleials"
+msgstr "Targetes de fidelització"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr "Comunicació lleial"
+msgstr "Comunicació de fidelització"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Cupó lleial"
+msgstr "Cupó de fidelització"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
@@ -1429,7 +1429,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Loyalty point(s)"
-msgstr "Punt(s) de lleialtat"
+msgstr "Punt(s) de fidelització"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
@@ -1513,7 +1513,7 @@ msgstr "No s'han trobat cupons."
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "No loyalty program found."
-msgstr "No s'ha trobat cap programa de lleialtat."
+msgstr "No s'ha trobat cap programa de fidelització."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
@@ -1605,6 +1605,7 @@ msgid "Portal Visible"
 msgstr "Portal visible"
 
 #. module: loyalty
+#: model:ir.model,name:loyalty.model_product_pricelist
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
 msgid "Pricelist"
 msgstr "Tarifa"
@@ -1852,7 +1853,7 @@ msgstr "Divideix per unitat"
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
-"La divisió per unitat no està permesa per als programes de Lleialtat i "
+"La divisió per unitat no està permesa per als programes de Fidelització i "
 "eWallet."
 
 #. module: loyalty
@@ -1950,6 +1951,14 @@ msgid ""
 msgstr ""
 "Aquest és l'import màxim que aquesta recompensa pot descomptar, deixeu-ho a "
 "0 per no tenir límit."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/product_pricelist.py:0
+msgid ""
+"This pricelist may not be archived. It is being used for active promotion "
+"programs: %s"
+msgstr ""
 
 #. module: loyalty
 #. odoo-python
