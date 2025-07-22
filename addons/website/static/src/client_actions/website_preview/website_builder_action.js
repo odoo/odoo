@@ -487,7 +487,7 @@ export class WebsiteBuilderClientAction extends Component {
         // trigger an new instance of the builder menu
         this.state.key++;
 
-        this.notification.add("Content saved", {
+        this.notification.add(_t("Content saved"), {
             type: "success",
         });
     }
