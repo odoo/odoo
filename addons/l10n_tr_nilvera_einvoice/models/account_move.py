@@ -325,6 +325,11 @@ class AccountMove(models.Model):
             for line in self.invoice_line_ids
         )
 
+    def _get_partner_l10n_tr_nilvera_customer_alias_name(self):
+        # Allows overriding the default customer alias with a custom one.
+        self.ensure_one()
+        return self.partner_id.l10n_tr_nilvera_customer_alias_id.name
+
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------
