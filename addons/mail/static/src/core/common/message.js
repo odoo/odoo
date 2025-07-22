@@ -245,8 +245,8 @@ export class Message extends Component {
 
     get authorAvatarAttClass() {
         return {
-            "object-fit-contain": this.props.message.author?.is_company,
-            "object-fit-cover": !this.props.message.author?.is_company,
+            "object-fit-contain": this.props.message.author_id?.is_company,
+            "object-fit-cover": !this.props.message.author_id?.is_company,
         };
     }
 
@@ -259,11 +259,9 @@ export class Message extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-
         if (this.message.author) {
             return this.message.author.avatarUrl;
         }
-
         return this.store.DEFAULT_AVATAR;
     }
 

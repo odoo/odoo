@@ -41,7 +41,7 @@ messageActionsRegistry
                 message_id: message.id,
             });
             const recipientIds = recipients.map((r) => r.id);
-            const emailFrom = message.author?.email || message.email_from;
+            const emailFrom = message.author_id?.email || message.email_from;
             const [name, email] = parseEmail(emailFrom);
             const datetime = _t("%(date)s at %(time)s", {
                 date: message.datetime.toFormat("ccc, MMM d, yyyy"),
@@ -70,7 +70,7 @@ messageActionsRegistry
         title: _t("Forward"),
         onClick: async (component) => {
             const message = component.props.message;
-            const emailFrom = message.author?.email || message.email_from;
+            const emailFrom = message.author_id?.email || message.email_from;
             const [name, email] = parseEmail(emailFrom);
             const datetime = _t("%(date)s at %(time)s", {
                 date: message.datetime.toFormat("ccc, MMM d, yyyy"),
