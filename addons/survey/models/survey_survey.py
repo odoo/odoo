@@ -633,13 +633,11 @@ class SurveySurvey(models.Model):
         # Then, questions in sections
 
         for page in self.page_ids:
-            if self.questions_selection == 'all':
+            if self.questions_selection == 'all' or page.random_questions_count == 0:
                 questions |= page.question_ids
             else:
-                if 0 < page.random_questions_count < len(page.question_ids):
-                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
-                else:
-                    questions |= page.question_ids
+                page_questions_count = min(page.random_questions_count, len(page.question_ids))
+                questions = questions.concat(*random.sample(page.question_ids, page_questions_count))
 
         return questions
 
