@@ -957,10 +957,14 @@ class Meeting(models.Model):
         public_users_settings_ids = self.env['res.users.settings'].sudo().search(
             [('calendar_default_privacy', '!=', 'private')]).ids
         # display public, confidential events and events with default privacy when owner's default privacy is not private
-        return [
-            '|', '|', '|', ('privacy', '=', 'public'), ('privacy', '=', 'confidential'), ('user_id', '=', self.env.user.id),
-            '&', ('privacy', '=', False), ('user_id.res_users_settings_id', 'in', public_users_settings_ids)
-        ]
+        return ['|', '|',
+            ('privacy', 'in', ['public', 'confidential']),
+            ('user_id', '=', self.env.user.id),
+            '&',
+                ('privacy', '=', False),
+                '|',
+                    ('user_id', '=', False),
+                    ('user_id.res_users_settings_id', 'in', public_users_settings_ids)]
 
     def _is_event_over(self):
         """Check if the event is over. This method is used to check if the event
