@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Lyall Kindmurr, 2024
-# Wil Odoo, 2025
+# Wil Odoo, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2025\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 "\n"
 "Affected valuation layers: %s"
 msgstr ""
+"\n"
+"Niveluri de evaluare afectate: %s"
 
 #. module: stock_account
 #. odoo-python
@@ -39,20 +42,22 @@ msgstr "Costul produsului actualizat de la %(previous)s la %(new_cost)s."
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid " [Accounted on %s]"
-msgstr " [Contabilizat pe %s]"
+msgstr " [Contabilizat la %s]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
 msgstr ""
+" Costul lotului/numărului de serie actualizat de la %(previous)s la "
+"%(new_cost)s."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
 msgstr ""
-"%(user)scost modificat de la%(previous)s la %(new_price)s - %(record)s"
+"%(user)s a modificat costul de la %(previous)s la %(new_price)s - %(record)s"
 
 #. module: stock_account
 #. odoo-python
@@ -61,6 +66,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
 "%(reason)s"
 msgstr ""
+"%(user)s a modificat evaluarea stocului de la %(previous)s la %(new_value)s - %(product)s\n"
+"%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -74,7 +81,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "6.00"
-msgstr ""
+msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -144,8 +151,7 @@ msgstr "Adaugă evaluare manuală"
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Adăugați costuri adiționale (transport, personalizare, ...) în valoarea "
-"produsului."
+"Adăugați costuri adiționale (transport, vamă, ...) în valoarea produsului."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -160,7 +166,7 @@ msgstr "Valoare adăugată"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_revalue_layers
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "Ajustează evaluarea"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -169,8 +175,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
-"Afectează costurile adiționate operațiunilor de recepție și le împarte între"
-" produse pentru a-și actualiza prețul de cost."
+"Atribuie costurile adiționale operațiunilor de recepție și le împarte între "
+"produse pentru a actualiza prețul de cost."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -195,13 +201,13 @@ msgstr "Automat"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
 msgid "Automatic Stock Accounting"
-msgstr ""
+msgstr "Contabilitate automată a stocurilor"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
-msgstr "Costul mediu "
+msgstr "Cost mediu"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
@@ -211,7 +217,7 @@ msgstr "Cost mediu ponderat (CMP)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "BC46282798"
-msgstr ""
+msgstr "BC46282798"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -253,8 +259,8 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
-"Modificarea metodei dvs. de cost este o schimbare importantă care va afecta "
-"evaluarea inventarului. Sunteți sigur că doriți să faceți această schimbare?"
+"Schimbarea metodei de cost este o modificare importantă care va afecta "
+"evaluarea stocului. Sunteți sigur că doriți să faceți această schimbare?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
@@ -264,7 +270,7 @@ msgstr "Alegeți o dată pentru a obține evaluarea la acea dată"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
 msgid "Cogs Origin"
-msgstr ""
+msgstr "Origine COGS"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -290,14 +296,14 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
-"Eroare de configurare. Configurați contul de diferență de preț pentru "
-"produsul sau categoria sa pentru a procesa această operațiune."
+"Eroare de configurare. Vă rugăm să configurați contul de diferență de preț "
+"pe produs sau pe categoria acestuia pentru a procesa această operațiune."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Correction of %s (modification of past move)"
-msgstr ""
+msgstr "Corecția lui %s (modificarea unei mișcări anterioare)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
@@ -320,12 +326,12 @@ msgid ""
 " to %(new_method)s."
 msgstr ""
 "Schimbarea metodei de cost pentru categoria de produse %(category)s: de la "
-"%(old_method)s până la %(new_method)s."
+"%(old_method)s la %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
 msgid "Counterpart Account"
-msgstr "Cont omolog"
+msgstr "Cont de contrapartidă"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -333,8 +339,11 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Elementele jurnalului omolog pentru toate intrările în stoc vor fi postate în acest cont, cu excepția cazului în care există un cont de evaluare specific\n"
-"                setat în locația sursă. Aceasta este valoarea implicită pentru toate produsele din această categorie. Poate fi setat și direct pe fiecare produs."
+"Elementele jurnalului de contrapartidă pentru toate intrările în stoc vor fi"
+" postate în acest cont, cu excepția cazului în care există un cont de "
+"evaluare specific setat pe locația sursă. Aceasta este valoarea implicită "
+"pentru toate produsele din această categorie. Poate fi setat și direct pe "
+"fiecare produs."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -351,7 +360,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
@@ -363,7 +372,7 @@ msgstr "Monedă"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr "Cantitatea actuală"
+msgstr "Cantitate curentă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -384,13 +393,14 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"Data la care se vor crea intrările contabile în cazul evaluării automatizate"
-" a inventarului. Daca este gol, data din inventar va fi utilizată."
+"Data la care vor fi create înregistrările contabile în cazul evaluării "
+"automate a stocului. Dacă este necompletat, se va folosi data inventarului."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Unitatea de măsură folosită implicit în toate operațiunile de stoc."
+msgstr ""
+"Unitatea de măsură implicită folosită pentru toate operațiunile de stoc."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
@@ -400,7 +410,7 @@ msgstr "Descriere"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr "Afișați loturi și numere de serie în facturi"
+msgstr "Afișează loturi și numere de serie pe facturi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
@@ -411,7 +421,7 @@ msgstr "Nume afișat"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr "Afișare serie și număr lot pe facturi"
+msgstr "Afișează seria și numărul lotului pe facturi"
 
 #. module: stock_account
 #. odoo-python
@@ -421,6 +431,9 @@ msgid ""
 "%(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
+"Datorită schimbării categoriei de produs (de la %(old_category)s la "
+"%(new_category)s), metoda de cost s-a schimbat pentru produsul %(product)s: "
+"de la %(old_method)s la %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -447,7 +460,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
-msgstr ""
+msgstr "Dacă este bifat, evaluarea va fi specifică pe lot/număr de serie."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -491,7 +504,7 @@ msgstr "Jurnal"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Journal Entry"
-msgstr "Înregistrare de jurnal "
+msgstr "Înregistrare de jurnal"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
@@ -518,7 +531,7 @@ msgstr "Ultima actualizare pe"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr "Legat de "
+msgstr "Legat de"
 
 #. module: stock_account
 #. odoo-python
@@ -527,12 +540,14 @@ msgid ""
 "Lot %(lot)s has a negative quantity in stock.\n"
 "Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
+"Lotul %(lot)s are o cantitate negativă în stoc.\n"
+"Corectați această cantitate înainte de a activa/dezactiva evaluarea pe lot."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
-msgstr ""
+msgstr "Valoarea lotului modificată manual (de la %(old)s la %(new)s)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -549,18 +564,19 @@ msgstr "Lot/Număr Serial"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr ""
+msgstr "Reevaluare lot/număr de serie"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
 msgstr ""
+"Numărul de lot/serie este obligatoriu pentru produsele evaluate pe lot"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Loturile și numerele de serie vor apărea pe factură"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -584,7 +600,7 @@ msgid ""
 "        "
 msgstr ""
 "Manual: notele contabile pentru evaluarea inventarului nu sunt înregistrate automat.\n"
-" Automatizat: o notă contabilă este creată automat pentru a evalua inventarul atunci când un produs intră sau iese din companie."
+"Automatizat: o notă contabilă este creată automat pentru a evalua inventarul atunci când un produs intră sau iese din companie."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
@@ -600,7 +616,7 @@ msgstr "Valoare nouă după cantitate"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "No Reason Given"
-msgstr ""
+msgstr "Nu a fost specificat niciun motiv"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -626,6 +642,8 @@ msgid ""
 "Product %(product)s has quantity in valued location %(location)s without any lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
+"Produsul %(product)s are cantitate într-o locație evaluată %(location)s fără niciun lot.\n"
+"Vă rugăm să alocați loturi tuturor cantităților înainte de a activa evaluarea pe lot."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -662,18 +680,18 @@ msgstr "Variantă de produs"
 msgid ""
 "Product value manually modified (from %(original_price)s to %(new_price)s)"
 msgstr ""
-"Valoarea produsului modificată manual( de la%(original_price)s până "
-"la%(new_price)s)"
+"Valoarea produsului modificată manual (de la %(original_price)s la "
+"%(new_price)s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "Cont producție în curs"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "Cont cheltuieli indirecte producție în curs"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -705,7 +723,7 @@ msgstr "Motivul reevaluării"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
 msgid "Receipt WH"
-msgstr ""
+msgstr "Depozit recepție"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -715,12 +733,12 @@ msgstr "Referință"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__lot_id
 msgid "Related lot/serial number"
-msgstr ""
+msgstr "Lot/număr de serie asociat"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr "Produs compatibil"
+msgstr "Produs asociat"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -746,13 +764,13 @@ msgstr "Reevaluarea lui %s"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr "Reevaluare"
+msgstr "Reevaluează"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr ""
+msgstr "Selectați un lot/număr de serie existent pentru a fi reevaluat"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -772,12 +790,12 @@ msgid ""
 msgstr ""
 "Preț standard: Produsele sunt evaluate la costul standard definit pe produs.\n"
 "Cost mediu ponderat (CMP): Produsele sunt evaluate la costul mediu ponderat.\n"
-"First In First Out (FIFO): Produsele sunt evaluate presupunând că cele care intră în companie mai întâi o vor părăsi mai întâi."
+"Primul intrat primul ieșit (FIFO): Produsele sunt evaluate presupunând că cele care intră în companie mai întâi o vor părăsi mai întâi."
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
 msgid "Stock Accounting Automatic"
-msgstr ""
+msgstr "Contabilitate automată a stocurilor"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -839,7 +857,7 @@ msgstr "Cont pentru Inventarul Stocului (Intrare)"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "Cont pentru Inventarul Stocului (Iesire)"
+msgstr "Cont pentru Inventarul Stocului (Ieșire)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
@@ -859,7 +877,7 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
-"Camp tehnic pentru a afișa corect moneda companiei selectate care corespunde"
+"Câmp tehnic pentru a afișa corect moneda companiei selectate care corespunde"
 " valorii totalizate a nivelurilor de evaluare a produsului"
 
 #. module: stock_account
@@ -934,7 +952,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
-msgstr ""
+msgstr "Conturile de stoc trebuie setate pentru a folosi evaluarea automată."
 
 #. module: stock_account
 #. odoo-python
@@ -945,6 +963,10 @@ msgid ""
 "the locations in a way that changes the valuation logic defined during the "
 "initial processing."
 msgstr ""
+"Evaluarea stocului pentru o mișcare se bazează pe tipul locațiilor sursă și "
+"destinație. Deoarece mișcarea a fost deja procesată, nu puteți modifica "
+"locațiile astfel încât să schimbați logica de evaluare definită la "
+"procesarea inițială."
 
 #. module: stock_account
 #. odoo-python
@@ -953,6 +975,8 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
+"Valoarea unui nivel de evaluare a stocului nu poate fi negativă. Costurile "
+"adiționale pot fi folosite pentru a corecta un transfer specific."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -971,6 +995,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for"
 " all lots/SN. Do you want to proceed ? "
 msgstr ""
+"Această operațiune poate duce la pierderea datelor. Evaluarea va fi identică"
+" pentru toate loturile/numerele de serie. Doriți să continuați?"
 
 #. module: stock_account
 #. odoo-python
@@ -979,11 +1005,13 @@ msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update"
 " the cost of every lot/serial number in stock."
 msgstr ""
+"Acest produs este evaluat pe lot/număr de serie. Modificarea costului va "
+"actualiza costul fiecărui lot/număr de serie din stoc."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Moved Quantity"
-msgstr ""
+msgstr "Cantitate totală mutată"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -1053,7 +1081,7 @@ msgstr "Actualizați cantitățile pe SO/PO"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr ""
+msgstr "Se actualizează evaluarea pe lot pentru produsul %s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1102,7 +1130,7 @@ msgstr "Valuarea monedei"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr ""
+msgstr "Niveluri de evaluare"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1119,7 +1147,7 @@ msgstr "Valuare la data"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 msgid "Valuation by Lot/Serial number"
-msgstr ""
+msgstr "Evaluare pe lot/număr de serie"
 
 #. module: stock_account
 #. odoo-python
@@ -1134,7 +1162,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuations layers being adjusted"
-msgstr ""
+msgstr "Niveluri de evaluare ajustate"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1160,6 +1188,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Valoarea lotului (calculată automat în AVCO).\n"
+"        Folosită pentru evaluarea produsului când costul de achiziție nu este cunoscut (ex: ajustare de inventar).\n"
+"        Folosită pentru calculul marjei pe comenzi de vânzare."
 
 #. module: stock_account
 #. odoo-python
@@ -1208,13 +1239,13 @@ msgstr ""
 #: code:addons/stock_account/models/stock_lot.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "Nu puteți ajusta evaluarea unui nivel cu cantitate zero"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr ""
+msgstr "Nu puteți ajusta evaluarea fără un produs"
 
 #. module: stock_account
 #. odoo-python
@@ -1223,6 +1254,8 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
+"Nu puteți schimba metoda de cost pentru un produs evaluat pe lot/număr de "
+"serie."
 
 #. module: stock_account
 #. odoo-python
@@ -1231,6 +1264,8 @@ msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
 msgstr ""
+"Nu puteți schimba categoria de produs pentru un produs evaluat pe lot/număr "
+"de serie."
 
 #. module: stock_account
 #. odoo-python
@@ -1248,7 +1283,7 @@ msgstr "Nu puteți reevalua un produs cu un stoc gol sau negativ."
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr ""
+msgstr "Nu puteți reevalua mai multe produse simultan"
 
 #. module: stock_account
 #. odoo-python
@@ -1259,9 +1294,9 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
-"Nu puteți actualiza costului unui produs în metoda automatizată de evaluare "
-"deoarece conduce la crearea unei note contabile, pentru care nu aveți "
-"dreptul de acces."
+"Nu puteți actualiza costul unui produs în evaluarea automată deoarece "
+"conduce la crearea unei note contabile, pentru care nu aveți dreptul de "
+"acces."
 
 #. module: stock_account
 #. odoo-python
@@ -1271,8 +1306,8 @@ msgid ""
 " You must define one before processing this operation."
 msgstr ""
 "Nu aveți niciun cont de evaluare a intrărilor definit în categoria "
-"dumneavoastră de produse. Trebuie să definiți unu înainte de procedarea "
-"acestei operațiuni."
+"dumneavoastră de produse. Trebuie să definiți unul înainte de a procesa "
+"această operațiune."
 
 #. module: stock_account
 #. odoo-python
@@ -1281,6 +1316,9 @@ msgid ""
 "You don't have any output valuation account defined on your product "
 "category. You must define one before processing this operation."
 msgstr ""
+"Nu aveți niciun cont de evaluare a ieșirilor definit în categoria "
+"dumneavoastră de produse. Trebuie să definiți unul înainte de a procesa "
+"această operațiune."
 
 #. module: stock_account
 #. odoo-python
@@ -1290,8 +1328,8 @@ msgid ""
 " must define one before processing this operation."
 msgstr ""
 "Nu aveți niciun cont de intrare în stoc definit în categoria dumneavoastră "
-"de produse. Trebuie să definiți unu înainte de procedarea acestei "
-"operațiuni."
+"de produse. Trebuie să definiți unul înainte de a procesa această "
+"operațiune."
 
 #. module: stock_account
 #. odoo-python
@@ -1300,8 +1338,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
-"u aveți niciun jurnal de stoc definit în categoria dvs. de produse, "
-"verificați dacă ați instalat un plan de conturi."
+"Nu aveți niciun jurnal de stoc definit în categoria dumneavoastră de "
+"produse, verificați dacă ați instalat un plan de conturi."
 
 #. module: stock_account
 #. odoo-python
@@ -1312,9 +1350,9 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
-"Nu aveți definit un cont de evaluare stoc în datele de baza ale produsului "
-"sau în categorie. Trebuie să definiți unul înainte de a procesa această "
-"operație."
+"Nu aveți definit un cont de evaluare a stocului în datele de bază ale "
+"produsului sau în categorie. Trebuie să definiți unul înainte de a procesa "
+"această operațiune."
 
 #. module: stock_account
 #. odoo-python
@@ -1345,4 +1383,4 @@ msgstr "unități"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
-msgstr ""
+msgstr "grafic evaluare"

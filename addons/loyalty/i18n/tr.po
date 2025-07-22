@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:37+0000\n"
+"POT-Creation-Date: 2025-07-18 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -159,7 +159,7 @@ msgstr "2+1 Ücretsiz"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "2023-08-20"
-msgstr ""
+msgstr "20-08-2023"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -429,7 +429,7 @@ msgstr "Kuponunuzdan biriyle aynı koda sahip bir tetikleyici zaten mevcut."
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "ABCDE12345"
-msgstr ""
+msgstr "ABCDE12345"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
@@ -819,12 +819,12 @@ msgstr "Müşteriler"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_CODE"
-msgstr ""
+msgstr "DEMO_KODU"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_TEXT"
-msgstr ""
+msgstr "DEMO_METNİ"
 
 #. module: loyalty
 #. odoo-python
@@ -1598,6 +1598,7 @@ msgid "Portal Visible"
 msgstr "Portal Görünür"
 
 #. module: loyalty
+#: model:ir.model,name:loyalty.model_product_pricelist
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
 msgid "Pricelist"
 msgstr "Fiyat Listesi"
@@ -1942,6 +1943,14 @@ msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
 msgstr ""
 "Bu, bu ödülün indirebileceği maksimum tutardır, sınırsız olarak 0'a bırakın."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/product_pricelist.py:0
+msgid ""
+"This pricelist may not be archived. It is being used for active promotion "
+"programs: %s"
+msgstr ""
 
 #. module: loyalty
 #. odoo-python

@@ -8175,6 +8175,8 @@ msgstr "Προγραμματισμένη Ημερομηνία"
 #: model:ir.model.fields,help:stock.field_stock_move_line__scheduled_date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
+"Προγραμματισμένη ημερομηνία μέχρι να ολοκληρωθεί η μετακίνηση, έπειτα η "
+"ημερομηνία πραγματικής εκτέλεσης της μετακίνησης"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -10783,7 +10785,7 @@ msgstr "Προειδοποιήσεις"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
-msgstr ""
+msgstr "Ειδοποιήσεις Aποθέματος"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
@@ -10812,12 +10814,12 @@ msgstr "Βάρος για την Μεταφορά"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr ""
+msgstr "Βάρος του τύπου συσκευασίας"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Μονάδα βάρους"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -10832,7 +10834,7 @@ msgstr "Ζυγιζόμενο Είδος"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__wh_replenishment_option_ids
 msgid "Wh Replenishment Option"
-msgstr ""
+msgstr "Επιλογή Ανατροφοδότησης Αποθήκης"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__warehouse_selectable
@@ -10840,6 +10842,9 @@ msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
 msgstr ""
+"Όταν επιλέγεται μία αποθήκη για αυτή τη διαδρομή, αυτή η διαδρομή θα "
+"θεωρείται ως η προεπιλεγμένη διαδρομή όταν τα προϊόντα περνούν μέσα από αυτή"
+" την αποθήκη."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -10853,22 +10858,28 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
 msgstr ""
+"Όταν είναι επιλεγμένο, η διαδρομή θα είναι διαθέσιμη στην καρτέλα Αποθέματος"
+" της φόρμας Προϊόντος."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
+"Όταν είναι επιλεγμένο, η διαδρομή θα είναι διαθέσιμη στην Κατηγορία "
+"Προϊόντος."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
 msgid "When checked, the route will be selectable on the Product Packaging."
 msgstr ""
+"Όταν είναι επιλεγμένο, η διαδρομή θα είναι διαθέσιμη στη Συσκευασία "
+"Προϊόντος."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "When product arrives in"
-msgstr ""
+msgstr "Όταν το προϊόν φτάνει σε"
 
 #. module: stock
 #. odoo-python
@@ -10878,6 +10889,9 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need. %(suffix)s"
 msgstr ""
+"Όταν τα προϊόντα χρειάζονται σε <b>%(destination)s</b>, <br> "
+"<b>%(operation)s</b> δημιουργούνται από <b>%(source_location)s</b> για να "
+"ικανοποιήσουν την ανάγκη. %(suffix)s"
 
 #. module: stock
 #. odoo-python
@@ -10886,6 +10900,9 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"Όταν τα προϊόντα φτάνουν σε <b>%(source_location)s</b>, <br> "
+"<b>%(operation)s</b> δημιουργούνται για να τα στείλουν σε "
+"<b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -10893,6 +10910,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"Όταν οριστεί σε Αληθές, η τοποθεσία  προορισμού  της κίνησης αποθέματος θα "
+"είναι ο κανόνας. Διαφορετικά, λαμβάνεται από τον τύπο παραλαβής."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10900,6 +10919,9 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
+"Όταν η παραλαβή δεν έχει ολοκληρωθεί, αυτό επιτρέπει την αλλαγή της αρχικής "
+"ζήτησης. Όταν η παραλαβή έχει ολοκληρωθεί, αυτό επιτρέπει την αλλαγή των "
+"πραγματοποιημένων ποσοτήτων."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -10908,6 +10930,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"Όταν το εικονικό απόθεμα πέσει κάτω από την Ελάχιστη Ποσότητα που ορίζεται "
+"σε αυτό το πεδίο, το Odoo δημιουργεί μια παραγγελία προμήθειας  για να φέρει"
+" την προβλεπόμενη ποσότητα πάνω από αυτήν την Ελάχιστη Ποσότητα."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10916,11 +10941,17 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"Όταν το εικονικό απόθεμα πέσει κάτω από την Ελάχιστη Ποσότητα, το Odoo "
+"δημιουργεί μια παραγγελία προμήθειας για να αυξήσει την προβλεπόμενη "
+"ποσότητα μέχρι (ή κοντά) στη Μέγιστη Ποσότητα που ορίζεται σε αυτό το πεδίο "
+"(ή μέχρι την Ελάχιστη Ποσότητα, όποιο από τα δύο είναι μεγαλύτερο)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
 msgid "When ticked, carrier of shipment will be propagated."
 msgstr ""
+"Όταν είναι επιλεγμένο, ο μεταφορέας της αποστολής θα προωθηθεί στις σχετικές"
+" κινήσεις."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_cancel
@@ -10928,6 +10959,8 @@ msgid ""
 "When ticked, if the move created by this rule is cancelled, the next move "
 "will be cancelled too."
 msgstr ""
+"Όταν είναι επιλεγμένο, αν η κίνηση που δημιουργείται από αυτόν τον κανόνα "
+"ακυρωθεί, θα ακυρωθεί και η επόμενη κίνηση."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -10937,23 +10970,31 @@ msgid ""
 " * Always: a backorder is automatically created for the remaining products\n"
 " * Never: remaining products are cancelled"
 msgstr ""
+"Κατά την επικύρωση μιας μεταφοράς:\n"
+" * Ερώτηση: οι χρήστες καλούνται να επιλέξουν αν θέλουν να δημιουργηθεί εκκρεμής παραγγελία για τα εναπομείναντα προϊόντα\n"
+" * Πάντα: δημιουργείται αυτόματα εκκρεμής παραγγελία για τα εναπομείναντα προϊόντα\n"
+" * Ποτέ: τα εναπομείναντα προϊόντα ακυρώνονται"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
 msgstr ""
+"Κατά την επικύρωση της μεταφοράς, τα προϊόντα θα αντιστοιχιστούν σε αυτόν "
+"τον ιδιοκτήτη."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
 msgstr ""
+"Κατά την επικύρωση της μεταφοράς, τα προϊόντα θα ληφθούν από αυτόν τον "
+"ιδιοκτήτη."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr ""
+msgstr "Αν η κίνηση προστέθηκε μετά την επιβεβαίωση της παραλαβής."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__width
@@ -10964,7 +11005,7 @@ msgstr "Πλάτος"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_width
 msgid "Width must be positive"
-msgstr ""
+msgstr "Το πλάτος πρέπει να είναι θετικό"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id
@@ -10977,6 +11018,8 @@ msgstr "Αυτόματος Οδηγός"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Write one lot/serial name per line, followed by the quantity."
 msgstr ""
+"Γράψτε ένα όνομα παρτίδας/σειριακού αριθμού ανά γραμμή, ακολουθούμενο από "
+"την ποσότητα."
 
 #. module: stock
 #. odoo-python
@@ -10992,6 +11035,8 @@ msgid ""
 "You are about to move quantities in a package without moving the full package.\n"
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
+"Πρόκειται να μετακινήσετε ποσότητες μέσα σε ένα πακέτο χωρίς να μετακινήσετε ολόκληρο το πακέτο.\n"
+"                    Αυτές οι ποσότητες θα αφαιρεθούν από το/τα παρακάτω πακέτο/πακέτα:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -10999,11 +11044,13 @@ msgid ""
 "You are going to pick products that are not referenced\n"
 "in this location. That leads to a negative stock."
 msgstr ""
+"Πρόκειται να παραλάβετε προϊόντα που δεν είναι καταχωρημένα \n"
+"σε αυτή την τοποθεσία. Αυτό θα οδηγήσει σε αρνητικό απόθεμα."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr ""
+msgstr "Είστε εντάξει, δεν υπάρχει ανάγκη για ανατροφοδότηση!"
 
 #. module: stock
 #. odoo-python
@@ -11013,6 +11060,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Δεν επιτρέπεται να αλλάξετε το προϊόν που συνδέεται με έναν σειριακό αριθμό "
+"ή αριθμό παρτίδας εάν έχουν ήδη δημιουργηθεί κινήσεις αποθέματος με αυτόν "
+"τον αριθμό. Αυτό θα οδηγούσε σε ασυνέπειες στο απόθεμα σας."
 
 #. module: stock
 #. odoo-python
@@ -11022,6 +11072,9 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
 msgstr ""
+"Δεν επιτρέπεται να δημιουργήσετε αριθμό παρτίδας ή σειριακό αριθμό με αυτόν "
+"τον τύπο λειτουργίας. Για να το αλλάξετε, μεταβείτε στον τύπο λειτουργίας "
+"και επιλέξτε το κουτί «Δημιουργία Νέων Αριθμών Παρτίδας/Σειριακών Αριθμών»."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -11029,6 +11082,8 @@ msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
 msgstr ""
+"Προσπαθείτε να βάλετε προϊόντα που προορίζονται για διαφορετικές τοποθεσίες "
+"στην ίδια συσκευασία."
 
 #. module: stock
 #. odoo-python
@@ -11040,6 +11095,12 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
+"Χρησιμοποιείτε μια μονάδα μέτρησης μικρότερη από αυτήν που χρησιμοποιείτε "
+"για την αποθήκευση του προϊόντος σας. Αυτό μπορεί να οδηγήσει σε προβλήματα "
+"στρογγυλοποίησης στην ποσότητα που έχει δεσμευτεί. Θα πρέπει να "
+"χρησιμοποιήσετε τη μικρότερη δυνατή μονάδα μέτρησης για την αξιολόγηση του "
+"αποθέματός σας ή να αλλάξετε την ακρίβεια στρογγυλοποίησης σε μικρότερη τιμή"
+" (π.χ. 0.00001)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -11049,11 +11110,15 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
+"δώ μπορείτε να ορίσετε τις κύριες διαδρομές που διέρχονται\n"
+"                από τις αποθήκες σας και που καθορίζουν τις ροές των προϊόντων σας. Αυτές\n"
+"                Αυτές οι διαδρομές μπορούν να ανατεθούν σε ένα προϊόν, μια κατηγορία προϊόντων ή να οριστούν σταθερά\n"
+"                σε μια παραγγελία προμήθειας ή πώλησης."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "You can either :"
-msgstr ""
+msgstr "Μπορείτε είτε :"
 
 #. module: stock
 #. odoo-python
@@ -11063,6 +11128,10 @@ msgid ""
 "reserved on a stock move. If you need to change the inventory tracking, you "
 "should first unreserve the stock move."
 msgstr ""
+"Δεν μπορείτε να αλλάξετε την παρακολούθηση αποθέματος ενός προϊόντος που "
+"αυτή τη στιγμή είναι δεσμευμένο σε μια μετακίνηση αποθέματος. Εάν χρειάζεται"
+" να αλλάξετε την παρακολούθηση αποθέματος, πρέπει πρώτα να αποδεσμεύσετε τη "
+"μετακίνηση αποθέματος."
 
 #. module: stock
 #. odoo-python
@@ -11071,6 +11140,8 @@ msgid ""
 "You can not change the inventory tracking of a product that was already "
 "used."
 msgstr ""
+"Δεν μπορείτε να αλλάξετε την παρακολούθηση αποθέματος ενός προϊόντος που "
+"χρησιμοποιείται ήδη."
 
 #. module: stock
 #. odoo-python
@@ -11078,12 +11149,14 @@ msgstr ""
 msgid ""
 "You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
+"Δεν μπορείτε να δημιουργήσετε ένα αναβλημένο σημείο παραγγελίας που να μην "
+"ενεργοποιείται χειροκίνητα."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You can not delete moves linked to another operation"
-msgstr ""
+msgstr "Δεν μπορείτε να διαγράψετε κινήσεις που συνδέονται σε άλλη ενέργεια"
 
 #. module: stock
 #. odoo-python
@@ -11092,6 +11165,8 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
+"Δεν μπορείτε να διαγράψετε κινήσεις προϊόντων εάν η παραλαβή έχει "
+"ολοκληρωθεί. Μπορείτε μόνο να διορθώσετε τις ολοκληρωμένες ποσότητες."
 
 #. module: stock
 #. odoo-python
@@ -11103,7 +11178,7 @@ msgstr "Δεν μπορείτε να εισάγετε αρνητικές ποσ�
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You can only enter positive quantities."
-msgstr ""
+msgstr "Μπορείτε να εισάγετε μόνο θετικές ποσότητες."
 
 #. module: stock
 #. odoo-python
@@ -11112,6 +11187,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
+"Μπορείτε να μετακινήσετε μία παρτίδα/σειριακό αριθμό μόνο σε μια νέα "
+"τοποθεσία εάν αυτή υπάρχει σε μία μόνο τοποθεσία."
 
 #. module: stock
 #. odoo-python
@@ -11120,12 +11197,15 @@ msgid ""
 "You can only move positive quantities stored in locations used by a single "
 "company per relocation."
 msgstr ""
+"Μπορείτε να μετακινήσετε μόνο θετικές ποσότητες αποθηκευμένες σε τοποθεσίες "
+"που χρησιμοποιούνται από μία εταιρεία ανά μετακίνηση."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
+"Μπορείτε να επεξεργαστείτε μόνο %s προϊόντα με μοναδικό σειριακό αριθμό."
 
 #. module: stock
 #. odoo-python
@@ -11134,6 +11214,9 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"Μπορείτε να θέσετε σε αναμονή μόνο σημεία παραγγελίας που ενεργοποιούνται "
+"χειροκίνητα. Αν δεν θέλετε να ενεργοποιούνται αυτόματα σημεία παραγγελίας, "
+"θα πρέπει να τα αρχειοθετήσετε."
 
 #. module: stock
 #. odoo-python
@@ -11142,12 +11225,16 @@ msgid ""
 "You can't deactivate the multi-location if you have more than once warehouse"
 " by company"
 msgstr ""
+"Δεν μπορείτε να απενεργοποιήσετε τη λειτουργία πολλαπλών τοποθεσιών αν έχετε"
+" πάνω από μία αποθήκη ανά εταιρεία."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid "You can't disable locations %s because they still contain products."
 msgstr ""
+"Δεν μπορείτε να απενεργοποιήσετε τις τοποθεσίες %s επειδή περιέχουν ακόμη "
+"προϊόντα."
 
 #. module: stock
 #. odoo-python
@@ -11156,6 +11243,8 @@ msgid ""
 "You cannot archive location %(location)s because it is used by warehouse "
 "%(warehouse)s"
 msgstr ""
+"Δεν μπορείτε να αρχειοθετήσετε την τοποθεσία %(location)sεπειδή "
+"χρησιμοποιείται από την αποθήκη %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11164,18 +11253,25 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
+"Δεν μπορείτε να ακυρώσετε μια μετακίνηση αποθέματος που έχει οριστεί ως "
+"\"Ολοκληρωμένη\". Δημιουργήστε μια επιστροφή για να αντιστρέψετε τις "
+"μετακινήσεις που πραγματοποιήθηκαν."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
+"Δεν μπορείτε να τροποποιήσετε μια ακυρωμένη μετακίνηση αποθέματος, "
+"δημιουργήστε μια νέα γραμμή αντί γι' αυτό."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr ""
+"Δεν μπορείτε να αλλάξετε την Προγραμματισμένη Ημερομηνία σε μια ολοκληρωμένη"
+" ή ακυρωμένη μεταφορά."
 
 #. module: stock
 #. odoo-python
@@ -11183,6 +11279,8 @@ msgstr ""
 msgid ""
 "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
+"Δεν μπορείτε να αλλάξετε τη Μονάδα Μέτρησης (UoM) για μια κίνηση αποθέματος "
+"που έχει οριστεί ως «Ολοκληρωμένη»."
 
 #. module: stock
 #. odoo-python
@@ -11191,6 +11289,9 @@ msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
 msgstr ""
+"Δεν μπορείτε να αλλάξετε την εταιρεία ενός αριθμού παρτίδας/σειριακού "
+"αριθμού που βρίσκεται αυτήν τη στιγμή σε τοποθεσία που ανήκει σε άλλη "
+"εταιρεία."
 
 #. module: stock
 #. odoo-python
@@ -11199,6 +11300,9 @@ msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Δεν μπορείτε να αλλάξετε τον λόγο αυτής της μονάδας μέτρησης, καθώς ορισμένα"
+" προϊόντα με αυτήν τη μονάδα έχουν ήδη μετακινηθεί ή είναι αυτήν τη στιγμή "
+"δεσμευμένα."
 
 #. module: stock
 #. odoo-python
@@ -11208,12 +11312,15 @@ msgid ""
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
 msgstr ""
+"Δεν μπορείτε να αλλάξετε τη μονάδα μέτρησης, καθώς υπάρχουν ήδη κινήσεις "
+"αποθέματος για αυτό το προϊόν. Αν θέλετε να αλλάξετε τη μονάδα μέτρησης, θα "
+"πρέπει να αρχειοθετήσετε αυτό το προϊόν και να δημιουργήσετε ένα νέο."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
-msgstr ""
+msgstr "Δεν μπορείτε να διαγράψετε μια απόρριψη που έχει ολοκληρωθεί."
 
 #. module: stock
 #. odoo-python
@@ -11223,18 +11330,21 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
+"Δεν μπορείτε να συσκευάσετε απευθείας ποσότητες από διαφορετικές μεταφορές "
+"στην ίδια συσκευασία μέσα από αυτήν την προβολή. Δοκιμάστε να τις προσθέσετε"
+" σε μια ομαδική παραλαβή και να τις συσκευάσετε εκεί."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot duplicate stock quants."
-msgstr ""
+msgstr "Δεν μπορείτε να αντιγράψετε ποσότητες αποθέματος."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot modify inventory loss quantity"
-msgstr ""
+msgstr "Δεν μπορείτε να τροποποιήσετε την ποσότητα απώλειας αποθέματος."
 
 #. module: stock
 #. odoo-python
@@ -11243,6 +11353,9 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
+"Δεν μπορείτε να μετακινήσετε το περιεχόμενο της ίδιας συσκευασίας "
+"περισσότερες από μία φορές στην ίδια μεταφορά ή να χωρίσετε την ίδια "
+"συσκευασία σε δύο διαφορετικές τοποθεσίες."
 
 #. module: stock
 #. odoo-python
@@ -11251,6 +11364,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Δεν μπορείτε να συσκευάσετε προϊόντα στην ίδια συσκευασία όταν προέρχονται "
+"από διαφορετικές μεταφορές με διαφορετικούς τύπους λειτουργίας."
 
 #. module: stock
 #. odoo-python
@@ -11259,6 +11374,8 @@ msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
 msgstr ""
+"Δεν μπορείτε να εκτελέσετε μεταφορές επειδή η μονάδα μέτρησής τους ανήκει σε"
+" διαφορετική κατηγορία από τη μονάδα μέτρησης του προϊόντος τους."
 
 #. module: stock
 #. odoo-python
@@ -11267,6 +11384,9 @@ msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"Δεν μπορείτε να ορίσετε μια τοποθεσία ως τοποθεσία απόρριψης (scrap) όταν "
+"αυτή έχει οριστεί ως τοποθεσία προορισμού για μια λειτουργία τύπου "
+"παραγωγής."
 
 #. module: stock
 #. odoo-python
@@ -11275,6 +11395,8 @@ msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr ""
+"Δεν μπορείτε να ορίσετε μια τοποθεσία απόρριψης ως τοποθεσία προορισμού για "
+"μια λειτουργία τύπου παραγωγής."
 
 #. module: stock
 #. odoo-python
@@ -11289,6 +11411,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Δεν μπορείτε να χωρίσετε μια μετακίνηση αποθέματος που έχει οριστεί ως "
+"«Ολοκληρωμένη» ή «Ακυρωμένη»."
 
 #. module: stock
 #. odoo-python
@@ -11297,12 +11421,16 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\" (%s)."
 msgstr ""
+"Δεν μπορείτε να παίρνετε ή να παραδίδετε προϊόντα σε μια τοποθεσία τύπου "
+"«προβολής» (%s)."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
+"Δεν μπορείτε να αποδεσμεύσετε μια μετακίνηση αποθέματος που έχει οριστεί ως "
+"«Ολοκληρωμένη»"
 
 #. module: stock
 #. odoo-python
@@ -11311,6 +11439,8 @@ msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
+"Δεν μπορείτε να χρησιμοποιήσετε τον ίδιο σειριακό αριθμό δύο φορές. Παρακαλώ"
+" διορθώστε τους σειριακούς αριθμούς που έχετε καταχωρίσει."
 
 #. module: stock
 #. odoo-python
@@ -11319,6 +11449,8 @@ msgid ""
 "You cannot validate a transfer if no quantities are reserved. To force the "
 "transfer, encode quantities."
 msgstr ""
+"Δεν μπορείτε να επιβεβαιώσετε μια μεταφορά αν δεν υπάρχουν δεσμευμένες "
+"ποσότητες. Για να πραγματοποιήσετε τη μεταφορά, καταχωρήστε ποσότητες."
 
 #. module: stock
 #. odoo-python
@@ -11327,11 +11459,13 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
+"Δεν μπορείτε να επιβεβαιώσετε μια κενή μεταφορά. Παρακαλώ προσθέστε προϊόντα"
+" για μεταφορά πριν προχωρήσετε."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr ""
+msgstr "Έχετε επεξεργαστεί λιγότερα προϊόντα από την αρχική ζήτηση."
 
 #. module: stock
 #. odoo-python
@@ -11340,6 +11474,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"Έχετε προϊόν(τα) σε απόθεμα με ενεργοποιημένη την παρακολούθηση αριθμού παρτίδας/σειράς. \n"
+"Απενεργοποιήστε την παρακολούθηση σε όλα τα προϊόντα πριν απενεργοποιήσετε αυτή τη ρύθμιση."
 
 #. module: stock
 #. odoo-python
@@ -11348,6 +11484,8 @@ msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
+"Έχετε προϊόν(τα) σε απόθεμα που δεν έχουν παρτίδα/σειριακό αριθμό. Μπορείτε "
+"να αναθέσετε παρτίδα/σειριακούς αριθμούς κάνοντας μια προσαρμογή αποθέματος."
 
 #. module: stock
 #. odoo-python
@@ -11356,18 +11494,21 @@ msgid ""
 "You have to select a product unit of measure that is in the same category as"
 " the default unit of measure of the product"
 msgstr ""
+"Πρέπει να επιλέξετε μονάδα μέτρησης προϊόντος που ανήκει στην ίδια κατηγορία"
+" με τη προεπιλεγμένη μονάδα μέτρησης του προϊόντος."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return Done pickings."
 msgstr ""
+"Μπορείτε να επιστρέψετε μόνο παραδόσεις που έχουν κατάσταση «Ολοκληρώθηκε»"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return one picking at a time."
-msgstr ""
+msgstr "Μπορείτε να επιστρέψετε μόνο μία παραλαβή κάθε φορά."
 
 #. module: stock
 #. odoo-python
@@ -11376,12 +11517,15 @@ msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
 msgstr ""
+"Πρέπει να ενεργοποιήσετε τις αποθηκευτικές τοποθεσίες για να μπορείτε να "
+"εκτελείτε εσωτερικούς τύπους λειτουργιών."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/product_replenish.py:0
 msgid "You need to select a route to replenish your products"
 msgstr ""
+"Πρέπει να επιλέξετε μια διαδρομή για την ανατροφοδότηση των προϊόντων σας."
 
 #. module: stock
 #. odoo-python
@@ -11390,17 +11534,23 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
+"Πρέπει να καταχωρίσετε έναν Αριθμό Παρτίδας/Σειριακό Αριθμό για το προϊόν:\n"
+"%(products)s"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr ""
+"Πρέπει να καταχωρίσετε έναν Αριθμό Παρτίδας/Σειριακό Αριθμό για το προϊόντα "
+"%s."
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
+"Θα πρέπει να ενημερώσετε αυτό το έγγραφο ώστε να αντικατοπτρίζει τους δικούς"
+" σας Όρους & Προϋποθέσεις."
 
 #. module: stock
 #. odoo-python
@@ -11409,6 +11559,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
+"Έχετε ακόμα σε εξέλιξη εργασίες για τους τύπους λειτουργίας %(operations)s "
+"στην αποθήκη %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11417,6 +11569,8 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
+"Έχετε ακόμα ενεργούς κανόνες αναπαραγγελίας για αυτό το προϊόν. Παρακαλώ "
+"αρχειοθετήστε ή διαγράψτε τους πρώτα."
 
 #. module: stock
 #. odoo-javascript
@@ -11425,6 +11579,8 @@ msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
 msgstr ""
+"Προσπαθήσατε να δημιουργήσετε μια εγγραφή που υπάρχει ήδη. Η υπάρχουσα "
+"εγγραφή τροποποιήθηκε αντί γι' αυτό."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -11433,6 +11589,9 @@ msgid ""
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
+"Εδώ θα βρείτε έξυπνες προτάσεις αναπλήρωσης βασισμένες σε προβλέψεις αποθέματος.\n"
+"            Επιλέξτε την ποσότητα που θέλετε να αγοράσετε ή να κατασκευάσετε και ξεκινήστε τις παραγγελίες με ένα κλικ..\n"
+"            Για εξοικονόμηση χρόνου στο μέλλον, ορίστε τους κανόνες ως «αυτόματους»."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1
@@ -11440,12 +11599,14 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Το μεσημεριανό σας παραδόθηκε.\n"
+"Καλή σας όρεξη!"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Your stock is currently empty"
-msgstr ""
+msgstr "Το απόθεμα σας αυτή τη στιγμή είναι άδειο."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__package_label_to_print__zpl
@@ -11457,28 +11618,28 @@ msgstr "ZPL"
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__zpl
 msgid "ZPL Labels"
-msgstr ""
+msgstr "Ετικέτες ZPL"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
 msgid "ZPL Labels - One per lot/SN"
-msgstr ""
+msgstr "Ετικέτες ZPL - Μία ανά παρτίδα/Σειριακό αριθμό"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
 msgid "ZPL Labels - One per unit"
-msgstr ""
+msgstr "Ετικέτες ZPL - Μία ανά μονάδα"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__zplxprice
 msgid "ZPL Labels with price"
-msgstr ""
+msgstr "Ετικέτες ZPL με τιμή"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "]<br/>min:"
-msgstr ""
+msgstr "]<br/>ελάχιστο:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11489,17 +11650,17 @@ msgstr "barcodelookup.com"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "below the inventory"
-msgstr ""
+msgstr "κάτω από το απόθεμα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "Σύνδεσμος bpost"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
 msgid "closest"
-msgstr ""
+msgstr "πιο κοντινό"
 
 #. module: stock
 #. odoo-javascript
@@ -11512,29 +11673,29 @@ msgstr "ημέρες"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "days before when starred"
-msgstr ""
+msgstr "ημέρες πριν την επισήμανση με αστέρι"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "days before/"
-msgstr ""
+msgstr "ημέρες πριν/"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. CW"
-msgstr ""
+msgstr "π.χ. Κεντρική Αποθήκη"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
-msgstr ""
+msgstr "π.χ. Κεντρική Αποθήκη"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "π.χ. ΠΑΡΤΙΔΑ-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -11544,12 +11705,12 @@ msgstr "π.χ. LOT/0001/20121"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. Lumber Inc"
-msgstr ""
+msgstr "e.g. Lumber Inc"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "e.g. PACK0000007"
-msgstr ""
+msgstr "π.χ. ΠΑΚΕΤΟ0000007"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -11559,27 +11720,27 @@ msgstr "π.χ. PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Physical Locations"
-msgstr ""
+msgstr "π.χ. Φυσικές Τοποθεσίες"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "e.g. Receptions"
-msgstr ""
+msgstr "π.χ. Παραλαβές"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "e.g. SN000001"
-msgstr ""
+msgstr "π.χ. SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Spare Stock"
-msgstr ""
+msgstr "π.χ. Αποθεματικό Ανταλλακτικών"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "e.g. Two-steps reception"
-msgstr ""
+msgstr "π.χ. Παραλαβή δύο βημάτων"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11589,7 +11750,7 @@ msgstr "π.χ. d7vctmiv2rwgenebha8bxq7irooudn"
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
-msgstr ""
+msgstr "fifo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -11604,7 +11765,7 @@ msgstr "σε"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "in barcode."
-msgstr ""
+msgstr "στο barcode."
 
 #. module: stock
 #. odoo-javascript
@@ -11621,13 +11782,13 @@ msgstr ""
 #. module: stock
 #: model:product.removal,method:stock.removal_lifo
 msgid "lifo"
-msgstr ""
+msgstr "lifo"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "minimum of"
-msgstr ""
+msgstr "ελάχιστο από"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11638,7 +11799,7 @@ msgstr "από"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 msgid "planned on"
-msgstr ""
+msgstr "προγραμματίστηκε στις"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11654,13 +11815,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "reserved"
-msgstr ""
+msgstr "δεσμευμένο"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "should be replenished"
-msgstr ""
+msgstr "πρέπει να ανατροφοδοτηθεί"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph
@@ -11685,12 +11846,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
 msgid "stock.putaway.rule"
-msgstr ""
+msgstr "κανόνας εναπόθεσης αποθέματος"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr ""
+msgstr "η εφαρμογή barcode"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id
@@ -11703,16 +11864,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "to reach the maximum of"
-msgstr ""
+msgstr "για να φτάσει το μέγιστο από"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "units"
-msgstr ""
+msgstr "μονάδες"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Εντολή Παράδοσης (Ref {{ object.name or 'n/a' "
+"}})"

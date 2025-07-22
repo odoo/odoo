@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
-# Luka Carević <luka@uvid.hr>, 2024
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2024
 # Antonijo Kovacevic, 2024
@@ -13,6 +12,8 @@
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Vladimir Vrgoč, 2024
 # Tina Milas, 2024
+# Ivica Dimjašević, 2025
+# Luka Carević <luka@uvid.hr>, 2025
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tina Milas, 2024\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s Greška"
 
 #. module: delivery
 #. odoo-python
@@ -157,7 +158,7 @@ msgstr "Raspoloživost"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr "Raspoloživi prevoznici"
+msgstr "Raspoloživi dostavljači"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
@@ -175,7 +176,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "Prijevoznik"
+msgstr "Dostavljač"
 
 #. module: delivery
 #. odoo-python
@@ -184,11 +185,13 @@ msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
 "Tags."
 msgstr ""
+"Dostavljač %s ne može imati istu oznaku i u Obaveznim oznakama i u Izuzetim "
+"oznakama."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr "Opis prevoznika"
+msgstr "Opis dostavljača"
 
 #. module: delivery
 #. odoo-javascript
@@ -426,7 +429,7 @@ msgstr "Procjena troška"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
 msgid "Excluded Tags"
-msgstr ""
+msgstr "Izuzete oznake"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -584,7 +587,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
-msgstr ""
+msgstr "Prikaz na karti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -604,12 +607,12 @@ msgstr "Marža na stopu"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Maks. volumen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
 msgid "Max Weight"
-msgstr "Max težina"
+msgstr "Maks. težina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
@@ -619,7 +622,7 @@ msgstr "Maksimalna vrijednost"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Obavezne oznake"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -695,6 +698,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Prefiksi poštanskih brojeva na koje se ovaj dostavljač odnosi. Imajte na umu"
+" da se regularni izrazi mogu koristiti za podršku zemljama s različitim "
+"duljinama poštanskih brojeva, tj. '$' se može dodati na kraj prefiksa kako "
+"bi se podudarao s točnim poštanskim brojem (npr. '100$' će se podudarati "
+"samo s '100', a ne s '1000')."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -822,7 +830,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Standardna dostava"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -989,6 +997,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"Ne možete izbrisati kategoriju proizvoda za dostavu jer se koristi za "
+"proizvode dostavljača."
 
 #. module: delivery
 #. odoo-javascript
@@ -1004,7 +1014,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Poštanski brojevi"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
