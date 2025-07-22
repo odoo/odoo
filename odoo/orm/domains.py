@@ -1858,11 +1858,6 @@ def _optimize_same_conditions(cls, conditions, model):
     Quick optimization for some conditions, just compare if we have the same
     condition twice.
     """
-    # just check the adjacent conditions for simple domains
-    # TODO replace this by:
-    # 1. optimize inequalities
-    # 2. optimize like with same prefixes
-    # 3. remove this function as equalities and existence is already covered
     for a, b in itertools.pairwise(itertools.chain([None], conditions)):
         if a == b:
             continue
