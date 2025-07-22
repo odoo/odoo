@@ -34,7 +34,7 @@ test("should check a simple item", async () => {
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">1</li>
+                <li class="o_checked">[]1</li>
             </ul>`),
     });
 });
@@ -51,7 +51,7 @@ test("should uncheck a simple item", async () => {
         },
         contentAfter: unformat(`
                 <ul class="o_checklist">
-                    <li>1</li>
+                    <li>[]1</li>
                 </ul>`),
     });
 });
@@ -68,7 +68,7 @@ test("should check an empty item", async () => {
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked"><br></li>
+                <li class="o_checked">[]<br></li>
             </ul>`),
     });
 });
@@ -85,7 +85,7 @@ test("should uncheck an empty item", async () => {
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked"><br></li>
+                <li class="o_checked">[]<br></li>
             </ul>`),
     });
 });
@@ -111,7 +111,7 @@ test("should check a nested item and the previous checklist item used as title",
                 <li><p>2</p>
                     <ul class="o_checklist">
                         <li class="o_checked">2.1</li>
-                        <li class="o_checked">2.2</li>
+                        <li class="o_checked">[]2.2</li>
                     </ul>
                 </li>
             </ul>`),
@@ -139,7 +139,7 @@ test("should uncheck a nested item and the previous checklist item used as title
                 <li class="o_checked"><p>2</p>
                     <ul class="o_checklist">
                         <li class="o_checked">2.1</li>
-                        <li>2.2</li>
+                        <li>[]2.2</li>
                     </ul>
                 </li>
             </ul>`),
@@ -173,7 +173,7 @@ test("should check a nested item and the wrapper wrapper title", async () => {
                         <li><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
-                                <li class="o_checked">3.2.2</li>
+                                <li class="o_checked">[]3.2.2</li>
                             </ul>
                         </li>
                     </ul>
@@ -209,7 +209,7 @@ test("should uncheck a nested item and the wrapper wrapper title", async () => {
                         <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.1.1</li>
-                                <li>3.1.2</li>
+                                <li>[]3.1.2</li>
                             </ul>
                         </li>
                     </ul>
@@ -246,7 +246,7 @@ test("should check all nested checklist item", async () => {
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked"><p>3</p>
+                <li class="o_checked">[]<p>3</p>
                     <ul class="o_checklist">
                         <li><p>3.1</p>
                             <ul class="o_checklist">
@@ -291,7 +291,7 @@ test("should uncheck all nested checklist item", async () => {
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li><p>3</p>
+                <li>[]<p>3</p>
                     <ul class="o_checklist">
                         <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
@@ -332,7 +332,7 @@ test("should check all nested checklist item and update wrapper title", async ()
             <ul class="o_checklist">
                 <li><p>3</p>
                     <ul class="o_checklist">
-                        <li class="o_checked"><p>3.1</p>
+                        <li class="o_checked">[]<p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li>3.2.2</li>
@@ -368,7 +368,7 @@ test("should uncheck all nested checklist items and update wrapper title", async
             <ul class="o_checklist">
                 <li class="o_checked"><p>3</p>
                     <ul class="o_checklist">
-                        <li><p>3.1</p>
+                        <li>[]<p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li class="o_checked">3.2.2</li>
