@@ -2,7 +2,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
-from odoo.tools.float_utils import float_repr, float_round, float_compare
+from odoo.tools.float_utils import float_is_zero, float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.translate import html_translate
 
@@ -1608,6 +1608,48 @@ class AccountTax(models.Model):
             self._add_tax_details_in_base_line(base_line, company)
 
     @api.model
+    def _distribute_delta_amount_smoothly(self, precision_digits, delta_amount, target_factors):
+        """ Distribute 'delta_amount' accross the factors passed as parameter.
+
+        For example, if 'delta_amount' = 0.03 and precision_digits is 3 and target factors is a list of 3 factors:
+        a) {'factor': 0.4}
+        b) {'factor': 0.3}
+        c) {'factor': 0.3}
+        ... it means the delta will be distributed first on a) then b) then c).
+        Since precision_digits = 3, it means we have a delta of "30" tenth of a hundred to be distributed.
+        a) will take 30 * 0.4 = 12 units.
+        b & c) will take 30 * 0.3 = 9 units each.
+        The result of this method will be [0.012, 0.009, 0.009].
+
+        :param precision_digits:    The decimal places of the delta.
+        :param delta_amount:        The delta amount to be distributed.
+        :param target_factors:      A list of dictionary containing at least 'factor' being the weight
+                                    defining how much delta will be allocated to this factor.
+        :return:                    A list of floats, one per element in 'target_factors'.
+        """
+        precision_rounding = float(f"1e-{precision_digits}")
+        amounts_to_distribute = [0.0] * len(target_factors)
+        if float_is_zero(delta_amount, precision_digits=precision_digits):
+            return amounts_to_distribute
+
+        sign = -1 if delta_amount < 0.0 else 1
+        nb_of_errors = round(abs(delta_amount / precision_rounding))
+        remaining_errors = nb_of_errors
+        for i, target_factor in enumerate(target_factors):
+            factor = target_factor['factor']
+            if not remaining_errors:
+                break
+
+            nb_of_amount_to_distribute = min(
+                math.ceil(abs(factor * nb_of_errors)),
+                remaining_errors,
+            )
+            remaining_errors -= nb_of_amount_to_distribute
+            amount_to_distribute = sign * nb_of_amount_to_distribute * precision_rounding
+            amounts_to_distribute[i] += amount_to_distribute
+        return amounts_to_distribute
+
+    @api.model
     def _round_base_lines_tax_details(self, base_lines, company, tax_lines=None):
         """ Round the 'tax_details' added to base_lines with the '_add_accounting_data_to_base_line_tax_details'.
         This method performs all the rounding and take care of rounding issues that could appear when using the
@@ -1862,30 +1904,29 @@ class AccountTax(models.Model):
             if not tax or not tax_amounts['total_included_currency']:
                 continue
 
-            delta_tax_amount_currency = tax_amounts['raw_tax_amount_currency'] - tax_amounts['tax_amount_currency']
-            delta_tax_amount = tax_amounts['raw_tax_amount'] - tax_amounts['tax_amount']
-            for delta, delta_field, delta_currency in (
-                (delta_tax_amount_currency, 'tax_amount_currency', currency),
-                (delta_tax_amount, 'tax_amount', company.currency_id),
+            for delta_field, delta_currency in (
+                ('tax_amount_currency', currency),
+                ('tax_amount', company.currency_id),
             ):
-                if delta_currency.is_zero(delta):
-                    continue
+                delta_amount = tax_amounts[f'raw_{delta_field}'] - tax_amounts[delta_field]
+                target_factors = [
+                    {
+                        'factor': abs(base_line['tax_details']['total_included_currency'] / tax_amounts['total_included_currency']),
+                        'base_line': base_line,
+                        'index_tax_data': index_tax_data,
+                    }
+                    for base_line, index_tax_data in tax_amounts['sorted_base_line_x_tax_data']
+                    if index_tax_data
+                ]
+                amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                    precision_digits=delta_currency.decimal_places,
+                    delta_amount=delta_amount,
+                    target_factors=target_factors,
+                )
+                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                    base_line = target_factor['base_line']
+                    index, tax_data = target_factor['index_tax_data']
 
-                sign = -1 if delta < 0.0 else 1
-                nb_of_errors = round(abs(delta / delta_currency.rounding))
-                remaining_errors = nb_of_errors
-                for base_line, index_tax_data in tax_amounts['sorted_base_line_x_tax_data']:
-                    tax_details = base_line['tax_details']
-                    if not remaining_errors or not index_tax_data:
-                        break
-
-                    index, tax_data = index_tax_data
-                    nb_of_amount_to_distribute = min(
-                        math.ceil(abs(tax_details['total_included_currency'] * nb_of_errors / tax_amounts['total_included_currency'])),
-                        remaining_errors,
-                    )
-                    remaining_errors -= nb_of_amount_to_distribute
-                    amount_to_distribute = sign * nb_of_amount_to_distribute * delta_currency.rounding
                     tax_data[delta_field] += amount_to_distribute
                     tax_amounts[delta_field] += amount_to_distribute
 
@@ -1905,43 +1946,36 @@ class AccountTax(models.Model):
             if not tax_amounts.get('sorted_base_line_x_tax_data') or not tax_amounts.get('total_included_currency'):
                 continue
 
-            if country_code == 'PT':
-                delta_base_amount_currency = (
-                    tax_amounts['raw_total_amount_currency']
-                    - tax_amounts['base_amount_currency']
-                    - tax_amounts['tax_amount_currency']
-                )
-                delta_base_amount = (
-                    tax_amounts['raw_total_amount']
-                    - tax_amounts['base_amount']
-                    - tax_amounts['tax_amount']
-                )
-            else:
-                delta_base_amount_currency = tax_amounts['raw_base_amount_currency'] - tax_amounts['base_amount_currency']
-                delta_base_amount = tax_amounts['raw_base_amount'] - tax_amounts['base_amount']
-
-            for delta, delta_currency_indicator, delta_currency in (
-                (delta_base_amount_currency, '_currency', currency),
-                (delta_base_amount, '', company.currency_id),
+            for delta_currency_indicator, delta_currency in (
+                ('_currency', currency),
+                ('', company.currency_id),
             ):
-                if delta_currency.is_zero(delta):
-                    continue
-
-                sign = -1 if delta < 0.0 else 1
-                nb_of_errors = round(abs(delta / delta_currency.rounding))
-                remaining_errors = nb_of_errors
-                for base_line, index_tax_data in tax_amounts['sorted_base_line_x_tax_data']:
-                    tax_details = base_line['tax_details']
-                    if not remaining_errors:
-                        break
-
-                    nb_of_amount_to_distribute = min(
-                        math.ceil(abs(tax_details['total_included_currency'] * nb_of_errors / tax_amounts['total_included_currency'])),
-                        remaining_errors,
+                if country_code == 'PT':
+                    delta_amount = (
+                        tax_amounts[f'raw_total_amount{delta_currency_indicator}']
+                        - tax_amounts[f'base_amount{delta_currency_indicator}']
+                        - tax_amounts[f'tax_amount{delta_currency_indicator}']
                     )
-                    remaining_errors -= nb_of_amount_to_distribute
-                    amount_to_distribute = sign * nb_of_amount_to_distribute * delta_currency.rounding
+                else:
+                    delta_amount = tax_amounts[f'raw_base_amount{delta_currency_indicator}'] - tax_amounts[f'base_amount{delta_currency_indicator}']
 
+                target_factors = [
+                    {
+                        'factor': abs(base_line['tax_details']['total_included_currency'] / tax_amounts['total_included_currency']),
+                        'base_line': base_line,
+                        'index_tax_data': index_tax_data,
+                    }
+                    for base_line, index_tax_data in tax_amounts['sorted_base_line_x_tax_data']
+                ]
+                amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                    precision_digits=delta_currency.decimal_places,
+                    delta_amount=delta_amount,
+                    target_factors=target_factors,
+                )
+                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                    base_line = target_factor['base_line']
+                    tax_details = base_line['tax_details']
+                    index_tax_data = target_factor['index_tax_data']
                     if index_tax_data:
                         _index, tax_data = index_tax_data
                         tax_data[f'base_amount{delta_currency_indicator}'] += amount_to_distribute
@@ -2139,25 +2173,30 @@ class AccountTax(models.Model):
                 tax_reps_data,
                 key=lambda tax_rep: (-abs(tax_rep['tax_amount_currency']), -abs(tax_rep['tax_amount'])),
             )
-            for field, field_currency in (
-                ('tax_amount_currency', currency),
-                ('tax_amount', company_currency),
+            for delta_suffix, delta_currency in (
+                ('_currency', currency),
+                ('', company_currency),
             ):
+                field = f'tax_amount{delta_suffix}'
                 tax_amount = tax_data.get(field)
                 if self.env.context.get('compute_all_use_raw_base_lines'):
                     tax_amount = tax_data.get(f"raw_{field}")
-                total_error = tax_amount - total_tax_rep_amounts[field]
-                nb_of_errors = round(abs(total_error / field_currency.rounding))
-                if not nb_of_errors:
-                    continue
 
-                amount_to_distribute = total_error / nb_of_errors
-                index = 0
-                while nb_of_errors:
-                    tax_rep = sorted_tax_reps_data[index]
-                    tax_rep[field] += amount_to_distribute
-                    nb_of_errors -= 1
-                    index = (index + 1) % len(sorted_tax_reps_data)
+                delta_amount = tax_amount - total_tax_rep_amounts[field]
+                target_factors = [
+                    {
+                        'factor': abs(tax_rep_data[field] / tax_amount) if tax_amount else 0.0,
+                        'tax_rep_data': tax_rep_data,
+                    }
+                    for tax_rep_data in sorted_tax_reps_data
+                ]
+                amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                    precision_digits=delta_currency.decimal_places,
+                    delta_amount=delta_amount,
+                    target_factors=target_factors,
+                )
+                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                    target_factor['tax_rep_data'][field] += amount_to_distribute
 
         subsequent_tags_per_tax = defaultdict(lambda: self.env['account.account.tag'])
         for tax_data in reversed(taxes_data):
