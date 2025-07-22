@@ -2,8 +2,8 @@ import DevicesSynchronisation from "@point_of_sale/app/utils/devices_synchronisa
 import { patch } from "@web/core/utils/patch";
 
 patch(DevicesSynchronisation.prototype, {
-    processDynamicRecords(dynamicRecords) {
-        const result = super.processDynamicRecords(dynamicRecords);
+    async processDynamicRecords(dynamicRecords) {
+        const result = await super.processDynamicRecords(dynamicRecords);
         if (!dynamicRecords["pos.order"]?.length) {
             return result;
         }
@@ -53,7 +53,7 @@ patch(DevicesSynchronisation.prototype, {
                     this.pos.addPendingOrder([uniqOrder.id]);
                 }
 
-                this.pos.deleteOrders([...syncedOrder, ...localOrders]);
+                await this.pos.deleteOrders([...syncedOrder, ...localOrders]);
             }
         }
     },
