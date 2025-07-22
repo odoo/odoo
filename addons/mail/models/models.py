@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,6 +7,7 @@ from markupsafe import Markup
 
 from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
+from odoo.fields import Domain
 from odoo.tools import parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
 
@@ -54,6 +54,7 @@ class Base(models.AbstractModel):
     # CHECK ACCESS
     # ------------------------------------------------------------
 
+    @api.model
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         """ Give document permission based on mail.message check permission.
         This is used when no other checks already granted permission (e.g.
@@ -71,19 +72,7 @@ class Base(models.AbstractModel):
             check_access = mail_post_access
         else:
             check_access = 'write'
-        return dict.fromkeys(self, check_access)
-
-    def _mail_group_by_operation_for_mail_message_operation(self, message_operation):
-        """ Globally reverse result of '_mail_get_operation_for_mail_message_operation'
-        aka return documents for a given access to check on them. """
-        document_operations = self._mail_get_operation_for_mail_message_operation(message_operation)
-        operation_documents = defaultdict(lambda: self.env[self._name])
-        for record, record_operation in document_operations.items():
-            operation_documents[record_operation] += record
-        # force prefetch in a post-loop as recordset concatenation may lose it
-        for operation, records in operation_documents.items():
-            records = records.with_prefetch(self.ids)
-        return operation_documents
+        return ((Domain.TRUE, check_access),)
 
     # ------------------------------------------------------------
     # FIELDS HELPERS

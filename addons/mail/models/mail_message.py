@@ -379,9 +379,7 @@ class MailMessage(models.Model):
         ))
         for id_, model, res_id, author_id, message_type, partner_id in self.env.cr.fetchall():
             ids.append(id_)
-            if author_id == pid:
-                allowed_ids.add(id_)
-            elif partner_id == pid:
+            if author_id == pid or partner_id == pid:
                 allowed_ids.add(id_)
             elif model and res_id and message_type != 'user_notification':
                 model_ids[model][res_id].add(id_)
@@ -413,20 +411,20 @@ class MailMessage(models.Model):
         for doc_model, doc_dict in model_ids.items():
             if not IrModelAccess.check(doc_model, 'read', False):
                 continue
-            records_all = self.env[doc_model].with_context(active_test=False).search([('id', 'in', list(doc_dict))])
-            allowed_documents = self.env[doc_model]
-            # _mail_group_by_operation_for_mail_message_operation set prefetch to records_all.ids
-            # hence should be good, no need to force it again
-            operation_res_ids = records_all._mail_group_by_operation_for_mail_message_operation('read')
-            # filter for each operation
-            for record_operation, records in operation_res_ids.items():
-                if record_operation == "read":  # already implied by 'search'
-                    allowed_documents += records
+            documents = self.env[doc_model].search([('id', 'in', list(doc_dict))], active_test=False)
+            for document_domain, operation_res_ids in documents._mail_get_operation_for_mail_message_operation('read'):
+                if not documents:
+                    break
+                records = documents.sudo().filtered_domain(document_domain).with_env(documents.env)
+                documents -= records
+                if operation_res_ids == 'read':
+                    # already implied by search
+                    accessible_doc_ids = records._ids
                 else:
-                    allowed_documents += records._filtered_access(record_operation)
-            allowed_ids |= {
-                msg_id for document_id in allowed_documents.ids for msg_id in doc_dict[document_id]
-            }
+                    accessible_doc_ids = records._filtered_access(operation_res_ids)._ids
+                allowed_ids.update(
+                    msg_id for document_id in accessible_doc_ids for msg_id in doc_dict[document_id]
+                )
         return allowed_ids
 
     def _check_access(self, operation: str) -> tuple | None:
@@ -572,11 +570,13 @@ class MailMessage(models.Model):
             documents = self.env[model].browse(docid_msgids)
             # group documents per operation to check, based on mail.message access
             # note that some ids may be filtered out if (e.g. group limitation, ...)
-            operation_res_ids = documents._mail_group_by_operation_for_mail_message_operation(operation)
-            for record_operation, records in operation_res_ids.items():
-                check_result = records._check_access(record_operation)
-                forbidden_doc_ids = set(check_result[0]._ids) if check_result else set()
-                for res_id in (r.id for r in records if r.id not in forbidden_doc_ids):
+            for document_domain, operation_res_ids in documents._mail_get_operation_for_mail_message_operation(operation):
+                if not documents:
+                    break
+                records = documents.sudo().filtered_domain(document_domain).with_env(documents.env)
+                documents -= records
+                accessible_doc_ids = records._filtered_access(operation_res_ids)._ids
+                for res_id in accessible_doc_ids:
                     for mid in docid_msgids[res_id]:
                         messages_to_check.pop(mid)
 
@@ -659,9 +659,9 @@ class MailMessage(models.Model):
 
         if message.model and message.res_id:
             thread_su = self.env[message.model].browse(message.res_id).sudo()
-            access_mode = thread_su._mail_get_operation_for_mail_message_operation(mode)[thread_su]
-            if access_mode and self.env[message.model]._get_thread_with_access(message.res_id, mode=access_mode, **kwargs):
-                return message
+            for domain, access_mode in thread_su._mail_get_operation_for_mail_message_operation(mode):
+                if thread_su.filtered_domain(domain) and self.env[message.model]._get_thread_with_access(message.res_id, mode=access_mode, **kwargs):
+                    return message
 
         return self.browse()
 

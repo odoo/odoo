@@ -1010,12 +1010,14 @@ class CalendarEvent(models.Model):
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         # reading messages on private events requires write access, not just read access
-        private = self.filtered(
-            lambda event: event.privacy == "private" and self.env.user.partner_id not in event.attendee_ids.partner_id
-        ) if message_operation == "read" else self.browse()
-        result = super(CalendarEvent, self - private)._mail_get_operation_for_mail_message_operation(message_operation)
-        result.update(dict.fromkeys(private, 'write'))
-        return result
+        operations = super()._mail_get_operation_for_mail_message_operation(message_operation)
+        if message_operation == 'read':
+            domain_private = Domain('privacy', '=', 'private') & (~Domain('attendee_ids.partner_id', '=', self.env.user.partner_id.id)).optimize(self)
+            return (
+                (domain_private, 'write'),
+                *operations,
+            )
+        return operations
 
     def _attendees_values(self, partner_commands):
         """

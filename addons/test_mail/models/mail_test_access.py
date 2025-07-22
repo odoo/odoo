@@ -1,4 +1,5 @@
 from odoo import fields, models, tools
+from odoo.fields import Domain
 
 
 class MailTestAccess(models.Model):
@@ -55,13 +56,15 @@ class MailTestAccessCusto(models.Model):
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         # customize message creation: only unlocked, except admins
         if message_operation == "create":
-            return dict.fromkeys(self.filtered(lambda r: not r.is_locked), 'read')
+            return (
+                (Domain('is_locked', '=', False), 'read'),
+            )
         # customize read: read access on unlocked, write access on locked
         elif message_operation == "read":
-            return {
-                record: 'write' if record.is_locked else 'read'
-                for record in self
-            }
+            return (
+                (Domain('is_locked', '=', True), 'write'),
+                (Domain.TRUE, 'read'),
+            )
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
 
