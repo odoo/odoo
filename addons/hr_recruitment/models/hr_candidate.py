@@ -116,7 +116,9 @@ class HrCandidate(models.Model):
             if not candidate.partner_id:
                 if not candidate.partner_name:
                     raise UserError(_('You must define a Contact Name for this candidate.'))
-                candidate.partner_id = self.env['res.partner'].with_context(default_lang=self.env.lang).find_or_create(candidate.email_from)
+                contact_email_normalized = tools.email_normalize(candidate.email_from)
+                contact_name_email = tools.formataddr((candidate.partner_name, contact_email_normalized))
+                candidate.partner_id = self.env['res.partner'].with_context(default_lang=self.env.lang).find_or_create(contact_name_email)
             if candidate.partner_name and not candidate.partner_id.name:
                 candidate.partner_id.name = candidate.partner_name
             if tools.email_normalize(candidate.email_from) != tools.email_normalize(candidate.partner_id.email):

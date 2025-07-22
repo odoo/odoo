@@ -201,3 +201,19 @@ class TestRecruitment(TransactionCase):
         application2.action_archive()
         self.env.invalidate_all()
         self.assertEqual(candidate.application_count, 2, 'The applications_count should not change after archiving an application')
+
+    def test_partner_name_from_candidate_name(self):
+        """
+        Test that when a candidate is created with an email, the related partner
+        is created with the candidate's name as the contact name, not the email.
+        """
+        candidate = self.env['hr.candidate'].create({
+            'partner_name': "testCandidate",
+            'email_from': "test@candidate.com",
+        })
+
+        self.assertEqual(
+            candidate.partner_id.name,
+            candidate.partner_name,
+            "The partner name should be the same as the candidate's name, not the email."
+        )
