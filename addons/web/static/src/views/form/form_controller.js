@@ -175,9 +175,16 @@ export class FormController extends Component {
         }
 
         this.formInDialog = 0;
-
         useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:ADD", () => this.formInDialog++);
         useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE", () => this.formInDialog--);
+
+        // Wait to be mounted before displaying dialog/notification for onchange warnings returned
+        // by the first onchange, for 2 reasons:
+        //  1) we don't want to show twice the warning if the component is destroyed before being
+        //     mounted and re-created
+        //  2) for form views in dialogs, this causes an infinite loop if willStart calls dialog.add
+        const mountedProm = new Promise((r) => onMounted(r));
+        this.onWillDisplayOnchangeWarning = () => mountedProm;
 
         const beforeFirstLoad = async () => {
             await loadSubViews(
@@ -360,6 +367,7 @@ export class FormController extends Component {
                 onWillLoadRoot: this.onWillLoadRoot.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
+                onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
         };

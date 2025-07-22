@@ -534,7 +534,7 @@ test("display a dialog if onchange result is a warning from within a dialog", as
 
     onRpc("instrument", "onchange", () => {
         expect.step("onchange warning");
-        return Promise.resolve({
+        return {
             value: {
                 name: false,
             },
@@ -543,7 +543,7 @@ test("display a dialog if onchange result is a warning from within a dialog", as
                 message: "You must first select a partner",
                 type: "dialog",
             },
-        });
+        };
     });
     await mountView({
         type: "form",
