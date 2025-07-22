@@ -33,7 +33,7 @@
                                         <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="ps-3 mb-2">
                                             <t t-set="c_qty" t-value="cline.qty / line.qty"/>
                                             <span t-if="(c_qty &gt; 1)"><t t-esc="c_qty"/>x </span>
-                                            <t t-esc="cline.product_id.name"/>
+                                            <t t-esc="formatProductName(cline.product_id)"/>
                                             <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted">
                                                 <t t-esc="attrVal.attribute_id.name" />:
                                                 <t t-esc="attrVal.name" />
