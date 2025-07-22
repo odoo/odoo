@@ -931,6 +931,14 @@ describe("Selection collapsed", () => {
                 });
             });
 
+            test("should remove the checkmark when the list item marker is deleted", async () => {
+                await testEditor({
+                    contentBefore: '<ul class="o_checklist"><li class="o_checked">[]</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<ul class="o_checklist"><li class="oe-nested">[]</li></ul>',
+                });
+            });
+
             describe("should merge a list item with its previous list item", () => {
                 test("should merge a list item with its previous list item (1)", async () => {
                     await testEditor({
@@ -2726,7 +2734,8 @@ describe("Selection not collapsed", () => {
                         contentBefore:
                             '<ul class="o_checklist"><li class="o_checked">ab[cd</li></ul><ul><li>ef]gh</li></ul>',
                         stepFunction: deleteBackward,
-                        contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                        contentAfter:
+                            '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                     });
                 });
                 test("should delete across an checklist list and an unordered list (2)", async () => {
@@ -2735,7 +2744,8 @@ describe("Selection not collapsed", () => {
                         contentBefore:
                             '<ul class="o_checklist"><li class="o_checked">ab]cd</li></ul><ul><li>ef[gh</li></ul>',
                         stepFunction: deleteBackward,
-                        contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                        contentAfter:
+                            '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                     });
                 });
                 test("should delete across an checklist list and an unordered list (3)", async () => {
