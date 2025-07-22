@@ -38,6 +38,15 @@ msgid ""
 "            * OOOO is the sequence number.\n"
 "    "
 msgstr ""
+"\n"
+"        Letlæselig ordrereference.\n"
+"            * Format: YYLL-SSS-FOOOO\n"
+"            * YY årstal\n"
+"            * LL login-nummer (proxy for enheden)\n"
+"            * SSS sessions-ID\n"
+"            * F er 1 eller 0 (1, hvis sekvensnummeret er genereret af kunden)\n"
+"            * OOOO sekvensnummer.\n"
+"    "
 
 #. module: point_of_sale
 #. odoo-python
@@ -70,7 +79,7 @@ msgstr "% Rabat"
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "%(name)s Ordreplukning i POS-systemet"
 
 #. module: point_of_sale
 #. odoo-python
@@ -102,7 +111,7 @@ msgstr "%(payment_method)s POS betaling på %(partner)s i %(session)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: Slettet linje (mængde: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -120,7 +129,7 @@ msgstr "%(refunded_order)s TILBAGEBETALE"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(title)s %(product_name)s with %(taxes)s"
-msgstr ""
+msgstr "%(title)s %(product_name)s med %(taxes)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -152,7 +161,7 @@ msgstr "%s importerede ordrer"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s ubeskattet"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -173,7 +182,7 @@ msgstr "0.00"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "0014-001-00001"
-msgstr ""
+msgstr "0014-001-00001"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -261,7 +270,7 @@ msgstr "5-lommers jeans i bomuldsdenim med let stretch for god komfort."
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_slim_template
 msgid "5-pocket jeans in cotton denim.."
-msgstr ""
+msgstr "Jeans med 5 lommer i bomuldsdenim."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -322,6 +331,8 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
+"<p>Hej %(client_name)s.<br/>Her er din kvittering %(is_invoiced)sfor"
+"             %(pos_name)s på %(amount)s fra %(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -329,6 +340,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Skal "
+"fastlægges</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -407,7 +420,7 @@ msgstr "<strong>Åbning af notat fra sessionen:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice</strong>"
-msgstr ""
+msgstr "<strong>Kildefaktura</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -432,7 +445,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_note_name_unique
 msgid "A note with this name already exists"
-msgstr ""
+msgstr "Der findes allerede en note med dette navn"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -459,6 +472,7 @@ msgid ""
 "A session-unique sequence number for the order. Negative if generated from "
 "the client"
 msgstr ""
+"Et unikt ekspeditionsnummer for ordren. Negativ, hvis genereret af kunden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
@@ -489,7 +503,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Mercado Pago on a terminal"
-msgstr ""
+msgstr "Acceptér betalinger med Mercado Pago i en terminal"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -499,7 +513,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr ""
+msgstr "Acceptér betalinger med en Razorpay-betalingsterminal"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -559,6 +573,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records"
 " for bank payments."
 msgstr ""
+"Konto anvendt som midlertidig modkonto ved bogføring af bankbetalinger."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -599,7 +614,7 @@ msgstr "Aktivér"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_sms
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_sms
 msgid "Activate SMS feature for point_of_sale"
-msgstr ""
+msgstr "Aktivér SMS-funktion for point_of_sale"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -639,7 +654,7 @@ msgstr "Tilføj"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/note_button/note_button.js:0
 msgid "Add %s"
-msgstr ""
+msgstr "Tilføj %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -682,7 +697,7 @@ msgstr "Tilføje en ny betalingsmetode i PoS"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_preset_form
 msgid "Add a new preset"
-msgstr ""
+msgstr "Tilføj en ny forudindstilling"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
@@ -710,7 +725,7 @@ msgstr "Tilføj til ordre"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Added %(payment_method)s with %(amount)s"
-msgstr ""
+msgstr "Tilføjet %(payment_method)s med %(amount)s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -5301,7 +5316,7 @@ msgstr "Betalingsmetoder"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_payment_mode
 msgid "Payment Mode"
-msgstr ""
+msgstr "Betalingsform"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -6824,7 +6839,7 @@ msgstr "Gennemse"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Review Orders"
-msgstr ""
+msgstr "Gennemse ordrer"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
