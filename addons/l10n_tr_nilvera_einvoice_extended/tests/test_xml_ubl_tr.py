@@ -81,16 +81,11 @@ class TestUBLTR(AccountTestInvoicingCommon):
         generated_xml = self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0]
         return generated_xml
 
-    def _skip_test_l10n_tr_nilvera_einvoice_extended(self):
-        if self.env['ir.module.module'].search([('name', '=', 'l10n_tr_nilvera_einvoice_extended')]).state == 'installed':
-            self.skipTest("This test won't work if l10n_tr_nilvera_einvoice_extended is installed since it adds new nodes to the XML reports.")
-
     def test_xml_invoice_einvoice(self):
-        self._skip_test_l10n_tr_nilvera_einvoice_extended()
         with freeze_time('2025-03-05'):
             generated_xml = self._generate_invoice_xml()
 
-        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_einvoice.xml', 'rb') as expected_xml_file:
+        with file_open('l10n_tr_nilvera_einvoice_extended/tests/expected_xmls/invoice_einvoice.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(
@@ -99,11 +94,10 @@ class TestUBLTR(AccountTestInvoicingCommon):
         )
 
     def test_xml_invoice_einvoice_multicurrency(self):
-        self._skip_test_l10n_tr_nilvera_einvoice_extended()
         with freeze_time('2025-03-05'):
             generated_xml = self._generate_invoice_xml(currency_id=self.env.ref('base.USD').id)
 
-        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_einvoice_multicurrency.xml', 'rb') as expected_xml_file:
+        with file_open('l10n_tr_nilvera_einvoice_extended/tests/expected_xmls/invoice_einvoice_multicurrency.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(
@@ -112,13 +106,12 @@ class TestUBLTR(AccountTestInvoicingCommon):
         )
 
     def test_xml_invoice_earchive(self):
-        self._skip_test_l10n_tr_nilvera_einvoice_extended()
         self.partner_1.l10n_tr_nilvera_customer_status = 'earchive'
 
         with freeze_time('2025-03-05'):
             generated_xml = self._generate_invoice_xml()
 
-        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_earchive.xml', 'rb') as expected_xml_file:
+        with file_open('l10n_tr_nilvera_einvoice_extended/tests/expected_xmls/invoice_earchive.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(
@@ -127,13 +120,12 @@ class TestUBLTR(AccountTestInvoicingCommon):
         )
 
     def test_xml_invoice_earchive_multicurrency(self):
-        self._skip_test_l10n_tr_nilvera_einvoice_extended()
         self.partner_1.l10n_tr_nilvera_customer_status = 'earchive'
 
         with freeze_time('2025-03-05'):
             generated_xml = self._generate_invoice_xml(currency_id=self.env.ref('base.USD').id)
 
-        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_earchive_multicurrency.xml', 'rb') as expected_xml_file:
+        with file_open('l10n_tr_nilvera_einvoice_extended/tests/expected_xmls/invoice_earchive_multicurrency.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(

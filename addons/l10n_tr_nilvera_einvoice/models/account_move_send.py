@@ -46,20 +46,53 @@ class AccountMoveSend(models.AbstractModel):
                 "level": "danger",
             }
 
+        # Danger alert if partner is missing required tax office
+        if tr_partners_missing_tax_office := self._get_tax_partner_tax_office_alert(moves):
+            alerts["tr_partners_missing_tax_office"] = tr_partners_missing_tax_office
+
+        # Danger alert if TR company is missing required tax office
+        if tr_companies_missing_tax_office := self._get_tax_company_tax_office_alert(moves):
+            alerts["tr_companies_missing_tax_office"] = tr_companies_missing_tax_office
+
+        return alerts
+
+    def _get_tax_partner_tax_office_alert(self, moves):
+        # Overriden in l10n_tr_nilvera_einvoice_extended to give error based on l10n_tax_office field
         if tr_einvoice_partners_missing_ref := moves.partner_id.filtered(
-            lambda p: p.l10n_tr_nilvera_customer_status == "einvoice" and not p.ref
+            lambda p: p.l10n_tr_nilvera_customer_status == "einvoice"
+            and not p.ref
+            and p.country_code == "TR"
         ):
-            alerts["critical_partner_data_missing"] = {
-                "message": _("The following E-Invoice partner(s) must have the reference field set to the tax office name."),
+            return {
+                "message": _(
+                    "The following E-Invoice partner(s) must have the reference field set to the tax office name."
+                ),
                 "action_text": _("View Partner(s)"),
-                "action": tr_einvoice_partners_missing_ref._get_records_action(name=_("Check reference on Partner(s)")
+                "action": tr_einvoice_partners_missing_ref._get_records_action(
+                    name=_("Check reference on Partner(s)")
                 ),
                 "level": "danger",
             }
 
-        return alerts
+        return False
 
-    # -------------------------------------------------------------------------
+    def _get_tax_company_tax_office_alert(self, moves):
+        # Overriden in l10n_tr_nilvera_einvoice_extended to give error based on l10n_tax_office field
+        if tr_companies_missing_tax_office := moves.company_id.partner_id.filtered(
+            lambda p: (not p.reference and p.country_code == "TR")
+        ):
+            return {
+                "message": _(
+                    "The following TR Company(s) must have the reference field set to the tax office name."
+                ),
+                "action_text": _("View Company(s)"),
+                "action": tr_companies_missing_tax_office._get_records_action(
+                    name=_(" TR Company(s)")
+                ),
+                "level": "danger",
+            }
+
+    # --------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
     def _link_invoice_documents(self, invoices_data):
@@ -89,7 +122,7 @@ class AccountMoveSend(models.AbstractModel):
                     # If no alias is saved, the user is either an E-Archive user or we haven't checked before. Check again
                     # just in case.
                     invoice.partner_id.check_nilvera_customer()
-                customer_alias = invoice.partner_id.l10n_tr_nilvera_customer_alias_id.name
+                customer_alias = invoice._get_partner_l10n_tr_nilvera_customer_alias_name()
                 if customer_alias:  # E-Invoice
                     invoice._l10n_tr_nilvera_submit_einvoice(xml_file, customer_alias)
                 else:   # E-Archive
