@@ -5314,6 +5314,23 @@ class TestMrpOrder(TestMrpCommon):
         # Check that the serial numbers follow the sequence
         self.assertEqual(mo2.lot_producing_ids.mapped('name'), ['customMRPSerial0000001', 'customMRPSerial0000002', 'customMRPSerial0000003'])
 
+    def test_copy_operation_excludes_variant(self):
+        """Test to ensure that copying an operation clears the product variant field (bom_product_template_attribute_value_ids)
+        and does not copy it from the original."""
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_7_template.id,
+            'operation_ids': [Command.create({
+                'name': 'Weld Machine',
+                'workcenter_id': self.workcenter_1.id,
+                'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v1.id)],
+            })]
+        })
+        operation = bom.operation_ids
+        operation.with_context(bom_id=bom.id).copy_to_bom()
+        self.assertEqual(len(bom.operation_ids), 2)
+        copied_operation = bom.operation_ids[1]
+        self.assertFalse(copied_operation.bom_product_template_attribute_value_ids, "'Apply on Variants' should not be copied to the new operation.")
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
