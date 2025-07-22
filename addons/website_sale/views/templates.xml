@@ -607,7 +607,7 @@
                                         role="button"
                                         t-attf-title="Back to {{category.parent_id and category.parent_id.name or 'Shop'}}"
                                     >
-                                        <i class="oi oi-arrow-left" role="img"/>
+                                        <i class="oi oi-chevron-left" role="img"/>
                                     </a>
                                     <t t-if="search and category">
                                         <span class="text-muted">Searching</span>
@@ -1909,14 +1909,12 @@
                         <div class="d-flex align-items-center flex-grow-1 mb-4 m-lg-0">
                             <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
                                 <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
-                                    <a t-att-href="keep(shop_path)">
-                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
-                                    </a>
+                                    <a t-att-href="keep(shop_path)">All Products</a>
                                 </li>
                                 <t t-foreach="category.parents_and_self" t-as="cat">
                                     <li
                                         t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
-                                        class="breadcrumb-item"
+                                        class="breadcrumb-item d-none d-lg-inline-block"
                                     >
                                         <a
                                             class="py-2 py-lg-0"
@@ -1924,19 +1922,19 @@
                                         >
                                             <i
                                                 class="oi oi-chevron-left d-lg-none me-1"
-                                                role="presentation"
+                                                role="img"
                                             />
                                             <t t-out="cat.name"/>
                                         </a>
                                     </li>
                                 </t>
-                                <li class="o_not_editable breadcrumb-item d-lg-none">
-                                    <a class="py-2 py-lg-0" t-att-href="keep(shop_path)">
-                                        <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
-                                    </a>
-                                </li>
                                 <li class="breadcrumb-item d-none d-lg-inline-block active">
                                     <span t-field="product.name" />
+                                </li>
+                                <li class="breadcrumb-item d-lg-none">
+                                    <a t-att-href="category and keep('%s/category/%s' % (shop_path, slug(cat))) or keep(shop_path)">
+                                        <i class="oi oi-chevron-left me-2" role="img"/><t t-out="category.name or 'All Products'"/>
+                                    </a>
                                 </li>
                             </ol>
                             <div class="d-flex d-md-none gap-2 ms-auto">
