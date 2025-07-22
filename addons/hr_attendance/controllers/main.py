@@ -62,15 +62,54 @@ class HrAttendance(http.Controller):
             'mode': mode
         }
 
+    def _get_allowed_company_ids(self, str_company_ids):
+        return (
+            [int(id) for id in str_company_ids.split(",")]
+            if str_company_ids
+            else []
+        )
+
+    def _get_multi_company_employees_infos(
+        self,
+        limit,
+        offset,
+        domain,
+        allowed_company_ids,
+    ):
+        company_ids = [int(id) for id in allowed_company_ids.split(",")]
+        Employee = request.env["hr.employee"].sudo()
+        domain = expression.AND([domain, [("company_id", "in", company_ids)]])
+        employees = Employee.search_fetch(
+            domain=domain,
+            field_names=["id", "display_name", "job_id"],
+            limit=limit,
+            offset=offset,
+            order="name, id"
+        )
+        employees_data = [{
+            "id": employee.id,
+            "display_name": employee.display_name,
+            "job_id": employee.job_id.name,
+            "avatar": image_data_uri(employee.avatar_128),
+        } for employee in employees]
+        return {
+            "records": employees_data,
+            "length": Employee.search_count(domain),
+        }
+
     @http.route('/hr_attendance/kiosk_mode_menu/<int:company_id>', auth='user', type='http')
-    def kiosk_menu_item_action(self, company_id):
+    def kiosk_menu_item_action(self, company_id, **kwargs):
         if request.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
             # Auto log out will prevent users from forgetting to log out of their session
             # before leaving the kiosk mode open to the public. This is a prevention security
             # measure.
+            company = request.env['res.company'].browse(company_id)
             if self.has_password():
                 request.session.logout(keep_db=True)
-            return request.redirect(request.env['res.company'].browse(company_id).attendance_kiosk_url)
+            company_ids = kwargs.get('allowed_company_ids')
+            if company_ids:
+                company = company.with_context(allowed_company_ids=company_ids)
+            return request.redirect(company.attendance_kiosk_url)
         else:
             return request.not_found()
 
@@ -80,7 +119,7 @@ class HrAttendance(http.Controller):
         return {}
 
     @http.route(["/hr_attendance/<token>"], type='http', auth='public', website=True, sitemap=True)
-    def open_kiosk_mode(self, token, from_trial_mode=False):
+    def open_kiosk_mode(self, token, from_trial_mode=False, **kwargs):
         company = self._get_company(token)
         if not company:
             return request.not_found()
@@ -121,11 +160,18 @@ class HrAttendance(http.Controller):
             )
 
     @http.route('/hr_attendance/attendance_employee_data', type="json", auth="public")
-    def employee_attendance_data(self, token, employee_id):
+    def employee_attendance_data(self, token, employee_id, **kwargs):
         company = self._get_company(token)
         if company:
+            allowed_company_ids = self._get_allowed_company_ids(
+                kwargs.get('allowed_company_ids', [])
+            )
             employee = request.env['hr.employee'].sudo().browse(employee_id)
-            if employee.company_id == company:
+            employee_company = employee.company_id
+            if (
+                employee_company == company
+                or employee_company.id in allowed_company_ids
+            ):
                 return self._get_employee_info_response(employee)
         return {}
 
@@ -143,17 +189,39 @@ class HrAttendance(http.Controller):
         return self.manual_selection_with_geolocation(token, employee_id, pin_code)
 
     @http.route('/hr_attendance/manual_selection', type="json", auth="public")
-    def manual_selection_with_geolocation(self, token, employee_id, pin_code, latitude=False, longitude=False):
+    def manual_selection_with_geolocation(self, token, employee_id, pin_code, latitude=False, longitude=False, **kwargs):
         company = self._get_company(token)
         if company:
+            allowed_company_ids = self._get_allowed_company_ids(
+                kwargs.get("allowed_company_ids", [])
+            )
             employee = request.env['hr.employee'].sudo().browse(employee_id)
-            if employee.company_id == company and ((not company.attendance_kiosk_use_pin) or (employee.pin == pin_code)):
+            employee_company = employee.company_id
+            is_company_allowed = (
+                employee_company == company
+                or employee_company in allowed_company_ids
+            )
+            if (
+                is_company_allowed
+                and (
+                    not employee_company.attendance_kiosk_use_pin
+                    or employee.pin == pin_code
+                )
+            ):
                 employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude))
                 return self._get_employee_info_response(employee)
         return {}
 
     @http.route('/hr_attendance/employees_infos', type="json", auth="public")
-    def employees_infos(self, token, limit, offset, domain):
+    def employees_infos(self, token, limit, offset, domain, **kwargs):
+        allowed_company_ids = kwargs.get("allowed_company_ids", [])
+        if allowed_company_ids:
+            return self._get_multi_company_employees_infos(
+                limit,
+                offset,
+                domain,
+                allowed_company_ids,
+            )
         company = self._get_company(token)
         if company:
             domain = expression.AND([domain, [('company_id', '=', company.id)]])

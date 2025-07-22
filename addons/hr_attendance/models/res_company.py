@@ -40,9 +40,21 @@ class ResCompany(models.Model):
     absence_management = fields.Boolean(string="Absence Management", default=False)
 
     @api.depends("attendance_kiosk_key")
+    @api.depends_context('allowed_company_ids')
     def _compute_attendance_kiosk_url(self):
+        Company = self.env['res.company']
+        allowed_company_ids = self.env.context.get('allowed_company_ids', [])
         for company in self:
-            company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+            attendance_kiosk_url = url_join(
+                self.env['res.company'].get_base_url(),
+                '/hr_attendance/%s' % company.attendance_kiosk_key
+            )
+            if allowed_company_ids:
+                attendance_kiosk_url = url_join(
+                    attendance_kiosk_url,
+                    '?allowed_company_ids={}'.format(allowed_company_ids)
+                )
+            company.attendance_kiosk_url = attendance_kiosk_url
 
     # ---------------------------------------------------------
     # ORM Overrides
@@ -98,8 +110,13 @@ class ResCompany(models.Model):
                 company.hr_presence_control_login = True
 
     def _action_open_kiosk_mode(self):
+        allowed_company_ids = self.env.context.get("allowed_company_ids", [])
+        action_url = f'/hr_attendance/kiosk_mode_menu/{self.env.company.id}'
+        if len(allowed_company_ids > 1):
+            cids = ','.join(str(cid) for cid in allowed_company_ids)
+            action_url = f'{action_url}?allowed_company_ids={cids}'
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': f'/hr_attendance/kiosk_mode_menu/{self.env.company.id}',
+            'url': action_url,
         }
