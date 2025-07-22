@@ -1,5 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="layout" name="Partners Layout">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Partners</t>
+        <div id="wrap">
+            <div class="oe_structure oe_empty" id="oe_structure_website_partner_layout_1"
+                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"/>
+            <div class="container mb-3">
+                <t t-out="0" />
+            </div>
+            <div class="oe_structure oe_empty" id="oe_structure_website_partner_layout_2"
+                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"/>
+        </div>
+    </t>
+</template>
+
+<template id="index" name="Find Partners">
+    <t t-call="website_partner.layout">
+        <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
+            <h1 class="me-auto mb-0 h4">
+                Find a partner<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
+            </h1>
+            <div class="dropdown d-none d-lg-block">
+                <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
+                    <t t-foreach="countries" t-as="country">
+                        <span t-if="country['active']" t-out="country['country_id'][1]"/>
+                    </t>
+                </button>
+                <div class="dropdown-menu">
+                    <t t-foreach="countries" t-as="country" t-if="country['country_id']">
+                        <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
+                        <a t-attf-href="/partners#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
+                            <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
+                            <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
+                        </a>
+                    </t>
+                </div>
+            </div>
+            <div class="o_wcrm_search d-flex w-100 w-lg-25">
+                <form class="flex-grow-1" action="" method="get">
+                    <input t-if="country_all" type="hidden" name="country_all" value="True" />
+                    <div class="input-group" role="search">
+                        <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
+                        <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                        <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
+                            <i class="oi oi-search"/>
+                        </button>
+                    </div>
+                </form>
+                <button class="btn btn-light position-relative ms-2 d-lg-none"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#o_wcrm_offcanvas">
+                    <i class="fa fa-sliders"/>
+                </button>
+            </div>
+        </section>
+        <!-- Off canvas filters on mobile-->
+        <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Filters</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div class="accordion accordion-flush">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target=".o_wcrm_offcanvas_grade"
+                                aria-expanded="false"
+                                aria-controls="o_wcrm_offcanvas_grade">
+                                Filter by category
+                            </button>
+                        </h2>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target=".o_wcrm_offcanvas_country"
+                                aria-expanded="false"
+                                aria-controls="o_wcrm_offcanvas_country">
+                                Filter by country
+                            </button>
+                        </h2>
+                    </div>
+                    <div class="o_wcrm_offcanvas_country accordion-collapse collapse">
+                        <div class="accordion-body pt-0">
+                            <ul class="list-group list-group-flush">
+                                <t t-foreach="countries" t-as="country">
+                                    <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                        <a t-attf-href="/partners#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                                        class="text-reset" aria-label="See countries filters">
+                                            <div class="form-check">
+                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
+                                                <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="my-5 py-5 text-center" t-if="not partners">
+                <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
+                <a href="/partners">See all partners</a>
+            </div>
+            <div t-elif="fallback_all_countries" class="mt-4 alert alert-primary alert-dismissible fade show" role="alert">
+                <i class="fa fa-info-circle me-2"/>
+                There are no matching partners found for the selected country. Displaying results across all countries instead.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="my-5 py-5 text-center" t-elif="True">
+                <h5>ELSE of the partner search</h5>
+            </div>
+            <div class="navbar">
+                <t t-call="website.pager">
+                   <t t-set="classname" t-valuef="mx-auto"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="partner" name="Partner Detail">
+    <t t-call="website_partner.layout">
+        <div t-if="not edit_page" class="mt-4 mb-3">
+            <a t-attf-href="/partners#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back to partners</a>
+        </div>
+        <t t-call="website_partner.partner_detail">
+            <t t-set="right_column">
+                <div id="right_column"><t t-call="website_partner.references_block"/></div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="references_block" name="Partner References Block">
+    <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
+        <h4 id="references">References</h4>
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
+            <div class="row">
+                <div class="col-md-2">
+                    <span t-field="reference.avatar_128" class="d-flex justify-content-center" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
+                </div>
+                <div class="card-body col-md-10">
+                    <span t-field="reference.self"/>
+                    <div t-field='reference.website_short_description'/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
 <template id="partner_page" name="Partner Page">
     <t t-call="website.layout">
         <div id="wrap">
