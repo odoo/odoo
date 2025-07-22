@@ -1084,7 +1084,6 @@ export class SetLabelTextAction extends BuilderAction {
                 multiple.dataset.name = value;
             }
             const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
-            const previousInputName = fieldEl.name;
             inputEls.forEach((el) => (el.name = value));
 
             // Synchronize the fields whose visibility depends on this field
@@ -1092,7 +1091,7 @@ export class SetLabelTextAction extends BuilderAction {
                 .closest("form")
                 .querySelectorAll(
                     `.s_website_form_field[data-visibility-dependency="${CSS.escape(
-                        previousInputName
+                        inputEls[0].name,
                     )}"]`
                 );
             for (const dependentEl of dependentEls) {
