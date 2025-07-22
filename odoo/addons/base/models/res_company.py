@@ -74,7 +74,7 @@ class ResCompany(models.Model):
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway"), ('Tajawal', 'Tajawal'), ('Fira_Mono', 'Fira Mono')], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()
-    color = fields.Integer(compute='_compute_color', inverse='_inverse_color')
+    color = fields.Integer(compute='_compute_color', inverse='_inverse_color', store=True)
     layout_background = fields.Selection([('Blank', 'Blank'), ('Demo logo', 'Demo logo'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
     uninstalled_l10n_module_ids = fields.Many2many('ir.module.module', compute='_compute_uninstalled_l10n_module_ids')
@@ -165,11 +165,11 @@ class ResCompany(models.Model):
     @api.depends('root_id')
     def _compute_color(self):
         for company in self:
-            company.color = company.root_id.partner_id.color or (company.root_id._origin.id % 12)
+            company.color = company.root_id.color or (company.root_id._origin.id % 12)
 
     def _inverse_color(self):
         for company in self:
-            company.root_id.partner_id.color = company.color
+            company.root_id.color = company.color
 
     @api.onchange('state_id')
     def _onchange_state(self):

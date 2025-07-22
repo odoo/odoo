@@ -78,7 +78,7 @@ class TestXMLRPC(common.HttpCase):
     def test_xmlrpc_read_group(self):
         self.xmlrpc_object.execute(
             common.get_db_name(), self.admin_uid, 'admin',
-            'res.partner', 'formatted_read_group', [], ['parent_id'], ['color:sum'],
+            'res.partner', 'formatted_read_group', [], ['parent_id'], ['id:sum'],
         )
 
     def test_xmlrpc_name_search(self):

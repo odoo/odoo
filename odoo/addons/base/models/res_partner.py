@@ -250,7 +250,6 @@ class ResPartner(models.Model):
     category_id: ResPartnerCategory = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     active = fields.Boolean(default=True)
-    employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
@@ -284,7 +283,6 @@ class ResPartner(models.Model):
         selection=[('person', 'Person'), ('company', 'Company')],
         compute='_compute_company_type', inverse='_write_company_type')
     company_id: ResCompany = fields.Many2one('res.company', 'Company', index=True)
-    color = fields.Integer(string='Color Index', default=0)
     user_ids: ResUsers = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     main_user_id: ResUsers = fields.Many2one(
         "res.users",
@@ -309,8 +307,6 @@ class ResPartner(models.Model):
     company_name = fields.Char('Company Name')
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
-    # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
-    self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
     application_statistics = fields.Json(string="Stats", compute="_compute_application_statistics")
 
     def _compute_application_statistics(self):
@@ -413,15 +409,14 @@ class ResPartner(models.Model):
     @api.depends('parent_id')
     def _compute_lang(self):
         """ While creating / updating child contact, take the parent lang by
-        default if any. 0therwise, fallback to default context / DB lang """
+        default if any. Otherwise, fallback to default context / DB lang """
         for partner in self.filtered('parent_id'):
             partner.lang = partner.parent_id.lang or self.default_get(['lang']).get('lang') or self.env.lang
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
         lang_count = len(self.env['res.lang'].get_installed())
-        for partner in self:
-            partner.active_lang_count = lang_count
+        self.active_lang_count = lang_count
 
     @api.depends('tz')
     def _compute_tz_offset(self):
@@ -517,10 +512,6 @@ class ResPartner(models.Model):
     def _compute_contact_address(self):
         for partner in self:
             partner.contact_address = partner._display_address()
-
-    def _compute_get_ids(self):
-        for partner in self:
-            partner.self = partner.id
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
@@ -934,7 +925,7 @@ class ResPartner(models.Model):
         # hence calling the compute manually
         for partner, values in zip(partners, vals_list):
             if 'lang' not in values and partner.parent_id:
-                partner._compute_lang()
+                self.env.add_to_compute(self._fields['lang'], partner)
 
         if self.env.context.get('_partners_skip_fields_sync'):
             return partners
