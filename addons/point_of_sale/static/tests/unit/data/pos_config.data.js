@@ -11,10 +11,14 @@ export class PosConfig extends models.ServerModel {
         return [];
     }
 
-    read_config_open_orders() {
+    read_config_open_orders(configId) {
+        // We can read everything since its only related to the current test.
+        const orderIds = this.env["pos.order"].search_read([], ["id"]).map((order) => order.id);
         return {
-            dynamic_records: {},
             deleted_record_ids: {},
+            dynamic_records: {
+                ...this.env["pos.order"].read_pos_data(orderIds, [], configId),
+            },
         };
     }
 
