@@ -1412,6 +1412,32 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
             all_partner.filtered_domain([('child_ids', 'any', [('name', '=', partner.name)])])
             self.assertEqual(patched.call_count, 2, "should be called here and only once for the any operator")
 
+    def test_filtered_domain_any_bypass_access(self):
+        Partner = self.env['res.partner'].with_user(self.env.ref('base.user_admin'))
+        private_child = self.partners.child_ids[0]
+        self.env['ir.rule'].search([]).unlink()
+        self.env['ir.rule'].create([{
+            'name': 'partners rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str([('id', '!=', private_child.id)]),
+        }])
+
+        domain = Domain('child_ids', 'any!', Domain('name', '=', private_child.name))
+        partner = self._search(Partner, domain)
+        self.assertIn(private_child, partner.sudo().child_ids)
+
+        Partner.invalidate_model()
+        self.assertEqual(partner.filtered_domain(domain), partner, "We should be able to check inaccessible child name")
+        Partner.invalidate_model()
+        self.assertFalse(partner.filtered_domain(Domain('child_ids', 'any', domain.value)), "We should not find the record anymore (child is inaccessible)")
+
+        Partner.invalidate_model()
+        domain = Domain('commercial_partner_id', 'any!', Domain('child_ids', 'any', domain.value))
+        self.assertFalse(partner.filtered_domain(domain), "Filtering the child and getting the parent without access should return no records")
+        Partner.invalidate_model()
+        domain = Domain('child_ids', 'any!', Domain('parent_id', 'any', Domain('child_ids', 'any!', domain.value)))
+        self.assertFalse(partner.filtered_domain(domain), "We should not find the record anymore (parent_id is inaccessible)")
+
 
 @tagged('res_partner')
 class TestExpression2(TransactionExpressionCase):
