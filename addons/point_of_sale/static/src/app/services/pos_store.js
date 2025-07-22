@@ -977,7 +977,8 @@ export class PosStore extends WithLazyGetterTrap {
                 order.pricelist_id,
                 this.data.models["decimal.precision"].getAll(),
                 this.data.models["product.template.attribute.value"].getAllBy("id"),
-                comboExtraLines
+                comboExtraLines,
+                this.currency
             );
 
             values.combo_line_ids = comboPrices.map((comboItem) => [
