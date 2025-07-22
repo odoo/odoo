@@ -3971,7 +3971,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave_type_day = self.env['hr.leave.type'].create({
                 'name': 'Test Leave Type',
                 'time_type': 'leave',
-                'requires_allocation': 'yes',
+                'requires_allocation': True,
                 'allocation_validation_type': 'no_validation',
                 'request_unit': 'day',
             })
@@ -4013,7 +4013,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave_type_day = self.env['hr.leave.type'].create({
                 'name': 'Test Leave Type',
                 'time_type': 'leave',
-                'requires_allocation': 'yes',
+                'requires_allocation': True,
                 'allocation_validation_type': 'no_validation',
                 'request_unit': 'half_day',
             })
@@ -4055,7 +4055,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave_type_day = self.env['hr.leave.type'].create({
                 'name': 'Test Leave Type',
                 'time_type': 'leave',
-                'requires_allocation': 'yes',
+                'requires_allocation': True,
                 'allocation_validation_type': 'no_validation',
                 'request_unit': 'day',
             })

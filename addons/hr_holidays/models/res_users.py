@@ -61,7 +61,7 @@ class ResUsers(models.Model):
         self.env.cr.execute('''SELECT res_users.%s FROM res_users
                             JOIN hr_leave ON hr_leave.user_id = res_users.id
                             AND hr_leave.state = 'validate'
-                            AND res_users.active = 't'
+                            AND res_users.active IS TRUE
                             AND hr_leave.date_from <= %%s AND hr_leave.date_to >= %%s''' % field, (now, now))
         return [r[0] for r in self.env.cr.fetchall()]
 
