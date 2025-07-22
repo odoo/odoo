@@ -15,6 +15,23 @@ export const stepUtils = {
         return step;
     },
 
+    editSelectMenuInput(trigger, value) {
+        return [
+            {
+                content: "Make sure a SelectMenu has been opened",
+                trigger: `.o_select_menu_menu`,
+            },
+            {
+                trigger,
+                run: async () => {
+                    const input = hoot.queryFirst(trigger);
+                    input.focus();
+                    await hoot.edit(value);
+                },
+            },
+        ];
+    },
+
     showAppsMenuItem() {
         return {
             isActive: ["auto", "community", "desktop"],
