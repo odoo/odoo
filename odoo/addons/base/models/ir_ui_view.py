@@ -438,6 +438,13 @@ actual arch.
                                 sibling_primary_views += child
                             else:
                                 stack.append(child)
+
+                    # During an upgrade, we can only use the views that have been
+                    # fully upgraded already.
+                    if self.pool._init:
+                        sibling_primary_views = sibling_primary_views._filter_loaded_views(set(sibling_primary_views.ids))
+
+                    # Check if we know how to apply inheritances
                     sibling_primary_views._get_combined_archs()
 
                 if view.type == 'qweb':
