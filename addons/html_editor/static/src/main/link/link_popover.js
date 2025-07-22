@@ -501,17 +501,15 @@ export class LinkPopover extends Component {
             .join(" ");
 
         let stylePrefix = "";
-        if (this.state.type === "custom") {
-            if (this.state.buttonSize) {
-                classes += ` btn-${this.state.buttonSize}`;
+        if (!!this.state.type && this.state.buttonSize) {
+            classes += ` btn-${this.state.buttonSize}`;
+        }
+        if (this.state.type === "custom" && this.state.buttonShape) {
+            const buttonShape = this.state.buttonShape.split(" ");
+            if (["outline", "fill"].includes(buttonShape[0])) {
+                stylePrefix = `${buttonShape[0]}-`;
             }
-            if (this.state.buttonShape) {
-                const buttonShape = this.state.buttonShape.split(" ");
-                if (["outline", "fill"].includes(buttonShape[0])) {
-                    stylePrefix = `${buttonShape[0]}-`;
-                }
-                classes += ` ${buttonShape.slice(stylePrefix ? 1 : 0).join(" ")}`;
-            }
+            classes += ` ${buttonShape.slice(stylePrefix ? 1 : 0).join(" ")}`;
         }
         if (this.state.type) {
             classes += ` btn btn-${stylePrefix}${this.state.type}`;
