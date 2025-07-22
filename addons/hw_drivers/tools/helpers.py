@@ -639,17 +639,17 @@ def update_conf(values, section='iot.box'):
     :param dict values: key-value pairs to update the config with.
     :param str section: The section to update the key-value pairs in (Default: iot.box).
     """
-    _logger.debug("Updating odoo.conf with values: %s", values)
-    conf = get_conf()
-
-    if not conf.has_section(section):
-        _logger.debug("Creating new section '%s' in odoo.conf", section)
-        conf.add_section(section)
-
-    for key, value in values.items():
-        conf.set(section, key, value) if value else conf.remove_option(section, key)
-
     with writable():
+        _logger.debug("Updating odoo.conf with values: %s", values)
+        conf = get_conf()
+
+        if not conf.has_section(section):
+            _logger.debug("Creating new section '%s' in odoo.conf", section)
+            conf.add_section(section)
+
+        for key, value in values.items():
+            conf.set(section, key, value) if value else conf.remove_option(section, key)
+
         with open(path_file("odoo.conf"), "w", encoding='utf-8') as f:
             conf.write(f)
 
