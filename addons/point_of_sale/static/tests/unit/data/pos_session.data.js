@@ -123,13 +123,13 @@ export class PosSession extends models.ServerModel {
             const posFields = model._load_pos_data_fields();
             const records = model.search_read([], posFields, false, false, false, false);
             response[modelName] =
-                (model._post_read_pos_data && model._post_read_pos_data(records)) || records;
+                (model._load_pos_data_read && model._load_pos_data_read(records)) || records;
         }
 
         return response;
     }
 
-    _post_read_pos_data(data) {
+    _load_pos_data_read(data) {
         data[0]["_partner_commercial_fields"] = [];
         data[0]["_server_version"] = "18.3+e";
         data[0]["_base_url"] = "http://localhost:4444";

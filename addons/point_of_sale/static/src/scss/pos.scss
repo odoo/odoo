@@ -64,12 +64,12 @@ select > option {
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
 .leftpane {
-    width: $left-pane-width;
-    max-width: $left-pane-width;
+    width: $pos-left-pane-width;
+    max-width: $pos-left-pane-width;
 
     @include media-breakpoint-down(xl) {
-        width: $left-pane-width-tablet;
-        max-width: $left-pane-width-tablet;
+        width: $pos-left-pane-width-tablet;
+        max-width: $pos-left-pane-width-tablet;
     }
 }
 
@@ -193,10 +193,10 @@ body.modal-open {
 }
 
 // External CSS to wrap long notes coming from another component (TagsList)
-.internal-note-container span {
+.pos .internal-note-container span {
     text-align: start;
 }
 
-.internal-note-container span > div {
+.pos .internal-note-container span > div {
     white-space: normal;
 }

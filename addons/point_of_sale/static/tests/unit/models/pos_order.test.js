@@ -11,7 +11,7 @@ describe("pos.order", () => {
 
         expect(order.uiState).toEqual({
             unmerge: {},
-            lastPrint: false,
+            lastPrints: [],
             lineToRefund: {},
             displayed: true,
             booked: false,
