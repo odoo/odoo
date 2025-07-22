@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_form_view_l10n_tr_nilvera_extended" model="ir.ui.view">
+        <field name="name">account.move.form.view.inherit.l10n_tr_nilvera_extended</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting_info_group']/field[@name='invoice_incoterm_id']" position="attributes">
+                <attribute name="required" add="l10n_tr_is_export_invoice" separator=" or "/>
+            </xpath>
+
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="l10n_tr_is_export_invoice" invisible="l10n_tr_nilvera_customer_status != 'earchive'" readonly="state in ['cancel', 'posted']"/>
+                <div class="o_td_label" invisible="l10n_tr_is_export_invoice or country_code != 'TR' or move_type != 'out_invoice' or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']">
+                    <label for="l10n_tr_gib_invoice_scenario" invisible="l10n_tr_nilvera_customer_status != 'einvoice'" />
+                    <label string="Invoice Type" for="l10n_tr_gib_invoice_type" invisible="l10n_tr_nilvera_customer_status != 'earchive'"/>
+                </div>
+                <div class="d-flex" invisible="l10n_tr_is_export_invoice or country_code != 'TR' or move_type != 'out_invoice' or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']">
+                    <field name="l10n_tr_gib_invoice_scenario" invisible="l10n_tr_nilvera_customer_status != 'einvoice'" readonly="state in ['cancel', 'posted']"/>
+                    <span class="o_form_label mx-3" invisible="l10n_tr_nilvera_customer_status != 'einvoice'">is</span>
+                    <field name="l10n_tr_gib_invoice_type" invisible="l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']" readonly="state in ['cancel', 'posted']"/>
+                </div>
+                <field name="l10n_tr_exemption_code_id" domain="[('code_type', 'in', l10n_tr_exemption_code_domain_list or [])]" invisible="not l10n_tr_exemption_code_domain_list or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']"  required="l10n_tr_is_export_invoice or l10n_tr_gib_invoice_type == 'IHRACKAYITLI'" readonly="state in ['cancel', 'posted']"/>
+                <field name="l10n_tr_shipping_type" invisible="not l10n_tr_exemption_code_domain_list or l10n_tr_nilvera_customer_status != 'earchive' or not l10n_tr_is_export_invoice" readonly="state in ['cancel', 'posted']"/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']//list//field[@name='tax_ids']" position="after">
+                <field name="l10n_tr_ctsp_number" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
