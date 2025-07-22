@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-09 11:55+0000\n"
-"PO-Revision-Date: 2025-06-09 11:55+0000\n"
+"POT-Creation-Date: 2025-07-22 10:21+0000\n"
+"PO-Revision-Date: 2025-07-22 10:21+0000\n"
 "Last-Translator: María Fernanda Alvarez Ramírez <mfar@odoo.com>\n"
 "Language-Team: \n"
 "Language: es_419\n"
@@ -551,6 +551,11 @@ msgid "External Fiscal Controller"
 msgstr "Controlador Fiscal Externo"
 
 #. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "Fiscal Transparency Regime for the Final Consumer (Law 27.743)"
+msgstr "Régimen de Transparencia Fiscal para el Consumidor Final (Ley 27.743)"
+
+#. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_fiscal_position
 msgid "Fiscal Position"
 msgstr "Posición fiscal"
@@ -840,6 +845,12 @@ msgid "Only numbers allowed for \"%s\""
 msgstr "Solo se permiten números para “%s”"
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+msgid "Other National Ind. Taxes %s"
+msgstr "Otros impuestos nacionales %s"
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_other_vat
 msgid "Other VAT"
 msgstr "CUIT Otros"
@@ -1048,6 +1059,12 @@ msgstr "IVA"
 #: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_vat_afip_code
 msgid "VAT AFIP Code"
 msgstr "Código AFIP de IVA"
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+msgid "VAT Content %s"
+msgstr "IVA Contenido %s"
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
