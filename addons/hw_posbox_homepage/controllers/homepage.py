@@ -325,7 +325,7 @@ class IotBoxOwlHomePage(http.Controller):
         return res_payload
 
     @route.iot_route(
-        '/hw_posbox_homepage/generate_password', type="jsonrpc", methods=["POST"], cors='*', sign=True, linux_only=True
+        '/hw_posbox_homepage/generate_password', type="jsonrpc", methods=["POST"], cors='*', linux_only=True
     )
     def generate_password(self):
         return {
