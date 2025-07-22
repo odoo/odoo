@@ -27,4 +27,3 @@ from . import test_perf_load_menu
 from . import test_pivot_export
 from . import test_res_partner_properties
 from . import test_action
-from . import test_web_save_multi

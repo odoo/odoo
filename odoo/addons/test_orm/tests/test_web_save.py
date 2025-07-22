@@ -72,3 +72,25 @@ class TestWebSave(TransactionCase):
         self.env.invalidate_all()
         self.assertEqual(record.image_wo_attachment, JPG.encode())
         self.assertEqual(record.image_wo_attachment, record.image_wo_attachment_related)
+
+    def test_web_save_multi(self):
+        Model = self.env['test_orm.mixed']
+        records = Model.create([
+            {'foo': 'Record 1', 'count': 100, 'number': 2.5},
+            {'foo': 'Record 2', 'count': 200, 'number': 3.5},
+        ])
+
+        vals = [
+            {"foo": "Updated 1", "count": 150, "number": 1.1},
+            {"count": 250, "number": 1.1},
+        ]
+        specification = {
+            "foo": {},
+            "count": {},
+        }
+        result = records.web_save_multi(vals, specification)
+
+        self.assertEqual(result, [
+            {'id': records[0].id, 'foo': 'Updated 1', 'count': 150},
+            {'id': records[1].id, 'foo': 'Record 2', 'count': 250},
+        ])
