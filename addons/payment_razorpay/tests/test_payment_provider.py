@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged
+from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
@@ -24,3 +25,27 @@ class TestPaymentProvider(RazorpayCommon):
         self.assertEqual(
             calculated_signature, '437b72e4e87362a39951b44487cf698410b074afdbed19ec44fffd32d2f863f3'
         )
+
+    def test_credentials_constraints(self):
+        """ Test that enabling a Razorpay provider without credentials raises a ValidationError,
+        and with credentials it succeeds.
+        """
+        provider_no_credentials = self.env['payment.provider'].create({
+            'name': 'Razorpay Missing Credentials',
+            'code': 'razorpay',
+            'state': 'test',
+        })
+
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            provider_no_credentials.write({'state': 'enabled'})
+
+        provider_valid_creds = self.env['payment.provider'].create({
+            'name': 'Razorpay Valid Creds',
+            'code': 'razorpay',
+            'razorpay_key_id': 'test_key',
+            'razorpay_key_secret': 'test_secret',
+            'state': 'test',
+        })
+
+        provider_valid_creds.write({'state': 'enabled'})
+        self.assertEqual(provider_valid_creds.state, 'enabled')
