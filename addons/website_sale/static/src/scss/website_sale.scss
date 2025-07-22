@@ -134,8 +134,18 @@ $input-border-color: $gray-400;
             overflow: hidden;
         }
 
-        .o_wsale_filmstrip_container.o_wsale_filmstrip_grid {
-            margin-left: calc(var(--o-wsale-topbar-padding-left) * -1);
+        .o_wsale_filmstrip_container {
+            &.o_wsale_filmstrip_grid, &.o_wsale_filmstrip_tabs {
+                margin-left: calc(var(--o-wsale-topbar-padding-left) * -1);
+
+                .o_wsale_filmstrip {
+                    margin-right: 0;
+                }
+            }
+
+            .o_wsale_filmstrip {
+                margin-right: var(--o-wsale-topbar-padding-right);
+            }
         }
     }
 
@@ -158,6 +168,7 @@ $input-border-color: $gray-400;
         // ==== Filmstrip design variations
         &.o_wsale_filmstrip_default {
             --o-wsale-filmstrip-item-color: #{color-contrast($light)};
+            --o-wsale-filmstrip-item-span-height: 2.5rem;
 
             --o-wsale-filmstrip-item-bg-hover: #{if(lightness($light) > .5, darken($light, 8%), lighten($light, 8%))};
         }
@@ -166,6 +177,7 @@ $input-border-color: $gray-400;
             --o-wsale-filmstrip-item-border-width: #{$border-width};
             --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-bg: #{$gray-100};
+            --o-wsale-filmstrip-item-span-height: 2.5rem;
 
             --o-wsale-filmstrip-item-border-color-hover: color-mix(in srgb, var(--o-border-color), black 30%);
         }
@@ -206,7 +218,8 @@ $input-border-color: $gray-400;
             --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-display: none;
 
-            --o-wsale-filmstrip-item-bg-hover: var(--primary-bg-subtle);
+            --o-wsale-filmstrip-item-color-hover: #{color-contrast($primary)};
+            --o-wsale-filmstrip-item-bg-hover: #{$primary};
 
             --o-wsale-filmstrip-item-color-active: #{color-contrast($primary)};
             --o-wsale-filmstrip-item-bg-active: #{$primary};
@@ -220,9 +233,10 @@ $input-border-color: $gray-400;
 
         &.o_wsale_filmstrip_images {
             --o-wsale-filmstrip-item-direction: column;
-            --o-wsale-filmstrip-item-justify: center;
+            --o-wsale-filmstrip-item-justify: top;
             --o-wsale-filmstrip-item-width: 7rem;
             --o-wsale-filmstrip-item-gap: #{map-get($spacers, 2)};
+            --o-wsale-filmstrip-item-border-radius: #{$border-radius};
             --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 2)};
             --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
             --o-wsale-filmstrip-item-font-size: #{$font-size-sm};
@@ -234,11 +248,14 @@ $input-border-color: $gray-400;
 
             --o-wsale-filmstrip-item-bg-hover: #{$light};
             --o-wsale-filmstrip-item-color-hover: #{color-contrast($light)};
-            --o-wsale-filmstrip-item-text-decoration-hover: #{$link-hover-decoration};
 
             --o-wsale-filmstrip-item-color-active: #{color-contrast($light)};
 
             --o-wsale-filmstrip-item-image-width: 75%;
+
+            --o-wsale-filmstrip-item-span-display: inline-block;
+            --o-wsale-filmstrip-item-span-overflow: hidden;
+            --o-wsale-filmstrip-item-span-text-overflow: ellipsis;
         }
 
         &.o_wsale_filmstrip_grid {
@@ -263,14 +280,16 @@ $input-border-color: $gray-400;
             --o-wsale-filmstrip-item-image-bg: transparent;
             --o-wsale-filmstrip-item-placeholder-display: block;
 
-            --o-wsale-filmstrip-item-text-decoration-hover: #{$link-hover-decoration};
-
             --o-wsale-filmstrip-item-border-color-active: #{$border-color};
             --o-wsale-filmstrip-item-color-active: #{$body-color};
             --o-wsale-filmstrip-item-bg-active: transparent;
             --o-wsale-filmstrip-item-text-decoration-active: underline;
 
             --o-wsale-filmstrip-item-image-width: 45%;
+
+            --o-wsale-filmstrip-item-span-display: inline-block;
+            --o-wsale-filmstrip-item-span-overflow: hidden;
+            --o-wsale-filmstrip-item-span-text-overflow: ellipsis;
 
             @include media-breakpoint-down(xl) {
                 --o-wsale-filmstrip-item-width: 14rem;
@@ -288,7 +307,7 @@ $input-border-color: $gray-400;
 
             .o_wsale_filmstrip_link:is(:hover, :focus) .o_wsale_filmstrip_item:not(.active) {
                 .o_wsale_filmstrip_image {
-                    transform: scale(1.04);
+                    transform: scale(1.06);
                     overflow: hidden;
                 }
             }
@@ -299,6 +318,7 @@ $input-border-color: $gray-400;
             --o-wsale-filmstrip-item-justify: end;
             --o-wsale-filmstrip-item-width: 14rem;
             --o-wsale-filmstrip-item-border-width: 0;
+            --o-wsale-filmstrip-item-border-radius: #{$border-radius-lg};
             --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 3)};
             --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
             --o-wsale-filmstrip-item-aspect-ratio: 3/4;
@@ -310,8 +330,6 @@ $input-border-color: $gray-400;
             --o-wsale-filmstrip-item-image-bg: transparent;
             --o-wsale-filmstrip-item-placeholder-display: block;
 
-            --o-wsale-filmstrip-item-text-decoration-hover: #{$link-hover-decoration};
-
             --o-wsale-filmstrip-item-color-active: #{$white};
             --o-wsale-filmstrip-item-bg-active: #{transparent};
             --o-wsale-filmstrip-item-text-decoration-active: underline;
@@ -319,6 +337,10 @@ $input-border-color: $gray-400;
             --o-wsale-filmstrip-item-image-position: absolute;
             --o-wsale-filmstrip-item-image-width: 100%;
             --o-wsale-filmstrip-item-image-height: 100%;
+
+            --o-wsale-filmstrip-item-span-display: inline-block;
+            --o-wsale-filmstrip-item-span-overflow: hidden;
+            --o-wsale-filmstrip-item-span-text-overflow: ellipsis;
 
             @include media-breakpoint-down(xl) {
                 --o-wsale-filmstrip-item-width: 12rem;
@@ -346,8 +368,9 @@ $input-border-color: $gray-400;
                     content: "";
                     display: block;
                     @include o-position-absolute(0, 0, 0, 0);
-                    background: var(--o-wsale-filmstrip-overlay-bg, linear-gradient(200deg, rgba(0, 0, 0, .05) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .35) 100%));
+                    background: var(--o-wsale-filmstrip-overlay-bg, linear-gradient(200deg, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .6) 100%));
                     border-radius: $border-radius;
+                    opacity: .8;
                     transition: opacity .2s ease-in-out;
                 }
 
@@ -365,7 +388,7 @@ $input-border-color: $gray-400;
                     transform: scale(1.02);
 
                     &::before {
-                        opacity: .8;
+                        opacity: 1;
                     }
                 }
             }
@@ -411,13 +434,17 @@ $input-border-color: $gray-400;
                     border-style: solid;
                     border-color: var(--o-wsale-filmstrip-item-border-color, #{$border-color});
                     border-radius: var(--o-wsale-filmstrip-item-border-radius, #{$btn-border-radius});
-                    padding: var(--o-wsale-filmstrip-item-padding-y, #{$btn-padding-y}) var(--o-wsale-filmstrip-item-padding-x, #{map-get($spacers, 3)}) var(--o-wsale-filmstrip-item-padding-y, #{$btn-padding-y}) var(--o-wsale-filmstrip-item-padding-x, #{map-get($spacers,2)});
+                    padding: var(--o-wsale-filmstrip-item-padding-y, #{map-get($spacers, 2)})
+                            var(--o-wsale-filmstrip-item-padding-x, #{map-get($spacers, 3)})
+                            var(--o-wsale-filmstrip-item-padding-y, #{map-get($spacers, 2)})
+                            var(--o-wsale-filmstrip-item-padding-x, #{map-get($spacers, 2)});
                     font-size: var(--o-wsale-filmstrip-item-font-size);
                     font-weight: var(--o-wsale-filmstrip-item-font-weight);
                     text-align: var(--o-wsale-filmstrip-item-text-align);
                     text-wrap: var(--o-wsale-filmstrip-item-text-wrap);
                     color: var(--o-wsale-filmstrip-item-color, #{$body-color});
                     background-color: var(--o-wsale-filmstrip-item-bg, #{$light});
+                    transition: all .15s ease-in-out;
 
                     .o_wsale_filmstrip_image {
                         display: var(--o-wsale-filmstrip-item-image-display);
@@ -426,13 +453,21 @@ $input-border-color: $gray-400;
                         height: var(--o-wsale-filmstrip-item-image-height);
                         background-color: var(--o-wsale-filmstrip-item-image-bg, #{$body-bg});
                         aspect-ratio: 1/1;
-                        transition: all .2s ease-in-out;
+                        transition: all .15s ease-in-out;
                         overflow: hidden;
 
                         &.o_wsale_filmstrip_placeholder {
                             display: var(--o-wsale-filmstrip-item-placeholder-display, none);
                             background: url('/website_sale/static/src/img/categories/placeholder_thumbnail.png') no-repeat center center / cover;
                         }
+                    }
+
+                    span {
+                        display: var(--o-wsale-filmstrip-item-span-display, flex);
+                        align-items: center;
+                        height: var(--o-wsale-filmstrip-item-span-height);
+                        overflow: var(--o-wsale-filmstrip-item-span-overflow);
+                        text-overflow: var(--o-wsale-filmstrip-item-span-text-overflow);
                     }
 
                     &:has(.o_wsale_filmstrip_placeholder) {
@@ -455,7 +490,6 @@ $input-border-color: $gray-400;
                     border-color: var(--o-wsale-filmstrip-item-border-color-hover, var(--o-wsale-filmstrip-item-border-color, #{$border-color}));
                     background-color: var(--o-wsale-filmstrip-item-bg-hover, var(--o-wsale-filmstrip-item-bg, transparent));
                     color: var(--o-wsale-filmstrip-item-color-hover, var(--o-wsale-filmstrip-item-color, inherit));
-                    text-decoration: var(--o-wsale-filmstrip-item-text-decoration-hover, none);
                     box-shadow: var(--o-wsale-filmstrip-item-box-shadow-hover, none);
                 }
             }
@@ -469,11 +503,11 @@ $input-border-color: $gray-400;
 
                 &::-webkit-scrollbar-thumb {
                     border-radius: $btn-border-radius-sm;
-                    background: currentColor;
+                    background: rgba($body-color, 0.25);
                 }
 
                 &::-webkit-scrollbar-track {
-                    background: rgba($dark, 0.05);
+                    background: rgba($body-color, 0.05);
                 }
             }
 
