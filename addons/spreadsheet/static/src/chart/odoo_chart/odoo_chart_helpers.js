@@ -76,6 +76,20 @@ export function onSunburstOdooChartItemClick(getters, chart) {
     });
 }
 
+export function onTreemapOdooChartItemClick(getters, chart) {
+    return navigateInOdooMenuOnClick(getters, chart, (chartJsItem, chartData, chartJSChart) => {
+        const { datasetIndex, index } = chartJsItem;
+        const rawItem = chartJSChart.data.datasets[datasetIndex].data[index];
+        const depth = rawItem.l;
+        const groups = [];
+        for (let i = 0; i <= depth; i++) {
+            groups.push(rawItem._data[i]);
+        }
+        const domain = chart.dataSource.buildDomainFromGroupByLabels(groups);
+        return { name: groups.join(" / "), domain: domain };
+    });
+}
+
 function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
     return async (event, items, chartJSChart) => {
         const env = getters.getOdooEnv();
