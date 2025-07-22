@@ -131,7 +131,7 @@ patch(PosStore.prototype, {
             if (line.display_type === "line_section") {
                 continue;
             }
-            newLineValues.attribute_value_ids = line.product_custom_attribute_value_ids.map(
+            newLineValues.attribute_value_ids = (line.product_custom_attribute_value_ids || []).map(
                 (value_line) => {
                     if (value_line?.custom_product_template_attribute_value_id) {
                         return ["link", value_line.custom_product_template_attribute_value_id];
