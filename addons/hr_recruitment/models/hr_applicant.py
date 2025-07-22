@@ -835,7 +835,6 @@ class HrApplicant(models.Model):
                 "active_test": False,
                 "search_default_stage": 1,
                 "default_applicant_ids": self.ids,
-                "no_create_application_button": True,
             },
         }
 

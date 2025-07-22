@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="hr_recruitment_survey_invite_view_form" model="ir.ui.view">
+      <field name="name">survey.invite.view.form.inherit</field>
+      <field name="mode">primary</field>
+      <field name="model">hr.recruitment.survey.invite</field>
+      <field name="inherit_id" ref="survey.survey_invite_view_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//label[@for='survey_start_url']" position="attributes">
+            <attribute name="invisible">hide_url</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='survey_start_url']" position="attributes">
+            <attribute name="invisible">hide_url</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='emails']" position="attributes">
+            <attribute name="invisible">has_many_applicants or not send_email</attribute>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
