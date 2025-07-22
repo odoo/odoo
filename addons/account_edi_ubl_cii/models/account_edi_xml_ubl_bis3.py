@@ -238,13 +238,6 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         # TaxTotal should not be used in BIS 3.0
         pass
 
-    def _add_document_line_item_nodes(self, line_node, vals):
-        super()._add_document_line_item_nodes(line_node, vals)
-        product = vals['base_line']['product_id']
-        line_node['cac:Item']['cac:SellersItemIdentification'] = {
-            'cbc:ID': {'_text': product.code},
-        }
-
     def _add_document_line_tax_category_nodes(self, line_node, vals):
         base_line = vals['base_line']
         aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
