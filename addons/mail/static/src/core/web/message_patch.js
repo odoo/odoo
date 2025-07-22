@@ -19,7 +19,7 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
-import { messageActionOpenFullComposer } from "./message_actions_patch";
+import { messageActionOpenFullComposer } from "@mail/core/web/message_actions_patch";
 
 patch(Message.prototype, {
     setup() {
@@ -49,7 +49,7 @@ patch(Message.prototype, {
         };
     },
     hasAuthorClickable() {
-        return this.message.author?.main_user_id;
+        return this.message.author_id?.main_user_id;
     },
     onClickAuthor(ev) {
         if (this.hasAuthorClickable()) {
@@ -57,7 +57,7 @@ patch(Message.prototype, {
             const target = ev.currentTarget;
             if (!this.avatarCard.isOpen) {
                 this.avatarCard.open(target, {
-                    id: this.message.author.main_user_id.id,
+                    id: this.message.author_id.main_user_id.id,
                 });
             }
         }
