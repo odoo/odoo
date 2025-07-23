@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Snippet Template -->
+    <template id="s_sale_order_display" name="Sale Order Display Snippet">
+        <section class="s_sale_order_display" data-name="Sale Order Display"
+            data-viewchange="list" data-confirmedorders="false" data-limitchange="3">
+            <div class="container">
+                <div class="row sale-order-list">
+                    <div class="border p-2">
+                        <strong>S000001</strong> - Mitchell Admin (<em>sale</em>) </div>
+                </div>
+                <div class="row sale-order-card"></div>
+                <div class="text-center mt-3 load-btn-class">
+                    <button class="btn btn-primary load-more-btn" type="button">Load More</button>
+                </div>
+            </div>
+        </section>
+    </template>
+    <record id="website.s_sale_order_display_js" model="ir.asset">
+        <field name="name">Sale Order Display JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website/static/src/snippets/s_sale_order_display/sale_order_display.js</field>
+    </record>
+
+    <record id="website.s_sale_order_display_templates" model="ir.asset">
+        <field name="name">Sale Order Display Templates</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website/static/src/snippets/s_sale_order_display/sale_order_display.xml</field>
+    </record>
+</odoo>
