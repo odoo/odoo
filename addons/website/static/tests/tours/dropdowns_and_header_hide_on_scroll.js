@@ -39,20 +39,14 @@ registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     selectHeader(),
     ...changeOptionInPopover("Header", "Scroll Effect", ".dropdown-item:contains('Fixed')"),
     {
-        content: "Wait for the modification has been applied",
-        trigger: ".o_notification .o_notification_content:contains('Content saved')",
+        content: "Wait for the option to be applied",
+        trigger: "[data-label='Scroll Effect'] .dropdown-toggle:contains('Fixed')",
         timeout: 30000,
     },
     {
         trigger: ":iframe #wrapwrap header.o_header_fixed",
     },
     selectHeader(),
-    {
-        // Checking step needed to make sure the builder DOM is up to date with
-        // the reloaded iframe.
-        content: "Expect Fixed scroll effect to be selected",
-        trigger: "[data-label='Scroll Effect'] .dropdown-toggle:contains('Fixed')",
-    },
     ...changeOptionInPopover("Header", "Template", ".dropdown-item[data-action-param*=sales_two]"),
     {
         trigger: ":iframe .o_header_sales_two_top",
