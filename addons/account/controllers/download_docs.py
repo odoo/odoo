@@ -50,8 +50,9 @@ class AccountDocumentDownloadController(http.Controller):
         invoices.line_ids.check_access('read')
         docs_data = []
         for invoice in invoices:
-            doc_data = invoice._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
-            if doc_data:
+            if filetype == 'all' and (doc_data := invoice._get_invoice_legal_documents_all(allow_fallback=allow_fallback)):
+                docs_data += doc_data
+            elif doc_data := invoice._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback):
                 docs_data.append(doc_data)
         if len(docs_data) == 1:
             doc_data = docs_data[0]
