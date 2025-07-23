@@ -1465,3 +1465,84 @@ class TestSaleProject(TestSaleProjectCommon):
             {str(so.project_id.account_id.id): 100},
             "The analytic distribution of `sol_2` should be set to the reference AA of the SO.",
         )
+
+    def test_project_creation_with_and_without_template(self):
+        """
+        Test creating a project from a sale order, both with and without using a project template.
+        Steps:
+        -------
+        1. Create a project template and add one task to it.
+
+        Flow 1: Creating project without template
+        -----------------------------------------
+        2. Create a sale order.
+        3. Confirm the sale order.
+        4. Open the create project wizard and create project without selecting template.
+        5. Check:
+        - The new project should not have any tasks.
+        - The project should be linked to the correct sale order.
+
+        Flow 2: Creating project with template
+        --------------------------------------
+        6. Create a sale order.
+        7. Confirm the sale order.
+        8. Open the create project wizard and create project with selected template.
+        9. Check:
+            - The project should have the task copied from the template.
+            - The task name should match what we gave in the template.
+            - The project should be linked to the correct sale order.
+        """
+        template = self.env['project.project'].create({
+            'name': 'Template Project',
+            'is_template': True,
+        })
+        self.env['project.task'].create({'name': 'Task 1', 'project_id': template.id})
+        sale_order_no_template = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_consumable.id,
+                }),
+            ],
+        })
+        sale_order_no_template.action_confirm()
+        action = sale_order_no_template.action_create_project()
+        with Form(self.env[action['res_model']].with_context(action['context'])) as wizard_form:
+            wizard_form.name = "Project Without Template"
+            project_action = wizard_form.save().action_create_project_from_so()
+
+        project_rec = self.env['project.project'].browse(project_action['res_id'])
+        self.assertFalse(project_rec.task_ids, "Project should not have tasks when created without template.")
+        self.assertEqual(
+            project_rec.reinvoiced_sale_order_id.id,
+            sale_order_no_template.id,
+            "Project should be linked to the sale order."
+        )
+        sale_order_with_template = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_consumable.id,
+                }),
+            ],
+        })
+        sale_order_with_template.action_confirm()
+        action = sale_order_with_template.action_create_project()
+        view_id = self.env.ref('sale_project.view_create_project_wizard_form').id
+        with Form(self.env[action['res_model']].with_context(action['context']), view=view_id) as wizard_form:
+            wizard_form.name = "Project From Template"
+            wizard_form.template_id = template
+            project_action = wizard_form.save().action_create_project_from_so()
+
+        project_from_template = self.env['project.project'].browse(project_action['res_id'])
+        self.assertEqual(len(project_from_template.task_ids), 1, "Project should have 1 task copied from the template.")
+        self.assertEqual(
+            {task.name for task in project_from_template.task_ids},
+            {'Task 1'},
+            "Copied tasks should match template tasks."
+        )
+        self.assertEqual(
+            project_from_template.reinvoiced_sale_order_id.id,
+            sale_order_with_template.id,
+            "Project should be linked to the sale order."
+        )

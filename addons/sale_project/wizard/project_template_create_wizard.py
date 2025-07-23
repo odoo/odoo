@@ -12,3 +12,19 @@ class ProjectTemplateCreateWizard(models.TransientModel):
         if self.allow_billable:
             res.append("partner_id")
         return res
+
+    def action_create_project_from_so(self):
+        self.ensure_one()
+        project_vals = {
+            'name': self.name,
+        }
+        if self.template_id:
+            project = self.template_id.action_create_from_template(values=project_vals)
+        else:
+            project = self.env['project.project'].create(project_vals)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'view_mode': 'form',
+        }
