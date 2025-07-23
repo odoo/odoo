@@ -17,7 +17,7 @@ patch(ChannelMemberList.prototype, {
         }
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: member.persona.main_user_id?.id,
+                id: member.partner_id.main_user_id?.id,
             });
         }
     },

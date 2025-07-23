@@ -52,6 +52,6 @@ export class ChannelMemberList extends Component {
         if (!this.canOpenChatWith(member)) {
             return;
         }
-        this.store.openChat({ partnerId: member.persona.id });
+        this.store.openChat({ partnerId: member.partner_id.id });
     }
 }
