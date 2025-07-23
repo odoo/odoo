@@ -12,6 +12,7 @@ class TenantCodeConfiguration(models.Model):
 
     name = fields.Char(string='Tenant Code', tracking=True)
     partner_id = fields.Many2one('res.partner', string='Partner', tracking=True)
+    allow_partial_packing = fields.Boolean(string='Default allow Partial Packing', default=False)
 
     @api.model
     def create(self, vals):
