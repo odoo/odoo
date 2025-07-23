@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
+import { stepUtils } from "@web_tour/tour_utils";
 
 function fillSelectMenu(inputID, search) {
     return [
@@ -8,14 +9,7 @@ function fillSelectMenu(inputID, search) {
             trigger: `.o_website_links_utm_forms div#${inputID} .o_select_menu_toggler`,
             run: "click",
         },
-        {
-            content: "Enter selectMenu search query",
-            trigger: `.o_website_links_utm_forms div#${inputID} .o_select_menu_input`,
-            run: async function() {
-                this.anchor.value = search;
-                this.anchor.dispatchEvent(new InputEvent("input"));
-            }
-        },
+        ...stepUtils.editSelectMenuInput(`.o_website_links_utm_forms div#${inputID} .o_select_menu_input`, search),
         {
             content: "Select found selectMenu item",
             trigger: `.o_popover .o_select_menu_item:contains("${search}")`,
