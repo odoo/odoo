@@ -31,14 +31,22 @@ class BaseDocumentLayout(models.TransientModel):
 
     def _get_render_information(self, styles):
         res = super()._get_render_information(styles)
+
         if (
             self.env.context.get('active_model') == 'account.move'
-            and self.env.context.get('active_id')
+            and (active_id := self.env.context.get('active_id'))
         ):
+            res['o'] = self.env['account.move'].browse(active_id)
+
+        if self._get_preview_template() in [
+            'web.report_invoice_wizard_preview',
+            'account.report_invoice_wizard_iframe'
+        ]:
             res.update({
-                'o': self.env['account.move'].browse(self.env.context.get('active_id')),
                 'qr_code': self.qr_code,
+                'account_number': self.account_number,
             })
+
         return res
 
     @api.depends('partner_id', 'account_number')
@@ -48,6 +56,11 @@ class BaseDocumentLayout(models.TransientModel):
                 record.account_number = record.partner_id.bank_ids[0].acc_number or ''
             else:
                 record.account_number = ''
+
+    @api.depends('qr_code', 'account_number')
+    def _compute_preview(self):
+        # EXTENDS 'web' to add dependencies
+        super()._compute_preview()
 
     def _inverse_account_number(self):
         for record in self:
