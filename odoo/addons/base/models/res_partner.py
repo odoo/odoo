@@ -407,8 +407,8 @@ class Partner(models.Model):
         for partner in self:
             # use _origin to deal with onchange()
             partner_id = partner._origin.id
-            #active_test = False because if a partner has been deactivated you still want to raise the error,
-            #so that you can reactivate it instead of creating a new one, which would loose its history.
+            # active_test = False because if a partner has been deactivated you still want to raise the error,
+            # so that you can reactivate it instead of creating a new one, which would loose its history.
             Partner = self.with_context(active_test=False).sudo()
             domain = [
                 ('vat', '=', partner.vat),
@@ -736,6 +736,9 @@ class Partner(models.Model):
             users = partner.user_ids
             partner.is_public = users and any(user._is_public() for user in users)
 
+    def _need_user_write_check(self):
+        return any(u._is_internal() for u in self.user_ids if u != self.env.user)
+
     def write(self, vals):
         if vals.get('active') is False:
             # DLE: It should not be necessary to modify this to make work the ORM. The problem was just the recompute
@@ -786,7 +789,7 @@ class Partner(models.Model):
             del vals['is_company']
         result = result and super().write(vals)
         for partner in self:
-            if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
+            if partner._need_user_write_check():
                 self.env['res.users'].check_access('write')
             partner._fields_sync(vals)
         return result
