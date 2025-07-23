@@ -41,13 +41,13 @@
         run: 'click',
     }, {
         isActive: ["enterprise"],
-        trigger: 'div[name="body_arch"] :iframe #newsletter',
+        trigger: 'div[name="body_arch"] .o_mailing_template_preview_wrapper [data-name="newsletter"]',
         content: markup(_t('Choose this <b>theme</b>.')),
         tooltipPosition: 'left',
         run: 'click',
     }, {
         isActive: ["community"],
-        trigger: 'div[name="body_arch"] :iframe #default',
+        trigger: 'div[name="body_arch"] .o_mailing_template_preview_wrapper [data-name="default"]',
         content: markup(_t('Choose this <b>theme</b>.')),
         tooltipPosition: 'right',
         run: 'click',

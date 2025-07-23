@@ -16,7 +16,7 @@
             </div>
             <div class="d-inline-block w-100">
                 <a t-foreach="themes.values()" t-as="theme" t-key="theme_index" role="menuitem" href="#" class="dropdown-item px-4"
-                    t-on-click="() => this.onSelectTheme(theme.html)">
+                    t-on-click="() => this.onSelectTheme(theme.html)" t-att-data-name="theme.name">
                     <div class="o_thumb small mb-2" t-attf-style="background-image: url(#{theme.imgPath}_small.png)"/>
                     <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.imgPath}_large.png)"/>
                     <h5 class="text-white text-capitalize text-truncate" t-out="theme.title"/>

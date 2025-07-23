@@ -32,11 +32,11 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             run: "click",
         },
         {
-            trigger: ":iframe .o_mail_theme_selector_new",
+            trigger: ".o_mailing_template_preview_wrapper",
         },
         {
             content: "Pick the basic theme",
-            trigger: ':iframe #basic',
+            trigger: '.o_mailing_template_preview_wrapper [data-name="basic"]',
             run: "click",
         },
         {
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             run: "click",
         },
         {
-            trigger: ":iframe .o_mail_theme_selector_new",
+            trigger: ".o_mailing_template_preview_wrapper",
         },
         {
             content: "Fill in Subject",
@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Pick the newsletter theme",
-            trigger: ':iframe #newsletter',
+            trigger: '.o_mailing_template_preview_wrapper [data-name="newsletter"]',
             run: "click",
         },
         {
