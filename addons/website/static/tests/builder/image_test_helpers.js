@@ -32,5 +32,8 @@ export function mockImageRequests() {
         onRpcReal("/html_builder/static/image_shapes/geometric/geo_tetris.svg");
         onRpcReal("/web/image/website.s_text_image_default_image");
         onRpcReal("/website/static/src/img/snippets_demo/s_text_image.webp");
+        onRpcReal("/web/image/123/transparent.png");
+        onRpcReal("/website/static/src/svg/hover_effects.svg");
+        onRpcReal("/html_builder/static/image_shapes/geometric/geo_square.svg");
     });
 }

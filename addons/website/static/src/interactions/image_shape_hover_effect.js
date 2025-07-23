@@ -15,17 +15,29 @@ export class ImageShapeHoverEffect extends Interaction {
         this.originalImgSrc = this.el.getAttribute("src");
         this.svgInEl = null;
         this.svgOutEl = null;
+        // Observe the src attribute for modifications made outside this
+        // interaction's scope.
+        this.sourceObserver = new MutationObserver(() => {
+            this.originalImgSrc = this.el.src;
+        });
+        this.connectSourceObserver();
+        this.adjustImageSourceFrom = this.protectSyncAfterAsync(this.adjustImageSourceFrom);
     }
 
     destroy() {
-        if (this.el.dataset.originalSrcBeforeHover && !this.el.classList.contains("o_modified_image_to_save")) {
-            // Replace the image source by its original one if it has not been
-            // modified in edit mode.
-            this.el.src = this.el.dataset.originalSrcBeforeHover;
-        } else if (this.originalImgSrc && (this.lastImgSrc === this.el.getAttribute("src"))) {
-            this.el.src = this.originalImgSrc;
+        this.el.src = this.originalImgSrc;
+        this.disconnectSourceObserver();
+    }
+    connectSourceObserver() {
+        this.sourceObserver.observe(this.el, {
+            attributes: true,
+            attributeFilter: ["src"],
+        });
+    }
+    disconnectSourceObserver() {
+        if (this.sourceObserver) {
+            this.sourceObserver.disconnect();
         }
-        delete this.el.dataset.originalSrcBeforeHover;
     }
 
     mouseEnter() {
@@ -88,6 +100,9 @@ export class ImageShapeHoverEffect extends Interaction {
      * @param {Function} resolve
 ￼    */
     setImgSrc(svg, resolve) {
+        if (this.isDestroyed) {
+            return;
+        }
         // Add random class to prevent browser from caching image. Otherwise the
         // animations do not trigger more than once.
         const previousRandomClass = [...svg.classList].find(cl => cl.startsWith("o_shape_anim_random_"));
@@ -123,10 +138,21 @@ export class ImageShapeHoverEffect extends Interaction {
      * @param {HTMLImageElement} preloadedImageEl
      */
     adjustImageSourceFrom(preloadedImageEl) {
+        if (this.isDestroyed) {
+            return;
+        }
+        this.disconnectSourceObserver();
         this.el.src = preloadedImageEl.getAttribute("src");
+        this.connectSourceObserver();
     }
 }
 
 registry
     .category("public.interactions")
     .add("website.image_shape_hover_effect", ImageShapeHoverEffect);
+
+registry
+    .category("public.interactions.edit")
+    .add("website.image_shape_hover_effect", {
+        Interaction: ImageShapeHoverEffect,
+    });
