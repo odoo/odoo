@@ -167,14 +167,14 @@ export class PosOrderline extends Base {
         if (!this.product_id.to_weight && setQuantity) {
             this.set_quantity_by_lot();
         }
-        this.setDirty();
+        this.setDirtyLine();
     }
 
     // FIXME related models update stuff
     set_product_lot(product) {
         this.has_product_lot = product.tracking !== "none";
         this.pack_lot_ids = this.has_product_lot && [];
-        this.setDirty();
+        this.setDirtyLine();
     }
 
     set_discount(discount) {
@@ -188,7 +188,7 @@ export class PosOrderline extends Base {
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
         this.order_id.recomputeOrderData();
-        this.setDirty();
+        this.setDirtyLine();
     }
 
     setLinePrice() {
@@ -263,7 +263,7 @@ export class PosOrderline extends Base {
             );
         }
 
-        this.setDirty();
+        this.setDirtyLine();
         return true;
     }
 
@@ -402,7 +402,7 @@ export class PosOrderline extends Base {
             parsed_price || 0,
             this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
         );
-        this.setDirty();
+        this.setDirtyLine();
     }
 
     get_unit_price() {
@@ -580,7 +580,7 @@ export class PosOrderline extends Base {
 
     set_customer_note(note) {
         this.customer_note = note || "";
-        this.setDirty();
+        this.setDirtyLine();
     }
 
     get_customer_note() {
@@ -709,7 +709,7 @@ export class PosOrderline extends Base {
         return this.note || "";
     }
     setNote(note) {
-        this.setDirty();
+        this.setDirtyLine();
         this.note = note;
     }
     setHasChange(isChange) {
@@ -736,6 +736,19 @@ export class PosOrderline extends Base {
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
+    }
+    setDirtyLine() {
+        if (this.isPartOfCombo()) {
+            // If the orderline is part of a combo, we need to set dirty on all lines in the combo
+            this.getAllLinesInCombo().forEach((line) => line.setDirty());
+            this.combo_parent_id?.setDirty();
+        } else {
+            // If the orderline is not part of a combo, we set dirty on this line only
+            this.setDirty();
+        }
+    }
+    setDirty() {
+        super.setDirty();
     }
 }
 
