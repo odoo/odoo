@@ -227,6 +227,7 @@ export class ListController extends Component {
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onWillSaveMulti: this.onWillSaveMulti.bind(this),
+                onAskMultiSaveConfirmation: this.onAskMultiSaveConfirmation.bind(this),
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
             },
         };
@@ -503,24 +504,14 @@ export class ListController extends Component {
 
     async afterExecuteActionButton(clickParams) {}
 
-    onWillSaveMulti(editedRecord, changes, validSelectedRecords) {
-        if (this.hasMousedownDiscard) {
-            this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord, changes);
-            return false;
-        }
-        if (validSelectedRecords.length > 1) {
+    onAskMultiSaveConfirmation(changes, validSelectedRecords) {
+        if (this.model.root.selection.length > 1 && validSelectedRecords.length > 0) {
+            const record = validSelectedRecords[0];
             const { isDomainSelected, selection } = this.model.root;
             return new Promise((resolve) => {
                 const dialogProps = {
                     confirm: () => resolve(true),
-                    cancel: () => {
-                        if (this.editedRecord) {
-                            this.model.root.leaveEditMode({ discard: true });
-                        } else {
-                            editedRecord.discard();
-                        }
-                        resolve(false);
-                    },
+                    cancel: () => resolve(false),
                     isDomainSelected,
                     fields: Object.keys(changes).map((fieldName) => {
                         const fieldNode = Object.values(this.archInfo.fieldNodes).find(
@@ -529,7 +520,7 @@ export class ListController extends Component {
                         const label = fieldNode && fieldNode.string;
                         return {
                             name: fieldName,
-                            label: label || editedRecord.fields[fieldName].string,
+                            label: label || record.fields[fieldName].string,
                             fieldNode,
                             widget: fieldNode && fieldNode.widget,
                         };
@@ -537,7 +528,7 @@ export class ListController extends Component {
                     changes,
                     nbRecords: selection.length,
                     nbValidRecords: validSelectedRecords.length,
-                    record: editedRecord,
+                    record,
                 };
 
                 const focusedCellBeforeDialog = document.activeElement.closest(".o_data_cell");
@@ -546,11 +537,18 @@ export class ListController extends Component {
                         if (focusedCellBeforeDialog) {
                             focusedCellBeforeDialog.focus();
                         }
-                        this.model.root.leaveEditMode({ discard: true });
                         resolve(false);
                     },
                 });
             });
+        }
+        return true;
+    }
+
+    onWillSaveMulti(editedRecord, changes) {
+        if (this.hasMousedownDiscard) {
+            this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord, changes);
+            return false;
         }
         return true;
     }

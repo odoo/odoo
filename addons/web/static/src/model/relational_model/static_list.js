@@ -578,6 +578,9 @@ export class StaticList extends DataPoint {
                     } else {
                         record = this._createRecordDatapoint({ ...command[2], id: command[1] });
                     }
+                    if (this._currentIds.includes(record.resId) && !removedIds[record.resId]) {
+                        break;
+                    }
                     if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
                         if (!command[2]) {
                             recordsToLoad.push(record);

@@ -91,7 +91,7 @@ const DEFAULT_HOOKS = {
     onWillSaveRecord: () => {},
     /** @type {(record: RelationalRecord) => any} */
     onRecordSaved: () => {},
-    /** @type {(record: RelationalRecord) => any} */
+    /** @type {(record: RelationalRecord, changes: Object) => any} */
     onWillSaveMulti: () => {},
     /** @type {(records: RelationalRecord[]) => any} */
     onSavedMulti: () => {},
@@ -101,6 +101,8 @@ const DEFAULT_HOOKS = {
     onRecordChanged: () => {},
     /** @type {(warning: Object) => any} */
     onWillDisplayOnchangeWarning: () => {},
+    /** @type {(changes: Object, validRecords: RelationalRecord[]) => any} */
+    onAskMultiSaveConfirmation: () => true,
 };
 
 rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
