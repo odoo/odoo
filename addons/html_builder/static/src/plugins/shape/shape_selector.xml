@@ -27,7 +27,7 @@
                     <div class="builder_select_page my-2">
                         <ImgGroup>
                             <t t-foreach="Object.entries(subgroup[1].shapes)" t-as="shape" t-key="shape_index">
-                                <div t-att-class="this.props.buttonWrapperClassName" t-on-click="this.props.onClose">
+                                <div t-att-class="this.props.buttonWrapperClassName" t-on-click="this.props.onClose" t-if="!shape[1].isTechnical">
                                     <BuilderButton type="''" action="this.props.shapeActionId" actionValue="shape[0]">
                                         <div t-att-class="props.imgThroughDiv ? 'o_we_shape_btn_content' : ''">
                                             <t t-if="props.imgThroughDiv">

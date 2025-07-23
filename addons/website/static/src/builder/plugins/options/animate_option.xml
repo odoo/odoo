@@ -88,6 +88,35 @@
                 <BuilderNumberInput styleAction="'animation-duration'" action="'forceAnimation'" default="0.4" unit="'s'" />
             </BuilderRow>
         </BuilderContext>
+        <t t-if="this.isActiveItem('animation_on_hover_opt')">
+            <BuilderRow label.translate="Effect" level="1">
+                <BuilderSelect action="'setHoverEffect'" actionParam="{}">
+                    <BuilderSelectItem actionValue="'overlay'" id="'hover_effect_overlay_opt'">Overlay</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'image_zoom_in'" id="'hover_effect_zoom_in_opt'">Zoom In</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'image_zoom_out'" id="'hover_effect_zoom_out_opt'">Zoom Out</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'dolly_zoom'" id="'hover_effect_dolly_zoom_opt'">Dolly Zoom</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'outline'" id="'hover_effect_outline_opt'">Outline</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'image_mirror_blur'" id="'hover_effect_mirror_blur_opt'">Mirror Blur</BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+            <BuilderRow label.translate="Intensity" level="2">
+                <BuilderRange action="'setHoverEffectIntensity'"
+                    t-if="this.isActiveItems(['hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_mirror_blur_opt', 'hover_effect_dolly_zoom_opt'])"
+                    preview="false" min="1" max="100" step="1" displayRangeValue="true"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Color" level="2">
+                <BuilderColorPicker action="'setHoverEffectColor'"
+                    enabledTabs="['custom']"
+                    t-if="this.isActiveItems(['hover_effect_dolly_zoom_opt', 'hover_effect_overlay_opt', 'hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_outline_opt'])"
+                    preview="false"
+                    id="'hover_effect_color_opt'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Stroke Width" level="2">
+                <BuilderNumberInput action="'setHoverEffectStrokeWidth'"
+                    t-if="this.isActiveItem('hover_effect_outline_opt')"
+                    step="1" min="1" unit="'px'" preview="false"/>
+            </BuilderRow>
+        </t>
     </t>
 </t>
 

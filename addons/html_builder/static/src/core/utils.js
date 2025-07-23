@@ -267,7 +267,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     useBus(env.editorBus, "DOM_UPDATED", refreshCurrentItem);
     function cleanSelectedItem(...args) {
         if (state.currentSelectedItem) {
-            state.currentSelectedItem.clean(...args);
+            return state.currentSelectedItem.clean(...args);
         }
     }
 
@@ -513,44 +513,52 @@ export function useClickableBuilderComponent() {
     }
 
     function clean(nextApplySpecs, isPreviewing) {
+        const proms = [];
         for (const { actionId, actionParam, actionValue } of getAllActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
                 let nextAction;
-                getAction(actionId).clean?.({
-                    isPreviewing,
-                    editingElement,
-                    params: actionParam,
-                    value: actionValue,
-                    dependencyManager: comp.env.dependencyManager,
-                    selectableContext: comp.env.selectableContext,
-                    get nextAction() {
-                        nextAction =
-                            nextAction || nextApplySpecs.find((a) => a.actionId === actionId) || {};
-                        return {
-                            params: nextAction.actionParam,
-                            value: nextAction.actionValue,
-                        };
-                    },
-                });
+                proms.push(
+                    getAction(actionId).clean?.({
+                        isPreviewing,
+                        editingElement,
+                        params: actionParam,
+                        value: actionValue,
+                        dependencyManager: comp.env.dependencyManager,
+                        selectableContext: comp.env.selectableContext,
+                        get nextAction() {
+                            nextAction =
+                                nextAction ||
+                                nextApplySpecs.find((a) => a.actionId === actionId) ||
+                                {};
+                            return {
+                                params: nextAction.actionParam,
+                                value: nextAction.actionValue,
+                            };
+                        },
+                    })
+                );
             }
         }
+        return Promise.all(proms);
     }
 
     async function callApply(applySpecs, isPreviewing) {
-        comp.env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
+        await comp.env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         const cleans = inheritedActionIds
             .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
+        const cleanPromises = [];
         for (const clean of new Set(cleans)) {
-            clean(applySpecs, isPreviewing);
+            cleanPromises.push(clean(applySpecs, isPreviewing));
         }
-        const proms = [];
+        await Promise.all(cleanPromises);
+        const cleanOrApplyProms = [];
         const isAlreadyApplied = isApplied();
         for (const applySpec of applySpecs) {
             const hasClean = !!applySpec.clean;
             const shouldClean = _shouldClean(comp, hasClean, isAlreadyApplied);
             if (shouldClean) {
-                proms.push(
+                cleanOrApplyProms.push(
                     applySpec.action.clean({
                         isPreviewing,
                         editingElement: applySpec.editingElement,
@@ -562,7 +570,7 @@ export function useClickableBuilderComponent() {
                     })
                 );
             } else {
-                proms.push(
+                cleanOrApplyProms.push(
                     applySpec.action.apply({
                         isPreviewing,
                         editingElement: applySpec.editingElement,
@@ -575,7 +583,7 @@ export function useClickableBuilderComponent() {
                 );
             }
         }
-        await Promise.all(proms);
+        await Promise.all(cleanOrApplyProms);
     }
     function getPriority() {
         return (
@@ -604,7 +612,9 @@ function useOperationWithReload(callApply, reload) {
     const env = useEnv();
     return async (...args) => {
         const { editingElement } = args[0][0];
-        await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
+        await callApply(...args);
+        env.editor.shared.history.addStep();
+        await env.editor.shared.savePlugin.save();
         const target = env.editor.shared["builderOptions"].getReloadSelector(editingElement);
         const url = reload.getReloadUrl?.();
         await env.editor.config.reloadEditor({ target, url });
@@ -984,5 +994,16 @@ export class BaseOptionComponent extends Component {
         }
         const Components = editor.shared.builderComponents.getComponents();
         Object.assign(comp.constructor.components, Components);
+    }
+    /**
+     * Check if the given items are active.
+     *
+     * Map over all items to listen for any reactive value changes.
+     *
+     * @param {string[]} itemIds - The IDs of the items to check.
+     * @returns {boolean} - True if the item is active, false otherwise.
+     */
+    isActiveItems(itemIds) {
+        return itemIds.map((i) => this.isActiveItem(i)).find(Boolean) || false;
     }
 }
