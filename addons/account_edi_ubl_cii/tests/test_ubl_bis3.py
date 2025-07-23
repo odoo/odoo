@@ -85,6 +85,36 @@ class TestUblBis3(AccountTestInvoicingCommon):
             **invoice_line_kwargs,
         } for line, invoice_line_kwargs in zip(invoice1.invoice_line_ids, invoice_line_kwargs_list)])
 
+    def test_export_invoice_from_account_edi_xml_ubl_bis3(self):
+        """ This test checks the result of `export_invoice` rather than `_generate_and_send_invoices`
+        because the latter calls `cleanup_xml_node`. This helps us catch nodes with attributes but no
+        text, that shouldn't be rendered, but are silently removed by `cleanup_xml_node`.
+        """
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        actual_content, _dummy = self.env['account.edi.xml.ubl_bis3'].with_context(lang='en_US')._export_invoice(invoice)
+        with misc.file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
+            expected_content = file.read()
+        self.assertXmlTreeEqual(
+            self.get_xml_tree_from_string(actual_content),
+            self.get_xml_tree_from_string(expected_content),
+        )
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
