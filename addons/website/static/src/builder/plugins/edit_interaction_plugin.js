@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
 export class EditInteractionPlugin extends Plugin {
@@ -9,7 +10,7 @@ export class EditInteractionPlugin extends Plugin {
     resources = {
         normalize_handlers: this.refreshInteractions.bind(this),
         content_manually_updated_handlers: this.refreshInteractions.bind(this),
-        before_save_handlers: () => this.stopInteractions(),
+        before_save_handlers: withSequence(5, () => this.stopInteractions()),
         on_will_clone_handlers: ({ originalEl }) => {
             this.stopInteractions(originalEl);
         },
