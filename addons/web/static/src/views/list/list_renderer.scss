@@ -479,9 +479,8 @@
     }
 
     .o_data_row.o_selected_row > .o_data_cell.o_invalid_cell:not(.o_readonly_modifier) {
-        border-bottom: 1px solid $danger;
-
         &:not(:focus-within) {
+            border-bottom: 1px solid $danger;
             background-color: $o-input-invalid-bg;
         }
     }

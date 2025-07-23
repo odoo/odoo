@@ -3596,6 +3596,48 @@ test(`editable list view: basic char field edition`, async () => {
 });
 
 test.tags("desktop");
+test(`editable list view: edit an invalid row`, async () => {
+    Foo._records[0].foo = "";
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="foo" required="1"/>
+                <field name="int_field"/>
+            </list>`,
+    });
+
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "",
+        "10",
+        "blip",
+        "9",
+        "gnap",
+        "17",
+        "blip",
+        "-4",
+    ]);
+
+    // switch first row on edition, then click out
+    await contains(`.o_field_cell`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row .o_invalid_cell`).toHaveCount(1);
+
+    await contains(`.o_control_panel`).click();
+    expect(`.o_selected_row`).toHaveCount(0);
+
+    // switch again first row on edition, edit, and click out
+    await contains(`.o_field_cell`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row .o_invalid_cell`).toHaveCount(1);
+
+    await contains(`.o_field_widget[name=int_field] input`).edit("14");
+    await contains(`.o_control_panel`).click();
+    expect(`.o_selected_row`).toHaveCount(1);
+});
+
+test.tags("desktop");
 test(`editable list view: save data when list sorting in edit mode`, async () => {
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
@@ -11275,6 +11317,172 @@ test(`multi edition: many2many_tags in many2many field`, async () => {
     expect(`.modal .o_field_many2many_tags .badge:eq(2)`).toHaveText("Value 3", {
         message: "should have display_name in badge",
     });
+});
+
+test.tags("desktop");
+test(`multi edition: many2many_tags field: link a record`, async () => {
+    stepAllNetworkCalls();
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </list>
+        `,
+    });
+
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "Value 1\nValue 2",
+        "blip",
+        "Value 1\nValue 2\nValue 3",
+        "gnap",
+        "",
+        "blip",
+        "Value 1",
+    ]);
+    await contains(`.o_list_record_selector`).click();
+    expect(".o_data_row_selected").toHaveCount(4);
+
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
+    await contains(`.o_field_widget[name=m2m] input`).click();
+    await contains(`.o-autocomplete--dropdown-item:contains(Value 3)`).click();
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.modal-body`).toHaveText(`Are you sure you want to update 4 records?
+
+Field: M2m
+Update to: \nValue 1\nValue 2\nValue 3`); // TODO: improve this by displaying the diff (the command)
+
+    await contains(`.o_dialog footer .btn-primary`).click();
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_search_read",
+        "has_group",
+        "web_name_search",
+        "web_read", // we want only one web_read, not one by selected record
+        "web_save",
+    ]);
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "Value 1\nValue 2\nValue 3",
+        "blip",
+        "Value 1\nValue 2\nValue 3",
+        "gnap",
+        "Value 3",
+        "blip",
+        "Value 1\nValue 3",
+    ]);
+});
+
+test.tags("desktop");
+test(`multi edition: many2many field required field`, async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        // can't write on record 4 as it would make it invalid
+        expect(args[0]).toEqual([1, 2, 3]);
+        expect(args[1]).toEqual({ m2m: [[3, 1]] });
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags" required="foo == 'blip'"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_list_record_selector`).click();
+    expect(".o_data_row_selected").toHaveCount(4);
+
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
+    await contains(`.o_field_widget[name=m2m] .o_tag:contains(Value 1) .o_delete`).click();
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.modal-body`).toHaveText(`Among the 4 selected records, 3 are valid for this update.
+Are you sure you want to update 3 records?
+
+Field: M2m
+Update to: \nValue 2`); // TODO: improve this by displaying the diff (the command)
+
+    await contains(`.o_dialog footer .btn-primary`).click();
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test(`multi edition: many2many field required field (edit another field)`, async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        // can't write on record 3 as it would make it invalid
+        expect(args[0]).toEqual([1, 2, 4]);
+        expect(args[1]).toEqual({ foo: "force required" });
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags" required="foo == 'force required'"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_list_record_selector`).click();
+    expect(".o_data_row_selected").toHaveCount(4);
+
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
+    await contains(`.o_data_row:eq(0) .o_field_widget[name=foo] input`).edit("force required");
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.modal-body`).toHaveText(`Among the 4 selected records, 3 are valid for this update.
+Are you sure you want to update 3 records?
+
+Field: Foo
+Update to: force required`);
+
+    await contains(`.o_dialog footer .btn-primary`).click();
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test(`multi edition: many2many field required field (edited field is invalid)`, async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        // can't write on record 4 as it would make it invalid
+        expect(args[0]).toEqual([1, 2, 3]);
+        expect(args[1]).toEqual({ m2m: [[3, 1]] });
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags" required="foo == 'blip'"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_list_record_selector`).click();
+    expect(".o_data_row_selected").toHaveCount(4);
+    expect(`.o_data_row:eq(3) .o_data_cell:eq(1) .o_tag`).toHaveCount(1);
+
+    await contains(`.o_data_row:eq(3) .o_data_cell:eq(1)`).click(); // edit last row
+    await contains(`.o_field_widget[name=m2m] .o_tag:contains(Value 1) .o_delete`).click();
+    expect(`.o_data_row:eq(3) .o_data_cell:eq(1) .o_tag`).toHaveCount(1); // still there
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.modal-body`).toHaveText(`Among the 4 selected records, 3 are valid for this update.
+Are you sure you want to update 3 records?
+
+Field: M2m
+Update to: \nValue 2`); // TODO: improve this by displaying the diff (the command)
+
+    await contains(`.o_dialog footer .btn-primary`).click();
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");

@@ -1,5 +1,6 @@
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { x2ManyCommands } from "@web/core/orm_service";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
@@ -101,6 +102,7 @@ export class DynamicList extends DataPoint {
         }
         const canProceed = await this.leaveEditMode();
         if (canProceed) {
+            record._checkValidity();
             this.model._updateConfig(record.config, { mode: "edit" }, { reload: false });
         }
         return canProceed;
@@ -134,17 +136,15 @@ export class DynamicList extends DataPoint {
             if (discard) {
                 this._recordToDiscard = editedRecord;
                 await editedRecord.discard();
-                for (const record of this.selection) {
-                    await record.discard();
-                }
                 this._recordToDiscard = null;
                 editedRecord = this.editedRecord;
                 if (editedRecord && editedRecord.isNew) {
                     this._removeRecords([editedRecord.id]);
                 }
             } else {
+                let isValid = true;
                 if (!this.model._urgentSave) {
-                    await editedRecord.checkValidity();
+                    isValid = await editedRecord.checkValidity();
                     editedRecord = this.editedRecord;
                     if (!editedRecord) {
                         return true;
@@ -152,7 +152,7 @@ export class DynamicList extends DataPoint {
                 }
                 if (editedRecord.isNew && !editedRecord.dirty) {
                     this._removeRecords([editedRecord.id]);
-                } else {
+                } else if (isValid || editedRecord.dirty) {
                     canProceed = await editedRecord.save();
                 }
             }
@@ -303,71 +303,125 @@ export class DynamicList extends DataPoint {
         }
     }
 
-    async _multiSave(record, changes) {
-        changes ??= {};
-        if (!Object.keys(changes).length || record === this._recordToDiscard) {
+    async _multiSave(editedRecord, changes) {
+        if (!Object.keys(changes).length || editedRecord === this._recordToDiscard) {
             return;
         }
-        this.model.root.selection.forEach((record) => {
-            record._applyChanges(changes);
-        });
-        const validSelection = this.selection.filter((record) =>
-            Object.keys(changes).every((fieldName) => {
-                if (record._isReadonly(fieldName)) {
-                    return false;
-                } else if (record._isRequired(fieldName) && !changes[fieldName]) {
-                    return false;
-                }
-                return true;
-            })
-        );
-        const canProceed = await this.model.hooks.onWillSaveMulti(record, changes, validSelection);
+        let canProceed = await this.model.hooks.onWillSaveMulti(editedRecord, changes);
         if (canProceed === false) {
-            this.selection.forEach((record) => record._discard());
-            this.leaveEditMode({ discard: true });
             return false;
         }
-        if (validSelection.length === 0) {
+
+        const selectedRecords = this.selection; // costly getter => compute it once
+
+        // special treatment for x2manys: apply commands on all selected record's static lists
+        const proms = [];
+        for (const fieldName in changes) {
+            if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                const list = editedRecord.data[fieldName];
+                const commands = list._getCommands();
+                if ("display_name" in list.activeFields) {
+                    // add display_name to LINK commands to prevent a web_read by selected record
+                    for (const command of commands) {
+                        if (command[0] === x2ManyCommands.LINK) {
+                            const relRecord = list._cache[command[1]];
+                            command[2] = { display_name: relRecord.data.display_name };
+                        }
+                    }
+                }
+                for (const record of selectedRecords) {
+                    if (record !== editedRecord) {
+                        proms.push(record.data[fieldName]._applyCommands(commands));
+                    }
+                }
+            }
+        }
+        await Promise.all(proms);
+        // apply changes on all selected records (for x2manys, the change is the static list itself)
+        selectedRecords.forEach((record) => {
+            const _changes = Object.assign({}, changes);
+            for (const fieldName in _changes) {
+                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                    _changes[fieldName] = record.data[fieldName];
+                }
+            }
+            record._applyChanges(_changes);
+        });
+
+        // determine valid and invalid records
+        const validRecords = [];
+        const invalidRecords = [];
+        for (const record of selectedRecords) {
+            const isEditedRecord = record === editedRecord;
+            if (
+                Object.keys(changes).every((fieldName) => !record._isReadonly(fieldName)) &&
+                record._checkValidity({ silent: !isEditedRecord })
+            ) {
+                validRecords.push(record);
+            } else {
+                invalidRecords.push(record);
+            }
+        }
+        const discardInvalidRecords = () => invalidRecords.forEach((record) => record._discard());
+
+        if (validRecords.length === 0) {
+            discardInvalidRecords();
             this.model.dialog.add(AlertDialog, {
                 body: _t("No valid record to save"),
                 confirm: () => this.leaveEditMode({ discard: true }),
                 dismiss: () => this.leaveEditMode({ discard: true }),
             });
             return false;
-        } else {
-            const resIds = unique(validSelection.map((r) => r.resId));
-            let records = [];
-            const context = this.context;
-            const changesHasFieldOperation = Object.values(changes).some(
-                (value) => value instanceof Operation
-            );
-            const method = changesHasFieldOperation ? "webSaveMulti" : "webSave";
-            const payload = changesHasFieldOperation
-                ? resIds.map((id) => {
-                      const record = validSelection.find((r) => r.resId === id);
-                      return record._getChanges();
-                  })
-                : record._getChanges();
-            const specification = getFieldsSpec(record.activeFields, record.fields);
-            try {
-                records = await this.model.orm[method](this.resModel, resIds, payload, {
-                    context,
-                    specification,
-                });
-            } catch (e) {
-                record._discard();
-                this.model._updateConfig(record.config, { mode: "readonly" }, { reload: false });
-                throw e;
-            }
-            for (const record of validSelection) {
-                const serverValues = records.find((r) => r.id === record.resId);
-                record._applyValues(serverValues);
-                this.model._updateSimilarRecords(record, serverValues);
-            }
-            record._discard();
-            this.model._updateConfig(record.config, { mode: "readonly" }, { reload: false });
         }
-        this.model.hooks.onSavedMulti(validSelection);
+
+        // generate the save callback with the values to save (must be done before discarding
+        // invalid records, in case the editedRecord is itself invalid)
+        const resIds = unique(validRecords.map((r) => r.resId));
+        const kwargs = {
+            context: this.context,
+            specification: getFieldsSpec(editedRecord.activeFields, editedRecord.fields),
+        };
+        let save;
+        if (Object.values(changes).some((v) => v instanceof Operation)) {
+            // "changes" contains a Field Operation => we must call the web_save_multi method to
+            // save each record individually
+            const changesById = {};
+            for (const record of validRecords) {
+                changesById[record.resId] = changesById[record.resId] || record._getChanges();
+            }
+            const valsList = resIds.map((resId) => changesById[resId]);
+            save = () => this.model.orm.webSaveMulti(this.resModel, resIds, valsList, kwargs);
+        } else {
+            const vals = editedRecord._getChanges();
+            save = () => this.model.orm.webSave(this.resModel, resIds, vals, kwargs);
+        }
+        discardInvalidRecords();
+
+        // ask confirmation
+        canProceed = await this.model.hooks.onAskMultiSaveConfirmation(changes, validRecords);
+        if (canProceed === false) {
+            selectedRecords.forEach((record) => record._discard());
+            this.leaveEditMode({ discard: true });
+            return false;
+        }
+
+        // save changes
+        let records = [];
+        try {
+            records = await save();
+        } catch (e) {
+            selectedRecords.forEach((record) => record._discard());
+            this.model._updateConfig(editedRecord.config, { mode: "readonly" }, { reload: false });
+            throw e;
+        }
+        const serverValuesById = Object.fromEntries(records.map((record) => [record.id, record]));
+        for (const record of validRecords) {
+            const serverValues = serverValuesById[record.resId];
+            record._setData(serverValues);
+            this.model._updateSimilarRecords(record, serverValues);
+        }
+        this.model._updateConfig(editedRecord.config, { mode: "readonly" }, { reload: false });
+        this.model.hooks.onSavedMulti(validRecords);
         return true;
     }
 
