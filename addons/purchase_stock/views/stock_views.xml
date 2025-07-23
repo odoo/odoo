@@ -32,20 +32,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_stock_replenishment_info']" position="before">
                     <field name="show_supplier" column_invisible="True"/>
-                    <field name="supplier_id" string="Vendor" optional="hidden" invisible="not show_supplier" options="{'no_create': True}"/>
+                    <field name="supplier_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                    <field name="supplier_id" widget="stock.forced_placeholder" string="Vendor" optional="hidden" invisible="not show_supplier" options="{'no_create': True, 'placeholder_field': 'supplier_id_placeholder'}" decoration-muted="not supplier_id"/>
                 </xpath>
             </field>
         </record>
-
-        <record id="stock_reorder_report_search_inherited_purchase_stock" model="ir.ui.view">
-            <field name="name">stock.warehouse.orderpoint.search.inherit.purchase.stock</field>
-            <field name="model">stock.warehouse.orderpoint</field>
-            <field name="inherit_id" ref="stock.stock_reorder_report_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="//search" position="inside">
-                    <field name="vendor_ids"/>
-                </xpath>
-            </field>
-        </record>
-
 </odoo>

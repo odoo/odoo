@@ -435,10 +435,10 @@ class TestProcRule(TransactionCase):
         replenishments = self.env['stock.warehouse.orderpoint'].search([
             ('product_id', '=', product.id),
         ])
-        # Verify that the location and the route make sense
+        # Verify that the location makes sense and that route is not set by default
         self.assertRecordValues(replenishments, [
-            {'location_id': warehouse_2.lot_stock_id.id, 'route_id': route_2.id},
-            {'location_id': warehouse_3.lot_stock_id.id, 'route_id': route_3.id},
+            {'location_id': warehouse_2.lot_stock_id.id, 'route_id': False},
+            {'location_id': warehouse_3.lot_stock_id.id, 'route_id': False},
         ])
 
     def test_orderpoint_replenishment_view_2(self):
@@ -479,11 +479,11 @@ class TestProcRule(TransactionCase):
 
     def test_orderpoint_replenishment_view_3(self):
         """
-        Create a selectable on product route and a product without routes. Verify that the orderpoint created
-        to replenish that product did not set the new route by default.
+        Create a selectable on product route and a product without routes.
+        Verify that none of the created orderpoints set the route by default.
         """
         stock_location = self.env.ref('stock.stock_location_stock')
-        interdimensional_protal = self.env['stock.location'].create({
+        interdimensional_portal = self.env['stock.location'].create({
             'name': 'Interdimensional portal',
             'usage': 'internal',
             'location_id': stock_location.location_id.id,
@@ -497,7 +497,7 @@ class TestProcRule(TransactionCase):
                 'name': 'Interdimensional portal -> Stock',
                 'action': 'pull',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
-                'location_src_id': interdimensional_protal.id,
+                'location_src_id': interdimensional_portal.id,
                 'location_dest_id': stock_location.id,
             })],
         })
@@ -542,8 +542,8 @@ class TestProcRule(TransactionCase):
         # Verify that the route is unset
         self.assertRecordValues(replenishments.sorted(lambda r: r.product_id.id), [
             {'product_id': products[0].id, 'location_id': stock_location.id, 'route_id': False},
-            {'product_id': products[1].id, 'location_id': stock_location.id, 'route_id': lovely_route.id},
-            {'product_id': products[2].id, 'location_id': stock_location.id, 'route_id': lovely_route.id},
+            {'product_id': products[1].id, 'location_id': stock_location.id, 'route_id': False},
+            {'product_id': products[2].id, 'location_id': stock_location.id, 'route_id': False},
         ])
 
     def test_orderpoint_compute_warehouse_location(self):
