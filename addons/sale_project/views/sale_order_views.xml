@@ -16,7 +16,20 @@
                     invisible="not show_project_button"
                     groups="project.group_project_user"
                 >
-                    <field name="project_count" widget="statinfo" string="Projects"/>
+                    <div class="o_stat_info">
+                        <div class="o_row">
+                            <span class="o_stat_value order-first">
+                                <field name="project_count"/>
+                            </span>
+                            <span class="o_stat_text"> Projects</span>
+                        </div>
+                        <div class="o_row">
+                            <span class="o_stat_value order-first">
+                                <field name="tasks_count"/>
+                            </span>
+                            <span class="o_stat_text"> Tasks</span>
+                        </div>
+                    </div>
                 </button>
                 <button
                     name="action_view_milestone"
@@ -27,22 +40,6 @@
                     groups="project.group_project_milestone"
                 >
                     <field name="milestone_count" widget="statinfo" string="Milestones"/>
-                </button>
-                <button
-                    name="action_view_task"
-                    type="object"
-                    class="oe_stat_button"
-                    icon="fa-check"
-                    invisible="not show_task_button"
-                    groups="project.group_project_user"
-                >
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Tasks</span>
-                        <span class="o_stat_value">
-                            <field name="closed_task_count"/> / <field name="tasks_count"/>
-                            (<field name="completed_task_percentage" widget="percentage" options="{'digits': [1, 0]}"/>)
-                        </span>
-                    </div>
                 </button>
             </button>
             <field name="journal_id" position="before">

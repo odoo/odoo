@@ -45,6 +45,18 @@ class ProjectTask(models.Model):
         return super().TASK_PORTAL_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
 
     @api.model
+    def default_get(self, fields):
+        default = super().default_get(fields)
+        if self.env.context.get("from_sale_order_action"):
+            sol = self.env['sale.order.line'].search([
+                ("order_id", "=", self.env.context.get("default_sale_order_id")),
+                ("project_id", "=", self.env.context.get("active_id")),
+            ], limit=1)
+            if sol:
+                default["sale_line_id"] = sol.id
+        return default
+
+    @api.model
     def _group_expand_sales_order(self, sales_orders, domain):
         start_date = self.env.context.get('gantt_start_date')
         scale = self.env.context.get('gantt_scale')
@@ -239,3 +251,10 @@ class ProjectTask(models.Model):
                 ('project_id', '!=', False),
             ],
         ])
+
+    def _get_template_default_context_whitelist(self):
+        return [
+            *super()._get_template_default_context_whitelist(),
+            'sale_line_id',
+            'from_sale_order_action',
+        ]

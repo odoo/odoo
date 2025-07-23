@@ -1669,14 +1669,148 @@ class TestSaleProject(TestSaleProjectCommon):
             "The project and task should be linked to the sale order."
         )
         self.assertFalse(
-            sale_order.show_project_button or sale_order.show_task_button,
-            "Both the project and task smart buttons should be hidden in the sale order."
+            sale_order.show_project_button,
+            "The project smart buttons should be hidden in the sale order."
         )
 
         sale_order.action_confirm()
         sale_order._compute_show_project_and_task_button()
 
         self.assertTrue(
-            sale_order.show_project_button and sale_order.show_task_button,
-            "Both the project and task smart buttons should be shown in the sale order."
+            sale_order.show_project_button,
+            "The project smart buttons should be shown in the sale order."
+        )
+
+    def test_project_creation_with_and_without_template(self):
+        """
+        Test creating a project from a sale order, both with and without using a project template.
+        Steps:
+        ------
+        1. Create a project template with one task.
+
+        Flow 1: Project creation without template
+        -----------------------------------------
+        2. Create a sale order and confirm it.
+        3. Open the create project wizard without selecting any template.
+        4. Create the project.
+        5. Assert:
+            - The project has no tasks.
+            - The project is linked to the sale order.
+
+        Flow 2: Project creation with template
+        --------------------------------------
+        6. Create a new sale order and confirm it.
+        7. Open the create project wizard and select the template.
+        8. Create the project.
+        9. Assert:
+            - The project has one task (copied from template).
+            - The project is linked to the sale order.
+        """
+        template_project = self.env['project.project'].create({
+            'name': 'Template Project',
+            'is_template': True,
+            'task_ids': [Command.create({'name': 'Task 1'})],
+        })
+        sale_order_1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_consumable.id})],
+        })
+        sale_order_1.action_confirm()
+        action_1 = sale_order_1.action_create_project()
+        view_id = self.env.ref('sale_project.sale_project_view_form_simplified_template').id
+
+        with Form(self.env[action_1['res_model']].with_context(action_1['context']), view=view_id) as wizard:
+            project_action_1 = wizard.save().action_create_project_from_so()
+        project_1 = self.env['project.project'].browse(project_action_1['context']['default_project_id'])
+        self.assertFalse(project_1.task_ids, "Project should not have tasks when created without template.")
+        self.assertEqual(
+            project_1.reinvoiced_sale_order_id,
+            sale_order_1,
+            "Project should be linked to the sale order."
+        )
+
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_consumable.id})],
+        })
+        sale_order_2.action_confirm()
+        action_2 = sale_order_2.action_create_project()
+        with Form(self.env[action_2['res_model']].with_context(action_2['context']), view=view_id) as wizard:
+            wizard.template_id = template_project
+            project_action_2 = wizard.save().action_create_project_from_so()
+        project_2 = self.env['project.project'].browse(project_action_2['context']['default_project_id'])
+        self.assertEqual(project_2.task_count, 1, "Project should have 1 task copied from the template.")
+        self.assertEqual(
+            project_2.reinvoiced_sale_order_id,
+            sale_order_2,
+            "Project should be linked to the sale order."
+        )
+
+    def test_task_sol_default_after_removing_so_from_project(self):
+        """
+        Steps:
+        1. Create two project templates.
+        2. Create two service products, each linked to one of the templates.
+        3. Create a Sale Order with these two products and confirm it.
+        4. Verify that two projects are created from the SO, each linked to its SOL.
+        5. Remove the SO and SOL from the second project.
+        6. Create a task in the second project **without context**, should not link any SOL.
+        7. Create a task in the second project **with context** (from SO action), should pick the original SOL.
+        """
+        template_1, template_2 = self.env['project.project'].create([
+            {'name': 'Project Template 1', 'is_template': True},
+            {'name': 'Project Template 2', 'is_template': True},
+        ])
+        product_1, product_2 = self.env['product.product'].create([
+            {
+                'name': 'Product with Project Template 1',
+                'type': 'service',
+                'invoice_policy': 'order',
+                'service_tracking': 'project_only',
+                'project_template_id': template_1.id,
+            },
+            {
+                'name': 'Product with Project Template 2',
+                'type': 'service',
+                'invoice_policy': 'order',
+                'service_tracking': 'project_only',
+                'project_template_id': template_2.id,
+            },
+        ])
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_1.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'product_id': product_2.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        so.action_confirm()
+        projects = self.env['project.project'].search([('sale_line_id', 'in', so.order_line.ids)])
+        self.assertEqual(len(projects), 2, "Two projects should be created from the SO")
+        project2 = projects[1]
+        sol2 = project2.sale_line_id
+        self.assertTrue(sol2, "Second project should have a SOL linked")
+
+        project2.write({'sale_order_id': False, 'sale_line_id': False})
+
+        task_no_context = self.env['project.task'].create({
+            'name': 'Task without context',
+            'project_id': project2.id,
+        })
+        self.assertFalse(task_no_context.sale_line_id, "Task without context should not have SOL")
+
+        task_with_context = self.env['project.task'].with_context(
+            from_sale_order_action=True,
+            default_sale_order_id=so.id,
+            active_id=project2.id,
+        ).create({'name': 'Task with context', 'project_id': project2.id})
+        self.assertEqual(
+            task_with_context.sale_line_id, sol2,
+            "Task with context should pick the original SOL even if removed from project"
         )
