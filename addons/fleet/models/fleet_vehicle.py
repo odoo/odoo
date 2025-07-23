@@ -127,8 +127,7 @@ class FleetVehicle(models.Model):
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", tracking=True)
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
-    plan_to_change_car = fields.Boolean(tracking=True)
-    plan_to_change_bike = fields.Boolean(tracking=True)
+    plan_to_change_vehicle = fields.Boolean(tracking=True)
     vehicle_type = fields.Selection(related='model_id.vehicle_type')
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], string="Bike Frame Type")
     electric_assistance = fields.Boolean(compute='_compute_electric_assistance', store=True, readonly=False)
@@ -374,28 +373,18 @@ class FleetVehicle(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        to_update_drivers_cars = set()
-        to_update_drivers_bikes = set()
+        to_update_drivers_vehicle = set()
         state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
         for vals in vals_list:
             if vals.get('future_driver_id'):
                 state_id = vals.get('state_id')
                 if not state_waiting_list or state_waiting_list.id != state_id:
-                    future_driver = vals['future_driver_id']
-                    if vals.get('vehicle_type') == 'bike':
-                        to_update_drivers_bikes.add(future_driver)
-                    elif vals.get('vehicle_type') == 'car':
-                        to_update_drivers_cars.add(future_driver)
-        if to_update_drivers_cars:
+                    to_update_drivers_vehicle.add(vals['future_driver_id'])
+        if to_update_drivers_vehicle:
             self.search([
-                ('driver_id', 'in', to_update_drivers_cars),
+                ('driver_id', 'in', to_update_drivers_vehicle),
                 ('vehicle_type', '=', 'car'),
-            ]).plan_to_change_car = True
-        if to_update_drivers_bikes:
-            self.search([
-                ('driver_id', 'in', to_update_drivers_bikes),
-                ('vehicle_type', '=', 'bike'),
-            ]).plan_to_change_bike = True
+            ]).plan_to_change_vehicle = True
 
         vehicles = super().create(vals_list)
 
@@ -420,15 +409,9 @@ class FleetVehicle(models.Model):
             vehicle_types = set(self.filtered(lambda vehicle: not state_waiting_list or\
                                 vals.get('state_id', vehicle.state_id.id) not in [state_waiting_list.id, state_new_request.id]).mapped('vehicle_type'))
             if vehicle_types:
-                vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
-                    domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)],
-                    groupby=['vehicle_type'],
-                    aggregates=['id:recordset'])
-                )
-                if 'bike' in vehicle_read_group:
-                    vehicle_read_group['bike'].write({'plan_to_change_bike': True})
-                if 'car' in vehicle_read_group:
-                    vehicle_read_group['car'].write({'plan_to_change_car': True})
+                self.env['fleet.vehicle'].search(
+                    [('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)]
+                ).write({'plan_to_change_vehicle': True})
 
         if 'future_driver_id' in vals or 'driver_id' in vals:
             # delete existing open activities for vehicles in self.
@@ -474,13 +457,11 @@ class FleetVehicle(models.Model):
         vehicles = self.search([('driver_id', 'in', self.mapped('future_driver_id').ids), ('vehicle_type', '=', self.vehicle_type)])
         vehicles.write({
             'driver_id': False,
-            'plan_to_change_car': False,
-            'plan_to_change_bike': False,
+            'plan_to_change_vehicle': False,
         })
         
         for vehicle in self:
-            vehicle.plan_to_change_bike = False
-            vehicle.plan_to_change_car = False
+            vehicle.plan_to_change_vehicle = False
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
 
