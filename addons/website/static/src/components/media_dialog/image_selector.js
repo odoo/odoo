@@ -10,6 +10,11 @@ patch(HtmlImageSelector.prototype, {
     },
 });
 
+const classesToRemove = ["img-thumbnail"];
+
 patch(HtmlImageSelector, {
-    mediaExtraClasses: [...HtmlImageSelector.mediaExtraClasses, "social_media_img"],
+    mediaExtraClasses: [
+        ...HtmlImageSelector.mediaExtraClasses.filter((cls) => !classesToRemove.includes(cls)),
+        "social_media_img",
+    ],
 });

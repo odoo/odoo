@@ -20,7 +20,7 @@ import {
     setupWebsiteBuilderOeId,
 } from "./website_helpers";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
-import { testImg } from "./image_test_helpers";
+import { testImgEl } from "@website/../tests/builder/image_test_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
@@ -245,7 +245,7 @@ describe("Image format/optimize", () => {
     test("Should format an image to be 800px", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();
@@ -270,7 +270,7 @@ describe("Image format/optimize", () => {
     test("should set the quality of an image to 50", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();

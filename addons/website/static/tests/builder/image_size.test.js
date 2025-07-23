@@ -2,14 +2,19 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame, clear, edit, press } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { testImg, testImgSrc, testGifImg, testGifImgSrc } from "./image_test_helpers";
+import {
+    testImgEl,
+    testImgSrc,
+    testGifImg,
+    testGifImgSrc,
+} from "@website/../tests/builder/image_test_helpers";
 
 defineWebsiteModels();
 
 test("the image should show its size", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -66,7 +71,7 @@ test("the GIF background image should show its size", async () => {
 test("images can be resized by slider, text input and button", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();

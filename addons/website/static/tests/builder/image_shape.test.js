@@ -1,9 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { testImg } from "./image_test_helpers";
+import { imageShapeDefinitions } from "@html_builder/plugins/image/image_shapes_definition";
+import { testImgEl } from "@website/../tests/builder/image_test_helpers";
 
 defineWebsiteModels();
 
@@ -18,10 +19,111 @@ const selectImageShape = async (shape) => {
     await animationFrame();
 };
 
+const testImgWithShapeAndClassEl = `
+<img src='/web/image/website.s_text_image_default_image'
+    data-attachment-id="1" data-original-id="1"
+    data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+    data-mimetype-before-conversion="image/webp"
+    data-mimetype="image/webp"
+    data-shape="html_builder/geometric/geo_shuriken"
+    data-file-name="s_text_image.webp"
+    class="o_class_one o_class_two"
+    >
+`;
+const testImgShapeWithOnlyClassEl = `
+<img src='/web/image/website.s_text_image_default_image'
+    class="o_class_one o_class_two"
+    >
+`;
+describe("image shape with classes", () => {
+    patchWithCleanup(
+        imageShapeDefinitions.basic.subgroups.geometrics.shapes[
+            "html_builder/geometric/geo_shuriken"
+        ],
+        {
+            imageShapeClass: ["o_class_one", "o_class_two"],
+        }
+    );
+    test("Applying shape with imageShapeClass should not generate an SVG and clear border radius", async () => {
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+            <div class="test-options-target">
+                ${testImgEl}
+            </div>
+        `);
+        await contains(":iframe .test-options-target img").click();
+
+        await contains(
+            "[data-container-title='Image'] [data-label='Round Corners'] [data-action-id='styleAction'] input"
+        ).edit("10");
+
+        await contains("[data-label='Shape'] button").click();
+        await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+        // ensure the shape action has been applied
+        await waitSidebarUpdated();
+
+        const img = queryFirst(":iframe .test-options-target img");
+        expect(":iframe .test-options-target img").toHaveAttribute("data-attachment-id", "1");
+        expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
+        expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/webp");
+        expect(img.src.startsWith("data:image/webp;base64,")).toBe(true);
+        expect(":iframe .test-options-target img").toHaveAttribute(
+            "data-original-src",
+            "/website/static/src/img/snippets_demo/s_text_image.webp"
+        );
+        expect(":iframe .test-options-target img").toHaveAttribute(
+            "data-mimetype-before-conversion",
+            "image/webp"
+        );
+        expect(":iframe .test-options-target img").toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_shuriken"
+        );
+        expect(":iframe .test-options-target img").toHaveAttribute(
+            "data-file-name",
+            "s_text_image.webp"
+        );
+        expect(":iframe .test-options-target img").not.toHaveAttribute(
+            "style",
+            "--box-border-bottom-left-radius: 10px; --box-border-bottom-right-radius: 10px; --box-border-top-right-radius: 10px; --box-border-top-left-radius: 10px;"
+        );
+        expect(":iframe .test-options-target img").toHaveClass(["o_class_one", "o_class_two"]);
+        expect("[data-container-title='Image'] [data-label='Round Corners']").toHaveCount(0);
+    });
+    test("Should remove shape classes when clearing a imageShapeClass-applied shape", async () => {
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+            <div class="test-options-target">
+                ${testImgWithShapeAndClassEl}
+            </div>
+        `);
+        expect(":iframe .test-options-target img").toHaveClass("o_class_one o_class_two");
+
+        await contains(":iframe .test-options-target img").click();
+        await contains("[data-action-id='setImageShape']").click();
+        // ensure the shape action has been applied
+        await waitSidebarUpdated();
+
+        expect(":iframe .test-options-target img").not.toHaveAttribute("data-image-shape-class");
+        expect(":iframe .test-options-target img").not.toHaveClass("o_class_one o_class_two");
+    });
+    test("Selects shape option when image classes match a shape definition", async () => {
+        await setupWebsiteBuilder(`
+            <div class="test-options-target">
+                ${testImgShapeWithOnlyClassEl}
+            </div>
+        `);
+        expect(":iframe .test-options-target img").toHaveClass("o_class_one o_class_two");
+
+        await contains(":iframe .test-options-target img").click();
+        expect(":iframe .test-options-target img").toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_shuriken"
+        );
+    });
+});
 test("Should set a shape on an image", async () => {
     const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
     const editor = getEditor();
@@ -112,7 +214,7 @@ test("Should set a shape on a GIF", async () => {
 test("Should change the shape color of an image", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `<div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>`,
         {
             loadIframeBundles: true,
@@ -169,7 +271,7 @@ test("Should change the shape color of an image", async () => {
 test("Should change the shape color of an image with a class color", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `<div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>`,
         {
             loadIframeBundles: true,
@@ -226,7 +328,7 @@ test("Should change the shape color of an image with a class color", async () =>
 test("Should not show transform action on shape that cannot bet transformed", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -241,7 +343,7 @@ describe("flip shape axis", () => {
     test("Should flip the shape X axis", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();
@@ -265,7 +367,7 @@ describe("flip shape axis", () => {
     test("Should unflip the shape X axis", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();
@@ -290,7 +392,7 @@ describe("flip shape axis", () => {
     test("Should flip the shape Y axis", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();
@@ -314,7 +416,7 @@ describe("flip shape axis", () => {
     test("Should flip the shape XY axis", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();
@@ -341,7 +443,7 @@ describe("rotate shape", () => {
     test("Should rotate the shape to the left", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         await contains(":iframe .test-options-target img").click();
@@ -364,7 +466,7 @@ describe("rotate shape", () => {
     test("Should remove rotate data when there is no rotation", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();
@@ -389,7 +491,7 @@ describe("rotate shape", () => {
     test("Should rotate the shape to the right", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         const editor = getEditor();
@@ -415,7 +517,7 @@ describe("rotate shape", () => {
 test("Should not show animate speed if the shape is not animated", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -428,7 +530,7 @@ test("Should not show animate speed if the shape is not animated", async () => {
 test("Should change the speed of an animated shape", async () => {
     const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
     const editor = getEditor();
@@ -453,7 +555,7 @@ describe("toggle ratio", () => {
     test("Should not be able to toggle the ratio of a pattern_wave_4", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         await contains(":iframe .test-options-target img").click();
@@ -467,7 +569,7 @@ describe("toggle ratio", () => {
     test("A shape with togglable ratio should be added cropped and crop when clicked", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
         await contains(":iframe .test-options-target img").click();
@@ -487,7 +589,7 @@ describe("toggle ratio", () => {
 test("Should reset crop when removing shape with ratio", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
 
@@ -506,7 +608,7 @@ test("Should reset crop when removing shape with ratio", async () => {
 test("Should have the correct active shape in the image shape selector", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
 
@@ -525,7 +627,7 @@ test("Should have the correct active shape in the image shape selector", async (
 test("Should keep colors when changing speed and vice versa", async () => {
     const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(
         `<div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>`,
         {
             loadIframeBundles: true,
@@ -642,7 +744,7 @@ test("Be able to add and remove shape from custom groups", async () => {
 
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            ${testImg}
+            ${testImgEl}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
