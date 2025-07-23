@@ -36,11 +36,28 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'reconcile': False,  # On purpose for testing.
             'account_type': 'asset_current'
         })
+        cls.tax_received_account = cls.env['account.account'].create({
+            'code': '2510',
+            'name': 'Tax Received',
+            'account_type': 'liability_current',
+        })
 
     def test_no_withholding_tax_invoice_but_included_one_on_payment(self):
         """ Test a flow where not withholding tax is set on the invoice line, but one is added to the payment register. """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(
+            amount=-1,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+        )
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -86,7 +103,19 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         Afterward, register the payment separately.
         """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(
+            amount=-1,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+        )
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -172,11 +201,27 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             amount=-1,
             is_withholding_tax_on_payment=True,
             withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
         )
         withholding_tax2 = self.percent_tax(
             amount=-2,
             is_withholding_tax_on_payment=True,
             withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
         )
 
         invoice = self.env['account.move'].create({
@@ -382,7 +427,19 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
     def test_withholding_not_payment_account_on_method_line(self):
         """ Test that when no payment account is set on the payment method line, the one from the wizard is used. """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(
+            amount=-1,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+        )
         self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = False
 
         invoice = self.env['account.move'].create({
@@ -417,7 +474,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             # Receivable line:
             {'balance': -1150.0,    'account_id': receivable.id},
             # withholding line:
-            {'balance': 10.0,       'account_id': withholding_account.id},
+            {'balance': 10.0,       'account_id': self.tax_received_account.id},
             # base lines:
             {'balance': 1000.0,     'account_id': withholding_account.id},
             {'balance': -1000.0,    'account_id': withholding_account.id},
@@ -449,11 +506,11 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             withholding_sequence_id=self.withholding_sequence.id,
             invoice_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': base_tag_1.ids}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': tax_tag_1.ids}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id, 'tag_ids': tax_tag_1.ids}),
             ],
             refund_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': base_tag_1.ids}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': tax_tag_1.ids}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id, 'tag_ids': tax_tag_1.ids}),
             ],
         )
         withholding_tax_2 = self.percent_tax(
@@ -462,11 +519,11 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             withholding_sequence_id=self.withholding_sequence.id,
             invoice_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': base_tag_2.ids}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': tax_tag_2.ids}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id, 'tag_ids': tax_tag_2.ids}),
             ],
             refund_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': base_tag_2.ids}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': tax_tag_2.ids}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id, 'tag_ids': tax_tag_2.ids}),
             ],
         )
 
@@ -517,6 +574,14 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             amount=-3,
             is_withholding_tax_on_payment=True,
             withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
         )
         self.product_a.taxes_id = withholding_tax
 
@@ -566,13 +631,13 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             withholding_sequence_id=self.withholding_sequence.id,
             invoice_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 60.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 40.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 60.0, 'account_id': self.tax_received_account.id}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 40.0, 'account_id': self.tax_received_account.id}),
             ],
             refund_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 60.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 40.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 60.0, 'account_id': self.tax_received_account.id}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 40.0, 'account_id': self.tax_received_account.id}),
             ],
         )
         self.product_b.taxes_id = withholding_tax
@@ -615,6 +680,61 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             {'balance': -200.0},
         ])
 
+    def test_withholding_tax_with_no_account(self):
+        """
+        Ensure that when no account is set on the tax repartition line,
+        the invoice line account is used for the withholding tax line.
+        """
+        account_sale = self.env['account.account'].create({
+            'name': 'Product Sales',
+            'code': '4200000',
+            'account_type': 'income',
+            'reconcile': False,
+        })
+
+        withholding_tax = self.percent_tax(
+            amount=-1,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+        )
+        self.product_b.taxes_id = withholding_tax
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'account_id': account_sale.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(withholding_tax.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({
+                'withholding_outstanding_account_id': self.outstanding_account.id
+            })
+
+        payment = payment_register._create_payments()
+
+        outstanding = self.outstanding_account
+        receivable = self.company_data['default_account_receivable']
+        withholding_account = self.env.company.withholding_tax_base_account_id
+
+        self.assertRecordValues(payment.move_id.line_ids, [
+            # Liquidity line
+            {'balance': 990.0,     'account_id': outstanding.id},
+            # Receivable line
+            {'balance': -1000.0,   'account_id': receivable.id},
+            # Withholding tax line (uses invoice line account)
+            {'balance': 10.0,      'account_id': account_sale.id},
+            # Withholding base lines
+            {'balance': 1000.0,    'account_id': withholding_account.id},
+            {'balance': -1000.0,   'account_id': withholding_account.id},
+        ])
+
     def test_withholding_analytic_distribution(self):
         """ Ensure that the analytic distribution set on an invoice line is correctly applied to the final entry if the
         withholding tax is set to affect analytics.
@@ -624,6 +744,14 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             is_withholding_tax_on_payment=True,
             withholding_sequence_id=self.withholding_sequence.id,
             analytic=True,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
         )
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -686,6 +814,14 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             is_withholding_tax_on_payment=True,
             withholding_sequence_id=self.withholding_sequence.id,
             analytic=True,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
         )
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -792,7 +928,19 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
     def test_payment_synchronize_to_moves(self):
         """ Test that the payment and the journal entry behind it are synchronized as expected when the payment record is updated. """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(
+            amount=-1,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+        )
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -897,6 +1045,14 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             amount=-1,
             is_withholding_tax_on_payment=True,
             withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
         )
 
         invoice = self.env['account.move'].create({
@@ -926,7 +1082,19 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_cannot_register_negative_payment(self):
         """ Test that you cannot register a payment where the withholding amount is higher than the payment amount. """
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(
+            amount=-1,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+        )
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -952,9 +1120,17 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
     def test_placeholder_computation(self):
         """ Ensure that the placeholder computation is working as expected when changed in the form view.. """
         withholding_tax = self.percent_tax(
-            -1,
+            amount=-1,
             is_withholding_tax_on_payment=True,
             withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
         )
         withholding_tax_2 = self.percent_tax(
             -2,
@@ -1010,7 +1186,19 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_manual_adjustments(self):
         """ Ensure that when manually adjusting the base or tax amount of a line, the manually set amount is saved. """
-        withholding_tax = self.percent_tax(-2, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(
+            amount=-2,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.tax_received_account.id}),
+            ],
+        )
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
