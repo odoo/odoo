@@ -360,21 +360,23 @@ export class FontPlugin extends Plugin {
     get fontSizeItems() {
         const style = getHtmlStyle(this.document);
         const nameAlreadyUsed = new Set();
-        return fontSizeItems.flatMap((item) => {
-            const strValue = getCSSVariableValue(item.variableName, style);
-            if (!strValue) {
-                return [];
-            }
-            const remValue = parseFloat(strValue);
-            const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
-            const roundedValue = Math.round(pxValue);
-            if (nameAlreadyUsed.has(roundedValue)) {
-                return [];
-            }
-            nameAlreadyUsed.add(roundedValue);
+        return fontSizeItems
+            .flatMap((item) => {
+                const strValue = getCSSVariableValue(item.variableName, style);
+                if (!strValue) {
+                    return [];
+                }
+                const remValue = parseFloat(strValue);
+                const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+                const roundedValue = Math.round(pxValue);
+                if (nameAlreadyUsed.has(roundedValue)) {
+                    return [];
+                }
+                nameAlreadyUsed.add(roundedValue);
 
-            return [{ ...item, tagName: "span", name: roundedValue }];
-        });
+                return [{ ...item, tagName: "span", name: roundedValue }];
+            })
+            .sort((a, b) => a.name - b.name);
     }
 
     blockFormatIsAvailable(selection) {
