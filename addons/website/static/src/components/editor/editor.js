@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import {
     markup,
@@ -18,7 +17,6 @@ export class WebsiteEditorComponent extends Component {
      */
     setup() {
         this.websiteService = useService('website');
-        this.notificationService = useService('notification');
 
         this.websiteContext = useState(this.websiteService.context);
         this.state = useState({
@@ -101,10 +99,6 @@ export class WebsiteEditorComponent extends Component {
      * @returns {Promise<void>}
      */
     async reload({ snippetOptionSelector, url } = {}) {
-        this.notificationService.add(_t("Your modifications were saved to apply this option."), {
-            title: _t("Content saved."),
-            type: 'success'
-        });
         this.state.showWysiwyg = false;
         await this.props.reloadIframe(url);
         this.reloadSelector = snippetOptionSelector;
