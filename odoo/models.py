@@ -5247,7 +5247,7 @@ class BaseModel(metaclass=MetaModel):
                     self.env.cache.set(record, field, field.convert_to_cache(None, record))
             for fname, value in vals.items():
                 field = self._fields[fname]
-                if field.type in ('one2many', 'many2many'):
+                if field.type in ('one2many', 'many2many', 'html'):
                     cachetoclear.append((record, field))
                 else:
                     cache_value = field.convert_to_cache(value, record)
