@@ -239,13 +239,24 @@ export class Builder extends Component {
         // TODO: handle the urgent save and the fail of the save operation
         const snippetMenuEl = this.builder_sidebarRef.el;
         // Add a loading effect on the save button and disable the other actions
-        addButtonLoadingEffect(snippetMenuEl.querySelector("[data-action='save']"));
+        const removeLoadingEffect = addButtonLoadingEffect(
+            snippetMenuEl.querySelector("[data-action='save']")
+        );
         const actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
         for (const actionButtonEl of actionButtonEls) {
             actionButtonEl.disabled = true;
         }
-        await this.editor.shared.savePlugin.save();
-        this.props.closeEditor();
+        try {
+            await this.editor.shared.savePlugin.save();
+            this.props.closeEditor();
+        } catch (error) {
+            for (const actionButtonEl of actionButtonEls) {
+                actionButtonEl.removeAttribute("disabled");
+            }
+            removeLoadingEffect();
+            this.editor.shared.edit_interaction.restartInteractions();
+            throw error;
+        }
     }
 
     /**
