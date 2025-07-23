@@ -18,15 +18,18 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Click the 'No Desktop' visibility option.",
+            content: "Click the 'No Desktop' visibility option to hide the banner.",
             trigger:
                 `.options-container [data-label="Visibility"] button[data-action-param="no_desktop"]`,
             run: "click",
         },
         {
-            content: "Verify that the popup is visible and the column is invisible.",
-            trigger:
-                ".o_we_invisible_root_parent i.fa-eye, ul .o_we_invisible_entry i.fa-eye-slash",
+            content: "Check that the popup is visible.",
+            trigger: ".o_we_invisible_root_parent i.fa-eye",
+        },
+        {
+            content: "Check that the banner is invisible.",
+            trigger: "ul .o_we_invisible_entry i.fa-eye-slash",
         },
     ]
 );
