@@ -932,6 +932,8 @@ class AccountPayment(models.Model):
             return
 
         for pay in self:
+            if pay.move_id.state == 'posted':
+                continue
             liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
             # Make sure to preserve the write-off amount.
             # This allows to create a new payment with custom 'line_ids'.
