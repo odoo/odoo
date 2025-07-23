@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="web.DocModel">
-    <div t-if="!state.error" class="o-doc-model position-relative flex flex-basis flex-column p-3">
-        <h1 class="w-100 mb-1 mt-2" t-out="this.state.model?.name ?? ''"></h1>
+    <div t-if="!state.error" class="o-doc-model position-relative d-flex flex-nowrap flex-fill flex-column p-3">
+        <h2 class="w-100 mb-2 mt-2" t-out="this.state.model?.name ?? ''"></h2>
         <DocTable data="state.modelData"/>
 
-        <h2 class="mt-3 mb-1" id="fields">Fields</h2>
+        <h3 class="mt-3 mb-2" id="fields">Fields</h3>
         <DocLoadingIndicator
             isLoaded="this.state.model and this.state.model.fields != null and this.state.fields.data"
             class="'o-fade-in'"
@@ -14,7 +14,7 @@
             <DocTable data="this.state.fields.data" activeIndex="this.state.fields.activeIndex"/>
         </DocLoadingIndicator>
 
-        <h2 class="mt-3 mb-1" id="methods">Methods</h2>
+        <h3 class="mt-3 mb-2" id="methods">Methods</h3>
         <DocLoadingIndicator
             isLoaded="this.state.methods and this.state.methods.length > 0"
             class="'o-fade-in position-relative'"
@@ -31,16 +31,16 @@
         <div style="min-height: 30vh"/>
     </div>
 
-    <aside t-if="!ui.isSmall and !state.error" class="o-doc-model-aside overflow-auto position-sticky block flex-basis bg-default pt-2 pb-2 ps-3 pe-3 border-start">
+    <aside t-if="!ui.isSmall and !state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
         <div
-            class="flex w-100 cursor-pointer capitalize align-items-center"
+            class="d-flex flex-nowrap w-100 cursor-pointer text-capitalize align-items-center"
             t-on-click="() => this.state.showModulesFilter = !this.state.showModulesFilter"
             role="button"
         >
             <div class="icon-btn ps-1" role="button" t-att-class="{ o_collapsed: !state.showModulesFilter}">
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
-            <h2 class="ms-1">Modules</h2>
+            <h3 class="ms-2">Modules</h3>
         </div>
         <t t-if="this.state.showModulesFilter">
             <span>
@@ -55,15 +55,15 @@
                 t-foreach="state.modules"
                 t-as="module"
                 t-key="module"
-                class="flex align-items-center mb-1 cursor-pointer btn"
+                class="d-flex flex-nowrap align-items-center mb-2 cursor-pointer btn o-doc-module-checks"
                 t-on-click="() => this.setActiveModules([module], !this.state.activeModules[module])"
             >
                 <input class="me-1" type="checkbox" t-att-id="module" t-att-checked="state.activeModules[module]"/>
-                <label class="text-ellipsis" t-att-for="module" t-out="module" t-on-click.prevent=""></label>
+                <label class="text-truncate" t-att-for="module" t-out="module" t-on-click.prevent=""></label>
             </div>
         </t>
 
-        <h2>On This Page</h2>
+        <h3 class="mt-2">On This Page</h3>
         <a
             t-foreach="state.methods"
             t-as="method"
@@ -71,14 +71,14 @@
             t-out="method.name"
             t-if="isModuleActive(method.module)"
             t-att-href="'#' + method.name"
-            class="block w-100 text-ellipsis"
+            class="d-block w-100 text-truncate"
         >
         </a>
     </aside>
 
-    <div t-if="state.error" class="flex align-items-center justify-content-center w-100 h-100">
-        <div class="alert error mt-1 flex flex-column">
-            <h5 class="mb-2 flex align-items-center">
+    <div t-if="state.error" class="d-flex flex-nowrap align-items-center justify-content-center w-100 h-100">
+        <div class="alert error mt-1 d-flex flex-nowrap flex-column">
+            <h5 class="mb-2 d-flex flex-nowrap align-items-center">
                 <i class="pe-1 fa fa-exclamation-triangle" aria-hidden="true"></i>
                 <span>Error while loading model</span>
             </h5>

@@ -21,6 +21,12 @@ export class DocSidebar extends Component {
             },
             () => [this.containerRef.el]
         );
+
+        for (const addon of this.filteredAddons) {
+            if (!(addon.name in this.state.collapseAddons)) {
+                this.state.collapseAddons[addon.name] = false;
+            }
+        }
     }
 
     onSearchInput(event) {
@@ -28,8 +34,18 @@ export class DocSidebar extends Component {
         this.containerRef.el.scrollTop = 0;
     }
 
-    toggleAddon(addonName) {
-        this.state.collapseAddons[addonName] = !this.isCollapsed(addonName);
+    _toggleAllAddons(isCollapsed) {
+        const allAddons = this.filteredAddons;
+        allAddons.forEach((a) => this.state.collapseAddons[a.name] = !isCollapsed);
+    }
+
+    toggleAddon(event, addonName) {
+        const isCollapsed = this.isCollapsed(addonName);
+        if (event.altKey && event.ctrlKey) {
+            this._toggleAllAddons(isCollapsed);
+        } else {
+            this.state.collapseAddons[addonName] = !isCollapsed;
+        }
     }
 
     isCollapsed(addonName) {

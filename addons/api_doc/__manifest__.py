@@ -40,7 +40,18 @@ the methods over HTTP, with examples in various programming languages.
             'web/static/src/core/assets.js',
             'web/static/src/core/code_editor/**',
 
-            'api_doc/static/src/**/*',
+            # Bootstrap
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            ('include', 'web._assets_bootstrap'),
+
+            # Static files
+            'api_doc/static/src/**/*.xml',
+            'api_doc/static/src/**/*.js',
+            'api_doc/static/src/doc_client.css',
         ],
     },
     'bootstrap': True,
