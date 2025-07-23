@@ -373,6 +373,16 @@ export class Message extends Record {
         );
     }
 
+    /**
+     * This is the preferred way to display the name of the author of a message.
+     */
+    get authorName() {
+        if (this.author) {
+            return this.getPersonaName(this.author);
+        }
+        return this.email_from;
+    }
+
     get inlineBody() {
         if (this.isEmpty) {
             return _t("This message has been removed");
@@ -469,6 +479,8 @@ export class Message extends Record {
     }
 
     /**
+     * Provide fallback to displayName in the absence of a thread
+     *
      * @param {import("models").Persona} persona
      * @returns {string}
      */
