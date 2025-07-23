@@ -4585,7 +4585,7 @@ class BaseModel(metaclass=MetaModel):
 
             for fname, value in vals.items():
                 field = self._fields[fname]
-                if field.type not in ('one2many', 'many2many'):
+                if field.type not in ('one2many', 'many2many', 'html'):
                     cache_value = field.convert_to_cache(value, record)
                     field._update_cache(record, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
