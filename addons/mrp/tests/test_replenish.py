@@ -311,3 +311,44 @@ class TestMrpReplenish(TestMrpCommon):
         })
         self.product_4.bom_ids.with_context(orderpoint_id=orderpoint.id).action_set_bom_on_orderpoint()
         self.assertEqual(orderpoint.bom_id.id, self.product_4.bom_ids.id)
+
+    def test_effective_bom(self):
+        route = self.env['stock.route'].create({
+            'name': 'Manufacture',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Manufacture',
+                    'location_dest_id': self.stock_location.id,
+                    'action': 'manufacture',
+                    'picking_type_id': self.picking_type_in.id,
+                }),
+            ],
+        })
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.productA.id,
+            'product_min_qty': 2,
+            'product_max_qty': 4,
+        })
+        # The Manufacture route is not set on the product -> no effective BoM
+        self.assertFalse(orderpoint.effective_bom_id)
+
+        self.productA.write({
+            'route_ids': [(4, route.id)],
+        })
+        self.env.invalidate_all()
+        # The route is set, but there is no BoM -> no effective BoM
+        self.assertFalse(orderpoint.effective_bom_id)
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
+            'product_qty': 1,
+            'code': 'Ref 1234',
+        })
+
+        self.env.invalidate_all()
+        # The route is set and there is a BoM -> effective BoM is available
+        self.assertEqual(orderpoint.effective_bom_id, bom)
+        self.assertEqual(orderpoint.bom_id_placeholder, 'Ref 1234: Product A')
+        # The actual BoM remains empty
+        self.assertFalse(orderpoint.bom_id)

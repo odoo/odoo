@@ -47,30 +47,12 @@ class StockRule(models.Model):
         procurements_by_po_domain = defaultdict(list)
         errors = []
         for procurement, rule in procurements:
-
-            # Get the schedule date in order to find a valid seller
-            procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
-
-            supplier = False
             company_id = rule.company_id or procurement.company_id
-            if procurement.values.get('supplierinfo_id'):
-                supplier = procurement.values['supplierinfo_id']
-            elif procurement.values.get('orderpoint_id') and procurement.values['orderpoint_id'].supplier_id:
-                supplier = procurement.values['orderpoint_id'].supplier_id
-            else:
-                supplier = procurement.product_id.with_company(company_id.id)._select_seller(
-                    partner_id=self._get_partner_id(procurement.values, rule),
-                    quantity=procurement.product_qty,
-                    date=max(procurement_date_planned.date(), fields.Date.today()),
-                    uom_id=procurement.product_uom,
-                    params={'force_uom': procurement.values.get('force_uom')},
-                )
 
-            # Fall back on a supplier for which no price may be defined. Not ideal, but better than
-            # blocking the user.
-            supplier = supplier or procurement.product_id._prepare_sellers(False).filtered(
-                lambda s: not s.company_id or s.company_id == company_id
-            )[:1]
+            supplier = rule._get_matching_supplier(
+                procurement.product_id, procurement.product_qty, procurement.product_uom,
+                company_id, procurement.values
+            )
 
             if not supplier and self.env.context.get('from_orderpoint'):
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
@@ -162,6 +144,35 @@ class StockRule(models.Model):
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
                         po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
+
+    def _get_matching_supplier(self, product_id, product_qty, product_uom, company_id, values):
+        supplier = False
+        # Get the schedule date in order to find a valid seller
+        if 'date_planned' in values:
+            date = max(fields.Datetime.from_string(values['date_planned']).date(), fields.Date.today())
+        else:
+            date = None
+
+        if values.get('supplierinfo_id'):
+            supplier = values['supplierinfo_id']
+        elif values.get('orderpoint_id') and values['orderpoint_id'].supplier_id:
+            supplier = values['orderpoint_id'].supplier_id
+        else:
+            supplier = product_id.with_company(company_id.id)._select_seller(
+                partner_id=self._get_partner_id(values, self),
+                quantity=product_qty,
+                date=date,
+                uom_id=product_uom,
+                params={'force_uom': values.get('force_uom')},
+            )
+
+        # Fall back on a supplier for which no price may be defined. Not ideal, but better than
+        # blocking the user.
+        supplier = supplier or product_id._prepare_sellers(False).filtered(
+            lambda s: not s.company_id or s.company_id == company_id
+        )[:1]
+
+        return supplier
 
     def _post_vendor_notification(self, records_to_notify, users_to_notify, product):
         notification_msg = Markup(" ").join(Markup("%s") % user._get_html_link(f'@{user.name}') for user in users_to_notify)

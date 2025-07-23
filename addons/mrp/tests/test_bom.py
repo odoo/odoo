@@ -1297,7 +1297,8 @@ class TestBoM(TestMrpCommon):
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
         orderpoint.replenishment_uom_id = self.uom_kg
-        self.assertEqual(orderpoint.route_id.id, self.route_manufacture.id)
+        # No route is set by default
+        self.assertEqual(orderpoint.route_id.id, False)
         self.assertEqual(orderpoint.qty_to_order, 3000.0)
 
     def test_bom_generated_from_mo(self):
