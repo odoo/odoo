@@ -19,8 +19,10 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_default_sending_method(self, move) -> set:
-        """ By default, we use the sending method set on the partner or email. """
-        return move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'
+        """ By default, use the sending method set on the partner's parent contact, partner, or email. """
+        partner = move.partner_id.with_company(move.company_id)
+        partner_invoice_sending_method = partner.parent_id.invoice_sending_method or partner.invoice_sending_method
+        return partner_invoice_sending_method or 'email'
 
     @api.model
     def _get_all_extra_edis(self) -> dict:
