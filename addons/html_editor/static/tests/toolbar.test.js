@@ -346,9 +346,9 @@ test("toolbar works: can select font size", async () => {
     expect(inputEl).toHaveValue(getFontSizeFromVar("body-font-size").toString());
 
     await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
-    const sizes = new Set(
-        fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
-    );
+    const sizes = [...new Set(fontSizeItems.map((item) => getFontSizeFromVar(item.variableName)))]
+        .sort((a, b) => a - b)
+        .map(String);
     expect(queryAllTexts(".o_font_size_selector_menu .dropdown-item")).toEqual([...sizes]);
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
@@ -377,9 +377,9 @@ test("toolbar works: change font size correctly when closest block element has a
     expect(inputEl).toHaveValue(getFontSizeFromVar("h3-font-size").toString());
 
     await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
-    const sizes = new Set(
-        fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
-    );
+    const sizes = [...new Set(fontSizeItems.map((item) => getFontSizeFromVar(item.variableName)))]
+        .sort((a, b) => a - b)
+        .map(String);
     expect(queryAllTexts(".o_font_size_selector_menu .dropdown-item")).toEqual([...sizes]);
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
