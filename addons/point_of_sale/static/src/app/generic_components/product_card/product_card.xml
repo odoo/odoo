@@ -16,7 +16,7 @@
             </div>
             <div class="product-content d-flex flex-row px-2 justify-content-between rounded-bottom rounded-3 flex-shrink-1" t-att-class="{'h-100' : !props.imageUrl}">
                 <div class="overflow-hidden lh-sm product-name my-2"
-                    t-att-class="{'no-image d-flex justify-content-center align-items-center text-center fs-4': !props.imageUrl}"
+                    t-att-class="{'no-image d-flex justify-content-center align-items-center text-center fs-4': !props.imageUrl, 'hasImage': props.imageUrl}"
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
                 <h1 t-if="props.productCartQty"
