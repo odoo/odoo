@@ -1,0 +1,17 @@
+.o_field_sale_section_note_list {
+    .o_section_row_level_1 {
+        --table-bg: var(--300);
+    }
+
+    .o_section_row_level_2 {
+        --table-bg: var(--200);
+    }
+}
+
+.o_list_table {
+    .o_selected_row.o_section_row_level_2, .o_selected_row.o_section_row_level_1 {
+        th:focus-within, td:focus-within {
+            background-color: var(--table-bg);
+        }
+    }
+}

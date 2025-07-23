@@ -28,9 +28,9 @@ export const ProductNameAndDescriptionListRendererMixin = {
                 this.props.list.records.forEach((record) => (record.columnIsProductAndLabel = false));
             }
             activeColumns = activeColumns.filter((col) => col.name !== this.descriptionColumn);
-            this.titleField = productCol.name;
+            this.props.sectionContentField = this.props.noteContentField = productCol.name;
         } else {
-            this.titleField = "name";
+            this.props.sectionContentField = this.props.noteContentField = "name";
         }
 
         return activeColumns;

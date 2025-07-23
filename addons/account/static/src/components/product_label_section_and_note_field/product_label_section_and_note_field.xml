@@ -16,7 +16,7 @@
                     t-key="props.readonly"
                 />
             </t>
-            <t t-elif="isSection()">
+            <t t-elif="isSection() || isSubsection()">
                 <input
                     type="text"
                     class="o_input text-wrap border-0 fst-italic"

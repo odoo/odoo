@@ -496,7 +496,8 @@
                     <page string="Order Lines" name="order_lines">
                         <field
                             name="order_line"
-                            widget="sol_o2m"
+                            widget="sale_section_note_list"
+                            options="{'display_type_field':'display_type', 'section_content_field':'name', 'note_content_field':'name'}"
                             mode="list,kanban"
                             readonly="state == 'cancel' or locked">
                             <form>
@@ -616,7 +617,11 @@
                                 <field name="currency_id" column_invisible="True"/>
 
                                 <!-- Standard fields -->
-                                <field name="sequence" widget="handle"/>
+                                <field
+                                    name="sequence"
+                                    widget="handle"
+                                    invisible="product_type == 'combo' or combo_item_id"
+                                />
                                 <field
                                     name="product_id"
                                     string="Product Variant"
