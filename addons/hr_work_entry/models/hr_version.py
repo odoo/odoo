@@ -449,11 +449,11 @@ class HrVersion(models.Model):
         dependent_fields = self._get_fields_that_recompute_we()
         salary_simulation = self.env.context.get('salary_simulation')
         if not salary_simulation and any(key in dependent_fields for key in vals):
-            for version in self:
-                date_from = max(version.date_start, version.date_generated_from.date())
-                date_to = min(version.date_end or date.max, version.date_generated_to.date())
+            for version_sudo in self.sudo():
+                date_from = max(version_sudo.date_start, version_sudo.date_generated_from.date())
+                date_to = min(version_sudo.date_end or date.max, version_sudo.date_generated_to.date())
                 if date_from != date_to and self.employee_id:
-                    version._recompute_work_entries(date_from, date_to)
+                    version_sudo._recompute_work_entries(date_from, date_to)
         return result
 
     def unlink(self):
