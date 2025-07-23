@@ -1475,29 +1475,26 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_promo_with_different_taxes(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.tax01 = self.env["account.tax"].create({
+        tax01 = self.env["account.tax"].create({
             "name": "C01 Tax",
             "amount": "10.00",
         })
-        self.product_a = self.env["product.product"].create(
+        self.env["product.product"].create([
             {
                 "name": "Product A",
                 "is_storable": True,
                 "list_price": 100,
                 "available_in_pos": True,
-                "taxes_id": [(6, 0, self.tax01.ids)],
-            }
-        )
-        self.product_b = self.env["product.product"].create(
-            {
+                "taxes_id": [(6, 0, tax01.ids)],
+            }, {
                 "name": "Product B",
                 "is_storable": True,
                 "list_price": 100,
                 "available_in_pos": True,
                 "taxes_id": False,
             }
-        )
-        self.free_product = self.env['loyalty.program'].create({
+        ])
+        self.env['loyalty.program'].create({
             'name': 'Free Product A',
             'program_type': 'loyalty',
             'trigger': 'auto',

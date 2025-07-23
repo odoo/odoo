@@ -51,6 +51,15 @@
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-editable-in-backend': edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page'),
         })"/>
+        <!--
+        TODO Review in master (this is a stable fix for new databases).
+        See REVIEW_CAN_PUBLISH_UNSUDO.
+        -->
+        <t t-if="html_data and html_data.get('data-can-publish') == True">
+            <t t-set="nothing" t-value="html_data.update({
+                'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.sudo(flag=False).can_publish,
+            })"/>
+        </t>
         <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
             'data-editable': '1' if editable else None,
             'data-translatable': '1' if translatable else None,
