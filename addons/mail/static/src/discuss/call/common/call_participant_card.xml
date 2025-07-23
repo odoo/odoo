@@ -4,13 +4,13 @@
     <t t-name="discuss.CallParticipantCard">
         <div class="o-discuss-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100"
             t-att-class="{
-                'o-isTalking': !props.minimized and isTalking,
+                'o-isTalking': !props.minimized and isTalking and !env.discussCall.collapsed,
                 'o-isInvitation opacity-50': !rtcSession,
                 'o-inset': props.inset,
                 'pe-none': rtc.state.screenTrack and !rtc.state.screenTrack.enabled,
                 'o-small': props.inset and (ui.isSmall or props.minimized),
-                'o-active': isActiveRtcSession and !props.inset and props.compact,
-                'p-1 rounded-1': !isActiveRtcSession,
+                'o-active': isActiveRtcSession and !props.inset and props.compact and !env.discussCall.collapsed,
+                'p-1 rounded-1': !isActiveRtcSession and !env.discussCall.collapsed,
             }"
             t-att-title="name"
             t-att-aria-label="name"
@@ -28,18 +28,20 @@
                     </button>
                 </div>
             </t>
-            <CallParticipantVideo t-elif="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
-            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized, 'o-isRemoteVideo': isRemoteVideo }" draggable="false">
-                <img t-if="!showRemoteWarning" alt="Avatar" class="h-100 rounded-circle border-5 object-fit-cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false" t-att-class="{
-                    'o-isTalking': isTalking,
-                    'o-isInvitation': !rtcSession,
-                }"/>
+            <CallParticipantVideo t-if="hasVideo and !env.discussCall.collapsed" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
+            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized or env.discussCall.collapsed, 'o-isRemoteVideo': isRemoteVideo }" draggable="false">
+                <img t-if="!showRemoteWarning" alt="Avatar" class="h-100 rounded-circle border-5 object-fit-cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false"
+                        t-att-class="{
+                        'o-isTalking': isTalking and !env.discussCall.collapsed,
+                        'o-isTalking-collapsed': isTalking and env.discussCall.collapsed,
+                        'o-isInvitation': !rtcSession,
+                        }"/>
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->
-                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1" t-att-class="{ 'o-proportional-container w-50': isSmall }">
-                    <span t-if="!props.minimized and !props.inset" class="rounded-1 text-truncate opacity-75 w-100 o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1': isSmall, 'p-0': !isSmall }" t-esc="name"/>
-                    <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-proportional-text o-minimized rounded text-bg-danger d-flex align-items-center fw-bolder p-1" title="live" aria-label="live">
+                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 d-flex overflow-hidden rounded-1" t-att-class="{ 'end-0': env.discussCall.collapsed, 'start-0': !env.discussCall.collapsed, 'o-proportional-container w-50': isSmall }">
+                    <span t-if="!props.minimized and !env.discussCall.collapsed and !props.inset" class="rounded-1 text-truncate opacity-75 w-100 o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1': isSmall, 'p-0': !isSmall }" t-esc="name"/>
+                    <small t-if="rtcSession.is_screen_sharing_on and (env.discussCall.collapsed or props.minimized) and !isOfActiveCall" class="user-select-none o-proportional-text o-minimized rounded text-bg-danger d-flex align-items-center fw-bolder p-1" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>

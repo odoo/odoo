@@ -6,9 +6,13 @@
             <div class="o-discuss-CallActionList-bar d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
                 <t t-if="isOfActiveCall and rtc.selfSession">
                     <t t-foreach="callActions.actions.slice(0, isMobileOS ? 3 : 4)" t-as="action" t-key="action_index">
-                        <CallActionButton action="action" isSmall="isSmall" isActive="action.isActive"/>
+                        <CallActionButton
+                            t-if="!env.discussCall.collapsed or !env.inChatWindow or (['Mute', 'Unmute', 'Deafen', 'Undeafen'].includes(action.name))" action="action"
+                            isSmall="isSmall"
+                            isActive="action.isActive"
+                        />
                     </t>
-                    <CallPopover position="'top-end'" clickToClose="true" contentClass="'o-discuss-CallActionList-dropdown p-1'">
+                    <CallPopover t-if="!(env.inChatWindow and env.discussCall.collapsed)" position="'top-end'" clickToClose="true" contentClass="'o-discuss-CallActionList-dropdown p-1'">
                         <button class="btn smaller d-flex m-1 border rounded-circle opacity-100 opacity-75-hover align-items-center p-0" t-att-title="MORE" t-ref="more" t-on-mouseenter="onMouseenterMore" t-on-mouseleave="onMouseleaveMore" t-on-click="onClickMore" t-att-class="{
                             'o-discuss-CallActionList-pulse': isPromotingFullscreen,
                             'shadow': isPromotingFullscreen
