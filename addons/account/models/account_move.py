@@ -7016,3 +7016,10 @@ class AccountMove(models.Model):
                 }]
             case _:
                 return []
+
+    def _get_document_attachments_to_sync(self):
+        """
+        Return the set of attachments of the move that should be synchronized
+        with the Documents app.
+        """
+        return self.message_main_attachment_id
