@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import urllib
 import uuid
 from pprint import pformat
+from urllib.parse import urlencode
 
 import requests
 
@@ -979,9 +980,13 @@ class PaymentProvider(models.Model):
         self.ensure_one()
         return set()
 
-    def _get_oauth_params(self, return_url):
-        return {
+
+    def _get_oauth_url(self, proxy_url, return_endpoint):
+
+        return_url = f'{self.get_base_url()}{return_endpoint}'
+        params ={
             'return_url': return_url,
             'provider_id': self.id,
             'csrf_token': request.csrf_token(),
         }
+        return f'{proxy_url}/authorize?{urlencode(params)}'
