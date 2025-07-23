@@ -115,7 +115,7 @@ const dragAndDropHookParams = {
     },
     onWillStartDrag: ({ ctx }) => {
         ctx.current.container = ctx.getScrollingElement();
-        ctx.current.hasExternalScroll = ctx.hasExternalScroll();
+        ctx.current.hasExternalScroll = ctx.hasExternalScroll?.();
         ctx.current.helperOffset = {
             x: 0,
             y: 0,
