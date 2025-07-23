@@ -45,12 +45,12 @@ registerWebsitePreviewTour("snippet_visibility_option", {
         run: "click"
     },
     {
-        content: "Verify that both the banner and column are marked as invisible.",
+        content: "Check that only the banner is marked as invisible and the column entry does not appear in the panel.",
         trigger: ".o_we_invisible_root_parent",
         run: () => {
             const isBlockInvisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            const isColumnInvisible = document.querySelector("li li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            if (!isBlockInvisible || !isColumnInvisible) {
+            const isColumnEntryDisplayed = document.querySelector("li li .o_we_invisible_entry");
+            if (!isBlockInvisible || !!isColumnEntryDisplayed) {
                 console.error("Visibility issue detected with the elements.");
             }
         }
@@ -58,59 +58,67 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
     {
-        content: "Click on the banner snippet in the list of invisible elements.",
-        trigger: "li > .o_we_invisible_entry",
-        run: "click"
-    },
-    {
-        content: "Verify that the popup is visible and the column is still invisible.",
-        trigger: "li > .o_we_invisible_entry",
-        run: () => {
-            const isPopupVisible = document.querySelector(".o_we_invisible_root_parent i").classList.contains("fa-eye");
-            const isColumnInvisible = document.querySelector("li li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            if (!isPopupVisible || !isColumnInvisible) {
-                console.error("Visibility issue detected with the elements.");
-            }
-        }
-    },
-    ...clickOnSave(),
-    ...clickOnEditAndWaitEditMode(),
-    {
-        content: "Click on the column snippet in the list of invisible elements.",
-        trigger: "li li .o_we_invisible_entry",
-        run: "click"
-    },
-    {
-        content: "Verify that both the popup and the banner are now visible.",
+        content: "Check that only the popup entry is displayed and that it is invisible.",
         trigger: ".o_we_invisible_root_parent",
         run: () => {
-            const isPopupVisible = document.querySelector(".o_we_invisible_root_parent i").classList.contains("fa-eye");
-            const isBlockVisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye");
-            if (!isPopupVisible || !isBlockVisible) {
+            const isSubentryDisplayed = document.querySelector("li .o_we_invisible_entry");
+            const isPopupInvisible = document.querySelector(".o_we_invisible_root_parent > i").classList.contains("fa-eye-slash");
+            if (!!isSubentryDisplayed || !isPopupInvisible) {
                 console.error("Visibility issue detected with the elements.");
             }
         }
     },
     {
-        content: "Click on the popup snippet to hide its descendant elements.",
+        content: "Click on the popup entry to show it.",
         trigger: ".o_we_invisible_root_parent",
+        run: "click"
+    },
+    {
+        content: "Click on the banner entry to show it.",
+        trigger: "li > .o_we_invisible_entry",
+        run: "click"
+    },
+    {
+        content: "Check that the popup and banner are visible and the column is still invisible.",
+        trigger: "li > .o_we_invisible_entry",
         run: () => {
-            setTimeout(() => {
-                document.querySelector(".o_we_invisible_root_parent").click();
-            }, 1000);
+            const isPopupVisible = document.querySelector(".o_we_invisible_root_parent i").classList.contains("fa-eye");
+            const isBannerVisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye");
+            const isColumnInvisible = document.querySelector("li li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
+            if (!isPopupVisible || !isBannerVisible || !isColumnInvisible) {
+                console.error("Visibility issue detected with the elements.");
+            }
         }
     },
     {
-        content: "Make sure the parent snippet is invisible.",
-        trigger: ".o_we_invisible_root_parent i.fa-eye-slash",
+        content: "Click on the popup entry to hide it.",
+        trigger: ".o_we_invisible_root_parent",
+        run: "click",
     },
     {
-        content: "Verify that both the banner and column snippets are marked as invisible.",
+        content: "Check that only the popup entry is displayed and that it is invisible.",
         trigger: ".o_we_invisible_root_parent",
         run: () => {
-            const isBlockInvisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
+            const isSubentryDisplayed = document.querySelector("li .o_we_invisible_entry");
+            const isPopupInvisible = document.querySelector(".o_we_invisible_root_parent > i").classList.contains("fa-eye-slash");
+            if (!!isSubentryDisplayed || !isPopupInvisible) {
+                console.error("Visibility issue detected with the elements.");
+            }
+        }
+    },
+    {
+        content: "Click on the popup entry to show it.",
+        trigger: ".o_we_invisible_root_parent",
+        run: "click",
+    },
+    {
+        content: "Check that the popup and banner are visible and the column is still invisible.",
+        trigger: "li > .o_we_invisible_entry",
+        run: () => {
+            const isPopupVisible = document.querySelector(".o_we_invisible_root_parent i").classList.contains("fa-eye");
+            const isBannerVisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye");
             const isColumnInvisible = document.querySelector("li li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            if (!isColumnInvisible || !isBlockInvisible) {
+            if (!isPopupVisible || !isBannerVisible || !isColumnInvisible) {
                 console.error("Visibility issue detected with the elements.");
             }
         }
