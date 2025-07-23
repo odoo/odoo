@@ -1,7 +1,7 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, Deferred, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
@@ -41,6 +41,32 @@ test("nothing to save", async () => {
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").not.toHaveClass("o_editable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
+});
+
+test("failure to save does not block the builder", async () => {
+    expect.errors(1);
+    let deferred = new Deferred();
+    onRpc("ir.ui.view", "save", async () => await deferred);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    await modifyText(getEditor(), getEditableContent());
+
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(".o-snippets-top-actions button:contains(Save)").toHaveClass("o_btn_loading");
+    expect(".o-snippets-top-actions button:contains(Discard)").toHaveAttribute("disabled");
+    deferred.reject(new Error("Message"));
+    await animationFrame();
+    expect.verifyErrors(["Message"]);
+    await animationFrame();
+    expect(".o-snippets-top-actions button:contains(Save)").not.toHaveClass("o_btn_loading");
+    expect(".o-snippets-top-actions button:contains(Discard)").not.toHaveAttribute("disabled");
+
+    deferred = new Deferred();
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(".o-snippets-top-actions button:contains(Save)").toHaveClass("o_btn_loading");
+    expect(".o-snippets-top-actions button:contains(Discard)").toHaveAttribute("disabled");
+    deferred.resolve(true);
+    await animationFrame();
+    expect(".o-snippets-top-actions").toHaveCount(0);
 });
 
 test("discard modified elements", async () => {
