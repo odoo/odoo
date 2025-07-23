@@ -368,6 +368,9 @@ export class Message extends Record {
         );
     }
 
+    /**
+     * This is the preferred way to display the name of the author of a message.
+     */
     get authorName() {
         if (this.author) {
             return this.getPersonaName(this.author);
@@ -584,6 +587,8 @@ export class Message extends Record {
     }
 
     /**
+     * Provide fallback to displayName in the absence of a thread
+     *
      * @param {import("models").Persona} persona
      * @returns {string}
      */

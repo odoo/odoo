@@ -9,9 +9,9 @@
             }">
                 <span class="d-inline-flex align-items-center text-muted opacity-75" t-att-class="{ 'cursor-pointer opacity-100-hover': props.onClick }" t-on-click="() => this.props.onClick?.()">
                     <t t-if="!props.message.parent_id.isEmpty">
-                        <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.author?.name ?? props.message.parent_id.email_from" alt="Avatar"/>
+                        <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.authorName" alt="Avatar"/>
                         <span class="o-mail-MessageInReply-content overflow-hidden smaller">
-                            <b class="o-mail-MessageInReply-author"><t t-out="props.message.parent_id.author?.name ?? props.message.parent_id.email_from"/></b>:
+                            <b class="o-mail-MessageInReply-author"><t t-out="props.message.parent_id.authorName"/></b>:
                             <span class="o-mail-MessageInReply-message ms-1 text-break">
                                 <t t-if="!props.message.parent_id.isBodyEmpty">
                                     <t t-out="props.message.parent_id.richBody"/>
