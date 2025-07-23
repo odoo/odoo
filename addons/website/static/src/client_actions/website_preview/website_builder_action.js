@@ -491,10 +491,6 @@ export class WebsiteBuilderClientAction extends Component {
         await this.reloadIframe(this.state.isEditing, param.url);
         // trigger an new instance of the builder menu
         this.state.key++;
-
-        this.notification.add(_t("Content saved"), {
-            type: "success",
-        });
     }
 
     async reloadIframeAndCloseEditor() {
