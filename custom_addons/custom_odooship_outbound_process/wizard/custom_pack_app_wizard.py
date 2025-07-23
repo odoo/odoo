@@ -728,6 +728,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "shipment_id": line.picking_id.sale_id.shipmentid or "",
                 "items": line.picking_id.sale_id.items or "",
                 "international":international_flag,
+                "product_category":line.product_id.categ_id.name or "other",
             })
 
         payload = {
@@ -827,6 +828,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "shipment_id": line.picking_id.sale_id.shipmentid or "",
                 "items":line.picking_id.sale_id.items or "",
                 "international": international_flag,
+                "product_category": line.product_id.categ_id.name or "other",
             })
 
         payload = {
