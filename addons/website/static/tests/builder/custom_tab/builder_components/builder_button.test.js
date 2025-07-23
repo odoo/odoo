@@ -301,6 +301,50 @@ test("clean should only be called on the currently selected item", async () => {
         "customAction2 apply",
     ]);
 });
+test("clean should be async", async () => {
+    function makeAction(n) {
+        const { promise, resolve } = Promise.withResolvers();
+        const action = class extends BuilderAction {
+            static id = `customAction${n}`;
+            async clean() {
+                expect.step(`customAction${n} clean before promise`);
+                await promise;
+                expect.step(`customAction${n} clean after promise`);
+            }
+            apply() {
+                expect.step(`customAction${n} apply`);
+            }
+        };
+        return { action, resolve };
+    }
+    const action1 = makeAction(1);
+    addActionOption({
+        customAction1: action1.action,
+        customAction2: makeAction(2).action,
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButtonGroup preview="false">
+                <BuilderButton action="'customAction1'" classAction="'c1'"/>
+                <BuilderButton action="'customAction2'" />
+            </BuilderButtonGroup>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await click("[data-action-id='customAction1']");
+    await animationFrame();
+    await click("[data-action-id='customAction2']");
+    await animationFrame();
+    action1.resolve();
+    await animationFrame();
+    expect.verifySteps([
+        "customAction1 apply",
+        "customAction1 clean before promise",
+        "customAction1 clean after promise",
+        "customAction2 apply",
+    ]);
+});
 test("add the active class if the condition is met", async () => {
     addOption({
         selector: ".test-options-target",
