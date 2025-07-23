@@ -9,30 +9,6 @@ from odoo.tools.translate import _
 
 
 class WebsitePartnerPage(http.Controller):
-
-    # Do not use semantic controller due to SUPERUSER_ID
-    @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
-    def partners_detail(self, partner_id, **post):
-        current_slug = partner_id
-        _, partner_id = request.env['ir.http']._unslug(partner_id)
-        if partner_id:
-            partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
-            is_website_restricted_editor = request.env.user.has_group('website.group_website_restricted_editor')
-            if partner_sudo.exists() and (partner_sudo.website_published or is_website_restricted_editor):
-                partner_slug = request.env['ir.http']._slug(partner_sudo)
-                if partner_slug != current_slug:
-                    return request.redirect('/partners/%s' % partner_slug)
-                values = {
-                    # See REVIEW_CAN_PUBLISH_UNSUDO
-                    'main_object': partner_sudo.with_context(can_publish_unsudo_main_object=True),
-                    'partner': partner_sudo,
-                    'edit_page': False
-                }
-                return request.render("website_partner.partner_page", values)
-        raise request.not_found()
-
-
-class WebsitePartnersPage(WebsitePartnerPage):
     _references_per_page = 40
 
     def sitemap_partners(env, rule, qs):
@@ -62,9 +38,11 @@ class WebsitePartnersPage(WebsitePartnerPage):
 
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('website_published', '=', True)]
+        base_partner_domain = [('website_published', '=', True)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
+        if False:
+            base_partner_domain += [('is_company', '=', True)]
 
         # Infer Country
         if not country and not country_all:
@@ -143,8 +121,6 @@ class WebsitePartnersPage(WebsitePartnerPage):
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
         }
-        for p in values['partners']:
-            print(p.name)
         return values
 
     @http.route(['/partners'], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True)
@@ -157,8 +133,8 @@ class WebsitePartnersPage(WebsitePartnerPage):
         )
         return request.render("website_partner.index", values, status=values.get('partners') and 200 or 404)
 
-    # Do not use semantic controller due to sudo()
-    @http.route()
+    # Do not use semantic controller due to SUPERUSER_ID
+    @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
         current_slug = partner_id
         _, partner_id = request.env['ir.http']._unslug(partner_id)
@@ -167,16 +143,18 @@ class WebsitePartnersPage(WebsitePartnerPage):
         if country_id:
             current_country = request.env['res.country'].browse(int(country_id)).exists()
         if partner_id:
-            partner = request.env['res.partner'].sudo().browse(partner_id)
+            partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
             is_website_restricted_editor = request.env.user.has_group('website.group_website_restricted_editor')
-            if partner.exists() and (partner.website_published or is_website_restricted_editor):
-                partner_slug = request.env['ir.http']._slug(partner)
+            if partner_sudo.exists() and (partner_sudo.website_published or is_website_restricted_editor):
+                partner_slug = request.env['ir.http']._slug(partner_sudo)
                 if partner_slug != current_slug:
                     return request.redirect('/partners/%s' % partner_slug)
                 values = {
-                    'main_object': partner,
-                    'partner': partner,
-                    'current_country': current_country
+                    # See REVIEW_CAN_PUBLISH_UNSUDO
+                    'main_object': partner_sudo.with_context(can_publish_unsudo_main_object=True),
+                    'partner': partner_sudo,
+                    'edit_page': False,
+                    'current_country': current_country,
                 }
-                return request.render("website_partner.partner", values)
+                return request.render("website_partner.partner_page", values)
         raise request.not_found()
