@@ -52,10 +52,7 @@ export class ResPartner extends MailResPartner {
             company_type: "person",
             fiscal_position_id: false,
             credit_limit: 0.0,
-            total_due: 0.0,
             use_partner_credit_limit: false,
-            pos_orders_amount_due: 0.0,
-            invoices_amount_due: 0.0,
         },
     ];
 }
