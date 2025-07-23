@@ -47,6 +47,32 @@ test("nothing to save", async () => {
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 
+test("failure to save does not block the builder", async () => {
+    expect.errors(1);
+    let deferred = new Deferred();
+    onRpc("ir.ui.view", "save", async () => await deferred);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    await modifyText(getEditor(), getEditableContent());
+
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(".o-snippets-top-actions button:contains(Save)").toHaveClass("o_btn_loading");
+    expect(".o-snippets-top-actions button:contains(Discard)").toHaveAttribute("disabled");
+    deferred.reject(new Error("Message"));
+    await animationFrame();
+    expect.verifyErrors(["Message"]);
+    await animationFrame();
+    expect(".o-snippets-top-actions button:contains(Save)").not.toHaveClass("o_btn_loading");
+    expect(".o-snippets-top-actions button:contains(Discard)").not.toHaveAttribute("disabled");
+
+    deferred = new Deferred();
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(".o-snippets-top-actions button:contains(Save)").toHaveClass("o_btn_loading");
+    expect(".o-snippets-top-actions button:contains(Discard)").toHaveAttribute("disabled");
+    deferred.resolve(true);
+    await animationFrame();
+    expect(".o-snippets-top-actions").toHaveCount(0);
+});
+
 test("discard modified elements", async () => {
     setupSaveAndReloadIframe();
     const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
