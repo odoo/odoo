@@ -125,6 +125,7 @@ export class BuilderColorPicker extends Component {
         this.colorButton = useRef("colorButton");
         this.state = state;
         this.state.defaultTab = this.props.selectedTab || "solid"; // TODO: select the correct tab based on the color
+        // here
         useColorPicker(
             "colorButton",
             {

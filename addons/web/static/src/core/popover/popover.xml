@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Popover">
+        <!-- here start -->
         <div
             t-ref="ref"
             t-att-class="defaultClassObj"
@@ -10,6 +11,7 @@
             t-on-pointerenter="() => props.holdOnHover and position.lock()"
             t-on-pointerleave="() => props.holdOnHover and position.unlock()"
         >
+        <!-- here end -->
             <t
                 t-component="props.component"
                 t-props="props.componentProps"

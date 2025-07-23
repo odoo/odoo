@@ -121,6 +121,7 @@ export class Popover extends Component {
     };
     static animationTime = 200;
 
+    // here
     setup() {
         if (this.props.setActiveElement) {
             useActiveElement("ref");
@@ -145,13 +146,23 @@ export class Popover extends Component {
         } else {
             this.props.close();
         }
+        // onRendered(() => {
+        //     // console.log(this);
+        //     // debugger;
+        // });
+        // onMounted(() => {
+        //     // debugger;
+        // });
+        // debugger;
     }
 
     get defaultClassObj() {
+        // debugger;
         return mergeClasses("o_popover popover mw-100 bs-popover-auto", this.props.class);
     }
 
     get positioningOptions() {
+        // debugger;
         return {
             margin: this.props.arrow ? 8 : 0,
             onPositioned: (el, solution) => {
@@ -163,6 +174,7 @@ export class Popover extends Component {
     }
 
     animate(direction) {
+        // debugger;
         const transform = {
             top: ["translateY(-5%)", "translateY(0)"],
             right: ["translateX(5%)", "translateX(0)"],
@@ -176,6 +188,7 @@ export class Popover extends Component {
     }
 
     isInside(target) {
+        // debugger;
         return (
             this.props.target?.contains(target) ||
             this.popoverRef?.el?.contains(target) ||
@@ -184,12 +197,14 @@ export class Popover extends Component {
     }
 
     onClickAway(target) {
+        // debugger;
         if (this.props.closeOnClickAway(target) && !this.isInside(target)) {
             this.props.close();
         }
     }
 
     onPositioned({ direction, variant, variantOffset }) {
+        // debugger;
         if (this.props.arrow) {
             this.updateArrow(direction, variant, variantOffset);
         }
@@ -212,12 +227,14 @@ export class Popover extends Component {
     }
 
     onTargetMutate() {
+        // debugger;
         if (!this.props.target.isConnected) {
             this.props.close();
         }
     }
 
     updateArrow(direction, variant, variantOffset) {
+        // debugger;
         const { el } = this.popoverRef;
 
         // Reverse the direction if RTL as bootstrap expects it that way

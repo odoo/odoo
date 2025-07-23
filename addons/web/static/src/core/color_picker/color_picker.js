@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
@@ -86,6 +86,37 @@ export class ColorPicker extends Component {
             },
             () => [this.state.activeTab]
         );
+        // onRendered(() => {
+        //     if (this.root.el) {
+        //         this.root.el.style.overflow = "auto";
+        //         this.root.el.style.maxHeight = "100px";
+        //     }
+        // });
+        // onMounted(() => {
+        //     this.root.el.style.overflow = "auto";
+        //     this.root.el.style.maxHeight = "100px";
+        // });
+        useEffect((el) => {
+            if (this.root.el) {
+                this.root.el.style.overflow = "auto";
+                this.root.el.style.maxHeight = "300px";
+            }
+        });
+    }
+
+    // return max height of the color picker popover based on the position of the root element
+    // and the available space in the viewport
+    // if the bottom of the root element is closer to the bottom of the viewport than the top of the root element,
+    // we use the bottom of the root element as the max height
+    // otherwise, we use the top of the root element as the max height
+    // this is to avoid the popover being cut off by the viewport
+    // and to ensure that the popover is fully visible
+    get maxHeight() {
+        const rectangle = this.root.el.getBoundingClientRect();
+        if (rectangle.bottom < window.innerHeight - rectangle.top) {
+            return rectangle.bottom - rectangle.top;
+        }
+        return window.innerHeight - rectangle.top;
     }
 
     getDefaultTab() {
@@ -197,6 +228,7 @@ export class ColorPicker extends Component {
         if (isColorGradient(this.props.state.selectedColor)) {
             return this.props.state.selectedColor;
         }
+        return null;
     }
 
     toggleGradientPicker() {

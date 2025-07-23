@@ -44,6 +44,7 @@ export const POSITION_BUS = Symbol("position-bus");
  * @returns {PositioningControl}
  *  control object to lock/unlock the positioning.
  */
+// here
 export function usePosition(refName, getTarget, options = {}) {
     const ref = useRef(refName);
     let lock = false;
