@@ -21,6 +21,24 @@ export class LoyaltyRule extends models.ServerModel {
             "code",
         ];
     }
+
+    _records = [
+        {
+            id: 1,
+            program_id: 1,
+            valid_product_ids: [],
+            any_product: true,
+            currency_id: 1,
+            reward_point_amount: 1,
+            reward_point_split: true,
+            reward_point_mode: "order",
+            minimum_qty: 0,
+            minimum_amount: 0,
+            minimum_amount_tax_mode: "incl",
+            mode: "auto",
+            code: false,
+        },
+    ];
 }
 
 patch(hootPosModels, [...hootPosModels, LoyaltyRule]);
