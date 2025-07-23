@@ -853,11 +853,13 @@ export class PosStore extends Reactive {
             values.price_unit = values.product_id.get_price(order.pricelist_id, values.qty);
         }
         const isScannedProduct = opts.code && opts.code.type === "product";
-        if (values.price_extra && !isScannedProduct) {
+        if ((values.price_extra || values.product_id.isConfigurable()) && !isScannedProduct) {
             const price = values.product_id.get_price(
                 order.pricelist_id,
                 values.qty,
-                values.price_extra
+                values.price_extra,
+                false,
+                product.list_price
             );
 
             values.price_unit = price;

@@ -45,7 +45,7 @@
                             </div>
                             <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.finalized ? ()=>{} : this._setOrder(order)" >
                                     <div class="col wide p-2 ">
                                         <div><t t-esc="getDate(order)"></t></div>
                                     </div>
@@ -79,7 +79,7 @@
                             </t>
                             <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="mobileOrderList order-row rounded-3" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.finalized ? ()=>{} : this._setOrder(order)" >
                                     <div class="col p-2 d-flex justify-content-between align-items-center">
                                         <div><t t-esc="order.pos_reference"></t> / <t t-esc="order.tracking_number"></t></div>
                                         <div><t t-esc="getTotal(order)"></t></div>
