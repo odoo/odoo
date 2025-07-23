@@ -1,11 +1,12 @@
-import { after, before, END, VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
+import { after, VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 
 class HorizontalPaddingOptionPlugin extends Plugin {
     static id = "horizontalPaddingOption";
-    selector = "[class*='col-lg-'], .s_discount2, .s_text_block, .s_media_list, .s_picture, .s_rating";
+    selector =
+        "[class*='col-lg-'], .s_discount2, .s_text_block, .s_media_list, .s_picture, .s_rating";
     resources = {
         mark_color_level_selector_params: [{ selector: this.selector }],
         builder_options: [

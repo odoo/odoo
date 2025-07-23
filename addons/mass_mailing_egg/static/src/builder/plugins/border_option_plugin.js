@@ -1,4 +1,4 @@
-import { after, before, VERTICAL_ALIGNMENT, WIDTH } from "@html_builder/utils/option_sequence";
+import { before, VERTICAL_ALIGNMENT, WIDTH } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -9,7 +9,8 @@ export class BorderOptionPlugin extends Plugin {
         builder_options: [
             withSequence(before(WIDTH), {
                 template: "mass_mailing.BorderOptionNoRoundedCornersDependency",
-                selector: ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div",
+                selector:
+                    ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div",
                 applyTo: ".card",
             }),
             withSequence(before(WIDTH), {
@@ -20,10 +21,11 @@ export class BorderOptionPlugin extends Plugin {
             withSequence(VERTICAL_ALIGNMENT, {
                 template: "mass_mailing.BorderOption",
                 selector: ".row > div",
-                exclude: ".o_mail_wrapper_td, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div",
+                exclude:
+                    ".o_mail_wrapper_td, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div",
             }),
         ],
-    }
+    };
 }
 
 registry.category("mass_mailing-plugins").add(BorderOptionPlugin.id, BorderOptionPlugin);
