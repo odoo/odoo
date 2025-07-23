@@ -5,6 +5,12 @@ from dateutil import relativedelta
 from odoo import fields, models, api
 
 
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    employee = fields.Boolean()
+
+
 class BaseAutomationLeadTest(models.Model):
     _name = 'base.automation.lead.test'
     _description = "Automated Rule Test"
