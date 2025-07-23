@@ -84,7 +84,7 @@
                 There are no matching partners found for the selected country. Displaying results across all countries instead.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <t t-foreach="partners" t-as="partner">
+            <t id="partners_cards" t-foreach="partners" t-as="partner">
                 <div class="col-md-4 col-xl-3 col-12 mb-4">
                     <div class="card h-100 text-decoration-none">
                         <a id="partner_link_card" class="text-decoration-none" aria-label="Go to reseller">
@@ -119,7 +119,7 @@
     </t>
 </template>
 
-<!-- <template id="partner" name="Partner Detail">
+<template id="partner" name="Partner Detail">
     <t t-call="website_partner.layout">
         <div t-if="not edit_page" class="mt-4 mb-3">
             <a t-attf-href="/partners#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back to partners</a>
@@ -130,9 +130,9 @@
             </t>
         </t>
     </t>
-</template> -->
+</template>
 
-<!-- <template id="references_block" name="Partner References Block">
+<template id="references_block" name="Partner References Block">
     <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
         <h4 id="references">References</h4>
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
@@ -147,7 +147,7 @@
             </div>
         </div>
     </t>
-</template> -->
+</template>
 
 <template id="partner_page" name="Partner Page">
     <t t-call="website.layout">
@@ -207,7 +207,7 @@
     </xpath>
 </template>
 
-<template id="search" inherit_id="website_partner.index" name="Search">
+<template id="search_setting" inherit_id="website_partner.index" name="Search">
     <xpath expr="//h1[@id='page_title']" position="after">
         <div class="o_wcrm_search d-flex w-100 w-lg-25">
             <form class="flex-grow-1" action="" method="get">
@@ -229,7 +229,13 @@
     </xpath>
 </template>
 
-<template id="companies_only" inherit_id="website_partner.index" name="Companies only">
+<template id="companies_only_setting" inherit_id="website_partner.index" name="Companies only">
+    <xpath expr="//t[@id='partners_cards']" position="attributes">
+        <attribute name="t-foreach">partners.filtered(lambda p: p.is_company)</attribute>
+    </xpath>
+</template>
+
+<template id="countries_setting" inherit_id="website_partner.index" name="Countries">
     <xpath expr="//h1[@id='page_title']" position="after">
         <div class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
@@ -250,17 +256,13 @@
     </xpath>
 </template>
 
-<template id="countries" inherit_id="website_partner.index" name="Countries">
-
-</template>
-
-<template id="partner_page" inherit_id="website_partner.index" name="Partner page">
+<template id="linked_partner_page_setting" inherit_id="website_partner.index" name="Partner page">
     <xpath expr="//a[@id='partner_link_card']" position="attributes">
         <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_country and 'country_id=%s' % current_country.id}</attribute>
     </xpath>
 </template>
 
-<template id="ref_country" inherit_id="website_partner.search" name="World Map">
+<template id="ref_country" inherit_id="website_partner.search_setting" name="World Map">
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->

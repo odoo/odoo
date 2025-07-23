@@ -41,8 +41,6 @@ class WebsitePartnerPage(http.Controller):
         base_partner_domain = [('website_published', '=', True)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
-        if False:
-            base_partner_domain += [('is_company', '=', True)]
 
         # Infer Country
         if not country and not country_all:
