@@ -3700,7 +3700,8 @@ class BaseModel(metaclass=MetaModel):
                         for key, value in translation.items()
                         if key in old_terms_digested2value
                     }
-                stored_translations[lang] = field.translate(translation.get, old_value)
+                translation = field.translate(translation.get, old_value)
+                stored_translations[lang] = field.convert_to_cache(translation, self)
                 stored_translations.pop(f'_{lang}', None)
             self.env.cache.update_raw(self, field, [stored_translations], dirty=True)
 
