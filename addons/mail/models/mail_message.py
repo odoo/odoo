@@ -883,6 +883,38 @@ class MailMessage(models.Model):
             },
         )
 
+    def move_to_inbox(self):
+        """Sets the needaction on the message for the current partner"""
+        if self.env.user.notification_type != "inbox":
+            return
+        self.ensure_one()
+        self.check_access("read")
+        partner_id = self.env.user.partner_id
+        if notification := self.env["mail.notification"].search([
+            ("mail_message_id", "=", self.id),
+            ("res_partner_id", "=", partner_id.id),
+        ]):
+            notification.update({
+                "is_read": False,
+                "notification_type": "inbox",
+                "read_date": False,
+            })
+        else:
+            self.env["mail.notification"].create({
+                "author_id": self.author_id.id,
+                "mail_message_id": self.id,
+                "notification_status": "sent",
+                "notification_type": "inbox",
+                "res_partner_id": partner_id.id,
+            })
+        self.env.user._bus_send(
+            "mail.message/move_to_inbox",
+            {
+                "message_id": self.id,
+                "store_data": Store().add(self).get_result(),
+            },
+        )
+
     @api.model
     def unstar_all(self):
         """ Unstar messages for the current partner. """

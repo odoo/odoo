@@ -683,6 +683,12 @@ export class Thread extends Record {
         this.message_needaction_counter = 0;
     }
 
+    async markMessagesAsRead(messageIds) {
+        await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [
+            [["id", "in", messageIds]],
+        ]);
+    }
+
     async markAsFetched() {
         await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
             [this.id],

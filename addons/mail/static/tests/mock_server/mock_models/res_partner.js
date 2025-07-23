@@ -301,10 +301,9 @@ export class ResPartner extends webModels.ResPartner {
                     }); // mock server simplification
                 }
                 if (partner.main_user_id && fields.includes("notification_type")) {
-                    store._add_record_fields(
-                        ResUsers.browse(partner.main_user_id),
-                        makeKwArgs({ fields: ["notification_type"] })
-                    );
+                    store._add_record_fields(ResUsers.browse(partner.main_user_id), [
+                        "notification_type",
+                    ]);
                 }
             }
             if (Object.keys(data).length) {

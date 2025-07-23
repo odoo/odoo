@@ -282,6 +282,53 @@ export class MailMessage extends models.ServerModel {
         }
     }
 
+    move_to_inbox(ids) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+
+        if (!this.env.user || this.env.user.notification_type !== "inbox") {
+            return;
+        }
+        const messages = this.browse(ids);
+        for (const message of messages) {
+            const notification = MailNotification.search_read(
+                [
+                    ["mail_message_id", "=", message.id],
+                    ["res_partner_id", "=", this.env.user.partner_id],
+                ],
+                ["mail_message_id"]
+            );
+            if (notification.length === 0) {
+                MailNotification.create({
+                    author_id: message.author_id,
+                    mail_message_id: message.id,
+                    notification_status: "sent",
+                    notification_type: "inbox",
+                    res_partner_id: this.env.user.partner_id,
+                    is_read: false,
+                });
+            } else {
+                MailNotification.write(
+                    notification.map((e) => e.id),
+                    { is_read: false, notification_type: "inbox", read_date: false }
+                );
+            }
+            BusBus._sendone(
+                this._bus_notification_target(message.id),
+                "mail.message/move_to_inbox",
+                {
+                    message_id: message.id,
+                    store_data: new mailDataHelpers.Store(
+                        this.browse(message.id),
+                        makeKwArgs({ for_current_user: true })
+                    ).get_result(),
+                }
+            );
+        }
+    }
+
     unlink() {
         const messageByPartnerId = {};
         for (const message of this) {

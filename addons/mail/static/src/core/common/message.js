@@ -369,6 +369,17 @@ export class Message extends Component {
         );
     }
 
+    get onRightSwipe() {
+        if (this.hasTouch() && this.message.canMarkAsRead(this.props.thread)) {
+            return {
+                action: () => this.message.setDone(),
+                bgColor: "bg-success",
+                icon: "fa-check-circle",
+            };
+        }
+        return undefined;
+    }
+
     get translatedFromText() {
         return _t("(Translated from: %(language)s)", { language: this.message.translationSource });
     }

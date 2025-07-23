@@ -111,7 +111,7 @@ registerMessageAction("toggle-star", {
     sequence: 30,
 });
 registerMessageAction("mark-as-read", {
-    condition: ({ store, thread }) => thread?.eq(store.inbox),
+    condition: ({ message, thread }) => message.canMarkAsRead(thread),
     icon: "fa fa-check",
     name: _t("Mark as Read"),
     onSelected: ({ message }) => message.setDone(),

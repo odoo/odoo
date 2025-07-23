@@ -27,6 +27,14 @@ export function messageActionOpenFullComposer(title, context, component) {
     });
 }
 
+registerMessageAction("move-to-inbox", {
+    condition: ({ message, thread }) => message.canMoveToInbox(thread),
+    icon: "fa fa-eye-slash",
+    iconLarge: "fa fa-lg fa-eye-slash",
+    name: _t("Mark as Unread"),
+    onSelected: ({ message, thread }) => message.moveToInbox(thread),
+    sequence: 40,
+});
 registerMessageAction("reply-all", {
     condition: ({ message, thread }) => message.canReplyAll(thread),
     icon: "fa fa-reply",
