@@ -30,14 +30,7 @@ registerWebsitePreviewTour('blog_tags', {
         trigger: "[data-label='Tags'] button.o_select_menu_toggler",
         run: "click",
     },
-    {
-        content: "Enter tag name",
-        trigger: ".o_select_menu_input",
-        run: async function() {
-            this.anchor.value = "testtag";
-            this.anchor.dispatchEvent(new InputEvent("input"));
-        }
-    },
+    ...stepUtils.editSelectMenuInput(".o_select_menu_input", "testtag"),
     {
         content: "Save tag",
         trigger: ".dropdown-menu a.o_we_m2o_create",
