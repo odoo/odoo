@@ -3,10 +3,151 @@ import { animationFrame, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { delay } from "@web/core/utils/concurrency";
+import { imageShapeDefinitions } from "@html_builder/plugins/image/image_shapes_definition";
 import { testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
 
+const testImgWithShapeAndClass = `
+<img src='/web/image/website.s_text_image_default_image'
+    data-attachment-id="1" data-original-id="1"
+    data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+    data-mimetype-before-conversion="image/webp"
+    data-mimetype="image/webp"
+    data-shape="html_builder/geometric/geo_shuriken"
+    data-image-shape-class="o_class_one o_class_two"
+    data-file-name="s_text_image.webp"
+    class="o_class_one o_class_two"
+    >
+`;
+const testImgShapeWithOnlyClass = `
+<img src='/web/image/website.s_text_image_default_image'
+    class="o_class_one o_class_two"
+    >
+`;
+const testImgShapeWithOnlyShape = `
+<img src='/web/image/website.s_text_image_default_image'
+    data-shape="html_builder/geometric/geo_shuriken"
+    >
+`;
+test("Applying shape with imageShapeClass should not generate an SVG and clear border radius", async () => {
+    // Update geo_shuriken to apply shape through imageShapeClass
+    imageShapeDefinitions.basic.subgroups.geometrics.shapes[
+        "html_builder/geometric/geo_shuriken"
+    ].imageShapeClass = "o_class_one o_class_two";
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target img").click();
+
+    await contains(
+        "[data-container-title='Image'] [data-label='Round Corners'] [data-action-id='styleAction'] input"
+    ).edit("10");
+
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    // ensure the shape action has been applied
+    await editor.shared.operation.next(() => {});
+
+    const img = queryFirst(":iframe .test-options-target img");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-attachment-id", "1");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/webp");
+    expect(img.src.startsWith("data:image/webp;base64,")).toBe(true);
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-original-src",
+        "/website/static/src/img/snippets_demo/s_text_image.webp"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-mimetype-before-conversion",
+        "image/webp"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-shape",
+        "html_builder/geometric/geo_shuriken"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-file-name",
+        "s_text_image.webp"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute("data-shape-colors", ";;;;");
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-image-shape-class",
+        "o_class_one o_class_two"
+    );
+    expect(":iframe .test-options-target img").not.toHaveAttribute(
+        "style",
+        "--box-border-bottom-left-radius: 10px; --box-border-bottom-right-radius: 10px; --box-border-top-right-radius: 10px; --box-border-top-left-radius: 10px;"
+    );
+    expect(":iframe .test-options-target img").toHaveClass(["o_class_one", "o_class_two"]);
+    // ensure the image shape class is applied
+    await animationFrame();
+    await animationFrame();
+    expect("[data-container-title='Image'] [data-label='Round Corners']").toHaveCount(0);
+    delete imageShapeDefinitions.basic.subgroups.geometrics.shapes[
+        "html_builder/geometric/geo_shuriken"
+    ].imageShapeClass;
+});
+test("Should remove shape classes when clearing a imageShapeClass-applied shape", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImgWithShapeAndClass}
+        </div>
+    `);
+    expect(":iframe .test-options-target img").toHaveClass("o_class_one o_class_two");
+    const editor = getEditor();
+    await contains(":iframe .test-options-target img").click();
+    await waitFor("[data-label='Shape'] .dropdown:contains(Shuriken)");
+    await contains("[data-action-id='setImageShape']").click();
+    // ensure the shape action has been applied
+    await editor.shared.operation.next(() => {});
+
+    expect(":iframe .test-options-target img").not.toHaveAttribute("data-image-shape-class");
+    expect(":iframe .test-options-target img").not.toHaveClass("o_class_one o_class_two");
+});
+test("Selects shape option when image classes match a shape definition", async () => {
+    // Update geo_shuriken to select shape through imageShapeClass
+    imageShapeDefinitions.basic.subgroups.geometrics.shapes[
+        "html_builder/geometric/geo_shuriken"
+    ].imageShapeClass = "o_class_one o_class_two";
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImgShapeWithOnlyClass}
+        </div>
+    `);
+    expect(":iframe .test-options-target img").toHaveClass("o_class_one o_class_two");
+
+    await contains(":iframe .test-options-target img").click();
+    await waitFor("[data-label='Shape'] .dropdown:contains(Shuriken)");
+    delete imageShapeDefinitions.basic.subgroups.geometrics.shapes[
+        "html_builder/geometric/geo_shuriken"
+    ].imageShapeClass;
+});
+test("Should set dataset shape and apply classes when image matches imageShapeClass", async () => {
+    // Update geo_shuriken to apply class through shape key
+    imageShapeDefinitions.basic.subgroups.geometrics.shapes[
+        "html_builder/geometric/geo_shuriken"
+    ].imageShapeClass = "o_class_one o_class_two";
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImgShapeWithOnlyShape}
+        </div>
+    `);
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-shape",
+        "html_builder/geometric/geo_shuriken"
+    );
+
+    await contains(":iframe .test-options-target img").click();
+    await waitFor("[data-label='Shape'] .dropdown:contains(Shuriken)");
+    expect(":iframe .test-options-target img").toHaveClass("o_class_one o_class_two");
+    delete imageShapeDefinitions.basic.subgroups.geometrics.shapes[
+        "html_builder/geometric/geo_shuriken"
+    ].imageShapeClass;
+});
 test("Should set a shape on an image", async () => {
     const { getEditor } = await setupWebsiteBuilder(`
         <div class="test-options-target">

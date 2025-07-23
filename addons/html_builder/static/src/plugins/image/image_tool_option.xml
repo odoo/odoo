@@ -42,7 +42,7 @@
             <BuilderSelectItem classAction="'ms-auto float-end'" title.translate="Align Right">Right</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Style">
+    <BuilderRow label.translate="Style" t-if="state.isIcon">
         <BuilderButton icon="'fa-square'" classAction="'rounded'" title.translate="Shape: Rounded"/>
         <BuilderButton icon="'fa-circle-o'" classAction="'rounded-circle'" title.translate="Shape: Circle"/>
         <BuilderButton icon="'fa-sun-o'" classAction="'shadow'" title.translate="Shadow"/>

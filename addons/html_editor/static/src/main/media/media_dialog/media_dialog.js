@@ -192,6 +192,9 @@ export class MediaDialog extends Component {
                     element.setAttribute("style", style);
                 }
                 if (this.state.activeTab === TABS.IMAGES.id) {
+                    if (this.props.media.dataset.imageShapeClass) {
+                        element.dataset.imageShapeClass = this.props.media.dataset.imageShapeClass;
+                    }
                     if (this.props.media.dataset.shape) {
                         element.dataset.shape = this.props.media.dataset.shape;
                     }

@@ -115,6 +115,7 @@ export class SetImageQualityAction extends BuilderAction {
             img,
             newDataset: {
                 quality,
+                imageShapeClass: img.dataset.imageShapeClass,
             },
         });
     }

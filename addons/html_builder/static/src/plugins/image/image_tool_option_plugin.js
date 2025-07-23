@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { ImageToolOption } from "./image_tool_option";
 import { isImageCorsProtected } from "@html_editor/utils/image";
+import { ImageAndFaOption } from "./image_and_fa_option";
 import { withSequence } from "@html_editor/utils/resource";
 import {
     REPLACE_MEDIA,
@@ -46,7 +47,7 @@ class ImageToolOptionPlugin extends Plugin {
                 name: "imageToolOption",
             }),
             withSequence(ALIGNMENT_STYLE_PADDING, {
-                template: "html_builder.ImageAndFaOption",
+                OptionComponent: ImageAndFaOption,
                 selector: "span.fa, i.fa, img",
                 exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
                 name: "imageAndFaOption",
