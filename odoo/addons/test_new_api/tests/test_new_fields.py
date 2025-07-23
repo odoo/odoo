@@ -3885,27 +3885,28 @@ class TestHtmlField(TransactionCase):
             'comment2': '<p>comment</p>',
         })
 
-        # in a perfect world this should be 1, but at the moment the value is
-        # sanitized more than once during creation of the record
+        # the new value is sanitized upon insertion in db,
+        # but not put in cache, therefore not sanitized a second time
+        self.assertEqual(patch.call_count, 1)
+
+        # new value sanitized for insertion in cache
+        record.comment2 = '<p>comment</p>'
         self.assertEqual(patch.call_count, 2)
 
-        # new value needs to be validated, so it is sanitized once more
-        record.comment2 = '<p>comment</p>'
-        self.assertEqual(patch.call_count, 3)
-
-        # the value is already sanitized for flushing
+        # the value in cache is dirty -> convert_to_column_update(..., validate=False),
+        # so no additional call to `html_sanitize`
         record.flush_recordset()
-        self.assertEqual(patch.call_count, 3)
+        self.assertEqual(patch.call_count, 2)
 
         # value coming from db does not need to be sanitized
         record.invalidate_recordset()
         record.comment2
-        self.assertEqual(patch.call_count, 3)
+        self.assertEqual(patch.call_count, 2)
 
         # value coming from db during an onchange does not need to be sanitized
         new_record = record.new(origin=record)
         new_record.comment2
-        self.assertEqual(patch.call_count, 3)
+        self.assertEqual(patch.call_count, 2)
 
 
 class TestMagicFields(TransactionCase):
