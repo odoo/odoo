@@ -16,7 +16,6 @@ class L10n_FrFecExportWizard(models.TransientModel):
     date_to = fields.Date(string='End Date', required=True, default=lambda self: self.env.context.get('report_dates', {}).get('date_to'))
     filename = fields.Char(string='Filename', size=256, readonly=True)
     test_file = fields.Boolean()
-    exclude_zero = fields.Boolean(string="Exclude lines at 0")
     export_type = fields.Selection([
         ('official', 'Official FEC report (posted entries only)'),
         ('nonofficial', 'Non-official FEC report (posted and unposted entries)'),
@@ -30,14 +29,12 @@ class L10n_FrFecExportWizard(models.TransientModel):
             self.export_type = 'official'
 
     def _get_base_domain(self):
-        domain = [('company_id', 'in', tuple(self.env.company._accessible_branches().ids))]
+        domain = [('company_id', 'in', tuple(self.env.company._accessible_branches().ids)), ('balance', '!=', 0.0)]
         # For official report: only use posted entries
         if self.export_type == "official":
             domain.append(('parent_state', '=', 'posted'))
         if self.excluded_journal_ids:
             domain.append(('journal_id', 'not in', self.excluded_journal_ids.ids))
-        if self.exclude_zero:
-            domain.append(('balance', '!=', 0.0))
         return domain
 
     def _do_query_unaffected_earnings(self):
