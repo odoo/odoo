@@ -223,9 +223,9 @@ export async function setupWebsiteBuilder(
     patchWithCleanup(SetupEditorPlugin.prototype, {
         setup() {
             super.setup();
-            editableContent = this.getEditableElements(
-                '.oe_structure.oe_empty, [data-oe-type="html"]'
-            )[0];
+            editableContent = this.editable.querySelector(
+                ".oe_structure.oe_empty, [data-oe-type='html']"
+            );
         },
     });
 

@@ -6,6 +6,8 @@ export class SetupEditorPlugin extends Plugin {
     static shared = ["getEditableAreas"];
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        savable_selectors: "[data-oe-model]",
+        normalize_handlers: this.normalize.bind(this),
     };
 
     setup() {
@@ -16,7 +18,9 @@ export class SetupEditorPlugin extends Plugin {
         if (this.delegateTo("after_setup_editor_handlers")) {
             return;
         }
-        let editableEls = this.getEditableElements("[data-oe-model]")
+        // Add the `o_editable` class on the savable elements
+        const savableSelectors = this.getResource("savable_selectors").join(",");
+        const editableEls = [...this.editable.querySelectorAll(savableSelectors)]
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
             .filter(
@@ -28,28 +32,21 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.classList.contains("oe_snippet_editor"))
             .filter((el) => !el.matches("hr, br, input, textarea"))
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
-        editableEls.concat(Array.from(this.editable.querySelectorAll(".o_editable")));
         editableEls.forEach((el) => el.classList.add("o_editable"));
-
-        // Add automatic editor message on the editables where we can drag and
-        // drop elements.
-        editableEls = this.getEditableElements('.oe_structure.oe_empty, [data-oe-type="html"]');
-        editableEls.forEach((el) => {
-            if (!el.hasAttribute("data-editor-message")) {
-                el.setAttribute("data-editor-message-default", true);
-                el.setAttribute("data-editor-message", _t("DRAG BUILDING BLOCKS HERE"));
-            }
-        });
     }
 
-    getEditableElements(selector) {
-        const editableEls = [...this.editable.querySelectorAll(selector)]
-            .filter((el) => !el.matches(".o_not_editable"))
-            .filter((el) => {
-                const parent = el.closest(".o_editable, .o_not_editable");
-                return !parent || parent.matches(".o_editable");
-            });
-        return editableEls;
+    normalize(rootEl) {
+        // Add automatic editor message on the editables where we can drag and
+        // drop elements.
+        const dragAndDropEls = [
+            ...rootEl.querySelectorAll(".oe_structure.oe_empty, [data-oe-type='html']"),
+        ];
+        for (const dragAndDropEl of dragAndDropEls) {
+            if (!dragAndDropEl.hasAttribute("data-editor-message")) {
+                dragAndDropEl.setAttribute("data-editor-message-default", true);
+                dragAndDropEl.setAttribute("data-editor-message", _t("DRAG BUILDING BLOCKS HERE"));
+            }
+        }
     }
 
     cleanForSave({ root }) {

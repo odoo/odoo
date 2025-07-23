@@ -13,11 +13,6 @@ export class SavePlugin extends Plugin {
         handleNewRecords: this.handleMutations.bind(this),
         start_edition_handlers: this.startObserving.bind(this),
         // Resource definitions:
-        savable_selectors: [
-            "#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]",
-            "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])",
-            "#wrapwrap .s_cover[data-res-model]",
-        ],
         before_save_handlers: [
             // async () => {
             //     called at the very beginning of the save process
@@ -46,7 +41,6 @@ export class SavePlugin extends Plugin {
 
     setup() {
         this.canObserve = false;
-        this.savableSelector = this.getResource("savable_selectors").join(", ");
     }
 
     async save() {
@@ -177,7 +171,7 @@ export class SavePlugin extends Plugin {
             if (!targetEl) {
                 continue;
             }
-            const savableEl = targetEl.closest(this.savableSelector);
+            const savableEl = targetEl.closest(".o_editable");
             if (
                 !savableEl ||
                 savableEl.classList.contains("o_dirty") ||

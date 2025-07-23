@@ -22,7 +22,7 @@ class CoverPropertiesOptionPlugin extends Plugin {
             SetCoverBackgroundAction,
             MarkCoverPropertiesToBeSavedAction,
         },
-        savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]",
+        savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]", // A check pour contenteditbale qu'on met à true
         before_save_handlers: this.savePendingBackgroundImage.bind(this),
         save_element_handlers: this.saveCoverProperties.bind(this),
     };
