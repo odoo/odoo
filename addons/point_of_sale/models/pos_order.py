@@ -837,7 +837,13 @@ class PosOrder(models.Model):
         # Cash rounding.
         cash_rounding = self.config_id.rounding_method
         if self.config_id.cash_rounding and cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
-            amount_currency = cash_rounding.compute_difference(self.currency_id, total_amount_currency)
+            if self.config_id.only_round_cash_method and any(not p.payment_method_id.is_cash_count for p in self.payment_ids):
+                # If only_round_cash_method is True, and there are non-cash payments, cash rounding must be computed
+                # based on the total amount of the order, and total payment amount.
+                total_payment_amount = self.currency_id.round(sum(p.amount for p in self.payment_ids))
+                amount_currency = sign * self.currency_id.round(self.currency_id.round(total_amount_currency) + total_payment_amount)
+            else:
+                amount_currency = cash_rounding.compute_difference(self.currency_id, total_amount_currency)
             if not self.currency_id.is_zero(amount_currency):
                 balance = company_currency.round(amount_currency * rate)
 
