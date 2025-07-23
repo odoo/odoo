@@ -8,6 +8,7 @@ export class SetupEditorPlugin extends Plugin {
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: withSequence(0, this.setContenteditable.bind(this)),
+        savable_selectors: "[data-oe-model]",
     };
 
     setup() {
@@ -19,8 +20,9 @@ export class SetupEditorPlugin extends Plugin {
         if (this.delegateTo("after_setup_editor_handlers")) {
             return;
         }
-        // Add the `o_editable` class on the editable elements
-        let editableEls = this.getEditableElements("[data-oe-model]")
+        // Add the `o_editable` class on the savable elements
+        const savableSelectors = this.getResource("savable_selectors").join(",");
+        let editableEls = [...this.editable.querySelectorAll(savableSelectors)]
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
             .filter(
@@ -32,7 +34,6 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.classList.contains("oe_snippet_editor"))
             .filter((el) => !el.matches("hr, br, input, textarea"))
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
-        editableEls.concat(Array.from(this.editable.querySelectorAll(".o_editable")));
         editableEls.forEach((el) => el.classList.add("o_editable"));
 
         // Add automatic editor message on the editables where we can drag and
