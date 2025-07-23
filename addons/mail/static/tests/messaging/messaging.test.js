@@ -88,6 +88,7 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
     );
     await contains(".o-mail-ChatBubble[name='GroupChat']");
     await openDiscuss();
+    await contains(".o-mail-Discuss[data-active]");
     // simulate receiving new message (chat, inside discuss app)
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -96,7 +97,8 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-DiscussSidebar-item:contains('Dumbledore') .badge", { text: "1" });
+    await click(".o-mail-DiscussSidebar-item:contains('Dumbledore'):has(.badge:contains(1))");
+    await contains(".o-mail-Message:contains('Tricky')");
     // check no new chat window/bubble while in discuss app
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-ChatBubble[name='GroupChat']");
