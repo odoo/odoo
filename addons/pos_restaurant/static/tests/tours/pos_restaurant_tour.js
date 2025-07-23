@@ -757,3 +757,28 @@ registry.category("web_tour.tours").add("test_book_and_release_table", {
             waitForLoading(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_combo_synchronisation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A"),
+            Chrome.clickPlanButton(),
+            FloorScreen.hasTable("5"),
+            FloorScreen.clickTable("5"),
+            {
+                content: "Check if there still has combo lines",
+                trigger: ".orderline-combo",
+            },
+        ].flat(),
+});
