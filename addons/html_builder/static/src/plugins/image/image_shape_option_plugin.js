@@ -1,8 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { DEFAULT_PALETTE } from "@html_editor/utils/color";
-import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
-import { isCSSColor } from "@web/core/utils/colors";
 import { getShapeURL } from "@html_builder/plugins/image/image_helpers";
 import { activateCropper, createDataURL, loadImage } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
@@ -30,15 +28,15 @@ const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m
 
 export class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
-    static dependencies = ["history", "userCommand", "imagePostProcess"];
+    static dependencies = ["history", "userCommand", "imagePostProcess", "imageToolOption"];
     static shared = [
         "getImageShapeGroups",
         "isTransformableShape",
+        "isTechnicalShape",
         "isAnimableShape",
         "isTogglableRatioShape",
         "getShapeLabel",
         "loadShape",
-        "getCSSColorValue",
     ];
     resources = {
         builder_actions: {
@@ -67,27 +65,20 @@ export class ImageShapeOptionPlugin extends Plugin {
         return shapeSvgText;
     }
     async loadShape(img, newData = {}) {
+        // todo: find a way to apply to carousel thumbnail after processImage
         return this.dependencies.imagePostProcess.processImage({ img, newDataset: newData });
-        //todo: handle hover effect before
-        // todo: is it still needed?
-        // await loadImage(shapeDataURL, img);
-        // return {
-        //     ...newData,
-        //     shapeColors: newColors.join(";"),
-        //     shapeDataURL,
-        // };
-        //todo: handle hover effect after
-        // todo: find a way to apply to carousel thumbnail
     }
     async processImageWarmup(img, newDataset) {
         const getData = (propName) =>
             propName in newDataset ? newDataset[propName] : img.dataset[propName];
-        const shapeId = getData("shape");
+        const combinedDataset = { ...img.dataset, ...newDataset };
+        const previousShapeId = this.getDefaultShapeId(img.dataset);
+        const shapeId = combinedDataset.shape || this.getDefaultShapeId(combinedDataset);
         // todo: should we reset some data if shapeName is not defined?
         if (!shapeId) {
             return;
         }
-        const isNewShape = "shape" in newDataset && newDataset.shape !== img.dataset.shape;
+        const isNewShape = previousShapeId !== shapeId;
         const shapeSvgText = await this.getShapeSvgText(shapeId);
 
         // Get colors.
@@ -106,7 +97,9 @@ export class ImageShapeOptionPlugin extends Plugin {
         const svgWidth = getData("resizeWidth") || getData("width") || (await getNaturalWidth());
 
         // Get the svg element.
-        const svg = this.computeShape(shapeSvgText, {
+        const svg = await this.computeShape(shapeSvgText, {
+            ...img.dataset,
+            ...newDataset,
             shapeId,
             shapeFlip: getData("shapeFlip") || "",
             shapeRotate: getData("shapeRotate") || 0,
@@ -195,7 +188,8 @@ export class ImageShapeOptionPlugin extends Plugin {
      * @param {HTMLImageElement} img
      * @returns {SVGElement}
      */
-    computeShape(svgText, { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors }) {
+    async computeShape(svgText, params) {
+        const { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors } = params;
         // Apply the colors to the shape.
         svgText = this.replaceSvgColors(svgText, shapeColors.split(";"));
         // Apply the right animation speed if there is an animated shape.
@@ -229,10 +223,9 @@ export class ImageShapeOptionPlugin extends Plugin {
             );
         }
 
-        // todo: Add shape animations on hover.
-        // if (params.hoverEffect && this._canHaveHoverEffect()) {
-        //     this._addImageShapeHoverEffect(svg, img);
-        // }
+        for (const cb of this.getResource("post_compute_shape_listeners")) {
+            await cb(svg, params);
+        }
 
         svg.removeChild(svg.querySelector("#preview"));
         return svg;
@@ -290,7 +283,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         for (const [i, color] of colors.entries()) {
             shapeSvgText = shapeSvgText.replace(
                 new RegExp(svgColors[i], "g"),
-                this.getCSSColorValue(color)
+                this.dependencies.imageToolOption.getCSSColorValue(color)
             );
         }
         return shapeSvgText;
@@ -306,28 +299,24 @@ export class ImageShapeOptionPlugin extends Plugin {
     getThemedSvgColors(shapeSvgText) {
         const svgColors = this.getSvgColors(shapeSvgText);
         return svgColors.map((color, i) =>
-            color !== null ? this.getCSSColorValue(`o-color-${i + 1}`) : null
+            color !== null
+                ? this.dependencies.imageToolOption.getCSSColorValue(`o-color-${i + 1}`)
+                : null
         );
     }
     applyShapeColors(editingElement, newColors) {}
-    /**
-     * Gets the CSS value of a color variable name so it can be used on shapes.
-     *
-     * @param {string} color
-     * @returns {string}
-     */
-    getCSSColorValue(color) {
-        if (!color || isCSSColor(color)) {
-            return color;
-        }
-        return getCSSVariableValue(color, getHtmlStyle(this.document));
-    }
     isTransformableShape(shapeId) {
         if (!shapeId) {
             return false;
         }
         const canTransform = this.imageShapes[shapeId].transform;
         return typeof canTransform === "undefined" ? true : canTransform;
+    }
+    isTechnicalShape(shapeId) {
+        if (!shapeId) {
+            return false;
+        }
+        return this.imageShapes[shapeId].isTechnical;
     }
     getShapeLabel(shapeId) {
         if (!shapeId) {
@@ -360,6 +349,14 @@ export class ImageShapeOptionPlugin extends Plugin {
             .flat();
         return Object.fromEntries(entries);
     }
+    getDefaultShapeId(dataset) {
+        for (const fn of this.getResource("default_shape_handlers")) {
+            const shapeId = fn(dataset);
+            if (shapeId) {
+                return shapeId;
+            }
+        }
+    }
 }
 
 export class SetImageShapeAction extends BuilderAction {
@@ -378,7 +375,7 @@ export class SetImageShapeAction extends BuilderAction {
 }
 export class SetImgShapeColorAction extends BuilderAction {
     static id = "setImgShapeColor";
-    static dependencies = ["imageShapeOption"];
+    static dependencies = ["imageShapeOption", "imageToolOption"];
     getValue({ editingElement: img, params: { index: colorIndex } }) {
         return img.dataset.shapeColors?.split(";")[colorIndex] || "";
     }
@@ -387,7 +384,7 @@ export class SetImgShapeColorAction extends BuilderAction {
         const newColorId = parseInt(colorIndex);
         const oldColors = img.dataset.shapeColors.split(";");
         const newColors = oldColors.slice(0);
-        newColors[newColorId] = this.dependencies.imageShapeOption.getCSSColorValue(
+        newColors[newColorId] = this.dependencies.imageToolOption.getCSSColorValue(
             color === "" ? `o-color-${newColorId + 1}` : color
         );
         return this.dependencies.imageShapeOption.loadShape(img, {

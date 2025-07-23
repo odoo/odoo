@@ -18,6 +18,8 @@ import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { isCSSColor } from "@web/core/utils/colors";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
 export const REPLACE_MEDIA_EXCLUDE =
@@ -33,6 +35,7 @@ class ImageToolOptionPlugin extends Plugin {
         "media",
         "builderOptions",
     ];
+    static shared = ["getCSSColorValue"];
     resources = {
         builder_options: [
             withSequence(REPLACE_MEDIA, {
@@ -110,6 +113,9 @@ class ImageToolOptionPlugin extends Plugin {
         hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
         normalize_handlers: this.migrateImages.bind(this),
     };
+    setup() {
+        this.htmlStyle = getHtmlStyle(this.document);
+    }
 
     async canHaveHoverEffect(img) {
         const getDataset = async () => Object.assign({}, img.dataset, await loadImageInfo(img));
@@ -133,7 +139,12 @@ class ImageToolOptionPlugin extends Plugin {
         return false;
     }
     isImageSupportedForShapes(img, dataset = img.dataset) {
-        return dataset.originalId && isImageSupportedForProcessing(getMimetype(img));
+        // todo: The hover effect code should probably be define somewhere else.
+        const isHoverEffect = !!dataset["hoverEffect"];
+        return (
+            isHoverEffect ||
+            (dataset.originalId && isImageSupportedForProcessing(getMimetype(img, dataset)))
+        );
     }
     migrateImages(rootEl) {
         for (const el of selectElements(
@@ -149,6 +160,18 @@ class ImageToolOptionPlugin extends Plugin {
             el.dataset.formatMimetype = el.dataset.originalMimetype;
             delete el.dataset.originalMimetype;
         }
+    }
+    /**
+     * Gets the CSS value of a color variable name.
+     *
+     * @param {string} color
+     * @returns {string}
+     */
+    getCSSColorValue(color) {
+        if (!color || isCSSColor(color)) {
+            return color;
+        }
+        return getCSSVariableValue(color, this.htmlStyle);
     }
 }
 

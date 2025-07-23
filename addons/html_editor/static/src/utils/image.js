@@ -34,12 +34,12 @@ export function backgroundImagePartsToCss(parts) {
  * @param {HTMLImageElement} image
  * @returns {string|null} The mimetype of the image.
  */
-export function getMimetype(image) {
+export function getMimetype(image, data = image.dataset) {
     const src = getImageSrc(image);
 
     return (
-        image.dataset.mimetype ||
-        image.dataset.mimetypeBeforeConversion ||
+        data.mimetype ||
+        data.mimetypeBeforeConversion ||
         (src &&
             ((src.endsWith(".png") && "image/png") ||
                 (src.endsWith(".webp") && "image/webp") ||
