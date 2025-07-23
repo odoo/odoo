@@ -23,11 +23,24 @@
             sequence="3"/>
 
         <menuitem
+            id="menu_hr_organization"
+            name="Organization"
+            parent="menu_hr_root"
+            sequence="1"/>
+
+        <menuitem
             id="menu_hr_employee"
             name="Directory"
             action="hr_employee_public_action"
-            parent="menu_hr_root"
-            sequence="4"/>
+            parent="menu_hr_organization"
+            sequence="1"/>
+
+        <menuitem
+            id="menu_hr_department_kanban_public"
+            action="hr_department_kanban_action"
+            parent="menu_hr_organization"
+            groups="base.group_user"
+            sequence="2"/>
 
         <menuitem
             id="hr_menu_hr_reports"
@@ -37,10 +50,10 @@
             sequence="95"/>
 
         <menuitem
-                id="menu_hr_department_kanban"
-                action="hr_department_kanban_action"
-                parent="menu_hr_root"
-                groups="base.group_user"/>
+            id="menu_hr_department_kanban"
+            action="hr_department_kanban_action"
+            parent="menu_hr_root"
+            groups="base.group_user"/>
 
         <menuitem
             id="menu_human_resources_configuration"
