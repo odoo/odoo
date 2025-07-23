@@ -121,6 +121,7 @@ export const imageShapeDefinitions = {
                         selectLabel: _t("Circle"),
                         transform: false,
                         togglableRatio: true,
+                        className: "rounded-circle"
                     },
                     "html_builder/geometric_round/geo_round_square": {
                         selectLabel: _t("Square (R)"),
