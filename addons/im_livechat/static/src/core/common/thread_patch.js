@@ -13,11 +13,11 @@ patch(Thread.prototype, {
         Object.assign(this.state, { isVisitorOffline: false }); // starting online avoids flickering
         useEffect(
             () => {
-                if (!this.props.thread.livechatVisitorMember?.persona?.im_status) {
+                if (!this.props.thread.livechatVisitorMember?.im_status) {
                     return;
                 }
                 clearTimeout(this.imStatusTimeoutId);
-                if (this.props.thread.livechatVisitorMember.persona.im_status.includes("offline")) {
+                if (this.props.thread.livechatVisitorMember.im_status.includes("offline")) {
                     this.imStatusTimeoutId = setTimeout(
                         () => (this.state.isVisitorOffline = true),
                         this.IM_STATUS_DELAY
@@ -27,7 +27,7 @@ patch(Thread.prototype, {
                 }
                 return () => clearTimeout(this.imStatusTimeoutId);
             },
-            () => [this.props.thread.livechatVisitorMember?.persona?.im_status]
+            () => [this.props.thread.livechatVisitorMember?.im_status]
         );
     },
     get showVisitorDisconnected() {
