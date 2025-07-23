@@ -6,6 +6,7 @@ import re
 
 from odoo import tools
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.website.tools import MockRequest
 
 
 class TestQweb(TransactionCaseWithUserDemo):
@@ -77,3 +78,15 @@ class TestQweb(TransactionCaseWithUserDemo):
         <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/avatar_1920/%(filename)s" class="img img-fluid" alt="%(alt)s" loading="lazy"/></div>
     </body>
 </html>""" % format_data).encode('utf8'))
+
+        with MockRequest(self.env, website=website):
+            html = demo_env['ir.qweb']._render('test_website.test_template_tatt_qweb', {}, website_id=website.id)
+            self.assertHTMLEqual(html, ("""
+    <html>
+       <body><a href="/">1</a>
+        <a>2</a>
+        <a>3</a>
+        <a>4</a>
+        <a href="">5</a></body>
+    </html>
+    """))
