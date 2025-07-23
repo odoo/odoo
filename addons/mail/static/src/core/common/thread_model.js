@@ -328,6 +328,7 @@ export class Thread extends Record {
      * thread.
      *
      * @param {import("models").Persona} persona
+     * @returns {string}
      */
     getPersonaName(persona) {
         return persona.displayName;
@@ -344,6 +345,7 @@ export class Thread extends Record {
     get supportsCustomChannelName() {
         return this.isChatChannel && this.channel_type !== "group";
     }
+
     get displayName() {
         return this.display_name;
     }
