@@ -328,5 +328,18 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             'product_uom_qty': 25,
         })
         so.action_confirm()
+<<<<<<< 13a4521a6269917428223825f5d9258a80abdcd5
         sol.write({'product_uom_qty': 10})
+||||||| ac57e368e2bc5e5b666cd820a76a845fb6bef32a
+
+        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+        sol.with_user(user_admin).write({'product_uom_qty': 10})
+=======
+
+        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+        self.env.ref('base.user_admin').write({
+            'email': 'mitchell.admin@example.com',
+        })
+        sol.with_user(user_admin).write({'product_uom_qty': 10})
+>>>>>>> 925afbe369128af54c1c572f8302cd2783c2de8e
         self.assertEqual(sol.purchase_line_ids.mapped('product_uom_qty'), [10, 10])
