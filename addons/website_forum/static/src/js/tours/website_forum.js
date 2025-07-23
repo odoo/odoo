@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import {
     registerBackendAndFrontendTour,
 } from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_utils";
 
 registerBackendAndFrontendTour("question", {
     url: '/forum/1',
@@ -35,13 +36,7 @@ registerBackendAndFrontendTour("question", {
     tooltipPosition: "top",
     run: "click",
 },
-{
-    trigger: ".o_select_menu input",
-    run: async function() {
-        this.anchor.value = "Test";
-        this.anchor.dispatchEvent(new InputEvent("input"));
-    }
-},
+...stepUtils.editSelectMenuInput(".o_select_menu_input", "Test"),
 {
     content: "Select found select menu item",
     trigger: ".o_popover.o_select_menu_menu .o_select_menu_item:contains('Test')",

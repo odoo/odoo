@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('forum_question', {
     url: '/forum/help-1',
@@ -29,10 +30,7 @@ registry.category("web_tour.tours").add('forum_question', {
         trigger: '.o_select_menu_toggler',
         run: 'click',
     },
-    {
-        trigger: '.o_select_menu_toggler',
-        run: 'edit Tag',
-    },
+    ...stepUtils.editSelectMenuInput(".o_select_menu_input", "Tag"),
     {
         content: "Click to post your question.",
         trigger: 'button:contains("Post")',
