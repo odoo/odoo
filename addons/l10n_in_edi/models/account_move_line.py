@@ -11,20 +11,19 @@ class AccountMoveLine(models.Model):
 
     def _l10n_in_check_einvoice_validation(self):
         def _group_by_error_code(line):
-            error_code = []
             if line.display_type != 'product' or line._l10n_in_is_global_discount():
                 return False
             if line._l10n_in_check_invalid_hsn_code():
-                error_code.append('invalid_hsn')
+                return 'invalid_hsn'
             if line.discount < 0:
-                error_code.append('restrict_negative_discount_line')
+                return 'restrict_negative_discount_line'
             Move = line.env['account.move']
             all_base_tags = Move._get_l10n_in_gst_tags() + Move._get_l10n_in_non_taxable_tags()
             if (
                 not line.tax_tag_ids
                 or not any(line_tag_id in all_base_tags for line_tag_id in line.tax_tag_ids.ids)
             ):
-                error_code.append('tax_validation')
+                return 'tax_validation'
             return False
         _ = self.env._
         error_messages = {
