@@ -326,6 +326,6 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         })
         so.action_confirm()
 
-        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+        user_admin = self.env['res.users'].search([('name', '=', 'Odoobot')])
         sol.with_user(user_admin).write({'product_uom_qty': 10})
         self.assertEqual(sol.purchase_line_ids.mapped('product_uom_qty'), [10, 10])
