@@ -21,6 +21,54 @@ export class LoyaltyRule extends models.ServerModel {
             "code",
         ];
     }
+
+    _records = [
+        {
+            id: 1,
+            program_id: 1,
+            valid_product_ids: [5],
+            any_product: true,
+            currency_id: 1,
+            reward_point_amount: 1,
+            reward_point_split: true,
+            reward_point_mode: "order",
+            minimum_qty: 0,
+            minimum_amount: 0,
+            minimum_amount_tax_mode: "incl",
+            mode: "auto",
+            code: false,
+        },
+        {
+            id: 2,
+            program_id: 2,
+            valid_product_ids: [5],
+            any_product: true,
+            currency_id: 1,
+            reward_point_amount: 1,
+            reward_point_split: true,
+            reward_point_mode: "order",
+            minimum_qty: 3,
+            minimum_amount: 40,
+            minimum_amount_tax_mode: "excl",
+            mode: "auto",
+            code: false,
+        },
+        {
+            id: 3,
+            program_id: 6,
+            valid_product_ids: [5],
+            any_product: true,
+            currency_id: 1,
+            reward_point_amount: 1,
+            reward_point_split: true,
+            reward_point_mode: "order",
+            minimum_qty: 3,
+            minimum_amount: 40,
+            minimum_amount_tax_mode: "excl",
+            mode: "with_code",
+            code: "EXPIRED",
+        },
+    ];
 }
 
 patch(hootPosModels, [...hootPosModels, LoyaltyRule]);

@@ -10,8 +10,14 @@ export class ProductPricelist extends models.ServerModel {
     _records = [
         {
             id: 1,
-            name: "Test Pricelist",
-            display_name: "Test Pricelist (USD)",
+            name: "Test Pricelist A",
+            display_name: "Test Pricelist A (USD)",
+            item_ids: [1],
+        },
+        {
+            id: 2,
+            name: "Test Pricelist B",
+            display_name: "Test Pricelist B (USD)",
             item_ids: [1],
         },
     ];

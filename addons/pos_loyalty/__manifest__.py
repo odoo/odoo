@@ -36,7 +36,7 @@
             'pos_loyalty/static/tests/tours/**/*',
         ],
         'web.assets_unit_tests': [
-            'pos_loyalty/static/tests/unit/data/**/*'
+            'pos_loyalty/static/tests/unit/**/*'
         ],
     },
     'uninstall_hook': 'uninstall_hook',
