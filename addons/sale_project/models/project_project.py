@@ -866,6 +866,15 @@ class ProjectProject(models.Model):
         action = super().action_view_tasks()
         action['context']['hide_partner'] = self._get_hide_partner()
         action['context']['allow_billable'] = self.allow_billable
+        if self.env.context.get("from_sale_order_action"):
+            context = dict(action.get("context", {}))
+            context.pop("search_default_open_tasks", None)
+            if self.sale_order_id:
+                context["search_default_sale_order_id"] = self.sale_order_id.id
+            if not self.sale_order_id:
+                sale_order = self.env["sale.order"].browse(self.env.context.get("active_id"))
+                context["default_sale_order_id"] = sale_order.id
+            action["context"] = context
         return action
 
     def action_open_project_vendor_bills(self):
@@ -923,4 +932,5 @@ class ProjectProject(models.Model):
         return [
             *super()._get_template_default_context_whitelist(),
             'allow_billable',
+            'from_sale_order_action',
         ]
