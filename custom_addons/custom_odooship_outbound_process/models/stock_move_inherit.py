@@ -102,6 +102,11 @@ class StockMoveLine(models.Model):
             # Update remaining_packed_qty if packed_qty changed
             if 'packed_qty' in vals:
                 move.remaining_packed_qty = move.picked_qty - move.packed_qty
+                # If pick_status changed to 'partial_pick', set allow_partial if allowed by tenant
+                if vals.get('pick_status') == 'partial_pick' and move.picking_id:
+                    tenant = move.picking_id.tenant_code_id or move.picking_id.sale_id.tenant_code_id
+                    if tenant and tenant.allow_partial_packing:
+                        move.picking_id.allow_partial = True
         self._ensure_pc_barcode_config()
         if 'picked_qty' in vals:
             self._update_picking_current_state()

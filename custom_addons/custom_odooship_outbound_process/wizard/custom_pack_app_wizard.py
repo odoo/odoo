@@ -180,6 +180,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             ("operation_process_type", "=", "pick"),
             ("sale_id", "in", list(sale_ids)),
         ])
+        print("\n\n\n relevant picks====", relevant_pickings)
         if not relevant_pickings:
             raise ValidationError(
                 ("No pickings found for involved Sale Orders at this site with state='Ready'.")
@@ -254,6 +255,53 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             self.line_ids = [(0, 0, v) for v in vals_list]
 
         self._compute_fields_based_on_picking_ids()
+
+        # --- SHORT PICK VALIDATION: Do not allow if picked_qty != demand_qty (product_uom_qty) ---
+        for picking in self.picking_ids:
+            for move in picking.move_ids_without_package:
+                demand_qty = move.product_uom_qty
+                picked_qty = move.picked_qty
+                if demand_qty > picked_qty:
+                    # Check if partial packing is allowed for this pick
+                    allow_partial = picking.allow_partial or False
+                    if not allow_partial:
+                        raise ValidationError((
+                            "Short Pick Detected!\n\n"
+                            "In Picking '%s', Product '[%s]  %s':\n"
+                            "Picked Qty = %.2f, Demand Qty = %.2f.\n\n"
+                            "Please call supervisor before processing this order."
+                        ) % (
+                              picking.name,
+                              move.product_id.default_code or '',
+                              move.product_id.name or '',
+                              picked_qty,
+                              demand_qty))
+
+    def update_packed_qty_after_success(self, picking_name, packed_lines):
+        """
+        Update packed_qty for stock moves after a successful payload response.
+
+        :param picking_name: String - name of the picking
+        :param packed_lines: List of dicts, each with 'sku' and 'qty'
+        """
+        picking = self.env['stock.picking'].search([('name', '=', picking_name)], limit=1)
+        if not picking:
+            raise ValidationError(_("Picking '%s' not found.") % picking_name)
+
+        for line in packed_lines:
+            sku = line.get('sku')
+            packed_qty = line.get('qty', 0.0)
+
+            move = self.env['stock.move'].search([
+                ('picking_id', '=', picking.id),
+                ('product_id.default_code', '=', sku)
+            ], limit=1)
+
+            if move:
+                move.packed_qty = packed_qty
+                _logger.info("Updated packed_qty = %.2f for SKU [%s] in picking %s", packed_qty, sku, picking_name)
+            else:
+                _logger.warning("Move not found for SKU [%s] in picking %s", sku, picking_name)
 
     def _get_package_box_id(self, tenant_id, site_id, incoterm):
         """
@@ -406,7 +454,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         l.scanned = True
                         l.quantity = 1
                         l.remaining_quantity = 0
-
+                    packed_data = [
+                        {'sku': l.product_id.default_code, 'qty': l.quantity or 1.0}
+                        for l in self.line_ids if l.scanned
+                    ]
+                    self.update_packed_qty_after_success(line.picking_id.name, packed_data)
                     return {
                         'warning': {
                             'title': _("Success"),
@@ -450,6 +502,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             l.available_quantity = 1
                             l.line_added = True
                             l.api_payload_success = True
+                        packed_data = [
+                            {'sku': l.product_id.default_code, 'qty': l.quantity or 1.0}
+                            for l in self.line_ids if l.scanned
+                        ]
+                        self.update_packed_qty_after_success(line.picking_id.name, packed_data)
                         return {
                             'warning': {
                                 'title': _("Success"),
@@ -491,6 +548,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             "scanned": True,
                             "product_package_number": line.product_package_number or self.next_package_number
                         })
+                        packed_data = [
+                            {'sku': l.product_id.default_code, 'qty': l.quantity or 1.0}
+                            for l in self.line_ids if l.scanned
+                        ]
+                        self.update_packed_qty_after_success(line.picking_id.name, packed_data)
                 except Exception as e:
                     raise UserError(_("Error while sending label for Order %s:\n%s") % (sale.name, str(e)))
         else:
@@ -1688,7 +1750,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         ('draft', 'Draft'),
         ('pick', 'Pick'),
         ('pack', 'Pack'),
-        ('partially_pick', 'Partially Pick')
+        ('partially_pick', 'Partially Pick'),
+        ('partially_pack', 'Partially Pack'),
     ], default='draft')
     product_package_number = fields.Integer(string='Package Number', required=True, store=True)
     serial_number = fields.Char(string='Serial Number', store=True)

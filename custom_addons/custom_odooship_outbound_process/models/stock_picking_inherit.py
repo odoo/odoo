@@ -16,7 +16,8 @@ class StockPicking(models.Model):
         ('draft','Draft'),
         ('pick', 'Pick'),
         ('pack', 'Pack'),
-        ('partially_pick', 'Partially Pick')
+        ('partially_pick', 'Partially Pick'),
+        ('partially_pack', 'Partially Pack'),
     ],tracking=True,default='draft')
     warehouse_id = fields.Many2one(related='sale_id.warehouse_id', store=True)
     discrete_pick = fields.Boolean(string="Merge Pick", default=False, copy=False)
@@ -52,17 +53,7 @@ class StockPicking(models.Model):
 
     def action_allow_partial(self):
         """
-          This method allows partials functionality on for those customers whose
-          allow partial configuration is setup
+        Marks allow_partial as True when the user clicks the button.
         """
         for rec in self:
-            allow_partials = self.env['partial.fulfill.order.configuration'].search([
-                ('tenant_code_id','=', self.tenant_code_id),
-                ('allow_partial', '=', True)
-            ])
-            if allow_partials:
-                rec.allow_partial = True
-            else:
-                raise ValidationError("Partial Shipping is not allowed for this. If you want to deliver this order as"
-                                      "a Partial one then please reach out to customer and note valide "
-                                      "reason here before processing this order. Thank you!")
+            rec.allow_partial = True
