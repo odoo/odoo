@@ -16,9 +16,8 @@
 
         <menuitem
             id="menu_hr_employee_payroll"
-            name="Employees"
+            name="Organization"
             parent="menu_hr_root"
-            groups="group_hr_user"
             sequence="3"/>
 
             <menuitem
@@ -26,6 +25,7 @@
                 name="Employees"
                 action="open_view_employee_list_my"
                 parent="menu_hr_employee_payroll"
+                groups="group_hr_user"
                 sequence="1"/>
 
             <menuitem
@@ -33,15 +33,23 @@
                 name="Contract Templates"
                 action="action_hr_contract_templates"
                 parent="menu_hr_employee_payroll"
-                sequence="2"
+                sequence="7"
                 groups="hr.group_hr_manager"/>
 
-        <menuitem
-            id="menu_hr_employee"
-            name="Directory"
-            action="hr_employee_public_action"
-            parent="menu_hr_root"
-            sequence="4"/>
+            <menuitem
+                id="menu_hr_employee"
+                name="Directory"
+                action="hr_employee_public_action"
+                parent="menu_hr_employee_payroll"
+                sequence="2"/>
+
+            <menuitem
+                id="menu_hr_department_kanban"
+                action="hr_department_kanban_action"
+                parent="menu_hr_employee_payroll"
+                groups="base.group_user"
+                sequence="3"/>
+
 
         <menuitem
             id="hr_menu_hr_task"
@@ -86,12 +94,6 @@
                 parent="menu_human_resources_configuration"
                 groups="group_hr_user"
                 sequence="10"/>
-
-            <menuitem
-                id="menu_hr_department_kanban"
-                action="hr_department_kanban_action"
-                parent="menu_hr_root"
-                groups="base.group_user"/>
 
             <menuitem
                 id="menu_config_plan_plan"
