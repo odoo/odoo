@@ -48,9 +48,9 @@ class PdfSigner:
         if not 'clone_document_from_reader' in dir(PdfWriter):
             _logger.info("PDF signature is supported by Python 3.12 and above")
             return
-        reader = PdfReader(stream)
+        self.reader = PdfReader(stream)
         self.writer = PdfWriter()
-        self.writer.clone_document_from_reader(reader)
+        self.writer.clone_document_from_reader(self.reader)
 
 
 
@@ -146,7 +146,7 @@ class PdfSigner:
         # Creating the appearance (visible elements of the signature)
         if visible_signature:
             origin = page.mediabox.upper_right # retrieves the top-right coordinates of the page
-            rect_size = (200, 20) # dimensions of the box (width, height)
+            rect_size = (300, 20) # dimensions of the box (width, height)
             padding = 5
 
             # Box that will contain the signature, defined as [x1, y1, x2, y2]
@@ -182,10 +182,13 @@ class PdfSigner:
                 NameObject("/Type"): NameObject("/XObject"),
                 NameObject("/Subtype"): NameObject("/Form")
             })
-
-            #
-            content = "Digitally signed"
-            content = create_string_object(f'{content} by {signer.name} <{signer.email}>') if signer is not None else create_string_object(content)
+            env = self.company.env
+            ICP = env['ir.config_parameter'].sudo()
+            base_url = ICP.get_base_url()
+            content = "Digitally signed on %s", base_url
+            if signer:
+                content = "Digitally signed by %s <%s> on %s" % (signer.name, signer.email, base_url)
+            content = create_string_object(content)
 
             # Setting the parameters used to display the text object of the signature
             # More details on this subject can be found in the sections 4.3 and 5.3
@@ -359,6 +362,15 @@ class PdfSigner:
         Args:
             sig_field_value (DictionaryObject): the value (/V) of the signature field which needs to be modified
         """
+        env = self.company.env
+        ICP = env['ir.config_parameter'].sudo()
+        db_secret = ICP.get_param('database.secret')
+        hashed_secret = hashlib.sha256(db_secret.encode('utf-8')).hexdigest()[:10]
+        base_url = ICP.get_base_url()
+        metadata_str = env._("Odoo Database (%s) on %s", hashed_secret, base_url)
+        metadata = self.reader.getDocumentInfo()
+        metadata.update({"/Producer": metadata_str})
+        self.writer.addMetadata(metadata)
         pdf_data = self._get_document_data()
 
         # Computation of the location of the last inserted contents for the signature field
