@@ -2878,7 +2878,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <xpath expr="//div[@role='search']" position="replace">
         <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
             <t>$0</t>
-            <input name="order" type="hidden" class="o_search_order_by" t-att-value="order_by if order_by else 'name asc'"/>
+            <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by if order_by else 'name asc'"/>
             <t t-out="0"/>
         </form>
     </xpath>
