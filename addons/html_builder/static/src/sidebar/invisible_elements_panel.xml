@@ -15,12 +15,12 @@
 
 <t t-name="html_builder.invisibleSnippetEntry">
     <div class="o_we_invisible_entry d-flex py-1 align-items-center justify-content-between"
-        t-att-class="{'o_we_invisible_root_parent pb-1': entry.isRootParent, 'o_we_sublevel': entry.isDescendant}"
+        t-att-class="{'o_we_invisible_root_parent': entry.isRootParent, 'o_we_sublevel_1': entry.isDescendant}"
         t-on-click="() => toggleElementVisibility(entry)">
-        <div t-out="entry.name"/>
+        <div class="o_title" t-out="entry.name"/>
         <i class="fa ms-2" t-att-class="entry.isVisible ? 'fa-eye' : 'fa-eye-slash'"></i>
     </div>
-    <ul t-if="entry.children.length > 0">
+    <ul t-if="entry.isVisible and entry.children.length > 0">
         <t t-foreach="entry.children" t-as="child" t-key="child_index">
             <li>
                 <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': child, toggleElementVisibility}"/>

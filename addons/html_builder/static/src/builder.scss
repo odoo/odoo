@@ -151,6 +151,31 @@
     }
 }
 
+%o_we_sublevel > div.o_title::before {
+    content: "└"; // TODO The size and look of this depends on the
+                  // browser default font, we should use a SVG instead.
+    display: inline-block;
+    margin-right: 0.4em;
+
+    .o_rtl & {
+        transform: scaleX(-1);
+    }
+}
+@for $level from 1 through 3 {
+    .o_we_sublevel_#{$level} {
+        --o-we-checkbox-color: #{$o-we-fg-light};
+
+        @extend %o_we_sublevel;
+        color: $o-we-fg-light;
+
+        @if $level > 1 {
+            > div.o_title {
+                padding-left: ($level - 1) * 0.6em;
+            }
+        }
+    }
+}
+
 // TODO: adjust the style of those elements
 .o_pager_container {
     overflow-y: scroll;

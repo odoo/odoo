@@ -1,5 +1,5 @@
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
-import { getSnippetName } from "@html_builder/utils/utils";
+import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
 
 export class InvisibleElementsPanel extends Component {
     static template = "html_builder.InvisibleElementsPanel";
@@ -14,7 +14,8 @@ export class InvisibleElementsPanel extends Component {
         onWillStart(() => this.updateInvisibleElementsPanel(this.props.invisibleEls));
 
         onWillUpdateProps((nextProps) => {
-            this.updateInvisibleElementsPanel(nextProps["invisibleEls"]);
+            const { invisibleEls, invisibleSelector } = nextProps;
+            this.updateInvisibleElementsPanel(invisibleEls, invisibleSelector);
         });
     }
 
@@ -22,7 +23,7 @@ export class InvisibleElementsPanel extends Component {
         return this.env.editor.shared;
     }
 
-    updateInvisibleElementsPanel(invisibleEls) {
+    updateInvisibleElementsPanel(invisibleEls, invisibleSelector = this.props.invisibleSelector) {
         // descendantPerSnippet: a map with its keys set to invisible
         // snippets that have invisible descendants. The value corresponding
         // to an invisible snippet element is a list filled with all its
@@ -33,9 +34,7 @@ export class InvisibleElementsPanel extends Component {
         // and create the map ("descendantPerSnippet") of the snippets and
         // their descendant snippets.
         const rootInvisibleSnippetEls = invisibleEls.filter((invisibleSnippetEl) => {
-            const ancestorInvisibleEl = invisibleSnippetEl.parentElement.closest(
-                this.props.invisibleSelector
-            );
+            const ancestorInvisibleEl = invisibleSnippetEl.parentElement.closest(invisibleSelector);
             if (!ancestorInvisibleEl) {
                 return true;
             }
@@ -81,31 +80,22 @@ export class InvisibleElementsPanel extends Component {
     }
 
     toggleElementVisibility(invisibleEntry) {
-        const toggleVisibility = (snippetEl) => {
-            const show = this.shared.visibility.toggleTargetVisibility(snippetEl);
-            invisibleEntry.isVisible = show;
-
-            this.shared.disableSnippets.disableUndroppableSnippets();
-            if (show) {
-                this.shared["builderOptions"].updateContainers(snippetEl);
-            } else {
-                this.shared["builderOptions"].deactivateContainers();
-            }
-        };
-
-        // When toggling the visibility of an element to "Hide", also toggle all
-        // its descendants.
+        const snippetEl = invisibleEntry.snippetEl;
         if (invisibleEntry.isVisible) {
-            invisibleEntry.children.forEach((child) => {
-                if (child.isVisible) {
-                    this.toggleElementVisibility(child);
-                }
-            });
-        } else if (invisibleEntry.parentEl && !invisibleEntry.parentEl.isVisible) {
-            // When toggling the visibility of an element to "Show", also toggle
-            // all its parents.
-            this.toggleElementVisibility(invisibleEntry.parentEl);
+            // Toggle the entry visibility to "Hide".
+            invisibleEntry.isVisible = false;
+            this.shared.visibility.toggleTargetVisibility(snippetEl, false);
+            this.shared.builderOptions.deactivateContainers();
+        } else {
+            // Toggle the entry visibility to "Show".
+            invisibleEntry.isVisible = true;
+            this.shared.visibility.toggleTargetVisibility(snippetEl, true);
+            this.shared.builderOptions.updateContainers(snippetEl);
+            // Scroll to the target if not visible.
+            if (!isElementInViewport(snippetEl) && !snippetEl.matches(".s_popup")) {
+                snippetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
         }
-        toggleVisibility(invisibleEntry.snippetEl);
+        this.shared.disableSnippets.disableUndroppableSnippets();
     }
 }
