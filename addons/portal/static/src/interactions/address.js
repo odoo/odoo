@@ -132,6 +132,7 @@ export class CustomerAddress extends Interaction {
      * @param {Event} ev
      */
     async saveAddress(ev) {
+        ev.preventDefault();  // avoid potential redirect if href set on link
         if (!this.addressForm.reportValidity()) return;
 
         const result = await this.waitFor(this.http.post(
