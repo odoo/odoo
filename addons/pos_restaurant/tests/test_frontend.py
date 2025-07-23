@@ -668,3 +668,12 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_delete_line_release_table')
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(len(order.lines), 0)
+
+    def test_combo_synchronisation(self):
+        """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.
+           if this is not the case, the combo lines would lose their link to the parent combo line and appear as
+           normal line"""
+        setup_product_combo_items(self)
+        self.pos_config.is_order_printer = False
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_synchronisation')
