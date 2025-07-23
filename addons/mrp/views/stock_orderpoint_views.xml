@@ -7,7 +7,8 @@
         <field name="arch" type="xml">
             <field name="route_id" position="after">
                 <field name="show_bom" column_invisible="True"/>
-                <field name="bom_id" optional="hide" invisible="not show_bom" context="{'default_product_tmpl_id': product_tmpl_id, 'display_bom_uom_qty': True}"/>
+                <field name="bom_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                <field name="bom_id" widget="stock.forced_placeholder" optional="hide" invisible="not show_bom" context="{'default_product_tmpl_id': product_tmpl_id, 'display_bom_uom_qty': True}" options="{'placeholder_field': 'bom_id_placeholder'}" decoration-muted="not bom_id"/>
             </field>
         </field>
     </record>
