@@ -49,7 +49,7 @@ class HrAttendance(models.Model):
     overtime_hours = fields.Float(string="Over Time", compute='_compute_overtime_hours', store=True)
     overtime_status = fields.Selection(selection=[('to_approve', "To Approve"),
                                                   ('approved', "Approved"),
-                                                  ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True, readonly=False)
+                                                  ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True, readonly=False, index=True)
     validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', store=True, readonly=False, tracking=True)
     no_validated_overtime_hours = fields.Boolean(compute='_compute_no_validated_overtime_hours')
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
@@ -290,6 +290,7 @@ class HrAttendance(models.Model):
         if employee_attendance_dates is None:
             employee_attendance_dates = self._get_attendances_dates()
 
+        attendance_to_recompute_domain = Domain.FALSE
         overtime_to_unlink = self.env['hr.attendance.overtime']
         overtime_vals_list = []
         affected_employees = self.env['hr.employee']
@@ -381,12 +382,11 @@ class HrAttendance(models.Model):
                         affected_employees |= overtime.employee_id
                 elif overtime:
                     overtime_to_unlink |= overtime
+
+            attendance_to_recompute_domain |= attendance_domain
         created_overtimes = self.env['hr.attendance.overtime'].sudo().create(overtime_vals_list)
-        employees_worked_hours_to_compute = (affected_employees.ids +
-                                             created_overtimes.employee_id.ids +
-                                             overtime_to_unlink.employee_id.ids)
         overtime_to_unlink.sudo().unlink()
-        to_recompute = self.search([('employee_id', 'in', employees_worked_hours_to_compute)])
+        to_recompute = self.search(attendance_to_recompute_domain)
         # for automatically validated attendances, avoid recomputing extra hours if user has changed its value
         validated_modified = to_recompute.filtered(lambda att: att.employee_id.company_id.attendance_overtime_validation == 'no_validation'
                                                         and float_compare(att.overtime_hours, att.validated_overtime_hours, precision_digits=2))
