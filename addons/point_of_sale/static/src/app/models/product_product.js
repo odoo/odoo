@@ -144,7 +144,8 @@ export class ProductProduct extends Base {
             );
         }
 
-        let price = (list_price || this.lst_price) + (price_extra || 0);
+        let price =
+            (typeof list_price === "number" ? list_price : this.lst_price) + (price_extra || 0);
         const rule = this.getPricelistRule(pricelist, quantity);
         if (!rule) {
             return price;

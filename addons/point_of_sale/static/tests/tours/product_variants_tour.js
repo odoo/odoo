@@ -113,3 +113,14 @@ registry.category("web_tour.tours").add("test_integration_dynamic_always_never_v
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_integration_always_variant_price_list_price_zero", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            check_variant_price("A always product", ["S"], "0.00"),
+            check_variant_price("A always product", ["M"], "5.00"),
+            Chrome.endTour(),
+        ].flat(),
+});

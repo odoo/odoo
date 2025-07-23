@@ -303,3 +303,25 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_integration_dynamic_always_never_variant_price', login="pos_user")
+
+    def test_integration_always_variant_price_list_price_zero(self):
+        """Tests the price of products with always variant when added to cart"""
+        self.size_attribute_m.default_extra_price = 5
+
+        product_template = self.env['product.template'].create({
+            'name': 'A always product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'is_storable': True,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+            'list_price': 0,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': self.size_attribute.id,
+            'value_ids': [Command.set([self.size_attribute_s.id, self.size_attribute_m.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_integration_always_variant_price_list_price_zero', login="pos_user")
