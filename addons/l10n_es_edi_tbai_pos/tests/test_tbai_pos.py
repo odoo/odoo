@@ -42,7 +42,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
         })
 
     @classmethod
-    def pay_pos_order(cls, pos_order):
+    def pay_pos_order(cls, pos_order, with_error=False):
         context_make_payment = {
             'active_ids': pos_order.ids,
             'active_id': pos_order.id,
@@ -52,7 +52,8 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
         })
         with patch(
             'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=cls.mock_response_post_invoice_success,
+            return_value=None if with_error else cls.mock_response_post_invoice_success,
+            side_effect=cls.mock_request_error if with_error else None,
         ):
             pos_make_payment.with_context(context_make_payment).check()
 
@@ -133,3 +134,34 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
 
         self.assertEqual(pos_refund.state, 'invoiced')
         self.assertFalse(pos_refund.l10n_es_tbai_state)
+
+    def test_tbai_upload_cron(self):
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        pos_order = self.create_pos_order(current_session, 100.0)
+        self.pay_pos_order(pos_order, with_error=True)
+
+        pos_order2 = self.create_pos_order(current_session, 101.0)
+        self.pay_pos_order(pos_order2)
+
+        # The second order should also not be sent since the chain head is not posted
+        self.assertNotEqual(pos_order.l10n_es_tbai_state, 'sent')
+        self.assertNotEqual(pos_order2.l10n_es_tbai_state, 'sent')
+
+        # Cron should handle errors gracefully
+        with patch(
+            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
+            side_effect=self.mock_request_error,
+        ):
+            self.env.ref('l10n_es_edi_tbai_pos.ir_cron_retry_tbai_upload').method_direct_trigger()
+        self.assertNotEqual(pos_order.l10n_es_tbai_state, 'sent')
+        self.assertNotEqual(pos_order2.l10n_es_tbai_state, 'sent')
+
+        with patch(
+            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
+            return_value=self.mock_response_post_invoice_success,
+        ):
+            self.env.ref('l10n_es_edi_tbai_pos.ir_cron_retry_tbai_upload').method_direct_trigger()
+        self.assertEqual(pos_order.l10n_es_tbai_state, 'sent')
+        self.assertEqual(pos_order2.l10n_es_tbai_state, 'sent')

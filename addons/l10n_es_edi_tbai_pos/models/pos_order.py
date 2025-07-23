@@ -2,6 +2,10 @@ from odoo import api, fields, models
 from odoo.addons.l10n_es_edi_tbai.models.account_move import TBAI_REFUND_REASONS
 from odoo.exceptions import UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
@@ -191,3 +195,50 @@ class PosOrder(models.Model):
             'refunded_doc': self.refunded_order_id.l10n_es_tbai_post_document_id,
             'refunded_doc_invoice_date': self.refunded_order_id.date_order if self.refunded_order_id else False,
         }
+
+    # -------------------------------------------------------------------------
+    # CRON METHODS
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _l10n_es_tbai_retry_cron(self, limit=50):
+        sent = []
+
+        for company in self.env['res.company'].search([]):
+            # The chain head is usually the most recent one to fail
+            chain_head_doc = company._get_l10n_es_tbai_last_chained_document()
+            if chain_head_doc and chain_head_doc.state != 'accepted':
+                chain_head_order = self.search([('l10n_es_tbai_post_document_id', '=', chain_head_doc.id)])
+                error = chain_head_order._l10n_es_tbai_post()
+                if error:
+                    _logger.info("Unable to send chain head %s: %s", chain_head_order, error)
+                    continue
+
+                new_chain_head_doc = chain_head_order.l10n_es_tbai_post_document_id
+                if new_chain_head_doc.state != 'accepted':
+                    _logger.info("Posted chain head was not accepted %s: %s", chain_head_order, new_chain_head_doc.response_message)
+                    continue
+
+                sent.append(chain_head_order.id)
+
+        domain = [
+            ('lines', '!=', False),
+            ('state', '!=', 'cancel'),
+            ('account_move', '=', False),
+            '|',
+            ('l10n_es_tbai_post_document_id', '=', False),
+            ('l10n_es_tbai_post_document_id.state', '!=', 'accepted')]
+
+        for order in self.search(domain, limit=limit):
+            error = order._l10n_es_tbai_post()
+            if error:
+                _logger.info("Unable to send %s: %s", order, error)
+                break
+
+            sent.append(order.id)
+
+        if sent:
+            _logger.info("Sent to TicketBAI PoS orders with ids %s", sent)
+
+        if sent and self.search_count(domain, limit=1):
+            self.env.ref('l10n_es_edi_tbai_pos.ir_cron_retry_tbai_upload')._trigger()
