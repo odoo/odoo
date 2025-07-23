@@ -14,7 +14,7 @@ class Department(models.Model):
     _parent_store = True
 
     name = fields.Char('Department Name', required=True)
-    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', compute_sudo=True, recursive=True, store=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -30,6 +30,39 @@ class Department(models.Model):
     parent_path = fields.Char(index=True, unaccent=False)
     master_department_id = fields.Many2one(
         'hr.department', 'Master Department', compute='_compute_master_department_id', store=True)
+    has_read_access = fields.Boolean(search="_search_has_read_access", compute="_compute_has_read_access", store=False)
+
+    @api.depends_context('hierarchical_naming')
+    def _compute_display_name(self):
+        if self.env.context.get('hierarchical_naming', True):
+            return super()._compute_display_name()
+        for record in self:
+            record.display_name = record.name
+
+    def _search_has_read_access(self, operator, value):
+        supported_operators = ["="]
+        if operator not in supported_operators or not isinstance(value, bool):
+            raise NotImplementedError()
+        if not value:
+            raise ValueError()
+        if self.env.user.has_group('hr.group_hr_user'):
+            return [(1, '=', 1)]
+        departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).ids
+        return [('id', 'child_of', departments_ids)]
+
+    @api.depends_context('uid', 'company')
+    @api.depends('manager_id')
+    def _compute_has_read_access(self):
+        if self.env.user.has_group('hr.group_hr_user'):
+            for r in self:
+                r.has_read_access = True
+        else:
+            departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).get_children_department_ids()
+            for r in self:
+                if r.id in departments_ids.ids:
+                    r.has_read_access = True
+                else:
+                    r.has_read_access = False
 
     def name_get(self):
         if not self.env.context.get('hierarchical_naming', True):
@@ -54,7 +87,7 @@ class Department(models.Model):
             department.master_department_id = int(department.parent_path.split('/')[0])
 
     def _compute_total_employee(self):
-        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
+        emp_data = self.env['hr.employee'].sudo()._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
         result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
         for department in self:
             department.total_employee = result.get(department.id, 0)

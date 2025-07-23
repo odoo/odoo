@@ -166,7 +166,7 @@ class HolidaysRequest(models.Model):
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean(related='employee_id.active', string='Employee Active', readonly=True)
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
-    tz = fields.Selection(_tz_get, compute='_compute_tz')
+    tz = fields.Selection(_tz_get, compute='_compute_tz', compute_sudo=True)
     department_id = fields.Many2one(
         'hr.department', compute='_compute_department_id', store=True, string='Department', readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
@@ -818,7 +818,7 @@ class HolidaysRequest(models.Model):
                 if leave.holiday_type == 'company':
                     target = leave.mode_company_id.name
                 elif leave.holiday_type == 'department':
-                    target = leave.department_id.name
+                    target = leave.sudo().department_id.name
                 elif leave.holiday_type == 'category':
                     target = leave.category_id.name
                 elif leave.employee_id:
@@ -1264,7 +1264,7 @@ class HolidaysRequest(models.Model):
         elif self.holiday_type == 'company':
             employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
         else:
-            employees = self.department_id.member_ids
+            employees = self.sudo().department_id.member_ids
         return employees
 
     def action_validate(self):
