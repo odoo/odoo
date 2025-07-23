@@ -284,8 +284,8 @@ wget 'https://nightly.odoo.com/master/iotbox/eftapi.so' -P /usr/lib/
 # Create Odoo user for odoo service and disable password login
 adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
 
-# Replace pi user with odoo user in sudoers file: odoo user doesn't need to type its password to run sudo commands
-mv /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_odoo-nopasswd
+# odoo user doesn't need to type its password to run sudo commands
+cp /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_odoo-nopasswd
 sed -i 's/pi/odoo/g' /etc/sudoers.d/010_odoo-nopasswd
 
 # copy the odoo.conf file to the overwrite directory
