@@ -164,7 +164,7 @@ export class ChannelInvitation extends Component {
         if (this.props.thread.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.thread.correspondent) {
-                partnerIds.unshift(this.props.thread.correspondent.persona.id);
+                partnerIds.unshift(this.props.thread.correspondent.partner_id.id);
             }
             await this.store.startChat(partnerIds);
         } else {
@@ -191,7 +191,7 @@ export class ChannelInvitation extends Component {
                 }
                 if (this.selectedPartners.length === 1) {
                     const alreadyChat = Object.values(this.store.Thread.records).some((thread) =>
-                        thread.correspondent?.persona.eq(this.selectedPartners[0])
+                        thread.correspondent?.partner_id.eq(this.selectedPartners[0])
                     );
                     if (alreadyChat) {
                         return _t("Go to conversation");

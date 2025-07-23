@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Thread" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-Thread')]" position="before">
-            <div t-if="props.thread.model === 'discuss.channel' and props.thread.correspondent?.persona.outOfOfficeDateEndText" class="alert alert-primary mb-0 smaller fw-bolder o-rounded-bubble mx-1 o-mt-0_5 py-1 shadow-sm" t-esc="props.thread.correspondent.persona.outOfOfficeDateEndText" role="alert"/>
+            <div t-if="props.thread.model === 'discuss.channel' and props.thread.correspondent?.partner_id?.outOfOfficeDateEndText" class="alert alert-primary mb-0 smaller fw-bolder o-rounded-bubble mx-1 o-mt-0_5 py-1 shadow-sm" t-esc="props.thread.correspondent.partner_id.outOfOfficeDateEndText" role="alert"/>
         </xpath>
     </t>
 </templates>
