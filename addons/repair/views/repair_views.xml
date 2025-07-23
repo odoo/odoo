@@ -243,7 +243,7 @@
                 <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                 <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
                 <filter string="Ready" name="ready" domain="[('state', '=', 'confirmed'), ('is_parts_available', '=', True)]" invisible="True"/>
-                <filter string="Late" name="filter_late" domain="[('state', '=', 'confirmed'), ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Late" name="filter_late" domain="[('state', '=', 'confirmed'), ('schedule_date', '&lt;', datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
                 <filter name="filter_create_date" date="create_date"/>
                 <separator/>
                 <filter invisible="1" string="My Activities" name="filter_activities_my"
