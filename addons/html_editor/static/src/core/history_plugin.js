@@ -1293,6 +1293,9 @@ export class HistoryPlugin extends Plugin {
                 } finally {
                     def.resolve();
                 }
+                if (this.isDestroyed) {
+                    return;
+                }
                 // todo: We should not add a step on preview as it would send
                 // unnecessary steps in collaboration and let the other peer see
                 // what we preview.
@@ -1311,6 +1314,9 @@ export class HistoryPlugin extends Plugin {
                 } catch (error) {
                     revertSavePoint();
                     throw error;
+                }
+                if (this.isDestroyed) {
+                    return;
                 }
                 this.addStep();
             },

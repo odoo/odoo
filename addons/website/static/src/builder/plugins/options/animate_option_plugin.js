@@ -346,7 +346,7 @@ export class AnimateOptionPlugin extends Plugin {
 
 export class SetAnimationModeAction extends BuilderAction {
     static id = "setAnimationMode";
-    static dependencies = ["animateOption"];
+    static dependencies = ["animateOption", "imageHover"];
     setup() {
         this.animationWithFadein = ["onAppearance", "onScroll"];
         this.scrollingElement = getScrollingElement(this.document);
@@ -355,7 +355,7 @@ export class SetAnimationModeAction extends BuilderAction {
     isApplied() {
         return true;
     }
-    clean({ editingElement, value: effectName, nextAction }) {
+    async clean({ editingElement, value: effectName, nextAction }) {
         this.scrollingElement.classList.remove("o_wanim_overflow_xy_hidden");
         editingElement.classList.remove(
             "o_animating",
@@ -374,11 +374,7 @@ export class SetAnimationModeAction extends BuilderAction {
             delete editingElement.dataset.scrollZoneEnd;
         }
         if (effectName === "onHover") {
-            // todo: to implement
-            // this.trigger_up("option_update", {
-            //     optionName: "ImageTools",
-            //     name: "disable_hover_effect",
-            // });
+            await this.dependencies.imageHover.removeHoverEffect(editingElement);
         }
 
         const isNextAnimationFadein = this.animationWithFadein.includes(nextAction.value);
@@ -389,7 +385,8 @@ export class SetAnimationModeAction extends BuilderAction {
             this._setImagesLazyLoading(editingElement);
         }
     }
-    apply({ editingElement, value: effectName, params: { forceAnimation } }) {
+
+    async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
         if (this.animationWithFadein.includes(effectName)) {
             editingElement.classList.add("o_anim_fade_in");
         }
@@ -398,15 +395,7 @@ export class SetAnimationModeAction extends BuilderAction {
             editingElement.dataset.scrollZoneEnd = 100;
         }
         if (effectName === "onHover") {
-            // todo: to implement
-            // Pause the history until the hover effect is applied in
-            // "setImgShapeHoverEffect". This prevents saving the intermediate
-            // steps done (in a tricky way) up to that point.
-            // this.options.wysiwyg.odooEditor.historyPauseSteps();
-            // this.trigger_up("option_update", {
-            //     optionName: "ImageTools",
-            //     name: "enable_hover_effect",
-            // });
+            await this.dependencies.imageHover.setHoverEffect(editingElement);
         }
         if (forceAnimation) {
             this.dependencies.animateOption.forceAnimation(editingElement);
