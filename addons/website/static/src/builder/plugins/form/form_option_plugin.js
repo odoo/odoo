@@ -1074,7 +1074,7 @@ export class MultiCheckboxDisplayAction extends BuilderAction {
 }
 export class SetLabelTextAction extends BuilderAction {
     static id = "setLabelText";
-    apply({ editingElement: fieldEl, value }) {
+    apply({ isPreviewing, editingElement: fieldEl, value }) {
         const labelEl = fieldEl.querySelector(".s_website_form_label_content");
         labelEl.textContent = value;
         if (isFieldCustom(fieldEl)) {
@@ -1084,7 +1084,9 @@ export class SetLabelTextAction extends BuilderAction {
                 multiple.dataset.name = value;
             }
             const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
-            const previousInputName = fieldEl.name;
+            if (!isPreviewing) {
+                this.previousInputName = inputEls[0].name;
+            }
             inputEls.forEach((el) => (el.name = value));
 
             // Synchronize the fields whose visibility depends on this field
@@ -1092,7 +1094,7 @@ export class SetLabelTextAction extends BuilderAction {
                 .closest("form")
                 .querySelectorAll(
                     `.s_website_form_field[data-visibility-dependency="${CSS.escape(
-                        previousInputName
+                        isPreviewing ? this.previousInputName : value
                     )}"]`
                 );
             for (const dependentEl of dependentEls) {
