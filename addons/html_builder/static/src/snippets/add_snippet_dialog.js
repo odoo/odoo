@@ -75,14 +75,15 @@ export class AddSnippetDialog extends Component {
     }
 
     /**
-     * Loads and injects the required styles into the iframe's <head>.
-     * The URL for web.assets_frontend CSS bundle is retrieved from the editor
+     * Loads and injects the required styles into the iframe's <head>. The URL
+     * for website.inside_builder_style CSS bundle is retrieved from the editor
      * document to ensure consistency, especially when using the RTL version.
      */
     async insertStyle() {
         const loadCSSBundleFromEditor = (bundleName, loadOptions) => {
-            const cssLinkEl = this.props.editor.document.head
-                .querySelector(`link[type="text/css"][href*="/${bundleName}."]`);
+            const cssLinkEl = this.props.editor.document.head.querySelector(
+                `link[type="text/css"][href*="/${bundleName}."]`
+            );
             if (cssLinkEl) {
                 return loadCSS(cssLinkEl.getAttribute("href"), loadOptions);
             }
@@ -91,7 +92,7 @@ export class AddSnippetDialog extends Component {
 
         const loadOptions = { targetDoc: this.iframeRef.el.contentDocument, js: false };
         await Promise.all([
-            loadCSSBundleFromEditor("web.assets_frontend", loadOptions),
+            loadCSSBundleFromEditor("website.inside_builder_style", loadOptions),
             loadBundle("html_builder.iframe_add_dialog", loadOptions),
         ]);
     }

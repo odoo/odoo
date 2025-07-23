@@ -1025,7 +1025,7 @@ class Website(Home):
         Reloads asset bundles and returns their unique URLs.
         """
         return {
-            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
+            'website.inside_builder_style': request.env['ir.qweb']._get_asset_link_urls('website.inside_builder_style', request.session.debug),
         }
 
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)

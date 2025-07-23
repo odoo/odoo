@@ -18,7 +18,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
-import { RPCError } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useService } from "@web/core/utils/hooks";
@@ -289,11 +289,32 @@ export class WebsiteBuilderClientAction extends Component {
             loadBundle("html_builder.assets_edit_frontend", {
                 targetDoc: this.websiteContent.el.contentDocument,
             }),
-            loadBundle("website.inside_builder_style", {
-                targetDoc: this.websiteContent.el.contentDocument,
-                js: false,
-            }),
+            this.loadInsideBuilderStyleBundle(this.websiteContent.el.contentDocument),
         ]);
+    }
+
+    async loadInsideBuilderStyleBundle(targetDoc) {
+        // Calling through `theme_customize_bundle_reload` to ensure that the
+        // website ID is included in the request, which is necessary for the
+        // bundle to include user customized variables
+        const bundles = await rpc("/website/theme_customize_bundle_reload");
+        const proms = [];
+        for (const [, bundleURLs] of Object.entries(bundles)) {
+            for (const url of bundleURLs) {
+                const linkEl = targetDoc.createElement("link");
+                linkEl.setAttribute("type", "text/css");
+                linkEl.setAttribute("rel", "stylesheet");
+                linkEl.setAttribute("href", url);
+                targetDoc.head.appendChild(linkEl);
+                proms.push(
+                    new Promise((resolve) => {
+                        linkEl.addEventListener("load", resolve);
+                        linkEl.addEventListener("error", resolve);
+                    })
+                );
+            }
+        }
+        return proms;
     }
 
     /**
