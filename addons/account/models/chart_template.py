@@ -255,7 +255,13 @@ class AccountChartTemplate(models.AbstractModel):
         if not isinstance(companies, models.BaseModel):
             companies = self.env['res.company'].browse(companies)
         for company in companies:
+<<<<<<< bf3df7f0d908415e1d07fa78c5fc713dafe27e69
             self.sudo().with_context(skip_pdf_attachment_generation=True)._load_data(self._get_demo_data(company))
+||||||| 89624acbab4184d55fbc3a07d6dab6fce93acac9
+            self.sudo()._load_data(self._get_demo_data(company), ignore_duplicates=True)
+=======
+            self.sudo()._load_data(self._get_demo_data(company))
+>>>>>>> 5e98ef63cca884ba5b61a0359b3b57aa72c3ee7d
             self._post_load_demo_data(company)
 
     def _pre_reload_data(self, company, template_data, data, force_create=True):
