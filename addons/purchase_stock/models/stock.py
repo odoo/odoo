@@ -116,9 +116,20 @@ class StockWarehouseOrderpoint(models.Model):
     supplier_id = fields.Many2one(
         'product.supplierinfo', string='Vendor Pricelist', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+    supplier_id_placeholder = fields.Char(compute='_compute_supplier_id_placeholder')
     vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor")
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
     product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
+
+    @api.depends('route_id', 'route_id_placeholder')
+    def _compute_supplier_id_placeholder(self):
+        for o in self:
+            o.supplier_id_placeholder = ''
+            default_rule = o._get_default_rule()
+            if o.show_supplier and default_rule:
+                supplier = default_rule._get_matching_supplier(o.product_id, 0, False, o.company_id, {})
+                if supplier:
+                    o.supplier_id_placeholder = supplier.display_name
 
     @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
     def _compute_qty_to_order_computed(self):
@@ -130,6 +141,12 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('supplier_id')
     def _compute_lead_days(self):
         return super()._compute_lead_days()
+
+    @api.onchange('supplier_id')
+    def _compute_new_route_id_from_supplier(self):
+        for o in self:
+            if not o.route_id and o.supplier_id:
+                o.route_id = self.env['stock.rule'].search([('action', '=', 'buy')])[0].route_id
 
     def _compute_visibility_days(self):
         res = super()._compute_visibility_days()
@@ -162,13 +179,15 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.days_to_order = orderpoint.company_id.days_to_purchase
         return res
 
-    @api.depends('route_id')
+    @api.depends('route_id', 'route_id_placeholder')
     def _compute_show_suppplier(self):
         buy_route = []
         for res in self.env['stock.rule'].search_read([('action', '=', 'buy')], ['route_id']):
             buy_route.append(res['route_id'][0])
         for orderpoint in self:
-            orderpoint.show_supplier = orderpoint.route_id.id in buy_route
+            orderpoint.show_supplier = (orderpoint.route_id.id in buy_route) or (
+                orderpoint._get_default_rule().action == 'buy'
+            )
 
     def action_view_purchase(self):
         """ This function returns an action that display existing

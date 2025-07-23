@@ -79,6 +79,7 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days_date = fields.Date(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
+    route_id_placeholder = fields.Char(compute='_compute_route_id_placeholder')
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit')
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit')
@@ -135,6 +136,16 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.rule_ids = rule_ids
             rules_cache[cache_key] = rule_ids
         (self - orderpoints_to_compute).rule_ids = False
+
+    @api.depends('product_id')
+    def _compute_route_id_placeholder(self):
+        for o in self:
+            default_rule = o._get_default_rule()
+            o.route_id_placeholder = default_rule.route_id.name if default_rule else ''
+
+    def _get_default_rule(self):
+        self.ensure_one()
+        return self.rule_ids or self.env['procurement.group']._get_rule(self.product_id, self.location_id, {})
 
     @api.depends('product_max_qty')
     def _compute_product_min_qty(self):
@@ -382,7 +393,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _set_default_route_id(self):
         """ Write the `route_id` field on `self`. This method is intendend to be called on the
-        orderpoints generated when openning the replenish report.
+        orderpoints generated when opening the replenish report.
         """
         self = self.filtered(lambda o: not o.route_id)
         rules_groups = self.env['stock.rule']._read_group([
