@@ -3,7 +3,7 @@ import { fields } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").Persona} */
+/** @type {import("models").MailGuest} */
 const mailGuestPatch = {
     setup() {
         super.setup();

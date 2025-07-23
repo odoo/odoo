@@ -19,7 +19,7 @@ patch(Thread.prototype, {
                 const orderedChannelMembers = [...this.channel_member_ids].sort(
                     (a, b) => a.id - b.id
                 );
-                const isFirstMemberOperator = orderedChannelMembers[0]?.persona.eq(
+                const isFirstMemberOperator = orderedChannelMembers[0]?.partner_id?.eq(
                     this.livechat_operator_id
                 );
                 const visitor = isFirstMemberOperator

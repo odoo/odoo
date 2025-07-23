@@ -113,7 +113,10 @@ export class ChannelMember extends Record {
     unpin_dt = fields.Datetime();
 
     get name() {
-        return this.channel_id.getPersonaName(this.persona);
+        if (this.guest_id) {
+            return this.guest_id.name;
+        }
+        return this.channel_id.getPersonaName(this.partner_id);
     }
 
     get avatarUrl() {
