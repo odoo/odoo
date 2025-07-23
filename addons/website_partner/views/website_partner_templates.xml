@@ -18,42 +18,9 @@
 <template id="index" name="Find Partners">
     <t t-call="website_partner.layout">
         <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-            <h1 class="me-auto mb-0 h4">
+            <h1 id="page_title" class="me-auto mb-0 h4">
                 Find a partner<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
             </h1>
-            <div class="dropdown d-none d-lg-block">
-                <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
-                    <t t-foreach="countries" t-as="country">
-                        <span t-if="country['active']" t-out="country['country_id'][1]"/>
-                    </t>
-                </button>
-                <div class="dropdown-menu">
-                    <t t-foreach="countries" t-as="country" t-if="country['country_id']">
-                        <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
-                        <a t-attf-href="/partners#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
-                            <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
-                            <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
-                        </a>
-                    </t>
-                </div>
-            </div>
-            <div class="o_wcrm_search d-flex w-100 w-lg-25">
-                <form class="flex-grow-1" action="" method="get">
-                    <input t-if="country_all" type="hidden" name="country_all" value="True" />
-                    <div class="input-group" role="search">
-                        <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
-                        <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
-                        <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
-                            <i class="oi oi-search"/>
-                        </button>
-                    </div>
-                </form>
-                <button class="btn btn-light position-relative ms-2 d-lg-none"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#o_wcrm_offcanvas">
-                    <i class="fa fa-sliders"/>
-                </button>
-            </div>
         </section>
         <!-- Off canvas filters on mobile-->
         <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
@@ -117,9 +84,32 @@
                 There are no matching partners found for the selected country. Displaying results across all countries instead.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="my-5 py-5 text-center" t-elif="True">
-                <h5>ELSE of the partner search</h5>
-            </div>
+            <t t-foreach="partners" t-as="partner">
+                <div class="col-md-4 col-xl-3 col-12 mb-4">
+                    <div class="card h-100 text-decoration-none">
+                        <a id="partner_link_card" class="text-decoration-none" aria-label="Go to reseller">
+                            <div t-field="partner.image_1920"
+                                class="card-img-top border-bottom"
+                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
+                                />
+                            <div class="card-body">
+                                <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
+                                <small id="o_wcrm_partners_address"/>
+                                <small class="o_wcrm_short_description text-muted overflow-hidden">
+                                    <b t-if="partner.implemented_partner_count">
+                                        <t t-if="partner.implemented_partner_count > 1" t-set='reflabel'>references</t>
+                                        <t t-else="" t-set='reflabel'>reference</t>
+                                        <t t-out="partner.implemented_partner_count"/> <t t-out='reflabel'/> » </b>
+                                    <span t-field="partner.website_short_description"/>
+                                </small>
+                                <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
+                                    Edit to add a short description
+                                </small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </t>
             <div class="navbar">
                 <t t-call="website.pager">
                    <t t-set="classname" t-valuef="mx-auto"/>
@@ -129,7 +119,7 @@
     </t>
 </template>
 
-<template id="partner" name="Partner Detail">
+<!-- <template id="partner" name="Partner Detail">
     <t t-call="website_partner.layout">
         <div t-if="not edit_page" class="mt-4 mb-3">
             <a t-attf-href="/partners#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back to partners</a>
@@ -140,9 +130,9 @@
             </t>
         </t>
     </t>
-</template>
+</template> -->
 
-<template id="references_block" name="Partner References Block">
+<!-- <template id="references_block" name="Partner References Block">
     <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
         <h4 id="references">References</h4>
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
@@ -157,7 +147,7 @@
             </div>
         </div>
     </t>
-</template>
+</template> -->
 
 <template id="partner_page" name="Partner Page">
     <t t-call="website.layout">
@@ -174,6 +164,9 @@
 </template>
 
 <template id="partner_detail" name="Partner Details">
+    <div t-if="not edit_page" class="mt-4 mb-3">
+        <a t-attf-href="/partners#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back to partners</a>
+    </div>
     <div class="row" itemscope="itemscope" itemtype="http://schema.org/Organization">
         <div class="col-lg-3 col-md-4">
             <div t-field="partner.avatar_1920" t-options='{"widget": "image", "preview_image": "avatar_1920", "style": "object-fit: cover", "class": "w-100 mb-2 rounded-3 border", "itemprop": "image"}'/>
@@ -198,5 +191,101 @@
             <t t-out="right_column or ''"/>
         </div>
     </div>
+</template>
+
+
+
+<template id="o_wcrm_partner_address" inherit_id="website_partner.index" name="Address">
+    <xpath expr="//small[@id='o_wcrm_partners_address']" position="inside">
+        <div t-field="partner.self"
+            t-options="{
+                'widget': 'contact',
+                'fields': ['country_id']
+            }"
+            class="py-2"
+        />
+    </xpath>
+</template>
+
+<template id="search" inherit_id="website_partner.index" name="Search">
+    <xpath expr="//h1[@id='page_title']" position="after">
+        <div class="o_wcrm_search d-flex w-100 w-lg-25">
+            <form class="flex-grow-1" action="" method="get">
+                <input t-if="country_all" type="hidden" name="country_all" value="True" />
+                <div class="input-group" role="search">
+                    <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
+                    <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                    <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
+                        <i class="oi oi-search"/>
+                    </button>
+                </div>
+            </form>
+            <button class="btn btn-light position-relative ms-2 d-lg-none"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#o_wcrm_offcanvas">
+                <i class="fa fa-sliders"/>
+            </button>
+        </div>
+    </xpath>
+</template>
+
+<template id="companies_only" inherit_id="website_partner.index" name="Companies only">
+    <xpath expr="//h1[@id='page_title']" position="after">
+        <div class="dropdown d-none d-lg-block">
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
+                <t t-foreach="countries" t-as="country">
+                    <span t-if="country['active']" t-out="country['country_id'][1]"/>
+                </t>
+            </button>
+            <div class="dropdown-menu">
+                <t t-foreach="countries" t-as="country" t-if="country['country_id']">
+                    <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
+                    <a t-attf-href="/partners#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
+                        <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
+                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="countries" inherit_id="website_partner.index" name="Countries">
+
+</template>
+
+<template id="partner_page" inherit_id="website_partner.index" name="Partner page">
+    <xpath expr="//a[@id='partner_link_card']" position="attributes">
+        <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_country and 'country_id=%s' % current_country.id}</attribute>
+    </xpath>
+</template>
+
+<template id="ref_country" inherit_id="website_partner.search" name="World Map">
+    <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
+        <t t-if="google_maps_api_key">
+            <!-- modal for large map -->
+            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h4 class="modal-title">World Map</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                    </header>
+                    <iframe loading="lazy" t-attf-src="/google_map?height=485&amp;dom=website_partner.partners&amp;current_country=#{ current_country and current_country.id }&amp;partner_url=/partners/&amp;limit=1000"
+                    style="height:485px;"/>
+                </div>
+              </div>
+            </div>
+            <!-- modal end -->
+            <div class="btn-group ms-2">
+                <button class="btn btn-light border-primary active">
+                    <i class="fa fa-th-large"/>
+                </button>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
+                    <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
+                </button>
+            </div>
+        </t>
+    </xpath>
 </template>
 </odoo>
