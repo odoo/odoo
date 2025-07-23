@@ -49,13 +49,13 @@ SEPA_COUNTRIES = [
 ]
 
 
-class ResCountry(models.CachedModel):
+class ResCountry(models.ValueModel):
     _name = 'res.country'
     _description = 'Country'
     _explanation = "Represents a nation or territory. Used for addressing, tax rules (fiscal positions), and localization settings."
     _order = 'name, id'
     _rec_names_search = ('name', 'code')
-    _cached_data_fields = ('code', 'currency_id', 'phone_code')
+    _cached_data_fields = ('code', 'name', 'currency_id', 'phone_code')
 
     name = fields.Char(
         string='Country Name', required=True, translate=True)
@@ -128,11 +128,7 @@ class ResCountry(models.CachedModel):
     @api.model
     @api.ormcache('code', cache='stable')
     def _phone_code_for(self, code):
-        data = self._cached_data()
-        for country_code, phone_code in zip(data['code'], data['phone_code']):
-            if country_code == code:
-                return phone_code
-        return False
+        return self.get(code).phone_code
 
     @api.model_create_multi
     def create(self, vals_list):

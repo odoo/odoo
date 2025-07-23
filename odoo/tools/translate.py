@@ -1934,7 +1934,7 @@ class TranslationImporter:
         """
         if self.verbose:
             _logger.info('loading translation file for language %s', lang)
-        if not self.env['res.lang']._lang_get(lang):
+        if not self.env['res.lang'].get(lang):
             _logger.error("Couldn't read translation for lang '%s', language not found", lang)
             return None
         try:
