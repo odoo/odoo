@@ -24,12 +24,12 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
             {
                 "model_id": model.id,
                 "driver_id": cls.purchaser.id,
-                "plan_to_change_car": False
+                "plan_to_change_vehicle": False
             },
             {
                 "model_id": model.id,
                 "driver_id": cls.purchaser.id,
-                "plan_to_change_car": False
+                "plan_to_change_vehicle": False
             }
         ])
         cls.bill = cls.env['account.move'].create({
@@ -147,7 +147,7 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         })
         car = self.env["fleet.vehicle"].create({
             "model_id": model.id,
-            "plan_to_change_car": False
+            "plan_to_change_vehicle": False
         })
 
         partner = self.env['res.partner'].create({
