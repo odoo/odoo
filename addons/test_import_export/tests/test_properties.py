@@ -1,5 +1,7 @@
+import datetime
 import json
 from odoo.tests.common import RecordCapturer, HttpCase
+from .test_import import generate_xlsx
 
 
 class TestPropertiesExportImport(HttpCase):
@@ -436,3 +438,33 @@ class TestPropertiesExportImport(HttpCase):
             {'bool_prop': True, 'tags_prop': ['bb'], 'm2m_prop': self.partners[1:].ids},
             {'bool_prop': False, 'tags_prop': ['bb', 'cc'], 'm2m_prop': False},
         ])
+
+    def test_parse_date_properties(self):
+        def_record = self.ModelDefinition.create([
+            {
+                'properties_definition': [
+                    {'name': 'char_prop', 'type': 'char', 'string': 'TextType'},
+                    {'name': 'date_prop', 'type': 'date', 'string': 'DateType'},
+                ]
+            },
+        ])
+
+        file_content = generate_xlsx({
+            f"TextType ({def_record.display_name})": ["test"],
+            f"DateType ({def_record.display_name})": [datetime.date(2025, 7, 1)]
+        })
+
+        file_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': self.ModelProperty._name,
+            'file': file_content,
+            'file_type': file_type,
+        })
+
+        opts = {'quoting': '"', 'separator': ',', 'has_headers': True}
+        data, import_fields = import_wizard._convert_import_data(
+            ["properties.char_prop", "properties.date_prop"],
+            opts
+        )
+        result = import_wizard._parse_datetime_data(import_fields, data)
+        self.assertItemsEqual(result, [], msg="Property Date type fields should have been parsed properly")

@@ -1001,6 +1001,31 @@ foo3,US,0,persons\n""",
         self.assertEqual(response['messages'][1]['type'], 'error')
         self.assertIn("Field 'name' does not accept date/time values.", response['messages'][1]['message'])
 
+    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    def test_date_fields_are_parsed(self):
+        """Test that importing datetime values are properly parsed."""
+
+        file_content = generate_xlsx({
+            'd': [datetime.date(2025, 7, 1)],
+            'parent_id/d': [datetime.date(2024, 7, 1)]
+        })
+        file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        import_wizard = self.env["base_import.import"].create({
+            'res_model': "import.complex",
+            'file': file_content,
+            'file_type': file_type,
+        })
+        data, import_fields = import_wizard._convert_import_data(
+            ["d", "parent_id/d"],
+            {
+                'quoting': '"',
+                'separator': ',',
+                'has_headers': True
+            }
+        )
+        result = import_wizard._parse_datetime_data(import_fields, data)
+        self.assertItemsEqual(result, [], msg="Date type fields should have been parsed properly")
+
 
 class TestBatching(TransactionCase):
     def _makefile(self, rows):

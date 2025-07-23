@@ -1415,11 +1415,37 @@ class Base_ImportImport(models.TransientModel):
 
     def _parse_datetime_data(self, import_fields, input_file_data):
         errors = []
-        field_types = self.env[self.res_model].fields_get(import_fields, ['type'])
-        allowed_date_fields = {
-            name for name, info in field_types.items() if info.get('type') in ('date', 'datetime')
-        }
 
+        def _get_related_models(model, fields):
+            def _get_model(current_model, field_path):
+                if field_path:
+                    relation = field_path.pop()
+                    # a extra check to avoid search for property fields in current model
+                    if relation and current_model._fields.get(relation):
+                        return _get_model(current_model[relation], field_path)
+                return current_model
+
+            return {
+                path: _get_model(model, path.split("/")[::-1])
+                for path in {field.rpartition("/")[0] for field in fields}
+            }
+
+        related_models = _get_related_models(self.env[self.res_model], import_fields)
+        allowed_date_fields = set()
+
+        for import_field in import_fields:
+            path, _sep, field_name = import_field.rpartition("/")
+            related_model = related_models.get(path)
+            field = related_model._fields.get(field_name)
+            if field and field.type in ("date", "datetime"):
+                allowed_date_fields.add(import_field)
+            # check for property field
+            if (
+                not field
+                and import_field.count(".") == 1
+                and related_model.get_property_definition(field_name).get("type") in ("date", "datetime")
+            ):
+                allowed_date_fields.add(import_field)
         for row_index, row in enumerate(input_file_data):
             for field_name, value in zip(import_fields, row):
                 if not isinstance(value, (datetime.date, datetime.datetime)):
