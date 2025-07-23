@@ -6,6 +6,7 @@ declare module "services" {
     import { discussCorePublicWeb } from "@mail/discuss/core/public_web/discuss_core_public_web_service";
     import { discussCoreWeb } from "@mail/discuss/core/web/discuss_core_web_service";
     import { im_status } from "@mail/core/common/im_status_service";
+    import { busRpcService } from "@mail/core/common/bus_rpc_service";
     import { mailCoreCommon } from "@mail/core/common/mail_core_common_service";
     import { mailCoreWeb } from "@mail/core/web/mail_core_web_service";
     import { mailPopoutService } from "@mail/core/common/mail_popout_service";
@@ -37,6 +38,7 @@ declare module "services" {
         "mail.sound_effects": typeof soundEffects;
         "mail.store": typeof storeService;
         "mail.suggestion": typeof suggestionService;
+        "mail.busRpc": typeof busRpcService,
         im_status: typeof im_status;
     }
 }

@@ -459,11 +459,7 @@ export class Store extends BaseStore {
 
     getMentionsFromText(
         body,
-        {
-            mentionedChannels = [],
-            mentionedPartners = [],
-            mentionedRoles = [],
-        } = {}
+        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
         const validMentions = {};
         validMentions.threads = mentionedChannels.filter((thread) => {
@@ -482,6 +478,11 @@ export class Store extends BaseStore {
             .filter((special) => body.includes(`@${special.label}`))
             .map((special) => special.label);
         return validMentions;
+    }
+
+    /** @returns {import("services")["mail.busRpc"]} */
+    get busRpc() {
+        return this.env.services["mail.busRpc"];
     }
 
     /**
