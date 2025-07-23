@@ -107,11 +107,14 @@
             <field name="is_seo_optimized"/>
             <field name="is_published"/>
 
+            <field name="create_uid" widget="many2one_avatar" optional="hide"/>
+            <field name="create_date" optional="hide"/>
             <field name="view_write_uid" widget="many2one_avatar" optional="hide"/>
             <field name="view_write_date" optional="hide"/>
             <field name="write_uid" widget="many2one_avatar" optional="hide"/>
             <field name="write_date" optional="hide"/>
             <field name="track" optional="hide"/>
+
             <field name="website_id" groups="website.group_multi_website"/>
 
             <button name="action_page_debug_view" type="object" title="Settings" icon="fa-bug fa-lg" groups="base.group_no_one"/>
