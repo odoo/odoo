@@ -2,7 +2,7 @@ import { MAIN_PLUGINS } from "./plugin_sets";
 import { createBaseContainer } from "./utils/base_container";
 import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
-import { resourceSequenceSymbol, withSequence } from "./utils/resource";
+import { sequenceNumber, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 
 /**
@@ -193,10 +193,10 @@ export class Editor {
                 .flat()
                 .map((r) => {
                     const isObjectWithSequence =
-                        typeof r === "object" && r !== null && resourceSequenceSymbol in r;
+                        typeof r === "object" && r !== null && sequenceNumber in r;
                     return isObjectWithSequence ? r : withSequence(10, r);
                 })
-                .sort((a, b) => a[resourceSequenceSymbol] - b[resourceSequenceSymbol])
+                .sort((a, b) => a[sequenceNumber] - b[sequenceNumber])
                 .map((r) => r.object);
 
             resources[key] = resource;
