@@ -218,6 +218,7 @@ test("Counter should have correct value of unread threads if category is folded 
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
+        livechat_active: true,
         livechat_operator_id: serverState.partnerId,
     });
     pyEnv["mail.message"].create({
