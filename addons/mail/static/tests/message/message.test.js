@@ -174,11 +174,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "other" });
 });
 
-test.skip("Can edit message comment in chatter", async () => {
-    // Fails on runbot often because race condition between RPC returns and bus notifications,
-    // leading to late steps receiving old bus notifications and therefore assertion error.
-    // This happens with heavy CPU load, e.g. when test takes around 2.5 seconds to run rather
-    // than 400ms in ideal condition.
+test("Can edit message comment in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     pyEnv["mail.message"].create({
@@ -204,14 +200,12 @@ test.skip("Can edit message comment in chatter", async () => {
     await webContains(".o-mail-Message .o-mail-Composer-input").press("Enter");
     await animationFrame();
     await contains(".o-mail-Message .o-mail-Composer-input"); // still editing message
-    await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')"); // FIXME: even though value has trailing '\n', HOOT selector doesn't see it on the node
     await webContains(".o-mail-Message .o-mail-Composer-input").press(["Control", "Enter"]);
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
     // save without change should keep (edited)
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
-    await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')");
     await contains(".o-mail-Message:contains('Escape to cancel, CTRL-Enter to save')");
     await webContains(".o-mail-Message .o-mail-Composer-input").press(["Control", "Enter"]);
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
