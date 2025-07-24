@@ -2,8 +2,16 @@ import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpe
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, hover, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, defineStyle } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
+
+function reapplyCollapseTransition() {
+    defineStyle(/* css */ `
+        hoot-fixture:not(.allow-transitions) * .hb-collapse-content {
+            transition: height 0.35s ease !important;
+        }
+    `);
+}
 
 describe("website tests", () => {
     defineWebsiteModels();
@@ -167,6 +175,7 @@ describe("website tests", () => {
         });
 
         test("Click on toggler collapses / expands the BuilderRow", async () => {
+            reapplyCollapseTransition();
             addOption({
                 selector: ".test-options-target",
                 template: collapseOptionTemplate(),
@@ -181,10 +190,12 @@ describe("website tests", () => {
             expect(".options-container button[data-class-action='b']").toBeVisible();
             await contains(".o_hb_collapse_toggler:not(.d-none)").click();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            await waitFor(".hb-collapse-content:not([style*='overflow: hidden'])", { timeout: 500 });
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
         });
 
         test("Click header row's label collapses / expands the BuilderRow", async () => {
+            reapplyCollapseTransition();
             addOption({
                 selector: ".test-options-target",
                 template: collapseOptionTemplate(),
@@ -199,6 +210,7 @@ describe("website tests", () => {
             expect(".options-container button[data-class-action='b']").toBeVisible();
             await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            await waitFor(".hb-collapse-content:not([style*='overflow: hidden'])", { timeout: 500 });
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
         });
 
