@@ -12,6 +12,7 @@ import {
 } from "@spreadsheet/global_filters/helpers";
 import { useService } from "@web/core/utils/hooks";
 import { isEmptyFilterValue } from "../../helpers";
+import { deepEqual } from "@web/core/utils/objects";
 
 /**
  * This component is used to display a dialog with the global filters of a
@@ -36,14 +37,13 @@ export class FiltersSearchDialog extends Component {
     setup() {
         this.orm = useService("orm");
         this.state = useState({
-            activeFilters: this.globalFilters
-                .filter((globalFilter) =>
-                    this.props.model.getters.isGlobalFilterActive(globalFilter.id)
-                )
-                .map((globalFilter) => ({
+            filtersAndValues: this.globalFilters.map((globalFilter) => {
+                const value = this.props.model.getters.getGlobalFilterValue(globalFilter.id);
+                return {
                     globalFilter,
-                    value: { ...this.props.model.getters.getGlobalFilterValue(globalFilter.id) },
-                })),
+                    value: value ? { ...value } : getDefaultValue(globalFilter.type),
+                };
+            }),
         });
         onWillStart(async () => {
             this.searchableParentRelations = await this.fetchSearchableParentRelation();
@@ -52,28 +52,6 @@ export class FiltersSearchDialog extends Component {
 
     get globalFilters() {
         return this.props.model.getters.getGlobalFilters();
-    }
-
-    get hasUnusedGlobalFilters() {
-        return this.globalFilters.length > this.state.activeFilters.length;
-    }
-
-    get unusedGlobalFilters() {
-        return this.globalFilters.filter(
-            (globalFilter) =>
-                !this.state.activeFilters.some((node) => node.globalFilter.id === globalFilter.id)
-        );
-    }
-
-    activateFilter(filter) {
-        this.state.activeFilters.push({
-            globalFilter: filter,
-            value: getDefaultValue(filter.type),
-        });
-    }
-
-    getFilterLabel(node) {
-        return _t(node.globalFilter.label); // Label is extracted from the spreadsheet json file
     }
 
     setGlobalFilterValue(node, value) {
@@ -97,14 +75,25 @@ export class FiltersSearchDialog extends Component {
         if (filter.type === "relation" && !this.searchableParentRelations[filter.modelName]) {
             return operators.filter((op) => op !== "child_of");
         }
-        return operators;
+        return filter.type === "boolean" ? [undefined, ...operators] : operators;
+    }
+
+    filterHasClearButton(node) {
+        return !isEmptyFilterValue(node.globalFilter, node.value);
     }
 
     getOperatorLabel(operator) {
-        return getOperatorLabel(operator);
+        return operator ? getOperatorLabel(operator) : "";
     }
 
     updateOperator(node, operator) {
+        if (!operator) {
+            node.value = undefined;
+            return;
+        }
+        if (!node.value) {
+            node.value = {};
+        }
         node.value.operator = operator;
         const defaultValue = getEmptyFilterValue(node.globalFilter, operator);
         for (const key of Object.keys(defaultValue ?? {})) {
@@ -114,28 +103,29 @@ export class FiltersSearchDialog extends Component {
         }
     }
 
-    removeFilter(filterId) {
-        const index = this.state.activeFilters.findIndex(
-            (node) => node.globalFilter.id === filterId
-        );
-        if (index !== -1) {
-            this.state.activeFilters.splice(index, 1);
+    clearFilter(filterId) {
+        const node = this.state.filtersAndValues.find((node) => node.globalFilter.id === filterId);
+        if (node && node.value) {
+            const emptyValue = getEmptyFilterValue(node.globalFilter, node.value.operator);
+            node.value =
+                typeof emptyValue === "object"
+                    ? { ...emptyValue, operator: node.value.operator }
+                    : emptyValue;
         }
     }
 
     onConfirm() {
-        for (const filter of this.globalFilters) {
-            const node = this.state.activeFilters.find(
-                (node) => node.globalFilter.id === filter.id
-            );
-            if (node && !isEmptyFilterValue(filter, node.value)) {
-                this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
-                    id: filter.id,
-                    value: node.value,
-                });
-            } else {
-                this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id });
+        for (const node of this.state.filtersAndValues) {
+            const { globalFilter, value } = node;
+            const originalValue = this.props.model.getters.getGlobalFilterValue(globalFilter.id);
+
+            if (deepEqual(originalValue, value)) {
+                continue;
             }
+            this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+                id: globalFilter.id,
+                value: isEmptyFilterValue(globalFilter, value) ? undefined : value,
+            });
         }
         this.props.close();
     }

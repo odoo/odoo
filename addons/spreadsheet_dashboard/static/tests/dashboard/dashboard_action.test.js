@@ -218,7 +218,7 @@ test("Can clear filter date filter value that defaults to current period", async
     const year = luxon.DateTime.local().year;
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year));
     await contains(".o_searchview_facet_label").click();
-    await contains(".o-filter-value input").click();
+    await contains('.o-filter-item[data-id="2"] input').click();
     await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
     await contains(".modal-footer .btn-primary").click();
 
@@ -359,9 +359,6 @@ test("Global filter with same id is not shared between dashboards", async functi
     expect(".o_searchview_facet").toHaveCount(0);
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
 
-    await contains(".o-filters-search-dialog button.dropdown-toggle").click();
-    await contains(".o-dropdown-item").click();
-
     await contains(".o-autocomplete--input.o_input").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(0);
     await contains(".dropdown-item:first").click();
@@ -399,11 +396,6 @@ test("Can add a new global filter from the search bar", async function () {
     await createSpreadsheetDashboard({ serverData });
 
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    expect(".o-filters-search-dialog button.dropdown-toggle").toHaveText("Add filter");
-    await contains(".o-filters-search-dialog button.dropdown-toggle").click();
-    await contains(".o-dropdown-item").click();
-
-    expect(".o-filters-search-dialog button.dropdown-toggle").toHaveCount(0);
 
     expect(".o-autocomplete--input.o_input").toHaveCount(1);
     expect(".o-autocomplete--input.o_input").toHaveValue("");
@@ -414,32 +406,6 @@ test("Can add a new global filter from the search bar", async function () {
     expect(".o_searchview_facet").toHaveCount(1);
     expect(".o_searchview_facet .o_searchview_facet_label").toHaveText("Relation Filter");
     expect(".o_searchview_facet .o_facet_value").toHaveText("xphone");
-});
-
-test("Can remove a global filter from the dialog", async function () {
-    const spreadsheetData = {
-        globalFilters: [
-            {
-                id: "1",
-                type: "relation",
-                label: "Relation Filter",
-                modelName: "product",
-                defaultValue: { operator: "in", ids: [37] }, // xphone
-            },
-        ],
-    };
-    const serverData = getServerData(spreadsheetData);
-    await createSpreadsheetDashboard({ serverData });
-
-    expect(".o_searchview_facet").toHaveCount(1);
-    expect(".o_searchview_facet .o_searchview_facet_label").toHaveText("Relation Filter");
-    expect(".o_searchview_facet .o_facet_value").toHaveText("xphone");
-
-    await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    await contains(".fa-trash").click();
-    await contains(".modal-footer .btn-primary").click();
-
-    expect(".o_searchview_facet").toHaveCount(0);
 });
 
 test("Can open the dialog by clicking on a facet", async function () {
@@ -498,8 +464,6 @@ test("Changes of global filters are not dispatched while inside the dialog", asy
     expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
 
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    await contains(".o-filters-search-dialog button.dropdown-toggle").click();
-    await contains(".o-dropdown-item").click();
 
     await contains(".o-autocomplete--input.o_input").click();
     await contains(".o-autocomplete--dropdown-item").click();
