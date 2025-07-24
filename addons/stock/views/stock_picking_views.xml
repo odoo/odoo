@@ -262,7 +262,7 @@
                     <field name="picking_properties" columns="2"/>
                     <notebook>
                         <page string="Operations" name="operations">
-                            <field name="move_ids_without_package" mode="list,kanban"
+                            <field name="move_ids" mode="list,kanban"
                                 widget="stock_move_one2many"
                                 readonly="state == 'done' and is_locked"
                                 context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}">
@@ -322,7 +322,6 @@
                                 </list>
                             </field>
                             <field name="id" invisible="1"/>
-                            <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}" invisible="not picking_type_entire_packs" readonly="state == 'done'" />
                             <button class="btn-secondary float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
                         </page>
                         <page string="Additional Info" name="extra">

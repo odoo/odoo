@@ -508,7 +508,7 @@ class TestRepair(common.TransactionCase):
         #create a delivery order
         picking_form.picking_type_id = self.stock_warehouse.out_type_id
         picking_form.partner_id = self.res_partner_1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 1.0
         picking = picking_form.save()

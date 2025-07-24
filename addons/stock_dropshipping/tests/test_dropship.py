@@ -458,7 +458,7 @@ class TestDropshipPostInstall(common.TransactionCase):
         dropship_picking = sale_order.picking_ids
         dropship_picking.action_confirm()
         with Form(dropship_picking) as picking_form:
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = product_lot
                 move.quantity = 1
         dropship_picking.button_validate()
