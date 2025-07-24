@@ -349,13 +349,12 @@ class HrLeave(models.Model):
             if leave.employee_id and leave.request_date_from:
                 calendar = calendar_by_dates[leave.request_date_from][leave.employee_id.id]
             leave.resource_calendar_id = calendar or self.env.company.resource_calendar_id
-        for leave in self:
             # We use the request dates to find the contracts, because date_from
             # and date_to are not set yet at this point. Since these dates are
             # used to get the contracts for which these leaves apply and
             # contract start- and end-dates are just dates (and not datetimes)
             # these dates are comparable.
-            if not leave.employee_id:
+            if not (leave.employee_id and leave.request_date_from and leave.request_date_to):
                 continue
             contracts = self.env['hr.version'].search([('employee_id', '=', leave.employee_id.id)]).filtered(
                 lambda c: c.date_start <= leave.request_date_to and
