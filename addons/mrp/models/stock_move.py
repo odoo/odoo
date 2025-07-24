@@ -31,7 +31,7 @@ class StockMove(models.Model):
         'mrp.bom.byproduct', 'By-products', check_company=True,
         help="By-product line that generated the move in a manufacturing order")
     unit_factor = fields.Float('Unit Factor', compute='_compute_unit_factor', store=True)
-    order_finished_lot_id = fields.Many2one('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_id")
+    order_finished_lot_ids = fields.Many2many('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_ids")
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit')
     cost_share = fields.Float(
         "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
@@ -491,8 +491,8 @@ class StockMove(models.Model):
         vals = super()._prepare_move_line_vals(quantity, reserved_quant)
         if self.raw_material_production_id:
             vals['production_id'] = self.raw_material_production_id.id
-        if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id:
-            vals['lot_id'] = self.production_id.lot_producing_id.id
+        if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id and self.production_id.lot_producing_ids:
+            vals['lot_id'] = self.production_id.lot_producing_ids.ids[0]
         return vals
 
     def _key_assign_picking(self):

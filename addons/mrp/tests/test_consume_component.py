@@ -206,7 +206,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
         self.assertTrue(countOk, "The number of MOs passed to the executeConsumptionTriggers method does not match the associated TRIGGERS_COUNT")
 
         mrp_productions[0].qty_producing = mrp_productions[0].product_qty
-        mrp_productions[0]._onchange_producing()
+        mrp_productions[0]._onchange_qty_producing()
 
         i = 1
         if isSerial:
@@ -319,9 +319,8 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             if serialTrigger is None:
                 self.executeConsumptionTriggers(mo)
             elif serialTrigger == 1:
-                mo_form = Form(mo)
-                mo_form.qty_producing = mo_form.product_qty
-                mo = mo_form.save()
+                mo.qty_producing = 1
+                mo._set_qty_producing(False)
             elif serialTrigger == 2:
                 mo.action_generate_serial()
 
@@ -372,20 +371,13 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
             {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
         ])
-        with Form(mo) as mo_form:
-            mo_form.qty_producing = 1.0
-        self.assertRecordValues(mo.move_raw_ids, [
-            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
-            {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
-            {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
-        ])
         mo.action_generate_serial()
         self.assertRecordValues(mo.move_raw_ids, [
             {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
             {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
         ])
-        self.assertTrue(mo.lot_producing_id)
+        self.assertTrue(mo.lot_producing_ids)
         mo.picking_ids.button_validate()
         self.assertRecordValues(mo.move_raw_ids, [
             {'quantity': 3.0, 'picked': True, 'lot_ids': []},
@@ -473,8 +465,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 2.0, 'picked': False},
             {'quantity': 1.0, 'picked': False},
         ])
-        with Form(mo) as mo_form:
-            mo_form.lot_producing_id = self.env['stock.lot']
+        mo.action_clear_lot_producing_ids()
         self.assertRecordValues(mo.move_raw_ids, [
             {'quantity': 0.0, 'picked': False},
             {'quantity': 0.0, 'picked': False},
