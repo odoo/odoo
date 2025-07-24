@@ -746,7 +746,7 @@ export class SeoChecks extends Component {
         this.state.checkingLinks = true;
         this.state.counterLinks = 0;
         const hrefEls =
-            this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap a[href]");
+            this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap a[href]:not(.oe_unremovable)");
         let links = Array.from(hrefEls)
             .filter((a) => {
                 const href = a.href;
