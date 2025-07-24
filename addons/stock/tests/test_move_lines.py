@@ -146,8 +146,6 @@ class TestStockMoveLine(TestStockCommon):
         })
         (move_line1 | move_line2).action_put_in_pack()
         self.assertEqual(move_line1.result_package_id, move_line2.result_package_id)
-        self.assertEqual(len(picking1.package_level_ids), 0)
-        self.assertEqual(len(picking2.package_level_ids), 0)
 
     def test_multi_edit_quant_and_lot(self):
         """

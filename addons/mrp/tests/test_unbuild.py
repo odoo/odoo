@@ -564,7 +564,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(picking.location_dest_id.id, self.stock_location.id, 'Wrong destination location in picking')
 
         # Transfer it
-        for ml in picking.move_ids_without_package:
+        for ml in picking.move_ids:
             ml.write({'quantity': 1, 'picked': True})
         picking._action_done()
 
@@ -689,7 +689,7 @@ class TestUnbuild(TestMrpCommon):
         internal_form.picking_type_id = warehouse.int_type_id
         internal_form.location_id = self.stock_location
         internal_form.location_dest_id = subloc01
-        with internal_form.move_ids_without_package.new() as move:
+        with internal_form.move_ids.new() as move:
             move.product_id = p_final
             move.quantity = 1.0
             move.picked = True

@@ -279,7 +279,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_type': 'one',
-            'move_ids_without_package': [
+            'move_ids': [
                 Command.create({
                     'product_id': productA.id,
                     'product_uom': self.uom_unit.id,
@@ -4393,10 +4393,10 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_in.id,
         })
         picking_form = Form(receipt_transfer)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_serial
             move.product_uom_qty = 4
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_lot
             move.product_uom_qty = 20
         receipt = picking_form.save()
@@ -4423,7 +4423,7 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_int.id,
             })
         picking_form = Form(internal_transfer)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_lot
             move.product_uom_qty = 4
         internal_transfer = picking_form.save()
@@ -5481,18 +5481,18 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_out.id,
         })
         delivery_form = Form(delivery_form)
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 10
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = product2
             move.product_uom_qty = 10
             move.description_picking = f"{product2.name}\nDescription2"
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = product3
             move.product_uom_qty = 10
             move.description_picking = f"{product3.display_name}\nDescription3"
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = product4
             move.product_uom_qty = 10
         delivery = delivery_form.save()
@@ -5894,12 +5894,12 @@ class TestStockMove(TestStockCommon):
 
         picking.action_confirm()
 
-        with Form(picking.move_ids_without_package, view='stock.view_stock_move_operations') as form:
+        with Form(picking.move_ids, view='stock.view_stock_move_operations') as form:
             with form.move_line_ids.edit(0) as line:
                 line.location_dest_id = self.stock_location.child_ids[0]
                 line.quantity = 1
 
-        self.assertEqual(picking.move_line_ids_without_package.location_dest_id, self.stock_location.child_ids[0])
+        self.assertEqual(picking.move_line_ids.location_dest_id, self.stock_location.child_ids[0])
 
     def test_inter_wh_and_forecast_availability(self):
         dest_wh = self.env['stock.warehouse'].create({
@@ -5999,14 +5999,14 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_in.id,
         })
         picking_form = Form(internal_transfer)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_serial
             move.product_uom_qty = 1
         receipt = picking_form.save()
         receipt.action_confirm()
 
         receipt_form = Form(receipt)
-        with receipt_form.move_ids_without_package.edit(0) as move:
+        with receipt_form.move_ids.edit(0) as move:
             move.lot_ids.add(sn)
         receipt = receipt_form.save()
         receipt.move_ids.picked = True
@@ -6056,11 +6056,11 @@ class TestStockMove(TestStockCommon):
         today = fields.Datetime.today()
         with Form(self.env['stock.picking']) as picking_form:
             picking_form.picking_type_id = self.picking_type_out
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = self.productA
                 move.product_uom_qty = 1
                 move.date = today + relativedelta(day=5)
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = self.product_consu
                 move.product_uom_qty = 1
                 move.date = today + relativedelta(day=10)
@@ -6094,7 +6094,7 @@ class TestStockMove(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=sn01)
         with Form(self.env['stock.picking']) as picking_form:
             picking_form.picking_type_id = self.picking_type_int
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = self.product_serial
                 move.product_uom_qty = 1
             picking = picking_form.save()
@@ -6103,10 +6103,10 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(picking.state, 'assigned')
 
         with Form(picking) as picking_form:
-            with picking_form.move_ids_without_package.edit(0) as line_form:
+            with picking_form.move_ids.edit(0) as line_form:
                 line_form.lot_ids.add(sn01)
             picking = picking_form.save()
-        self.assertEqual(picking.move_ids_without_package.lot_ids, sn01)
+        self.assertEqual(picking.move_ids.lot_ids, sn01)
 
     def test_change_move_line_uom(self):
         """Check the reserved_quantity of the quant is correctly updated when changing the UOM in the move line"""
@@ -6373,25 +6373,25 @@ class TestStockMove(TestStockCommon):
 
     def test_change_dest_loc_after_sm_creation(self):
         form = Form(self.env['stock.picking'].with_context(restricted_picking_type_code="incoming"))
-        with form.move_ids_without_package.new() as move:
+        with form.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 1
         form.location_dest_id = self.customer_location
-        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.customer_location)
+        self.assertEqual(form.move_ids.edit(0).location_dest_id, self.customer_location)
 
         picking = form.save()
-        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.customer_location)
+        self.assertEqual(picking.move_ids.location_dest_id, self.customer_location)
 
         form = Form(picking)
-        with form.move_ids_without_package.new() as move:
+        with form.move_ids.new() as move:
             move.product_id = self.product_consu
             move.product_uom_qty = 1
         form.location_dest_id = self.stock_location
-        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.stock_location)
-        self.assertEqual(form.move_ids_without_package.edit(1).location_dest_id, self.stock_location)
+        self.assertEqual(form.move_ids.edit(0).location_dest_id, self.stock_location)
+        self.assertEqual(form.move_ids.edit(1).location_dest_id, self.stock_location)
 
         picking = form.save()
-        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.stock_location)
+        self.assertEqual(picking.move_ids.location_dest_id, self.stock_location)
 
     def test_set_quantity_done_with_rounding_issues(self):
         """Imperial UoM can sometime create a discrepancy between the demand and the actual quantity moved,
