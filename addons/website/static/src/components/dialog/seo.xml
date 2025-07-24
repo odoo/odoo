@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MetaImage">
-    <div class="mb-2 me-2" t-att-class="props.active ? 'o_active_image o_meta_img' : 'o_meta_img'" t-on-click="() => props.selectImage(props.src)">
+    <button class="o_btn_reset mb-2 me-2" t-att-class="props.active ? 'o_active_image o_meta_img' : 'o_meta_img'" t-on-click="() => props.selectImage(props.src)">
         <span t-if="props.custom" class="o-custom-label w-100 text-white text-center">Custom</span>
         <img t-att-src="props.src"/>
-    </div>
+    </button>
 </t>
 
 <t t-name="website.ImageSelector">
@@ -14,9 +14,9 @@
             <t t-foreach="state.images" t-as="image" t-key="image.src">
                 <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
             </t>
-            <div class="o_meta_img_upload mb-2 me-2" title="Click to choose more images" t-on-click="openMediaDialog">
+            <button class="o_meta_img_upload o_btn_reset mb-2 me-2" title="Click to choose more images" t-on-click="openMediaDialog">
                 <i class="fa fa-upload"/>
-            </div>
+            </button>
         </div>
     </section>
 </t>

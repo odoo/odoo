@@ -28,7 +28,7 @@
                 cursor: pointer;
             }
 
-            &:hover {
+            &:hover, &:focus-visible {
                 border-color: $o-brand-primary;
             }
 
@@ -70,7 +70,7 @@
             vertical-align: top;
             color: lighten(map-get($grays, '600'), 30%);
 
-            &:hover {
+            &:hover, &:focus-visible {
                 border-color: $o-brand-primary;
                 color: $o-brand-primary;
             }
@@ -157,5 +157,11 @@
         height: 70px;
         object-fit: cover;
         border: 1px solid map-get($grays, '300');
+    }
+
+    // We don't use a specific class here to highlight the fact that the
+    // variable is tied to the bootstrap class.
+    select.btn-outline-primary:focus option {
+        color: var(--btn-color);
     }
 }
