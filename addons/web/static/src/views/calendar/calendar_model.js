@@ -112,7 +112,7 @@ export class CalendarModel extends Model {
         return this.meta.eventLimit;
     }
     get exportedState() {
-        return this.meta;
+        return { date: this.meta.date };
     }
     get fieldMapping() {
         return this.meta.fieldMapping;
