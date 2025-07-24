@@ -47,10 +47,11 @@ export class PosPreset extends models.ServerModel {
             has_image: false,
             write_date: "2025-07-03 14:34:07",
             identification: "none",
-            use_timing: false,
+            use_timing: true,
             slots_per_interval: 5,
             interval_time: 20,
             attendance_ids: [],
+            resource_calendar_id: 1,
         },
     ];
 }
