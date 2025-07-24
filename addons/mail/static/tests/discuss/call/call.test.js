@@ -533,6 +533,7 @@ test("Use saved volume settings", async () => {
     await contains(".o-discuss-CallContextMenu");
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
     expect(rangeInput.value).toBe(expectedVolume.toString());
+    rangeInput.dispatchEvent(new Event("change")); // to trigger the volume change
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
 });
 

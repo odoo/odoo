@@ -98,4 +98,44 @@ export class ResUsersSettings extends models.ServerModel {
 
         return changedSettings;
     }
+
+    /**
+     * @param {number} guest_id
+     * @param {number} partner_id
+     * @param {number} volume
+     */
+    set_volume_setting(ids, partner_id, volume, guest_id = false) {
+        const kwargs = getKwArgs(arguments, "ids", "partner_id", "volume", "guest_id");
+        ids = kwargs.ids;
+        partner_id = kwargs.partner_id;
+        volume = kwargs.volume;
+        guest_id = kwargs.guest_id;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsersSettingsVolumes} */
+        const ResUsersSettingsVolumes = this.env["res.users.settings.volumes"];
+
+        const id = ids[0]; // ensure_one
+        let [volumeSettings] = ResUsersSettingsVolumes.search_read([
+            ["user_setting_id", "=", id],
+            partner_id ? ["partner_id", "=", partner_id] : ["guest_id", "=", guest_id],
+        ]);
+        if (!volumeSettings) {
+            volumeSettings = ResUsersSettingsVolumes.create({
+                partner_id,
+                guest_id,
+                volume,
+            });
+        } else {
+            ResUsersSettingsVolumes.write(volumeSettings.id, { volume });
+        }
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        BusBus._sendone(partner, "res.users.settings.volumes", {
+            ...ResUsersSettingsVolumes.discuss_users_settings_volume_format(volumeSettings.id),
+        });
+        return volumeSettings;
+    }
 }
