@@ -17,8 +17,10 @@ paymentButton.include({
             return;
         }
 
-        document.getElementById('o_paypal_disabled_button').classList.add('d-none');
-        document.getElementById('o_paypal_enabled_button').classList.remove('d-none');
+        document.querySelectorAll('#o_paypal_disabled_button')
+            .forEach((el) => el.classList.add('d-none'));
+        document.querySelectorAll('#o_paypal_enabled_button')
+            .forEach((el) => el.classList.remove('d-none'));
     },
 
     /**
@@ -34,8 +36,10 @@ paymentButton.include({
             return;
         }
 
-        document.getElementById('o_paypal_disabled_button').classList.remove('d-none');
-        document.getElementById('o_paypal_enabled_button').classList.add('d-none');
+        document.querySelectorAll('#o_paypal_disabled_button')
+            .forEach((el) => el.classList.remove('d-none'));
+        document.querySelectorAll('#o_paypal_enabled_button')
+            .forEach((el) => el.classList.add('d-none'));
     },
 
     /**
