@@ -1,13 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { withSequence } from "@html_editor/utils/resource";
 
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
     static shared = ["getEditableAreas"];
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        normalize_handlers: withSequence(0, this.setContenteditable.bind(this)),
     };
 
     setup() {
@@ -15,11 +13,9 @@ export class SetupEditorPlugin extends Plugin {
             "#wrap .o_homepage_editor_welcome_message"
         );
         welcomeMessageEl?.remove();
-        this.editable.setAttribute("contenteditable", false);
         if (this.delegateTo("after_setup_editor_handlers")) {
             return;
         }
-        // Add the `o_editable` class on the editable elements
         let editableEls = this.getEditableElements("[data-oe-model]")
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
@@ -66,21 +62,6 @@ export class SetupEditorPlugin extends Plugin {
             el.removeAttribute("data-editor-message");
             el.removeAttribute("data-editor-message-default");
         });
-
-        [root, ...root.querySelectorAll("[contenteditable]")].forEach((el) =>
-            el.removeAttribute("contenteditable")
-        );
-    }
-
-    setContenteditable(root = this.editable) {
-        // TODO: Should be imp, we need to check _getReadOnlyAreas etc
-        const editableEls = this.getEditableElements(".o_editable");
-        editableEls.forEach((el) =>
-            el.setAttribute("contenteditable", !el.matches(":empty:not([placeholder])"))
-        );
-
-        const uneditableEls = root.querySelectorAll(".o_not_editable");
-        uneditableEls.forEach((el) => el.setAttribute("contenteditable", false));
     }
 
     /**

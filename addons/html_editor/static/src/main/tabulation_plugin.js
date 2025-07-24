@@ -55,13 +55,10 @@ export class TabulationPlugin extends Plugin {
             { hotkey: "tab", commandId: "tab" },
             { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
+        force_not_editable_selector: ".oe-tabs",
+        contenteditable_to_remove_selector: "span.oe-tabs",
 
         /** Handlers */
-        clean_for_save_handlers: ({ root }) => {
-            for (const tab of root.querySelectorAll("span.oe-tabs")) {
-                tab.removeAttribute("contenteditable");
-            }
-        },
         normalize_handlers: this.normalize.bind(this),
 
         /** Overrides */
@@ -238,9 +235,6 @@ export class TabulationPlugin extends Plugin {
         }
     }
     normalize(el) {
-        for (const tab of el.querySelectorAll(".oe-tabs")) {
-            tab.setAttribute("contenteditable", "false");
-        }
         this.alignTabs(el);
     }
 }
