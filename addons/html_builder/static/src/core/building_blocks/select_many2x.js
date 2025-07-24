@@ -40,6 +40,7 @@ export class SelectMany2X extends Component {
         closeOnEnterKey: { type: Boolean, optional: true },
         message: { type: String, optional: true },
         create: { type: Function, optional: true },
+        nullText: { type: String, optional: true },
     };
     static defaultProps = {
         fields: [],
@@ -100,11 +101,19 @@ export class SelectMany2X extends Component {
             limit: this.state.limit + 1,
         });
         this.state.hasMore = tuples.length > this.state.limit;
-        this.state.searchResults = await this.cachedModel.ormRead(
+        const results = await this.cachedModel.ormRead(
             this.props.model,
             tuples.slice(0, this.state.limit).map(([id, _name]) => id),
             [...new Set(this.props.fields).add("display_name").add("name")]
         );
+        if (this.props.nullText && (!results.length || results[0].id)) {
+            results.unshift({
+                id: 0,
+                name: this.props.nullText,
+                display_name: this.props.nullText,
+            });
+        }
+        this.state.searchResults = results;
     }
     filteredSearchResult() {
         const selectedIds = new Set(this.props.selected.map((e) => e.id));
