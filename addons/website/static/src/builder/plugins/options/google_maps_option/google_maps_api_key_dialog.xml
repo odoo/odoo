@@ -49,8 +49,8 @@
             </div>
         </div>
         <t t-set-slot="footer">
-            <button t-on-click="onClickSave" class="btn btn-primary">Save</button>
-            <button class="btn" t-on-click="() => this.props.close()">Cancel</button>
+            <button t-on-click="onClickSave" class="btn btn-primary" data-hotkey="q">Save</button>
+            <button class="btn" t-on-click="() => this.props.close()" data-hotkey="x">Cancel</button>
         </t>
     </Dialog>
 </t>
