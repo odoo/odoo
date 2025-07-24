@@ -189,6 +189,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if financial_account_node['cac:FinancialInstitutionBranch']:
             financial_account_node['cac:FinancialInstitutionBranch']['cac:FinancialInstitution'] = None
 
+            if financial_account_node['cac:FinancialInstitutionBranch']['cbc:ID']:
+                financial_account_node['cac:FinancialInstitutionBranch']['cbc:ID']['schemeID'] = None
+
         return financial_account_node
 
     # -------------------------------------------------------------------------
