@@ -638,8 +638,7 @@ class BaseCase(case.TestCase):
             The second form is convenient when used with :func:`users`.
         """
         if not 'is_query_count' in self.test_tags:
-            # change into warning in master
-            self._logger.info('assertQueryCount is used but the test is not tagged `is_query_count`')
+            self._logger.warning('assertQueryCount is used but the test is not tagged `is_query_count`')
         if self.warm:
             # mock random in order to avoid random bus gc
             with patch('random.random', lambda: 1):
@@ -2435,8 +2434,7 @@ class HttpCase(TransactionCase):
         if 'tour_enabled' not in self.env['res.users']._fields:
             raise unittest.SkipTest('web_tour is not installed')
         if not 'is_tour' in self.test_tags:
-            # change it into warning in master
-            self._logger.info('start_tour was called from a test not tagged `is_tour`')
+            self._logger.warning('start_tour was called from a test not tagged `is_tour`')
         options = {
             'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
