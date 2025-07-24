@@ -173,8 +173,10 @@ class HolidaysRequest(models.Model):
     # therefore never be set directly.
     date_from = fields.Datetime(
         'Start Date', compute='_compute_date_from_to', store=True, index=True, tracking=True)
+    date_from_display = fields.Datetime(compute='_compute_date_from_to_display')
     date_to = fields.Datetime(
         'End Date', compute='_compute_date_from_to', store=True, tracking=True)
+    date_to_display = fields.Datetime(compute='_compute_date_from_to_display')
     number_of_days = fields.Float(
         'Duration (Days)', compute='_compute_duration', store=True, tracking=True,
         help='Number of days of the time off request. Used in the calculation.')
@@ -425,6 +427,14 @@ class HolidaysRequest(models.Model):
 
                 holiday.date_from = self._to_utc(compensated_request_date_from, hour_from, holiday.employee_id or holiday)
                 holiday.date_to = self._to_utc(compensated_request_date_to, hour_to, holiday.employee_id or holiday)
+
+    @api.depends('date_from', 'date_to', 'employee_id', 'tz')
+    def _compute_date_from_to_display(self):
+        for record in self:
+            user_tz = timezone(self.env.user.tz)
+            employee_tz = timezone(record.employee_id.tz)
+            record.date_from_display = user_tz.localize(record.date_from).astimezone(employee_tz).replace(tzinfo=None)
+            record.date_to_display = user_tz.localize(record.date_to).astimezone(employee_tz).replace(tzinfo=None)
 
     @api.depends('holiday_status_id', 'request_unit_hours')
     def _compute_request_unit_half(self):

@@ -116,8 +116,10 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="employee_id"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
+                <field name="date_from_display" string="Start Date"/>
+                <field name="date_to_display" string="End Date"/>
+                <field name="date_to" invisible="True"/>
+                <field name="date_from" invisible="True"/>
                 <field name="name"/>
                 <field name="number_of_days"/>
                 <field name="can_approve"/>
@@ -516,8 +518,10 @@
                 <field name="holiday_type" string="Mode" groups="base.group_no_one" readonly="state not in ['confirm', 'draft']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="name"/>
-                <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                <field name="date_from_display" string="Start Date"/>
+                <field name="date_to_display" string="End Date"/>
+                <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" invisible="True"/>
+                <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" invisible="True"/>
                 <field name="duration_display" string="Duration"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <field name="active_employee" column_invisible="True"/>
