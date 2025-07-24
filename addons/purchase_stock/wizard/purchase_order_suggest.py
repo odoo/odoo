@@ -55,43 +55,25 @@ class PurchaseOrderSuggest(models.TransientModel):
     @api.depends('based_on', 'number_of_days', 'percent_factor', 'product_ids', 'warehouse_id')
     def _compute_estimated_price(self):
         for suggest in self:
-            estimated_price, product_count = 0, 0
-            seller_params = {'order_id': suggest.purchase_order_id}
+            estimated_price = 0
+            seller_args = {
+                "partner_id": suggest.purchase_order_id.partner_id,
+                "params": {'order_id': suggest.purchase_order_id}
+            }
 
             # Explicitly fetch existing records to avoid "NewId origin" shenanigans
             products = self.env['product.product'].browse(self.product_ids.ids)
             products = products.with_context(suggest._get_suggested_products_context())
 
-            for product in products:
-                if self.based_on == 'actual_demand':
-                    quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
-                else:
-                    quantity = ceil(product.monthly_demand * self.multiplier)
-                qty_to_deduce = product.qty_available + max(product.incoming_qty, 0)
-                quantity -= qty_to_deduce
-                if quantity <= 0:
-                    continue
-                product_count += 1
-                # Then, compute the price.
-                price = product.standard_price  # Price if no pricelist at all
-                seller = product._select_seller(
-                    partner_id=suggest.partner_id,
-                    quantity=quantity,
-                    params=seller_params
+            for product in products.filtered(lambda p: p.suggested_qty > 0):
+                # Then, compute the price either from pricelist or standard price
+                # Try pricelist for quantity first, then lowest min_qty pricelist
+                seller = (
+                    product._select_seller(quantity=product.suggested_qty, **seller_args)
+                    or product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
                 )
-                if seller:
-                    price = seller.price_discounted  # Price if pricelist matching suggest qty
-                else:
-                    lowest_qty_pricelist = product._select_seller(
-                        partner_id=suggest.partner_id,
-                        quantity=None,  # skips filetering on min_qty
-                        ordered_by='min_qty',
-                        params=seller_params
-                    )
-                    if lowest_qty_pricelist:
-                        price = lowest_qty_pricelist.price_discounted  # Take lowest unit pricelist if pricelist
-                estimated_price += price * quantity
-            suggest.product_count = product_count
+                price = seller.price_discounted if seller else product.standard_price
+                estimated_price += price * product.suggested_qty
             suggest.estimated_price = estimated_price
 
     @api.depends('number_of_days', 'percent_factor')
@@ -114,48 +96,24 @@ class PurchaseOrderSuggest(models.TransientModel):
         # Create new PO lines for each product with a monthy demand.
         po_lines_commands = []
         for product in products:
-            existing_po_lines = order.order_line.filtered(lambda pol: pol.product_id == product)
-            existing_po_line = existing_po_lines[:1]
-            # If there is multiple lines for the same product, we delete all the
-            # lines except the first one (who will be updated.)
-            for po_line in existing_po_lines[1:]:
-                po_lines_commands.append(Command.unlink(po_line.id))
-
-            if self.based_on == 'actual_demand':
-                quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
-            else:
-                quantity = ceil(product.monthly_demand * self.multiplier)
-            qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
-            quantity -= qty_to_deduce
-            if quantity <= 0:
-                # If there is no quantity for a filtered product and there is an
-                # existing PO line for this product, we delete it.
-                if existing_po_line:
-                    po_lines_commands.append(Command.unlink(existing_po_line.id))
-                continue
             supplierinfo = supplierinfos.filtered(lambda supinfo: supinfo.product_id == product)[:1]
-            if existing_po_line:
-                # If a PO line already exists for this product, we simply update its quantity.
-                vals = self.env['purchase.order.line']._prepare_purchase_order_line(
-                    product,
-                    quantity,
-                    product.uom_id,
-                    order.company_id,
-                    supplierinfo,
-                    order
-                )
-                po_lines_commands.append(Command.update(existing_po_line.id, vals))
-            else:
-                # If not, we create a new PO line.
-                vals = self.env['purchase.order.line']._prepare_purchase_order_line(
-                    product,
-                    quantity,
-                    product.uom_id,
-                    order.company_id,
-                    supplierinfo,
-                    order
-                )
-                po_lines_commands.append(Command.create(vals))
+            suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
+                product,
+                product.suggested_qty,
+                product.uom_id,
+                order.company_id,
+                supplierinfo,
+                order
+            )
+            existing_po_lines = order.order_line.filtered(lambda pol: pol.product_id == product)
+            if existing_po_lines:
+                to_unlink = existing_po_lines[:-1] if product.suggested_qty > 0 else existing_po_lines
+                po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
+                if product.suggested_qty > 0:
+                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
+            elif product.suggested_qty > 0:
+                po_lines_commands.append(Command.create(suggest_line))
+
         order.order_line = po_lines_commands
         self._save_values_for_vendor()
         return {
@@ -167,8 +125,8 @@ class PurchaseOrderSuggest(models.TransientModel):
         self.ensure_one()
         if self.based_on == 'actual_demand':
             context = {
-                'from_date': fields.Datetime.now(),
-                'to_date': fields.Datetime.now() + relativedelta(days=self.number_of_days),
+                'actual_from_date': fields.Datetime.now(),
+                'actual_to_date': fields.Datetime.now() + relativedelta(days=self.number_of_days),
             }
         else:
             start_date, limit_date = self._get_period_of_time()
@@ -178,7 +136,14 @@ class PurchaseOrderSuggest(models.TransientModel):
             }
         if self.warehouse_id and not self.hide_warehouse:
             context['warehouse_id'] = self.warehouse_id.id
-        context['suggest_based_on'] = self.based_on
+
+        context = {
+            **context,
+            "suggest_number_days": self.number_of_days,
+            "suggest_based_on": self.based_on,
+            "suggest_percent": self.percent_factor,
+            "suggest_multiplier": self.multiplier,
+        }
         return context
 
     def _get_period_of_time(self):

@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import formatLang
+from math import ceil
 
 
 class ProductCategory(models.Model):
@@ -39,6 +40,38 @@ class ProductProduct(models.Model):
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
+    suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
+
+    @api.depends("qty_available", "outgoing_qty", "incoming_qty", "monthly_demand")
+    @api.depends_context("suggest_based_on", "suggest_number_days", "suggest_multiplier", "warehouse_id")
+    def _compute_suggested_quantity(self):
+        ctx = self.env.context
+        for product in self.with_context(ctx):
+            if not ctx.get("suggest_based_on"):
+                product.suggested_qty = 0
+                continue
+            elif ctx.get("suggest_based_on") == "actual_demand":
+                qty = ceil(product.outgoing_qty * ctx.get("suggest_percent", 0) / 100)  # suggest_percent depends on suggest_multiplier
+            else:
+                qty = ceil(product.monthly_demand * ctx.get("suggest_multiplier", 1))
+            qty -= product.qty_available + max(product.incoming_qty, 0)
+            product.suggested_qty = max(qty, 0)
+
+    @api.depends_context('suggest_number_days', 'warehouse_id')
+    def _compute_quantities(self):
+        return super()._compute_quantities()
+
+    def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
+        ctx = self.env.context
+        if ctx.get("suggest_based_on") and "suggest_number_days" in ctx:
+            to_date = fields.Datetime.now() + relativedelta(days=ctx.get("suggest_number_days"))
+        return super()._compute_quantities_dict(
+            lot_id=lot_id,
+            owner_id=owner_id,
+            package_id=package_id,
+            from_date=from_date,
+            to_date=to_date,
+        )
 
     @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id', 'suggest_based_on')
     def _compute_monthly_demand(self):
