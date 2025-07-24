@@ -44,7 +44,7 @@ registerWebsitePreviewTour(
     () => [
         ...insertSnippet(blogPostsSnippet),
         ...clickOnSnippet({ ...blogPostsSnippet, id: "s_blog_posts" }),
-        ...changeOptionInPopover("Blog Posts", "Blog", "aaa Blog Test"),
+        ...changeOptionInPopover("Blog Posts", "Blogs", "aaa Blog Test"),
         {
             content: "Check that the blog filter is applied",
             trigger: `:iframe .s_dynamic_snippet_blog_posts:not([data-filter-by-blog-id="-1"])`,

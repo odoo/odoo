@@ -1,5 +1,3 @@
-import { useState } from "@web/owl2/utils";
-import { onWillStart } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
@@ -12,15 +10,9 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        const { fetchBlogs, getModelNameFilter } = this.dependencies.dynamicSnippetBlogPostsOption;
+        const { getModelNameFilter } = this.dependencies.dynamicSnippetBlogPostsOption;
         this.modelNameFilter = getModelNameFilter();
         this.dynamicOptionParams = useDynamicSnippetOption(this.modelNameFilter);
-        this.blogState = useState({
-            blogs: [],
-        });
-        onWillStart(async () => {
-            this.blogState.blogs.push(...(await fetchBlogs()));
-        });
         this.templateKeyState = useDomState((el) => ({
             templateKey: el.dataset.templateKey,
         }));

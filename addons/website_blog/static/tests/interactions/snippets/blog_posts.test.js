@@ -29,7 +29,7 @@ test("dynamic snippet blog posts loads items and displays them through template"
             "website_blog.dynamic_filter_template_blog_post_big_picture"
         );
         expect(json.params.limit).toBe(16);
-        expect(json.params.search_domain).toEqual([["blog_id", "=", 1]]);
+        expect(json.params.search_domain).toEqual([["blog_id", "in", [1]]]);
         return [
             `
             <div class="s_test_item" data-test-param="test">
@@ -48,7 +48,7 @@ test("dynamic snippet blog posts loads items and displays them through template"
           <section data-snippet="s_blog_posts" class="s_blog_posts s_dynamic_snippet_blog_posts s_blog_post_big_picture s_blog_posts_effect_marley s_blog_posts_post_picture_size_default s_dynamic pt32 pb32 o_colored_level"
                   data-custom-template-data="{&quot;blog_posts_post_author_active&quot;:true, &quot;blog_posts_post_teaser_active&quot;:true, &quot;blog_posts_post_date_active&quot;:true}"
                   data-name="Blog Posts"
-                  data-filter-by-blog-id="1"
+                  data-filter-by-blog-ids="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;Travel&quot;,&quot;name&quot;:&quot;Travel&quot;}]"
                   data-filter-id="1"
                   data-template-key="website_blog.dynamic_filter_template_blog_post_big_picture"
                   data-number-of-records="16"
