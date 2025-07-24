@@ -58,10 +58,13 @@ class WebsiteEventController(http.Controller):
         SudoEventType = request.env['event.type'].sudo()
 
         searches.setdefault('search', '')
-        searches.setdefault('date', 'upcoming')
+        searches.setdefault('date', 'scheduled')
         searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
+        # The previous name of the 'scheduled' filter is 'upcoming' and may still be present in URL's saved by users.
+        if searches['date'] == 'upcoming':
+            searches['date'] = 'scheduled'
 
         website = request.website
 
@@ -69,7 +72,7 @@ class WebsiteEventController(http.Controller):
 
         options = self._get_events_search_options(slug_tags, **searches)
         order = 'date_begin'
-        if searches.get('date', 'upcoming') == 'old':
+        if searches.get('date', 'scheduled') == 'old':
             order = 'date_begin desc'
         order = 'is_published desc, ' + order + ', id desc'
         search = searches.get('search')
@@ -127,7 +130,7 @@ class WebsiteEventController(http.Controller):
             key: value for key, value in searches.items() if (
                 key != 'tags' and (
                     key == 'search' or
-                    (value != 'upcoming' if key == 'date' else value != 'all'))
+                    (value != 'scheduled' if key == 'date' else value != 'all'))
                 )
             })
 
