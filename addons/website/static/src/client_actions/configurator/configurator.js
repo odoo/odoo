@@ -1,12 +1,13 @@
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
 import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { mixCssColors } from '@web/core/utils/colors';
@@ -154,10 +155,22 @@ export class DescriptionScreen extends Component {
     };
     setup() {
         this.industrySelection = useRef('industrySelection');
+        this.purposeSelectionRef = useRef("purposeSelection");
         this.state = useStore();
         this.orm = useService('orm');
+        useAutofocus();
 
         onMounted(() => this.onMounted());
+
+        // Autofocus the next field once the current one is confirmed.
+        useEffect((selectedType, selectedIndustry) => {
+            if (selectedType && !selectedIndustry) {
+                this.industrySelection.el.querySelector("input").focus();
+            }
+            if (selectedIndustry) {
+                this.purposeSelectionRef.el.focus();
+            }
+        }, () => [this.state.selectedType, this.state.selectedIndustry]);
     }
 
     onMounted() {
@@ -241,9 +254,6 @@ export class DescriptionScreen extends Component {
 
     selectWebsiteType(id) {
         this.state.selectWebsiteType(id);
-        setTimeout(() => {
-            this.industrySelection.el.querySelector("input").focus();
-        });
         this.checkDescriptionCompletion();
     }
 
@@ -263,6 +273,22 @@ export class DescriptionScreen extends Component {
                 });
             }
             this.props.navigate(ROUTES.paletteSelectionScreen);
+        }
+    }
+    /**
+     * Hide the dropdown once the focus isn't contained within it anymore.
+     *
+     * @param {FocusEvent} ev
+     */
+    onDropdownFocusout(ev) {
+        if (ev.relatedTarget?.closest(".dropdown") !== ev.currentTarget) {
+            window.Dropdown.getOrCreateInstance(ev.currentTarget).hide();
+        }
+    }
+
+    onAutocompleteInput({ inputValue }) {
+        if (!inputValue) {
+            this.state.selectIndustry(); // reset
         }
     }
 }
@@ -485,6 +511,13 @@ export class FeaturesSelectionScreen extends Component {
         }
 
         this.props.navigate(FeaturesSelectionScreen.nextStep());
+    }
+
+    onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (["enter", "space"].includes(hotkey)) {
+            ev.target.click();
+        }
     }
 }
 
