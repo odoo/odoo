@@ -1,3 +1,4 @@
+import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { Component, useState, useRef, useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
@@ -34,6 +35,7 @@ export class LinkPopover extends Component {
         onUpload: { type: Function, optional: true },
         allowCustomStyle: { type: Boolean, optional: true },
         allowTargetBlank: { type: Boolean, optional: true },
+        allowStripDomain: { type: Boolean, optional: true },
     };
     static defaultProps = {
         canEdit: true,
@@ -112,6 +114,7 @@ export class LinkPopover extends Component {
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
             showLabel: !this.props.linkElement.childElementCount,
+            stripDomain: true,
         });
 
         this.customTextColorState = useState({
@@ -242,6 +245,16 @@ export class LinkPopover extends Component {
         this.state.url = deducedUrl
             ? this.correctLink(deducedUrl)
             : this.correctLink(this.state.url);
+        if (
+            this.props.allowStripDomain &&
+            this.state.stripDomain &&
+            this.isAbsoluteURLInCurrentDomain()
+        ) {
+            const urlObj = new URL(this.state.url, window.location.origin);
+            // Not necessarily equal to window.location.origin
+            // (see isAbsoluteURLInCurrentDomain)
+            this.state.url = this.state.url.replace(urlObj.origin, "");
+        }
     }
     onClickEdit() {
         this.state.editing = true;
@@ -300,6 +313,10 @@ export class LinkPopover extends Component {
 
     onClickNewWindow(checked) {
         this.state.linkTarget = checked ? "_blank" : "";
+    }
+
+    onClickStripDomain(checked) {
+        this.state.stripDomain = checked;
     }
 
     /**
@@ -549,5 +566,38 @@ export class LinkPopover extends Component {
     }
     isAttachmentUrl() {
         return !!this.state.url.match(/\/web\/content\/\d+/);
+    }
+    /**
+     * Checks if the given URL is using the domain where the content being
+     * edited is reachable, i.e. if this URL should be stripped of its domain
+     * part and converted to a relative URL if put as a link in the content.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    isAbsoluteURLInCurrentDomain() {
+        // First check if it is a relative URL: if it is, we don't want to check
+        // further as we will always leave those untouched.
+        let hasProtocol;
+        try {
+            hasProtocol = !!new URL(this.state.url).protocol;
+        } catch {
+            hasProtocol = false;
+        }
+        if (!hasProtocol) {
+            return false;
+        }
+
+        const urlObj = new URL(this.state.url, window.location.origin);
+        // Chosen heuristic to detect someone trying to enter a link using
+        // its Odoo instance domain. We just suppose it should be a relative
+        // URL (if unexpected behavior, the user can just not enter its Odoo
+        // instance domain but its real domain, or opt-out from the domain
+        // stripping). Mentioning an .odoo.com domain, especially its own
+        // one, is always a bad practice anyway.
+        return (
+            urlObj.origin === window.location.origin ||
+            new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(urlObj.origin)
+        );
     }
 }

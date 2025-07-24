@@ -137,6 +137,9 @@ export class LinkPlugin extends Plugin {
         "baseContainer",
         "feff",
     ];
+    static defaultConfig = {
+        allowStripDomain: true,
+    };
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     resources = {
@@ -593,6 +596,7 @@ export class LinkPlugin extends Plugin {
             showReplaceTitleBanner: this.newlyInsertedLinks.has(linkElement),
             allowCustomStyle: this.config.allowCustomStyle,
             allowTargetBlank: this.config.allowTargetBlank,
+            allowStripDomain: this.config.allowStripDomain,
         };
 
         const popover = this.getActivePopover(linkElement);
