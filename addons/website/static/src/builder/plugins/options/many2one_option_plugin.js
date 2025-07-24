@@ -72,6 +72,9 @@ export class Many2OneAction extends BuilderAction {
         }
     }
     getValue({ editingElement }) {
+        if (!editingElement.dataset.oeMany2oneId) {
+            return "";
+        }
         return JSON.stringify({ id: parseInt(editingElement.dataset.oeMany2oneId) });
     }
 }
