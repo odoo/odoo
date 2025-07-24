@@ -13,12 +13,12 @@ class ResPartner(models.Model):
 
     invoice_edi_format = fields.Selection(
         selection_add=[
-            ('facturx', "Factur-X (CII)"),
-            ('ubl_bis3', "BIS Billing 3.0"),
-            ('xrechnung', "XRechnung CIUS"),
-            ('nlcius', "NLCIUS"),
-            ('ubl_a_nz', "BIS Billing 3.0 A-NZ"),
-            ('ubl_sg', "BIS Billing 3.0 SG"),
+            ('facturx', "France (FacturX)"),
+            ('ubl_bis3', "EU Standard (Peppol Bis 3.0)"),
+            ('xrechnung', "Germany (XRechnung)"),
+            ('nlcius', "Netherlands (NLCIUS)"),
+            ('ubl_a_nz', "Australia BIS Billing 3.0 A-NZ"),
+            ('ubl_sg', "Singapore BIS Billing 3.0 SG"),
         ],
     )
     is_ubl_format = fields.Boolean(compute='_compute_is_ubl_format')

@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    invoice_edi_format = fields.Selection(selection_add=[('it_edi_xml', 'FatturaPA')])
+    invoice_edi_format = fields.Selection(selection_add=[('it_edi_xml', 'Italy (Factura PA)')])
     l10n_it_pec_email = fields.Char(string="PEC e-mail")
     l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16)
     l10n_it_pa_index = fields.Char(
