@@ -147,7 +147,7 @@ class MailActivityMixin(models.AbstractModel):
     def _inverse_activity_type_id(self):
         for record in self:
             if record.activity_type_id:
-                activities = record.activity_ids.filtesored(lambda a: a.state != 'done')
+                activities = record.activity_ids.filtered(lambda a: a.state != 'done')
                 if activities:
                     first = min(activities, key=lambda a: a.date_deadline or fields.Date.max)
                     first.activity_type_id = record.activity_type_id

@@ -805,40 +805,47 @@ class TestActivityMixin(TestActivityCommon):
                 {(e['activity_state'], e['__count']) for e in Model.formatted_read_group(**read_group_params)},
                 {('today', 2)})
 
-    def test_activity_type_filter_excludes_done_even_if_keep_done_true(self):
-        Partner = self.env['res.partner']
-        MailActivity = self.env['mail.activity']
+    def test_mail_activity_mixin_activity_type(self):
+        """Test that activity_type_id excludes done activities from its
+        computation and search results, even when the activity type has
+        keep_done=True. Verify that the compute method correctly ignores
+        done activities and that the inverse method updates the earliest
+        non-done activity when activity_type_id is changed."""
 
-        partner = Partner.create({'name': 'Keep Done Filter Test'})
+        MailTestActivity = self.env['mail.test.activity']
+        test_record = MailTestActivity.create({'name': 'Keep Done Filter Test'})
         todo_type = self.env.ref('test_mail.mail_act_test_todo')
-
+        meeting_type = self.env.ref('test_mail.mail_act_test_meeting')
         todo_type.keep_done = True
 
-        MailActivity.create({
-            'res_model_id': self.env['ir.model']._get_id('res.partner'),
-            'res_id': partner.id,
-            'activity_type_id': todo_type.id,
-            'user_id': self.env.uid,
-            'active': False,
-        })
+        activity = test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.env.uid)
+        activity.action_done()
 
-        results = Partner.search([('activity_type_id', '=', todo_type.id)])
+        results = MailTestActivity.search([('activity_type_id', '=', todo_type.id)])
         self.assertNotIn(
-            partner, results,
-            "Record with only DONE activities (even with keep_done=True) should not appear in activity_type_id search"
+            test_record, results,
+            "Record with only done activities should not appear in "
+            "activity_type_id search, even with keep_done=True"
+        )
+        self.assertFalse(test_record.activity_type_id, "activity_type_id should be False when only done activities")
+
+        test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.env.uid)
+
+        results = MailTestActivity.search([('activity_type_id', '=', todo_type.id)])
+        self.assertIn(test_record, results, "Record with an active activity should appear in activity_type_id search")
+
+        self.assertEqual(
+            test_record.activity_type_id,
+            todo_type,
+            "activity_type_id should be set to the earliest activity type"
         )
 
-        MailActivity.create({
-            'res_model_id': self.env['ir.model']._get_id('res.partner'),
-            'res_id': partner.id,
-            'activity_type_id': todo_type.id,
-            'user_id': self.env.uid,
-        })
-
-        results = Partner.search([('activity_type_id', '=', todo_type.id)])
-        self.assertIn(
-            partner, results,
-            "Record with an active activity should appear in activity_type_id search"
+        test_record.activity_type_id = meeting_type
+        active_activities = test_record.activity_ids.filtered(lambda a: a.state != 'done')
+        self.assertEqual(
+            active_activities[0].activity_type_id,
+            meeting_type,
+            "Inverse method should update the earliest activity's type"
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
