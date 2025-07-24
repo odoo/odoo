@@ -63,7 +63,7 @@ registerWebsitePreviewTour("blog", {
     tooltipPosition: "top",
 },
 {
-    trigger: ".o_select_media_dialog .o_existing_attachment_cell:first img",
+    trigger: ".o_select_media_dialog .o_existing_attachment_cell:first .o_button_area",
     content: _t("Choose an image from the library."),
     tooltipPosition: "top",
     run: "click",

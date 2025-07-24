@@ -58,7 +58,7 @@ test("Unsplash is inserted in the Media Dialog", async () => {
     await fetchDef;
     expect.verifySteps(["fetch_images"]);
     await waitFor("img[title='Username']");
-    await click("img[title='Username']");
+    await click(".o_button_area[aria-label='Username']");
     await waitFor(".o-wysiwyg img[alt='unsplash_image']");
     expect(".o-wysiwyg img[alt='unsplash_image']").toHaveCount(1);
 });

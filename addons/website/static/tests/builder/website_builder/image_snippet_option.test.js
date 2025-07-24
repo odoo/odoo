@@ -41,7 +41,7 @@ test("Drag & drop an 'Image' snippet opens the dialog to select an image", async
     expect(".o_select_media_dialog").toHaveCount(1);
     expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
 
-    await contains(".o_select_media_dialog img[title='logo']").click();
+    await contains(".o_select_media_dialog .o_button_area[aria-label='logo']").click();
     await waitForEndOfOperation();
     expect(".o_select_media_dialog").toHaveCount(0);
 
