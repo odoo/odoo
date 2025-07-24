@@ -271,7 +271,7 @@ export class PosOrder extends Base {
     }
 
     getCashierName() {
-        return this.user_id?.name;
+        return this.user_id?.name?.split(" ").at(0);
     }
     canPay() {
         return this.lines.length;

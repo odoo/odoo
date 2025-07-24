@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
-            ReceiptScreen.cashierNameExists("A simple PoS man!"),
+            ReceiptScreen.cashierNameExists("A"), // A simple PoS man! (Take the first word)
             Dialog.confirm("Continue with limited functionality"),
             //receipt had expected delivery printed
             ReceiptScreen.shippingDateExists(),
