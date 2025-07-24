@@ -301,7 +301,7 @@ class ProductTemplate(models.Model):
         """
         return any(v.is_custom for v in self.valid_product_template_attribute_line_ids.product_template_value_ids._only_active())
 
-    def _get_possible_variants_sorted(self, parent_combination=None):
+    def _get_possible_variants_sorted(self):
         """Return the sorted recordset of variants that are possible.
 
         The order is based on the order of the attributes and their values.
@@ -309,10 +309,6 @@ class ProductTemplate(models.Model):
         See `_get_possible_variants` for the limitations of this method with
         dynamic or no_variant attributes, and also for a warning about
         performances.
-
-        :param parent_combination: combination from which `self` is an
-            optional or accessory product
-        :type parent_combination: recordset `product.template.attribute.value`
 
         :return: the sorted variants that are possible
         :rtype: recordset of `product.product`
@@ -336,7 +332,7 @@ class ProductTemplate(models.Model):
                 keys.append(attribute.id)
             return keys
 
-        return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
+        return self._get_possible_variants().sorted(_sort_key_variant)
 
     def _get_previewed_attribute_values(self, category=None, product_query_params=None):
         """Compute previewed product attribute values for each product in the recordset.
@@ -436,14 +432,10 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return bool(self.filtered_domain(self.env['website']._product_domain()))
 
-    def _is_add_to_cart_possible(self, parent_combination=None):
+    def _is_add_to_cart_possible(self):
         """
         It's possible to add to cart (potentially after configuration) if
         there is at least one possible combination.
-
-        :param parent_combination: the combination from which `self` is an
-            optional or accessory product.
-        :type parent_combination: recordset `product.template.attribute.value`
 
         :return: True if it's possible to add to cart, else False
         :rtype: bool
@@ -452,7 +444,7 @@ class ProductTemplate(models.Model):
         if not self.active or not self._can_be_added_to_cart():
             # for performance: avoid calling `_get_possible_combinations`
             return False
-        return next(self._get_possible_combinations(parent_combination), False) is not False
+        return next(self._get_possible_combinations(), False) is not False
 
     def _get_combination_info(
         self, combination=False, product_id=False, add_qty=1.0, uom_id=False, only_template=False,

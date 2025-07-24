@@ -13,7 +13,7 @@ export class ProductTemplateAttributeValue extends models.ServerModel {
             "is_custom",
             "html_color",
             "image",
-            "exclude_for",
+            "excluded_value_ids",
         ];
     }
 }

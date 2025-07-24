@@ -142,7 +142,7 @@
         Handle automatically created product.template.attribute.value.
         Meaning that the combination between the "customizable desk" and the attribute value "black" will be materialized
         into a "product.template.attribute.value" with the ref "product.product_4_attribute_1_value_1".
-        This will allow setting fields like "price_extra" and "exclude_for"
+        This will allow setting fields like "price_extra" and "excluded_value_ids"
          -->
         <function model="ir.model.data" name="_update_xmlids">
             <value model="base" eval="[{
@@ -451,33 +451,13 @@
             <field name="price_extra">6.40</field>
         </record>
 
-        <record id="product_template_attribute_exclusion_1" model="product.template.attribute.exclusion">
-            <field name="product_tmpl_id" ref="product.product_product_4_product_template" />
-            <field name="value_ids" eval="[(6, 0, [ref('product.product_4_attribute_2_value_2')])]"/>
-        </record>
-        <record id="product_template_attribute_exclusion_2" model="product.template.attribute.exclusion">
-            <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
-            <field name="value_ids" eval="[(6, 0, [ref('product.product_11_attribute_1_value_1')])]"/>
-        </record>
-        <record id="product_template_attribute_exclusion_3" model="product.template.attribute.exclusion">
-            <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
-            <field name="value_ids" eval="[(6, 0, [ref('product.product_11_attribute_1_value_2')])]"/>
-        </record>
-
         <!--
         The "Customizable Desk's Aluminium" attribute value will excude:
         - The "Customizable Desk's Black" attribute
         - The "Office Chair's Steel" attribute
          -->
         <record id="product_4_attribute_1_value_2" model="product.template.attribute.value">
-            <field name="exclude_for" eval="[(6, 0, [ref('product.product_template_attribute_exclusion_1'), ref('product.product_template_attribute_exclusion_2')])]" />
-        </record>
-        <!--
-        The "Customizable Desk's Steel" attribute value will excude:
-        - The "Office Chair's Aluminium" attribute
-        -->
-        <record id="product_4_attribute_1_value_1" model="product.template.attribute.value">
-            <field name="exclude_for" eval="[(6, 0, [ref('product.product_template_attribute_exclusion_3')])]" />
+            <field name="excluded_value_ids" eval="[Command.link(ref('product.product_4_attribute_2_value_2'))]"/>
         </record>
 
         <!-- MRP Demo Data-->

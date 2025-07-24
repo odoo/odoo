@@ -23,7 +23,6 @@ import { ProductAttribute } from "./product_attribute.data";
 import { ProductAttributeCustomValue } from "./product_attribute_custom_value.data";
 import { ProductTemplateAttributeLine } from "./product_template_attribute_line.data";
 import { ProductTemplateAttributeValue } from "./product_template_attribute_value.data";
-import { ProductTemplateAttributeExclusion } from "./product_template_attribute_exclusion.data";
 import { ProductCombo } from "./product_combo.data";
 import { ProductComboItem } from "./product_combo_item.data";
 import { ResUsers } from "./res_users.data";
@@ -82,7 +81,6 @@ export const hootPosModels = [
     ProductAttributeCustomValue,
     ProductTemplateAttributeLine,
     ProductTemplateAttributeValue,
-    ProductTemplateAttributeExclusion,
     ProductCombo,
     ProductComboItem,
     ProductUom,

@@ -173,7 +173,6 @@
                                         >
                                             <t t-call="website_sale.variants">
                                                 <t t-set="ul_class" t-valuef="flex-column" />
-                                                <t t-set="parent_combination" t-value="None" />
                                                 <t
                                                     t-set="combination"
                                                     t-value="combination_info['combination']"
@@ -313,7 +312,7 @@
     </template>
 
     <template id="website_sale.variants">
-        <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination)"/>
+        <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions()"/>
         <ul
             t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
             t-att-data-attribute-exclusions="json.dumps(attribute_exclusions)"
@@ -525,7 +524,10 @@
 
     <template id="website_sale.badge_extra_price" name="Badge Extra Price">
         <t t-set="price_extra" t-value="ptav._get_extra_price(combination_info)"/>
-        <span t-if="price_extra" t-attf-class="{{'badge text-bg-primary' if attribute.display_type != 'pills' else 'small text-muted'}}">
+        <span
+            t-if="ptav.show_price_extra and price_extra"
+            t-attf-class="{{'badge text-bg-primary' if attribute.display_type != 'pills' else 'small text-muted'}}"
+        >
             <!--
                 price_extra is displayed as catalog price instead of
                 price after pricelist because it is impossible to

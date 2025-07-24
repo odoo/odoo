@@ -12,4 +12,41 @@
         </field>
     </record>
 
+    <record id="product_attribute_value_form" model="ir.ui.view">
+        <field name="name">product.attribute.value.form</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml">
+            <form string="Attribute Value">
+                <div class="row">
+                    <div class="col col-8">
+                        <group>
+                            <field name="attribute_id" invisible="True"/>
+                            <field name="name" string="Name"/>
+                            <field
+                                name="is_custom"
+                                width="120px"
+                                invisible="display_type == 'multi'"
+                            />
+                            <field
+                                name="html_color"
+                                widget="color"
+                                invisible="display_type != 'color' or image"
+                            />
+                            <field name="default_extra_price"/>
+                        </group>
+                    </div>
+                    <div class="col col-4">
+                        <field
+                            name="image"
+                            widget="image"
+                            options="{'size': [70, 70]}"
+                            class="oe_avatar float-none"
+                            invisible="display_type not in ['color', 'image']"
+                        />
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
 </odoo>
