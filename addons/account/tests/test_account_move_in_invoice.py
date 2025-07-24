@@ -2762,6 +2762,43 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         bill_uom = bill.invoice_line_ids[0].product_uom_id
         self.assertEqual(bill_uom, uom_kgm)
 
+    def test_vendor_uom_per_company(self):
+        """Vendor bill should use correct seller UoM per company."""
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_gram = self.env.ref('uom.product_uom_gram')
+        uom_kgm = self.env.ref('uom.product_uom_kgm')
+        other_company = self.setup_other_company()['company']
+
+        product = self.env['product.product'].create({
+            'name': "Shared Product",
+            'uom_id': uom_kgm.id,
+            'standard_price': 100.0,
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.partner_a.id,
+                    'company_id': self.env.company.id,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'partner_id': self.partner_a.id,
+                    'company_id': self.env.company.id,
+                    'product_uom_id': uom_gram.id,
+                }),
+                Command.create({
+                    'partner_id': self.partner_a.id,
+                    'company_id': other_company.id,
+                    'product_uom_id': uom_kgm.id,
+                }),
+            ]
+        })
+
+        bill_1 = self.init_invoice(move_type='in_invoice', products=[product])
+        self.assertIn(
+            bill_1.invoice_line_ids[0].product_uom_id,
+            [uom_unit, uom_gram],
+            "The selected UoM should be either Unit or Gram for the seller in the bill's company."
+        )
+
     def test_manual_label_change_on_payment_term_line(self):
         """
         Ensure label of the payment term line can be changed manually
