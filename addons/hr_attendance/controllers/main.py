@@ -112,7 +112,7 @@ class HrAttendance(http.Controller):
             has_password = self.has_password()
             if not from_trial_mode and has_password:
                 request.session.logout(keep_db=True)
-            if (from_trial_mode or not has_password):
+            if (from_trial_mode or (not has_password and not request.env.user.is_public)):
                 kiosk_mode = "settings"
             else:
                 kiosk_mode = company.attendance_kiosk_mode
