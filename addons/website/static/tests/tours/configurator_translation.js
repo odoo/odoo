@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
     // Make sure "Back" works
     {
         content: "use browser's Back",
-        trigger: 'a.o_change_website_type',
+        trigger: 'button.o_change_website_type',
         run() {
             window.history.back();
         },
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
     // Description screen
     {
         content: "select a website type",
-        trigger: 'a.o_change_website_type',
+        trigger: 'button.o_change_website_type',
         run: "click",
     }, {
         content: "insert a website industry",
@@ -38,12 +38,8 @@ registry.category("web_tour.tours").add('configurator_translation', {
         trigger: '.o_configurator_industry_wrapper ul li a:contains("in fr")',
         run: "click",
     }, {
-        content: "select an objective",
-        trigger: '.o_configurator_purpose_dd a',
-        run: "click",
-    }, {
         content: "choose from the objective list",
-        trigger: 'a.o_change_website_purpose',
+        trigger: 'button.o_change_website_purpose',
         run: "click",
     },
     // Palette screen
