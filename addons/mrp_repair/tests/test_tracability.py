@@ -42,7 +42,7 @@ class TestRepairTraceability(TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
         # Set serial to A1
-        mo.lot_producing_id = ptrepair_lot
+        mo.lot_producing_ids = ptrepair_lot
         # Set component serial to B2
         mo.move_raw_ids.move_line_ids.lot_id = ptremove_lot
         mo.move_raw_ids.picked = True
@@ -70,7 +70,7 @@ class TestRepairTraceability(TestMrpCommon):
         mo2 = mo2_form.save()
         mo2.action_confirm()
         # Set serial to A2
-        mo2.lot_producing_id = self.env['stock.lot'].create({
+        mo2.lot_producing_ids = self.env['stock.lot'].create({
             'name': 'A2',
             'product_id': product_to_repair.id,
         })

@@ -934,15 +934,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             self.assertEqual(action['name'], 'Subcontract', "It should open the subcontract record components wizard instead.")
             mo = self.env['mrp.production'].browse(action['res_id'])
             with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
-                mo_form.qty_producing = 1
-                mo_form.lot_producing_id = lot
+                mo_form.lot_producing_ids.set(lot)
                 mo_form.save()
             mo.subcontracting_record_component()
 
         subcontract_move = picking_receipt.move_ids_without_package.filtered(lambda m: m.is_subcontract)
         self.assertEqual(len(subcontract_move._get_subcontract_production()), 3)
-        self.assertEqual(len(subcontract_move._get_subcontract_production().lot_producing_id), 3)
-        self.assertRecordValues(subcontract_move._get_subcontract_production().lot_producing_id.sorted('id'), [
+        self.assertEqual(len(subcontract_move._get_subcontract_production().lot_producing_ids), 3)
+        self.assertRecordValues(subcontract_move._get_subcontract_production().lot_producing_ids.sorted('id'), [
             {'id': finished_lots[0].id},
             {'id': finished_lots[1].id},
             {'id': finished_lots[2].id},
@@ -960,8 +959,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move_form.save()
 
         subcontracted_mo = subcontract_move._get_subcontract_production()
-        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id == new_lot)), 1)
-        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id != new_lot)), 2)
+        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_ids == new_lot)), 1)
+        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_ids != new_lot)), 2)
 
     def test_multiple_component_records_for_incomplete_move(self):
         self.bom.consumption = 'flexible'
@@ -1195,7 +1194,6 @@ class TestSubcontractingTracking(TransactionCase):
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished_product
             move.product_uom_qty = 1
-            move.quantity = 1
             move.picked = True
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
@@ -1241,7 +1239,7 @@ class TestSubcontractingTracking(TransactionCase):
         mo = self.env['mrp.production'].browse(action['res_id'])
         mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
         mo_form.qty_producing = 1
-        mo_form.lot_producing_id = lot_id
+        mo_form.lot_producing_ids.set(lot_id)
         with mo_form.move_line_raw_ids.edit(0) as ml:
             ml.lot_id = serial_id
         mo = mo_form.save()
@@ -1298,7 +1296,7 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEqual(mos.mapped("state"), ["done"] * nb_finished_product)
         self.assertEqual(mos.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mos.picking_type_id.active)
-        self.assertEqual(set(mos.lot_producing_id.mapped("name")), set(lot_names_finished))
+        self.assertEqual(set(mos.lot_producing_ids.mapped("name")), set(lot_names_finished))
 
         # Available quantities should be negative at the subcontracting location for each components
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
@@ -1321,7 +1319,6 @@ class TestSubcontractingTracking(TransactionCase):
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished_product
             move.product_uom_qty = todo_nb
-            move.quantity = todo_nb
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
 
@@ -1352,19 +1349,22 @@ class TestSubcontractingTracking(TransactionCase):
                 'product_id': self.comp1_sn.id,
             }))
 
+        action = picking_receipt.action_record_components()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        mo.lot_producing_ids = [Command.link(serial.id) for serial in serials_finished]
+        mo.set_qty_producing()
+        mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
         for i in range(todo_nb):
-            action = picking_receipt.action_record_components()
-            mo = self.env['mrp.production'].browse(action['res_id'])
-            mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
-            mo_form.lot_producing_id = serials_finished[i]
-            with mo_form.move_line_raw_ids.edit(0) as ml:
+            with mo_form.move_line_raw_ids.edit(i) as ml:
                 self.assertEqual(ml.product_id, self.comp1_sn)
                 ml.lot_id = serials_comp1[i]
-            with mo_form.move_line_raw_ids.edit(1) as ml:
-                self.assertEqual(ml.product_id, self.comp2)
-                ml.lot_id = lot_comp2
-            mo = mo_form.save()
-            mo.subcontracting_record_component()
+        with mo_form.move_line_raw_ids.edit(todo_nb) as ml:
+            self.assertEqual(ml.product_id, self.comp2)
+            ml.lot_id = lot_comp2
+        mo = mo_form.save()
+        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        mo.subcontracting_record_component()
+        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
 
         # We should not be able to call the 'record_components' button
         self.assertEqual(picking_receipt.display_action_record_components, 'hide')
@@ -1372,9 +1372,6 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done'] * todo_nb)
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), todo_nb)
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("qty_produced"), [1] * todo_nb)
 
         # Available quantities should be negative at the subcontracting location for each components
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
@@ -1439,7 +1436,7 @@ class TestSubcontractingTracking(TransactionCase):
             mo = self.env['mrp.production'].browse(action['res_id'])
             mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
             mo_form.qty_producing = qty
-            mo_form.lot_producing_id = finished_lot
+            mo_form.lot_producing_ids.set(finished_lot)
             with mo_form.move_line_raw_ids.edit(0) as ml:
                 ml.lot_id = component_lot
             mo = mo_form.save()
@@ -1492,7 +1489,6 @@ class TestSubcontractingTracking(TransactionCase):
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = finished_product
             move.product_uom_qty = todo_nb
-            move.quantity = todo_nb
             move.picked = True
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
@@ -1510,8 +1506,7 @@ class TestSubcontractingTracking(TransactionCase):
             action = picking_receipt.action_record_components()
             mo = self.env['mrp.production'].browse(action['res_id'])
             mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
-            mo_form.qty_producing = 1
-            mo_form.lot_producing_id = sn
+            mo_form.lot_producing_ids.set(sn)
             mo = mo_form.save()
             mo.subcontracting_record_component()
 
@@ -1553,7 +1548,6 @@ class TestSubcontractingTracking(TransactionCase):
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = finished_product
             move.product_uom_qty = todo_nb
-            move.quantity = todo_nb
             move.picked = True
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
@@ -1566,28 +1560,23 @@ class TestSubcontractingTracking(TransactionCase):
         compo_picking.action_assign()
         compo_picking.button_validate()
 
-        batch_produce_action = mo.button_mark_done()
-        wizard = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
-        # Let the wizard generate all serial numbers
-        wizard.lot_name = "sn#1"
-        wizard.lot_qty = todo_nb
-        wizard = wizard.save()
-        wizard.action_generate_production_text()
-        wizard.action_prepare()
+        action = mo.button_mark_done()
+        wizard = Form.from_action(self.env, action)
+        wizard.lot_name = 'sn#1'
+        wizard.lot_quantity = todo_nb
+        action = wizard.save().action_generate_serial_numbers()
+        wizard = Form.from_action(self.env, action)
+        wizard.save().action_apply()
 
-        # Each generated serial number should have its own mo
+        # One MO - multiple serials
         self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.sorted("name"), [
-            {"name": initial_name + "-001", "state": "confirmed"},
-            {"name": initial_name + "-002", "state": "confirmed"},
-            {"name": initial_name + "-003", "state": "confirmed"},
+            {"name": initial_name, "state": "to_close"},
         ])
         self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
-            {"quantity": 1.0, "state": "assigned"},
-            {"quantity": 1.0, "state": "assigned"},
-            {"quantity": 1.0, "state": "assigned"},
+            {"quantity": 3.0, "state": "assigned"},
         ])
         mo.procurement_group_id.mrp_production_ids.button_mark_done()
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done', 'done' , 'done'])
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done'])
 
 
 @tagged('post_install', '-at_install')
@@ -1686,7 +1675,7 @@ class TestSubcontractingPortal(TransactionCase):
         mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
         # Registering components for the first manufactured product
         mo_form.qty_producing = 1
-        mo_form.lot_producing_id = lot1
+        mo_form.lot_producing_ids.set(lot1)
         with mo_form.move_line_raw_ids.edit(0) as ml:
             ml.lot_id = serial1
         mo = mo_form.save()
@@ -1697,7 +1686,7 @@ class TestSubcontractingPortal(TransactionCase):
         mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
         # Registering components for the second manufactured product with over-consumption, which leads to a warning
         mo_form.qty_producing = 1
-        mo_form.lot_producing_id = lot2
+        mo_form.lot_producing_ids.set(lot2)
         with mo_form.move_line_raw_ids.edit(0) as ml:
             ml.lot_id = serial2
         with mo_form.move_line_raw_ids.new() as ml:
