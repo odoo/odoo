@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons.im_livechat.models.discuss_channel import is_livechat_channel
 from odoo.addons.mail.tools.discuss import Store
 from datetime import datetime, timedelta
 
@@ -44,9 +45,9 @@ class DiscussChannel(models.Model):
             # an accessible channel when computing requested_by_operator
             Store.Attr(
                 "requested_by_operator",
-                lambda channel: channel.create_uid in channel.sudo()
-                .livechat_agent_history_ids.partner_id.user_ids,
-                predicate=lambda channel: channel.channel_type == "livechat",
+                lambda channel: channel.create_uid
+                in channel.sudo().livechat_agent_history_ids.partner_id.user_ids,
+                predicate=is_livechat_channel,
             ),
         ]
 
@@ -84,7 +85,7 @@ class DiscussChannel(models.Model):
                         value=channels,
                     ),
                 ],
-                predicate=lambda channel: channel.channel_type == "livechat",
+                predicate=is_livechat_channel,
             ),
         )
         return fields_to_store
