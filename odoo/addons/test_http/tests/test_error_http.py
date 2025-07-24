@@ -1,7 +1,7 @@
 import json
 from odoo.tools import mute_logger
 from odoo.tests import tagged
-from odoo.addons.test_http.controllers import CT_JSON
+from odoo.addons.test_http.controllers.controllers import CT_JSON
 from .test_common import TestHttpBase
 
 
