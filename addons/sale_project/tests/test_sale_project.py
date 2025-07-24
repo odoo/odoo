@@ -387,7 +387,6 @@ class TestSaleProject(TestSaleProjectCommon):
             'order_id': sale_order_1.id,
         }])
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # add a milestone product
         line_delivered_milestone = self.env['sale.order.line'].create({
             'product_id': self.product_service_delivered_milestone.id,
@@ -398,18 +397,15 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_1.with_user(user_wrong_group)._compute_show_project_and_task_button()
         self.assertFalse(sale_order_1.show_create_project_button, "The user does not have the right to create a new project, the button should be hidden")
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # the user has project creation right
         sale_order_1._compute_show_project_and_task_button()
         self.assertTrue(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # add a project to the SO
         line_delivered_milestone.project_id = self.project_global
         sale_order_1._compute_show_project_and_task_button()
         self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be hidden")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
-        self.assertTrue(sale_order_1.show_task_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
 
         # add an ordered_prepaid service product
         line_prepaid = self.env['sale.order.line'].create({
@@ -419,7 +415,6 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_2._compute_show_project_and_task_button()
         self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_2.show_task_button, "There is no project on the sale order, the button should be hidden")
         # create a new task, whose sale order item is a sol of the SO
         task = self.env['project.task'].create({
             'name': 'Test Task',
@@ -430,8 +425,8 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_2._compute_show_project_and_task_button()
         self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertTrue(sale_order_2.show_task_button, "There is no project on the sale order and there is a task whose sale item is one of the sale_line of the SO, the button should be displayed")
         self.assertEqual(sale_order_2.tasks_ids, task)
+
         # add a manual service product
         self.env['sale.order.line'].create({
             'product_id': self.product_service_delivered_manual.id,
@@ -440,7 +435,6 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_3._compute_show_project_and_task_button()
         self.assertTrue(sale_order_3.show_create_project_button, "There is a product service with the service_policy set on 'manual' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_3.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_3.show_task_button, "There is no project on the sale order, the button should be hidden")
 
     def test_create_task_from_template_line(self):
         """
@@ -887,30 +881,6 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order_action = multi_company_project.with_company(company).action_view_sos()
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
-
-    def test_action_view_task_stages(self):
-        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
-        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
-
-        sale_order_2 = SaleOrder.create({
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
-        })
-        sale_line_1_order_2 = SaleOrderLine.create({
-            'product_id': self.product_order_service1.id,
-            'product_uom_qty': 10,
-            'price_unit': self.product_order_service1.list_price,
-            'order_id': sale_order_2.id,
-        })
-
-        self.env['project.task'].create({
-            'name': 'Task',
-            'sale_line_id': sale_line_1_order_2.id,
-            'project_id': self.project_global.id,
-        })
-        action = sale_order_2.action_view_task()
-        self.assertEqual(action["context"]["default_project_id"], self.project_global.id)
 
     def test_creating_AA_when_adding_service_to_confirmed_so(self):
         sale_order = self.env['sale.order'].create({
