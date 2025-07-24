@@ -515,12 +515,12 @@ class EventEvent(models.Model):
 
     @api.model
     def _search_build_dates(self):
-        # To fetch events of the user's current day. The start and the end of the user's day must
+        now = fields.Datetime.now()
+        # To fetch the remaining events of the user's current day, the end of the user's day must
         # be localized and then converted in UTC, as it is the timezone used to record dates and
         # times in db.
         tz = timezone(self.env.user.tz or self.env.context.get('tz') or 'UTC')
         localized_today_begin = tz.localize(fields.Datetime.today())
-        utc_today_begin = localized_today_begin.astimezone(utc)
         utc_today_end = localized_today_begin.replace(hour=23, minute=59, second=59).astimezone(utc)
 
         def sd(date):
@@ -528,29 +528,24 @@ class EventEvent(models.Model):
 
         def get_month_filter_domain(filter_name, months_delta):
             localized_month_begin = localized_today_begin.replace(day=1)
-            utc_month_begin = (localized_month_begin + relativedelta(months=months_delta)).astimezone(utc)
-            # As utc_month_begin may be the 30th day of the month, adding months may lead to miscalculation the
-            # last day of the interval since 31st day may be missing. Since localized_month_begin is always the
-            # first day of the month, it must be used to calculate the end of the interval and then the UTC
-            # conversion can be done.
             utc_months_delta_end = (localized_month_begin + relativedelta(months=months_delta + 1)).astimezone(utc)
             filter_string = _('This month') if months_delta == 0 \
                 else format_date(self.env, value=localized_today_begin + relativedelta(months=months_delta),
                     date_format='LLLL', lang_code=get_lang(self.env).code).capitalize()
             return [filter_name, filter_string, [
-                ("date_end", ">=", sd(utc_month_begin)),
+                ("date_end", ">=", sd(now)),
                 ("date_begin", "<", sd(utc_months_delta_end))],
                 0]
 
         return [
-            ['upcoming', _('Upcoming Events'), [("date_end", ">=", sd(utc_today_begin))], 0],
+            ['scheduled', _('Scheduled Events'), [("date_end", ">=", sd(now))], 0],
             ['today', _('Today'), [
-                ("date_end", ">", sd(utc_today_begin)),
+                ("date_end", ">", sd(now)),
                 ("date_begin", "<", sd(utc_today_end))],
                 0],
             get_month_filter_domain('month', 0),
             ['old', _('Past Events'), [
-                ("date_end", "<", sd(utc_today_begin))],
+                ("date_end", "<", sd(now))],
                 0],
             ['all', _('All Events'), [], 0]
         ]
@@ -600,7 +595,7 @@ class EventEvent(models.Model):
             if date == date_details[0]:
                 domain.append(date_details[2])
                 no_country_domain.append(date_details[2])
-                if date_details[0] != 'upcoming':
+                if date_details[0] != 'scheduled':
                     current_date = date_details[1]
 
         search_fields = ['name']
