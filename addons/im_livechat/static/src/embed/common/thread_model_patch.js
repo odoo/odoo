@@ -159,13 +159,14 @@ patch(Thread.prototype, {
         );
     },
 
+    get hasLivechatEnded() {
+        return (super.hasLivechatEnded && !this.chatbot) || this.chatbot?.completed;
+    },
+
     get composerDisabledText() {
         const text = super.composerDisabledText;
-        if (text || !this.chatbot) {
+        if (text) {
             return text;
-        }
-        if (this.chatbot.completed) {
-            return _t("This livechat conversation has ended");
         }
         if (
             this.chatbot.currentStep?.type === "question_selection" &&

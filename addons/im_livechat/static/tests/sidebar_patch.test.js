@@ -348,6 +348,7 @@ test("Clicking on leave button leaves the channel", async () => {
             Command.create({ guest_id: pyEnv["mail.guest"].create({ name: "Visitor 11" }) }),
         ],
         channel_type: "livechat",
+        livechat_active: true,
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
