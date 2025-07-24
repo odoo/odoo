@@ -7,6 +7,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
@@ -14,7 +15,7 @@ export class CallSettings extends Component {
     static defaultProps = {
         withActionPanel: true,
     };
-    static components = { ActionPanel };
+    static components = { ActionPanel, DeviceSelect };
 
     setup() {
         super.setup();
