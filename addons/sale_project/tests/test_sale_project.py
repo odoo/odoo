@@ -119,6 +119,11 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         self.start_tour('/odoo', 'task_create_sol_tour', login='admin')
 
     def test_project_create_sol_ui(self):
+        self.product_order_service5 = self.env['product.product'].create({
+            'name': 'New Sale order line',
+            'type': 'service',
+            'invoice_policy': 'delivery',
+        })
         self.start_tour('/odoo', 'project_create_sol_tour', login='admin')
 
     def test_sale_order_with_project_task(self):
