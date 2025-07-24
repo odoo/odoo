@@ -46,9 +46,11 @@ test("Renders the call settings", async () => {
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Call Settings" });
     await contains(".o-discuss-CallSettings");
-    await contains("label[aria-label='Input device']");
+    await contains("label[aria-label='Camera']");
+    await contains("label[aria-label='Microphone']");
+    await contains("label[aria-label='Audio Output']");
     await contains("option[value=mockAudioDeviceId]");
-    await contains("option[value=mockVideoDeviceId]", { count: 0 });
+    await contains("option[value=mockVideoDeviceId]");
     await contains("button", { text: "Voice Detection" });
     await contains("button", { text: "Push to Talk" });
     await contains("span", { text: "Voice detection sensitivity" });

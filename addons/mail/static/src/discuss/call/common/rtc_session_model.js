@@ -195,6 +195,10 @@ export class RtcSession extends Record {
         if (!this.audioElement) {
             return;
         }
+        if (this.store.settings.audioOutputDeviceId) {
+            // skipping, it will use the default device.
+            await this.audioElement.setSinkId(this.store.settings.audioOutputDeviceId).catch();
+        }
         try {
             await this.audioElement.play();
             this.audioError = undefined;
