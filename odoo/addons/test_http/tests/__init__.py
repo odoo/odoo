@@ -2,6 +2,7 @@ from . import test_captcha
 from . import test_common
 from . import test_device
 from . import test_echo_reply
+from . import test_endpoints
 from . import test_error
 from . import test_greeting
 from . import test_misc
