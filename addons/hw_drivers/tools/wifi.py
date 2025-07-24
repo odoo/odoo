@@ -157,7 +157,8 @@ def reconnect(ssid=None, password=None, force_update=False):
         timer = time.time() + 10  # Required on boot: wait 10 sec (see: https://github.com/odoo/odoo/pull/187862)
         while time.time() < timer:
             if get_ip():
-                toggle_access_point(STOP)  # ensure access point is off
+                if is_access_point():
+                    toggle_access_point(STOP)
                 return True
             time.sleep(.5)
 
@@ -231,8 +232,8 @@ def _configure_access_point(on=True):
     """
     ssid = get_access_point_ssid()
 
-    _logger.info("Configuring access point with SSID %s", ssid)
     if on:
+        _logger.info("Starting access point with SSID %s", ssid)
         with writable(), open('/etc/hostapd/hostapd.conf', 'w', encoding='utf-8') as f:
             f.write(f"interface=wlan0\nssid={ssid}\nchannel=1\n")
     mode = 'add' if on else 'del'

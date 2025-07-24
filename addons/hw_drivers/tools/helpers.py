@@ -149,7 +149,7 @@ def check_certificate():
     server = get_odoo_server_url()
 
     if not server:
-        _logger.info('Ignoring the nginx certificate check without a connected database')
+        _logger.debug('Ignoring the nginx certificate check without a connected database')
         return {"status": CertificateStatus.ERROR,
                 "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
 
@@ -179,7 +179,7 @@ def check_certificate():
         return {"status": CertificateStatus.NEED_REFRESH}
     else:
         message = 'Your certificate %(certificate)s is valid until %(end_date)s' % {"certificate": cn, "end_date": cert_end_date}
-        _logger.info(message)
+        _logger.debug(message)
         return {"status": CertificateStatus.OK, "message": message}
 
 
@@ -758,7 +758,7 @@ def reset_log_level():
         _logger.info("Resetting log level to default.")
         update_conf({
             'log_level_reset_timestamp': '',
-            'log_handler': ':INFO',
+            'log_handler': ':INFO,werkzeug:WARNING',
             'log_level': 'info',
         })
 
