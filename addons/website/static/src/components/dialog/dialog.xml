@@ -12,10 +12,10 @@
         <t t-if="props.showFooter" t-set-slot="footer">
             <t t-if="props.slots and props.slots.footer" t-slot="footer"/>
             <t t-else="">
-                <button class="btn btn-primary" t-on-click="protectedClick(props.primaryClick)" t-att-disabled="state.disabled">
+                <button class="btn btn-primary" t-on-click="protectedClick(props.primaryClick)" t-att-disabled="state.disabled" data-hotkey="q">
                     <t t-esc="props.primaryTitle"/>
                 </button>
-                <button t-if="props.showSecondaryButton" class="btn btn-secondary" t-on-click="protectedClick(props.secondaryClick)" t-att-disabled="state.disabled">
+                <button t-if="props.showSecondaryButton" class="btn btn-secondary" t-on-click="protectedClick(props.secondaryClick)" t-att-disabled="state.disabled" data-hotkey="x">
                     <t t-esc="props.secondaryTitle"/>
                 </button>
             </t>
