@@ -28,7 +28,7 @@ class Manager(Thread):
     def __init__(self):
         super().__init__()
         self.hostname = helpers.get_hostname()
-        self.mac_address = helpers.get_mac_address()
+        self.identifier = helpers.get_identifier()
         self.domain = self._get_domain()
         self.token = helpers.get_token()
         self.version = helpers.get_version(detailed_version=True)
@@ -56,11 +56,6 @@ class Manager(Thread):
             self.previous_iot_devices = iot_devices.copy()
             changed = True
 
-        # Mac address can change if the user has multiple network interfaces
-        new_mac_address = helpers.get_mac_address()
-        if self.mac_address != new_mac_address:
-            self.mac_address = new_mac_address
-            changed = True
         # IP address change
         new_domain = self._get_domain()
         if self.domain != new_domain:
@@ -82,7 +77,7 @@ class Manager(Thread):
         """
         iot_box = {
             'name': self.hostname,
-            'identifier': self.mac_address,
+            'identifier': self.identifier,
             'ip': self.domain,
             'token': self.token,
             'version': self.version,
