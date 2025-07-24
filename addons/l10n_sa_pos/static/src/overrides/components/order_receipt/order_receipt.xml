@@ -10,14 +10,36 @@
         </xpath>
 
         <xpath expr="//span[@id='title_english']" position="replace">
+<<<<<<< 77fca96493fd5f5a9530c4272386032c7984937b
             <t t-if="!order.is_settlement()">
                 <span id="title_english">Simplified Tax Invoice</span>
+||||||| b3b0a0959ae12f53f702c359c1205d89a8e92ffb
+            <t t-if="!props.data.is_settlement">
+                <span id="title_english">Simplified Tax Invoice</span>
+=======
+            <t t-if="!props.data.is_settlement and props.data.is_simplified">
+                <span id="title_english" t-translation="off">Simplified Tax Invoice</span>
+            </t>
+            <t t-else="">
+                <span id="title_english" t-translation="off">Tax Invoice</span>
+>>>>>>> f3d9600b257830e56e3cc282f3e8ec31b92a45b2
             </t>
         </xpath>
 
         <xpath expr="//span[@id='title_arabic']" position="replace">
+<<<<<<< 77fca96493fd5f5a9530c4272386032c7984937b
             <t t-if="!order.is_settlement()">
                 <span id="title_arabic">فاتورة ضريبية مبسطة</span>
+||||||| b3b0a0959ae12f53f702c359c1205d89a8e92ffb
+            <t t-if="!props.data.is_settlement">
+                <span id="title_arabic">فاتورة ضريبية مبسطة</span>
+=======
+            <t t-if="!props.data.is_settlement and props.data.is_simplified">
+                <span id="title_arabic" t-translation="off">فاتورة ضريبية مبسطة</span>
+            </t>
+            <t t-else="">
+                <span id="title_arabic" t-translation="off">الفاتورة الضريبية</span>
+>>>>>>> f3d9600b257830e56e3cc282f3e8ec31b92a45b2
             </t>
         </xpath>
     </t>
