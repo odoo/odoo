@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    grade_id = fields.Many2one('res.partner.grade', 'Partner Level', tracking=True)
+    grade_id = fields.Many2one('res.partner.grade', 'Partner Level', tracking=True, group_expand='_read_group_expand_full')
 
     def write(self, vals):
         if vals.get('grade_id'):
