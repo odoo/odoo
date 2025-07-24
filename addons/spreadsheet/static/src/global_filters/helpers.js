@@ -816,7 +816,7 @@ export function isSetOperator(operator) {
 }
 
 export function getDefaultValue(type) {
-    if (type === "date") {
+    if (type === "date" || type === "boolean") {
         return undefined;
     }
     const defaultOperator = FILTERS_BEHAVIORS[type][0].operators[0];
