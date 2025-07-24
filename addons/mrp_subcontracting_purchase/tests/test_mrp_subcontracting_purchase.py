@@ -789,7 +789,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.warehouse.subcontracting_resupply_type_id
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = component
             move.product_uom_qty = moved_quantity_to_subcontractor
         picking = picking_form.save()

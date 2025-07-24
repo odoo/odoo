@@ -52,7 +52,7 @@ class TestSubcontractingPortalUi(HttpCase):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.partner_portal
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.finished_product
             move.product_uom_qty = 2
             move.quantity = 2

@@ -241,7 +241,7 @@ class TestPacking(TestPackingCommon):
             'picking_type_id': self.warehouse.out_type_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
-            'move_ids_without_package': [Command.create({
+            'move_ids': [Command.create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.stock_location.id,
@@ -266,7 +266,7 @@ class TestPacking(TestPackingCommon):
             'picking_type_id': wh_b.int_type_id.id,
             'location_id': wh_b.lot_stock_id.id,
             'location_dest_id': wh_b.lot_stock_id.id,
-            'move_ids_without_package': [Command.create({
+            'move_ids': [Command.create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 3.0,
                 'location_id': wh_b.lot_stock_id.id,

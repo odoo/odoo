@@ -49,7 +49,7 @@ class TestProcRule(TransactionCase):
         # Creates a delivery for this product, that way, this product will be to resupply.
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = warehouse.out_type_id
-        with picking_form.move_ids_without_package.new() as move_line:
+        with picking_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 10
         delivery = picking_form.save()

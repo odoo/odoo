@@ -817,12 +817,12 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         self.assertEqual(len(mo.picking_ids), 2, "Should have 2 pickings: Components + (Final product and byproducts)")
         for picking in mo.picking_ids:
-            if demo in [m.product_id for m in picking.move_ids_without_package]:
-                self.assertEqual(len(picking.move_ids_without_package), 3, "Should have 3 moves for: Demo, Bprod1 and Bprod2")
-                self.assertEqual([move.product_id for move in picking.move_ids_without_package.sorted(lambda m: bool(m.product_id))], [demo, bprod1, bprod2])
+            if demo in [m.product_id for m in picking.move_ids]:
+                self.assertEqual(len(picking.move_ids), 3, "Should have 3 moves for: Demo, Bprod1 and Bprod2")
+                self.assertEqual([move.product_id for move in picking.move_ids.sorted(lambda m: bool(m.product_id))], [demo, bprod1, bprod2])
             else:
-                self.assertEqual(len(picking.move_ids_without_package), 2, "Should have 2 moves for: Comp1 and Comp2")
-                self.assertEqual([move.product_id for move in picking.move_ids_without_package.sorted(lambda m: bool(m.product_id))], [comp1, comp2])
+                self.assertEqual(len(picking.move_ids), 2, "Should have 2 moves for: Comp1 and Comp2")
+                self.assertEqual([move.product_id for move in picking.move_ids.sorted(lambda m: bool(m.product_id))], [comp1, comp2])
 
     def test_pick_components_uses_shipping_policy_from_picking_type(self):
         self.warehouse.manufacture_steps = "pbm"

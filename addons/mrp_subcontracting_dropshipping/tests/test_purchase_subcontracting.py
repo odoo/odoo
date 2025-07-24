@@ -118,7 +118,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         wh = picking_delivery.picking_type_id.warehouse_id
         origin = picking_delivery.origin
         self.assertEqual(len(picking_delivery), 1)
-        self.assertEqual(len(picking_delivery.move_ids_without_package), 1)
+        self.assertEqual(len(picking_delivery.move_ids), 1)
         self.assertEqual(picking_delivery.picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_delivery.partner_id, self.subcontractor_partner1)
 
@@ -130,7 +130,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(picking_deliveries.picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_deliveries.partner_id, self.subcontractor_partner1)
         self.assertTrue(picking_deliveries.state != 'cancel')
-        move1 = picking_deliveries.move_ids_without_package
+        move1 = picking_deliveries.move_ids
         self.assertEqual(move1.product_id, self.comp1)
         self.assertEqual(move1.product_uom_qty, 2)
 
