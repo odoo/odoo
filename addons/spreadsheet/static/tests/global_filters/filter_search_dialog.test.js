@@ -386,3 +386,17 @@ test("Relational global filter with a parent/child model adds the child of opera
     await mountFiltersSearchDialog(env, { model });
     expect('option[value="child_of"]').toHaveCount(1);
 });
+
+test(`Relational global filter with "set" operator doesn't have a record selector input`, async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "relation",
+        label: "Filter",
+        modelName: "partner",
+        defaultValue: { operator: "set" },
+    });
+    await mountFiltersSearchDialog(env, { model });
+    expect(".o-filter-value input").toHaveCount(0);
+});
