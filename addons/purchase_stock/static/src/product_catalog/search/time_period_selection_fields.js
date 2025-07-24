@@ -29,9 +29,9 @@ export class TimePeriodSelectionField extends SelectionField {
         for (const option of this.props.record.fields[this.props.name].selection) {
             if (option[0] === "last_year") {
                 options.push([option[0], `${date1.monthLong} ${date1.year}`]);
-            } else if (option[0] === "last_year_2") {
+            } else if (option[0] === "last_year_m_plus_1") {
                 options.push([option[0], `${date2.monthLong} ${date2.year}`]);
-            } else if (option[0] === "last_year_3") {
+            } else if (option[0] === "last_year_m_plus_2") {
                 options.push([option[0], `${date3.monthLong} ${date3.year}`]);
             } else if (option[0] === "last_year_quarter") {
                 let beginDate = date1.monthShort;
