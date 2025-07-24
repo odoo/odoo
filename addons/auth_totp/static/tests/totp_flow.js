@@ -27,6 +27,9 @@ function openUserProfileAtSecurityTab() {
         trigger: '[data-menu=settings]',
         run: 'click',
     }, {
+        content: "wait for security tab",
+        trigger: 'a[role=tab]:contains("Account Security")',
+    }, {
         content: "Switch to security tab",
         trigger: 'a[role=tab]:contains("Account Security")',
         run: 'click',
@@ -375,6 +378,9 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     trigger: "td.o_data_cell:contains(test_user)",
     run: "click",
 }, {
+    content: "wait for Account security Tab to appear",
+    trigger: "a.nav-link:contains(Account Security)",
+},{
     content: "go to Account security Tab",
     trigger: "a.nav-link:contains(Account Security)",
     run: "click",
