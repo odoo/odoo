@@ -37,6 +37,13 @@
                          data-reload="/"/>
         </div>
     </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
+        <we-checkbox string="HTML Content"
+                     data-dependencies="search_all_opt"
+                     data-select-data-attribute="true"
+                     data-attribute-name="displayHtmlContent"
+                     data-apply-to=".search-query"/>
+    </xpath>
 </template>
 
 </odoo>
