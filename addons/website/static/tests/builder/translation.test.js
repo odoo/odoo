@@ -140,7 +140,7 @@ test("translate attribute", async () => {
     onRpc("ir.ui.view", "save", ({ args }) => true);
     await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto rounded o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style="" contenteditable="false"></img>
+            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto rounded o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
         `,
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
@@ -155,7 +155,7 @@ test("translate attribute", async () => {
 test("translate attribute history", async () => {
     const { getEditableContent } = await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style="" contenteditable="false"></img>
+            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
         `,
     });
     const editable = getEditableContent();
@@ -166,7 +166,7 @@ test("translate attribute history", async () => {
     const getImg = ({ titleName, translated }) =>
         `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable o_translatable_attribute${
             translated ? " oe_translated" : ""
-        }" loading="lazy" title="${titleName}" style="" contenteditable="false" data-oe-translation-state="to_translate"></img>`;
+        }" loading="lazy" title="${titleName}" style="" data-oe-translation-state="to_translate"></img>`;
     expect(editable).toHaveInnerHTML(getImg({ titleName: "titre", translated: true }));
     await contains(".o-snippets-menu button.fa-undo").click();
     expect(editable).toHaveInnerHTML(getImg({ titleName: "title", translated: false }));
