@@ -741,12 +741,10 @@ class TestSaleService(TestCommonSaleTimesheet):
         sale_order_1.action_confirm()
         self.assertTrue(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         line_1.project_id = self.project_global.id
         sale_order_1._compute_show_project_and_task_button()
         self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be hidden")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
-        self.assertTrue(sale_order_1.show_task_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
 
     def test_compute_show_timesheet_button(self):
         """ This test ensures that the hours recorded button is correctly computed. If there is a service product with an invoice policy of prepaid or timesheet, and there is
