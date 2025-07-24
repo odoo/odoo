@@ -14,7 +14,7 @@ from odoo.tools import config, file_path, mute_logger, parse_version
 
 from .test_common import TestHttpBase
 from odoo.addons import test_http
-from odoo.addons.test_http.controllers import CT_JSON
+from odoo.addons.test_http.controllers.controllers import CT_JSON
 from odoo.addons.test_http.utils import TEST_IP
 
 werkzeug_version = metadata.version('werkzeug')
@@ -139,7 +139,7 @@ class TestHttpMisc(TestHttpBase):
 
     def test_misc6_upload_file_retry(self):
         file = StringIO("Hello world!")
-        with patch.object(test_http.controllers, 'should_fail', True):
+        with patch.object(test_http.controllers.controllers, 'should_fail', True):
             res = self.url_open('/test_http/upload_file', files={'ufile': file})
             res.raise_for_status()
             self.assertEqual(res.text, file.getvalue())
@@ -150,7 +150,7 @@ class TestHttpMisc(TestHttpBase):
     def test_misc8_concurrency_error(self):
         with (
             self.assertLogs('odoo.service.model') as log_catcher,
-            patch.object(test_http.controllers, 'should_fail', True),
+            patch.object(test_http.controllers.controllers, 'should_fail', True),
         ):
             self.url_open('/test_http/concurrency_error').raise_for_status()
         self.assertIn("A dummy concurrency error occurred", log_catcher.output[0])
