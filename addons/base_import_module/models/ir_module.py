@@ -3,26 +3,39 @@ import base64
 import io
 import json
 import logging
-import lxml
 import os
 import pathlib
 import sys
 import zipfile
-from babel.messages import extract
 from collections import defaultdict
 from io import BytesIO
 from os.path import join as opj
 
-from odoo import api, fields, models, _
+import lxml
+from babel.messages import extract
+
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
-from odoo.tools import SQL, convert_file, exception_to_unicode
-from odoo.tools import file_open, file_path, file_open_temporary_directory, ormcache
+from odoo.tools import (
+    SQL,
+    convert_file,
+    exception_to_unicode,
+    file_open,
+    file_open_temporary_directory,
+    file_path,
+    ormcache,
+)
 from odoo.tools.misc import OrderedSet, topological_sort
-from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
+from odoo.tools.translate import (
+    JAVASCRIPT_TRANSLATION_COMMENT,
+    CodeTranslations,
+    TranslationImporter,
+    get_base_langs,
+)
 
 from odoo.addons.base.models.ir_asset import is_wildcard_glob
 
@@ -510,6 +523,37 @@ class IrModuleModule(models.Model):
         self.search([('imported', '=', True), ('state', '=', 'to upgrade')]).state = 'installed'
         return res
 
+    def is_major_version_different(self, zip_data):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators can install data modules."))
+        if not zip_data:
+            raise UserError(_("No file sent."))
+        if not zipfile.is_zipfile(zip_data):
+            raise UserError(_('Only zip files are supported.'))
+
+        with zipfile.ZipFile(zip_data, "r") as z:
+            with file_open_temporary_directory(self.env) as module_dir:
+                manifest_files = sorted(
+                    (file.filename.split('/')[0], file)
+                    for file in z.infolist()
+                    if file.filename.count('/') == 1
+                    and file.filename.split('/')[1] in MANIFEST_NAMES
+                )
+                IrModule = self.env['ir.module.module']
+                for mod_name, manifest in manifest_files:
+                    z.extract(manifest, module_dir)
+                    terp = Manifest._from_path(opj(module_dir, mod_name), env=self.env)
+                    if not terp:
+                        continue
+                    installed_mod = IrModule.search([('name', '=', mod_name)])
+                    if not installed_mod:
+                        continue
+                    installed_version = int(installed_mod.installed_version.split('.')[2])
+                    latest_version = int(terp.version.split('.')[2])
+                    if installed_version != latest_version:
+                        return True
+        return False
+
     def button_immediate_install_app(self):
         if not self.env.is_admin():
             raise AccessDenied()
@@ -529,6 +573,8 @@ class IrModuleModule(models.Model):
                 'state': 'init',
                 'modules_dependencies': missing_dependencies_description,
             })
+            if not import_module.major_upgrade and self.is_major_version_different(resp.content):
+                raise UserError(_("Upgrade script is not available yet to update to new major version.\nTo enforce module upgrade at your own risk, Switch to debug mode and set the force upgrade setting."))
             return {
                 'name': _("Install an Industry"),
                 'view_mode': 'form',
@@ -536,7 +582,7 @@ class IrModuleModule(models.Model):
                 'res_id': import_module.id,
                 'res_model': 'base.import.module',
                 'type': 'ir.actions.act_window',
-                'context': {'data_module': True}
+                'context': {'data_module': True},
             }
         except requests.exceptions.HTTPError:
             raise UserError(_('The module %s cannot be downloaded') % module_name)
