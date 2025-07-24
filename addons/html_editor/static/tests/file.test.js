@@ -101,7 +101,7 @@ describe("document tab in media dialog", () => {
             await animationFrame();
             await click(".nav-link:contains('Documents')");
             await animationFrame();
-            await click(".o_we_attachment_highlight");
+            await click(".o_we_attachment_highlight .o_button_area");
             // wait for the embedded component to be mounted
             await waitFor('[data-embedded="file"] .o_file_name:contains("file.txt")');
             expect('[data-embedded="file"]').toHaveCount(1);
@@ -117,7 +117,7 @@ describe("document tab in media dialog", () => {
             await animationFrame();
             await click(".nav-link:contains('Documents')");
             await animationFrame();
-            await click(".o_we_attachment_highlight");
+            await click(".o_we_attachment_highlight .o_button_area");
             expect(".odoo-editor-editable .o_file_box a:contains('file.txt')").toHaveCount(1);
         });
     });

@@ -63,7 +63,7 @@ test("Add image in gallery", async () => {
     await contains("[data-action-id='addImage']").click();
     // We use "click" instead of contains.click because contains wait for the image to be visible.
     // In this test we don't want to wait ~800ms for the image to be visible but we can still click on it
-    await click("img.o_we_attachment_highlight");
+    await click(".o_existing_attachment_cell .o_button_area");
     await waitDomUpdated();
     await contains(".modal-footer button").click();
     await waitFor(":iframe .o_masonry_col img[data-index='6']");

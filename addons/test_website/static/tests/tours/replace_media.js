@@ -61,7 +61,7 @@ registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "select svg",
-        trigger: ".o_select_media_dialog img[title='sample.svg']",
+        trigger: ".o_select_media_dialog .o_button_area[aria-label='sample.svg']",
         run: "click",
     },
     {
