@@ -176,7 +176,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
-        
+
         <section id="o_wblog_post_top">
             <div id="title" class="blog_header" t-ignore="True">
                 <t t-call="website.record_cover">
@@ -358,6 +358,7 @@ list of filtered posts (by date or tag).
             </t>
             <t t-else="">
                 <div id="o_wblog_next_container" class="d-flex flex-column" t-cache="next_post">
+                    <button aria-labelledby="o_wblog_next_title" class="o_wblog_next_button o_button_area btn z-1"/>
                     <t t-call="website.record_cover">
                         <t t-set="_record" t-value="next_post"/>
                         <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
@@ -372,7 +373,7 @@ list of filtered posts (by date or tag).
                         <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
 
                         <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
-                            <div t-attf-class="o_wblog_post_title">
+                            <div id="o_wblog_next_title" class="o_wblog_post_title">
                                 <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h1 o_wblog_post_name"/>
                                 <div t-field="next_post.subtitle" class="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                             </div>
