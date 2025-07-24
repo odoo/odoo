@@ -285,7 +285,7 @@ class TestProjectBase(TestProjectCommon):
 
         self.task_1.rating_apply(rating, token=rate.access_token)
 
-        self.project_pigs.rating_ids.invalidate_recordset()
+        self.project_pigs.invalidate_recordset(['rating_ids'])
         self.assertEqual(len(self.project_pigs.rating_ids), 1, "There should be 1 rating linked to the project")
 
     def test_planned_dates_consistency_for_project(self):
