@@ -553,14 +553,17 @@ class ProjectProject(models.Model):
             '|', ('product_id', '!=', False), ('is_downpayment', '=', True),
             ('is_expense', '=', False),
             ('state', '=', 'sale'),
-            '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
+            '|', '|',
+                ('qty_to_invoice', '>', 0),
+                ('qty_invoiced', '>', 0),
+                ('product_id.invoice_policy', '=', 'delivery'),
         ]) & domain
 
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
             ['currency_id', 'product_id', 'is_downpayment'],
-            ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
+            ['id:recordset', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
         )
         display_sol_action = with_action and len(self) == 1 and self.env.user.has_group('sales_team.group_sale_salesman')
         revenues_dict = {}
@@ -574,14 +577,17 @@ class ProjectProject(models.Model):
             sols_per_product = defaultdict(lambda: [0.0, 0.0, []])
             downpayment_amount_invoiced = 0
             downpayment_sol_ids = []
-            for currency, product, is_downpayment, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
+            for currency, product, is_downpayment, sol, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
                 if is_downpayment:
                     downpayment_amount_invoiced += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company, round=False)
-                    downpayment_sol_ids += sol_ids
+                    downpayment_sol_ids += sol.ids
                 else:
+                    if sum(sol.mapped('qty_delivered')) == 0:
+                        untaxed_amount_to_invoice = sum(sol.mapped('price_subtotal'))
+
                     sols_per_product[product.id][0] += currency._convert(untaxed_amount_to_invoice, convert_company.currency_id, convert_company)
                     sols_per_product[product.id][1] += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company)
-                    sols_per_product[product.id][2] += sol_ids
+                    sols_per_product[product.id][2] += sol.ids
             if downpayment_amount_invoiced:
                 downpayments_data = {
                     'id': 'downpayments',
