@@ -119,6 +119,33 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_product_code_and_barcode')
 
+    def test_financial_account(self):
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+
+        bank_kbc = self.env['res.bank'].create({
+            'name': 'KBC',
+            'bic': 'KREDBEBB',
+        })
+        self.env.company.bank_ids[0].bank_id = bank_kbc
+        tax_21 = self.percent_tax(21.0)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_financial_account')
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
