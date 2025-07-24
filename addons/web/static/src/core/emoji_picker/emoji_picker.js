@@ -520,7 +520,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     const popover = usePopover(PickerComponent, {
         ...newOptions,
         animation: false,
-        popoverClass: options.popoverClass ?? "" + " bg-100 border border-secondary",
+        popoverClass: options.popoverClass ?? "" + " bg-100 border border-secondary rounded-3",
     });
     props.storeScroll = {
         scrollValue: 0,
