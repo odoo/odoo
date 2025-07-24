@@ -21,7 +21,6 @@ from . import product_pricelist_item
 from . import product_supplierinfo
 from . import product_tag
 from . import product_template_attribute_line
-from . import product_template_attribute_exclusion
 from . import product_template_attribute_value
 from . import product_uom
 from . import res_company

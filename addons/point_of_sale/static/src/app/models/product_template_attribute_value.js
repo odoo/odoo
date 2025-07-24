@@ -6,10 +6,10 @@ export class ProductTemplateAttributeValue extends Base {
 
     get exclusions() {
         const values = this.models["product.template.attribute.value"].filter((value) =>
-            value.exclude_for.some(({ value_ids }) => value_ids.some(({ id }) => id === this.id))
+            value.excluded_value_ids.some(({ id })=> id === this.id)
         );
 
-        return [...this.exclude_for.flatMap(({ value_ids }) => value_ids), ...values];
+        return [...this.excluded_value_ids, ...values];
     }
 
     doHaveConflictWith(values) {

@@ -310,7 +310,6 @@ export class ProductConfiguratorDialog extends Component {
     _checkExclusions(product) {
         const combination = this._getCombination(product);
         const exclusions = product.exclusions;
-        const parentExclusions = product.parent_exclusions;
         const archivedCombinations = product.archived_combinations;
         const parentCombination = this._getParentsCombination(product);
         const childProducts = this._getChildProducts(product.product_tmpl_id)
@@ -321,16 +320,6 @@ export class ProductConfiguratorDialog extends Component {
             for(const ptavId of combination) {
                 for(const excludedPtavId of exclusions[ptavId]) {
                     ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
-                }
-            }
-        }
-        if (parentCombination) {
-            for(const ptavId of parentCombination) {
-                for(const excludedPtavId of (parentExclusions[ptavId]||[])) {
-                    const ptav = ptavList.find(ptav => ptav.id === excludedPtavId);
-                    if (ptav) {
-                        ptav.excluded = true; // Assign only if the element exists
-                    }
                 }
             }
         }

@@ -22,7 +22,6 @@ export const modelsToLoad = [
     "product.attribute.custom.value",
     "product.template.attribute.line",
     "product.template.attribute.value",
-    "product.template.attribute.exclusion",
     "product.combo",
     "product.combo.item",
     "res.users",
@@ -383,16 +382,8 @@ export class ProductTemplateAttributeValue extends models.ServerModel {
             "is_custom",
             "html_color",
             "image",
-            "exclude_for",
+            "excluded_value_ids",
         ];
-    }
-}
-
-export class ProductTemplateAttributeExclusion extends models.ServerModel {
-    _name = "product.template.attribute.exclusion";
-
-    _load_pos_data_fields() {
-        return ["value_ids", "product_template_attribute_value_id"];
     }
 }
 

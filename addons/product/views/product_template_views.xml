@@ -93,7 +93,14 @@
                             <field name="value_count" column_invisible="True"/>
                             <field name="sequence" widget="handle"/>
                             <field name="attribute_id" readonly="id"/>
-                            <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}"/>
+                            <field
+                                    name="value_ids"
+                                    widget="many2many_tags"
+                                    options="{
+                                        'edit_tags': True,
+                                        'color_field': 'color'
+                                    }"
+                                    context="{'default_attribute_id': attribute_id, 'show_attribute': False}"/>
                             <button string="Configure" class="float-end btn-secondary"
                                 type="object" name="action_open_attribute_values"
                                 groups="product.group_product_variant"/>

@@ -611,7 +611,7 @@ class SaleOrder(models.Model):
                     product.id not in product_ids
                     and product._website_show_quick_add()
                     and product.filtered_domain(self.env['product.product']._check_company_domain(line.company_id))
-                    and product._is_variant_possible(parent_combination=combination)
+                    and product._is_variant_possible()
                     and (
                         not self.website_id.prevent_zero_price_sale
                         or product._get_contextual_price()

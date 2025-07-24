@@ -55,18 +55,4 @@ class ProductTemplateAttributeValue(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image', 'exclude_for']
-
-
-class ProductTemplateAttributeExclusion(models.Model):
-    _name = 'product.template.attribute.exclusion'
-    _inherit = ['product.template.attribute.exclusion', 'pos.load.mixin']
-
-    @api.model
-    def _load_pos_data_domain(self, data, config):
-        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
-        return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
-
-    @api.model
-    def _load_pos_data_fields(self, config):
-        return ['value_ids']
+        return ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image', 'excluded_value_ids']

@@ -830,21 +830,18 @@ class ProductProduct(models.Model):
 
         return name
 
-    def _is_variant_possible(self, parent_combination=None):
+    def _is_variant_possible(self):
         """Return whether the variant is possible based on its own combination,
         and optionally a parent combination.
 
         See `_is_combination_possible` for more information.
 
-        :param parent_combination: combination from which `self` is an
-            optional or accessory product.
-        :type parent_combination: recordset `product.template.attribute.value`
-
         :return: ẁhether the variant is possible based on its own combination
         :rtype: bool
         """
         self.ensure_one()
-        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination, ignore_no_variant=True)
+        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids,
+                                                             ignore_no_variant=True)
 
     def get_contextual_price(self):
         return self._get_contextual_price()

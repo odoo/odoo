@@ -2329,11 +2329,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         color_attribute = cherry.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Color')
         first_color_value = color_attribute.product_template_value_ids.filtered(lambda v: v.attribute_id.name == 'Color' and v.name == 'RED')
         first_size_value = cherry.product_variant_ids.product_template_attribute_value_ids.filtered(lambda v: v.attribute_id.name == 'Size' and v.name == 'BIG')
-        first_color_value.exclude_for = [(0, 0, {
-            'product_tmpl_id': cherry.id,
-            'value_ids': first_size_value.ids,
-            'product_template_attribute_value_id': first_size_value.id
-        })]
+        first_color_value.excluded_value_ids = [Command.link(value) for value in first_size_value.ids]
         for index, variant in enumerate(cherry.product_variant_ids):
             variant.write({'barcode': f'cherry_{index}'})
 

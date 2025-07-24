@@ -114,13 +114,6 @@ class ProductTemplate(models.Model):
         product_tmpl_attr_value = product_tmpls.attribute_line_ids.product_template_value_ids
         product_tmpl_attr_value_read = product_tmpl_attr_value._load_pos_data_read(product_tmpl_attr_value, config)
 
-        # product.template.attribute.exclusion loading
-        product_tmpl_excl = self.env['product.template.attribute.exclusion']
-        product_tmpl_exclusion = product_tmpl_attr_value.exclude_for + product_tmpl_excl.search([
-            ('product_tmpl_id', 'in', product_tmpls.ids),
-        ])
-        product_tmpl_exclusion_read = product_tmpl_excl._load_pos_data_read(product_tmpl_exclusion, config)
-
         # product.product loading
         product_read = products._load_pos_data_read(products.with_context(display_default_code=False), config)
 
@@ -157,7 +150,6 @@ class ProductTemplate(models.Model):
             'product.combo.item': combo_item_read,
             'product.template.attribute.value': product_tmpl_attr_value_read,
             'product.template.attribute.line': product_tmpl_attr_line_read,
-            'product.template.attribute.exclusion': product_tmpl_exclusion_read,
         }
 
     @api.model

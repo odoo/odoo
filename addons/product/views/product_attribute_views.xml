@@ -128,16 +128,15 @@
         <field name="name">product.template.attribute.value.view.list</field>
         <field name="model">product.template.attribute.value</field>
         <field name="arch" type="xml">
-            <list string="Attributes" create="0" delete="0" multi_edit="1">
+            <list string="Attributes" editable="bottom" multi_edit="1">
+                <field name="sequence" widget="handle"/>
                 <field name="product_tmpl_id" string="Product" column_invisible="context.get('product_invisible', False)"/>
-                <field name="attribute_id" optional="hide"/>
                 <field name="name"/>
-                <field name="display_type" optional="hide"/>
-                <field name="html_color" invisible="display_type != 'color' or image" widget="color"/>
-                <field name="image" invisible="display_type != 'color'" widget="image" options="{'size': [70, 70]}"/>
+                <field name="excluded_value_ids" widget="many2many_tags" options="{}" />
                 <field name="ptav_active" optional="hide"/>
                 <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
                 <field name="currency_id" column_invisible="True"/>
+                <field name="show_price_extra" optional="hide"/>
             </list>
         </field>
     </record>
@@ -156,12 +155,7 @@
                         <field name="image" invisible="display_type != 'color' or not image" widget="image" options="{'size': [70, 70]}"/>
                         <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
                         <field name="currency_id" invisible="1"/>
-                        <field name="exclude_for" widget="one2many" mode="list">
-                            <list editable="bottom">
-                                <field name="product_tmpl_id" />
-                                <field name="value_ids" widget="many2many_tags" options="{'no_create': True}" />
-                            </list>
-                        </field>
+                        <field name="excluded_value_ids" widget="many2many_tags" options="{}" />
                     </group>
                 </sheet>
             </form>

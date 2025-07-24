@@ -25,7 +25,6 @@ export class Product extends Component {
         imageURL: { type: String, optional: true },
         archived_combinations: Array,
         exclusions: Object,
-        parent_exclusions: Object,
         parent_product_tmpl_id: { type: Number, optional: true },
         price_info: { type: String, optional: true },
     };
