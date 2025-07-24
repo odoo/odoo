@@ -51,7 +51,9 @@
                 <t t-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
             </div>
         </div>
-        <div t-if="props.slots.collapse" t-att-class="{ 'd-none': !state.expanded }" t-ref="collapse-content" t-att-id="collapseContentId">
+        <div t-if="props.slots.collapse"
+             class="hb-collapse-content"
+             t-ref="collapse-content" t-att-id="collapseContentId">
             <t t-slot="collapse"/>
         </div>
     </BuilderComponent>

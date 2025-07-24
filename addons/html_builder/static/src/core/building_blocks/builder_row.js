@@ -37,6 +37,7 @@ export class BuilderRow extends Component {
         }
 
         this.labelRef = useRef("label");
+        this.collapseContentRef = useRef("collapse-content");
         useEffect(
             (labelEl) => {
                 if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
@@ -53,5 +54,23 @@ export class BuilderRow extends Component {
 
     toggleCollapseContent() {
         this.state.expanded = !this.state.expanded;
+        const expanded = this.state.expanded;
+        const contentEl = this.collapseContentRef.el;
+
+        if (!contentEl) return;
+
+        const cleanup = () => {
+            contentEl.style.display = expanded ? "block" : "";
+            contentEl.style.overflow = "";
+            contentEl.style.height = expanded ? "auto" : "";
+            contentEl.removeEventListener("transitionend", cleanup);
+        };
+
+        contentEl.style.display = "block";
+        contentEl.style.overflow = "hidden";
+        contentEl.style.height = contentEl.scrollHeight + "px";
+        void contentEl.offsetHeight; // force reflow
+        contentEl.style.height = expanded ? contentEl.scrollHeight + "px" : "0px";
+        contentEl.addEventListener("transitionend", cleanup);
     }
 }
