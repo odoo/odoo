@@ -95,7 +95,7 @@ class TestUnbuild(TestMrpCommon):
 
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
-        mo_form.lot_producing_id = lot
+        mo_form.lot_producing_ids.set(lot)
         mo = mo_form.save()
 
         mo.button_mark_done()
@@ -264,7 +264,7 @@ class TestUnbuild(TestMrpCommon):
         # FIXME sle: behavior change
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
-        mo_form.lot_producing_id = lot_final
+        mo_form.lot_producing_ids.set(lot_final)
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
@@ -308,6 +308,7 @@ class TestUnbuild(TestMrpCommon):
         x.product_id = p_final
         x.bom_id = bom
         x.mo_id = mo
+        x.lot_id = lot_final
         x.product_qty = 3
         x.save().action_unbuild()
 
@@ -319,6 +320,7 @@ class TestUnbuild(TestMrpCommon):
         x.product_id = p_final
         x.bom_id = bom
         x.mo_id = mo
+        x.lot_id = lot_final
         x.product_qty = 2
         x.save().action_unbuild()
 
@@ -330,6 +332,7 @@ class TestUnbuild(TestMrpCommon):
         x.product_id = p_final
         x.bom_id = bom
         x.mo_id = mo
+        x.lot_id = lot_final
         x.product_qty = 5
         x.save().action_unbuild()
 
@@ -410,7 +413,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(mo.product_qty, 5)
         mo_form = Form(mo)
         mo_form.qty_producing = 3.0
-        mo_form.lot_producing_id = lot_finished_1
+        mo_form.lot_producing_ids.set(lot_finished_1)
         mo = mo_form.save()
         self.assertEqual(mo.move_raw_ids[1].quantity, 12)
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
@@ -438,7 +441,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(mo.product_qty, 2)
         mo_form = Form(mo)
         mo_form.qty_producing = 2
-        mo_form.lot_producing_id = lot_finished_2
+        mo_form.lot_producing_ids.set(lot_finished_2)
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
@@ -771,8 +774,7 @@ class TestUnbuild(TestMrpCommon):
         mo.action_confirm()
 
         mo_form = Form(mo)
-        mo_form.qty_producing = 1.0
-        mo_form.lot_producing_id = product_1_sn
+        mo_form.lot_producing_ids.set(product_1_sn)
         mo = mo_form.save()
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
@@ -780,6 +782,7 @@ class TestUnbuild(TestMrpCommon):
         #unbuild order
         unbuild_form = Form(self.env['mrp.unbuild'])
         unbuild_form.mo_id = mo
+        unbuild_form.lot_id = product_1_sn
         unbuild_form.save().action_unbuild()
 
         #mo2
@@ -834,8 +837,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.product_qty = 1.0
         mo = mo_form.save()
         mo.action_confirm()
-        mo.qty_producing = 1.0
-        mo.lot_producing_id = finished_product_sn
+        mo.lot_producing_ids = finished_product_sn
         mo.move_raw_ids.write({'quantity': 1, 'picked': True})
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
@@ -860,8 +862,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.product_qty = 1.0
         mo_2 = mo_form.save()
         mo_2.action_confirm()
-        mo_2.qty_producing = 1.0
-        mo_2.lot_producing_id = finished_product_sn
+        mo_2.lot_producing_ids = finished_product_sn
         mo_2.move_raw_ids.write({'quantity': 1, 'picked': True})
         mo_2.button_mark_done()
         self.assertEqual(mo_2.state, 'done', "Production order should be in done state.")

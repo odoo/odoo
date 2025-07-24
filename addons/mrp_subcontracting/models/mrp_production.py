@@ -116,12 +116,12 @@ class MrpProduction(models.Model):
         subcontract_move_id = self._get_subcontract_move().filtered(lambda m: m.state not in ('done', 'cancel'))
         if subcontract_move_id:
             quantity = self.qty_producing
-            if self.lot_producing_id:
-                move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and ml.lot_id == self.lot_producing_id or not ml.lot_id)
+            if self.lot_producing_ids:
+                move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and ml.lot_id in self.lot_producing_ids or not ml.lot_id)
             else:
                 move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and not ml.lot_id)
             # Update reservation and quantity done
-            for ml in move_lines:
+            for ml, lot_id in zip(move_lines, self.lot_producing_ids or ([self.env['stock.lot']] * len(move_lines))):
                 rounding = ml.product_uom_id.rounding
                 if float_compare(quantity, 0, precision_rounding=rounding) <= 0:
                     break
@@ -133,13 +133,13 @@ class MrpProduction(models.Model):
                     ml.write({
                         'quantity': quantity_to_process,
                         'picked': True,
-                        'lot_id': self.lot_producing_id and self.lot_producing_id.id,
+                        'lot_id': lot_id.id,
                     })
                 else:
                     ml.write({
                         'quantity': quantity_to_process,
                         'picked': True,
-                        'lot_id': self.lot_producing_id and self.lot_producing_id.id,
+                        'lot_id': lot_id.id,
                     })
 
             if self.product_uom_id.compare(quantity, 0) > 0:
@@ -152,7 +152,7 @@ class MrpProduction(models.Model):
                     'product_uom_id': self.product_uom_id.id,
                     'quantity': quantity,
                     'picked': True,
-                    'lot_id': self.lot_producing_id and self.lot_producing_id.id,
+                    'lot_id': self.lot_producing_ids and self.lot_producing_ids[:1].id,
                 })
             if not self._get_quantity_to_backorder():
                 subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked).unlink()
@@ -188,11 +188,11 @@ class MrpProduction(models.Model):
         return self.move_finished_ids.move_dest_ids.filtered(lambda m: m.is_subcontract)
 
     def _get_writeable_fields_portal_user(self):
-        return ['move_line_raw_ids', 'lot_producing_id', 'subcontracting_has_been_recorded', 'qty_producing', 'product_qty']
+        return ['move_line_raw_ids', 'lot_producing_ids', 'subcontracting_has_been_recorded', 'qty_producing', 'product_qty']
 
     def _subcontract_sanity_check(self):
         for production in self:
-            if production.product_tracking != 'none' and not self.lot_producing_id:
+            if production.product_tracking != 'none' and not self.lot_producing_ids:
                 raise UserError(_('You must enter a serial number for %s', production.product_id.name))
             for sml in production.move_raw_ids.move_line_ids:
                 if sml.tracking != 'none' and not sml.lot_id:

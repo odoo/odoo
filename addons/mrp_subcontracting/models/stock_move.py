@@ -90,31 +90,14 @@ class StockMove(models.Model):
             production = subcontracted_productions[-1:]
             production = production.sudo().with_context(allow_more=True)._split_productions({production: [production.qty_producing, qty]})[-1:]
         qty = self.product_uom._compute_quantity(qty, production.product_uom_id)
-
-        if production.product_tracking == 'serial':
-            qty = float_round(qty, precision_digits=0, rounding_method='UP')  # Makes no sense to have partial quantities for serial number
-            if production.product_uom_id.compare(qty, production.product_qty) < 0:
-                remaining_qty = production.product_qty - qty
-                productions = production.sudo()._split_productions({production: ([1] * int(qty)) + [remaining_qty]})[:-1]
-            else:
-                productions = production.sudo().with_context(allow_more=True)._split_productions({production: ([1] * int(qty))})
-
-            for production in productions:
-                production.qty_producing = 1
-                if not production.lot_producing_id:
-                    production.action_generate_serial()
-                production.with_context(cancel_backorder=False).subcontracting_record_component()
-        else:
-            production.qty_producing = qty
-            if production.product_uom_id.compare(production.qty_producing, production.product_qty) > 0:
-                self.env['change.production.qty'].with_context(skip_activity=True).create({
-                    'mo_id': production.id,
-                    'product_qty': qty
-                }).change_prod_qty()
-            if production.product_tracking == 'lot' and not production.lot_producing_id:
-                production.action_generate_serial()
-            production._set_qty_producing()
-            production.with_context(cancel_backorder=False).subcontracting_record_component()
+        production.qty_producing = qty
+        if production.product_uom_id.compare(production.qty_producing, production.product_qty) > 0:
+            self.env['change.production.qty'].with_context(skip_activity=True).create({
+                'mo_id': production.id,
+                'product_qty': qty
+            }).change_prod_qty()
+        production._set_qty_producing()
+        production.with_context(cancel_backorder=False).subcontracting_record_component()
 
     def copy_data(self, default=None):
         default = dict(default or {})

@@ -1468,7 +1468,7 @@ class StockQuant(models.Model):
                 internal_domain &= Domain('company_id', '=', company_id.id)
             quants = self.env['stock.quant'].search(Domain.AND((
                 Domain('product_id', '=', product_id.id),
-                Domain('lot_id', '=', lot_id.id),
+                Domain('lot_id', 'in', lot_id.ids),
                 Domain('quantity', '!=', 0),
                 Domain('location_id.usage', '=', 'customer') | internal_domain,
             )))

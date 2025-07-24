@@ -30,11 +30,11 @@
 
     <function model="mrp.production" name="write">
         <value eval="[ref('mrp_account.mrp_production_drawer_2')]"/>
-        <value eval="{'qty_producing': 5, 'lot_producing_id': ref('mrp.lot_product_27_0')}"/>
+        <value eval="{'qty_producing': 5, 'lot_producing_ids': [ref('mrp.lot_product_27_0')]}"/>
     </function>
     <function model="mrp.production" name="write">
         <value eval="[ref('mrp_account.mrp_production_drawer_3')]"/>
-        <value eval="{'qty_producing': 3, 'lot_producing_id': ref('mrp.lot_product_27_0')}"/>
+        <value eval="{'qty_producing': 3, 'lot_producing_ids': [ref('mrp.lot_product_27_0')]}"/>
     </function>
 
     <function model="mrp.production" name="action_assign">

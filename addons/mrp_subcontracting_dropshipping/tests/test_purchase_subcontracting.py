@@ -556,14 +556,14 @@ class TestSubcontractingDropshippingPortal(TestSubcontractingPortal):
         mo = self.env['mrp.production'].with_user(self.portal_user).browse(action['res_id'])
         mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
         # Registering components for the first manufactured product
-        mo_form.lot_producing_id = finished_serial
+        mo_form.lot_producing_ids.set(finished_serial)
         mo = mo_form.save()
         mo.subcontracting_record_component()
         self.assertRecordValues(mo, [{
-            'qty_producing': 1.0, 'lot_producing_id': finished_serial.id, 'state': 'to_close',
+            'qty_producing': 1.0, 'lot_producing_ids': [finished_serial.id], 'state': 'to_close',
         }])
         # Check that the initial MO has been splitted in 2
         self.assertTrue("-001" in mo.name)
         self.assertRecordValues(mo.procurement_group_id.mrp_production_ids - mo, [{
-            'qty_producing': 1.0, 'lot_producing_id': False, 'state': 'to_close',
+            'qty_producing': 1.0, 'lot_producing_ids': [], 'state': 'to_close',
         }])

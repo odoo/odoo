@@ -212,7 +212,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
 
             production_form = Form(active_production)
             production_form.qty_producing = 1
-            production_form.lot_producing_id = lot_final
+            production_form.lot_producing_ids.set(lot_final)
             active_production = production_form.save()
 
             active_production.move_raw_ids.picked = True
@@ -379,10 +379,8 @@ class TestMrpProductionBackorder(TestMrpCommon):
         production.action_assign()
         active_production = production
         for i in range(nb_product_todo):
-            production_form = Form(active_production)
-            production_form.qty_producing = 1
-            production_form.lot_producing_id = serials_final[i]
-            active_production = production_form.save()
+            active_production.lot_producing_ids = serials_final[i]
+            active_production.qty_producing = 1
             details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
             with details_operation_form.move_line_ids.edit(0) as ml:
                 ml.quantity = 1
@@ -412,7 +410,14 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 2.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 2.0)
         mo.action_assign()
-        mo.action_generate_serial()
+        res_dict = mo.action_generate_serial()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.production.serials')
+        serials_wizard = Form.from_action(self.env, res_dict)
+        serials_wizard.lot_name = 'sn#1'
+        serials_wizard.lot_quantity = 1
+        res_dict = serials_wizard.save().action_generate_serial_numbers()
+        serials_wizard = Form.from_action(self.env, res_dict)
+        serials_wizard.save().action_apply()
         res_dict = mo.button_mark_done()
         self.assertEqual(res_dict.get('res_model'), 'mrp.production.backorder')
         backorder_wizard = Form.from_action(self.env, res_dict)

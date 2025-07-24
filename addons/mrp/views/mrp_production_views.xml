@@ -57,7 +57,7 @@
                         decoration-danger="is_delayed"
                         decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
-                    <field name="lot_producing_id" optional="hide"/>
+                    <field name="lot_producing_ids" optional="hide"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
@@ -270,6 +270,12 @@
                                 <span class="o_stat_text">Overview</span>
                             </div>
                         </button>
+                        <button class="oe_stat_button" name="action_view_serial_numbers" type="object" icon="fa-wrench" invisible="serial_numbers_count == 0">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="serial_numbers_count"/></span>
+                                <span class="o_stat_text">Serial Numbers</span>
+                            </div>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <h1 class="d-flex">
@@ -292,7 +298,7 @@
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row g-0 d-flex">
                                 <div invisible="state == 'draft'" class="o_row flex-grow-1">
-                                    <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
+                                    <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
                                     /
                                 </div>
                                 <field name="product_qty" class="oe_inline text-start text-truncate" invisible="state not in ('draft', 'done')" readonly="state != 'draft'" style="width:auto!important"/>
@@ -322,11 +328,15 @@
                                     title="Note that another version of this BOM is available." class="text-danger"
                                     invisible="not is_outdated_bom or state not in ['draft', 'confirmed']"/>
                             </div>
-                            <label for="lot_producing_id" invisible="state == 'draft' or product_tracking in ('none', False)"/>
-                            <div class="o_row" invisible="state == 'draft' or product_tracking in ('none', False)">
-                                <field name="lot_producing_id"
-                                    context="{'default_product_id': product_id}" invisible="product_tracking in ('none', False)"/>
-                                <button name="action_generate_serial" type="object" class="btn btn-primary" string="New" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="product_tracking in ('none', False) or lot_producing_id"/>
+                            <label for="lot_producing_ids" invisible="state in ('draft', 'cancel') or product_tracking in ('none', False) or (state == 'done' and product_tracking == 'serial' and product_qty > 1)"/>
+                            <div class="o_row" invisible="state in ('draft', 'cancel') or product_tracking in ('none', False) or (state == 'done' and product_tracking == 'serial' and product_qty > 1)">
+                                <field name="lot_producing_ids" widget="many2many_tags" options="{'edit_tags': True}"
+                                    invisible="product_tracking in ('none', False) or (product_tracking == 'serial' and (product_qty > 1 or serial_numbers_count > 1))"
+                                    readonly="lot_producing_ids" force_save="1" context="{'default_product_id': product_id}"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary o_right_alignment" string="Generate Serial" aria-label="Creates a new serial number" title="Creates a new serial number" role="img" invisible="product_tracking in ('none', 'lot', False) or lot_producing_ids"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-secondary o_right_alignment" string="Generate Serial" aria-label="Creates a new serial number" title="Creates a new serial number" role="img" invisible="product_tracking in ('none', 'lot', False) or not lot_producing_ids or product_qty == 1"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary o_right_alignment" string="Generate Lot" aria-label="Creates a new lot number" title="Creates a new lot number" role="img" invisible="product_tracking in ('none', 'serial', False) or lot_producing_ids"/>
+                                <button name="action_clear_lot_producing_ids" type="object" class="btn btn-secondary o_right_alignment" string="Clear" aria-label="Clears the selected lot/serial number" title="Clears the selected lot/serial number" role="img" invisible="state == 'done' or  (product_tracking == 'serial' and product_qty > 1) or not lot_producing_ids"/>
                             </div>
                         </group>
                         <group name="group_extra_info">

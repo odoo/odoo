@@ -278,8 +278,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         serial = self.env['stock.lot'].create({'product_id': self.laptop.id})
 
         mo_form = Form(mo_laptop)
-        mo_form.qty_producing = 1
-        mo_form.lot_producing_id = serial
+        mo_form.lot_producing_ids.set(serial)
         mo_laptop = mo_form.save()
         mo_laptop.button_mark_done()
 

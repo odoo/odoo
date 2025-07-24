@@ -53,10 +53,10 @@ class MrpUnbuild(models.Model):
         domain="[('state', '=', 'done'), ('product_id', '=?', product_id), ('bom_id', '=?', bom_id)]",
         check_company=True, index='btree_not_null')
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
+    lot_producing_ids = fields.Many2many('stock.lot', string='Lot/Serial Numbers', related='mo_id.lot_producing_ids')
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
-        compute='_compute_lot_id', store=True,
-        domain="[('product_id', '=', product_id)]", check_company=True)
+        domain="[('product_id', '=', product_id),('id', 'in', lot_producing_ids)]", check_company=True)
     has_tracking = fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
@@ -112,12 +112,6 @@ class MrpUnbuild(models.Model):
                 order.bom_id = self.env['mrp.bom']._bom_find(
                     order.product_id, company_id=order.company_id.id
                 )[order.product_id]
-
-    @api.depends('mo_id')
-    def _compute_lot_id(self):
-        for order in self:
-            if order.mo_id:
-                order.lot_id = order.mo_id.lot_producing_id
 
     @api.depends('mo_id')
     def _compute_product_id(self):
