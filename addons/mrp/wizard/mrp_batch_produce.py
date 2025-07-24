@@ -31,7 +31,8 @@ class MrpBatchProduce(models.TransientModel):
         for wizard in self:
             if wizard.lot_name:
                 continue
-            wizard.lot_name = self.production_id.lot_producing_id.name
+            if self.production_id.lot_producing_ids:
+                wizard.lot_name = self.production_id.lot_producing_ids[-1].name
             if not wizard.lot_name:
                 wizard.lot_name = self.env['stock.lot']._get_next_serial(self.production_id.company_id, self.production_id.product_id)
 
@@ -108,7 +109,7 @@ class MrpBatchProduce(models.TransientModel):
 
         productions_to_set = OrderedSet()
         for production, finished_lot in zip(productions, lots):
-            production.lot_producing_id = finished_lot
+            production.lot_producing_ids = finished_lot.ids
             self._process_components(production, components_list.pop(0))
             productions_to_set.add(production.id)
 

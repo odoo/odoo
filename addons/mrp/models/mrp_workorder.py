@@ -109,8 +109,8 @@ class MrpWorkorder(models.Model):
     move_line_ids = fields.One2many(
         'stock.move.line', 'workorder_id', 'Moves to Track',
         help="Inventory moves for which you must scan a lot number at this work order")
-    finished_lot_id = fields.Many2one(
-        'stock.lot', string='Lot/Serial Number', related='production_id.lot_producing_id',
+    finished_lot_ids = fields.Many2many(
+        'stock.lot', string='Lot/Serial Numbers', related='production_id.lot_producing_ids',
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
         readonly=False, check_company=True)
     time_ids = fields.One2many(
@@ -468,10 +468,10 @@ class MrpWorkorder(models.Model):
         )
         return interval['hours'] * 60
 
-    @api.onchange('finished_lot_id')
-    def _onchange_finished_lot_id(self):
+    @api.onchange('finished_lot_ids')
+    def _onchange_finished_lot_ids(self):
         if self.production_id:
-            res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
+            res = self.production_id._can_produce_serial_numbers(sns=self.finished_lot_ids)
             if res is not True:
                 return res
 
@@ -483,8 +483,6 @@ class MrpWorkorder(models.Model):
                 raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
             elif self.product_uom_id.compare(values['qty_produced'], 0) < 0:
                 raise UserError(_('The quantity produced must be positive.'))
-            elif values['qty_produced'] not in (0, 1) and any(wo.product_tracking == 'serial' for wo in self):
-                raise UserError(_('You cannot produce more than 1 unit of a serial product at a time.'))
 
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
@@ -645,9 +643,7 @@ class MrpWorkorder(models.Model):
                     continue
                 raise UserError(_('You cannot start a work order that is already done or cancelled'))
 
-            if wo.product_tracking == 'serial' and wo.qty_producing == 0:
-                wo.qty_producing = 1.0
-            elif wo.qty_producing == 0:
+            if wo.qty_producing == 0:
                 wo.qty_producing = wo.qty_remaining
 
             if wo._should_start_timer():
@@ -882,7 +878,7 @@ class MrpWorkorder(models.Model):
         if not production_move:
             return
         if production_move.product_id.tracking != 'none':
-            if not self.finished_lot_id:
+            if not self.finished_lot_ids:
                 raise UserError(_('You need to provide a lot for the finished product.'))
             move_line = production_move.move_line_ids.filtered(
                 lambda line: line.lot_id.id == self.finished_lot_id.id
