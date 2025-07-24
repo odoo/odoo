@@ -1,10 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
     <t t-name="spreadsheet_dashboard.FiltersSearchDialog">
         <Dialog title.translate="Global Filters" size="md">
             <div class="d-flex flex-column o-filters-search-dialog">
-                <div t-foreach="state.activeFilters" t-as="item" t-key="item_index" class="d-flex o-filter-item align-items-center">
+                <div t-foreach="state.filtersAndValues"
+                     t-as="item"
+                     t-key="item_index"
+                     class="d-flex o-filter-item align-items-center"
+                     t-att-data-id="item.globalFilter.id">
                     <div class="me-1 w-25">
                         <t t-esc="getTranslatedFilterLabel(item.globalFilter)"/>
                     </div>
@@ -19,31 +23,22 @@
                                  model="props.model"
                                  setGlobalFilterValue="(id, value) => this.setGlobalFilterValue(item, value)"
                                  globalFilterValue="item.value"/>
-                    <button class="btn btn-link px-2 text-danger fs-4" t-on-click="() => this.removeFilter(item.globalFilter.id)">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </div>
-                <div class="d-flex">
-                    <Dropdown t-if="hasUnusedGlobalFilters">
-                        <button class="btn btn-link o-add-global-filter">
-                            Add filter
+                    <div class="o-filter-clear">
+                        <button t-if="filterHasClearButton(item)"
+                            class="btn btn-link px-2 text-danger fs-4"
+                            t-on-click="() => this.clearFilter(item.globalFilter.id)">
+                            <i class="fa fa-times"></i>
                         </button>
-                        <t t-set-slot="content">
-                            <t t-foreach="unusedGlobalFilters" t-as="filter" t-key="filter.id">
-                                <DropdownItem onSelected="() => this.activateFilter(filter)">
-                                    <span class="o-add-global-filter-label" t-esc="getTranslatedFilterLabel(filter)"/>
-                                </DropdownItem>
-                            </t>
-                        </t>
-                    </Dropdown>
-                    <a href="#" t-if="props.openFiltersEditor" class="pt-2 ps-4 o-edit-global-filters" t-on-click="() => this.props.openFiltersEditor()">
-                        <i class="fa fa-pencil"/>
-                        Edit filters
-                    </a>
+                    </div>
                 </div>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="onConfirm">Filter</button>
+                <button t-if="props.openFiltersEditor"
+                        class="btn btn-secondary o-edit-global-filters"
+                        t-on-click="props.openFiltersEditor">
+                    Edit
+                </button>
                 <button class="btn btn-secondary" t-on-click="onDiscard">Discard</button>
             </t>
         </Dialog>
