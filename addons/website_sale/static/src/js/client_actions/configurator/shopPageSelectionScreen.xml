@@ -11,10 +11,7 @@
                     <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-2 g-2 g-sm-3 g-lg-4">
                         <t t-foreach="this.shopPageStyles" t-as="style" t-key="style_index">
                             <div class="col">
-                                <div
-                                    class="theme_preview o_configurator_show_fast rounded position-relative button_area mt-3 mb-2"
-                                    t-on-click="() => this.selectStyle(style.option)"
-                                >
+                                <div class="theme_preview o_configurator_show_fast rounded position-relative mt-3 mb-2">
                                     <h6 class="theme_preview_tip text-center text-muted d-none d-lg-block">
                                         Click to select
                                     </h6>
@@ -26,6 +23,11 @@
                                             t-att-title="style.title"
                                         />
                                     </div>
+                                    <button
+                                        class="o_btn_reset button_area"
+                                        t-on-click="() => this.selectStyle(style.option)"
+                                        t-att-aria-label="style.title"
+                                    />
                                 </div>
                             </div>
                         </t>
