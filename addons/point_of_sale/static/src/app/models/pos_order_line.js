@@ -470,14 +470,6 @@ export class PosOrderline extends Base {
         return this.allPrices.taxDetails;
     }
 
-    getTotalTaxesIncludedInPrice() {
-        const productTaxes = this._getProductTaxesAfterFiscalPosition();
-        const taxDetails = this.getTaxDetails();
-        return productTaxes
-            .filter((tax) => tax.price_include)
-            .reduce((sum, tax) => sum + taxDetails[tax.id].amount, 0);
-    }
-
     /**
      * Calculates the taxes for a product, and converts the taxes based on the fiscal position of the order.
      *
