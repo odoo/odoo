@@ -10,7 +10,7 @@ import { EventBus, reactive, useEffect, useRef } from "@odoo/owl";
 
 export const SIZES = { XS: 0, SM: 1, MD: 2, LG: 3, XL: 4, XXL: 5 };
 
-function getFirstAndLastTabableElements(el) {
+export function getFirstAndLastTabableElements(el) {
     const tabableEls = getTabableElements(el);
     return [tabableEls[0], tabableEls[tabableEls.length - 1]];
 }

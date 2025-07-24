@@ -117,7 +117,7 @@
                 pointer-events: none;
                 z-index: 1;
             }
-            &:hover {
+            &:hover, &:focus-visible {
                 box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
                 &::after {
                     outline: 6px solid $o-we-handles-accent-color;
@@ -127,7 +127,7 @@
                 .s_dialog_preview_image {
                     filter: saturate(0) blur(5px);
                 }
-                &:hover {
+                &:hover, &:focus-within {
                     .s_dialog_preview_image {
                         opacity: 1;
                         filter: saturate(0) brightness(0.6) blur(5px);
@@ -136,6 +136,11 @@
                         opacity: 1;
                      }
                 }
+
+                &:focus-within > .o_snippet_preview_install_btn {
+                    outline: 6px solid $o-we-handles-accent-color;
+                }
+
                 > .o_snippet_preview_install_btn {
                     z-index: 1;
                     @include o-position-absolute(auto, 0, 0, 0);

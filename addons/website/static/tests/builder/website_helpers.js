@@ -481,7 +481,7 @@ export async function setupWebsiteBuilderWithDummySnippet(content) {
 export async function confirmAddSnippet(snippetName) {
     let previewSelector = `.o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap`;
     if (snippetName) {
-        previewSelector += " [data-snippet='" + snippetName + "']";
+        previewSelector += ":has([data-snippet='" + snippetName + "'])";
     }
     await waitForSnippetDialog();
     await contains(previewSelector).click();

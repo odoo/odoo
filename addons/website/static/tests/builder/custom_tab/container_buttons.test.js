@@ -172,7 +172,7 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     await contains(customGroupSelector).click();
     await waitForSnippetDialog();
     expect(
-        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe span:contains('Custom Dummy Section')"
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe span:not(.visually-hidden):contains('Custom Dummy Section')"
     ).toHaveCount(1);
 });
 
