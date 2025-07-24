@@ -21,6 +21,9 @@
         'web.assets_frontend': [
             'payment_paypal/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'payment_paypal/static/tests/tours/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
