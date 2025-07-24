@@ -1122,7 +1122,7 @@ export class HistoryPlugin extends Plugin {
                 case "attributes": {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
-                        let value = mutation.oldValue;
+                        let value = mutation.value;
                         for (const cb of this.getResource("attribute_change_processors")) {
                             value = cb(
                                 {

@@ -1087,7 +1087,7 @@ export class SetLabelTextAction extends BuilderAction {
                 multiple.dataset.name = value;
             }
             const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
-            const previousInputName = fieldEl.name;
+            const previousInputName = inputEls[0].name;
             inputEls.forEach((el) => (el.name = value));
 
             // Synchronize the fields whose visibility depends on this field
