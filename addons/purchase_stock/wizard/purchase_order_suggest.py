@@ -19,15 +19,15 @@ class PurchaseOrderSuggest(models.TransientModel):
         selection=[
             ('actual_demand', "Actual Demand"),
             ('one_week', "Last 7 days"),
-            ('one_month', "Last 30 days"),
+            ('last_30_days', "Last 30 days"),
             ('three_months', "Last 3 months"),
             ('one_year', "Last 12 months"),
             ('last_year', "Same month last year"),
-            ('last_year_2', "Next month last year"),
-            ('last_year_3', "After next month last year"),
+            ('last_year_m_plus_1', "Next month last year"),
+            ('last_year_m_plus_2', "After next month last year"),
             ('last_year_quarter', "Last year quarter"),
         ],
-        default='one_month',
+        default='last_30_days',
         string='Based on',
         help="Estimate the sales volume for the period based on past period or order the forecasted quantity for that period.",
         required=True
@@ -55,7 +55,7 @@ class PurchaseOrderSuggest(models.TransientModel):
     @api.depends('based_on', 'number_of_days', 'percent_factor', 'product_ids', 'warehouse_id')
     def _compute_estimated_price(self):
         for suggest in self:
-            estimated_price, product_count = 0, 0
+            estimated_price = 0
             seller_args = {
                 "partner_id": suggest.purchase_order_id.partner_id,
                 "params": {'order_id': suggest.purchase_order_id}
@@ -64,24 +64,15 @@ class PurchaseOrderSuggest(models.TransientModel):
             products = self.env['product.product'].browse(self.product_ids.ids)
             products = products.with_context(suggest._get_suggested_products_context())
 
-            for product in products:
-                if self.based_on == 'actual_demand':
-                    quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
-                else:
-                    quantity = ceil(product.monthly_demand * self.multiplier)
-                qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
-                quantity -= qty_to_deduce
-                if quantity <= 0:
-                    continue
+            for product in products.filtered(lambda p: p.suggested_qty > 0):
                 # Then, compute the price either from pricelist or standard price
                 # Try pricelist for quantity first, then lowest min_qty pricelist
                 seller = (
-                    product._select_seller(quantity=quantity, **seller_args)
+                    product._select_seller(quantity=product.suggested_qty, **seller_args)
                     or product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
                 )
                 price = seller.price_discounted if seller else product.standard_price
-                estimated_price += price * quantity
-            suggest.product_count = product_count
+                estimated_price += price * product.suggested_qty
             suggest.estimated_price = estimated_price
 
     @api.depends('number_of_days', 'percent_factor')
@@ -103,33 +94,22 @@ class PurchaseOrderSuggest(models.TransientModel):
         # Create new PO lines for each product with a monthy demand.
         po_lines_commands = []
         for product in products:
-            existing_po_lines = order.order_line.filtered(lambda pol: pol.product_id == product)
             supplierinfo = supplierinfos.filtered(lambda supinfo: supinfo.product_id == product)[:1]
-
-            if self.based_on == 'actual_demand':
-                quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
-            else:
-                quantity = ceil(product.monthly_demand * self.multiplier)
-            qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
-            quantity -= qty_to_deduce
-
-            if quantity > 0:  # Save fetching new val if we don't need it
-                suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
-                    product,
-                    quantity,
-                    product.uom_id,
-                    order.company_id,
-                    supplierinfo,
-                    order,
-                )
+            suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
+                product,
+                product.suggested_qty,
+                product.uom_id,
+                order.company_id,
+                supplierinfo,
+                order
+            )
             existing_po_lines = order.order_line.filtered(lambda pol: pol.product_id == product)
-            # Keep 0 or 1 line max, delete all others
             if existing_po_lines:
-                to_unlink = existing_po_lines[:-1] if quantity > 0 else existing_po_lines
+                to_unlink = existing_po_lines[:-1] if product.suggested_qty > 0 else existing_po_lines
                 po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
-                if quantity > 0:
+                if product.suggested_qty > 0:
                     po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
-            elif quantity > 0:
+            elif product.suggested_qty > 0:
                 po_lines_commands.append(Command.create(suggest_line))
 
         order.order_line = po_lines_commands
@@ -141,20 +121,14 @@ class PurchaseOrderSuggest(models.TransientModel):
 
     def _get_suggested_products_context(self):
         self.ensure_one()
-        if self.based_on == 'actual_demand':
-            context = {
-                'from_date': fields.Datetime.now(),
-                'to_date': fields.Datetime.now() + relativedelta(days=self.number_of_days),
-            }
-        else:
-            start_date, limit_date = self._get_period_of_time()
-            context = {
-                'monthly_demand_start_date': start_date,
-                'monthly_demand_limit_date': limit_date,
-            }
+        context = {
+            "suggest_days": self.number_of_days,
+            "suggest_based_on": self.based_on,
+            "suggest_percent": self.percent_factor,
+            "suggest_multiplier": self.multiplier,
+        }
         if self.warehouse_id and not self.hide_warehouse:
             context['warehouse_id'] = self.warehouse_id.id
-        context['suggest_based_on'] = self.based_on
         return context
 
     def _get_period_of_time(self):
@@ -163,7 +137,7 @@ class PurchaseOrderSuggest(models.TransientModel):
         limit_date = fields.Datetime.now()
         if self.based_on == 'one_week':
             start_date = start_date - relativedelta(weeks=1)
-        elif self.based_on == 'one_month':
+        elif self.based_on == 'last_30_days':
             start_date = start_date - relativedelta(months=1)
         elif self.based_on == 'three_months':
             start_date = start_date - relativedelta(months=3)

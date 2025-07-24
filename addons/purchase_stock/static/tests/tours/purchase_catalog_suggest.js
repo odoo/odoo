@@ -37,14 +37,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         { trigger: "button[name='toggle_suggest_catalog'].fa-toggle-off" }, // Should still be off
         ...toggleSuggest(true),
         ...setSuggestParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
-        {
-            content: "Check on warehouse2 should only be taking those stock move into account",
-            trigger: "span[name='suggest_total']:visible",
-            run() {
-                const estimatedTotal = this.anchor.textContent.trim();
-                assert(estimatedTotal, "20", `Wrong suggest estimated total price`);
-            },
-        },
+        { trigger: "span[name='suggest_total']:visible:contains('20')" },
         ...goToPOFromCatalog(),
         ...selectPOWarehouse("Base Warehouse: Receipts"), // Still the same PO, no need to reset vendor
         ...goToCatalogFromPO(),
