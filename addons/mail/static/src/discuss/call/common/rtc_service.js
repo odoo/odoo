@@ -52,9 +52,7 @@ const SCREEN_CONFIG = {
         max: 24,
     },
 };
-const CAMERA_CONFIG = {
-    width: 1280,
-};
+
 const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);
 function GET_DEFAULT_ICE_SERVERS() {
     return [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] }];
@@ -414,6 +412,16 @@ export class Rtc extends Record {
         onChange(this.store.settings, "audioInputDeviceId", async () => {
             if (this.localSession) {
                 await this.resetMicAudioTrack({ force: true });
+            }
+        });
+        onChange(this.store.settings, "audioOutputDeviceId", async () => {
+            if (this.localSession) {
+                await this.setOutputDevice(this.store.settings.audioOutputDeviceId);
+            }
+        });
+        onChange(this.store.settings, "cameraInputDeviceId", async () => {
+            if (this.localSession && this.state.cameraTrack) {
+                await this.toggleVideo("camera", { force: true, refreshStream: true });
             }
         });
         this.store.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
@@ -1604,6 +1612,17 @@ export class Rtc extends Record {
         await this.refreshMicAudioStatus();
     }
 
+    async setOutputDevice(deviceId) {
+        const promises = [];
+        for (const session of this.state.channel.rtc_session_ids) {
+            if (!session.audioElement) {
+                continue;
+            }
+            promises.push(session.audioElement.setSinkId(deviceId));
+        }
+        await Promise.all(promises);
+    }
+
     /**
      * @param {Boolean} is_muted
      */
@@ -1646,15 +1665,18 @@ export class Rtc extends Record {
      * @param {Object} [param1]
      * @param {boolean} [param1.force]
      * @param {boolean} [param1.env]
+     * @param {boolean} [param1.refreshStream]
      */
     async toggleVideo(type, options) {
         let force;
         let env;
+        let refreshStream;
         if (typeof options === "boolean") {
             force = options;
         } else {
             force = options?.force;
             env = options?.env;
+            refreshStream = options?.refreshStream;
         }
         if (this.isRemote) {
             this.notification.add(UNAVAILABLE_AS_REMOTE, {
@@ -1670,7 +1692,7 @@ export class Rtc extends Record {
                 const track = this.state.cameraTrack;
                 const sendCamera = force ?? !this.state.sendCamera;
                 this.state.sendCamera = false;
-                await this.setVideo(track, type, { activateVideo: sendCamera, env });
+                await this.setVideo(track, type, { activateVideo: sendCamera, env, refreshStream });
                 break;
             }
             case "screen": {
@@ -1749,7 +1771,8 @@ export class Rtc extends Record {
      * @param {String} type 'camera' or 'screen'
      * @param {Object} [param1] options
      * @param {Boolean} [param1.activateVideo=false] options
-     * @param {Env} [param1.env] options
+     * @param {Env} [param1.env]
+     * @param {Boolean} [param1.refreshStream] whether we are requesting a new stream
      */
     async setVideo(track, type, options) {
         let activateVideo;
@@ -1794,11 +1817,12 @@ export class Rtc extends Record {
         const sourceWindow = env?.pipWindow ?? browser;
         try {
             if (type === "camera") {
-                if (this.state.sourceCameraStream) {
+                if (this.state.sourceCameraStream && !options?.refreshStream) {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
+                    closeStream(this.state.sourceCameraStream);
                     sourceStream = await sourceWindow.navigator.mediaDevices.getUserMedia({
-                        video: CAMERA_CONFIG,
+                        video: this.store.settings.cameraConstraints,
                     });
                 }
             }

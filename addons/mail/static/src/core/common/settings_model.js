@@ -60,6 +60,8 @@ export class Settings extends Record {
     // Voice settings
     // DeviceId of the audio input selected by the user
     audioInputDeviceId = "";
+    audioOutputDeviceId = "";
+    cameraInputDeviceId = "";
     use_push_to_talk = false;
     voice_active_duration = 200;
     volumes = fields.Many("Volume");
@@ -87,6 +89,16 @@ export class Settings extends Record {
         };
         if (this.audioInputDeviceId) {
             constraints.deviceId = this.audioInputDeviceId;
+        }
+        return constraints;
+    }
+
+    get cameraConstraints() {
+        const constraints = {
+            width: 1280,
+        };
+        if (this.cameraInputDeviceId) {
+            constraints.deviceId = this.cameraInputDeviceId;
         }
         return constraints;
     }
@@ -181,6 +193,26 @@ export class Settings extends Record {
     async setAudioInputDevice(audioInputDeviceId) {
         this.audioInputDeviceId = audioInputDeviceId;
         browser.localStorage.setItem("mail_user_setting_audio_input_device_id", audioInputDeviceId);
+    }
+    /**
+     * @param {String} audioOutputDeviceId
+     */
+    async setAudioOutputDevice(audioOutputDeviceId) {
+        this.audioOutputDeviceId = audioOutputDeviceId;
+        browser.localStorage.setItem(
+            "mail_user_setting_audio_output_device_id",
+            audioOutputDeviceId
+        );
+    }
+    /**
+     * @param {String} cameraInputDeviceId
+     */
+    async setCameraInputDevice(cameraInputDeviceId) {
+        this.cameraInputDeviceId = cameraInputDeviceId;
+        browser.localStorage.setItem(
+            "mail_user_setting_camera_input_device_id",
+            cameraInputDeviceId
+        );
     }
     /**
      * @param {string} value
@@ -301,6 +333,12 @@ export class Settings extends Record {
             : this.voiceActivationThreshold;
         this.audioInputDeviceId = browser.localStorage.getItem(
             "mail_user_setting_audio_input_device_id"
+        );
+        this.audioOutputDeviceId = browser.localStorage.getItem(
+            "mail_user_setting_audio_output_device_id"
+        );
+        this.cameraInputDeviceId = browser.localStorage.getItem(
+            "mail_user_setting_camera_input_device_id"
         );
         this.showOnlyVideo =
             browser.localStorage.getItem("mail_user_setting_show_only_video") === "true";

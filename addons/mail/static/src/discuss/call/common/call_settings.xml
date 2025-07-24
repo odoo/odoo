@@ -10,19 +10,20 @@
 
     <t t-name="discuss.CallSettings.content">
         <div class="o-discuss-CallSettings d-flex flex-column">
-            <label class="d-flex align-items-baseline mb-2" title="Input device" aria-label="Input device">
-                <h5 class="flex-shrink-0 pe-2">
-                    Input device
-                </h5>
+            <h4>Voice</h4>
+            <label class="d-flex align-items-baseline mb-2" title="Microphone" aria-label="Microphone">
+                <span class="flex-shrink-0 pe-2">
+                    Microphone
+                </span>
                 <div class="flex-grow-1"/>
-                <select name="inputDevice" class="form-select d-flex w-auto shadow-sm" t-on-change="onChangeSelectAudioInput">
-                    <option value="">Browser default</option>
-                    <t t-foreach="state.userDevices" t-as="device" t-key="device_index" device="device">
-                        <option t-if="device.kind === 'audioinput'" t-att-selected="store.settings.audioInputDeviceId === device.deviceId" t-att-value="device.deviceId">
-                            <t t-esc="device.label || 'audio device ' + device_index"/>
-                        </option>
-                    </t>
-                </select>
+                <DeviceSelect kind="'audioinput'"/>
+            </label>
+            <label class="d-flex align-items-baseline mb-2" title="Audio Output" aria-label="Audio Output">
+                <span class="flex-shrink-0 pe-2">
+                    Audio Output
+                </span>
+                <div class="flex-grow-1"/>
+                <DeviceSelect kind="'audiooutput'"/>
             </label>
             <div class="d-flex flex-column">
                 <button class="btn d-flex my-1" t-att-class="{'bg-300' : !store.settings.use_push_to_talk }" t-on-click="()=>this.store.settings.setPushToTalk(false)">
@@ -81,7 +82,14 @@
                 <span t-if="store.settings.isRegisteringKey">Press a key to register it as the push-to-talk shortcut.</span>
             </div>
             <hr class="o-discuss-separator my-2"/>
-            <h4>Video Settings</h4>
+            <h4>Video</h4>
+            <label class="d-flex align-items-baseline mb-2" title="Camera" aria-label="Camera">
+                <span class="flex-shrink-0 pe-2">
+                    Camera
+                </span>
+                <div class="flex-grow-1"/>
+                <DeviceSelect kind="'videoinput'"/>
+            </label>
             <div class="d-flex flex-column my-1">
                 <t t-call="discuss.CallSettings.textToggler">
                     <t t-set="text">Show video participants only</t>
