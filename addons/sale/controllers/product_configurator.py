@@ -80,20 +80,16 @@ class SaleProductConfiguratorController(Controller):
                 dict(
                     **self._get_product_information(
                         optional_product_template,
-                        optional_product_template._get_first_possible_combination(
-                            parent_combination=combination
-                        ),
+                        optional_product_template._get_first_possible_combination(),
                         currency,
                         pricelist,
                         so_date,
                         # giving all the ptav of the parent product to get all the exclusions
-                        parent_combination=product_template.attribute_line_ids.\
-                            product_template_value_ids,
                         **kwargs,
                     ),
                     parent_product_tmpl_id=product_template.id,
                 ) for optional_product_template in product_template.optional_product_ids if
-                self._should_show_product(optional_product_template, combination)
+                self._should_show_product(optional_product_template)
             ] if not only_main_product else [],
             'currency_id': currency_id,
         }
@@ -215,27 +211,21 @@ class SaleProductConfiguratorController(Controller):
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
         product_template = self._get_product_template(product_template_id)
-        parent_combination = request.env['product.template.attribute.value'].browse(
-            parent_ptav_ids + ptav_ids
-        )
         currency = request.env['res.currency'].browse(currency_id)
         pricelist = request.env['product.pricelist'].browse(pricelist_id)
         return [
             dict(
                 **self._get_product_information(
                     optional_product_template,
-                    optional_product_template._get_first_possible_combination(
-                        parent_combination=parent_combination
-                    ),
+                    optional_product_template._get_first_possible_combination(),
                     currency,
                     pricelist,
                     datetime.fromisoformat(so_date),
-                    parent_combination=parent_combination,
                     **kwargs,
                 ),
                 parent_product_tmpl_id=product_template.id,
             ) for optional_product_template in product_template.optional_product_ids if
-            self._should_show_product(optional_product_template, parent_combination)
+            self._should_show_product(optional_product_template)
         ]
 
     def _get_product_template(self, product_template_id):
@@ -250,8 +240,7 @@ class SaleProductConfiguratorController(Controller):
         so_date,
         quantity=1,
         product_uom_id=None,
-        parent_combination=None,
-        show_packaging=True,
+            show_packaging=True,
         **kwargs,
     ):
         """Return complete information about a product.
@@ -264,8 +253,6 @@ class SaleProductConfiguratorController(Controller):
             rate.
         :param int quantity: The quantity of the product.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
-        :param product.template.attribute.value|None parent_combination: The combination of the
-            parent product.
         :param dict kwargs: Locally unused data passed to `_get_basic_product_information`.
         :rtype: dict
         :return: A dict with the following structure:
@@ -295,7 +282,6 @@ class SaleProductConfiguratorController(Controller):
                 }],
                 'exclusions': dict,
                 'archived_combination': dict,
-                'parent_exclusions': dict,
                 'available_uoms': dict (optional),
             }
         """
@@ -305,7 +291,6 @@ class SaleProductConfiguratorController(Controller):
         )
         product = product_template._get_variant_for_combination(combination)
         attribute_exclusions = product_template._get_attribute_exclusions(
-            parent_combination=parent_combination,
             combination_ids=combination.ids,
         )
         product_or_template = product or product_template
@@ -343,7 +328,6 @@ class SaleProductConfiguratorController(Controller):
             } for ptal in product_template.attribute_line_ids],
             exclusions=attribute_exclusions['exclusions'],
             archived_combinations=attribute_exclusions['archived_combinations'],
-            parent_exclusions=attribute_exclusions['parent_exclusions'],
         )
         if show_packaging and product_template._has_multiple_uoms():
             values['available_uoms'] = product_template._get_available_uoms().read(
@@ -418,12 +402,10 @@ class SaleProductConfiguratorController(Controller):
             date.date(),
         )
 
-    def _should_show_product(self, product_template, parent_combination):
+    def _should_show_product(self, product_template):
         """Decide whether a product should be shown in the configurator.
 
         :param product.template product_template: The product being checked.
-        :param product.template.attribute.value parent_combination: The combination of the parent
-            product.
         :rtype: bool
         :return: Whether the product should be shown in the configurator.
         """

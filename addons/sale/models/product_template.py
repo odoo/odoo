@@ -211,9 +211,7 @@ class ProductTemplate(models.Model):
         if res.get('product_id', False):
             has_optional_products = False
             for optional_product in self.product_variant_id.optional_product_ids:
-                if optional_product.has_dynamic_attributes() or optional_product._get_possible_variants(
-                    self.product_variant_id.product_template_attribute_value_ids
-                ):
+                if optional_product.has_dynamic_attributes() or optional_product._get_possible_variants():
                     has_optional_products = True
                     break
             res.update({
