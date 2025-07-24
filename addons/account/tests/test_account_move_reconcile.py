@@ -5762,6 +5762,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             partials.exchange_move_id.id: 1666.67,
         })
 
+        statement_line.set_account_bank_statement_line(statement_line.line_ids[-1].id, self.company_data['default_account_revenue'].id)
+        self.assertFalse(invoice.invoice_outstanding_credits_debits_widget, "Only statement lines with suspense account should be considered")
+
     def test_reconcile_refund_with_bank_statement_line(self):
         """
         Test reconcile refund with bank statement line. with foreign currency on the refund.
