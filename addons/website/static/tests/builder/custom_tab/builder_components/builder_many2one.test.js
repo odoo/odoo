@@ -128,3 +128,40 @@ test("dependency definition should not be outdated", async () => {
     await contains("span.o-dropdown-item:contains(Third)").click();
     expect("span:contains(Dependant)").toHaveCount(0);
 });
+
+test("BuilderMany2One: add null_text option in website builder dropdown", async () => {
+    onRpc("test", "name_search", () => [
+        [1, "First"],
+        [2, "Second"],
+        [3, "Third"],
+    ]);
+    addBuilderAction({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement, value }) {
+                editingElement.textContent = JSON.parse(value).name;
+                editingElement.dataset.test = value;
+            }
+            getValue({ editingElement }) {
+                return editingElement.dataset.test;
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10" nullText="'Remote'"/>`;
+        }
+    );
+    const { getEditableContent } = await setupWebsiteBuilder(`
+        <div class="test-options-target">b</div>
+    `);
+    const editableContent = getEditableContent();
+    await contains(":iframe .test-options-target").click();
+    await contains(".btn.o-dropdown").click();
+    await contains("span.o-dropdown-item:contains('Remote')").click();
+    expect(editableContent.textContent.trim()).toBe("Remote");
+    await contains(".btn.o-dropdown").click();
+    await contains("span.o-dropdown-item:contains('First')").click();
+    expect(editableContent.textContent.trim()).toBe("First");
+});
