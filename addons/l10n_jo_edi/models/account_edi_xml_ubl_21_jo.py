@@ -1,5 +1,6 @@
 from functools import wraps
 from lxml import etree
+import re
 from types import SimpleNamespace
 
 from odoo import models
@@ -110,6 +111,9 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             line_id = n + default_id
 
         return line_id
+
+    def _sanitize_phone(self, raw):
+        return re.sub(r'[^0-9]', '', raw or '')[:15]
 
     ########################################################
     # overriding vals methods of account_edi_xml_ubl_20 file
@@ -417,7 +421,13 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'accounting_customer_party_vals': {
                 'party_vals': self._get_empty_party_vals() if is_refund else self._get_partner_party_vals(customer, role='customer'),
                 'accounting_contact': {
+<<<<<<< cdcd2631cb7f2a3216d0157f8dbd0dcd1cb36aad
                     'telephone': '' if is_refund else invoice.partner_id.phone,
+||||||| c5cdbc045df3052b2e485fa7c012e4bad0de0b4f
+                    'telephone': '' if is_refund else invoice.partner_id.phone or invoice.partner_id.mobile,
+=======
+                    'telephone': '' if is_refund else self._sanitize_phone(invoice.partner_id.phone or invoice.partner_id.mobile),
+>>>>>>> 9c039b990bb6df69461f74255ba066bc0b390651
                 },
             },
             'seller_supplier_party_vals': {
