@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: markup('Click here to switch to <b>code view</b>'),
             run: 'click'
         }, {
-            trigger: ':iframe .o_codeview',
+            trigger: 'textarea.o_codeview',
             content: ('Remove all content from codeview'),
             run: function () {
                 const iframe = document.querySelector('.wysiwyg_iframe');

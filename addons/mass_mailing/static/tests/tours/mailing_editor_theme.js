@@ -103,16 +103,21 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the floating toolbar is visible",
-            trigger: '#toolbar.oe-floating[style*="visible"]',
+            trigger: '.overlay:has(.o-we-toolbar)[style*="visible"]',
+        },
+        {
+            content: "Expand Toolbar",
+            trigger: ".o-we-toolbar button[name='expand_toolbar']",
+            run: "click",
         },
         {
             content: "Open the color picker",
-            trigger: '#toolbar #oe-text-color',
+            trigger: ".o-select-color-foreground",
             run: "click",
         },
         {
             content: "Pick a color",
-            trigger: '#toolbar button[data-color="o-color-1"]',
+            trigger: '.o_font_color_selector button[data-color="o-color-1"]',
             run: "click",
         },
         {
@@ -143,7 +148,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the floating toolbar is visible",
-            trigger: '#toolbar.oe-floating[style*="visible"]',
+            trigger: '.overlay:has(.o-we-toolbar)[style*="visible"]',
         },
     ],
 });

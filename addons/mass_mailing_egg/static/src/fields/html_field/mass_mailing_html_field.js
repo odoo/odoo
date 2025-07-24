@@ -13,6 +13,8 @@ import { effect } from "@web/core/utils/reactive";
 import { htmlField, HtmlField } from "@html_editor/fields/html_field";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Deferred, Race } from "@web/core/utils/concurrency";
+import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
+import { DynamicPlaceholderPlugin } from "@html_editor/others/dynamic_placeholder_plugin";
 
 export class MassMailingHtmlField extends HtmlMailField {
     static template = "mass_mailing_egg.HtmlField";
@@ -64,6 +66,9 @@ export class MassMailingHtmlField extends HtmlMailField {
                 (this.props.readonly || nextProps.readonly)
             ) {
                 this.state.key++;
+            }
+            if (nextProps.record.isNew) {
+                this.state.activeTheme = undefined;
             }
         });
 
@@ -182,6 +187,7 @@ export class MassMailingHtmlField extends HtmlMailField {
         // TODO EGGMAIL: special config for no-builder mode
         return {
             ...super.getConfig(),
+            Plugins: [...MAIN_EDITOR_PLUGINS, DynamicPlaceholderPlugin],
             toggleThemeSelector: (show) => this.toggleThemeSelector(show),
         };
     }

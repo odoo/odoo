@@ -15,11 +15,11 @@ export class MassMailingBuilder extends Component {
 
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);
-        const massMailingPlugins = [
+        const massMailingPlugins = new Set([
             ...registry.category("builder-plugins").getAll(),
             // TODO EGGMAIL: use this registry for mass_mailing exclusive plugins
             ...registry.category("mass_mailing-plugins").getAll(),
-        ];
+        ]);
         // TODO EGGMAIL: copied from website, check if something needs to be changed here
         const mainEditorPluginsToRemove = [
             "PowerButtonsPlugin",
@@ -27,30 +27,26 @@ export class MassMailingBuilder extends Component {
             "SeparatorPlugin",
             "StarPlugin",
             "BannerPlugin",
-            "PromptPlugin",
             "MoveNodePlugin",
+            "ColorPlugin", // it's duplicated in the builder
         ];
-        const mainEditorPlugins = removePlugins(
-            [...MAIN_EDITOR_PLUGINS],
-            mainEditorPluginsToRemove
+        const mainEditorPlugins = new Set(
+            removePlugins([...MAIN_EDITOR_PLUGINS], mainEditorPluginsToRemove)
         );
         const coreBuilderPluginsToRemove = ["SavePlugin"];
-        const builderEditorPlugins = removePlugins(
-            [...CORE_BUILDER_PLUGINS],
-            coreBuilderPluginsToRemove
+        const builderEditorPlugins = new Set(
+            removePlugins([...CORE_BUILDER_PLUGINS], coreBuilderPluginsToRemove)
         );
-        const optionalPlugins = [
+        const optionalPlugins = new Set([
             ...(this.props.builderProps.config.dynamicPlaceholder
-                ? DYNAMIC_PLACEHOLDER_PLUGINS
+                ? removePlugins(DYNAMIC_PLACEHOLDER_PLUGINS, ["PromptPlugin"])
                 : []),
-        ];
-        const Plugins = [
-            ...mainEditorPlugins,
-            ...builderEditorPlugins,
-            ...massMailingPlugins,
-            ...optionalPlugins,
-        ];
-        builderProps.Plugins = Plugins;
+        ]);
+        const Plugins = mainEditorPlugins
+            .union(builderEditorPlugins)
+            .union(massMailingPlugins)
+            .union(optionalPlugins);
+        builderProps.Plugins = Array.from(Plugins);
         return builderProps;
     }
 }
