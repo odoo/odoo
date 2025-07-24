@@ -4,11 +4,9 @@ import hashlib
 import hmac
 import uuid
 from datetime import timedelta
-from urllib.parse import urlencode
 
 from odoo import _, fields, models
 from odoo.exceptions import RedirectWarning
-from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay import const

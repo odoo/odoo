@@ -60,21 +60,12 @@ class PaymentTransaction(models.Model):
         """
         transaction_urls = self._get_transaction_urls()
 
-
         payload = {
             'external_reference': self.reference,
-            'payer': {
-                'name': self.partner_name,
-                'email': self.partner_email,
-                'phone': {
-                    'number': self.partner_phone,
-                },
-                'address': {
-                    'zip_code': self.partner_zip,
-                    'street_name': self.partner_address,
-                },
-            },
             'notification_url': transaction_urls['webhook_url'],
+            'payer': {
+                'email': 'test_user_0@testuser.com',
+            },
         }
         if self.operation == 'online_redirect':
             return_url = transaction_urls['return_url']
@@ -86,22 +77,34 @@ class PaymentTransaction(models.Model):
                     'pending': return_url,
                     'failure': return_url,
                 },
-                'payment_methods':  {
-                    'excluded_payment_types': [
-                        {'id': 'credit_card', },
-                        {'id': 'debit_card', },
-                    ],
-                },
                 'items': [{
                     'title': self.reference,
                     'quantity': 1,
                     'currency_id': self.currency_id.name,
                     'unit_price': self._get_unit_price(),
                 }],
+                'payer': {
+                    'address': {
+                        'zip_code': self.partner_zip,
+                        'street_name': self.partner_address,
+                    },
+                    'email': self.partner_email,
+                    'name': self.partner_name,
+                    'phone': {
+                        'number': self.partner_phone,
+                    },
+                },
+                'payment_methods':  {
+                    'excluded_payment_types': [
+                        {'id': 'credit_card'},
+                        {'id': 'debit_card'},
+                    ],
+                },
+
             })
 
         elif self.operation == 'online_direct':
-            payload.update = {
+            payload.update({
                 'additional_info': {
                     'items': [{
                         'title': self.reference,
@@ -111,20 +114,21 @@ class PaymentTransaction(models.Model):
                 },
                 'statement_descriptor': self.reference,
                 'installments': 1,
-            }
+            })
 
+        return payload
 
     def _get_transaction_urls(self):
 
         base_url = self.provider_id.get_base_url()
         sanitized_reference = url_quote(self.reference)
         tx_urls = {
-            'webhook_url' : urls.url_join(
+            'webhook_url': urls.url_join(
                 base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
             )
         }
         if self.operation == 'online_redirect':
-            tx_urls['return_url'] =  urls.url_join(base_url, MercadoPagoController._return_url)
+            tx_urls['return_url'] = urls.url_join(base_url, MercadoPagoController._return_url)
 
         return tx_urls
 
@@ -230,7 +234,7 @@ class PaymentTransaction(models.Model):
             return super()._extract_token_values(payment_data)
 
         # Check if customer account exists in Mercado Pago
-        email = {'email': payment_data['email']}
+        email = {'email': payment_data['payer']['email']}
         response = self._send_api_request(
             endpoint='/v1/customers/search', method='GET', params=email
         )
@@ -252,15 +256,12 @@ class PaymentTransaction(models.Model):
         response = self._send_api_request(
             endpoint=f'/v1/customers/{customer_id}/cards', method='POST', json=payload
         )
-        card_id = response['id']
+        card_id = response.get('id')
         last_four_digits = response.get('last_four_digits')
-        #  generate a card token
-        response = self._send_api_request('POST', '/v1/card_tokens', data={'card_id': card_id})
 
         return {
             'payment_details': last_four_digits,
-            'provider_ref': response['id'],
-            'mercado_pago_customer_id': customer_id,
+            'provider_ref': card_id,
         }
 
     @api.model
@@ -290,9 +291,15 @@ class PaymentTransaction(models.Model):
         if not self.token_id:
             raise UserError("Mercado Pago: " + _("The transaction is not linked to a token."))
 
+        # New token has to be generated everytime based on card_id
+        response = self._send_api_request(
+            'POST', '/v1/card_tokens', data={'card_id': self.token_id.mercado_pago_card_id}
+        )
+
+        # retrieve new token
         data = {
             'transaction_amount': self._get_unit_price(),
-            'token': self.token_id.provider_ref,
+            'token': response['id'],
             'installments': 1,
             'payer': {
                 'type': 'customer',
@@ -310,4 +317,3 @@ class PaymentTransaction(models.Model):
         )
 
         self._process('mercado_pago', response_content)
-

@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from datetime import timedelta
+
 from werkzeug import urls
 
 from odoo import _, api, fields, models
@@ -54,6 +56,43 @@ class PaymentProvider(models.Model):
         return supported_currencies
 
     # === CRUD METHODS === #
+    @api.model_create_multi
+    def create(self, vals_list):
+        providers = super().create(vals_list)
+        if any(provider.code == 'mercado_pago' for provider in providers):
+            self._toggle_token_refresh_cron()
+        return providers
+
+    def write(self, vals):
+        providers = super().write(vals)
+        if 'state' in vals:
+            if self.filtered(lambda p: p.code == 'mercado_pago'):
+                self._toggle_token_refresh_cron()
+        return providers
+
+    @api.model
+    def _toggle_token_refresh_cron(self):
+        """ Enable the token refresh cron if Mercado Pago is not disabled and refresh token us
+        present; disable it otherwise.
+
+        This allows for saving resources on the cron's wake-up overhead when it has nothing to do.
+
+        :return: None
+        """
+        token_refresh_cron = self.env.ref(
+            'payment_mercado_pago.cron_token_refresh_mercado_pago', raise_if_not_found=False
+        )
+        if token_refresh_cron:
+            any_active_mercado_pago_provider = bool(
+                self.sudo().search_count(
+                    [
+                        ('code', '=', 'mercado_pago'),
+                        ('state', '!=', 'disabled'),
+                        ('mercado_pago_refresh_token', '!=', None)
+                    ], limit=1
+                )
+            )
+            token_refresh_cron.active = any_active_mercado_pago_provider
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
@@ -131,7 +170,7 @@ class PaymentProvider(models.Model):
 
     # === REQUEST HELPERS === #
 
-    def _build_request_url(self, endpoint, is_proxy_request=False, **kwargs):
+    def _build_request_url(self, endpoint, *, is_proxy_request=False, **kwargs):
         """Override of `payment` to build the request URL."""
         if self.code != 'mercado_pago':
             return super()._build_request_url(endpoint, **kwargs)
@@ -170,28 +209,27 @@ class PaymentProvider(models.Model):
             return super()._parse_response_error(response)
         return response.json().get('message', '')
 
-    # def _mercado_pago_refresh_token(self):
-    #     """ TODO ADD DOCSTRING"""
-    #     #TODO ANKO make call to IAP proxy
-    #     self.ensure_one()
-    #
-    #     proxy_payload = self._prepare_json_rpc_payload(
-    #         {'mercado_pago_refresh_token': self.mercado_pago_refresh_token}
-    #     )
-    #     response_content = self._send_api_request(
-    #         'POST',
-    #         '/oauth/token',
-    #         json=proxy_payload,
-    #         is_proxy_request=True,
-    #     )
-    #     response_content = self._make_proxy_request( #Change to send api
-    #         url=const.OAUTH_URL,
-    #         endpoint=
-    #         payload={'mercado_pago_refresh_token': self.mercado_pago_refresh_token}
-    #     )
-    #     expires_in = fields.Datetime.now() + timedelta(seconds=int(response_content['expires_in']))
-    #     self.write({
-    #         'mercado_pago_access_token': response_content['access_token'],
-    #         'mercado_pago_refresh_token': response_content['refresh_token'],
-    #         'mercado_pago_access_token_expiry': expires_in,
-    #     })
+    def _cron_refresh_token(self):
+        self.ensure_one()
+
+        proxy_payload = self._prepare_json_rpc_payload(
+            {'mercado_pago_refresh_token': self.mercado_pago_refresh_token}
+        )
+
+        response_content = self._send_api_request(
+            'POST',
+            '/refresh_access_token',
+            json=proxy_payload,
+            is_proxy_request=True,
+        )
+
+        expires_in = (
+            fields.Datetime.now()
+            + timedelta(seconds=int(response_content['expires_in']))
+            - timedelta(days=31)
+        )
+        self.write({
+            'mercado_pago_access_token': response_content['access_token'],
+            'mercado_pago_refresh_token': response_content['refresh_token'],
+            'mercado_pago_access_token_expiry': expires_in,
+        })

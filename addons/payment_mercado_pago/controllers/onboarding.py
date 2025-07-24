@@ -48,8 +48,14 @@ class MercadoPagoController(Controller):
             'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True,
         )
 
-        #save values on provider
-        expires_in = fields.Datetime.now() + timedelta(seconds=int(response_content['expires_in']))
+        # set the expiry date month before, so new refresh token will be retrieved using cron before
+        # current access token expiration
+        expires_in = (
+            fields.Datetime.now()
+            + timedelta(seconds=int(response_content['expires_in']))
+            - timedelta(days=31)
+        )
+        # save values on provider
         provider_sudo.write({
             'mercado_pago_access_token': response_content['access_token'],
             'mercado_pago_refresh_token': response_content['refresh_token'],
