@@ -221,7 +221,7 @@ registry.category("web_tour.tours").add("test_cashier_changed_in_receipt", {
             PosHr.clickCashierName(),
             SelectionPopup.has("Test Employee 3", { run: "click" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.cashierNameExists("Test Employee 3"),
+            ReceiptScreen.cashierNameExists("Test"), // Test Employee 3 (Take the first word)
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
