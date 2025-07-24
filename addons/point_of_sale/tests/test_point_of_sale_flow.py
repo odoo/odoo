@@ -10,6 +10,7 @@ from odoo.fields import Command
 from odoo.tests import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+from odoo.exceptions import UserError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -2611,3 +2612,28 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         pos_order = self.env['pos.order'].search([])
         pos_order.action_pos_order_invoice()
         self.assertEqual(pos_order.state, 'done')
+
+    def test_unlink_partner_containing_pos_order(self):
+        """
+        Restrict the user to unlink a partner by raising a User Exception if it contains a PoS Order
+        """
+        self.pos_config.open_ui()
+        self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'qty': 1,
+                    'price_subtotal': 134.38,
+                    'price_subtotal_incl': 134.38,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 134.38,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        with self.assertRaises(UserError):
+            self.partner1.unlink()
