@@ -427,8 +427,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_08_website_style_custo(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_09_website_edit_link_popover(self):
         self.start_tour('/@/', 'edit_link_popover', login='admin', step_delay=500, timeout=180)
 
