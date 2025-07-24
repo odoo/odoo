@@ -56,3 +56,31 @@ export function openProductForm(name) {
         },
     ];
 }
+
+export function openCustomerForm(name) {
+    return [
+        {
+            trigger: ".o_main_navbar span:contains('Orders')",
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-item:contains('Customers')",
+            run: "click",
+        },
+        {
+            trigger: ".o_facet_values",
+            run: "click",
+        },
+        {
+            trigger: ".o_searchview_facet .o_facet_remove",
+            run: "click",
+        },
+        {
+            trigger: `.o_kanban_record:contains("${name}")`,
+            run: "click",
+        },
+        {
+            trigger: `.o_form_renderer`,
+        },
+    ];
+}
