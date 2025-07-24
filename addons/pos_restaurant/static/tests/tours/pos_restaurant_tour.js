@@ -16,7 +16,7 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { delay } from "@odoo/hoot-dom";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import { generatePreparationReceiptElement } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
-import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+import { negate, negateStep, run } from "@point_of_sale/../tests/generic_helpers/utils";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -655,5 +655,25 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             Chrome.clickOrders(),
             Chrome.clickRegister(),
             ProductScreen.customerIsSelected("Deco Addict"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_lines_deleted_from_first_try", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Coca-Cola"),
+            ProductScreen.selectedOrderlineHasDirect("Coca-Cola"),
+            ...["⌫", "⌫"].map(Numpad.click),
+            ProductScreen.releaseTable(),
+            FloorScreen.clickTable("5"),
+            run(() => delay(500)),
+            negateStep(...Order.hasLine({ productName: "Coca-Cola" })),
         ].flat(),
 });

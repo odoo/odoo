@@ -616,3 +616,7 @@ class TestFrontend(TestFrontendCommon):
         Tests that when a customer is set, it will be saved and not be reset even if this is the only thing that changed in the order
         """
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_customer_alone_saved', login="pos_user")
+
+    def test_lines_deleted_from_first_try(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_lines_deleted_from_first_try')
