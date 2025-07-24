@@ -701,7 +701,8 @@ class Website(models.Model):
         footer_ids = [
             'website.template_footer_contact', 'website.template_footer_headline',
             'website.footer_custom', 'website.template_footer_links',
-            'website.template_footer_minimalist',
+            'website.template_footer_minimalist', 'website.template_footer_descriptive',
+            'website.template_footer_centered', 'website.template_footer_call_to_action',
         ]
         for footer_id in footer_ids:
             view_id = self.env['website'].viewref(footer_id)
@@ -718,7 +719,6 @@ class Website(models.Model):
                 else:
                     el = arch_string.xpath("//t[@t-set='configurator_footer_links']")
                     if not el:
-                        logger.warning("No 'configurator_footer_links' found in view %s", footer_id)
                         continue
                     el[0].attrib['t-value'] = json.dumps(footer_links)
                     view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
@@ -850,6 +850,16 @@ class Website(models.Model):
         # coverage. But if the target lang is en_XX it's ok to have en_US text.
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
         generated_content = {}
+        # Generate the footer content
+        footer_terms = []
+        for key in footer_ids:
+            footer_view = self.env['website'].viewref(key)
+            if footer_view:
+                xml_translate(footer_terms.append, footer_view.arch_db)
+        footer_placeholders = [_compute_placeholder(term) for term in footer_terms]
+        for placeholder in footer_placeholders:
+            generated_content[placeholder] = ''
+
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
@@ -981,6 +991,17 @@ class Website(models.Model):
                     logger.warning(e)
             page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                               xpath="(//div[hasclass('oe_structure')])[last()]")
+        for key in footer_ids:
+            generic_view = self.env['website'].viewref(key)
+            current_website_footer_view = self.env['ir.ui.view'].with_context(active_test=False).search(
+                [('key', '=', key), ('website_id', '=', website.id)], limit=1
+            )
+            # Use the website-specific view if exists, otherwise use the generic
+            # view
+            view_to_update = current_website_footer_view or generic_view
+            if generic_view and view_to_update:
+                updated_view = xml_translate(_format_replacement, view_to_update.arch_db)
+                generic_view.with_context(website_id=website.id).write({'arch_db': updated_view})
 
         # Configure the images
         images = custom_resources.get('images', {})
