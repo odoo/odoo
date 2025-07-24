@@ -23,6 +23,7 @@ export class OptionsContainer extends BaseOptionComponent {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
+        folded: { type: Boolean, optional: true },
         removeDisabledReason: { type: String, optional: true },
         isClonable: false,
         cloneDisabledReason: { type: String, optional: true },
@@ -47,6 +48,7 @@ export class OptionsContainer extends BaseOptionComponent {
             isUpToDate: this.env.editor.shared.versionControl.hasAccessToOutdatedEl(
                 this.props.editingElement
             ),
+            folded: this.props.folded,
         });
 
         this.hasGroup = {};
@@ -55,6 +57,7 @@ export class OptionsContainer extends BaseOptionComponent {
         });
         onWillUpdateProps(async (nextProps) => {
             await this.updateAccessGroup(nextProps.options);
+            this.state.folded = nextProps.folded;
         });
     }
 
@@ -88,6 +91,11 @@ export class OptionsContainer extends BaseOptionComponent {
             : "";
 
         return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
+    }
+
+    toggle() {
+        this.state.folded = !this.state.folded;
+        this.props.editingElement.folded = this.state.folded;
     }
 
     selectElement() {

@@ -88,6 +88,16 @@ export class BuilderOptionsPlugin extends Plugin {
             ".transfo-container",
             ".o_datetime_picker",
         ].join(", ");
+
+        this.addDomListener(this.editable, "mousemove", (ev) => {
+            let el = ev.target;
+            while (el && !this.hasOverlayOptions(el)) {
+                el = el.parentElement;
+            }
+            if (el) {
+                this.dependencies.builderOverlay.showHoverOverlay(el);
+            }
+        });
     }
 
     destroy() {
@@ -226,6 +236,7 @@ export class BuilderOptionsPlugin extends Plugin {
             .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
             .map(([element, options]) => ({
                 id: previousElementToIdMap.get(element) || uniqueId(),
+                folded: "folded" in element ? element.folded : true,
                 element,
                 options,
                 headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
@@ -244,6 +255,20 @@ export class BuilderOptionsPlugin extends Plugin {
         );
         if (lastValidContainerIdx > 0) {
             containers = containers.slice(lastValidContainerIdx);
+        }
+        if (
+            containers.length === 2 &&
+            containers[0].element.tagName === "HEADER" &&
+            containers[1].element.tagName === "NAV"
+        ) {
+            for (const c of containers) {
+                if (!("folded" in c.element)) {
+                    c.folded = false;
+                }
+            }
+        }
+        if (containers.length) {
+            containers.at(-1).folded = false;
         }
         return containers;
     }
