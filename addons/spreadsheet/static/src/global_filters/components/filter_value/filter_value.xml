@@ -22,7 +22,7 @@
                 <DateFilterValue value="filterValue"
                                  update.bind="(value) => this.onDateInput(filter.id, value)"/>
             </div>
-            <div t-if="filter.type === 'numeric'" class="w-100 d-flex align-items-center"
+            <div t-elif="filter.type === 'numeric'" class="w-100 d-flex align-items-center"
                  t-att-class="filterValue?.operator === 'between' ? 'justify-content-between' : ''">
                 <t t-if="filterValue?.operator === 'between'">
                     <NumericFilterValue
