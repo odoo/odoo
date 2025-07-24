@@ -27,6 +27,25 @@ group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 53
 </svg>'''
 
 
+def is_channel(channel):
+    """Predicate to filter channels for which the channel type is 'channel'.
+
+    :returns: Whether the channel type is 'channel'.
+    :rtype: bool
+    """
+    return channel.channel_type == "channel"
+
+
+def is_channel_or_group(channel):
+    """Predicate to filter channels for which the channel type is either
+    'channel' or 'group'.
+
+    :returns: Whether the channel type is 'channel' or 'group'.
+    :rtype: bool
+    """
+    return channel.channel_type in ("channel", "group")
+
+
 class DiscussChannel(models.Model):
     _name = 'discuss.channel'
     _description = 'Discussion Channel'
@@ -426,13 +445,13 @@ class DiscussChannel(models.Model):
         # keys are bus subchannel names, values are lists of field names to sync
         res = defaultdict(list)
         res[None] += [
-            "avatar_cache_key",
+            Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
             "channel_type",
             "create_uid",
             "default_display_mode",
-            "description",
-            Store.Many("group_ids", []),
-            "group_public_id",
+            Store.Attr("description", predicate=is_channel_or_group),
+            Store.Many("group_ids", [], predicate=is_channel),
+            Store.One("group_public_id", predicate=is_channel),
             "last_interest_dt",
             "member_count",
             "name",
@@ -1054,7 +1073,7 @@ class DiscussChannel(models.Model):
             )
 
         res = [
-            "avatar_cache_key",
+            Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
             "channel_type",
             "create_uid",
             Store.Many(
@@ -1064,10 +1083,10 @@ class DiscussChannel(models.Model):
                 predicate=lambda channel: channel in channels_with_all_members,
             ),
             "default_display_mode",
-            "description",
-            Store.One("from_message_id"),
-            Store.Many("group_ids", []),
-            Store.One("group_public_id", ["full_name"]),
+            Store.Attr("description", predicate=is_channel_or_group),
+            Store.One("from_message_id", predicate=is_channel_or_group),
+            Store.Many("group_ids", [], predicate=is_channel),
+            Store.One("group_public_id", ["full_name"], predicate=is_channel),
             Store.Many(
                 "invited_member_ids",
                 [
@@ -1079,7 +1098,7 @@ class DiscussChannel(models.Model):
             "last_interest_dt",
             "member_count",
             "name",
-            Store.One("parent_channel_id"),
+            Store.One("parent_channel_id", predicate=is_channel_or_group),
             Store.Many("rtc_session_ids", mode="ADD", extra=True, sudo=True),
             "uuid",
         ]
