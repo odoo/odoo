@@ -197,7 +197,7 @@
             'web/static/src/views/**/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/actions/**/*',
-            ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
+            ('remove', 'web/static/src/webclient/actions/reports/report_layouts.scss'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'partner_autocomplete/static/src/**/*',
             'google_address_autocomplete/static/src/**/*',

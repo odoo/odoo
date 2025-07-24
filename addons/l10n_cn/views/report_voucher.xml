@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="external_layout_boxed" inherit_id="web.external_layout_boxed" primary="True">
-            <xpath expr="//div[contains(@t-attf-class, 'header')]/div" position="replace">
+        <!-- TODO test if it's the intended result -->
+        <template id="external_layout_standard" inherit_id="web.external_layout_standard" primary="True">
+            <xpath expr="//div[contains(@t-attf-class, 'header')]/table" position="replace">
                 <div class="row mb8">
                     <div class="col-3 mb4">
                         <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
@@ -15,7 +16,7 @@
             <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="company" t-value="o.company_id"/>
 
-            <t t-call="l10n_cn.external_layout_boxed">
+            <t t-call="l10n_cn.external_layout_standard">
                 <div class="page">
 
                     <div align="center">

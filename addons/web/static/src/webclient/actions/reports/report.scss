@@ -30,6 +30,11 @@ body {
 
     .footer > .o_footer_content {
         padding-bottom: $o-default-report-margins;
+
+        .o_footer_pager, p {
+            // Condensed footer spacing
+            margin-bottom: map-get($spacers, 1);
+        }
     }
 }
 
@@ -99,12 +104,6 @@ li.oe-nested {
         white-space: nowrap;
         display: inline-block;
     }
-}
-
-.o_report_layout_background {
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 .o_company_logo {
