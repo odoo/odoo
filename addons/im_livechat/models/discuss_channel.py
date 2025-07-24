@@ -7,6 +7,15 @@ from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2h
 from markupsafe import Markup
 
 
+def is_livechat_channel(channel):
+    """Predicate to filter channels for which the channel type is 'livechat'.
+
+    :returns: Whether the channel is a live chat channel.
+    :rtype: bool
+    """
+    return channel.channel_type == "livechat"
+
+
 class DiscussChannel(models.Model):
     """ Chat Session
         Reprensenting a conversation between users.
@@ -307,12 +316,13 @@ class DiscussChannel(models.Model):
             Store.One(
                 "livechat_operator_id",
                 self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+                predicate=is_livechat_channel,
             ),
         )
         field_names["internal_users"].extend([
-            Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat"),
-            Store.Attr("livechat_status", predicate=lambda c: c.channel_type == "livechat"),
-            Store.Many("livechat_expertise_ids", ["name"], predicate=lambda c: c.channel_type == "livechat"),
+            Store.Attr("livechat_note", predicate=is_livechat_channel),
+            Store.Attr("livechat_status", predicate=is_livechat_channel),
+            Store.Many("livechat_expertise_ids", ["name"], predicate=is_livechat_channel),
         ])
         return field_names
 
@@ -322,24 +332,29 @@ class DiscussChannel(models.Model):
 
     def _to_store_defaults(self, target: Store.Target):
         fields = [
-            "anonymous_name",
+            Store.Attr("anonymous_name", predicate=is_livechat_channel),
             "chatbot_current_step",
-            Store.One("country_id", ["code", "name"]),
-            Store.Attr("livechat_end_dt", predicate=lambda c: c.channel_type == "livechat"),
+            Store.One("country_id", ["code", "name"], predicate=is_livechat_channel),
+            Store.Attr("livechat_end_dt", predicate=is_livechat_channel),
             # sudo - res.partner: accessing livechat operator is allowed
             Store.One(
                 "livechat_operator_id",
                 self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+                predicate=is_livechat_channel,
                 sudo=True,
             ),
         ]
         if target.is_internal(self.env):
-            fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
+            fields.append(
+                Store.One(
+                    "livechat_channel_id", ["name"], predicate=is_livechat_channel, sudo=True
+                )
+            )
             fields.extend([
-                Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat"),
-                Store.Attr("livechat_outcome", predicate=lambda c: c.channel_type == "livechat"),
-                Store.Attr("livechat_status", predicate=lambda c: c.channel_type == "livechat"),
-                Store.Many("livechat_expertise_ids", ["name"], predicate=lambda c: c.channel_type == "livechat"),
+                Store.Attr("livechat_note", predicate=is_livechat_channel),
+                Store.Attr("livechat_outcome", predicate=is_livechat_channel),
+                Store.Attr("livechat_status", predicate=is_livechat_channel),
+                Store.Many("livechat_expertise_ids", ["name"], predicate=is_livechat_channel),
             ])
         return super()._to_store_defaults(target) + fields
 
