@@ -114,6 +114,14 @@
                                 </CheckBox>
                             </t>
                         </t>
+                        <t t-if="props.allowStripDomain and isAbsoluteURLInCurrentDomain()">
+                            <CheckBox
+                                value="state.stripDomain"
+                                onChange="onClickStripDomain.bind(this)"
+                                className="'strip-domain-option'">
+                                Autoconvert to relative link
+                            </CheckBox>
+                        </t>
                         <div class="mt-3">
                             <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>
                             <button class="o_we_discard_link btn btn-sm btn-dark ms-1" t-on-click="props.onDiscard">Discard</button>
