@@ -1791,8 +1791,8 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.current_session_id.action_pos_session_closing_control()
         self.assertEqual(
-            two_last_orders[0].picking_ids.move_line_ids_without_package.owner_id.id,
-            two_last_orders[1].picking_ids.move_line_ids_without_package.owner_id.id,
+            two_last_orders[0].picking_ids.move_line_ids.owner_id.id,
+            two_last_orders[1].picking_ids.move_line_ids.owner_id.id,
             "The owner of the refund is not the same as the owner of the original order")
 
     def test_only_existing_lots(self):

@@ -183,7 +183,7 @@
                 </cac:TransportHandlingUnit>
             </cac:Shipment>
             <t t-set="line_id" t-value="1"/>
-            <t t-foreach="picking.move_ids_without_package" t-as="line">
+            <t t-foreach="picking.move_ids" t-as="line">
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_dispatch_line"/>
                 <t t-set="line_id" t-value="line_id + 1"/>
             </t>

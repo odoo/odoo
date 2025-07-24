@@ -1286,7 +1286,7 @@ class TestBoM(TestMrpCommon):
         # We create a delivery order of 2300 grams
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.picking_type_out
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = product_gram
             move.product_uom_qty = 2300.0
         customer_picking = picking_form.save()

@@ -529,10 +529,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # Delivery to trigger replenishment
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = warehouse.out_type_id
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = finished
             move.product_uom_qty = 3
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = component
             move.product_uom_qty = 2
         picking = picking_form.save()
@@ -557,16 +557,16 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.po.button_confirm()
 
         # Check the component qty in the created picking
-        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty, 2, "The quantity of components must be created according to the BOM")
-        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty, 1, "The quantity of components must be created according to the BOM")
-        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty, 3, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids[0].product_uom_qty, 2, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids[1].product_uom_qty, 1, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids[2].product_uom_qty, 3, "The quantity of components must be created according to the BOM")
 
         # Update the kit quantity in the PO
         self.po.order_line[0].product_qty = 2
         # Check the component qty after the update
-        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty, 4, "The amount of the kit components must be updated when changing the quantity of the kit.")
-        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty, 2, "The amount of the kit components must be updated when changing the quantity of the kit.")
-        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty, 6, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids[0].product_uom_qty, 4, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids[1].product_uom_qty, 2, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids[2].product_uom_qty, 6, "The amount of the kit components must be updated when changing the quantity of the kit.")
 
     def test_procurement_with_preferred_route(self):
         """

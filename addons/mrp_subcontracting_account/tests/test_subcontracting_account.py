@@ -72,7 +72,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -114,7 +114,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -247,7 +247,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -292,7 +292,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = todo_nb
             move.quantity = todo_nb
@@ -363,7 +363,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.env.ref('stock.picking_type_in')
         receipt_form.partner_id = self.subcontractor_partner1
-        with receipt_form.move_ids_without_package.new() as move:
+        with receipt_form.move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 10
         receipt = receipt_form.save()
@@ -445,7 +445,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -488,7 +488,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()

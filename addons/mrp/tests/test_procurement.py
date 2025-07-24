@@ -554,7 +554,7 @@ class TestProcurement(TestMrpCommon):
         mo = mo_form.save()
         mo.button_mark_done()
 
-        self.assertEqual(pick_output.move_ids_without_package.quantity, 10, "Completed products should have been auto-reserved in picking")
+        self.assertEqual(pick_output.move_ids.quantity, 10, "Completed products should have been auto-reserved in picking")
 
         # make sure next MO auto-reserves components now that they are in stock since
         # default reservation_method = 'at_confirm'

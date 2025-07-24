@@ -375,14 +375,14 @@ class TestSaleMrpKitBom(BaseCommon):
         so.action_confirm()
 
         pick = so.picking_ids[0]
-        self.assertTrue(pick.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
-        self.assertTrue(pick.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(pick.move_ids[0].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(pick.move_ids[1].bom_line_id, "All component from kits should have a bom line")
         pick.move_ids.write({'quantity': 1, 'picked': True})
         pick.button_validate()
 
         ship = so.picking_ids[1]
-        self.assertTrue(ship.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
-        self.assertTrue(ship.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(ship.move_ids[0].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(ship.move_ids[1].bom_line_id, "All component from kits should have a bom line")
 
     def test_qty_delivered_with_bom_using_kit2(self):
         """Create 2 kits products that have common components and activate 2 steps delivery
@@ -461,8 +461,6 @@ class TestSaleMrpKitBom(BaseCommon):
         pick.button_validate()
 
         ship = so.picking_ids[1]
-        ship.package_level_ids.write({'is_done': True})
-        ship.package_level_ids._set_is_done()
 
         for move_line in ship.move_line_ids:
             self.assertEqual(move_line.move_id.product_uom_qty, move_line.quantity, "Quantity done should be equal to the quantity reserved in the move line")
@@ -580,7 +578,7 @@ class TestSaleMrpKitBom(BaseCommon):
         })
         so.action_confirm()
         picking = so.picking_ids
-        self.assertEqual(len(so.picking_ids.move_ids_without_package), 7)
+        self.assertEqual(len(so.picking_ids.move_ids), 7)
         picking.move_ids.write({'quantity': 1, 'picked': True})
         picking.button_validate()
         self.assertEqual(picking.state, 'done')

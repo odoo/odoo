@@ -27,10 +27,10 @@ class StockMove(TransactionCase):
         """
         # create a delivery order
         picking = Form(self.env['stock.picking'].with_context(default_picking_type_id=self.ref('stock.picking_type_out')))
-        with picking.move_ids_without_package.new() as move:
+        with picking.move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 1.0
-        with picking.move_ids_without_package.new() as move:
+        with picking.move_ids.new() as move:
             move.product_id = self.product_consu
             move.product_uom_qty = 1.0
         picking = picking.save()
@@ -44,17 +44,17 @@ class StockMove(TransactionCase):
         """
         # create a delivery order
         picking = Form(self.env['stock.picking'].with_context(default_picking_type_id=self.ref('stock.picking_type_out')))
-        with picking.move_ids_without_package.new() as move:
+        with picking.move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 2.0
         picking = picking.save()
 
         # we check that changing the quantity while still in draft doesn't change the state of the move
-        picking.move_ids_without_package.write({'product_uom_qty': 1})
-        self.assertEqual(picking.move_ids_without_package.state, 'draft')
+        picking.move_ids.write({'product_uom_qty': 1})
+        self.assertEqual(picking.move_ids.state, 'draft')
 
         self.env['stock.move.line'].create({
-            'move_id': picking.move_ids_without_package.id,
+            'move_id': picking.move_ids.id,
             'product_id': self.product.id,
             'quantity': 1.0,
         })

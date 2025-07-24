@@ -284,7 +284,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
         self.assertEqual(len(current_session.picking_ids), 1, "There should be 2 pickings")
-        current_session.picking_ids.move_ids_without_package.write({'quantity': 1, 'picked': True})
+        current_session.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
         current_session.picking_ids.button_validate()
         self.assertEqual(len(current_session.picking_ids), 2, "There should be 2 pickings")
         current_session.picking_ids.button_validate()
@@ -478,7 +478,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         current_session_id.close_session_from_ui()
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
-        current_session.picking_ids.move_ids_without_package.filtered(lambda m: m.product_id == self.product_2).write({'quantity': 1, 'picked': True})
+        current_session.picking_ids.move_ids.filtered(lambda m: m.product_id == self.product_2).write({'quantity': 1, 'picked': True})
         res_dict = current_session.picking_ids.button_validate()
         self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process()
 
@@ -498,7 +498,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(aml_output.credit, 20)
 
         backorder_picking = current_session.picking_ids.filtered(lambda p: p.state == 'confirmed')
-        backorder_picking.move_ids_without_package.write({'quantity': 1, 'picked': True})
+        backorder_picking.move_ids.write({'quantity': 1, 'picked': True})
         backorder_picking.button_validate()
 
         # As the second item has no cost, the account move line should be the same as before

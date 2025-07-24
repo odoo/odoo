@@ -658,7 +658,7 @@ class TestStockQuant(TestStockCommon):
         with Form(self.env['stock.picking']) as picking_form:
             picking_form.picking_type_id = self.picking_type_out
             picking_form.location_id = self.stock_location
-            with picking_form.move_ids_without_package.new() as move_form:
+            with picking_form.move_ids.new() as move_form:
                 move_form.product_id = self.product_serial
                 move_form.product_uom_qty = 1
             picking = picking_form.save()
@@ -1637,11 +1637,8 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         delivery.action_confirm()
         # Make an internal transfer to move Pack 001 in a sublocation
         self.picking_type_int.show_entire_packs = True
-        with Form(internal_transfer) as picking_form:
-            with picking_form.package_level_ids.new() as package_level:
-                package_level.package_id = packages[0]
+        internal_transfer.action_add_entire_packs(packages[0])
         internal_transfer.action_confirm()
-        internal_transfer.package_level_ids.is_done = True
         internal_transfer.button_validate()
         quants = self.env['stock.quant'].search([('product_id', 'in', products.ids)])
         self.assertRecordValues(quants, [
