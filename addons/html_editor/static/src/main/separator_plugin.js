@@ -30,15 +30,13 @@ export class SeparatorPlugin extends Plugin {
             categoryId: "structure",
             commandId: "insertSeparator",
         }),
+        force_not_editable_selector: "hr",
+        contenteditable_to_remove_selector: "hr[contenteditable]",
         /** Handlers */
-        normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.handleSelectionInHr.bind(this),
         deselect_custom_selected_nodes_handlers: this.deselectHR.bind(this),
         clean_handlers: this.deselectHR.bind(this),
         clean_for_save_handlers: ({ root }) => {
-            for (const el of root.querySelectorAll("hr[contenteditable]")) {
-                el.removeAttribute("contenteditable");
-            }
             this.deselectHR(root);
         },
     };
@@ -63,24 +61,6 @@ export class SeparatorPlugin extends Plugin {
             }
         }
         this.dependencies.history.addStep();
-    }
-
-    normalize(el) {
-        if (el.tagName === "HR") {
-            el.setAttribute(
-                "contenteditable",
-                el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
-            );
-        } else {
-            for (const separator of el.querySelectorAll("hr")) {
-                separator.setAttribute(
-                    "contenteditable",
-                    separator.hasAttribute("contenteditable")
-                        ? separator.getAttribute("contenteditable")
-                        : "false"
-                );
-            }
-        }
     }
 
     deselectHR(root = this.editable) {
