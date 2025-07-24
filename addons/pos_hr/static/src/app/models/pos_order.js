@@ -4,6 +4,6 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     // @Override
     getCashierName() {
-        return this.employee_id?.name || super.getCashierName(...arguments);
+        return this.employee_id?.name?.split(" ").at(0) || super.getCashierName(...arguments);
     },
 });
