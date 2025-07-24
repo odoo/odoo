@@ -15,6 +15,7 @@ import { isEventHandled } from "@web/core/utils/misc";
 
 import { Component, toRaw, useChildSubEnv, useRef, useState } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { localization } from "@web/core/l10n/localization";
@@ -135,6 +136,26 @@ export class ChatWindow extends Component {
                 this.store.env.services.command.openMainPalette({ searchValue: "@" });
                 ev.preventDefault();
                 break;
+        }
+    }
+
+    onClickContent(ev) {
+        if (!this.ui.isSmall) {
+            return;
+        }
+        const linkElement = ev.target.closest("a");
+        if (!linkElement?.href || linkElement.href.startsWith("#")) {
+            return;
+        }
+        let url;
+        try {
+            url = new URL(linkElement.href);
+        } catch {
+            // Ignore invalid URLs
+            return;
+        }
+        if (browser.location.host === url.host && browser.location.pathname.startsWith("/odoo")) {
+            this.toggleFold();
         }
     }
 
