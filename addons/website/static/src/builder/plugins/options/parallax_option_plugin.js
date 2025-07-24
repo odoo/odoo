@@ -33,8 +33,8 @@ class WebsiteParallaxPlugin extends Plugin {
             fixed: 1,
             top: 1.5,
             bottom: -1.5,
-            zoom_in: 1.2,
-            zoom_out: 0.2,
+            zoom_in: 0.2,
+            zoom_out: 1.2,
         };
         editingElement.dataset.scrollBackgroundRatio = typeValues[value];
         // Set a parallax type only if there is a zoom option selected.

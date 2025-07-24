@@ -83,12 +83,12 @@ export class Parallax extends Interaction {
             Math.max(0, (currentPosition - this.minScrollPos) / scrollRange)
         );
 
-        if (this.isZoomIn) {
+        if (this.isZoomOut) {
             const initialZoom = 1;
             const maxZoom = this.speed + 1;
 
             this.styleTransform = `scale(${initialZoom + (maxZoom - initialZoom) * progress})`;
-        } else if (this.isZoomOut) {
+        } else if (this.isZoomIn) {
             const initialZoom = this.speed + 1;
 
             this.styleTransform = `scale(${initialZoom - (initialZoom - 1) * progress})`;
