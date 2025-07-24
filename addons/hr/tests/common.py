@@ -19,6 +19,14 @@ class TestHrCommon(common.TransactionCase):
             name='HR Officer',
         )
 
+        cls.res_users_hr_manager = mail_new_test_user(
+            cls.env,
+            email='manager@example.com',
+            login='manager',
+            groups='base.group_user,hr.group_hr_manager,base.group_partner_manager',
+            name='HR Admin',
+        )
+
         cls.employee = cls.env['hr.employee'].create({
             'name': 'Richard',
             'sex': 'male',
