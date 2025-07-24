@@ -161,9 +161,10 @@
                                     <list string="Rates"  editable="top" limit="25">
                                         <field name="name"/>
                                         <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                                        <field name="company_rate" digits="[12,12]"/>
-                                        <field name="inverse_company_rate" digits="[12,12]"/>
-                                        <field name="rate" digits="[12,12]" optional="hide"/>
+                                        <field name="company_currency_id" string="Base Currency"/>
+                                        <field name="company_rate" width="120" digits="[12,12]" string="Unit/Base"/>
+                                        <field name="inverse_company_rate" width="120" digits="[12,12]" string="Base/Unit"/>
+                                        <field name="rate" digits="[12,12]" string="Unit/Base" optional="hide"/>
                                         <field name="write_date" optional="hide"/>
                                     </list>
                                 </field>
