@@ -6,7 +6,8 @@
         title.translate="Insert a block"
         contentClass="'o_add_snippet_dialog h-100'"
         footer="false"
-        size="'xl'">
+        size="'xl'"
+        modalRef="modalRef">
         <div class="overflow-hidden w-100">
             <div class="d-flex w-100 h-100 vertical flex-row">
                 <aside class="border-end overflow-auto">
@@ -17,11 +18,21 @@
                             <i class="oi oi-search" aria-hidden="true"></i>
                         </span>
                     </div>
-                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
+                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
+                         role="tablist"
+                         aria-orientation="vertical"
+                         aria-label="Block Categories">
                         <t t-if="!state.search" t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.id">
-                            <button class="list-group-item list-group-item-light list-group-item-action p-3" role="tab"
-                                t-att-class="{ 'active': this.state.groupSelected === snippetGroup.groupName}"
-                                t-on-click="() => this.selectGroup(snippetGroup)">
+                            <t t-set="isActive" t-value="state.groupSelected === snippetGroup.groupName"/>
+                            <button class="list-group-item list-group-item-light list-group-item-action p-3"
+                                    role="tab"
+                                    t-att-class="{ 'active': isActive }"
+                                    t-att-id="'tab_' + snippetGroup.groupName"
+                                    t-att-aria-controls="'tabpanel_' + snippetGroup.groupName"
+                                    t-att-aria-selected="isActive ? 'true' : 'false'"
+                                    t-att-tabindex="isActive ? '0' : '-1'"
+                                    t-on-click="() => this.selectGroup(snippetGroup)"
+                                    t-on-keydown="onTabKeydown">
                                 <t t-out="snippetGroup.title"/>
                             </button>
                         </t>
@@ -43,7 +54,14 @@
                             </p>
                         </div>
                     </t>
-                    <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe" t-att-class="state.showIframe ? ' show' : '' " tabindex="-1" t-ref="iframe" src="about:blank" height="333%" width="333%" />
+                    <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe"
+                            t-ref="iframe"
+                            role="tabpanel"
+                            t-att-aria-labelledby="'tab_' + state.groupSelected"
+                            t-att-id="'tabpanel_' + state.groupSelected"
+                            t-att-class="state.showIframe ? 'show' : '' "
+                            src="about:blank"
+                            height="333%" width="333%"/>
                 </div>
             </div>
         </div>
