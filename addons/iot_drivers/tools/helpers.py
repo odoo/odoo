@@ -570,7 +570,7 @@ def reset_log_level():
         _logger.info("Resetting log level to default.")
         update_conf({
             'log_level_reset_timestamp': '',
-            'log_handler': ':INFO',
+            'log_handler': ':INFO,werkzeug:WARNING',
             'log_level': 'info',
         })
 
