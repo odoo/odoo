@@ -4593,7 +4593,9 @@ class MailThread(models.AbstractModel):
             )
         elif attachment_ids is not None:  # None means "no update"
             message.attachment_ids._delete_and_notify()
-        if partner_ids:
+        if not body and not attachment_ids:
+            self._clean_empty_message(msg_values)
+        elif partner_ids:
             msg_values.update({
                 'partner_ids': list(partner_ids or [])
             })
@@ -4611,18 +4613,24 @@ class MailThread(models.AbstractModel):
             else:
                 self.env['mail.message.schedule'].sudo()._send_message_notifications(message)
 
-        res = [
+        res = self._get_message_update_store_fields()
+        if body is not None:
+            # sudo: mail.message.translation - discarding translations of message after editing it
+            self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
+            res.append({"translationValue": False})
+        message._bus_send_store(message, res)
+
+    def _get_message_update_store_fields(self):
+        return [
             Store.Many("attachment_ids", sort="id"),
             "body",
             Store.Many("partner_ids", ["avatar_128", "name"], rename="recipients"),
             "pinned_at",
             "write_date",
         ]
-        if body is not None:
-            # sudo: mail.message.translation - discarding translations of message after editing it
-            self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
-            res.append({"translationValue": False})
-        message._bus_send_store(message, res)
+
+    def _clean_empty_message(self, msg_values):
+        msg_values.update({'partner_ids': False})
 
     # ------------------------------------------------------
     # STORE
