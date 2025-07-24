@@ -277,7 +277,8 @@ class AccountMoveLine(models.Model):
 
     def _eligible_for_cogs(self):
         self.ensure_one()
-        return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
+        is_a_rental = self.sale_line_ids and any(getattr(sol, 'is_rental', False) for sol in self.sale_line_ids)
+        return self.product_id.type == 'product' and self.product_id.valuation == 'real_time' and not is_a_rental
 
     def _get_gross_unit_price(self):
         if float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding):
