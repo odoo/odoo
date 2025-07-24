@@ -44,12 +44,8 @@
                         </tr>
                     </table>
                 </div>
-                <t t-set="layout_background_url"
-                   t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                        '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
-                
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}} #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}"
-                     t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
+
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}"
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id">
                     <table class="din_company_info table-borderless">

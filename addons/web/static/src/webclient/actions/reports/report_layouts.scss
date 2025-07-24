@@ -1,7 +1,9 @@
+// This file regroups all the styles applied on each external layout.
+
+// external_layout_bubble
 .o_report_layout_bubble {
     #informations {
         margin: 0;
-        border: $border-width * 2 solid;
         border-radius: $border-radius-lg;
         padding: map-get($spacers, 2) $table-cell-padding-y;
 
@@ -15,7 +17,6 @@
         }
     }
 }
-
 .o_shape_bubble_1 {
     top: -870px;
     right: -450px;
@@ -27,5 +28,19 @@
 
     &-html {
         top: -50%;
+    }
+}
+
+// external_layout_folder
+.o_folder_adaptative_shape {
+    top: -1px;
+    height: 3rem;
+
+    .o_folder_angle_shape {
+        left: -1px;
+    }
+
+    .o_folder_title {
+        margin-right: $o-default-report-margins;
     }
 }

@@ -70,10 +70,8 @@ class BaseDocumentLayout(models.TransientModel):
     logo_primary_color = fields.Char(compute="_compute_logo_colors")
     logo_secondary_color = fields.Char(compute="_compute_logo_colors")
 
-    layout_background = fields.Selection(related='company_id.layout_background', readonly=False)
-    layout_background_image = fields.Binary(related='company_id.layout_background_image', readonly=False)
-
     report_layout_id = fields.Many2one('report.layout')
+    report_tables_id = fields.Selection(related='company_id.report_tables_id', readonly=False, required=True)
 
     # All the sanitization get disabled as we want true raw html to be passed to an iframe.
     preview = fields.Html(compute='_compute_preview', sanitize=False)
@@ -110,7 +108,7 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
 
-    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details')
+    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'company_details', 'report_tables_id')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
         styles = self._get_asset_style()

@@ -12,10 +12,8 @@
                             <field name="external_report_layout_id" invisible="1" />
                             <field name="logo_primary_color" invisible="1" />
                             <field name="logo_secondary_color" invisible="1" />
-
                             <field name="report_layout_id" string="Layout" widget="selection_badge" required="1" options="{'horizontal': true, 'size': 'sm'}"/>
-                            <field name="layout_background" string="Background" widget="selection" required="1"/>
-                            <field name="layout_background_image" options="{'accepted_file_extensions': 'image/*'}" invisible="layout_background != 'Custom'" required="layout_background == 'Custom'">Upload your file</field>
+                            <field name="report_tables_id" string="Tables" widget="selection_badge" required="1" options="{'horizontal': true, 'size': 'sm'}"/>
                             <field name="font" string="Text" widget="selection" required="1"/>
                             <field name="logo" string="Logo" widget="image" options="{'size': [0, 50]}"/>
 
