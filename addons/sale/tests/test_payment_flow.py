@@ -477,3 +477,41 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             notification_mail_mock.assert_called_with(
                 self.env.ref('sale.mail_template_sale_confirmation'))
             self.assertEqual(self.sale_order.state, 'sale')
+
+    def test_automatic_invoice_mail_author(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal Customer',
+            'login': 'portal@test.com',
+            'email': 'portal@test.com',
+            'partner_id': self.partner_a.id,
+            'group_ids': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+        portal_user.partner_id.invoice_sending_method = 'email'
+
+        sale_order = self.env['sale.order'].with_user(portal_user).sudo().create({
+            'partner_id': portal_user.partner_id.id,
+            'user_id': self.sale_user.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 100.0,
+            })],
+        })
+
+        self.amount = sale_order.amount_total
+        tx = self._create_transaction(
+            flow='redirect',
+            sale_order_ids=[sale_order.id],
+            state='done'
+        )
+
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx.with_user(portal_user).sudo()._post_process()
+
+        # Verify invoice was created and sent successfully
+        invoice = sale_order.invoice_ids[0]
+        self.assertTrue(invoice.is_move_sent, "Invoice should be marked as sent")
+        invoice_sent_mail = invoice.message_ids[0]
+        self.assertTrue(invoice_sent_mail.author_id.id not in invoice_sent_mail.notified_partner_ids.ids)
