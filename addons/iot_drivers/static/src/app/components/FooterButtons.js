@@ -4,6 +4,7 @@ import useStore from "../hooks/useStore.js";
 import { CredentialDialog } from "./dialog/CredentialDialog.js";
 import { HandlerDialog } from "./dialog/HandlerDialog.js";
 import { RemoteDebugDialog } from "./dialog/RemoteDebugDialog.js";
+import { TimeDialog } from "./dialog/TimeDialog.js";
 
 const { Component, xml } = owl;
 
@@ -13,6 +14,7 @@ export class FooterButtons extends Component {
         RemoteDebugDialog,
         HandlerDialog,
         CredentialDialog,
+        TimeDialog,
     };
 
     setup() {
@@ -37,6 +39,7 @@ export class FooterButtons extends Component {
         <CredentialDialog t-if="this.store.advanced" />
         <HandlerDialog t-if="this.store.advanced" />
         <a t-if="this.store.advanced" class="btn btn-primary btn-sm" t-att-href="this.url + '/logs'" target="_blank">View Logs</a>
+        <TimeDialog/>
     </div>
   `;
 }
