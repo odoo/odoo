@@ -315,29 +315,6 @@ class ResCurrency(models.Model):
             JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
         """
 
-    @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view changing the rate field labels according to the company currency
-        makes the view cache dependent on the company currency"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + ((self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name,)
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('list', 'form'):
-            currency_name = (self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name
-            fields_maps = [
-                [['company_rate', 'rate'], self.env._('Unit per %s', currency_name)],
-                [['inverse_company_rate', 'inverse_rate'], self.env._('%s per Unit', currency_name)],
-            ]
-            for fnames, label in fields_maps:
-                xpath_expression = '//list//field[' + " or ".join(f"@name='{f}'" for f in fnames) + "][1]"
-                node = arch.xpath(xpath_expression)
-                if node:
-                    node[0].set('string', label)
-        return arch, view
-
 
 class ResCurrencyRate(models.Model):
     _name = 'res.currency.rate'
@@ -371,6 +348,7 @@ class ResCurrencyRate(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, index=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company.root_id)
+    company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute="_compute_company_currency_id")
 
     _unique_name_per_day = models.Constraint(
         'unique (name,currency_id,company_id)',
@@ -443,6 +421,12 @@ class ResCurrencyRate(models.Model):
                 currency_rate.company_rate = 1.0
             currency_rate.inverse_company_rate = 1.0 / currency_rate.company_rate
 
+    @api.depends('company_id')
+    @api.depends_context('company')
+    def _compute_company_currency_id(self):
+        for currency_rate in self:
+            currency_rate.company_currency_id = (currency_rate.company_id or self.env.company.root_id).currency_id
+
     @api.onchange('inverse_company_rate')
     def _inverse_inverse_company_rate(self):
         for currency_rate in self:
@@ -479,25 +463,3 @@ class ResCurrencyRate(models.Model):
         else:
             value = parse_date(self.env, value)
         return super()._search_display_name(operator, value)
-
-    @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view changing the rate field labels according to the company currency
-        makes the view cache dependent on the company currency"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + ((self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name,)
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'list':
-            names = {
-                'company_currency_name': (self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name,
-                'rate_currency_name': self.env['res.currency'].browse(self.env.context.get('active_id')).name or 'Unit',
-            }
-            for name, label in [['company_rate', self.env._('%(rate_currency_name)s per %(company_currency_name)s', **names)],
-                                ['inverse_company_rate', self.env._('%(company_currency_name)s per %(rate_currency_name)s', **names)]]:
-
-                if (node := arch.find(f"./field[@name='{name}']")) is not None:
-                    node.set('string', label)
-        return arch, view
