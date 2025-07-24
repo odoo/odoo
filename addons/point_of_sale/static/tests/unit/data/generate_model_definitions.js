@@ -48,7 +48,7 @@ import { AccountJournal } from "./account_journal.data";
 import { IrSequence } from "./ir_sequence.data";
 import { StockWarehouse } from "./stock_warehouse.data";
 import { StockRoute } from "./stock_route.data";
-import { BarcodeNomenclature } from "./barcode_nomenclature.data";
+import { BarcodeNomenclature, BarcodeRule } from "./barcode_nomenclature.data";
 import { ProductAttributeValue } from "./product_attribute_value.data";
 
 export const hootPosModels = [
@@ -102,6 +102,7 @@ export const hootPosModels = [
     AccountJournal,
     ResourceCalendar,
     BarcodeNomenclature,
+    BarcodeRule,
 ];
 
 export const definePosModels = () => {

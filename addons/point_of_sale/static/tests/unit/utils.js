@@ -1,5 +1,6 @@
 import { uuidv4 } from "@point_of_sale/utils";
-import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
+import { getService, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 
 const { DateTime } = luxon;
 
@@ -20,6 +21,12 @@ export const setupPosEnv = async () => {
     store.setCashier(store.user);
     return store;
 };
+
+export function patchSession() {
+    patchWithCleanup(session, {
+        nomenclature_id: 2,
+    });
+}
 
 export const getFilledOrder = async (store) => {
     const order = store.addNewOrder();
