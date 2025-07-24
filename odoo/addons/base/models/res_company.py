@@ -350,7 +350,6 @@ class ResCompany(models.Model):
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
-
         companies_needs_l10n = (
             values.get('country_id')
             and self.filtered(lambda company: not company.country_id)
@@ -374,6 +373,8 @@ class ResCompany(models.Model):
 
         res = super().write(values)
 
+        if values.get('active') is True:
+            self.env.registry.clear_cache()
         # Archiving a company should also archive all of its branches
         if values.get('active') is False:
             self.child_ids.active = False
