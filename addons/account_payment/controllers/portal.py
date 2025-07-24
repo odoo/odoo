@@ -122,10 +122,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
 
         availability_report = {}
         # Get compatible providers using minor amount
-        valid_modes = ('next', 'overdue')
         mode = kwargs.get('mode')
-        use_next_amount_to_pay = (invoices_data['installment_state'] in valid_modes and
-                                  invoices_data['total_amount'] != invoices_data['next_amount_to_pay'] and mode != 'full')
+        use_next_amount_to_pay = invoices_data['total_amount'] != invoices_data['next_amount_to_pay'] and mode != 'full'
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             invoice_company.id,
