@@ -56,6 +56,7 @@ import functools
 import itertools
 import logging
 import operator
+import pytz
 import typing
 import warnings
 from datetime import date, datetime, time, timedelta, timezone
@@ -1516,7 +1517,17 @@ def _value_to_datetime(value, env, iso_only=False):
             value = parse_date(value, env)
         return _value_to_datetime(value, env)
     if isinstance(value, date):
-        return datetime.combine(value, time.min), True
+        tz = env.context.get('tz') or env.user.tz or None
+        if value.year == 9999:
+            # avoid overflow errors, treat as UTC timezone
+            tz = None
+        elif tz:
+            # get the tzinfo (without LMT)
+            tz = pytz.timezone(tz).localize(datetime.now()).tzinfo
+        value = datetime.combine(value, time.min, tz)
+        if tz is not None:
+            value = value.astimezone(timezone.utc).replace(tzinfo=None)
+        return value, True
     if isinstance(value, COLLECTION_TYPES):
         value, is_date = zip(*(_value_to_datetime(v, env=env, iso_only=iso_only) for v in value))
         return OrderedSet(value), all(is_date)
