@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.exceptions import AccessDenied
 
 
 MILKY_WAY_REGIONS = ['P3X', 'P4X', 'P2X', 'P5C']
@@ -78,3 +79,11 @@ class Test_HttpGalaxy(models.Model):
         return self.env['ir.qweb']._render('test_http.tmpl_galaxy', {
             'galaxy': self.browse([galaxy_id])
         })
+
+
+class IrHttp(models.AbstractModel):
+    _inherit = 'ir.http'
+
+    @classmethod
+    def _auth_method_thing(cls):
+        raise AccessDenied()

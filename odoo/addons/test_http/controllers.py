@@ -151,9 +151,17 @@ class TestHttp(http.Controller):
     def cors_http_verbs(self, **kwargs):
         return "Hello"
 
+    @http.route('/test_http/cors_http_auth', type="http", auth="thing", methods=('GET', 'OPTIONS'), cors="*")
+    def cors_http_auth(self):
+        raise "Hello"
+
     @http.route('/test_http/cors_json', type='jsonrpc', auth='none', cors='*')
     def cors_json(self, **kwargs):
         return {}
+
+    @http.route('/test_http/cors_json_auth', type="jsonrpc", auth="thing", cors="*")
+    def cors_json_auth(self):
+        raise {}
 
     # =====================================================
     # Dual nodb/db
