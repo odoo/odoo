@@ -33,6 +33,7 @@ export const odooExceptionTitleMap = new Map(
         "odoo.exceptions.AccessDenied": _t("Access Denied"),
         "odoo.exceptions.MissingError": _t("Missing Record"),
         "odoo.addons.web.controllers.action.MissingActionError": _t("Missing Action"),
+        "odoo.addons.base.models.ir_actions.ServerActionWithWarningsError": _t("Invalid Operation"),
         "odoo.exceptions.UserError": _t("Invalid Operation"),
         "odoo.exceptions.ValidationError": _t("Validation Error"),
         "odoo.exceptions.AccessError": _t("Access Error"),
@@ -224,6 +225,7 @@ registry
     .add("odoo.exceptions.AccessError", WarningDialog)
     .add("odoo.exceptions.MissingError", WarningDialog)
     .add("odoo.addons.web.controllers.action.MissingActionError", WarningDialog)
+    .add("odoo.addons.base.models.ir_actions.ServerActionWithWarningsError", WarningDialog)
     .add("odoo.exceptions.UserError", WarningDialog)
     .add("odoo.exceptions.ValidationError", WarningDialog)
     .add("odoo.exceptions.RedirectWarning", RedirectWarningDialog)
