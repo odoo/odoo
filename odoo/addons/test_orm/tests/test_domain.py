@@ -697,6 +697,19 @@ class TestDomainOptimize(TransactionCase):
             today_domain = Domain('moment', '=', 'today').optimize_full(model)
             self.assertIn(datetime(2024, 1, 5), [v for cond in today_domain.iter_conditions() for v in ([cond.value] if isinstance(cond.value, datetime) else cond.value)])
 
+    def test_condition_optimize_datetime_timezone(self):
+        model = self.env['test_orm.mixed'].with_context(tz='Europe/Brussels')
+        self.assertEqual(
+            Domain('moment', '>=', '2024-01-01 10:00:00').optimize(model),
+            Domain('moment', '>=', datetime(2024, 1, 1, 10)),
+            "Timezone should have no effect on datetime"
+        )
+        self.assertEqual(
+            Domain('moment', '>=', '2024-01-02').optimize(model),
+            Domain('moment', '>=', datetime(2024, 1, 1, 22)),
+            "Date should consider timezone of the user"
+        )
+
     def test_condition_optimize_datetime_millisecond(self):
         model = self.env['test_orm.mixed']
         self.assertEqual(
