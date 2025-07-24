@@ -11,8 +11,8 @@
         </div>
 
         <t t-set-slot="footer">
-          <button class="btn" t-att-class="props.confirmClass" t-on-click="_confirm" t-esc="props.confirmLabel"/>
-          <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel"/>
+          <button class="btn" t-att-class="props.confirmClass" t-on-click="_confirm" t-esc="props.confirmLabel" data-hotkey="q"/>
+          <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel" data-hotkey="x"/>
         </t>
     </Dialog>
 </t>

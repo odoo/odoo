@@ -20,6 +20,13 @@ export class SnippetViewer extends Component {
         this.content = useRef("content");
     }
 
+    getRenameBtnLabel(snippetName) {
+        return _t("Rename %(snippetName)s", { snippetName });
+    }
+    getDeleteBtnLabel(snippetName) {
+        return _t("Delete %(snippetName)s", { snippetName });
+    }
+
     onClickRename(snippet) {
         this.dialog.add(InputConfirmationDialog, {
             title: _t("Rename the block"),
