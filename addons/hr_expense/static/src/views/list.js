@@ -1,5 +1,4 @@
 import { ExpenseDashboard } from '../components/expense_dashboard';
-import { ExpenseMobileQRCode } from '../mixins/qrcode';
 import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/document_upload';
 
 import { registry } from '@web/core/registry';
@@ -64,9 +63,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
     }
 }
 
-export class ExpenseListRenderer extends ExpenseDocumentDropZone(
-    ExpenseMobileQRCode(ListRenderer)
-) {
+export class ExpenseListRenderer extends ExpenseDocumentDropZone(ListRenderer) {
     static template = "hr_expense.ListRenderer";
 }
 
