@@ -122,7 +122,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="o.move_ids_without_package" t-as="move">
+                                    <t t-foreach="o.move_ids_without_package.filtered(lambda x: x.quantity)" t-as="move">
                                         <!-- This flag is true if there are multiple move lines in a move, or if there is at least one tracked move line -->
                                         <t t-set="move_has_multiple_lines" t-value="len(move.move_line_ids) > 1 or any(move_line.lot_id or move_line.lot_name for move_line in move.move_line_ids)"/>
                                         <tr>
@@ -140,18 +140,18 @@
                                             </td>
                                             <!-- If a move contains only one move line, the move is summarized in the heading only -->
                                             <td class="text-start" t-if="from_col_exists" groups="stock.group_stock_multi_locations">
-                                                <div t-if="not move_has_multiple_lines">
+                                                <div t-if="move.move_line_ids and not move_has_multiple_lines">
                                                     <span t-field="move.move_line_ids[0].location_id.display_name">WH/Stock</span>
-                                                    <t t-if="move.move_line_ids and move.move_line_ids[0].package_id">
+                                                    <t t-if="move.move_line_ids[0].package_id">
                                                         <span t-field="move.move_line_ids[0].package_id">Package A</span>
                                                     </t>
                                                 </div>
                                             </td>
                                             <!-- If a move contains only one move line, the move is summarized in the heading only -->
                                             <td class="text-start" t-if="to_col_exists" groups="stock.group_stock_multi_locations">
-                                                <div t-if="not move_has_multiple_lines">
+                                                <div t-if="move.move_line_ids and not move_has_multiple_lines">
                                                     <span t-field="move.move_line_ids[0].location_dest_id.display_name">WH/Outgoing</span>
-                                                    <t t-if="move.move_line_ids and move.move_line_ids[0].result_package_id">
+                                                    <t t-if="move.move_line_ids[0].result_package_id">
                                                         <span t-field="move.move_line_ids[0].result_package_id">Package B</span>
                                                     </t>
                                                 </div>
