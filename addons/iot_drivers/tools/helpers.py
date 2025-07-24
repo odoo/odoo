@@ -575,6 +575,13 @@ def reset_log_level():
         })
 
 
+def _get_system_uptime():
+    if platform.system() == 'Windows':
+        return 0
+    uptime_string = read_file_first_line("/proc/uptime")
+    return float(uptime_string.split(" ")[0])
+
+
 def _get_raspberry_pi_model():
     """Returns the Raspberry Pi model number (e.g. 4) as an integer
     Returns 0 if the model can't be determined, or -1 if called on Windows
@@ -589,3 +596,5 @@ def _get_raspberry_pi_model():
 
 
 raspberry_pi_model = _get_raspberry_pi_model()
+odoo_start_time = time.monotonic()
+system_start_time = odoo_start_time - _get_system_uptime()
