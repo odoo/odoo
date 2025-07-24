@@ -4,11 +4,9 @@ import hashlib
 import hmac
 import uuid
 from datetime import timedelta
-from urllib.parse import urlencode
 
 from odoo import _, fields, models
 from odoo.exceptions import RedirectWarning
-from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay import const
@@ -109,7 +107,7 @@ class PaymentProvider(models.Model):
             'target': 'self',
         }
 
-    def action_razorpay_reset_oauth_account(self):
+    def action_reset_oauth_account(self):
         """ Reset the Razorpay OAuth account.
 
         Note: self.ensure_one()
@@ -118,14 +116,15 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
+        if self.code != 'razorpay':
+            return super().action_reset_oauth_account()
+
         return self.write({
             'razorpay_account_id': None,
             'razorpay_public_token': None,
             'razorpay_refresh_token': None,
             'razorpay_access_token': None,
             'razorpay_access_token_expiry': None,
-            'state': 'disabled',
-            'is_published': False,
         })
 
     def action_razorpay_create_webhook(self):

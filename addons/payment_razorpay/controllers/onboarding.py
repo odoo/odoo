@@ -4,8 +4,6 @@ import logging
 import pprint
 from datetime import timedelta
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import _, fields
 from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
@@ -53,7 +51,7 @@ class RazorpayController(Controller):
             {'authorization_code': authorization_code}
         )
         try:
-            response_content = provider_sudo._send_api_request( #TODO ANKO check if it shouldn't be a is_proxy_call
+            response_content = provider_sudo._send_api_request( # TODO ANKO check if it shouldn't be a is_proxy_call
                 'POST', '/get_access_token', json=proxy_payload
             )
         except ValidationError as e:

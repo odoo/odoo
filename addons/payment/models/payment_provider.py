@@ -8,11 +8,11 @@ import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
-from odoo.http import request
 
 # Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
 _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
@@ -485,6 +485,17 @@ class PaymentProvider(models.Model):
         :rtype: dict
         """
         return {}
+
+    def action_reset_oauth_account(self):
+        """ Reset the Providers OAuth account.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+
+        return self.write({'state': 'disabled', 'is_published': False})
 
     def action_toggle_is_published(self):
         """ Toggle the field `is_published`.

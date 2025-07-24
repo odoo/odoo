@@ -5,7 +5,7 @@ from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
-OAUTH_URL = 'https://mercadopago.api.odoo.com/api/mercado_pago'
+OAUTH_URL = 'https://mercadopago.api.odoo.com/api/mercado_pago/1'
 
 # Currency codes of the currencies supported by Mercado Pago in ISO 4217 format.
 # See https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.

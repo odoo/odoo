@@ -1,16 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from datetime import timedelta
+
 from werkzeug import urls
 
 from odoo import _, api, fields, models
+from odoo.exceptions import RedirectWarning
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.controllers.onboarding import MercadoPagoController
-from odoo.exceptions import RedirectWarning
 
 _logger = get_payment_logger(__name__)
 
@@ -98,6 +100,26 @@ class PaymentProvider(models.Model):
             'url': authorization_url,
             'target': 'self',
         }
+
+    def action_reset_oauth_account(self):
+        """ Reset the Mercado Pago OAuth account.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+
+        if self.code != 'mercado_pago':
+            return super().action_reset_oauth_account()
+
+        return self.write({
+            'mercado_pago_access_token': None,
+            'mercado_pago_access_token_expiry': None,
+            'mercado_pago_public_key': None,
+            'mercado_pago_refresh_token': None,
+        })
+
     # === BUSINESS METHODS === #
 
     @api.model
@@ -129,9 +151,34 @@ class PaymentProvider(models.Model):
         }
         return json.dumps(inline_form_values)
 
+    def _mercado_pago_refresh_token(self):
+        self.ensure_one()
+
+        proxy_payload = self._prepare_json_rpc_payload(
+            {'mercado_pago_refresh_token': self.mercado_pago_refresh_token}
+        )
+
+        response_content = self._send_api_request(
+            'POST',
+            '/refresh_access_token',
+            json=proxy_payload,
+            is_proxy_request=True,
+        )
+
+        expires_in = (
+            fields.Datetime.now()
+            + timedelta(seconds=int(response_content['expires_in']))
+            - timedelta(days=31)
+        )
+        self.write({
+            'mercado_pago_access_token': response_content['access_token'],
+            'mercado_pago_refresh_token': response_content['refresh_token'],
+            'mercado_pago_access_token_expiry': expires_in,
+        })
+
     # === REQUEST HELPERS === #
 
-    def _build_request_url(self, endpoint, is_proxy_request=False, **kwargs):
+    def _build_request_url(self, endpoint, *, is_proxy_request=False, **kwargs):
         """Override of `payment` to build the request URL."""
         if self.code != 'mercado_pago':
             return super()._build_request_url(endpoint, **kwargs)
@@ -169,29 +216,3 @@ class PaymentProvider(models.Model):
         if self.code != 'mercado_pago':
             return super()._parse_response_error(response)
         return response.json().get('message', '')
-
-    # def _mercado_pago_refresh_token(self):
-    #     """ TODO ADD DOCSTRING"""
-    #     #TODO ANKO make call to IAP proxy
-    #     self.ensure_one()
-    #
-    #     proxy_payload = self._prepare_json_rpc_payload(
-    #         {'mercado_pago_refresh_token': self.mercado_pago_refresh_token}
-    #     )
-    #     response_content = self._send_api_request(
-    #         'POST',
-    #         '/oauth/token',
-    #         json=proxy_payload,
-    #         is_proxy_request=True,
-    #     )
-    #     response_content = self._make_proxy_request( #Change to send api
-    #         url=const.OAUTH_URL,
-    #         endpoint=
-    #         payload={'mercado_pago_refresh_token': self.mercado_pago_refresh_token}
-    #     )
-    #     expires_in = fields.Datetime.now() + timedelta(seconds=int(response_content['expires_in']))
-    #     self.write({
-    #         'mercado_pago_access_token': response_content['access_token'],
-    #         'mercado_pago_refresh_token': response_content['refresh_token'],
-    #         'mercado_pago_access_token_expiry': expires_in,
-    #     })

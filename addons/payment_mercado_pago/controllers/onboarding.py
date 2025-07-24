@@ -21,7 +21,16 @@ class MercadoPagoController(Controller):
     def mercado_pago_return_from_authorization(
             self, provider_id, csrf_token=None, authorization_code=None, **data
     ):
+        """ Exchange the authorization code for an access token and redirect to the provider form.
 
+        :param str provider_id: The provider sent back by the proxy.
+        :param str csrf_token: The CSRF token that was sent back by the proxy.
+        :param str authorization_code: The authorization code received from Mercado Pago.
+
+        :raise Forbidden: If the received CSRF token cannot be verified.
+        :raise ValidationError: If the provider id does not match any Razorpay provider.
+        :return: Redirect to the payment provider form.
+        """
         _logger.info("Returning from authorization with data:\n%s", pprint.pformat(data))
 
         provider_sudo = request.env['payment.provider'].sudo().browse(int(provider_id)).exists()
@@ -48,13 +57,22 @@ class MercadoPagoController(Controller):
             'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True,
         )
 
-        #save values on provider
-        expires_in = fields.Datetime.now() + timedelta(seconds=int(response_content['expires_in']))
+        # set the expiry date month before, so new refresh token will be retrieved during
+        # transaction before current access token expiration
+        expires_in = (
+            fields.Datetime.now()
+            + timedelta(seconds=int(response_content['expires_in']))
+            - timedelta(days=31)
+        )
+        # save values on provider
         provider_sudo.write({
             'mercado_pago_access_token': response_content['access_token'],
             'mercado_pago_refresh_token': response_content['refresh_token'],
             'mercado_pago_access_token_expiry': expires_in,
             'mercado_pago_public_key': response_content['public_key'],
+            # Enable the provider.
+            'state': 'enabled',
+            'is_published': True,
         })
 
         return request.redirect(redirect_url)

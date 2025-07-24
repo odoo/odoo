@@ -7,5 +7,5 @@ class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
     mercado_pago_customer_id = fields.Char(
-        string="Customer ID", help="The unique reference of the customer owning this token",
-        readonly=True)
+        help="Mercado Pago's id of the customer at the time the token was created.", readonly=True
+    )
