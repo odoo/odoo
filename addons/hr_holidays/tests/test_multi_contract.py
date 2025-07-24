@@ -2,7 +2,7 @@
 
 from datetime import datetime, date
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, freeze_time
+from odoo.tests import Form, freeze_time, tagged
 from odoo.addons.hr_holidays.tests.common import TestHolidayContract
 
 
@@ -319,3 +319,86 @@ class TestHolidaysMultiContract(TestHolidayContract):
 
         employee._compute_leave_status()
         self.assertEqual(employee.leave_date_to, date(2024, 3, 4))
+
+    def test_multi_contracts_with_different_work_schedules(self):
+        """
+            Test that the employee can have multiple non-overlapping versions with different work schedules,
+            and that the leave requests are correctly calculated based on corresponding the contract's working schedule.
+        """
+        calendar_full, calendar_partial = self.env['resource.calendar'].create([
+            {
+                'name': 'Full time (5/5, 8h/day)',
+                'attendance_ids': [
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                ]
+            },
+            {
+                'name': 'Partial time (5/5, 6h/day)',
+                'attendance_ids': [
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                ]
+            },
+        ])
+        employee = self.env['hr.employee'].create({
+            'name': "Employee",
+            "resource_calendar_id": calendar_partial.id,
+        })
+        employee.create_version({
+            "name": "Full time (5/5)",
+            "date_version": datetime.strptime('2023-01-01', '%Y-%m-%d').date(),
+            "contract_date_start": datetime.strptime('2023-01-01', '%Y-%m-%d').date(),
+            "contract_date_end": datetime.strptime('2023-06-30', '%Y-%m-%d').date(),
+            "resource_calendar_id": calendar_full.id,
+            "wage": 1000.0,
+        })
+        employee.create_version({
+            "name": "Partial time (5/5)",
+            "date_version": datetime.strptime('2023-07-01', '%Y-%m-%d').date(),
+            "contract_date_start": datetime.strptime('2023-07-01', '%Y-%m-%d').date(),
+            "contract_date_end": datetime.strptime('2023-12-31', '%Y-%m-%d').date(),
+            "resource_calendar_id": calendar_partial.id,
+            "wage": 1000.0,
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'request_unit': 'day',
+        })
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = leave_type
+            leave_form.request_date_from = date(2023, 2, 14)  # full-time calendar
+            leave_form.request_date_to = date(2023, 2, 14)
+
+        leave = leave_form.save()
+        # Assert based on full-time calendar (8h)
+        self.assertEqual(leave.number_of_days, 1)
+        self.assertEqual(leave.number_of_hours, 8)
+        # Change to date under partial-time contract
+        leave.write({
+            'request_date_from': date(2023, 7, 14),
+            'request_date_to': date(2023, 7, 14),
+        })
+        # Assert based on partial-time calendar
+        self.assertEqual(leave.number_of_days, 1)
+        self.assertEqual(leave.number_of_hours, 6)
