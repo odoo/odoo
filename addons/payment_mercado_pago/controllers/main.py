@@ -2,19 +2,15 @@
 
 import pprint
 
-from werkzeug import urls
-
-from odoo import http
+from odoo import fields, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.orm import fields
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 
 _logger = get_payment_logger(__name__)
-
 
 
 class MercadoPagoController(http.Controller):
@@ -43,24 +39,13 @@ class MercadoPagoController(http.Controller):
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
 
-        data = {
-            'additional_info': {
-                'items': [{
-                    'title': tx_sudo.reference,
-                    'quantity': 1,
-                    'unit_price': tx_sudo._get_unit_price(),
-                }],
-            },
+        data = tx_sudo._mercado_pago_prepare_payment_request_payload()
+        data.update({
             'transaction_amount': float(transaction_amount),
-            'notification_url': tx_sudo._create_transaction_urls()['webhook_url'],
-            'statement_descriptor': reference,
-            'installments': 1,
             'payment_method_id': payment_method_id,
-            'payer': payer,
             'token': token,
-            'external_reference': tx_sudo.reference,
             'issuer_id': issuer_id,
-        }
+        })
 
         if provider_sudo.mercado_pago_access_token:
             if provider_sudo.mercado_pago_access_token_expiry < fields.Datetime.now():
@@ -71,7 +56,7 @@ class MercadoPagoController(http.Controller):
             endpoint='/v1/payments',
             json=data,
             idempotency_key=payment_utils.generate_idempotency_key(
-                self, scope='payment_request_token'
+                tx_sudo, scope='payment_request_token'
             )
         )
         tx_sudo._process(

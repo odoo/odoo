@@ -18,7 +18,9 @@ class MercadoPagoController(Controller):
     OAUTH_RETURN_URL = '/payment/mercado_pago/oauth/return'
 
     @route(OAUTH_RETURN_URL, type='http', auth='user', methods=['GET'], website=True)
-    def mercado_pago_return_from_authorization(self, provider_id, csrf_token=None, authorization_code=None, **data):
+    def mercado_pago_return_from_authorization(
+            self, provider_id, csrf_token=None, authorization_code=None, **data
+    ):
 
         _logger.info("Returning from authorization with data:\n%s", pprint.pformat(data))
 
@@ -32,7 +34,6 @@ class MercadoPagoController(Controller):
         payment_utils.check_csrf_token(csrf_token)
 
         # get the access token using authorization_token
-        authorization_code = data.get('authorization_code')
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
         redirect_url = f'/odoo/action-{action.id}/{int(provider_sudo.id)}'
@@ -42,11 +43,9 @@ class MercadoPagoController(Controller):
         proxy_payload = self.env['payment.provider']._prepare_json_rpc_payload(
             {'authorization_code': authorization_code}
         )
+
         response_content = provider_sudo._send_api_request(
-            'POST',
-            endpoint='/get_access_token',
-            json=proxy_payload,
-            is_proxy_request=True,
+            'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True,
         )
 
         #save values on provider

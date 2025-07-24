@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import urllib
+
 import uuid
 from pprint import pformat
 from urllib.parse import urlencode
@@ -510,6 +510,24 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
+    def _get_oauth_url(self, proxy_url, return_endpoint):
+        """ Return the OAuth URL.
+
+        :param url proxy_url: The url of proxy.
+        :param return_endpoint The return endpoint to which user should be redirected back after
+        authorization.
+        :return: Proxy OAuth URL with which OAuth request will be sent.
+        :rtype: str
+        """
+
+        return_url = f'{self.get_base_url()}{return_endpoint}'
+        params = {
+            'return_url': return_url,
+            'provider_id': self.id,
+            'csrf_token': request.csrf_token(),
+        }
+        return f'{proxy_url}/authorize?{urlencode(params)}'
+
     @api.model
     def _get_compatible_providers(
         self, company_id, partner_id, amount, currency_id=None, force_tokenization=False,
@@ -968,25 +986,3 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         return self.code
-
-    def _get_default_payment_method_codes(self):
-        """ Return the default payment methods for this provider.
-
-        Note: self.ensure_one()
-
-        :return: The default payment method codes.
-        :rtype: set
-        """
-        self.ensure_one()
-        return set()
-
-
-    def _get_oauth_url(self, proxy_url, return_endpoint):
-
-        return_url = f'{self.get_base_url()}{return_endpoint}'
-        params ={
-            'return_url': return_url,
-            'provider_id': self.id,
-            'csrf_token': request.csrf_token(),
-        }
-        return f'{proxy_url}/authorize?{urlencode(params)}'

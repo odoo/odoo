@@ -89,7 +89,7 @@ class PaymentProvider(models.Model):
         if self.code != 'razorpay':
             return super().action_start_onboarding(menu_id=menu_id)
 
-        if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES:
+        if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES: #TODO ANKO the error message should refer to currency
             raise RedirectWarning(
                 _(
                     "Razorpay is not available in your country; please use another payment"
@@ -203,7 +203,7 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - OAUTH FLOW === #
 
-    def _razorpay_refresh_access_token(self):
+    def _razorpay_refresh_access_token(self): # TODO ANKO this doesn't seem to be called anywhere it seems like it was forgotten to remove when it was moved to iap_repo
         """ Refresh the access token.
 
         Note: `self.ensure_one()`

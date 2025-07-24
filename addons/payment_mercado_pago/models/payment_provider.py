@@ -1,22 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import json
-
-from urllib.parse import urlencode
-
-
 from werkzeug import urls
 
-from odoo.addons.payment.const import REPORT_REASONS_MAPPING
-from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
-from odoo.addons.payment_mercado_pago.controllers.onboarding import MercadoPagoController
 from odoo import _, api, fields, models
 
-from odoo.exceptions import ValidationError
-
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.controllers.onboarding import MercadoPagoController
-
+from odoo.exceptions import RedirectWarning
 
 _logger = get_payment_logger(__name__)
 
@@ -43,6 +37,13 @@ class PaymentProvider(models.Model):
 
     # === COMPUTE METHODS === #
 
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'mercado_pago').update({
+            'support_tokenization': True,
+        })
+
     def _get_supported_currencies(self):
         """ Override of `payment` to return the supported currencies. """
         supported_currencies = super()._get_supported_currencies()
@@ -52,24 +53,41 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
-    def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
-        super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'mercado_pago').update({
-            'support_tokenization': True,
-        })
+    # === CRUD METHODS === #
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        self.ensure_one()
+        if self.code != 'mercado_pago':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
 
     # === ACTIONS METHODS === #
 
-    def action_mercado_pago_redirect_to_oauth_url(self):
-        """ Redirect to the Mercado Pago OAuth URL.
+    def action_start_onboarding(self, menu_id=None):
+        """ Override of `payment` to redirect to the Razorpay OAuth URL.
 
         Note: `self.ensure_one()`
 
-        :return: An URL action to redirect to the Mercado Pago OAuth URL.
+        :param int menu_id: The menu from which the onboarding is started, as an `ir.ui.menu` id.
+        :return: An URL action to redirect to the Razorpay OAuth URL.
         :rtype: dict
+        :raise RedirectWarning: If the company's currency is not supported.
         """
         self.ensure_one()
+
+        if self.code != 'mercado_pago':
+            return super().action_start_onboarding(menu_id=menu_id)
+
+        if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES:
+            raise RedirectWarning(
+                _(
+                    "Mercado Pago is not available for your currencies; please use another payment"
+                    " provider."
+                ),
+                self.env.ref('payment.action_payment_provider').id,
+                _("Other Payment Providers"),
+            )
 
         authorization_url = self._get_oauth_url(
             proxy_url=const.OAUTH_URL,
@@ -82,8 +100,8 @@ class PaymentProvider(models.Model):
         }
     # === BUSINESS METHODS === #
 
-    @api.model #TODO ANKO move
-    def _get_compatible_providers(self, payment_utils=None, *args, is_validation=False, report=None, **kwargs):
+    @api.model
+    def _get_compatible_providers(self, *args, is_validation=False, report=None, **kwargs):
         """ Override of `payment` to filter out Mercado Pago providers for validation operations.
         """
         providers = super()._get_compatible_providers(
@@ -102,14 +120,14 @@ class PaymentProvider(models.Model):
 
         return providers
 
-    # === CRUD METHODS === #
-
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+    def _mercado_pago_get_inline_form_values(self, partner_id):
         self.ensure_one()
-        if self.code != 'mercado_pago':
-            return super()._get_default_payment_method_codes()
-        return const.DEFAULT_PAYMENT_METHOD_CODES
+        partner = self.env['res.partner'].browse(partner_id).exists()
+        inline_form_values = {
+            'email': partner.email,
+            'mercado_pago_public_key': self.mercado_pago_public_key,
+        }
+        return json.dumps(inline_form_values)
 
     # === REQUEST HELPERS === #
 
@@ -121,33 +139,36 @@ class PaymentProvider(models.Model):
             return f'{const.OAUTH_URL}{endpoint}'
         return urls.url_join('https://api.mercadopago.com', endpoint)
 
-    def _build_request_headers(self, *args, is_proxy_request=False, **kwargs):
+    def _build_request_headers(self, method, *args, idempotency_key=None, is_proxy_request=False, **kwargs):
         """Override of `payment` to build the request headers."""
         if self.code != 'mercado_pago':
-            return super()._build_request_headers(*args, **kwargs)
+            return super()._build_request_headers(
+                method,
+                *args,
+                idempotency_key=idempotency_key,
+                is_proxy_request=is_proxy_request,
+                **kwargs
+            )
 
         headers = {
-            'Authorization': f'Bearer {self.mercado_pago_access_token}',
             'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987',
         }
+        if method == 'POST' and idempotency_key:
+            headers['X-Idempotency-Key'] = idempotency_key
         if not is_proxy_request and self.mercado_pago_access_token:
             headers['Authorization'] = f'Bearer {self.mercado_pago_access_token}'
         return headers
+
+    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
+        if self.code != 'mercado_pago' or not is_proxy_request:
+            return super()._parse_response_content(response)
+        return self._parse_proxy_response(response)
 
     def _parse_response_error(self, response):
         """Override of `payment` to parse the error message."""
         if self.code != 'mercado_pago':
             return super()._parse_response_error(response)
         return response.json().get('message', '')
-
-    def _mercado_pago_get_inline_form_values(self, partner_id):
-        self.ensure_one()
-        partner = self.env['res.partner'].browse(partner_id).exists()
-        inline_form_values = {
-            'email': partner.email,
-            'mercado_pago_public_key': self.mercado_pago_public_key,
-        }
-        return json.dumps(inline_form_values)
 
     # def _mercado_pago_refresh_token(self):
     #     """ TODO ADD DOCSTRING"""
