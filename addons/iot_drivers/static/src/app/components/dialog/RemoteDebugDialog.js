@@ -27,7 +27,7 @@ export class RemoteDebugDialog extends Component {
 
     async isNgrokEnabled() {
         try {
-            const data = await this.store.rpc({ url: "/hw_posbox_homepage/is_ngrok_enabled" });
+            const data = await this.store.rpc({ url: "/iot_drivers/is_ngrok_enabled" });
             this.state.ngrok = data.enabled;
             if (!this.state.ngrok) {
                 this.state.ngrokToken = "";
@@ -79,7 +79,7 @@ export class RemoteDebugDialog extends Component {
         this.state.loadingNgrok = true;
         try {
             await this.store.rpc({
-                url: "/hw_posbox_homepage/disable_ngrok",
+                url: "/iot_drivers/disable_ngrok",
                 method: "POST",
             });
             // Wait 2 seconds to let odoo-ngrok service stop
