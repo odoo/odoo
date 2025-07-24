@@ -655,8 +655,8 @@ export class Rtc extends Record {
     setVolume(session, volume) {
         session.volume = volume;
         this.store.settings.saveVolumeSetting({
-            guestId: session?.guest_id.id,
-            partnerId: session?.partner_id.id,
+            guestId: session?.guest_id?.id,
+            partnerId: session?.partner_id?.id,
             volume,
         });
         this._postToTabs({
