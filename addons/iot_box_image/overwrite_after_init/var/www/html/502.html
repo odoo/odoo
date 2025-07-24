@@ -18,12 +18,13 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-
+                gap: 10px;
             }
 
             .header a {
                 color: white;
                 background-color: #714b67;
+                max-width: 100px;
                 padding: 8px 16px;
                 border-radius: 4px;
                 text-decoration: none;
@@ -33,6 +34,10 @@
             .header a:hover {
                 background-color: #52374B;
                 color: white;
+            }
+
+            h1 {
+                margin-right: auto;
             }
 
             h2 {
@@ -69,7 +74,8 @@
         <div class="container">
             <div class="header">
                 <h1>IoT Box is down</h1>
-                <a href="/odoo-logs/odoo-server.log">Download logs</a>
+                <a href="/odoo-logs/odoo/odoo-server.log">Download Odoo logs</a>
+                <a href="/odoo-logs/nginx/access.log">Download Nginx logs</a>
             </div>
             <h2>(502 Bad Gateway)</h2>
             <p>The IoT Box received the request but was not able to handle it. You can try to refresh the page to see if the request can now be handled.</p>
