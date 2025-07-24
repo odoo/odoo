@@ -63,13 +63,19 @@
     .o_hb_collapse_toggler {
         position: absolute;
         padding-left: $o-hb-row-spacing;
+        align-self: baseline;
         z-index: $_z-index + 1;
-        font-size: 0.8em;
+        box-shadow: none;
+        font-size: 1em;
         color: inherit;
 
         &.active i {
             margin-left: -1px;
         }
+    }
+
+    &:has(> div > .o_cc_preview_wrapper) > .o_hb_collapse_toggler {
+        align-self: center;
     }
 
     // ==== States
@@ -132,5 +138,14 @@
             @include sublevel-line($_level-left);
             z-index: $_z-index - $_level;
         }
+    }
+
+    &:not(:has(> .o_hb_collapse_toggler.active)) + .hb-collapse-content {
+        display: none;
+        height: 0;
+    }
+
+    & + .hb-collapse-content {
+        transition: height 0.35s ease;
     }
 }
