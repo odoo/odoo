@@ -9,11 +9,26 @@
 
 <t t-name="website_blog.DynamicSnippetBlogPostsOption" t-inherit="website.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
-        <BuilderRow label.translate="Blog" t-if="!isSingleMode">
-            <BuilderSelect dataAttributeAction="'filterByBlogId'" preview="false">
-                <BuilderSelectItem dataAttributeActionValue="'-1'">All blogs</BuilderSelectItem>
-                <t t-foreach="blogState.blogs" t-as="blog" t-key="blog.id">
-                    <BuilderSelectItem dataAttributeActionValue="`${blog.id}`" t-out="blog.name"/>
+        <BuilderRow label.translate="Blogs" preview="false">
+            <BuilderMany2Many model="'blog.blog'"
+                dataAttributeAction="'filterByBlogIds'"
+                domain="[
+                    '|',
+                    ['website_id', '=', false],
+                    ['website_id', '=', this.services.website.currentWebsite.id],
+                ]"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Tags" preview="false">
+            <BuilderMany2Many model="'blog.tag'"
+                dataAttributeAction="'filterByTagIds'"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Author">
+            <BuilderSelect dataAttributeAction="'filterByAuthorId'" preview="false">
+                <BuilderSelectItem dataAttributeActionValue="'-1'">All Authors</BuilderSelectItem>
+                <t t-foreach="blogState.authors" t-as="author" t-key="author.id">
+                    <BuilderSelectItem dataAttributeActionValue="`${author.id}`" t-out="author.name"/>
                 </t>
             </BuilderSelect>
         </BuilderRow>
