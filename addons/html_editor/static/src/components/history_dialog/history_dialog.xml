@@ -11,21 +11,37 @@
                     <t t-foreach="state.revisionsData" t-as="rev"
                        t-key="rev.revision_id">
                         <a type="object" href="#" role="button"
-                           t-attf-class="btn btn-outline-primary #{state.revisionId === rev.revision_id ? 'active' : ''}"
+                           t-att-class="this.getRevisionClasses(rev)"
                            t-on-click="() => this.updateCurrentRevision(rev.revision_id )">
-                            <strong><t t-esc="this.getRevisionDate(rev)" /></strong>
-                            <br/>
-                            <small><t t-esc="rev.create_user_name" /></small>
+                            <small><t t-esc="this.getRevisionDate(rev)" /></small>
+                            <div class="o_avatar">
+                                <img class="rounded" t-att-src="this.getRevisionAuthorAvatar(rev)"
+                                     t-att-alt="rev.create_user_name" t-att-title="rev.create_user_name"/>
+                            </div>
                         </a>
                     </t>
                 </div>
                 <div class="history-container">
-                    <Notebook defaultPage="'history'">
-                        <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
+                    <div t-attf-class="history-content-view #{state.currentView === 'content' ? '' : 'd-none'}">
+                        <div class="history-view-top-bar">
+                            <div>
+                                <div class="text-info smaller">
+                                    <i class="fa fa-info-circle me-1" title="Version date"/>
+                                    Showing the document as it was on <t t-esc="this.getRevisionDate(this.currentRevision)" />, submited by <t t-esc="this.currentRevision.create_user_name" />
+                                </div>
+                            </div>
+                            <div>
+                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'comparison'">
+                                    <i class="fa fa-exchange" title="View comparison" />
+                                    View comparison
+                                </a>
+                            </div>
+                        </div>
+                        <div class="history-view-inner">
                             <t t-if="state.revisionLoading">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
-                                        style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                                         style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
                                     <p class="m-0 text-muted">
                                         <em>Loading...</em>
                                     </p>
@@ -37,24 +53,58 @@
                                 </div>
                             </t>
                             <t t-else="" t-out="props.noContentHelper" />
-                        </t>
-                        <t t-set-slot="comparison" name="'comparison'" isVisible="true" title="notebookTabs[1]">
+                        </div>
+                    </div>
+                    <div t-attf-class="history-comparison-view #{state.currentView === 'comparison' ? '' : 'd-none'}">
+                        <div class="history-view-top-bar">
+                            <div class="toggle-view-btns">
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" name="vbtn-radio" id="unified-view-btn"
+                                           t-on-click="() => state.isComparisonSplit = false"
+                                           t-att-checked="state.isComparisonSplit ? '' : 'checked'" />
+                                    <label class="btn btn-secondary" for="unified-view-btn">Unified view</label>
+                                    <input type="radio" class="btn-check" name="vbtn-radio" id="split-view-btn"
+                                           t-on-click="() => state.isComparisonSplit = true"
+                                           t-att-checked="state.isComparisonSplit ? 'checked' : ''" />
+                                    <label class="btn btn-secondary" for="split-view-btn">Split view</label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-info smaller">
+                                    <i class="fa fa-info-circle me-1" title="Version date"/>
+                                    Showing all updates that happened since <t t-esc="this.currentRevision.create_user_name" /> changed it on <t t-esc="this.getRevisionDate(this.currentRevision)" />
+                                </div>
+                            </div>
+                            <div>
+                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'content'">
+                                    <i class="fa fa-eye" title="View Content"/>
+                                    View content
+                                </a>
+                            </div>
+                        </div>
+                        <div class="history-view-inner">
                             <t t-if="state.revisionLoading">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
-                                        style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                                         style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
                                     <p class="m-0 text-muted">
                                         <em>Loading...</em>
                                     </p>
                                 </div>
                             </t>
                             <t t-elif="state.revisionComparison?.length">
-                                <div class="pe-none">
+                                <div t-attf-class="#{state.isComparisonSplit ? '' : 'd-none'}">
+                                    <HtmlViewer config="getConfig('revisionComparisonSplit')"/>
+                                </div>
+                                <div t-attf-class="pe-none #{state.isComparisonSplit ? 'd-none' : ''}">
                                     <HtmlViewer config="getConfig('revisionComparison')"/>
                                 </div>
                             </t>
-                        </t>
-                    </Notebook>
+                            <t t-else="">
+                                <span class="text-muted fst-italic">This is the current version, nothing to compare.</span>
+                            </t>
+                        </div>
+                    </div>
                 </div>
             </div>
             <t t-set-slot="footer">
