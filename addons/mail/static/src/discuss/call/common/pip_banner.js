@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class PipBanner extends Component {
     static template = "discuss.pipBanner";
-    static props = {};
+    static props = ["compact?"];
     static components = { CallActionList };
 
     setup() {

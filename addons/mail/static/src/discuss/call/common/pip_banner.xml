@@ -4,9 +4,14 @@
 <t t-name="discuss.pipBanner">
     <span class="o-discuss-PipBanner px-2 py-1 mx-1 mt-1 rounded-1">
         <div class="d-flex justify-content-between align-items-center p-2">
-            <span class="small fw-bold">The call is currently open in picture-in-picture mode.</span>
+            <span class="small fw-bold">Your call is in another window. <t t-if="!props.compact">Using picture-in-picture lets you stay in the call while you do other things.</t></span>
             <button class="btn o-discuss-PipBannerButton d-flex rounded-1" title="Bring call back" t-on-click="onClickClose">
-                Bring back
+                <t t-if="props.compact">
+                    Bring back
+                </t>
+                <t t-else="">
+                    Bring the call back here
+                </t>
             </button>
         </div>
         <div class="d-flex justify-content-center">
