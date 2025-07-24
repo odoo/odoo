@@ -164,7 +164,7 @@ class PaymentTransaction(models.Model):
                 if mail_template.exists():
                     send_context['mail_template'] = mail_template
 
-            self.env['account.move.send']._generate_and_send_invoices(
+            tx.env['account.move.send']._generate_and_send_invoices(
                 invoice_to_send,
                 **send_context,
             )
