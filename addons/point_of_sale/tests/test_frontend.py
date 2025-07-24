@@ -2610,11 +2610,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         color_attribute = cherry.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Color')
         first_color_value = color_attribute.product_template_value_ids.filtered(lambda v: v.attribute_id.name == 'Color' and v.name == 'RED')
         first_size_value = cherry.product_variant_ids.product_template_attribute_value_ids.filtered(lambda v: v.attribute_id.name == 'Size' and v.name == 'BIG')
-        first_color_value.exclude_for = [(0, 0, {
-            'product_tmpl_id': cherry.id,
-            'value_ids': first_size_value.ids,
-            'product_template_attribute_value_id': first_size_value.id
-        })]
+        first_color_value.excluded_value_ids = [Command.link(value) for value in first_size_value.ids]
         for index, variant in enumerate(cherry.product_variant_ids):
             variant.write({'barcode': f'cherry_{index}'})
 
@@ -2962,17 +2958,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         ptav_1_2 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_1.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_1_value_2.id)
         ptav_2_2 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_2.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_2_value_2.id)
         ptav_2_1 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_2.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_2_value_1.id)
-        self.env['product.template.attribute.exclusion'].create({
-            'product_tmpl_id': self.test_product_1.id,
-            'product_template_attribute_value_id': ptav_1_1.id,
-            'value_ids': [Command.set([ptav_2_1.id])],
-        })
 
-        self.env['product.template.attribute.exclusion'].create({
-            'product_tmpl_id': self.test_product_1.id,
-            'product_template_attribute_value_id': ptav_1_2.id,
-            'value_ids': [Command.set([ptav_2_2.id])],
-        })
+        ptav_1_1.excluded_value_ids = [Command.link(ptav_2_1.id)]
+        ptav_1_2.excluded_value_ids = [Command.link(ptav_2_2.id)]
+
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_cross_exclusion_attribute_values')
 
