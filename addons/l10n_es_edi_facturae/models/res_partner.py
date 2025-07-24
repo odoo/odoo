@@ -14,7 +14,7 @@ class L10n_Es_Edi_FacturaeAc_Role_Type(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    invoice_edi_format = fields.Selection(selection_add=[('es_facturae', 'Facturae')])
+    invoice_edi_format = fields.Selection(selection_add=[('es_facturae', 'Spain (FacturaE)')])
     type = fields.Selection(selection_add=[('facturae_ac', 'FACe Center'), ('other',)])
     l10n_es_edi_facturae_ac_center_code = fields.Char(string='Code', size=10, help="Code of the issuing department.")
     l10n_es_edi_facturae_ac_role_type_ids = fields.Many2many(
