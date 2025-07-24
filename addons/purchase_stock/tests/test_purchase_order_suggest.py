@@ -27,7 +27,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'product_id': cls.product_1.id,
         }])
 
-    def assertEstimatedPrice(self, po_suggest, price, based_on='one_month', days=30, factor=100, warehouse=False):
+    def assertEstimatedPrice(self, po_suggest, price, based_on='last_30_days', days=30, factor=100, warehouse=False):
         """ This helper method does an assert for the `purchase.order.suggest` wizard
         estimated price for the given parameters (use the default values if not set).
         Note that the wizard fields are updated each time this method is called."""
@@ -96,7 +96,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             [(self.product_1, 5), (product_3, 10)], today - relativedelta(months=2, days=5)
         )
         self._create_and_process_delivery_at_date(
-            [(self.product_1, 10), (product_3, 10)], today - relativedelta(months=1)
+            [(self.product_1, 10), (product_3, 10)], today - relativedelta(days=30)
         )
         self._create_and_process_delivery_at_date(
             [(self.product_1, 10), (product_2, 5)], today - relativedelta(days=15)
@@ -111,56 +111,33 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         self.assertEqual(product_2.monthly_demand, 10)
         self.assertEqual(product_3.monthly_demand, 10)
         # Check for last week.
-        one_week_ago = today - relativedelta(weeks=1)
-        context = {
-            'monthly_demand_start_date': one_week_ago,
-            'monthly_demand_limit_date': today,
-        }
+
+        context = {'suggest_based_on': "one_week"}
         self.assertEqual(self.product_1.with_context(context).monthly_demand, 0)
-        self.assertEqual(product_2.with_context(context).monthly_demand, 5)
+        self.assertAlmostEqual(product_2.with_context(context).monthly_demand, 5 * (365.25 / 12) / 7, places=6)
         self.assertEqual(product_3.with_context(context).monthly_demand, 0)
         # Check for last three months.
-        three_months_ago = today - relativedelta(months=3)
-        context = {
-            'monthly_demand_start_date': three_months_ago,
-            'monthly_demand_limit_date': today,
-        }
-        self.assertEqual(self.product_1.with_context(context).monthly_demand, 25)
-        self.assertEqual(product_2.with_context(context).monthly_demand, 10)
-        self.assertEqual(product_3.with_context(context).monthly_demand, 20)
+        context = {'suggest_based_on': "three_months"}
+        self.assertAlmostEqual(self.product_1.with_context(context).monthly_demand, 25 / 3, places=6)
+        self.assertAlmostEqual(product_2.with_context(context).monthly_demand, 10 / 3, places=6)
+        self.assertAlmostEqual(product_3.with_context(context).monthly_demand, 20 / 3, places=6)
         # Check for last year months.
-        one_year_ago = today - relativedelta(years=1)
-        context = {
-            'monthly_demand_start_date': one_year_ago,
-            'monthly_demand_limit_date': today,
-        }
-        self.assertEqual(self.product_1.with_context(context).monthly_demand, 42)
-        self.assertEqual(product_2.with_context(context).monthly_demand, 15)
-        self.assertEqual(product_3.with_context(context).monthly_demand, 20)
+        context = {'suggest_based_on': "one_year"}
+        self.assertAlmostEqual(self.product_1.with_context(context).monthly_demand, 42 / 12, places=6)
+        self.assertAlmostEqual(product_2.with_context(context).monthly_demand, 15 / 12, places=6)
+        self.assertAlmostEqual(product_3.with_context(context).monthly_demand, 20 / 12, places=6)
         # Check for January 2020.
-        last_january = datetime(year=today.year - 1, month=today.month, day=1)
-        context = {
-            'monthly_demand_start_date': last_january,
-            'monthly_demand_limit_date': last_january + relativedelta(months=1),
-        }
+        context = {'suggest_based_on': "last_year"}
         self.assertEqual(self.product_1.with_context(context).monthly_demand, 12)
         self.assertEqual(product_2.with_context(context).monthly_demand, 0)
         self.assertEqual(product_3.with_context(context).monthly_demand, 0)
         # Check for February 2020.
-        last_february = datetime(year=today.year - 1, month=today.month, day=1) + relativedelta(months=1)
-        context = {
-            'monthly_demand_start_date': last_february,
-            'monthly_demand_limit_date': last_february + relativedelta(months=1),
-        }
+        context = {'suggest_based_on': "last_year_m_plus_1"}
         self.assertEqual(self.product_1.with_context(context).monthly_demand, 0)
         self.assertEqual(product_2.with_context(context).monthly_demand, 0)
         self.assertEqual(product_3.with_context(context).monthly_demand, 0)
         # Check for March 2020.
-        last_march = datetime(year=today.year - 1, month=today.month, day=1) + relativedelta(months=2)
-        context = {
-            'monthly_demand_start_date': last_march,
-            'monthly_demand_limit_date': last_march + relativedelta(months=1),
-        }
+        context = {'suggest_based_on': "last_year_m_plus_2"}
         self.assertEqual(self.product_1.with_context(context).monthly_demand, 5)
         self.assertEqual(product_2.with_context(context).monthly_demand, 5)
         self.assertEqual(product_3.with_context(context).monthly_demand, 0)
@@ -187,7 +164,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         self.assertEstimatedPrice(po_suggest, 5500, based_on='one_year', days=365)
 
         # Use suggest wizard to generate PO lines and check their values.
-        po_suggest.based_on = 'one_month'
+        po_suggest.based_on = 'last_30_days'
         po_suggest.number_of_days = 30
         po_suggest.percent_factor = 100
         po_suggest.action_purchase_order_suggest()
@@ -341,53 +318,29 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         self._create_and_process_delivery_at_date([(consu, 12)], today - relativedelta(years=1))
         self._create_and_process_delivery_at_date([(consu, 5)], today - relativedelta(months=10, days=3))
         self._create_and_process_delivery_at_date([(consu, 5)], today - relativedelta(months=2, days=5))
-        self._create_and_process_delivery_at_date([(consu, 10)], today - relativedelta(months=1))
+        self._create_and_process_delivery_at_date([(consu, 10)], today - relativedelta(days=30))
         self._create_and_process_delivery_at_date([(consu, 10)], today - relativedelta(days=15))
 
         # Check product demand quantity.
         # With no dates given in the context, the monthly demand should take only last month.
         self.assertEqual(consu.monthly_demand, 20)
         # Check for last week.
-        one_week_ago = today - relativedelta(weeks=1)
-        context = {
-            'monthly_demand_start_date': one_week_ago,
-            'monthly_demand_limit_date': today,
-        }
+        context = {'suggest_based_on': "one_week"}
         self.assertEqual(consu.with_context(context).monthly_demand, 0)
         # Check for last three months.
-        three_months_ago = today - relativedelta(months=3)
-        context = {
-            'monthly_demand_start_date': three_months_ago,
-            'monthly_demand_limit_date': today,
-        }
-        self.assertEqual(consu.with_context(context).monthly_demand, 25)
+        context = {'suggest_based_on': "three_months"}
+        self.assertAlmostEqual(consu.with_context(context).monthly_demand, 25 / 3, places=6)
         # Check for last year months.
-        one_year_ago = today - relativedelta(years=1)
-        context = {
-            'monthly_demand_start_date': one_year_ago,
-            'monthly_demand_limit_date': today,
-        }
-        self.assertEqual(consu.with_context(context).monthly_demand, 42)
+        context = {'suggest_based_on': "one_year"}
+        self.assertAlmostEqual(consu.with_context(context).monthly_demand, 42 / 12, places=6)
         # Check for January 2020.
-        last_january = datetime(year=today.year - 1, month=today.month, day=1)
-        context = {
-            'monthly_demand_start_date': last_january,
-            'monthly_demand_limit_date': last_january + relativedelta(months=1),
-        }
+        context = {'suggest_based_on': "last_year"}
         self.assertEqual(consu.with_context(context).monthly_demand, 12)
         # Check for February 2020.
-        last_february = datetime(year=today.year - 1, month=today.month, day=1) + relativedelta(months=1)
-        context = {
-            'monthly_demand_start_date': last_february,
-            'monthly_demand_limit_date': last_february + relativedelta(months=1),
-        }
+        context = {'suggest_based_on': "last_year_m_plus_1"}
         self.assertEqual(consu.with_context(context).monthly_demand, 0)
         # Check for March 2020.
-        last_march = datetime(year=today.year - 1, month=today.month, day=1) + relativedelta(months=2)
-        context = {
-            'monthly_demand_start_date': last_march,
-            'monthly_demand_limit_date': last_march + relativedelta(months=1),
-        }
+        context = {'suggest_based_on': "last_year_m_plus_2"}
         self.assertEqual(consu.with_context(context).monthly_demand, 5)
 
         # Create a new PO for the vendor then check suggest wizard estimed price.
@@ -412,7 +365,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         self.assertEstimatedPrice(po_suggest, 840, based_on='one_year', days=365)
 
         # Use suggest wizard to generate PO lines and check their values.
-        po_suggest.based_on = 'one_month'
+        po_suggest.based_on = 'last_30_days'
         po_suggest.number_of_days = 30
         po_suggest.percent_factor = 100
         po_suggest.action_purchase_order_suggest()
