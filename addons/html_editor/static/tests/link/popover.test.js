@@ -215,6 +215,27 @@ describe("popover should edit,copy,remove the link", () => {
             '<p>this is a <a href="http://test.com/">http://test.com/[]</a></p>'
         );
     });
+    test("link popover should autoconvert an absolute URL if it's in the domain", async () => {
+        onRpc("/html_editor/link_preview_internal", () => ({}));
+        onRpc("/contactus", () => ({}));
+        const absoluteUrlIndomain = `${window.origin}/contactus`;
+        const { el } = await setupEditor(
+            `<p>this is an absolute href targeting the domain <a href="${absoluteUrlIndomain}">absolute li[]nk</a></p>`,
+            {
+                config: {
+                    allowStripDomain: true,
+                },
+            }
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_apply_link");
+        expect(".strip-domain-option input").toHaveCount(1);
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is an absolute href targeting the domain <a href="/contactus">absolute li[]nk</a></p>'
+        );
+    });
     test("relative URLs should be kept relative URLs", async () => {
         onRpc("/html_editor/link_preview_internal", () => ({}));
         onRpc("/contactus", () => ({}));
@@ -991,7 +1012,11 @@ describe("link preview", () => {
             link_preview_name: "Task name | Project name",
         }));
         onRpc("/odoo/project/1/tasks/8", () => "", { pure: true });
-        const { editor, el } = await setupEditor(`<p>[]</p>`);
+        const { editor, el } = await setupEditor(`<p>[]</p>`, {
+            config: {
+                allowStripDomain: false,
+            },
+        });
         await insertText(editor, "/link");
         await animationFrame();
         await click(".o-we-command-name:first");
@@ -1091,7 +1116,11 @@ describe("link preview", () => {
             { pure: true }
         );
 
-        const { editor } = await setupEditor(`<p>abc[]</p>`);
+        const { editor } = await setupEditor(`<p>abc[]</p>`, {
+            config: {
+                allowStripDomain: false,
+            },
+        });
         await insertText(editor, "/link");
         await animationFrame();
         await click(".o-we-command-name:first");
