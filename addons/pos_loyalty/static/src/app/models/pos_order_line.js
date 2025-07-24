@@ -12,12 +12,6 @@ patch(PosOrderline, {
             type: "many2one",
             local: true,
         },
-        gift_code: {
-            model: "pos.order.line",
-            name: "gift_code",
-            type: "char",
-            local: true,
-        },
         _gift_barcode: {
             model: "pos.order.line",
             name: "_gift_barcode",
@@ -42,9 +36,21 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
+    initState() {
+        super.initState();
+        this.uiState = {
+            ...this.uiState,
+            program_type: null,
+            gift_code: null,
+            e_wallet_id: null,
+            gift_card_expiration_date: null,
+        };
+    },
     setOptions(options) {
         if (options.eWalletGiftCardProgram) {
             this._e_wallet_program_id = options.eWalletGiftCardProgram;
+            this.uiState.program_type = options.eWalletGiftCardProgram.program_type;
+            this.uiState.e_wallet_id = options.eWalletGiftCardProgram.id;
         }
         if (options.giftBarcode) {
             this._gift_barcode = options.giftBarcode;
@@ -55,12 +61,16 @@ patch(PosOrderline.prototype, {
         return super.setOptions(...arguments);
     },
     getEWalletGiftCardProgramType() {
-        return this._e_wallet_program_id && this._e_wallet_program_id.program_type;
+        return (
+            (this._e_wallet_program_id && this._e_wallet_program_id.program_type) ||
+            this.uiState.program_type
+        );
     },
     ignoreLoyaltyPoints({ program }) {
         return (
             (["gift_card", "ewallet"].includes(program.program_type) &&
-                this._e_wallet_program_id?.id !== program.id) ||
+                (this._e_wallet_program_id?.id !== program.id ||
+                    this.uiState.e_wallet_id !== program.id)) ||
             this.settled_invoice_id ||
             this.settled_order_id
         );
@@ -81,5 +91,12 @@ patch(PosOrderline.prototype, {
             ...super.getDisplayClasses(),
             "fst-italic": this.is_reward_line,
         };
+    },
+    canBeMergedWith(orderline) {
+        const res = super.canBeMergedWith(...arguments);
+        if (!this._e_wallet_program_id || this.uiState.gift_code === orderline.uiState.gift_code) {
+            return res;
+        }
+        return false;
     },
 });

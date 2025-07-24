@@ -14,7 +14,10 @@ patch(OrderSummary.prototype, {
     async updateSelectedOrderline({ buffer, key }) {
         const selectedLine = this.currentOrder.getSelectedOrderline();
         if (key === "-") {
-            if (selectedLine && selectedLine._e_wallet_program_id) {
+            if (
+                selectedLine &&
+                (selectedLine._e_wallet_program_id || selectedLine.uiState.e_wallet_id)
+            ) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
                 // Refunding gift card or ewallet is not supported.
                 this.notification.add(
@@ -44,6 +47,23 @@ patch(OrderSummary.prototype, {
                 buffer = null;
             } else {
                 // Cancel backspace
+                return;
+            }
+        }
+        const numpadMode = this.pos.numpadMode;
+        if (
+            selectedLine?.uiState?.program_type === "gift_card" &&
+            ["quantity", "discount"].includes(numpadMode) &&
+            key !== "Backspace"
+        ) {
+            let notificationString = "";
+            if (numpadMode === "discount") {
+                notificationString = _t("You cannot add discount on gift card.");
+            } else if (selectedLine?.uiState?.gift_code) {
+                notificationString = _t("You cannot update quantity of physical gift card.");
+            }
+            if (notificationString) {
+                this.notification.add(notificationString, 4000);
                 return;
             }
         }
@@ -100,7 +120,7 @@ patch(OrderSummary.prototype, {
      * 1. Reduce the quantity if greater than one, otherwise remove the order line.
      * 2. Add a new order line with updated gift card code and points, removing any existing related couponPointChanges.
      */
-    async _updateGiftCardOrderline(code, points) {
+    async _updateGiftCardOrderline(code, points, expirationDate = false) {
         let selectedLine = this.currentOrder.getSelectedOrderline();
         const product = selectedLine.product_id;
 
@@ -134,7 +154,8 @@ patch(OrderSummary.prototype, {
             { price_unit: points }
         );
         selectedLine = this.currentOrder.getSelectedOrderline();
-        selectedLine.gift_code = code;
+        selectedLine.uiState.gift_code = code;
+        selectedLine.uiState.gift_card_expiration_date = expirationDate;
     },
 
     manageGiftCard() {
@@ -169,7 +190,7 @@ patch(OrderSummary.prototype, {
                     return;
                 }
 
-                await this._updateGiftCardOrderline(code, points);
+                await this._updateGiftCardOrderline(code, points, expirationDate);
                 this.currentOrder.processGiftCard(code, points, expirationDate);
 
                 // update indexedDB
