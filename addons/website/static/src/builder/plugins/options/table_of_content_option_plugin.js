@@ -27,10 +27,6 @@ class TableOfContentOptionPlugin extends Plugin {
             {
                 template: "website.TableOfContentOption",
                 selector: ".s_table_of_content",
-                cleanForSave: (editingElement) => {
-                    const navbarEl = editingElement.querySelector(".s_table_of_content_navbar");
-                    navbarEl.removeAttribute("contenteditable");
-                },
             },
             {
                 template: "website.TableOfContentNavbarOption",
@@ -58,12 +54,10 @@ class TableOfContentOptionPlugin extends Plugin {
             return true;
         },
         is_unremovable_selector: ".s_table_of_content_navbar_wrap, .s_table_of_content_main",
+        force_not_editable_selector: ".s_table_of_content_navbar",
     };
 
     normalize(root) {
-        for (const navbar of root.querySelectorAll(".s_table_of_content_navbar")) {
-            navbar.setAttribute("contenteditable", "false");
-        }
         applyFunDependOnSelectorAndExclude(this.updateTableOfContentNavbar.bind(this), root, {
             selector: ".s_table_of_content_main",
         });

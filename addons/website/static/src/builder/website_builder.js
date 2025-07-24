@@ -24,6 +24,7 @@ import { BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin"
 import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_plugin";
 import { CarouselOptionTranslationPlugin } from "./plugins/carousel_option_translation_plugin";
 import { ThemeTab } from "./plugins/theme/theme_tab";
+import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -44,6 +45,7 @@ const TRANSLATION_PLUGINS = [
     OperationPlugin,
     EditInteractionPlugin,
     CarouselOptionTranslationPlugin,
+    BuilderContentEditablePlugin,
 ];
 
 export class WebsiteBuilder extends Component {
