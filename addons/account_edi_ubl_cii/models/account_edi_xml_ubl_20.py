@@ -887,7 +887,9 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
 
     def _add_document_line_allowance_charge_nodes(self, line_node, vals):
         if vals['document_type'] not in {'credit_note', 'debit_note'}:
-            line_node['cac:AllowanceCharge'] = [self._get_line_discount_allowance_charge_node(vals)]
+            line_node['cac:AllowanceCharge'] = []
+            if node := self._get_line_discount_allowance_charge_node(vals):
+                line_node['cac:AllowanceCharge'].append(node)
             if vals['fixed_taxes_as_allowance_charges']:
                 line_node['cac:AllowanceCharge'].extend(self._get_line_fixed_tax_allowance_charge_nodes(vals))
 
