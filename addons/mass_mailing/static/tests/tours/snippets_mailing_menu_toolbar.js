@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure there does not exist a floating toolbar",
-        trigger: 'iframe',
+        trigger: "iframe:not(:visible)",
         run: function () {
             const iframeDocument = this.anchor.contentDocument;
             if (iframeDocument.querySelector('#toolbar.oe-floating')) {
@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the snippets menu is not hidden",
-        trigger: '#oe_snippets:not(.d-none)',
+        trigger: ".o-snippets-menu",
     },
     {
         content: "Wait for .s_text_block to be populated",
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the toolbar is there",
-        trigger: '#oe_snippets .o_we_customize_panel #toolbar',
+        trigger: ".o-snippets-menu .o_we_customize_panel #toolbar",
     },
     ...stepUtils.discardForm(),
     ],

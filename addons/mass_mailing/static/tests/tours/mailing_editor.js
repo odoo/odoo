@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     trigger: '[name="body_arch"] :iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
 }, {
     content: 'drag the "Title" snippet from the design panel and drop it in the editor',
-    trigger: '[name="body_arch"] #oe_snippets [name="Title"] .oe_snippet_thumbnail',
+    trigger: '[name="body_arch"] .o-snippets-menu [name="Title"] .oe_snippet_thumbnail',
     async run(helpers) {
         await helpers.drag_and_drop(`[name="body_arch"] :iframe .o_editable`, {
             position: {

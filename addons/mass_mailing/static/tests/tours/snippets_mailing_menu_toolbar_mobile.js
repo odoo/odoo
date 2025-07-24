@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
         trigger: ':iframe',
         run: function () {
             const iframeDocument = this.anchor.contentDocument;
-            if (!iframeDocument.querySelector('#oe_snippets.d-none')) {
+            if (iframeDocument.querySelector(".o-snippets-menu")) {
                 console.error('The snippet menu should be hidden');
             }
         },

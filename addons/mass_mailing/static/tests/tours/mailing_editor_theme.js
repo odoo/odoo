@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'html:has(#oe_snippets.d-none)',
+            trigger: "html:not(:has(.o-snippets-menu))",
         },
         ...stepUtils.saveForm(),
         {
@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is displayed",
-            trigger: '#oe_snippets',
+            trigger: ".o-snippets-menu",
         },
         ...stepUtils.discardForm(),
         {
@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'html:has(#oe_snippets.d-none)',
+            trigger: "html:not(:has(.o-snippets-menu))",
         },
         {
             content: "Add some content to be selected afterwards",
@@ -132,7 +132,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'html:has(#oe_snippets.d-none)',
+            trigger: "html:not(:has(.o-snippets-menu))",
         },
         {
             content: "Select content",
