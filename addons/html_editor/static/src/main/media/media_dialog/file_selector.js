@@ -111,6 +111,16 @@ export class FileSelectorControlPanel extends Component {
         this.debouncedValidateUrl = useDebounced(this.props.validateUrl, 500);
 
         this.fileInput = useRef("file-input");
+        const urlInputRef = useRef("urlInput");
+
+        useEffect(
+            () => {
+                if (this.state.showUrlInput) {
+                    urlInputRef.el.focus();
+                }
+            },
+            () => [this.state.showUrlInput]
+        );
     }
 
     get showSearchServiceSelect() {
