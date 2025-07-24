@@ -1,5 +1,5 @@
 import { DYNAMIC_SNIPPET_CAROUSEL } from "@website/builder/plugins/options/dynamic_snippet_carousel_option_plugin";
-import { setDatasetIfUndefined } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
+import { setDatasetIfUndefined, setOptionsDefaultValues } from '@website/js/dynamic_snippet_utils';
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -40,7 +40,7 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
             ]) {
                 setDatasetIfUndefined(snippetEl, optionName, value);
             }
-            await this.dependencies.dynamicSnippetCarouselOption.setOptionsDefaultValues(
+            await setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter,
                 getContextualFilterDomain(this.editable)

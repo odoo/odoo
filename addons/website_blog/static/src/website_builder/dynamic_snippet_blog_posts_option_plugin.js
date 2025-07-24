@@ -1,7 +1,5 @@
-import {
-    DYNAMIC_SNIPPET,
-    setDatasetIfUndefined,
-} from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
+import { DYNAMIC_SNIPPET } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
+import { setDatasetIfUndefined, setOptionsDefaultValues} from '@website/js/dynamic_snippet_utils';
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -29,7 +27,7 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(this.selector)) {
             setDatasetIfUndefined(snippetEl, "filterByBlogId", -1);
-            await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
+            await setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter
             );

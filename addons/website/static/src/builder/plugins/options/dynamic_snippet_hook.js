@@ -1,5 +1,6 @@
 import { useDomState } from "@html_builder/core/utils";
 import { onWillStart, useEnv } from "@odoo/owl";
+import { fetchDynamicFilters, fetchDynamicFilterTemplates } from '@website/js/dynamic_snippet_utils';
 
 export function useDynamicSnippetOption(modelNameFilter, contextualFilterDomain = []) {
     const env = useEnv();
@@ -15,7 +16,7 @@ export function useDynamicSnippetOption(modelNameFilter, contextualFilterDomain 
 
     async function fetchDynamicFiltersAndTemplates() {
         const fetchedDynamicFilters =
-            await env.editor.shared.dynamicSnippetOption.fetchDynamicFilters({
+            await fetchDynamicFilters({
                 model_name: modelNameFilter,
                 search_domain: contextualFilterDomain,
             });
@@ -30,7 +31,7 @@ export function useDynamicSnippetOption(modelNameFilter, contextualFilterDomain 
         }
         defaultFilterId = fetchedDynamicFilters[0].id;
         const fetchedDynamicFilterTemplates =
-            await env.editor.shared.dynamicSnippetOption.fetchDynamicFilterTemplates({
+            await fetchDynamicFilterTemplates({
                 filter_name: modelNameFilter.replaceAll(".", "_"),
             });
         for (const dynamicFilterTemplate of fetchedDynamicFilterTemplates) {

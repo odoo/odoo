@@ -1,22 +1,16 @@
 import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { DynamicSnippetOption } from "./dynamic_snippet_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { setOptionsDefaultValues, updateTemplate } from '@website/js/dynamic_snippet_utils';
 
 export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
 
 class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
-    static shared = [
-        "fetchDynamicFilters",
-        "fetchDynamicFilterTemplates",
-        "setOptionsDefaultValues",
-        "updateTemplate",
-    ];
     selector = ".s_dynamic_snippet";
     modelNameFilter = "";
     resources = {
@@ -50,100 +44,8 @@ class DynamicSnippetOptionPlugin extends Plugin {
     }
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(this.selector)) {
-            await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
+            await setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
-    }
-    async setOptionsDefaultValues(snippetEl, modelNameFilter, contextualFilterDomain = []) {
-        const fetchedDynamicFilters = await this.fetchDynamicFilters({
-            model_name: modelNameFilter,
-            search_domain: contextualFilterDomain,
-        });
-        const dynamicFilters = {};
-        for (const dynamicFilter of fetchedDynamicFilters) {
-            dynamicFilters[dynamicFilter.id] = dynamicFilter;
-        }
-        const fetchedDynamicFilterTemplates = await this.fetchDynamicFilterTemplates({
-            filter_name: modelNameFilter.replaceAll(".", "_"),
-        });
-        const dynamicFilterTemplates = {};
-        for (const dynamicFilterTemplate of fetchedDynamicFilterTemplates) {
-            dynamicFilterTemplates[dynamicFilterTemplate.key] = dynamicFilterTemplate;
-        }
-        let selectedFilterId = snippetEl.dataset["filterId"];
-        if (Object.keys(dynamicFilters).length > 0) {
-            setDatasetIfUndefined(snippetEl, "numberOfRecords", fetchedDynamicFilters[0].limit);
-            const defaultFilterId = fetchedDynamicFilters[0].id;
-            if (!dynamicFilters[selectedFilterId]) {
-                snippetEl.dataset["filterId"] = defaultFilterId;
-                selectedFilterId = defaultFilterId;
-            }
-        }
-        if (
-            dynamicFilters[selectedFilterId] &&
-            !dynamicFilterTemplates[snippetEl.dataset["templateKey"]]
-        ) {
-            const modelName = dynamicFilters[selectedFilterId].model_name.replaceAll(".", "_");
-            const defaultFilterTemplate = fetchedDynamicFilterTemplates.find((dynamicTemplate) =>
-                dynamicTemplate.key.includes(modelName)
-            );
-            snippetEl.dataset["templateKey"] = defaultFilterTemplate.key;
-            this.updateTemplate(snippetEl, defaultFilterTemplate);
-        }
-    }
-    getTemplateClass(templateKey) {
-        return templateKey.replace(/.*\.dynamic_filter_template_/, "s_");
-    }
-    updateTemplate(el, template) {
-        const newTemplateKey = template.key;
-        const oldTemplateKey = el.dataset.templateKey;
-        el.dataset.templateKey = newTemplateKey;
-        if (oldTemplateKey) {
-            el.classList.remove(this.getTemplateClass(oldTemplateKey));
-        }
-        el.classList.add(this.getTemplateClass(newTemplateKey));
-
-        if (template.numOfEl) {
-            el.dataset.numberOfElements = template.numOfEl;
-        } else {
-            delete el.dataset.numberOfElements;
-        }
-        if (template.numOfElSm) {
-            el.dataset.numberOfElementsSmallDevices = template.numOfElSm;
-        } else {
-            delete el.dataset.numberOfElementsSmallDevices;
-        }
-        if (template.numOfElFetch) {
-            el.dataset.numberOfRecords = template.numOfElFetch;
-        }
-        if (template.extraClasses) {
-            el.dataset.extraClasses = template.extraClasses;
-        } else {
-            delete el.dataset.extraClasses;
-        }
-        if (template.columnClasses) {
-            el.dataset.columnClasses = template.columnClasses;
-        } else {
-            delete el.dataset.columnClasses;
-        }
-        this.dispatchTo("dynamic_snippet_template_updated", { el: el, template: template });
-    }
-    async fetchDynamicFilters(params) {
-        return this.dynamicFiltersCache.read(params);
-    }
-    async _fetchDynamicFilters(params) {
-        return rpc("/website/snippet/options_filters", params);
-    }
-    async fetchDynamicFilterTemplates(params) {
-        return this.dynamicFilterTemplatesCache.read(params);
-    }
-    async _fetchDynamicFilterTemplates(params) {
-        return rpc("/website/snippet/filter_templates", params);
-    }
-}
-
-export function setDatasetIfUndefined(snippetEl, optionName, value) {
-    if (snippetEl.dataset[optionName] === undefined) {
-        snippetEl.dataset[optionName] = value;
     }
 }
 
@@ -160,7 +62,7 @@ export class DynamicFilterAction extends BuilderAction {
             !el.dataset.templateKey.includes(`_${params.model_name.replaceAll(".", "_")}_`)
         ) {
             // Only if filter's model name changed
-            this.dependencies.dynamicSnippetOption.updateTemplate(el, params.defaultTemplate);
+            updateTemplate(el, params.defaultTemplate);
         }
     }
 }
@@ -171,7 +73,7 @@ export class DynamicFilterTemplateAction extends BuilderAction {
         return el.dataset.templateKey === params.key;
     }
     apply({ editingElement: el, params }) {
-        this.dependencies.dynamicSnippetOption.updateTemplate(el, params);
+        updateTemplate(el, params);
     }
 }
 export class CustomizeTemplateAction extends BuilderAction {

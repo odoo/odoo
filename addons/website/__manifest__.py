@@ -256,6 +256,7 @@
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.cookies_warning.xml',
+            'website/static/src/js/dynamic_snippet_utils.js',
             'website/static/src/js/text_processing.js',
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
@@ -503,6 +504,7 @@
             ('include', 'html_builder.assets'),
             'website/static/src/scss/website_common.scss',
             'website/static/src/builder/**/*',
+            'website/static/src/js/dynamic_snippet_utils.js',
             ('remove', 'website/static/src/builder/**/*.inside.scss'),
         ],
         'html_builder.iframe_add_dialog': [
@@ -511,7 +513,12 @@
     },
     'configurator_snippets': {
         'homepage': ['s_cover', 's_text_image', 's_numbers'],
-        'homepage_website_sale': ['s_cover', 's_text_image', 's_numbers', 'website_sale.s_dynamic_snippet_products'],
+        'homepage_website_sale': [
+            (1, 'website_sale.s_dynamic_snippet_products'),
+            (3, 'website_appointment.s_appointments'),
+            (5, 'website_event.s_events'),
+            (7, 'website_blog.s_blog_posts'),
+        ],
         'about_us': ['s_text_image', 's_image_text', 's_title', 's_company_team'],
         'our_services': ['s_three_columns', 's_quotes_carousel', 's_references'],
         'pricing': ['s_comparisons'],

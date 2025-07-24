@@ -2,8 +2,9 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { DynamicSnippetCarouselOption } from "./dynamic_snippet_carousel_option";
-import { DYNAMIC_SNIPPET, setDatasetIfUndefined } from "./dynamic_snippet_option_plugin";
+import { DYNAMIC_SNIPPET } from "./dynamic_snippet_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { setDatasetIfUndefined, setOptionsDefaultValues } from '@website/js/dynamic_snippet_utils';
 
 export const DYNAMIC_SNIPPET_CAROUSEL = DYNAMIC_SNIPPET;
 
@@ -50,7 +51,7 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
         }
     }
     async setOptionsDefaultValues(snippetEl, modelNameFilter, contextualFilterDomain = []) {
-        await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
+        await setOptionsDefaultValues(
             snippetEl,
             modelNameFilter,
             contextualFilterDomain
