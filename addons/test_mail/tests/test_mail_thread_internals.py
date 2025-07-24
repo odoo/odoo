@@ -583,11 +583,18 @@ class TestAPI(ThreadRecipients):
             'email_from': self.partner_employee.email_formatted,
             'name': 'Partner follower (user)',
         })
+        # existing partner with multiple emails -> should propose only the first one
+        partner_multiemail = self.test_partner.copy({'email': 'test1.external@example.com,test2.external@example.com'})
+        ticket_partner_multiemail = self.env['mail.test.ticket.mc'].create({
+            'customer_id': partner_multiemail.id,
+            'email_from': partner_multiemail.email_formatted,
+            'name': 'Partner Multi-Emails',
+        })
         ticket_partner_fol.message_subscribe(partner_ids=self.test_partner.ids)
         ticket_partner_fol.message_subscribe(partner_ids=self.partner_employee.ids)
         for ticket, sugg_partner in zip(
-            ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user,
-            (self.test_partner, self.test_partner, self.test_partner, False),
+            ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user + ticket_partner_multiemail,
+            (self.test_partner, self.test_partner, self.test_partner, False, partner_multiemail),
             strict=True,
         ):
             with self.subTest(ticket=ticket.name):
