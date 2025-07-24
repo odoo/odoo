@@ -55,3 +55,26 @@ test("Preview changes of many2one option", async () => {
     expect(":iframe span.span-2 > span").toHaveText("The Address of 3");
     expect(":iframe span.span-4").toHaveText("Other");
 });
+
+test("Many2OneOption: add null_text option in dropdown", async () => {
+    onRpc(
+        "ir.qweb.field.contact",
+        "get_record_to_html",
+        ({ args: [[id]], kwargs }) => `<span>The ${kwargs.options.option} of ${id}</span>`
+    );
+    await setupHTMLBuilder(`
+        <div class="many2oneoption_dropdown"
+            data-oe-many2one-id="1"
+            data-oe-many2one-model="res.partner"
+            data-oe-contact-options='{"null_text":"Remote"}'>
+            <span>location</span>
+        </div>
+    `);
+    await contains(":iframe .many2oneoption_dropdown").click();
+    expect("button.btn.dropdown").toHaveCount(1);
+    await contains("button.btn.dropdown").click();
+    await contains('input[placeholder="Search for records..."]').fill("R");
+    await advanceTime(250);
+    await contains("span.o-dropdown-item.dropdown-item:contains('Remote')").click();
+    expect(":iframe div.many2oneoption_dropdown").toHaveText("Remote");
+});
