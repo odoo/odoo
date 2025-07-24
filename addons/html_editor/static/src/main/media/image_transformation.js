@@ -189,6 +189,7 @@ export class ImageTransformation extends Component {
         settings.angle = Math.round(settings.angle);
         settings.translatex = Math.round(settings.translatex);
         settings.translatey = Math.round(settings.translatey);
+        this.transfo.settings.pos = this.getOffset(this.image);
         this.positionTransfoContainer();
         this.props.onChange();
     }
