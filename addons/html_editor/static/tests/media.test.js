@@ -32,7 +32,7 @@ test("Can replace an image", async () => {
     expect("button[name='replace_image']").toHaveCount(1);
     await click("button[name='replace_image']");
     await animationFrame();
-    await click("img.o_we_attachment_highlight");
+    await click(".o_existing_attachment_cell .o_button_area");
     await animationFrame();
     expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
     expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
@@ -62,7 +62,7 @@ test("Replace an image with link by a document should remove the link", async ()
     await animationFrame();
     await click(".nav-link:contains('Documents')");
     await animationFrame();
-    await click(".o_we_attachment_highlight");
+    await click(".o_we_attachment_highlight .o_button_area");
     expect(".odoo-editor-editable .o_file_box a:contains('file.txt')").toHaveCount(1);
     expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
     expect("p a[href='http://test.com']").toHaveCount(0);
@@ -90,7 +90,7 @@ test("Selection is collapsed after the image after replacing it", async () => {
     expect("button[name='replace_image']").toHaveCount(1);
     await click("button[name='replace_image']");
     await animationFrame();
-    await click("img.o_we_attachment_highlight");
+    await click(".o_existing_attachment_cell .o_button_area");
     await animationFrame();
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe("<p>abc<img>[]def</p>");
 });
@@ -114,7 +114,7 @@ test("Can insert an image, and selection should be collapsed after it", async ()
     await expectElementCount(".o-we-powerbox", 1);
     await press("Enter");
     await animationFrame();
-    await click("img.o_we_attachment_highlight");
+    await click(".o_existing_attachment_cell .o_button_area");
     await animationFrame();
     expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe("<p>a<img>[]bc</p>");

@@ -47,11 +47,11 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     run: "click",
 }, {
     content: "Click on the first new image",
-    trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
+    trigger: ".o_select_media_dialog .o_button_area[aria-label='s_default_image.jpg']",
     run: "click",
 }, {
     content: "Click on the second new image",
-    trigger: ".o_select_media_dialog img[title='s_default_image2.webp']",
+    trigger: ".o_select_media_dialog .o_button_area[aria-label='s_default_image2.webp']",
     run: "click",
 },
     addMedia(),
@@ -140,7 +140,7 @@ registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     changeOption("Image Gallery", "addImage"),
 {
     content: "Click on the default image",
-    trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
+    trigger: ".o_select_media_dialog .o_button_area[aria-label='s_default_image.jpg']",
     run: "click",
 },
     addMedia(),

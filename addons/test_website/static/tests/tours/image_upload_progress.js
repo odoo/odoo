@@ -214,7 +214,7 @@ registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         run: "edit fox",
     }, {
         content: "click on unsplash result", // note that unsplash is mocked
-        trigger: "img[alt~=fox]",
+        trigger: ".o_we_media_dialog_img_wrapper:has(img[alt~=fox]) + .o_button_area",
         run: "click",
     },
     {
