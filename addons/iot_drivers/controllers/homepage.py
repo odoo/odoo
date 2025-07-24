@@ -161,6 +161,8 @@ class IotBoxOwlHomePage(http.Controller):
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
         network_qr_codes = wifi.generate_network_qr_codes() if IS_RPI else {}
         odoo_server_url = helpers.get_odoo_server_url() or ''
+        odoo_uptime_seconds = time.monotonic() - helpers.odoo_start_time
+        system_uptime_seconds = time.monotonic() - helpers.system_start_time
 
         return json.dumps({
             'db_uuid': helpers.get_conf('db_uuid'),
@@ -177,6 +179,8 @@ class IotBoxOwlHomePage(http.Controller):
             'network_interfaces': network_interfaces,
             'version': helpers.get_version(),
             'system': IOT_SYSTEM,
+            'odoo_uptime_seconds': odoo_uptime_seconds,
+            'system_uptime_seconds': system_uptime_seconds,
             'certificate_end_date': certificate.get_certificate_end_date(),
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
             'qr_code_wifi': network_qr_codes.get('qr_wifi'),
