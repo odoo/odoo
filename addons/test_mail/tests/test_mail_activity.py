@@ -805,6 +805,42 @@ class TestActivityMixin(TestActivityCommon):
                 {(e['activity_state'], e['__count']) for e in Model.formatted_read_group(**read_group_params)},
                 {('today', 2)})
 
+    def test_activity_type_filter_excludes_done_even_if_keep_done_true(self):
+        Partner = self.env['res.partner']
+        MailActivity = self.env['mail.activity']
+
+        partner = Partner.create({'name': 'Keep Done Filter Test'})
+        todo_type = self.env.ref('test_mail.mail_act_test_todo')
+
+        todo_type.keep_done = True
+
+        MailActivity.create({
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': partner.id,
+            'activity_type_id': todo_type.id,
+            'user_id': self.env.uid,
+            'active': False,
+        })
+
+        results = Partner.search([('activity_type_id', '=', todo_type.id)])
+        self.assertNotIn(
+            partner, results,
+            "Record with only DONE activities (even with keep_done=True) should not appear in activity_type_id search"
+        )
+
+        MailActivity.create({
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': partner.id,
+            'activity_type_id': todo_type.id,
+            'user_id': self.env.uid,
+        })
+
+        results = Partner.search([('activity_type_id', '=', todo_type.id)])
+        self.assertIn(
+            partner, results,
+            "Record with an active activity should appear in activity_type_id search"
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_different_day_but_close_time(self):
         """Test the case where there's less than 24 hours between the deadline and now_tz,

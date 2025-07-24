@@ -1,4 +1,5 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { makeMailActivityMixin } from "@mail/../tests/mock_server/mock_models/mail_activity_mixin";
 import {
     fields,
     getKwArgs,
@@ -9,7 +10,7 @@ import {
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
-export class ResPartner extends webModels.ResPartner {
+class ResPartner extends webModels.ResPartner {
     _inherit = ["mail.thread"];
 
     description = fields.Char({ string: "Description" });
@@ -388,3 +389,6 @@ export class ResPartner extends webModels.ResPartner {
         return [this.browse(this.env.user.partner_id)[0], null];
     }
 }
+
+const ResPartnerActivityMixin = makeMailActivityMixin(ResPartner);
+export { ResPartnerActivityMixin as ResPartner };

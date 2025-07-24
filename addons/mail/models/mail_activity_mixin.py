@@ -67,7 +67,9 @@ class MailActivityMixin(models.AbstractModel):
         groups="base.group_user")
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',
-        related='activity_ids.activity_type_id', readonly=False,
+        compute='_compute_activity_type_id',
+        inverse='_inverse_activity_type_id',
+        readonly=False,
         search='_search_activity_type_id',
         groups="base.group_user")
     activity_type_icon = fields.Char('Activity Type Icon', related='activity_ids.icon')
@@ -131,6 +133,24 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'planned'
             else:
                 record.activity_state = False
+
+    @api.depends('activity_ids.state', 'activity_ids.date_deadline', 'activity_ids.activity_type_id')
+    def _compute_activity_type_id(self):
+        for record in self:
+            activities = record.activity_ids.filtered(lambda a: a.state != 'done')
+            if activities:
+                first = min(activities, key=lambda a: a.date_deadline or fields.Date.max)
+                record.activity_type_id = first.activity_type_id
+            else:
+                record.activity_type_id = False
+
+    def _inverse_activity_type_id(self):
+        for record in self:
+            if record.activity_type_id:
+                activities = record.activity_ids.filtesored(lambda a: a.state != 'done')
+                if activities:
+                    first = min(activities, key=lambda a: a.date_deadline or fields.Date.max)
+                    first.activity_type_id = record.activity_type_id
 
     def _search_activity_state(self, operator, value):
         all_states = {'overdue', 'today', 'planned', False}
