@@ -1385,6 +1385,7 @@ class AccountMove(models.Model):
                     ])),
                     ('balance', '>' if move.is_inbound() else '<', 0.0),
                     ('statement_line_id', '!=', False),
+                    ('move_id.line_ids', 'any', [('account_id', '=', move.company_id.account_journal_suspense_account_id.id)])
                 ])
 
             payments_widget_vals = {
