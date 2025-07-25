@@ -30,17 +30,19 @@ class ProductProduct(models.Model):
     suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
 
     @api.depends("qty_available", "outgoing_qty", "incoming_qty", "monthly_demand")
-    @api.depends_context("suggest_based_on", "suggest_days", "suggest_multiplier", "warehouse_id")
+    @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggested_quantity(self):
+        """ IMPROVE: computes too many time for one suggestion """
         ctx = self.env.context
         for product in self:
             if not ctx.get("suggest_based_on"):
                 product.suggested_qty = 0
                 continue
             elif ctx.get("suggest_based_on") == "actual_demand":
-                qty = ceil(product.outgoing_qty * ctx.get("suggest_percent", 0) / 100)  # suggest_percent depends on suggest_multiplier
+                qty = ceil(product.outgoing_qty * ctx.get("suggest_percent", 0) / 100)
             else:
-                qty = ceil(product.monthly_demand * ctx.get("suggest_multiplier", 1))
+                monthly_ratio = ctx.get("suggest_days", 0) / (365.25 / 12)  # eg. 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
+                qty = ceil(product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100)
             qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
             product.suggested_qty = max(qty, 0)
 

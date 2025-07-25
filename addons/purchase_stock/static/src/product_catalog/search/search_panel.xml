@@ -9,7 +9,7 @@
     <t t-name="purchase_stock.SearchPanelContent" t-inherit="web.SearchPanelContent" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_search_panel')]/section" position="before">
             <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-            <t t-if="wizard.suggestToggle.isOn">
+            <t t-if="suggest.suggestToggle.isOn">
                 <div class="o_suggest_feature">
                     <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
                     <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
@@ -24,7 +24,7 @@
             <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
             <b class="me-2">Suggest</b>
             <button name="toggle_suggest_catalog" class="fa fa-lg bg-white border-0 text-primary"
-                t-attf-class="fa-toggle-{{wizard.suggestToggle.isOn ? 'on' : 'off'}}"
+                t-attf-class="fa-toggle-{{suggest.suggestToggle.isOn ? 'on' : 'off'}}"
                 t-on-click.stop="onSuggestToggle"/>
         </header>
     </t>
@@ -33,7 +33,7 @@
         <div class="d-flex align-items-center ms-2">
             <span class="me-2 fw-bold">Replenish for</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="wizard.numberOfDays"
+                t-att-value="suggest.numberOfDays"
                 t-on-input="onDaysInput"/>
             <span class="ms-2">day(s)</span>
         </div>
@@ -47,7 +47,7 @@
             </div>
             <span class="m-1">x</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="wizard.percentFactor"
+                t-att-value="suggest.percentFactor"
                 t-on-input="onPercentFactorInput"/>
             <span>%</span>
         </div>
@@ -56,8 +56,7 @@
     <t t-name="PurchaseSuggest.SearchPanel.Footer">
         <div class="d-flex align-items-center mt-3 ms-2">
             <div class="text-info fw-bold">
-                <span class="me-1"><t t-out="wizard.currencySymbol"/></span>
-                <span name="suggest_total"><t t-out="wizard.estimatedPrice"/></span>
+                <span name="suggest_total"><t t-out="estimatedSuggestPrice"/></span>
             </div>
             <button name="suggest_add_all" class="btn btn-sm btn-primary ms-2" t-on-click="addAllProducts">
                 Add All
