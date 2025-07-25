@@ -3,6 +3,7 @@
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
+from pytz import timezone
 
 from odoo import http, _
 from odoo.http import content_disposition, request
@@ -251,13 +252,15 @@ class LivechatController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
+        partner, guest = request.env["res.partner"]._get_current_persona()
+        tz = timezone(partner.tz or guest.timezone or "UTC")
         pdf, _type = (
             request.env["ir.actions.report"]
             .sudo()
             ._render_qweb_pdf(
                 "im_livechat.action_report_livechat_conversation",
                 channel.ids,
-                data={"company": request.env.company},
+                data={"company": request.env.company, "tz": tz},
             )
         )
         headers = [
