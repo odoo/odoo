@@ -75,6 +75,7 @@ def _check_open_container_format(data):
 
         return False
 
+
 _old_ms_office_mimetypes = {
     '.doc': 'application/msword',
     '.xls': 'application/vnd.ms-excel',
@@ -200,6 +201,22 @@ try:
                     mimetype,
                     exc_info=True,
                 )
+        if mimetype == 'application/zip':
+            # magic doesn't properly detect some Microsoft Office
+            # documents created after 2025, use our own check to further
+            # discriminate the mimetype.
+            # /!\ Only work when bin_data holds the whole zipfile. /!\
+            try:
+                if msoffice_mimetype := _check_ooxml(bin_data):
+                    return msoffice_mimetype
+            except zipfile.BadZipFile:
+                pass
+            except Exception:  # noqa: BLE001
+                _logger_guess_mimetype.warning(
+                    "Sub-checker '_check_ooxml' of type '%s' failed",
+                    mimetype,
+                    exc_info=True,
+                )
         return mimetype
 
 except ImportError:
@@ -255,6 +272,9 @@ def fix_filename_extension(filename, mimetype):
 
     extension = get_extension(filename)
     if mimetype in _olecf_mimetypes and extension in _old_ms_office_mimetypes:
+        return filename
+
+    if mimetype == 'application/zip' and extension in {'.docx', '.xlsx', '.pptx'}:
         return filename
 
     if extension := mimetypes.guess_extension(mimetype):
