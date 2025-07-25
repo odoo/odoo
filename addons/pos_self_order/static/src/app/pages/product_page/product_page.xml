@@ -5,15 +5,13 @@
             <t t-set="product" t-value="productTemplate"/>
 
             <!-- Header -->
-            <div class="o_self_product_page_header text-bg-primary text-reset" t-att-class="{'o_self_shadow_top': scrollShadow.top}">
+            <div class="o_self_product_page_header text-bg-primary" t-att-class="{'o_self_shadow_top': scrollShadow.top}">
                 <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
                     <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="() => this.goBack()">
                         <i class="oi oi-close fa-fw" aria-hidden="true"/>
                         <span  t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
                     </button>
-                    <div class="o_self_product_name position-absolute fw-bold fs-2 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}"   >
-                         <t t-esc="product.name" />
-                    </div>
+                    <h2 class="o_self_product_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-esc="product.name"/>
                 </div>
             </div>
 
