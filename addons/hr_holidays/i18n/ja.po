@@ -3,9 +3,9 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Junko Augias, 2025
 # Tiffany Chang, 2025
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,7 +124,7 @@ msgstr "%(label)s 戻り予定: %(date)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(leave_name)s has been cancelled for the following reason: %(reason)s"
-msgstr ""
+msgstr "%(leave_name)s は以下の理由でキャンセルされました: %(reason)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -246,6 +246,8 @@ msgid ""
 "(s)\n"
 "                                    and a balance cap is set to"
 msgstr ""
+" \n"
+"                                    および残りの上限が以下に設定されています:"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -267,7 +269,7 @@ msgstr "00:00"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid ": the"
-msgstr ""
+msgstr ": "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -439,7 +441,7 @@ msgstr "<strong>部署と従業員</strong>"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "A balance cap is set to"
-msgstr ""
+msgstr "残高上限が設定されています:"
 
 #. module: hr_holidays
 #. odoo-python
@@ -503,14 +505,14 @@ msgstr "休暇を複製することはできません。"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "A yearly cap is set to"
-msgstr ""
+msgstr "年間上限が設定されています:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__show_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__show_leaves
 msgid "Able to see Remaining Time Off"
-msgstr "残りの休みを見ることができます"
+msgstr "残りの休暇を表示できます"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__leave
@@ -577,7 +579,7 @@ msgstr "休暇の累積レベル"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual Level Options"
-msgstr ""
+msgstr "休暇累積レベルオプション"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
@@ -616,12 +618,12 @@ msgstr "見越休暇:休暇の数を更新します"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Accrual frequency :"
-msgstr ""
+msgstr "休暇累積頻度 :"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual will stop until next carry-over date if accrued time's reach"
-msgstr ""
+msgstr "休暇累積が上限に達した場合、次の繰越日まで休暇累積が停止します"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -713,7 +715,7 @@ msgstr "活動タイプ"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Add a milestone"
-msgstr ""
+msgstr "マイルストンを追加"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -742,7 +744,7 @@ msgstr "変更後"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "After a year, unused time off will be :"
-msgstr ""
+msgstr "1年後、未使用の休暇は次のように処理されます:"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__end_of_accrual
@@ -954,7 +956,7 @@ msgstr "金額"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "An element name parent of the radio to observe updates"
-msgstr ""
+msgstr "更新を監視するためのラジオボタンの親要素の名前"
 
 #. module: hr_holidays
 #. odoo-python
@@ -966,7 +968,7 @@ msgstr "従業員が以下の期間と重複する休暇を予約しています
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "An object to link select options and element id to move"
-msgstr ""
+msgstr "選択肢と移動させる要素のIDを関連付けるオブジェクト"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1076,7 +1078,7 @@ msgstr "申請する"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__milestone_date__creation
 msgid "At allocation creation"
-msgstr ""
+msgstr "割当作成時"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__allocation
@@ -1195,7 +1197,7 @@ msgstr "休暇累積プランに基づく"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Boolean display as radio field with translatable labels"
-msgstr ""
+msgstr "翻訳可能なラベルを持つラジオボタン形式で表示されるブール値フィールド"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
@@ -1331,12 +1333,12 @@ msgstr "キャンセル済休暇"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Cap Options"
-msgstr ""
+msgstr "上限オプション"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__all
 msgid "Carried over"
-msgstr ""
+msgstr "繰越済"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
@@ -1346,7 +1348,7 @@ msgstr "繰越日の有効期限日"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Options"
-msgstr ""
+msgstr "繰越オプション"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1483,7 +1485,7 @@ msgstr "連絡先"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Contract %(contract)s from %(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "契約 %(contract)s 開始日: %(start_date)s 終了日: %(end_date)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1528,7 +1530,7 @@ msgstr "顧客を作成する"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Create a milestone"
-msgstr ""
+msgstr "マイルストンを作成"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -1594,7 +1596,7 @@ msgstr "現在有効"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__other
 msgid "Custom date"
-msgstr ""
+msgstr "カスタム日付"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__daily
@@ -1665,7 +1667,7 @@ msgstr "日"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_death
 msgid "Death Leave"
-msgstr ""
+msgstr "忌引休暇"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__12
@@ -1677,17 +1679,17 @@ msgstr "12月"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a balance cap?"
-msgstr ""
+msgstr "残日数の上限を設定しますか?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a carry over validity?"
-msgstr ""
+msgstr "繰越日の有効性を設定しますか?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a yearly cap?"
-msgstr ""
+msgstr "年次上限を設定しますか?"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_allowed_negative
@@ -1811,7 +1813,7 @@ msgstr "カレンダーに休暇を表示"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Do you need a carry-over of the accrued days from one year to another?"
-msgstr ""
+msgstr "付与された休暇日数を翌年に繰越す必要がありますか?"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1819,7 +1821,7 @@ msgstr ""
 msgid ""
 "Do you want to save the changes made to the accrual plan before creating a "
 "new milestone?"
-msgstr ""
+msgstr "新しいマイルストンを作成する前に、休暇累積プランの変更を保存しますか?"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1827,7 +1829,7 @@ msgstr ""
 msgid ""
 "Do you want to save the changes made to the accrual plan before editing this"
 " milestone?"
-msgstr ""
+msgstr "このマイルストンを編集する前に、休暇累積プランへの変更を保存しますか?"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1890,13 +1892,13 @@ msgstr "日単位の期間。必要に応じて使用する参照フィールド
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Element association"
-msgstr ""
+msgstr "要素の関連付け"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Element to observe"
-msgstr ""
+msgstr "監視対象の要素"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -2010,7 +2012,7 @@ msgstr "追加休暇"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "False association"
-msgstr ""
+msgstr "誤った関連付け"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__2
@@ -2206,7 +2208,7 @@ msgstr "従業員によるHR休暇要約レポート"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_hajj
 msgid "Hajj Leave"
-msgstr ""
+msgstr "ハッジ休暇"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
@@ -2270,7 +2272,7 @@ msgstr "時間から"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__added_value_type__hour
 msgid "Hour(s)"
-msgstr ""
+msgstr "時間"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__hourly
@@ -2289,7 +2291,7 @@ msgstr "時間"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "How much time can be carried over :"
-msgstr ""
+msgstr "繰越可能な日数 :"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__hr_icon_display
@@ -2482,7 +2484,7 @@ msgstr "使用済"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "It is based on worked time?"
-msgstr ""
+msgstr "勤務時間に基づいていますか?"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__1
@@ -2621,13 +2623,13 @@ msgstr "レベル"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean False value."
-msgstr ""
+msgstr "要素をbooleanのFalse(偽)値に関連付けてください。"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean True value."
-msgstr ""
+msgstr "要素をbooleanのTrue(真)値に関連付けてください。"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
@@ -2764,7 +2766,7 @@ msgstr "メッセージ"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "Milestone Edition"
-msgstr ""
+msgstr "マイルストン版"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2894,7 +2896,7 @@ msgstr "新規"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "New !"
-msgstr ""
+msgstr "新規 !"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3023,18 +3025,18 @@ msgstr "必須出勤日はまだ設定されていません!"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No milestones on the plan yet. Let's create a new one"
-msgstr ""
+msgstr "プランにマイルストンが見つかりません。作成しましょう!"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No, always consider the entire accrual period (whole calendar days)."
-msgstr ""
+msgstr "いいえ、常に休暇累積期間全体（暦日単位）を考慮してください。"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "No, keep the old version"
-msgstr ""
+msgstr "いいえ、古いバージョンを維持します"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_holidays_dashboard
@@ -3156,7 +3158,7 @@ msgstr "休暇中"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "On Leave (Busy)"
-msgstr ""
+msgstr "休暇中 (対応不可)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3248,7 +3250,7 @@ msgstr "自分の申請を承認または却下できるのは、休暇管理者
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
 msgid ""
 "Only excludes requests where the time off type is set as unpaid kind of."
-msgstr ""
+msgstr "「無給」種別として設定されている休暇申請のみを除外します。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3272,7 +3274,7 @@ msgstr "概要"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_paid_sick_time_off
 msgid "Paid Sick time off"
-msgstr ""
+msgstr "有給病気休暇"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.leave_type_paid_time_off
@@ -3350,7 +3352,7 @@ msgstr "休暇を申請する際、祝日は休暇期間に算入する必要が
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Radio followed by element"
-msgstr ""
+msgstr "要素に続くラジオボタン"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -3651,7 +3653,7 @@ msgstr "割当で年末に保持される累積休暇の上限を設定します
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Set the employee accrual frequency :"
-msgstr ""
+msgstr "従業員の休暇累積頻度を設定してください:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3662,12 +3664,12 @@ msgstr "次回活動日が過去のすべてのレコードを表示"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_75
 msgid "Sick Leave (75% Paid)"
-msgstr ""
+msgstr "病気休暇 (75% 有給)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_unpaid
 msgid "Sick Leave (UnPaid)"
-msgstr ""
+msgstr "病気休暇 (無給)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_ae_leave_type_sick_leave_0
@@ -3833,7 +3835,7 @@ msgstr "参考資料"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Switch employees to the new accrual level:"
-msgstr ""
+msgstr "従業員を新しい休暇累積レベルに切り替える:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
@@ -3891,7 +3893,7 @@ msgstr "ここで選択された色は、休暇タイプの全ての画面で使
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The days carried over will be effective for"
-msgstr ""
+msgstr "繰越された日数は、次の期間に有効となります:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
@@ -3952,7 +3954,7 @@ msgstr "carried_over_days_expiration_date に有効期限が切れる繰越日�
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The plan will be on hold if the balance reach"
-msgstr ""
+msgstr "限度が以下に達した場合、このプランは一時停止されます:"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -3992,7 +3994,7 @@ msgstr "休暇は自動的に承認されました"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "The time off request has been cancelled for the following reason:%(reason)s"
-msgstr ""
+msgstr "次の理由により、休暇申請はキャンセルされました:%(reason)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -4068,7 +4070,7 @@ msgstr "これは、このタイプの休暇をまだ使用できるかどうか
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "This milestone will be reached :"
-msgstr ""
+msgstr "このマイルストーンが達成されるのは:"
 
 #. module: hr_holidays
 #. odoo-python

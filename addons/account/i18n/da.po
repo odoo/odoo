@@ -1542,9 +1542,9 @@ msgid ""
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Et kasseapparat giver dig mulighed for at administrere kontantposter i dine kontant\n"
-"journaler. Denne funktion giver en nem måde at følge op på kontant\n"
-"betalinger på daglig basis."
+"Et kasseapparat giver dig mulighed for at administrere kontantposter i dine kassekladder.\n"
+"                Denne funktion giver en nem måde at følge op på kontantbetalinger\n"
+"                på daglig basis."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -1653,7 +1653,7 @@ msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
-"En betaling med en udestående konto kan ikke bekræftes uden at have en "
+"En betaling med en konto til forfaldne beløb kan ikke bekræftes uden en "
 "journalpost."
 
 #. module: account
@@ -2134,8 +2134,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Konto der vil blive sat på linjer lavet i kontant basis journal indskrivelse"
-" og brugt til at holde styr på skattens grund mængde."
+"Den konto, der bruges i journalposteringer ved faktisk beskatning, og som "
+"registrerer det beløb, skatten beregnes ud fra."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -2750,7 +2750,7 @@ msgstr "Gør det muligt at konfigurere moms ud fra kontant basis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Tilladt måleenhed"
 
 #. module: account
 #. odoo-javascript
@@ -4241,7 +4241,7 @@ msgstr "Kontantbasis Posteringer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr "Kasse journal"
+msgstr "Journal for faktisk beskatning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
@@ -5528,7 +5528,7 @@ msgstr "Valuta oversættelse"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Currency exchange rate difference"
-msgstr "Valutakurs difference"
+msgstr "Valutakursdifference"
 
 #. module: account
 #. odoo-python
@@ -11049,7 +11049,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No outstanding account could be found to make the payment"
-msgstr "Inden udestående konto kunne findes til at udføre betalingen"
+msgstr ""
+"Der kunne ikke findes en konto til forfaldne beløb til at gennemføre "
+"betalingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -11734,7 +11736,7 @@ msgstr "Udgående Betalinger"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Udestående Konto"
+msgstr "Konto til forfaldne beløb"
 
 #. module: account
 #. odoo-python
@@ -11746,7 +11748,7 @@ msgstr "Udestående Betalinger"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr "Udestående Betalingskonti"
+msgstr "Konto til forfaldne beløb"
 
 #. module: account
 #. odoo-python
@@ -11758,7 +11760,7 @@ msgstr "Udestående Kvitteringer"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr "Udestående Kvitteringskonti"
+msgstr "Konto til forfaldne beløb"
 
 #. module: account
 #. odoo-python
@@ -13973,7 +13975,7 @@ msgstr "Valgt Betalingsmetode Koder"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "Køb og sælg produkter i forskellige måleenheder eller emballagetyper"
 
 #. module: account
 #. odoo-python
@@ -14828,7 +14830,7 @@ msgstr "Moms kontantbasis postering fra"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "Moms kontant basis journal"
+msgstr "Journal for faktisk beskatning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
@@ -15791,8 +15793,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
-"Journalposteringen hvorfra denne kontantbasis moms journalpostering er "
-"blevet oprettet."
+"Den oprindelige journalpost, hvorfra denne post med faktisk beskatning "
+"stammer."
 
 #. module: account
 #. odoo-python
@@ -16256,7 +16258,7 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
-"Der er ingen kontant basis moms journal defineret for virksomheden '%s'.\n"
+"Virksomheden har ikke fået angivet en journal til faktisk beskatning '%s'.\n"
 "Konfigurér den i Regnskab/Konfiguration/Indstillinger"
 
 #. module: account
@@ -17114,7 +17116,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Enheder og emballage"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -18422,7 +18424,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "Du kan ikke nulstille en kontant moms baseret journalpost til kladde."
+msgstr ""
+"Det er ikke muligt at nulstille udkastet til en journalpost med faktisk "
+"beskatning."
 
 #. module: account
 #. odoo-python

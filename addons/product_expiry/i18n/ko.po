@@ -257,7 +257,7 @@ msgstr "수량 사용 가능"
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.js:0
 msgid "Fresh Free Stock"
-msgstr ""
+msgstr "신선 여유 재고"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -328,6 +328,8 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore.It will be computed on the lot/serial number."
 msgstr ""
+"유통기한까지 남은 날짜 기준 기간이며 품목이 재고에서 제거되어 더 이상 신선 보유 재고로 포함되지 않는 기간입니다. 로트번호 및 "
+"일련번호를 기준으로 계산됩니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -354,7 +356,7 @@ msgstr "선별"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except expired"
-msgstr ""
+msgstr "만료된 항목은 제외하고 진행"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -450,6 +452,8 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore. This date will be used in FEFO removal strategy."
 msgstr ""
+"이 날짜는 해당 일련번호의 품목이 재고에서 제거되어 더 이상 신선 보유 재고로 포함되지 않는 날짜입니다. 이 날짜는 FEFO 처리 "
+"방식에서 사용됩니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
@@ -462,19 +466,19 @@ msgstr "이 일련번호를 가진 상품이 아직 위험하진 않지만 상�
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_header.xml:0
 msgid "To Remove"
-msgstr ""
+msgstr "제거"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove now"
-msgstr ""
+msgstr "지금 제거"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove on"
-msgstr ""
+msgstr "다음 날짜에 제거:"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -521,6 +525,8 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired or should at least be removed from stock.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"배송하려는 %(product_name)s, %(lot_name)s 품목은 유통기한이 만료되어 최소한 재고에서 제거해야 하는 품목입니다.\n"
+"계속 진행할까요?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry

@@ -66,19 +66,19 @@ msgstr "Timesheet %(name)s"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s (%(days)shari)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)sjam%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)sjam)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -165,6 +165,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        Oh-oh! Karyawan yang Anda ingin hapus masih memiliki beberapa timesheet dan tidak dapat dihapus.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Maka berikut dua opsi Anda: baik hapus timesheet tersebut atau pertimbangkan untuk mengarsip karyawan alih-alih menghapus.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Silakan hapus pertama-tama semua timesheet mereka.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        Apakah Anda yakin ingin menghapus karyawan tersebut?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -331,7 +343,7 @@ msgstr "Telepon klien dan diskusikan project"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "Pilih karyawan untuk membuat timesheet mereka."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -340,6 +352,8 @@ msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected employees on the chosen dates"
 msgstr ""
+"Klik di hari atau pilih rentang hari untuk membuat timesheet untuk karyawan "
+"terpilih di tanggal-tanggal terpilih"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -348,6 +362,8 @@ msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected project on the chosen dates"
 msgstr ""
+"Klik di hari atau pilih rentang tanggal untuk membuat timesheet untuk "
+"project terpilih di tanggal-tanggal terpilih"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -355,6 +371,8 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to permanently delete its contents"
 msgstr ""
+"Klik di hari atau pilih rentang tanggal untuk secara permanen menghapus "
+"kontennya"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -576,6 +594,7 @@ msgstr "Jam Tambahan"
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_side_panel/timesheet_calendar_side_panel.xml:0
 msgid "Filter by specific employees to view only their timesheets"
 msgstr ""
+"Filter berdasarkan karyawan spesifik untuk melihat hanya timesheet mereka"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -791,7 +810,7 @@ msgstr "Partner"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "Filter-Filter Pribadi di Karyawan untuk tampilan Kalender"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -954,6 +973,8 @@ msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
 msgstr ""
+"Beberapa entri-entri timesheet memberatkan tugas-tugas tersebut! Hapus "
+"terlebih dahulu, lalu Anda dapat menghapus task-nya!"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1510,7 +1531,7 @@ msgstr "tanggal"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "contoh. Mengirim E-mail"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
