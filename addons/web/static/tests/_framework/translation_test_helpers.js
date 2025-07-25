@@ -2,7 +2,12 @@ import { after } from "@odoo/hoot";
 import { serverState } from "./mock_server_state.hoot";
 import { patchWithCleanup } from "./patch_test_helpers";
 
-import { loadLanguages, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import {
+    loadLanguages,
+    translatedTerms,
+    translatedTermsGlobal,
+    translationLoaded,
+} from "@web/core/l10n/translation";
 
 /**
  * @param {Record<string, string>} languages
@@ -31,5 +36,6 @@ export function patchTranslations(terms = {}) {
             patchWithCleanup(translatedTerms, { [addonName]: {} });
         }
         patchWithCleanup(translatedTerms[addonName], terms[addonName]);
+        patchWithCleanup(translatedTermsGlobal, terms[addonName]);
     }
 }

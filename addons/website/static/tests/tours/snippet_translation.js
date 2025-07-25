@@ -1,5 +1,5 @@
 import { localization } from '@web/core/l10n/localization';
-import { translatedTerms } from '@web/core/l10n/translation';
+import { translatedTermsGlobal } from '@web/core/l10n/translation';
 import {
     clickOnEditAndWaitEditMode,
     clickOnEditAndWaitEditModeInTranslatedPage,
@@ -19,7 +19,7 @@ registerWebsitePreviewTour('snippet_translation', {
             if (localization.code !== "fu_GB") {
                 console.error("the user language is not properly set");
             } else {
-                translatedTerms["Save"] = "Save in fu_GB";
+                translatedTermsGlobal["Save"] = "Save in fu_GB";
             }
         }
     },

@@ -5,7 +5,12 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
-import { translatedTerms, translationLoaded, translationIsReady } from "./translation";
+import {
+    translatedTerms,
+    translatedTermsGlobal,
+    translationLoaded,
+    translationIsReady,
+} from "./translation";
 import { objectToUrlEncodedString } from "../utils/urls";
 import { IndexedDB } from "../utils/indexed_db";
 

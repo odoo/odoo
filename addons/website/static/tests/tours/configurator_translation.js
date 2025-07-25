@@ -1,5 +1,5 @@
 import { localization } from "@web/core/l10n/localization";
-import { translatedTerms } from "@web/core/l10n/translation";
+import { translatedTermsGlobal } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 
@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
             if (localization.code !== "pa_GB") {
                 throw new Error("The user language is not the correct one");
             } else {
-                translatedTerms["Save"] = "Save_Parseltongue";
+                translatedTermsGlobal["Save"] = "Save_Parseltongue";
             }
         }
     },
