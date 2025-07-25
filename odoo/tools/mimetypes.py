@@ -15,6 +15,7 @@ import zipfile
 __all__ = ['guess_mimetype']
 
 _logger = logging.getLogger(__name__)
+_logger_guess_mimetype = _logger.getChild('guess_mimetype')
 
 # We define our own guess_mimetype implementation and if magic is available we
 # use it instead.
@@ -74,6 +75,13 @@ def _check_open_container_format(data):
 
         return False
 
+
+_old_ms_office_mimetypes = {
+    '.doc': 'application/msword',
+    '.xls': 'application/vnd.ms-excel',
+    '.ppt': 'application/vnd.ms-powerpoint',
+}
+_olecf_mimetypes = ('application/x-ole-storage', 'application/CDFV2')
 _xls_pattern = re.compile(b"""
     \x09\x08\x10\x00\x00\x06\x05\x00
   | \xFD\xFF\xFF\xFF(\x10|\x1F|\x20|"|\\#|\\(|\\))
@@ -160,7 +168,7 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
                         if guess: return guess
                     except Exception:
                         # log-and-next
-                        _logger.getChild('guess_mimetype').warn(
+                        _logger_guess_mimetype.warning(
                             "Sub-checker '%s' of type '%s' failed",
                             discriminant.__name__, entry.mimetype,
                             exc_info=True
@@ -179,6 +187,7 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
 try:
     import magic
     def guess_mimetype(bin_data, default=None):
+<<<<<<< 561b97acc85cd37f5fcc92809353cf5243c8a52c
         mimetype = magic.from_buffer(bin_data[:1024], mime=True)
         if mimetype in ('application/CDFV2', 'application/x-ole-storage'):
             # Those are the generic file format that Microsoft Office
@@ -191,6 +200,32 @@ try:
                 _logger.getChild('guess_mimetype').warning(
                     "Sub-checker '_check_olecf' of type 'application/x-ole-storage' failed",
                     exc_info=True)
+||||||| d380a3a42dc39451fa26f161cc0b955b2f0098fd
+        mimetype = _guesser(bin_data[:1024])
+        # upgrade incorrect mimetype to official one, fixed upstream
+        # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
+        if mimetype == 'image/svg':
+            return 'image/svg+xml'
+=======
+        mimetype = _guesser(bin_data[:1024])
+        # upgrade incorrect mimetype to official one, fixed upstream
+        # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
+        if mimetype == 'image/svg':
+            return 'image/svg+xml'
+        # application/CDFV2 and application/x-ole-storage are two files
+        # formats that Microsoft Office was using before 2006. Use our
+        # own guesser to further discriminate the mimetype.
+        if mimetype in _olecf_mimetypes:
+            try:
+                if msoffice_mimetype := _check_olecf(bin_data):
+                    return msoffice_mimetype
+            except Exception:  # noqa: BLE001
+                _logger_guess_mimetype.warning(
+                    "Sub-checker '_check_olecf' of type '%s' failed",
+                    mimetype,
+                    exc_info=True,
+                )
+>>>>>>> 276a84ac52a99655f730a911ab46bccb6373cdaa
         return mimetype
 
 except ImportError:
@@ -240,7 +275,15 @@ def fix_filename_extension(filename, mimetype):
         mimetype, otherwise the same filename with the mimetype's
         extension added at the end.
     """
-    if mimetypes.guess_type(filename)[0] == mimetype:
+    extension_mimetype = mimetypes.guess_type(filename)[0]
+    if extension_mimetype == mimetype:
+        return filename
+
+    extension = get_extension(filename)
+    if mimetype in _olecf_mimetypes and extension in _old_ms_office_mimetypes:
+        return filename
+
+    if mimetype == 'application/zip' and extension in {'.docx', '.xlsx', '.pptx'}:
         return filename
 
     if extension := mimetypes.guess_extension(mimetype):
