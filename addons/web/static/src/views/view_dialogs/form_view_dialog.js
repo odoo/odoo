@@ -13,6 +13,7 @@ export class FormViewDialog extends Component {
         resModel: String,
 
         context: { type: Object, optional: true },
+        expandedFormRef: { type: String, optional: true },
         nextRecordsContext: { type: Object, optional: true },
         mode: {
             optional: true,
@@ -117,6 +118,7 @@ export class FormViewDialog extends Component {
                 views: [[false, "form"]],
                 context: {
                     ...this.props.context,
+                    form_view_ref: this.props.expandedFormRef,
                 },
             });
         }
