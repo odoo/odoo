@@ -947,11 +947,11 @@ class DiscussChannel(models.Model):
             notification_text = '''
                 <div data-oe-type="pin" class="o_mail_notification">
                     %(user_pinned_a_message_to_this_channel)s
-                    <a href="#" data-oe-type="pin-menu">%(see_all_pins)s</a>
+                    <span data-oe-type="pin-menu" class="btn btn-link smaller fw-normal p-0">%(see_all_pins)s</span>
                 </div>
             '''
             notification = Markup(notification_text) % {
-                'user_pinned_a_message_to_this_channel': Markup('<a href="#" data-oe-type="highlight" data-oe-id="%s">%s</a>') % (
+                'user_pinned_a_message_to_this_channel': Markup('<span data-oe-type="highlight" data-oe-id="%s" class="btn btn-link smaller fw-normal p-0">%s</span>') % (
                     message_id,
                     _('%(user_name)s pinned a message to this channel.', user_name=self.self_member_id._get_html_link_title()),
                 ),
@@ -1348,10 +1348,10 @@ class DiscussChannel(models.Model):
         ) % {
             "user": self.env.user.display_name,
             "goto": Markup(
-                "<a href='#' class='o_channel_redirect' data-oe-id='%s' data-oe-model='discuss.channel'>"
+                "<span class='o_channel_redirect btn btn-link smaller fw-normal p-0' data-oe-id='%s' data-oe-model='discuss.channel'>"
             )
             % sub_channel.id,
-            "goto_end": Markup("</a>"),
+            "goto_end": Markup("</span>"),
             "thread_name": sub_channel.name,
         }
         self.message_post(
