@@ -53,3 +53,9 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
         self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id)
         self.order_id._update_programs_and_rewards()
         return True
+
+    def action_discard(self):
+        if coupon_code := self.env.context.get("coupon_code"):
+            # In case `self` is empty (when triggered via X btn from dialog)
+            sale_order = self.order_id or self.env["sale.order"].browse(self.env.context.get("active_id"))
+            sale_order.code_enabled_rule_ids = sale_order.code_enabled_rule_ids.filtered(lambda c: c.code != coupon_code)

@@ -26,5 +26,6 @@ class SaleLoyaltyCouponWizard(models.TransientModel):
         action['context'] = {
             'active_id': self.order_id.id,
             'default_reward_ids': all_rewards.ids,
+            'coupon_code': self.coupon_code
         }
         return action

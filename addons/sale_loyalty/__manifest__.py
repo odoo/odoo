@@ -27,6 +27,9 @@
         'web.assets_backend': [
             'sale_loyalty/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'sale_loyalty/static/tests/tours/**/*',
+        ],
     },
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
