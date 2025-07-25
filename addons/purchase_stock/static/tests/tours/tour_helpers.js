@@ -1,3 +1,5 @@
+import { assert } from "@stock/../tests/tours/tour_helper";
+
 /**
  * Sets the date on the client to a specific timestamp using luxon's DateTime.fromFormat(jsDate, fmt)
  * @param {string} jsDate A date time string
@@ -132,4 +134,31 @@ export function toggleSuggest(turnOn) {
         },
         { trigger: `button[name="toggle_suggest_catalog"].fa-toggle-${turnOn ? "on" : "off"}` },
     ];
+}
+
+/**
+ * Checks a product Kanban is highlighted and in a specified place
+ * @param {string} product product display name
+ * @param {number} expected_order  1 == [0], 2 == [1] ...
+ * @param {boolean} highlightOn default to true
+ */
+export function checkKanbanRecordHighlight(product, expected_order, highlightOn = true) {
+    return {
+        trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view .o_kanban_record",
+        run() {
+            const cards = [...document.querySelectorAll(".o_kanban_record")];
+            const product_card = cards.find((card) => card.textContent.includes(product));
+            const highlighted = product_card.className.includes("o_suggest_highlight");
+            if (highlightOn === true) {
+                assert(highlighted, true, `${product} record should be highlighted.`);
+                assert(
+                    product_card == cards[expected_order - 1],
+                    true,
+                    `Card in position ${cards.indexOf(product_card)} not ${expected_order}.`
+                );
+            } else if (highlightOn === false) {
+                assert(highlighted, false, `${product} record should not be highlighted.`);
+            }
+        },
+    };
 }

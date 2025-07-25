@@ -8,10 +8,17 @@ import {
     goToPOFromCatalog,
     toggleSuggest,
     setSuggestParameters,
+    checkKanbanRecordHighlight,
 } from "./tour_helpers";
 
 registry.category("web_tour.tours").add("test_purchase_order_suggest_search_panel_ux", {
     steps: () => [
+        /*
+         * -----------------  PART 1 : Suggest Component -----------------
+         * Checks that the Suggest UI in the search panel works well
+         * (estimated price, warehouse logic, toggling, saving defaults)
+         * ----------------------------------------------------------------
+         */
         ...freezeDateTime("2021-01-14 09:12:15"), // Same date as python @freeze decorator
         { trigger: ".o_purchase_order" },
         {
@@ -96,6 +103,41 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...setSuggestParameters({ basedOn: "Actual Demand" }), // Keeping factor 50%
         // Suggest total should be -100 units forcasted * 50% * 20 = 1000$
         { trigger: "span[name='suggest_total']:visible:contains('1000')" },
+        /*
+         * -----------------  PART 2 : Kanban Interactions -----------------
+         * Checks that the Suggest UI and the Kanban record interactions
+         * (monthly demand, suggest_qtys, ADD suggested qtys)
+         * TODO: filtering attributes and categories
+         * ------------------------------------------------------------------
+         */
+        ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
+        { trigger: "span[name='suggest_total']:visible:contains('480')" },
+        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('52')" }, // ceil(12 * 30/ 7)
+        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
+        checkKanbanRecordHighlight("test_product", 1),
+
+        ...setSuggestParameters({ basedOn: "Last 30 days" }),
+        { trigger: "span[name='suggest_total']:visible:contains('240')" },
+        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('24')" }, // 2 orders of 12
+        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('12')" }, // 24 * 1 (28 days ~= 1 month) * 50% = 12
+
+        ...setSuggestParameters({ basedOn: "Last 3 months" }),
+        { trigger: "span[name='suggest_total']:visible:contains('80')" },
+        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('8')" }, // 24 / 3 = 8 with quaterly
+        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('4')" }, // 24 / 3* 1 (28 days ~= 1 month) * 50% = 4
+        ...toggleSuggest(false),
+        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('24')" }, // Should come back to normal monthly demand
+        checkKanbanRecordHighlight("test_product", 1, false), // expected order 1 not checked, just that highligh is off
+        ...toggleSuggest(true),
+
+        ...setSuggestParameters({ basedOn: "Actual Demand", factor: 100 }),
+        { trigger: "span[name='suggest_total']:visible:contains('2000')" },
+        { trigger: "span[name='o_kanban_forecasted_qty']:visible:contains('100')" }, // Move out of 100 in 20days
+        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('100')" }, // 100 * 100%
+        ...setSuggestParameters({ factor: 200 }),
+        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('200')" }, // 100 * 200%
+        ...setSuggestParameters({ factor: 50 }),
+        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('50')" }, // 100 * 50%
         {
             content: "Go back to the dashboard",
             trigger: ".o_menu_brand",
