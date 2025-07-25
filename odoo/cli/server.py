@@ -30,10 +30,9 @@ _logger = logging.getLogger('odoo')
 
 def check_root_user():
     """Warn if the process's user is 'root' (on POSIX system)."""
-    if os.name == 'posix':
-        import getpass
-        if getpass.getuser() == 'root':
-            sys.stderr.write("Running as user 'root' is a security risk.\n")
+    if os.name == 'posix' and os.getuid() == 0:
+        sys.stderr.write("Running as user 'root' is a security risk.\n")
+
 
 def check_postgres_user():
     """ Exit if the configured database user is 'postgres'.
