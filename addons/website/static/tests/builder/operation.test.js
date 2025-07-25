@@ -12,6 +12,8 @@ import {
     setupWebsiteBuilder,
 } from "./website_helpers";
 
+defineWebsiteModels();
+
 describe("Operation", () => {
     test("handle 3 concurrent cancellable operations (with delay)", async () => {
         const operation = new Operation();
@@ -86,8 +88,6 @@ describe("Operation", () => {
 });
 
 describe("Block editable", () => {
-    defineWebsiteModels();
-
     test("Doing an operation should block the editable during its execution", async () => {
         const customActionDef = new Deferred();
         addActionOption({
@@ -124,7 +124,6 @@ describe("Block editable", () => {
 });
 
 describe("Async operations", () => {
-    defineWebsiteModels();
     beforeEach(() => {
         patchWithCleanup(HistoryPlugin.prototype, {
             makePreviewableAsyncOperation(operation) {
@@ -225,5 +224,64 @@ describe("Async operations", () => {
         // test sometimes fails with an unverified step.
         await press(["Escape"]);
         expect.verifySteps(["revert"]);
+    });
+});
+
+describe("Operation that will fail", () => {
+    test("html builder must not be blocked if a preview crashes", async () => {
+        expect.errors(1);
+        class TestAction extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("fail");
+                throw new Error("This action should crash");
+            }
+        }
+        addActionOption({
+            TestAction,
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderButton action="'testAction'"/>
+                <BuilderButton classAction="'test'"/>`,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains("[data-action-id='testAction']").hover();
+        await contains("[data-class-action='test']").click();
+        expect(":iframe .test-options-target").toHaveOuterHTML(
+            '<div class="test-options-target o-paragraph test">b</div>'
+        );
+        expect.verifyErrors(["This action should crash"]);
+    });
+
+    test("html builder must not be blocked when a failed action is commit", async () => {
+        expect.errors(2);
+        class TestAction extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("fail");
+                throw new Error("This action should crash");
+            }
+        }
+        addActionOption({
+            TestAction,
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderButton action="'testAction'"/>
+                <BuilderButton classAction="'test'"/>`,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains("[data-action-id='testAction']").click();
+        await contains("[data-class-action='test']").click();
+        expect(":iframe .test-options-target").toHaveOuterHTML(
+            '<div class="test-options-target o-paragraph test">b</div>'
+        );
+        // preview + commit
+        expect.verifyErrors(["This action should crash", "This action should crash"]);
     });
 });
