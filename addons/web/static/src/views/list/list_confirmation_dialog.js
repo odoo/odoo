@@ -70,13 +70,11 @@ export class ListConfirmationDialog extends Component {
         this.props.close();
     }
 
-    /**
-     * Whether the Field component would show nothing
-     */
     isValueEmpty(field) {
-        // force readonly as we force that state on the Field component
-        return fieldVisualFeedback(field, this.props.record, field.name, {
-            ...field.fieldNode,
+        const fieldNode = field.fieldNode || {};
+        return fieldVisualFeedback(fieldNode.field || {}, this.props.record, field.name, {
+            ...fieldNode,
+            // force readonly as we force that state on the Field component
             readonly: true,
         }).empty;
     }

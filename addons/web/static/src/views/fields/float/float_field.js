@@ -131,7 +131,7 @@ export const floatField = {
         },
     ],
     supportedTypes: ["float", "monetary"],
-    isEmpty: () => false,
+    isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: ({ attrs, options }) => {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
