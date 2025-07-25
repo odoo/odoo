@@ -712,22 +712,31 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         self.assertEstimatedPrice(po_suggest_2, 20, based_on='one_week', days=7)  # No pricelist --> should use standard price
 
     def test_purchase_order_suggest_search_panel_ux(self):
-        # Create product, and supplier info
+        """ Tests the purchase catalog suggest component, in particular:
+        - Suggest: Hidding, Estimated price, Add all action, Changing warehouse
+        TODO Kanban View: Adding from record, Monthly demand & forecast on record, order of cards
+        """
         today = fields.Datetime.now()
         test_product = self.env['product.product'].create([{
             'name': "test_product",
             'is_storable': True,
         }])
-        self.env['stock.quant']._update_available_quantity(test_product, self.stock_location, 12)
         self.env['product.supplierinfo'].create([{
             'partner_id': self.partner_1.id,
             'min_qty': 1,
             'price': 20,
             'product_id': test_product.id,
         }])
-        # Create a move yesterday
-        self._create_and_process_delivery_at_date([(test_product, 12)], date=today - relativedelta(days=1))
-        self.assertEqual(test_product.monthly_demand, 12)
+        # Create and confirm a move yesterday (used to check monthly_demand/suggest)
+        self.env['stock.quant']._update_available_quantity(test_product, self.stock_location, 24)
+        self._create_and_process_delivery_at_date(
+            [(test_product, 12)], date=fields.Datetime.now() - relativedelta(days=1)
+        )
+        # Create and confirm 10 days ago (used to check monthly_demand/suggest with 7 days)
+        self._create_and_process_delivery_at_date(
+            [(test_product, 12)], date=fields.Datetime.now() - relativedelta(days=10)
+        )
+        self.assertEqual(test_product.monthly_demand, 24)
 
         # Create a and mark as todo a move in 20 days (for checking suggest/forecasted)
         self._create_and_process_delivery_at_date(
@@ -737,6 +746,6 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         other_warehouse = self.env.ref('stock.warehouse0')
         self.env['stock.quant']._update_available_quantity(test_product, other_warehouse.lot_stock_id, 1)
         self._create_and_process_delivery_at_date(
-            [(test_product, 1)], date=today - relativedelta(days=1), warehouse=other_warehouse
-        )
+            [(test_product, 1)], date=today - relativedelta(days=92), warehouse=other_warehouse
+        )  # Temp until we fix monthly demand taking into account warehouse id changes days
         self.start_tour('/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin')
