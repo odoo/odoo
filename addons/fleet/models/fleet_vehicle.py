@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
+from datetime import date, datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -405,11 +405,6 @@ class FleetVehicle(models.Model):
             driver_id = vals['driver_id']
             for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
                 vehicle.create_driver_history(vals)
-                if vehicle.driver_id:
-                    vehicle.activity_schedule(
-                        'mail.mail_activity_data_todo',
-                        user_id=vehicle.manager_id.id or self.env.user.id,
-                        note=_('Specify the End date of %s', vehicle.driver_id.name))
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = vals['future_driver_id']
@@ -427,6 +422,23 @@ class FleetVehicle(models.Model):
                     vehicle_read_group['bike'].write({'plan_to_change_bike': True})
                 if 'car' in vehicle_read_group:
                     vehicle_read_group['car'].write({'plan_to_change_car': True})
+
+        if 'future_driver_id' in vals or 'driver_id' in vals:
+            # delete existing open activities for vehicles in self.
+            # must delete because cannot update date_deadline
+            self.env['mail.activity'].sudo().search([
+                ('res_model_id', '=', self._name),
+                ('res_id', 'in', self.ids),
+                ('note', 'ilike', _('Review driver change')),
+                ('user_id', 'in', self.manager_id.ids or [self.env.user.id])
+            ]).action_cancel()
+            for vehicle in self:
+                vehicle.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    date_deadline=date.today() + relativedelta(weeks=1),
+                    note=_('Review driver change of %s and specify End date', vehicle.display_name),
+                    user_id=vehicle.manager_id.id or self.env.user.id,
+                )
 
         if 'active' in vals and not vals['active']:
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
