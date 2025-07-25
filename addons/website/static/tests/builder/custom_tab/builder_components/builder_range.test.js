@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, freezeTime, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -85,7 +85,12 @@ test("range input should step up or down with arrow keys", async () => {
     await contains(".options-container input").keyDown("ArrowLeft");
     expect(":iframe .test-options-target").toHaveInnerHTML("10");
 
-    expect.verifySteps(["customAction 12", "customAction 14", "customAction 12", "customAction 10"]);
+    expect.verifySteps([
+        "customAction 12",
+        "customAction 14",
+        "customAction 12",
+        "customAction 10",
+    ]);
 });
 
 test("keeping an arrow key pressed should commit only once", async () => {
@@ -96,9 +101,9 @@ test("keeping an arrow key pressed should commit only once", async () => {
             res.commit = async (...args) => {
                 expect.step(`commit ${args[0][0].actionValue}`);
                 commit(...args);
-            }
+            };
             return res;
-        }
+        },
     });
     addActionOption({
         customAction: class extends BuilderAction {
@@ -116,6 +121,7 @@ test("keeping an arrow key pressed should commit only once", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
     });
+    freezeTime();
     await setupWebsiteBuilder(`
         <div class="test-options-target">10</div>
     `);
@@ -129,7 +135,12 @@ test("keeping an arrow key pressed should commit only once", async () => {
     await advanceTime(50);
     await contains(".options-container input").keyDown("ArrowUp");
     expect(":iframe .test-options-target").toHaveInnerHTML("18");
-    expect.verifySteps(["customAction 12", "customAction 14", "customAction 16", "customAction 18"]);
+    expect.verifySteps([
+        "customAction 12",
+        "customAction 14",
+        "customAction 16",
+        "customAction 18",
+    ]);
     await advanceTime(550);
     expect.verifySteps(["commit 18", "customAction 18"]);
 });
