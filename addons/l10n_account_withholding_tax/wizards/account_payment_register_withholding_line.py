@@ -32,7 +32,10 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
     @api.depends('payment_register_id.payment_type')
     def _compute_type_tax_use(self):
         for line in self:
-            line.type_tax_use = 'sale' if line.payment_register_id.payment_type == 'inbound' else 'purchase'
+            if line.tax_id:
+                line.type_tax_use = line.tax_id.type_tax_use
+            else:
+                line.type_tax_use = 'sale' if line.payment_register_id.payment_type == 'inbound' else 'purchase'
 
     @api.depends('payment_register_id.amount', 'payment_register_id.can_edit_wizard')
     def _compute_comodel_percentage_paid_factor(self):
