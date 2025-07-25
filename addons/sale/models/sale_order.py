@@ -2067,7 +2067,8 @@ class SaleOrder(models.Model):
         :return: A dictionary to create a new SO line.
         """
         self.ensure_one()
-        extra_tax_data = self.env['account.tax']._export_base_line_extra_tax_data(base_line)
+        AccountTax = self.env['account.tax']
+        extra_tax_data = AccountTax._export_base_line_extra_tax_data(base_line)
         return {
             'order_id': self.id,
             'is_downpayment': True,
