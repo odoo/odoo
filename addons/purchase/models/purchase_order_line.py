@@ -524,15 +524,14 @@ class PurchaseOrderLine(models.Model):
         return res
 
     @api.model
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, partner_id, po):
         values = self.env.context.get('procurement_values', {})
-        partner = supplier.partner_id
         uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.today()
         seller = product_id.with_company(company_id)._select_seller(
-            partner_id=partner,
+            partner_id=partner_id,
             quantity=product_qty if values.get('force_uom') else uom_po_qty,
             date=po.date_order and max(po.date_order.date(), today) or today,
             uom_id=product_uom if values.get('force_uom') else product_id.uom_id,
@@ -555,8 +554,8 @@ class PurchaseOrderLine(models.Model):
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
 
         product_lang = product_id.with_prefetch().with_context(
-            lang=partner.lang,
-            partner_id=partner.id,
+            lang=partner_id.lang,
+            partner_id=partner_id.id,
         )
         name = product_lang.with_context(seller_id=seller.id).display_name
         if product_lang.description_purchase:

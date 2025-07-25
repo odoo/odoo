@@ -39,7 +39,7 @@ class PurchaseOrder(models.Model):
             Green: On time")
     suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
 
-    @api.depends_context("suggest_based_on", "suggest_multiplier", "suggest_days", "warehouse_id")
+    @api.depends_context("suggest_based_on", "suggest_percent", "suggest_days", "warehouse_id")
     def _compute_suggest_estimated_price(self):
         ctx = self.env.context
         for purchase_order in self:
@@ -139,23 +139,21 @@ class PurchaseOrder(models.Model):
         collapsing existing po_lines into at most 1 orderline. """
         po = self.browse(suggest_ctx.get("order_id"))
         po.ensure_one()
-
         products = self.env['product.product'].with_context(suggest_ctx).search(domain)
-        supplierinfos = self.env['product.supplierinfo'].search([('partner_id', '=', self.partner_id.id)])
 
         po_lines_commands = []
         for product in products:
-            supplierinfo = supplierinfos.filtered(lambda supinfo: supinfo.product_id == product)[:1]
             suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
                 product,
                 product.suggested_qty,
                 product.uom_id,
                 po.company_id,
-                supplierinfo,
+                po.partner_id,
                 po
             )
             existing_po_lines = po.order_line.filtered(lambda pol: pol.product_id == product)
             if existing_po_lines:
+                # Collapse into 1 or 0 po line, discarding previous data in favor of suggested qtys
                 to_unlink = existing_po_lines if product.suggested_qty == 0 else existing_po_lines[:-1]
                 po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
                 if product.suggested_qty > 0:
@@ -164,6 +162,13 @@ class PurchaseOrder(models.Model):
                 po_lines_commands.append(Command.create(suggest_line))
 
         po.order_line = po_lines_commands
+
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'warehouse_id': self.picking_type_id.warehouse_id.id if self.picking_type_id else False,
+            'vendor_name': self.partner_id.display_name,
+        }
 
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)

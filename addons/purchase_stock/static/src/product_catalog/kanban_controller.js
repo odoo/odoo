@@ -12,42 +12,30 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
     setup() {
         super.setup();
         this.state = useState({
-            basedOn: "",
-            percentFactor: 0,
+            basedOn: "last_30_days",
+            numberOfDays: 7,
+            currencyId: this.props.context.product_catalog_currency_id,
+            digits: this.props.context.product_catalog_digits,
+            percentFactor: 100,
             estimatedPrice: 0.0,
-            multiplier: 0,
-            numberOfDays: 0,
-            // bundling next constants in reactive state for code simplification (no need for reactivity)
-            wizardId: null,
-            warehouseId: null,
-            basedOnOptions: [],
-            currencySymbol: null,
+            vendorName: this.props.context.vendor_name,
             suggestToggle: this._loadSuggestToggleState(),
+        });
+
+        onWillStart(async () => {
+            this._baseContext = { ...this.model.config.context }; // For resetting when suggest is off
         });
 
         /* Pass context to backend and reload front-end with computed values
          * using a 300ms delay to avoid rendering entire kanban on each digit change */
         const debouncedSync = useDebounced(async () => {
-            const resp = await rpc("/purchase_stock/update_purchase_suggest", {
-                wizard_id: this.state.wizardId,
-                vals: {
-                    based_on: this.state.basedOn,
-                    number_of_days: this.state.numberOfDays,
-                    percent_factor: this.state.percentFactor,
-                },
-            });
-            Object.assign(this.state, resp);
-            await this._reload_grid();
-        }, 300); // Enough to type eg. 110 in percent input without rendering 3 times
-
-        onWillStart(async () => {
-            this._baseContext = { ...this.model.config.context }; // For resetting when suggest is off
-            const init = await rpc("/purchase_stock/init_purchase_suggest", {
+            this.state.estimatedPrice = await rpc("/purchase_stock/update_purchase_suggest", {
                 po_id: this.orderId,
                 domain: this.model.config.domain,
+                suggest_ctx: this._getCatalogContext(),
             });
-            Object.assign(this.state, init);
-        });
+            await this._reload_grid();
+        }, 300); // Enough to type eg. 110 in percent input without rendering 3 times
 
         useEffect(
             () => {
@@ -62,26 +50,24 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         );
 
         const onAddAll = async () => {
-            if (!this.state.wizardId) {
-                throw new Error("Error on server, please retry"); // Should never happen
-            }
-            await this.model.orm.call("purchase.order.suggest", "action_purchase_order_suggest", [
-                [this.state.wizardId],
+            await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
+                this.model.config.domain,
+                this._getCatalogContext(),
             ]);
-            this.model.root.load(); // No other way for JS to know that product.product suggest values changed
+            this.model.root.load();
         };
 
         useSubEnv({
-            purchaseSuggestWizard: this.state,
+            suggest: this.state,
             addAllProducts: onAddAll,
         });
     }
 
-    /* Reload the Kanban view to display values based on Suggest component state */
+    /* Reload the Kanban view to display values based on suggest component state
+     and order the records with suggested quantities first if suggest is On */
     async _reload_grid() {
         this.model.config.context = this._getCatalogContext();
         await this.model.root.load({}); // No other way for JS to know that product.product suggest values changed
-
         if (this.state.suggestToggle.isOn) {
             const cards = [...this.model.root.records];
             cards.sort((a, b) => (b.data.suggested_qty || 0) - (a.data.suggested_qty || 0));
@@ -101,11 +87,10 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         }
         return {
             ...ctx,
-            warehouse_id: this.state.warehouseId,
+            warehouse_id: this.props.context.warehouse_id,
             suggest_based_on: this.state.basedOn,
             suggest_days: this.state.numberOfDays,
             suggest_percent: this.state.percentFactor,
-            suggest_multiplier: this.state.multiplier,
         };
     }
 
