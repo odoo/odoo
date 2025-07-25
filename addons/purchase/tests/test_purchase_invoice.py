@@ -949,14 +949,39 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
             match_lines.action_match_lines()
 
-    def test_manual_matching_restrict_multi_bill(self):
-        """ raises when multiple bill selected """
-        with self.assertRaisesRegex(UserError, "can't select lines from multiple Vendor Bill"):
-            self.init_purchase(confirm=True, products=[self.product_order])
-            self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
-            self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
-            match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
-            match_lines.action_match_lines()
+    def test_manual_matching_allow_multi_bill(self):
+        """ test matching with multiple bills """
+        po = self.init_purchase(partner=self.partner_a, confirm=True, products=[
+            self.product_order,
+            self.product_order_other_price,
+            self.product_order_var_name
+        ])
+        po.order_line[0].product_qty = 2
+        po.order_line[0].qty_received = 2
+        po.order_line[1].qty_received = 1
+        po.order_line[2].qty_received = 1
+
+        bill_1 = self.init_invoice(move_type='in_invoice', partner=self.partner_a, products=[self.product_order, self.product_order_other_price])
+        bill_2 = self.init_invoice(move_type='in_invoice', partner=self.partner_a, products=[self.product_order, self.product_order_var_name])
+        bill_2.invoice_line_ids[1].product_id = None
+
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines.action_match_lines()  # Match by product and leave residual bill and po lines unmatched because multiple bills
+
+        self.assertEqual(po.order_line[0], bill_1.invoice_line_ids[0].purchase_line_id)
+        self.assertEqual(po.order_line[0], bill_2.invoice_line_ids[0].purchase_line_id)
+        self.assertEqual(po.order_line[1], bill_1.invoice_line_ids[1].purchase_line_id)
+        self.assertFalse(bill_2.invoice_line_ids[1].purchase_line_id)
+        self.assertFalse(self.env['account.move.line'].search([('purchase_line_id', '=', po.order_line[2].id)]))
+        self.env['purchase.order.line'].flush_model()
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        self.assertEqual(len(match_lines), 2)
+
+        match_lines.action_match_lines()  # Can't match by product but delete residual bill line and create new bill line for residual po line as only one bill
+        self.assertEqual(po.order_line[2], bill_2.invoice_line_ids[1].purchase_line_id)
+        self.env['purchase.order.line'].flush_model()
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        self.assertEqual(len(match_lines), 0)
 
     def test_manual_matching_create_bill(self):
         """ Selecting POL without AML will create bill with the selected POL as the lines """

@@ -155,14 +155,11 @@ class PurchaseBillLineMatch(models.Model):
             raise UserError(_("You must select at least one Purchase Order line to match or create bill."))
         if not self.aml_id:  # select POL(s) without AML -> create a draft bill with the POL(s)
             return self._action_create_bill_from_po_lines(self.partner_id, self.pol_id)
-        if len(self.aml_id.move_id) > 1:  # for purchase matching, disallow matching multiple bills at the same time
-            raise UserError(_("You can't select lines from multiple Vendor Bill to do the matching."))
 
         pol_by_product = self.pol_id.grouped('product_id')
         aml_by_product = self.aml_id.grouped('product_id')
         residual_purchase_order_lines = self.pol_id
         residual_account_move_lines = self.aml_id
-        residual_bill = self.aml_id.move_id
 
         # Match all matchable POL-AML lines and remove them from the residual group
         for product, po_line in pol_by_product.items():
@@ -173,12 +170,13 @@ class PurchaseBillLineMatch(models.Model):
                 residual_purchase_order_lines -= po_line
                 residual_account_move_lines -= matching_bill_lines
 
-        # Delete all unmatched selected AML
-        if residual_account_move_lines:
-            residual_account_move_lines.unlink()
+        if len(residual_bill := self.aml_id.move_id) == 1:
+            # Delete all unmatched selected AML
+            if residual_account_move_lines:
+                residual_account_move_lines.unlink()
 
-        # Add all remaining POL to the residual bill
-        residual_bill._add_purchase_order_lines(residual_purchase_order_lines)
+            # Add all remaining POL to the residual bill
+            residual_bill._add_purchase_order_lines(residual_purchase_order_lines)
 
     def action_add_to_po(self):
         if not self or not self.aml_id:
