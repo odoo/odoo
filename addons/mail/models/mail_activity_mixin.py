@@ -482,3 +482,30 @@ class MailActivityMixin(models.AbstractModel):
             return False
         self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True
+
+    def _domain_contains_field(self, domain, field_name):
+        for item in domain:
+            if isinstance(item, (list, tuple)) and len(item) == 3:
+                if item[0] == field_name:
+                    return True
+        return False
+
+    @api.model
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        """
+        Include inactive activities when filtering on field activity_ids.date_done
+        The date_done filter only work when a activity_type as keep_done enabled
+        """
+        if self._domain_contains_field(domain, 'activity_ids.date_done'):
+            self = self.with_context(active_test=False)
+        return super().web_search_read(domain, specification, offset, limit, order, count_limit)
+
+    @api.model
+    def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
+        """
+        Include inactive activities when filtering on field activity_ids.date_done
+        The date_done filter only work when a activity_type as keep_done enabled
+        """
+        if self._domain_contains_field(domain, 'activity_ids.date_done'):
+            self = self.with_context(active_test=False)
+        return super().web_read_group(domain, fields, groupby, limit, offset, orderby, lazy)
