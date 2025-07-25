@@ -282,7 +282,7 @@ export class SelectMenu extends Component {
     }
 
     getSelectedChoice(props) {
-        const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices)];
+        const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices || [])];
         if (!this.props.multiSelect) {
             return choices.find((c) => c.value === props.value);
         }
@@ -331,16 +331,15 @@ export class SelectMenu extends Component {
         this.state.choices = [];
 
         for (const group of groupsList) {
-            let filteredOptions = [];
+            let filteredOptions = group.choices || [];
 
             if (searchString) {
                 filteredOptions = fuzzyLookup(
                     searchString.trim(),
-                    group.choices,
+                    filteredOptions,
                     (choice) => choice.label
                 );
             } else {
-                filteredOptions = group.choices || [];
                 if (this.props.autoSort) {
                     filteredOptions.sort((optionA, optionB) =>
                         optionA.label.localeCompare(optionB.label)
