@@ -53,6 +53,8 @@ class TestSalePurchaseStockFlow(TransactionCase):
         so.action_confirm()
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        # dest_address_id should only be present for dropshipping
+        self.assertFalse(po.dest_address_id)
 
         so._action_cancel()
 
