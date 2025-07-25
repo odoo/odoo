@@ -28,12 +28,10 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
         const debouncedSync = useDebounced(async () => {
             const resp = await rpc("/purchase_stock/update_purchase_suggest", {
+                po_id: this.orderId,
                 wizard_id: this.state.wizardId,
-                vals: {
-                    based_on: this.state.basedOn,
-                    number_of_days: this.state.numberOfDays,
-                    percent_factor: this.state.percentFactor,
-                },
+                domain: this.model.config.domain,
+                suggest_ctx: this._getCatalogContext(),
             });
             Object.assign(this.state, resp);
             await this._reload_grid();
@@ -44,6 +42,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             const init = await rpc("/purchase_stock/init_purchase_suggest", {
                 po_id: this.orderId,
                 domain: this.model.config.domain,
+                suggest_ctx: this._getCatalogContext(),
             });
             Object.assign(this.state, init);
         });
@@ -64,8 +63,9 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             if (!this.state.wizardId) {
                 throw new Error("Error on server, please retry"); // Should never happen
             }
-            await this.model.orm.call("purchase.order.suggest", "action_purchase_order_suggest", [
-                [this.state.wizardId],
+            await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
+                this.model.config.domain,
+                this._getCatalogContext(),
             ]);
             this.model.root.load(); // No other way for JS to know that product.product suggest values changed
         };

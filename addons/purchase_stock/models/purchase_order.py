@@ -37,6 +37,71 @@ class PurchaseOrder(models.Model):
        help="Red: Late\n\
             Orange: To process today\n\
             Green: On time")
+    suggest_estimated_price = fields.Float(
+        string="Expected",
+        compute='_compute_suggest_estimated_price',
+        digits='Product Price')
+
+    @api.depends_context("suggest_based_on", "suggest_multiplier", "suggest_number_days", "warehouse_id",
+                         "actual_from_date", "actual_to_date")
+    def _compute_suggest_estimated_price(self):
+        ctx = self.env.context
+        for purchase_order in self:
+            estimated_price = 0
+            seller_args = {
+                "partner_id": purchase_order.partner_id,
+                "params": {'order_id': purchase_order}
+            }
+            products = self.env['product.product'].with_context(ctx).browse(ctx.get("suggest_product_ids"))
+            for product in products.filtered(lambda p: p.suggested_qty > 0):
+                # Get pricelist for suggested_qty or lowest min_qty pricelist
+                seller = (
+                    product._select_seller(quantity=product.suggested_qty, **seller_args)
+                    or product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
+                )
+                price = seller.price_discounted if seller else product.standard_price
+                estimated_price += price * product.suggested_qty
+            purchase_order.suggest_estimated_price = estimated_price
+
+    @api.model
+    def action_purchase_order_suggest(self, domain, suggest_ctx):
+        """ Auto-fill the Purchase Order with vendor's product regarding the
+        past demand (real consumption for a given period of time.)"""
+        po = self.browse(suggest_ctx.get("order_id"))
+        po.ensure_one()
+
+        product_ids = self.env['product.product'].with_context(order_id=po.id).search(domain)
+        products = self.env['product.product'].with_context(suggest_ctx).browse(product_ids.ids)
+
+        supplierinfos = self.env['product.supplierinfo'].search([
+            ('partner_id', '=', self.partner_id.id),
+        ])
+
+        po_lines_commands = []
+        for product in products:
+            supplierinfo = supplierinfos.filtered(lambda supinfo: supinfo.product_id == product)[:1]
+            suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
+                product,
+                product.suggested_qty,
+                product.uom_id,
+                po.company_id,
+                supplierinfo,
+                po
+            )
+            existing_po_lines = po.order_line.filtered(lambda pol: pol.product_id == product)
+            if existing_po_lines:
+                to_unlink = existing_po_lines[:-1] if product.suggested_qty > 0 else existing_po_lines
+                po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
+                if product.suggested_qty > 0:
+                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
+            elif product.suggested_qty > 0:
+                po_lines_commands.append(Command.create(suggest_line))
+
+        po.order_line = po_lines_commands
+        return {
+            'type': 'ir.actions.act_window_close',
+            'infos': {'refresh': True},
+        }
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):

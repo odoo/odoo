@@ -1,8 +1,4 @@
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from math import ceil
-
-from odoo import api, Command, fields, models
+from odoo import api, fields, models
 
 
 class PurchaseOrderSuggest(models.TransientModel):
@@ -37,142 +33,14 @@ class PurchaseOrderSuggest(models.TransientModel):
         default=7,
         help="Suggested quantities to replenish will be computed to cover this amount of days for all filtered products in this catalog.")
     percent_factor = fields.Integer(default=100, required=True)
-    estimated_price = fields.Float(
-        string="Expected",
-        compute='_compute_estimated_price',
-        digits='Product Price')
-    product_count = fields.Integer(compute='_compute_estimated_price')
-    hide_warehouse = fields.Boolean(compute='_compute_hide_warehouse')
     multiplier = fields.Float(compute='_compute_multiplier')
-
-    def _compute_hide_warehouse(self):
-        if not self.env.user.has_group('stock.group_stock_multi_warehouses'):
-            self.hide_warehouse = True
-        else:
-            company_warehouses_count = self.env['stock.warehouse'].search_count([('company_id', '=', self.env.company.id)])
-            self.hide_warehouse = company_warehouses_count < 2
-
-    @api.depends('based_on', 'number_of_days', 'percent_factor', 'product_ids', 'warehouse_id')
-    def _compute_estimated_price(self):
-        for suggest in self:
-            estimated_price = 0
-            seller_args = {
-                "partner_id": suggest.purchase_order_id.partner_id,
-                "params": {'order_id': suggest.purchase_order_id}
-            }
-
-            # Explicitly fetch existing records to avoid "NewId origin" shenanigans
-            products = self.env['product.product'].browse(self.product_ids.ids)
-            products = products.with_context(suggest._get_suggested_products_context())
-
-            for product in products.filtered(lambda p: p.suggested_qty > 0):
-                # Then, compute the price either from pricelist or standard price
-                # Try pricelist for quantity first, then lowest min_qty pricelist
-                seller = (
-                    product._select_seller(quantity=product.suggested_qty, **seller_args)
-                    or product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
-                )
-                price = seller.price_discounted if seller else product.standard_price
-                estimated_price += price * product.suggested_qty
-            suggest.estimated_price = estimated_price
 
     @api.depends('number_of_days', 'percent_factor')
     def _compute_multiplier(self):
         for suggest in self:
             suggest.multiplier = (suggest.number_of_days / (365.25 / 12)) * (suggest.percent_factor / 100)
 
-    def action_purchase_order_suggest(self):
-        """ Auto-fill the Purchase Order with vendor's product regarding the
-        past demand (real consumtion for a given period of time.)"""
-        self.ensure_one()
-        order = self.purchase_order_id
-        # Products are either the given products, either the supplier's products.
-        supplierinfos = self.env['product.supplierinfo'].search([
-            ('partner_id', '=', order.partner_id.id),
-        ])
-        products = self.product_ids or supplierinfos.product_id
-        products = products.with_context(self._get_suggested_products_context())
-
-        # Create new PO lines for each product with a monthy demand.
-        po_lines_commands = []
-        for product in products:
-            supplierinfo = supplierinfos.filtered(lambda supinfo: supinfo.product_id == product)[:1]
-            suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
-                product,
-                product.suggested_qty,
-                product.uom_id,
-                order.company_id,
-                supplierinfo,
-                order
-            )
-            existing_po_lines = order.order_line.filtered(lambda pol: pol.product_id == product)
-            if existing_po_lines:
-                to_unlink = existing_po_lines[:-1] if product.suggested_qty > 0 else existing_po_lines
-                po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
-                if product.suggested_qty > 0:
-                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
-            elif product.suggested_qty > 0:
-                po_lines_commands.append(Command.create(suggest_line))
-
-        order.order_line = po_lines_commands
-        self._save_values_for_vendor()
-        return {
-            'type': 'ir.actions.act_window_close',
-            'infos': {'refresh': True},
-        }
-
-    def _get_suggested_products_context(self):
-        self.ensure_one()
-        if self.based_on == 'actual_demand':
-            context = {
-                'actual_from_date': fields.Datetime.now(),
-                'actual_to_date': fields.Datetime.now() + relativedelta(days=self.number_of_days),
-            }
-        else:
-            start_date, limit_date = self._get_period_of_time()
-            context = {
-                'monthly_demand_start_date': start_date,
-                'monthly_demand_limit_date': limit_date,
-            }
-        if self.warehouse_id and not self.hide_warehouse:
-            context['warehouse_id'] = self.warehouse_id.id
-
-        context = {
-            **context,
-            "suggest_number_days": self.number_of_days,
-            "suggest_based_on": self.based_on,
-            "suggest_percent": self.percent_factor,
-            "suggest_multiplier": self.multiplier,
-        }
-        return context
-
-    def _get_period_of_time(self):
-        self.ensure_one()
-        start_date = fields.Datetime.now()
-        limit_date = fields.Datetime.now()
-        if self.based_on == 'one_week':
-            start_date = start_date - relativedelta(weeks=1)
-        elif self.based_on == 'one_month':
-            start_date = start_date - relativedelta(months=1)
-        elif self.based_on == 'three_months':
-            start_date = start_date - relativedelta(months=3)
-        elif self.based_on == 'one_year':
-            start_date = start_date - relativedelta(years=1)
-        else:  # Relative period of time.
-            today = fields.Datetime.now()
-            start_date = datetime(year=today.year - 1, month=today.month, day=1)
-
-            if self.based_on == 'last_year_2':
-                start_date += relativedelta(months=1)
-            elif self.based_on == 'last_year_3':
-                start_date += relativedelta(months=2)
-
-            if self.based_on == 'last_year_quarter':
-                limit_date = start_date + relativedelta(months=3)
-            else:
-                limit_date = start_date + relativedelta(months=1)
-        return start_date, limit_date
-
+    # TODO not called any more but need to figure out how to replace
     def _save_values_for_vendor(self):
         """ Save fields' value as default values for the PO vendor."""
         cid = self.env.company.id
