@@ -94,14 +94,13 @@
                             <field name="body_html" type="html">
                                 <div style="margin: 0px; padding: 0px;">
                                     <t t-set="color" t-value="object.company_id.email_secondary_color or '#875A7B'"/>
-                                    <t t-set="mail_logo" t-value="False"/>
-                                    <t t-if="hasattr(object, 'website_id') and object.website_id and object.website_id.logo">
-                                        <t t-set="mail_logo" t-value="object.website_id.logo"/>
-                                    </t>
-                                    <t t-elif="not object.company_id.uses_default_logo">
-                                        <t t-set="mail_logo" t-value="object.company_id.logo"/>
-                                    </t>
-                                    <img t-if="mail_logo" t-att-src="image_data_uri(mail_logo)" style="display: block; height: 50px; margin: 0 0 16px;"  alt="Logo"/>
+                                    <t
+                                        t-if="'website_id' in object.partner_id and object.partner_id.website_id"
+                                        t-set="logo_src"
+                                        t-value="object.partner_id.website_id.image_url(object.partner_id.website_id, 'logo')"
+                                    />
+                                    <t t-else="" t-set="logo_src" t-valuef="/logo.png?company=#{object.company_id.id}"/>
+                                    <img t-att-src="logo_src" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
                                     <p style="margin: 0 0 12px; padding: 0px; line-height: 18px; font-size: 14px;">
                                         Hello <t t-out="object.partner_id.display_name or ''">Johnny Tester</t>,
                                         <br/><br/>

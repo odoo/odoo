@@ -19,14 +19,13 @@
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:collapse;" role="presentation">
                                     <tr><td valign="top" style="font-size: 14px;">
                                         <t t-set="color" t-value="object.company_id.email_secondary_color or '#875A7B'"/>
-                                        <t t-set="mail_logo" t-value="False"/>
-                                        <t t-if="hasattr(object, 'website_id') and object.website_id and object.website_id.logo">
-                                            <t t-set="mail_logo" t-value="object.website_id.logo"/>
-                                        </t>
-                                        <t t-elif="not object.company_id.uses_default_logo">
-                                            <t t-set="mail_logo" t-value="object.company_id.logo"/>
-                                        </t>
-                                        <img t-if="mail_logo" t-att-src="image_data_uri(mail_logo)" style="display: block; height: 50px; margin: 0 0 16px;"  alt="Logo"/>
+                                        <t
+                                            t-if="'website_id' in object and object.website_id"
+                                            t-set="logo_src"
+                                            t-value="object.website_id.image_url(object.website_id, 'logo')"
+                                        />
+                                        <t t-else="" t-set="logo_src" t-valuef="/logo.png?company=#{object.company_id.id}"/>
+                                        <img t-att-src="logo_src" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
                                         <p style="margin: 0 0 12px; line-height: 18px;">
                                             Hello <t t-out="object.partner_id.display_name or ''">Johnny Tester</t>,
                                             <br/><br/>

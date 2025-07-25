@@ -21,6 +21,9 @@ class WebsiteSaleStock(Controller):
         if not product._has_stock_notification(partner):
             product.sudo().stock_notification_partner_ids += partner
 
+        if not partner.website_id:
+            partner.website_id = request.website
+
         if request.website.is_public_user():
             request.session['product_with_stock_notification_enabled'] = list(
                 set(request.session.get('product_with_stock_notification_enabled', []))

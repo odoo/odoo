@@ -12,10 +12,16 @@
             stock</field>
             <field name="email_layout_xmlid">mail.mail_notification_layout_with_footer_and_powered_by</field>
             <field name="body_html" type="html">
-                <t t-set="partner_name" t-value="partner in ctx and ctx['partner'].name or ''"/>
+                <t t-set="partner" t-value="ctx.get('partner')"/>
                 <div id="body">
-                    <img t-if="object.company_id.logo" t-att-src="image_data_uri(object.company_id.logo)" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
-                    <p>Hello <t t-out="partner_name"/>,</p>
+                    <t
+                        t-if="partner and 'website_id' in partner and partner.website_id"
+                        t-set="logo_src"
+                        t-value="partner.website_id.image_url(partner.website_id, 'logo')"
+                    />
+                    <t t-else="" t-set="logo_src" t-valuef="/logo.png?company=#{object.company_id.id}"/>
+                    <img t-att-src="logo_src" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
+                    <p>Hello <t t-out="partner and partner.name or ''"/>,</p>
                     <p>The product you were waiting for is now back in stock!</p>
                     <t t-if="not is_html_empty(user.signature)">
                         <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="user.signature or ''">Mitchell Admin</t></div>
