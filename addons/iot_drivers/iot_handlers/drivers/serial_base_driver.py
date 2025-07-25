@@ -130,6 +130,8 @@ class SerialDriver(Driver):
         :param data: the `_actions` key mapped to the action method we want to call
         :type data: string
         """
+        self.data["owner"] = data.get('session_id')
+        self.data["action_args"] = {**data}
 
         if self._connection and self._connection.isOpen():
             self._do_action(data)
