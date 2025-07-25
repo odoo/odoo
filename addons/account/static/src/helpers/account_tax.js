@@ -79,6 +79,10 @@ export const accountTaxHelpers = {
         return results;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     propagate_extra_taxes_base(taxes, tax, taxes_data, { special_mode = null } = {}) {
         function* get_tax_before() {
             for (const tax_before of taxes) {
@@ -207,6 +211,10 @@ export const accountTaxHelpers = {
         return null;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     get_tax_details(
         taxes,
         price_unit,
@@ -426,6 +434,10 @@ export const accountTaxHelpers = {
     // MAPPING PRICE_UNIT
     // -------------------------------------------------------------------------
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes) {
         const original_tax_ids = new Set(original_taxes.map((x) => x.id));
         const new_tax_ids = new Set(new_taxes.map((x) => x.id));
@@ -463,6 +475,10 @@ export const accountTaxHelpers = {
     // GENERIC REPRESENTATION OF BUSINESS OBJECTS & METHODS
     // -------------------------------------------------------------------------
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     export_base_line_extra_tax_data(base_line) {
         const results = {};
         if (base_line.computation_key) {
@@ -481,6 +497,10 @@ export const accountTaxHelpers = {
         return results;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     import_base_line_extra_tax_data(base_line, extra_tax_data) {
         const currency_dp = base_line.currency_id.decimal_places;
 
@@ -517,6 +537,10 @@ export const accountTaxHelpers = {
         return results;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     get_base_line_field_value_from_record(record, field, extra_values, fallback) {
         if (field in extra_values) {
             return extra_values[field] || fallback;
@@ -527,10 +551,13 @@ export const accountTaxHelpers = {
         return fallback;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     prepare_base_line_for_taxes_computation(record, kwargs = {}) {
         const load = (field, fallback) =>
             this.get_base_line_field_value_from_record(record, field, kwargs, fallback);
-
         const currency =
             load("currency_id", null) ||
             load("company_currency_id", null) ||
@@ -573,6 +600,10 @@ export const accountTaxHelpers = {
         return base_line;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     add_tax_details_in_base_line(base_line, company, { rounding_method = null } = {}) {
         rounding_method = rounding_method || company.tax_calculation_rounding_method;
         const price_unit_after_discount = base_line.price_unit * (1 - base_line.discount / 100.0);
@@ -630,12 +661,20 @@ export const accountTaxHelpers = {
         }
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     add_tax_details_in_base_lines(base_lines, company) {
         for (const base_line of base_lines) {
             this.add_tax_details_in_base_line(base_line, company);
         }
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     distribute_delta_amount_smoothly(precision_digits, delta_amount, target_factors) {
         const precision_rounding = Number(`1e-${precision_digits}`);
         const amounts_to_distribute = target_factors.map((x) => 0.0);
@@ -666,6 +705,10 @@ export const accountTaxHelpers = {
         return amounts_to_distribute;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     round_base_lines_tax_details(base_lines, company) {
         const total_per_tax = {};
         const total_per_base = {};
@@ -1186,6 +1229,10 @@ export const accountTaxHelpers = {
     // TAX TOTALS SUMMARY
     // -------------------------------------------------------------------------
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     get_tax_totals_summary(base_lines, currency, company, { cash_rounding = null } = {}) {
         const company_pd = company.currency_id.rounding;
         const tax_totals_summary = {
@@ -1459,6 +1506,10 @@ export const accountTaxHelpers = {
     // AGGREGATOR OF TAX DETAILS
     // -------------------------------------------------------------------------
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     aggregate_base_line_tax_details(base_line, grouping_function) {
         const values_per_grouping_key = {};
         const tax_details = base_line.tax_details;
@@ -1529,6 +1580,10 @@ export const accountTaxHelpers = {
         return values_per_grouping_key;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     aggregate_base_lines_tax_details(base_lines, grouping_function) {
         return base_lines.map((base_line) => [
             base_line,
@@ -1536,6 +1591,10 @@ export const accountTaxHelpers = {
         ]);
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     aggregate_base_lines_aggregated_values(base_lines_aggregated_values) {
         const default_float_fields = new Set([
             "base_amount_currency",
@@ -1578,10 +1637,18 @@ export const accountTaxHelpers = {
     // GLOBAL DISCOUNT
     // -------------------------------------------------------------------------
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     can_be_discounted(tax) {
         return !["fixed", "code"].includes(tax.amount_type);
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     compute_subset_base_lines_total(base_lines, company) {
         let base_amount_currency = 0.0;
         let tax_amount_currency = 0.0;
@@ -1631,6 +1698,10 @@ export const accountTaxHelpers = {
         };
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     has_taxes_to_exclude(base_lines) {
         return base_lines.some((base_line) =>
             base_line.tax_details.taxes_data.some(
@@ -1639,6 +1710,10 @@ export const accountTaxHelpers = {
         );
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     reduce_base_lines_with_grouping_function(base_lines, { grouping_function = null } = {}) {
         const base_line_map = {};
         for (const base_line of base_lines) {
@@ -1692,6 +1767,10 @@ export const accountTaxHelpers = {
         return reduced_base_lines;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     apply_base_lines_manual_amounts_to_reach(
         base_lines,
         company,
@@ -1824,6 +1903,10 @@ export const accountTaxHelpers = {
         }
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     prepare_global_discount_lines(
         base_lines,
         company,
@@ -1980,6 +2063,10 @@ export const accountTaxHelpers = {
         return reduced_base_lines;
     },
 
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     prepare_down_payment_lines(
         base_lines,
         company,
