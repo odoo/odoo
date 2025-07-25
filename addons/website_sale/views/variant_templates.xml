@@ -3,7 +3,7 @@
     <template id="variants">
         <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination)"/>
         <ul
-            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 pt-3 #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
+            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
             t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
         >
             <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
@@ -160,7 +160,7 @@
         </ul>
         <ul
             t-if="product._has_multiple_uoms()"
-            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 pt-3 #{ul_class}"
+            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
             t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
         >
             <!-- NOTE: the t-att-data-attribute_exclusions is only there to match existing events selectors -->
@@ -222,7 +222,7 @@
         name="Variants Separator"
     >
         <xpath expr="//ul" position="attributes">
-            <attribute name="t-attf-class" remove="pt-3" add="border-top pt-4" separator=" "/>
+            <attribute name="t-attf-class" add="border-top pt-4" separator=" "/>
         </xpath>
     </template>
 </odoo>

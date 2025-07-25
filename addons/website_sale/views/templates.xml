@@ -1895,6 +1895,15 @@
             t-value="website.product_page_image_width in ['none', '100_pc']"
         />
         <t t-set="is_50_pc" t-value="website.product_page_image_width == '50_pc'"/>
+        <t t-set="extra_info">
+            <t
+                t-if="is_view_active('website_sale.product_tags')"
+                t-call="website_sale.product_tags"
+            >
+                <t t-set="all_product_tags" t-value="product_variant.all_product_tag_ids"/>
+            </t>
+            <t t-call="website_sale.product_terms_and_conditions"/>
+        </t>
 
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
@@ -1993,15 +2002,6 @@
                                         t-attf-class="oe_structure text-muted {{not product.description_ecommerce and 'mb-0'}}"
                                         placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."
                                     />
-                                    <t
-                                        t-if="is_view_active('website_sale.product_tags')"
-                                        t-call="website_sale.product_tags"
-                                    >
-                                        <t
-                                            t-set="all_product_tags"
-                                            t-value="product_variant.all_product_tag_ids"
-                                        />
-                                    </t>
                                     <form t-if="product._is_add_to_cart_possible()">
                                         <input
                                             type="hidden"
@@ -2145,10 +2145,9 @@
                                             </t>
                                         </div>
                                     </div>
-                                    <t
-                                        t-if="not is_fullwidth_content"
-                                        t-call="website_sale.product_terms_and_conditions"
-                                    />
+                                    <div t-if="not is_fullwidth_content">
+                                        <t t-out="extra_info"/>
+                                    </div>
                                 </div>
                                 <div
                                     t-if="is_fullwidth_content"
@@ -2156,7 +2155,7 @@
                                 >
                                     <div class="o_wsale_product_sticky_col position-sticky">
                                         <t t-call="website_sale.cta_wrapper"/>
-                                        <t t-call="website_sale.product_terms_and_conditions"/>
+                                        <t t-out="extra_info"/>
                                     </div>
                                 </div>
                             </div>
@@ -2197,7 +2196,7 @@
     <template id="website_sale.cta_wrapper" name="CTA Wrapper">
         <div
             id="o_wsale_cta_wrapper"
-            t-att-class="'d-flex flex-wrap align-items-center gap-2 my-4' + (' w-100 w-lg-auto' if is_50_pc else ' w-100') + (' pt-3' if not is_fullwidth_content and not is_view_active('website_sale.cta_wrapper_boxed') else ' ')"
+            t-att-class="'d-flex flex-wrap align-items-center gap-2 my-4' + (' w-100 w-lg-auto' if is_50_pc else ' w-100')"
         >
             <div
                 id="add_to_cart_wrap"
@@ -2217,7 +2216,7 @@
             </div>
             <div
                 id="product_option_block"
-                t-attf-class="d-flex d-empty-none flex-wrap gap-2 {{'' if is_50_pc and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) else ' w-100'}}"
+                t-attf-class="d-flex d-empty-none flex-wrap gap-2 w-100 {{'w-sm-auto' if is_50_pc and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) else ''}}"
             />
         </div>
     </template>
@@ -2281,7 +2280,6 @@
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="attributes">
             <attribute
                 name="t-att-class"
-                remove="(' pt-3' if not is_fullwidth_content and not is_view_active('website_sale.cta_wrapper_boxed') else ' ')"
                 add="(' border-0 pt-0' if is_fullwidth_content and not is_view_active('website_sale.cta_wrapper_boxed') else ' border-top pt-4')"
                 separator=" + "
             />
@@ -2521,7 +2519,7 @@
         <xpath expr="//div[@id='product_option_block']" position="before">
             <a
                 role="button"
-                t-attf-class="btn btn-outline-primary o_we_buy_now {{'w-100' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') else ''}} {{'flex-grow-1' if not is_50_pc else ''}}"
+                t-attf-class="btn btn-outline-primary o_we_buy_now w-100 {{'' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') or not is_50_pc else 'w-sm-auto'}}"
                 href="#"
             >
                 <i class="fa fa-bolt me-2"/>
@@ -2560,13 +2558,13 @@
         >
             <div
                 name="product_price_container"
-                class="css_editable_mode_hidden d-flex align-items-center justify-content-end gap-2 flex-wrap h4 mb-0 text-wrap"
+                class="css_editable_mode_hidden d-flex align-items-baseline justify-content-end gap-2 flex-wrap h5 mb-0 text-wrap"
             >
                 <span class="oe_price"
                       style="white-space: nowrap;"
                       t-out="combination_info['price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <span t-attf-class="text-muted oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                <span t-attf-class="text-muted oe_default_price mb-0 h6 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                       style="text-decoration: line-through; white-space: nowrap;"
                       t-esc="combination_info['list_price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
@@ -2576,7 +2574,7 @@
                 <del
                     name="product_price_strikethrough"
                     t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                    class="text-muted ms-1 h5 oe_compare_list_price"
+                    class="text-muted ms-1 h6 oe_compare_list_price"
                 >
                     <bdi dir="inherit">
                     <span t-esc="combination_info['compare_list_price']"
@@ -2587,7 +2585,7 @@
             <div
                 t-if="editable"
                 name="product_list_price_container"
-                class="css_non_editable_mode_hidden decimal_precision h4"
+                class="css_non_editable_mode_hidden decimal_precision h5"
                 t-att-data-precision="str(website.currency_id.decimal_places)"
             >
                 <span t-field="product.list_price"
