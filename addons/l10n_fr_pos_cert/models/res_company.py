@@ -11,13 +11,13 @@ import pytz
 def ctx_tz(record, field):
     res_lang = None
     ctx = record.env.context
-    tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz or 'UTC')
     timestamp = Datetime.from_string(record[field])
     if ctx.get('lang'):
         res_lang = record.env['res.lang']._get_data(code=ctx['lang'])
     if res_lang:
         timestamp = pytz.utc.localize(timestamp, is_dst=False)
-        return datetime.strftime(timestamp.astimezone(tz_name), res_lang.date_format + ' ' + res_lang.time_format)
+        tz = record.env.tz
+        return datetime.strftime(timestamp.astimezone(tz), res_lang.date_format + ' ' + res_lang.time_format)
     return Datetime.context_timestamp(record, timestamp)
 
 

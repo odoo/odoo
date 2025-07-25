@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import functools
 import logging
+import pytz
 import typing
 import warnings
 from collections import defaultdict
@@ -25,6 +26,7 @@ from .utils import SUPERUSER_ID
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, MutableMapping
+    from datetime import tzinfo
     from .identifiers import IdType, NewId
     from .types import BaseModel, Field
 
@@ -279,6 +281,17 @@ class Environment(Mapping[str, "BaseModel"]):
         #   - when accessing to a record from the notification email template
         #   - when loading an binary image on a template
         return self['res.company'].browse(user_company_ids)
+
+    @functools.cached_property
+    def tz(self) -> tzinfo:
+        """Return the current timezone info, defaults to UTC."""
+        timezone = self.context.get('tz') or self.user.tz
+        if timezone:
+            try:
+                return pytz.timezone(timezone)
+            except Exception:  # noqa: BLE001
+                _logger.debug("Invalid timezone %r", timezone, exc_info=True)
+        return pytz.utc
 
     @functools.cached_property
     def lang(self) -> str | None:

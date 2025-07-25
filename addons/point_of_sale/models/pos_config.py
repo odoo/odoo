@@ -398,7 +398,7 @@ class PosConfig(models.Model):
                 ['cash_register_balance_end_real', 'stop_at'],
                 order="stop_at desc", limit=1)
             if session:
-                timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+                timezone = self.env.tz
                 pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date()
                 pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
             else:
