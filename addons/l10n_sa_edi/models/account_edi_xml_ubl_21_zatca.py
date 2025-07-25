@@ -8,7 +8,7 @@ import re
 
 TAX_EXEMPTION_CODES = ['VATEX-SA-29', 'VATEX-SA-29-7', 'VATEX-SA-30']
 TAX_ZERO_RATE_CODES = ['VATEX-SA-32', 'VATEX-SA-33', 'VATEX-SA-34-1', 'VATEX-SA-34-2', 'VATEX-SA-34-3', 'VATEX-SA-34-4',
-                       'VATEX-SA-34-5', 'VATEX-SA-35', 'VATEX-SA-36', 'VATEX-SA-EDU', 'VATEX-SA-HEA']
+                       'VATEX-SA-34-5', 'VATEX-SA-35', 'VATEX-SA-36', 'VATEX-SA-EDU', 'VATEX-SA-HEA', 'VATEX-SA-MLTRY']
 
 PAYMENT_MEANS_CODE = {
     'bank': 42,
@@ -105,9 +105,9 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         if supplier.country_id.code == 'SA':
             if tax and tax.amount != 0:
                 return 'S'
-            elif tax and tax.l10n_sa_exemption_reason_code in TAX_EXEMPTION_CODES:
+            elif tax and tax.ubl_cii_tax_exemption_reason_code in TAX_EXEMPTION_CODES:
                 return 'E'
-            elif tax and tax.l10n_sa_exemption_reason_code in TAX_ZERO_RATE_CODES:
+            elif tax and tax.ubl_cii_tax_exemption_reason_code in TAX_ZERO_RATE_CODES:
                 return 'Z'
             else:
                 return 'O'
@@ -116,13 +116,18 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
     def _get_tax_exemption_reason(self, customer, supplier, tax):
         if supplier.country_id.code == 'SA':
             if tax and tax.amount == 0:
-                exemption_reason_by_code = dict(tax._fields["l10n_sa_exemption_reason_code"]._description_selection(self.env))
-                code = tax.l10n_sa_exemption_reason_code
+                exemption_reason_by_code = dict(tax._fields["ubl_cii_tax_exemption_reason_code"]._description_selection(self.env))
+                code = tax.ubl_cii_tax_exemption_reason_code
+                if not code or code == 'VATEX-SA-OOS':
+                    return {
+                        'tax_exemption_reason_code': "VATEX-SA-OOS",
+                        'tax_exemption_reason': tax.free_text_exemption_reason,
+                    }
+
                 return {
-                    'tax_exemption_reason_code': code or "VATEX-SA-OOS",
+                    'tax_exemption_reason_code': code,
                     'tax_exemption_reason': (
                         exemption_reason_by_code[code].split(code)[1].lstrip()
-                        if code else "Not subject to VAT"
                     )
                 }
             else:
