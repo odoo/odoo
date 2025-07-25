@@ -268,6 +268,8 @@ export class Many2XAutocomplete extends Component {
                     }
                     autoCompleteInput.focus();
                 },
+                component: this.createDialog,
+                size: this.createDialogSize,
             });
 
         this.selectCreate = useSelectCreate({
@@ -304,16 +306,25 @@ export class Many2XAutocomplete extends Component {
     get sources() {
         return [this.optionsSource, ...this.props.otherSources];
     }
+
     get optionsSource() {
         return {
             placeholder: _t("Loading..."),
             options: this.loadOptionsSource.bind(this),
-            optionSlot: this.props.slots?.autoCompleteItem ? "option" : undefined,
+            optionSlot: "option",
         };
     }
 
     get activeActions() {
         return this.props.activeActions || {};
+    }
+
+    get createDialog() {
+        return FormViewDialog;
+    }
+
+    get createDialogSize() {
+        return "lg";
     }
 
     getCreationContext(value) {
@@ -329,14 +340,6 @@ export class Many2XAutocomplete extends Component {
     }
     onCancel() {
         this.props.setInputFloats(false);
-    }
-
-    abortableSearch(name) {
-        const originalPromise = this.search(name);
-        return {
-            promise: originalPromise,
-            abort: originalPromise.abort ? originalPromise.abort.bind(originalPromise) : () => {},
-        };
     }
 
     get searchSpecification() {
@@ -359,15 +362,12 @@ export class Many2XAutocomplete extends Component {
             specification: this.searchSpecification,
         });
     }
-    mapRecordToOption(record, request) {
-        const label = record.__formatted_display_name || record.display_name;
-        return {
-            data: { record },
-            label: label
-                ? highlightText(request, odoomark(label), "text-primary fw-bold")
-                : _t("Unnamed"),
-            onSelect: () => this.props.update([record]),
-        };
+
+    slowCreate(request) {
+        return this.openMany2X({
+            context: this.getCreationContext(request),
+            nextRecordsContext: this.props.context,
+        });
     }
 
     onQuickCreateError(error, request) {
@@ -375,96 +375,154 @@ export class Many2XAutocomplete extends Component {
             error instanceof RPCError &&
             error.exceptionName === "odoo.exceptions.ValidationError"
         ) {
-            return this.openMany2X({
-                context: this.getCreationContext(request),
-                nextRecordsContext: this.props.context,
-            });
+            return this.slowCreate(request);
         } else {
             throw error;
         }
     }
-    async loadOptionsSource(request) {
-        if (this.lastProm) {
-            this.lastProm.abort(false);
-            this.lastProm = null;
-        }
-        const canCreateEdit =
-            "createEdit" in this.activeActions
-                ? this.activeActions.createEdit
-                : this.activeActions.create;
-        let addSearchMore = true;
 
-        const options = [];
+    async loadOptionsSource(request) {
+        this.__lastSuggestionsLoadPromise?.abort(false);
+        return this.suggest(request, (promise) => {
+            this.__lastSuggestionsLoadPromise = promise;
+            return promise;
+        });
+    }
+
+    async suggest(request, lock) {
+        const suggestions = [];
+        /** @type {Record<string, any>[] | null} */
+        let records = null;
+
         if (request.length < this.props.searchThreshold) {
-            if (!this.props.value) {
-                options.push({
-                    cssClass: "o_m2o_start_typing",
-                    label:
-                        this.props.searchThreshold > 1
-                            ? _t("Start typing %s characters", this.props.searchThreshold)
-                            : _t("Start typing..."),
-                });
+            if (this.addStartTypingSuggestion()) {
+                suggestions.push(this.buildStartTypingSuggestion());
             }
         } else {
-            this.lastProm = this.abortableSearch(request);
-            const records = await this.lastProm.promise;
-            addSearchMore = records.length > 0;
+            records = await lock(this.search(request));
             if (records.length) {
                 for (const record of records) {
-                    options.push(this.mapRecordToOption(record, request));
+                    suggestions.push(this.buildRecordSuggestion(request, record));
                 }
-            } else if (!this.activeActions.createEdit && !this.props.quickCreate) {
-                options.push({
-                    cssClass: "o_m2o_no_result",
-                    label: _t("No records"),
-                });
+            } else if (this.addNoRecordsSuggestion()) {
+                suggestions.push(this.buildNoRecordsSuggestion());
             }
         }
 
-        const slowCreate = () =>
-            this.openMany2X({
-                context: this.getCreationContext(request),
-                nextRecordsContext: this.props.context,
-            });
-        if (request.length) {
-            if (this.props.quickCreate) {
-                options.push({
-                    cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
-                    label: _t('Create "%s"', request),
-                    onSelect: async () => {
-                        try {
-                            await this.props.quickCreate(request);
-                        } catch (e) {
-                            this.onQuickCreateError(e, request);
-                        }
-                    },
-                });
+        for (const action of this.actionSuggestions) {
+            const enabled = action.enabled ?? (() => true);
+            if (enabled({ request, records })) {
+                suggestions.push(action.build(request));
             }
-
-            if (canCreateEdit) {
-                options.push({
-                    cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
-                    label: _t("Create and edit..."),
-                    onSelect: slowCreate,
-                });
-            }
-        } else if (canCreateEdit && !addSearchMore) {
-            options.push({
-                cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create_new",
-                label: _t("Create..."),
-                onSelect: slowCreate,
-            });
         }
 
-        if (addSearchMore) {
-            options.push({
-                cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
-                label: this.SearchMoreButtonLabel,
-                onSelect: this.onSearchMore.bind(this, request),
-            });
-        }
+        return suggestions;
+    }
 
-        return options;
+    get actionSuggestions() {
+        return [
+            {
+                // create
+                enabled: this.addCreateSuggestion.bind(this),
+                build: this.buildCreateSuggestion.bind(this),
+            },
+            {
+                // create and edit
+                enabled: this.addCreateEditSuggestion.bind(this),
+                build: this.buildCreateEditSuggestion.bind(this),
+            },
+            {
+                // search more
+                enabled: this.addSearchMoreSuggestion.bind(this),
+                build: this.buildSearchMoreSuggestion.bind(this),
+            },
+        ];
+    }
+
+    addCreateSuggestion({ request }) {
+        return !!this.props.quickCreate && request.length > 0;
+    }
+
+    addCreateEditSuggestion({ records, request }) {
+        return (
+            (this.activeActions.createEdit ?? this.activeActions.create) &&
+            (request.length > 0 || records?.length === 0)
+        );
+    }
+
+    addNoRecordsSuggestion() {
+        return !this.activeActions.createEdit && !this.props.quickCreate;
+    }
+
+    addSearchMoreSuggestion({ records, request }) {
+        return request.length < this.props.searchThreshold || records?.length > 0;
+    }
+
+    addStartTypingSuggestion() {
+        return !this.props.value;
+    }
+
+    buildCreateSuggestion(request) {
+        return {
+            cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
+            data: { slotName: "createItem" },
+            label: _t('Create "%s"', request),
+            onSelect: async () => {
+                try {
+                    await this.props.quickCreate(request);
+                } catch (e) {
+                    this.onQuickCreateError(e, request);
+                }
+            },
+        };
+    }
+
+    buildCreateEditSuggestion(request) {
+        return {
+            cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
+            data: { slotName: "createEditItem" },
+            label: request.length > 0 ? _t("Create and edit...") : _t("Create..."),
+            onSelect: () => this.slowCreate(request),
+        };
+    }
+
+    buildNoRecordsSuggestion() {
+        return {
+            cssClass: "o_m2o_no_result",
+            data: { slotName: "noRecordsItem" },
+            label: _t("No records"),
+        };
+    }
+
+    buildRecordSuggestion(request, record) {
+        const label = record.__formatted_display_name || record.display_name;
+        return {
+            data: { record, slotName: "autoCompleteItem" },
+            label: label
+                ? highlightText(request, odoomark(label), "text-primary fw-bold")
+                : _t("Unnamed"),
+            onSelect: () => this.props.update([record]),
+        };
+    }
+
+    buildSearchMoreSuggestion(request) {
+        return {
+            cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+            data: { slotName: "searchMoreItem" },
+            label: this.SearchMoreButtonLabel,
+            onSelect: this.onSearchMore.bind(this, request),
+        };
+    }
+
+    buildStartTypingSuggestion() {
+        return {
+            cssClass: "o_m2o_start_typing",
+            data: { slotName: "startTypingItem" },
+            label:
+                this.props.searchThreshold > 1
+                    ? _t("Start typing %s characters", this.props.searchThreshold)
+                    : _t("Start typing..."),
+        };
     }
 
     get SearchMoreButtonLabel() {
@@ -522,6 +580,8 @@ export function useOpenMany2XRecord({
     activeActions,
     isToMany,
     onClose = (isNew) => {},
+    component = FormViewDialog,
+    size = "lg",
 }) {
     const addDialog = useOwnedDialogs();
     const orm = useService("orm");
@@ -547,7 +607,7 @@ export function useOpenMany2XRecord({
         const readonly = !(resId ? canWrite : canCreate);
 
         addDialog(
-            FormViewDialog,
+            component,
             {
                 preventCreate: !canCreate,
                 preventEdit: !canWrite,
@@ -561,6 +621,7 @@ export function useOpenMany2XRecord({
                 onRecordSaved,
                 onRecordDiscarded,
                 isToMany,
+                size,
             },
             {
                 onClose: () => {

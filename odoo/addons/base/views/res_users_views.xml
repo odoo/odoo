@@ -60,9 +60,6 @@
             <field name="arch" type="xml">
                 <form string="Users">
                     <sheet>
-                        <div class="alert alert-info text-center mb-3" invisible="id &gt; 0" role="alert">
-                            You are inviting a new user.
-                        </div>
                         <div class="d-flex gap-3">
                             <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'zoom': true, 'size': [130,130], 'img_class': 'rounded-4'}"/>
                             <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
@@ -73,7 +70,8 @@
                                 <div class="d-flex align-items-baseline w-100">
                                     <field name="email" invisible="1"/> <!-- needed to update partner's email from on_change_login() -->
                                     <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                    <field name="login" class="w-100" placeholder="Email"/>
+                                    <field name="email_domain_placeholder" invisible="1" /> <!-- needed to compute the placeholder whenever the dialog opens -->
+                                    <field name="login" class="w-100" options="{'placeholder_field': 'email_domain_placeholder'}"/>
                                 </div>
                                 <div class="d-flex align-items-baseline w-100">
                                     <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
