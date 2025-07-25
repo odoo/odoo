@@ -5,6 +5,18 @@ import { selectionField, SelectionField } from "@web/views/fields/selection/sele
 const { DateTime } = luxon;
 
 export class TimePeriodSelectionField extends SelectionField {
+    static props = {
+        ...SelectionField.props,
+        onChange: { type: Function, optional: true },
+    };
+
+    onChange(ev) {
+        super.onChange(ev);
+        if (this.props.onChange) {
+            this.props.onChange(ev);
+        }
+    }
+
     get options() {
         // This field widget replaces three last options of `based_on` field by
         // the current month, the next month and the after next month for the

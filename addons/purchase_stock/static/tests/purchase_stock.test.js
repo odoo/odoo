@@ -1,18 +1,13 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { describe, destroy, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import {
-    contains,
-    defineModels,
-    fields,
-    models,
-    mountView,
-} from "@web/../tests/web_test_helpers";
+import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 class PurchaseOrderSuggest extends models.Model {
     _name = "purchase.order.suggest";
     based_on = fields.Selection({
         selection: [
+            ["actual_demand", "Actual Demand"],
             ["one_week", "Last 7 days"],
             ["one_month", "Last 30 days"],
             ["three_months", "Last 3 months"],
