@@ -21,6 +21,7 @@
                     <group name='carrier_data' string="Shipping Information">
                         <field name="is_return_picking" invisible="1"/>
                         <field name="carrier_id" readonly="state in ('done', 'cancel')" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="integration_level" invisible="1"/>
                         <field name="delivery_type" invisible="True"/>
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
@@ -50,7 +51,7 @@
                     <button name="print_return_label" string="Print Return Label" type="object" invisible="not is_return_picking or state == 'done' or picking_type_code != 'incoming'" data-hotkey="shift+o"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="required">carrier_id and carrier_id.integration_level == 'rate_and_ship'</attribute>
+                    <attribute name="required">carrier_id and integration_level == 'rate_and_ship'</attribute>
                 </xpath>
               </data>
             </field>
