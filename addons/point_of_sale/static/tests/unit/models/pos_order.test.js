@@ -93,4 +93,145 @@ describe("pos.order", () => {
             product2.taxes_id[0].id,
         ]);
     });
+
+    test("priceDoesntChangeWhenChangingPreset", async () => {
+        const store = await setupPosEnv();
+        const outPreset = store.models["pos.preset"].get(2);
+
+        const lines = store.models.loadConnectedData({
+            "product.template": [
+                {
+                    id: 555,
+                    name: "Test Combo Product Template",
+                    combo_ids: [123],
+                    product_variant_ids: [7],
+                    taxes_id: [],
+                },
+            ],
+            "product.combo.item": [
+                {
+                    id: 111,
+                    combo_id: 123,
+                    product_id: 5,
+                    extra_price: 0,
+                },
+                {
+                    id: 222,
+                    combo_id: 123,
+                    product_id: 6,
+                    extra_price: 0,
+                },
+                {
+                    id: 333,
+                    combo_id: 123,
+                    product_id: 6,
+                    extra_price: 5,
+                },
+            ],
+            "product.combo": [
+                {
+                    id: 123,
+                    name: "Test Combo",
+                    qty_max: 4,
+                    qty_free: 2,
+                    base_price: 10,
+                    combo_item_ids: [111, 222, 333],
+                },
+            ],
+            "product.product": [
+                {
+                    id: 7,
+                    display_name: "Test Combo Product",
+                    product_tmpl_id: 555,
+                    lst_price: 10,
+                    combo_ids: [1],
+                },
+            ],
+            "pos.order": [
+                {
+                    id: 1,
+                    name: "Test Order extra qty",
+                },
+                {
+                    id: 2,
+                    name: "Test Order normal",
+                },
+                {
+                    id: 3,
+                    name: "Test Order extra price",
+                },
+                {
+                    id: 4,
+                    name: "Test Order all the same products",
+                },
+            ],
+        });
+        // Same taxes_id for every product
+        store.models["product.product"].get(6).taxes_id = [1];
+
+        // Normal flow with extras
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(555),
+                payload: [
+                    [{ combo_item_id: store.models["product.combo.item"].get(111), qty: 2 }],
+                    [{ combo_item_id: store.models["product.combo.item"].get(222), qty: 2 }],
+                ],
+                qty: 1,
+            },
+            lines["pos.order"][0]
+        );
+        expect(lines["pos.order"][0].amount_total).toBe(34.5);
+        lines["pos.order"][0].setPreset(outPreset);
+        lines["pos.order"][0].recomputeOrderData();
+        expect(lines["pos.order"][0].amount_total).toBe(34.5);
+
+        // Normal flow
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(555),
+                payload: [[{ combo_item_id: store.models["product.combo.item"].get(111), qty: 2 }]],
+                qty: 1,
+            },
+            lines["pos.order"][1]
+        );
+        expect(lines["pos.order"][1].amount_total).toBe(11.5);
+        lines["pos.order"][1].setPreset(outPreset);
+        lines["pos.order"][1].recomputeOrderData();
+        expect(lines["pos.order"][1].amount_total).toBe(11.5);
+
+        // Flow with products with extra price
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(555),
+                payload: [
+                    [{ combo_item_id: store.models["product.combo.item"].get(111), qty: 2 }],
+                    [{ combo_item_id: store.models["product.combo.item"].get(333), qty: 2 }],
+                ],
+                qty: 1,
+            },
+            lines["pos.order"][2]
+        );
+        expect(lines["pos.order"][2].amount_total).toBe(46);
+        lines["pos.order"][2].setPreset(outPreset);
+        lines["pos.order"][2].recomputeOrderData();
+        expect(lines["pos.order"][2].amount_total).toBe(46);
+
+        // Flow with all the same product
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(555),
+                payload: [
+                    [{ combo_item_id: store.models["product.combo.item"].get(111), qty: 2 }],
+                    [{ combo_item_id: store.models["product.combo.item"].get(111), qty: 2 }],
+                ],
+                qty: 1,
+            },
+            lines["pos.order"][3]
+        );
+        expect(lines["pos.order"][3].amount_total).toBe(34.5);
+        lines["pos.order"][3].setPreset(outPreset);
+        lines["pos.order"][3].recomputeOrderData();
+        expect(lines["pos.order"][3].amount_total).toBe(34.5);
+    });
 });
