@@ -25,7 +25,6 @@ import {
     lastLeaf,
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
-import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
@@ -91,6 +90,16 @@ export class ListPlugin extends Plugin {
                 isAvailable: this.canToggleList.bind(this),
             },
             {
+                id: "toggleListOLLowerAlpha",
+                run: () => this.toggleListCommand({ mode: "OL", listStyle: "lower-alpha" }),
+                isAvailable: this.canToggleList.bind(this),
+            },
+            {
+                id: "toggleListOLUpperAlpha",
+                run: () => this.toggleListCommand({ mode: "OL", listStyle: "upper-alpha" }),
+                isAvailable: this.canToggleList.bind(this),
+            },
+            {
                 id: "toggleListCL",
                 title: _t("Checklist"),
                 description: _t("Track tasks with a checklist"),
@@ -103,6 +112,13 @@ export class ListPlugin extends Plugin {
             { hotkey: "control+shift+7", commandId: "toggleListOL" },
             { hotkey: "control+shift+8", commandId: "toggleListUL" },
             { hotkey: "control+shift+9", commandId: "toggleListCL" },
+        ],
+        markdown_shortcuts: [
+            { pattern: /^1[.)]$/, commandId: "toggleListOL" },
+            { pattern: /^a[.)]$/, commandId: "toggleListOLLowerAlpha" },
+            { pattern: /^A[.)]$/, commandId: "toggleListOLUpperAlpha" },
+            { pattern: /^[-*]$/, commandId: "toggleListUL" },
+            { pattern: /^\[\]$/, commandId: "toggleListCL" },
         ],
         toolbar_items: [
             withSequence(5, {
@@ -141,7 +157,6 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
         /** Handlers */
-        input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
         step_added_handlers: this.updateToolbarButtons.bind(this),
         delete_handlers: this.adjustListPaddingOnDelete.bind(this),
@@ -186,8 +201,8 @@ export class ListPlugin extends Plugin {
         );
     }
 
-    toggleListCommand({ mode } = {}) {
-        this.toggleList(mode);
+    toggleListCommand({ mode, listStyle } = {}) {
+        this.toggleList(mode, listStyle);
         this.dependencies.history.addStep();
     }
 
@@ -203,51 +218,6 @@ export class ListPlugin extends Plugin {
 
     canToggleList(selection) {
         return this.canToggleListMemoized(selection);
-    }
-
-    onInput(ev) {
-        if (ev.data !== " ") {
-            return;
-        }
-        const selection = this.dependencies.selection.getEditableSelection();
-        const blockEl = closestBlock(selection.anchorNode);
-        const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
-        let spaceOffset = selection.anchorOffset;
-        let leftLeaf = leftDOMPath.next().value;
-        while (leftLeaf) {
-            // Calculate spaceOffset by adding lengths of previous text nodes
-            // to correctly find offset position for selection within inline
-            // elements. e.g. <p>ab<strong>cd[]e</strong></p>
-            spaceOffset += leftLeaf.length;
-            leftLeaf = leftDOMPath.next().value;
-        }
-        const stringToConvert = blockEl.textContent.substring(0, spaceOffset);
-        const shouldCreateNumberList = /^(?:[1aA])[.)]\s$/.test(stringToConvert);
-        const shouldCreateBulletList = /^[-*]\s$/.test(stringToConvert);
-        const shouldCreateCheckList = /^\[\]\s$/.test(stringToConvert);
-        if (
-            (shouldCreateNumberList || shouldCreateBulletList || shouldCreateCheckList) &&
-            !closestElement(selection.anchorNode, "li")
-        ) {
-            this.dependencies.selection.setSelection({
-                anchorNode: blockEl.firstChild,
-                anchorOffset: 0,
-                focusNode: selection.focusNode,
-                focusOffset: selection.focusOffset,
-            });
-            this.dependencies.delete.deleteSelection();
-            if (shouldCreateNumberList) {
-                const listStyle = { a: "lower-alpha", A: "upper-alpha", 1: null }[
-                    stringToConvert.substring(0, 1)
-                ];
-                this.toggleList("OL", listStyle);
-            } else if (shouldCreateBulletList) {
-                this.toggleList("UL");
-            } else if (shouldCreateCheckList) {
-                this.toggleList("CL");
-            }
-            this.dependencies.history.addStep();
-        }
     }
 
     // --------------------------------------------------------------------------
