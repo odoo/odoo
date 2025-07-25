@@ -70,7 +70,7 @@
                         <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
                             data-hotkey="d" invisible="state != 'done'"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
-                        <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
+                        <button name="action_cancel" type="object" invisible="state != 'in_queue' or schedule_type == 'now'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
                         <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
                         <button type="object"
                             name="action_set_favorite"
