@@ -1102,6 +1102,34 @@ test("search value is cleared when reopening the menu", async () => {
     expect(".o_select_menu input").toHaveValue("");
 });
 
+test("Groups can be used without choices", async () => {
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu choices="choices" groups="groups" />
+        `;
+        setup() {
+            this.choices = [{ label: "Hello", value: "hello" }];
+            this.groups = [
+                { label: "Group A" },
+                {
+                    label: "Subgroup 1",
+                    choices: [
+                        { label: "Option I", value: "optionI" },
+                        { label: "Option II", value: "optionII" },
+                    ],
+                },
+                { label: "Subgroup 2", choices: [] },
+            ];
+        }
+    }
+    await mountSingleApp(Parent);
+    await open();
+    expect(".o_select_menu_group").toHaveCount(2);
+    expect(".o_select_menu_item").toHaveCount(3);
+});
+
 test("Can add custom data to choices", async () => {
     class Parent extends Component {
         static props = ["*"];
