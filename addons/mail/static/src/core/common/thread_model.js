@@ -40,7 +40,7 @@ export class Thread extends Record {
                 request_list: fieldNames,
             });
             thread = this.get(data);
-            if (!thread.exists() || !thread.hasReadAccess) {
+            if (!thread?.exists() || !thread.hasReadAccess) {
                 return;
             }
         }
