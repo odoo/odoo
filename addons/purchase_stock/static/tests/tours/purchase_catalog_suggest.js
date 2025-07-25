@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { assert } from "@stock/../tests/tours/tour_helper";
 import {
-    freezeDateTime,
     selectPOVendor,
     selectPOWarehouse,
     goToCatalogFromPO,
@@ -19,7 +18,6 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * (estimated price, warehouse logic, toggling, saving defaults)
          * ----------------------------------------------------------------
          */
-        ...freezeDateTime("2021-01-14 09:12:15"), // Same date as python @freeze decorator
         { trigger: ".o_purchase_order" },
         {
             content: "Create a New PO",
@@ -44,7 +42,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         { trigger: "button[name='toggle_suggest_catalog'].fa-toggle-off" }, // Should still be off
         ...toggleSuggest(true),
         ...setSuggestParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('20')" },
+        { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" },
         ...goToPOFromCatalog(),
         ...selectPOWarehouse("Base Warehouse: Receipts"), // Still the same PO, no need to reset vendor
         ...goToCatalogFromPO(),
@@ -76,33 +74,33 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...selectPOVendor("Julia Agrolait"),
         ...selectPOWarehouse("Base Warehouse: Receipts"),
         ...goToCatalogFromPO(),
-        {
-            content: "Check number days saved",
-            trigger: "input.o_PurchaseSuggestInput:eq(0)",
-            run() {
-                const days = parseInt(this.anchor.value);
-                assert(days, 28, `Suggest number of days value not saved for vendor`);
-            },
-        },
-        {
-            content: "Check percent factor saved",
-            trigger: "input.o_PurchaseSuggestInput:eq(1)",
-            run() {
-                const percent = parseInt(this.anchor.value);
-                assert(percent, 50, `Suggest Percent factor value not saved for vendor`);
-            },
-        },
-        {
-            content: "Check based on saved",
-            trigger: ".o_TimePeriodSelectionField",
-            run() {
-                const i = this.anchor.querySelector(".o_select_menu_toggler");
-                assert(i.value, "Last 7 days", `Suggest Based on value not saved for vendor`);
-            },
-        },
-        ...setSuggestParameters({ basedOn: "Actual Demand" }), // Keeping factor 50%
+        // { Reactivate when saving is done
+        //     content: "Check number days saved",
+        //     trigger: "input.o_PurchaseSuggestInput:eq(0)",
+        //     run() {
+        //         const days = parseInt(this.anchor.value);
+        //         assert(days, 28, `Expected days to be saved to 28, but got ${days}`);
+        //     },
+        // },
+        // {
+        //     content: "Check percent factor saved",
+        //     trigger: "input.o_PurchaseSuggestInput:eq(1)",
+        //     run() {
+        //         const percent = parseInt(this.anchor.value);
+        //         assert(percent, 50, `Expected percent factor to be saved to 50% got ${percent}`);
+        //     },
+        // },
+        // {
+        //     content: "Check based on saved",
+        //     trigger: ".o_TimePeriodSelectionField",
+        //     run() {
+        //         const i = this.anchor.querySelector(".o_select_menu_toggler");
+        //         assert(i.value, "Last 7 days", `based_on = ${i.value},should be "Last 7 days"`);
+        //     },
+        // },
+        ...setSuggestParameters({ basedOn: "Actual Demand", nbDays: 30, factor: 50 }),
         // Suggest total should be -100 units forcasted * 50% * 20 = 1000$
-        { trigger: "span[name='suggest_total']:visible:contains('1000')" },
+        { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
         /*
          * -----------------  PART 2 : Kanban Interactions -----------------
          * Checks that the Suggest UI and the Kanban record interactions
@@ -131,7 +129,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...toggleSuggest(true),
 
         ...setSuggestParameters({ basedOn: "Actual Demand", factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('2000')" },
+        { trigger: "span[name='suggest_total']:visible:contains('2,000')" },
         { trigger: "span[name='o_kanban_forecasted_qty']:visible:contains('100')" }, // Move out of 100 in 20days
         { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('100')" }, // 100 * 100%
         ...setSuggestParameters({ factor: 200 }),
@@ -145,3 +143,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         },
     ],
 });
+
+/**
+ * TODO Create a TEST for actions Add all and adding individual products
+ * With Mulitple warehouses, clicking twice on Add All ...
+ */

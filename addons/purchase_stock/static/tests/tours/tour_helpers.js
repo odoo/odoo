@@ -1,23 +1,6 @@
 import { assert } from "@stock/../tests/tours/tour_helper";
 
 /**
- * Sets the date on the client to a specific timestamp using luxon's DateTime.fromFormat(jsDate, fmt)
- * @param {string} jsDate A date time string
- * @param {string} fmt The format of jsDate param (default: yyyy-LL-dd HH:mm:ss).
- */
-export function freezeDateTime(jsDate, fmt = "yyyy-LL-dd HH:mm:ss") {
-    return [
-        {
-            trigger: "body",
-            run: () => {
-                // Resolve luxon at runtime only, to prevent import error
-                luxon.DateTime.now = () => luxon.DateTime.fromFormat(jsDate, fmt);
-            },
-        },
-    ];
-}
-
-/**
  * Sets the vendor on a purchase order (must already on PO).
  * @param {string} vendorName An existing partner.
  */
