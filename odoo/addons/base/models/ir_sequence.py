@@ -204,7 +204,7 @@ class IrSequence(models.Model):
             return (s % d) if s else ''
 
         def _interpolation_dict():
-            now = range_date = effective_date = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
+            now = range_date = effective_date = datetime.now(self.env.tz)
             if date or self.env.context.get('ir_sequence_date'):
                 effective_date = fields.Datetime.from_string(date or self.env.context.get('ir_sequence_date'))
             if date_range or self.env.context.get('ir_sequence_date_range'):

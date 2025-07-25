@@ -79,8 +79,8 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
 
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
         sql_expr = field_sql
-        timezone = model.env.context.get('tz')
-        if self.type == 'datetime' and timezone:
+        if self.type == 'datetime' and (timezone := model.env.context.get('tz')):
+            # only use the timezone from the context
             if timezone in pytz.all_timezones_set:
                 sql_expr = SQL("timezone(%s, timezone('UTC', %s))", timezone, sql_expr)
             else:
@@ -129,16 +129,10 @@ class Date(BaseDate[date]):
             can't be converted between timezones).
         """
         today = timestamp or datetime.now()
-        context_today = None
-        tz_name = record.env.context.get('tz') or record.env.user.tz
-        if tz_name:
-            try:
-                today_utc = pytz.timezone('UTC').localize(today, is_dst=False)  # UTC = no DST
-                context_today = today_utc.astimezone(pytz.timezone(tz_name))
-            except Exception:
-                _logger.debug("failed to compute context/client-specific today date, using UTC value for `today`",
-                              exc_info=True)
-        return (context_today or today).date()
+        tz = record.env.tz
+        today_utc = pytz.utc.localize(today, is_dst=False)  # UTC = no DST
+        today = today_utc.astimezone(tz)
+        return today.date()
 
     @staticmethod
     def to_date(value) -> date | None:
@@ -229,17 +223,10 @@ class Datetime(BaseDate[datetime]):
         :rtype: datetime
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
-        tz_name = record.env.context.get('tz') or record.env.user.tz
+        tz = record.env.tz
         utc_timestamp = pytz.utc.localize(timestamp, is_dst=False)  # UTC = no DST
-        if tz_name:
-            try:
-                context_tz = pytz.timezone(tz_name)
-                return utc_timestamp.astimezone(context_tz)
-            except Exception:
-                _logger.debug("failed to compute context/client-specific timestamp, "
-                              "using the UTC value",
-                              exc_info=True)
-        return utc_timestamp
+        timestamp = utc_timestamp.astimezone(tz)
+        return timestamp
 
     @staticmethod
     def to_datetime(value) -> datetime | None:
@@ -288,6 +275,7 @@ class Datetime(BaseDate[datetime]):
             if not dt:
                 return False
             if (tz := record.env.context.get('tz')) and tz in pytz.all_timezones_set:
+                # only use the timezone from the context
                 dt = dt.astimezone(pytz.timezone(tz))
             return get_property(dt)
 

@@ -38,7 +38,7 @@ class WebsiteBlog(http.Controller):
             dom, groupby=['post_date:month'])
 
         locale = get_lang(request.env).code
-        tzinfo = pytz.timezone(request.env.context.get('tz', 'utc') or 'utc')
+        tzinfo = request.env.tz
         fmt = tools.DEFAULT_SERVER_DATETIME_FORMAT
 
         res = defaultdict(list)
