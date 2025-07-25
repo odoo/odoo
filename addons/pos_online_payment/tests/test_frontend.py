@@ -169,14 +169,14 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertTrue(self.pos_config)
         self.assertTrue(self.pos_user)
 
-    def _open_session_fake_cashier_unpaid_order(self):
+    def _open_session_fake_cashier_unpaid_order(self, product=None):
         self.pos_config.with_user(self.pos_user).open_ui()
 
         current_session = self.pos_config.current_session_id
         current_session.set_opening_control(0, None)
 
         # Simulate a cashier saving an unpaid order on the server
-        product = self.letter_tray
+        product = product or self.letter_tray
         order_uid = '00055-001-0001'
         order_pos_reference = 'Order ' + order_uid
 
