@@ -705,7 +705,50 @@ export class PosOrderline extends Base {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
     }
     get canBeRemoved() {
+<<<<<<< b8c32d95d74042f1494bfd59bd1686ffc3922639
         return this.product_id.uom_id.isZero(this.qty);
+||||||| 3173a5f993a3ffa3d3a14d29713142e5b6b314d9
+        const decimals = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit"
+        ).digits;
+        return floatIsZero(this.qty, decimals);
+    }
+    setDirty(processedLines = new Set()) {
+        if (processedLines.has(this)) {
+            return;
+        }
+        processedLines.add(this);
+        super.setDirty();
+        const linesToSetDirty = [
+            this.combo_parent_id,
+            ...(this.combo_parent_id?.combo_line_ids || []),
+            ...(this.combo_line_ids || []),
+        ].filter(Boolean);
+        for (const line of linesToSetDirty) {
+            line.setDirty(processedLines);
+        }
+=======
+        const decimals = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit"
+        ).digits;
+        return floatIsZero(this.qty, decimals);
+    }
+    setDirty(processedLines = new Set()) {
+        if (processedLines.has(this)) {
+            return;
+        }
+        processedLines.add(this);
+        super.setDirty();
+        const linesToSetDirty = [
+            this.combo_parent_id,
+            ...(this.combo_parent_id?.combo_line_ids || []),
+            ...(this.combo_line_ids || []),
+        ].filter(Boolean);
+        for (const line of linesToSetDirty) {
+            line.setDirty(processedLines);
+        }
+        this.order_id?.setDirty();
+>>>>>>> 7cd43c04b74026201b20bf14f14092ae7f8620c5
     }
 }
 
