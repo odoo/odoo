@@ -716,6 +716,9 @@ patch(PosStore.prototype, {
         if (order && !order.isBooked) {
             this.removeOrder(order);
         } else if (order) {
+            if (order.isDirty()) {
+                this.addPendingOrder([order.id]);
+            }
             if (!this.isOrderTransferMode) {
                 this.syncAllOrders();
             } else if (order && this.previousScreen !== "ReceiptScreen") {
