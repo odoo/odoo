@@ -87,3 +87,44 @@ class TestUi(AccountTestInvoicingHttpCommon):
         product.supplier_taxes_id = new_tax
 
         self.start_tour("/odoo", 'account_tax_group', login="admin")
+
+    def test_portuguese_company_tax_base_amount_computation(self):
+        self.env.ref('base.user_admin').write({
+            'company_id': self.env.company.id,
+            'company_ids': [(4, self.env.company.id)],
+        })
+
+        portugal = self.env.ref('base.pt')
+        self.env.company.write({
+            'country_id': portugal.id,
+            'account_fiscal_country_id': portugal.id,
+        })
+        self.env['res.partner'].create({
+            'name': 'Portuguese Vendor',
+            'email': 'azure.vendor@example.com',
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'Portuguese Product',
+            'standard_price': 123.0,
+            'list_price': 123.0,
+            'type': 'consu',
+        })
+
+        tax_group = self.env['account.tax.group'].create({
+            'name': 'Purchases',
+            'sequence': 10,
+        })
+
+        new_tax = self.env['account.tax'].create({
+            'name': '23% Tax',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 23,
+            'company_id': self.env.company.id,
+            'country_id': portugal.id,
+            'tax_group_id': tax_group.id,
+        })
+        product.supplier_taxes_id = new_tax
+
+        self.start_tour("/odoo", 'pt_tax_base_amount_tour', login="admin")
