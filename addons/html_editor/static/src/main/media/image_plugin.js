@@ -166,6 +166,7 @@ export class ImagePlugin extends Plugin {
                 title: _t("Transform the picture (click twice to reset transformation)"),
                 Component: ImageTransformButton,
                 props: this.getImageTransformProps(),
+                isAvailable: () => this.config.allowImageTransform ?? true,
             },
             {
                 id: "image_delete",

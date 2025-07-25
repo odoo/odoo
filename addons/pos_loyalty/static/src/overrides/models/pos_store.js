@@ -179,7 +179,7 @@ patch(PosStore.prototype, {
             ) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
-            if (pointsAdded.length < oldChanges.length) {
+            if (pointsAdded.length < oldChanges.length || !order._programIsApplicable(program)) {
                 const removedIds = oldChanges.map((pe) => pe.coupon_id);
                 order.uiState.couponPointChanges = Object.fromEntries(
                     Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) => {

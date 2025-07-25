@@ -579,8 +579,19 @@ export class PosStore extends Reactive {
         }
         const attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+            let defaultValues = {};
+            const match = product.barcode && product.barcode.includes(this.searchProductWord);
+            if (this.searchProductWord && match) {
+                defaultValues = Object.fromEntries(
+                    product.product_template_variant_value_ids.map((value) => [
+                        value.attribute_line_id.id,
+                        value.id.toString(),
+                    ])
+                );
+            }
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 product: product,
+                defaultValues: defaultValues,
             });
         }
         return {
@@ -853,13 +864,11 @@ export class PosStore extends Reactive {
             values.price_unit = values.product_id.get_price(order.pricelist_id, values.qty);
         }
         const isScannedProduct = opts.code && opts.code.type === "product";
-        if ((values.price_extra || values.product_id.isConfigurable()) && !isScannedProduct) {
+        if (values.price_extra && !isScannedProduct) {
             const price = values.product_id.get_price(
                 order.pricelist_id,
                 values.qty,
-                values.price_extra,
-                false,
-                product.list_price
+                values.price_extra
             );
 
             values.price_unit = price;

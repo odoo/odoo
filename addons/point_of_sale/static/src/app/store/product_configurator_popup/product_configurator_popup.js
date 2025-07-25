@@ -6,12 +6,17 @@ import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_ba
 
 export class BaseProductAttribute extends Component {
     static template = "";
-    static props = ["attributeLine"];
+    static props = {
+        attributeLine: { type: Object },
+        defaultValues: { type: Object, optional: true },
+    };
     setup() {
         this.attributeLine = this.props.attributeLine;
         this.values = this.attributeLine.product_template_value_ids;
+        const defaultValue =
+            this.props.defaultValues?.[this.attributeLine.id] || this.values[0].id.toString();
         this.state = useState({
-            attribute_value_ids: this.values[0].id.toString(),
+            attribute_value_ids: defaultValue,
             custom_value: "",
         });
         onMounted(() => {
@@ -65,8 +70,9 @@ export class RadioProductAttribute extends BaseProductAttribute {
         // With radio buttons `t-model` selects the default input by searching for inputs with
         // a matching `value` attribute. In our case, we use `t-att-value` so `value` is
         // not found yet and no radio is selected by default.
-        // We then manually select the first input of each radio attribute.
-        this.root.el.querySelector("input[type=radio]").checked = true;
+        // We then manually select the default radio button
+        const id = `${this.attributeLine.attribute_id.id}_${this.state.attribute_value_ids}`;
+        this.root.el.querySelector(`[id="${id}"]`).checked = true;
     }
 }
 
@@ -113,7 +119,7 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = ["product", "getPayload", "close"];
+    static props = ["product", "getPayload", "close", "defaultValues"];
 
     setup() {
         useSubEnv({
@@ -143,7 +149,10 @@ export class ProductConfiguratorPopup extends Component {
                 // for custom values, it will never be a multiple attribute
                 attribute_custom_values[valueIds[0]] = custom_value;
             }
-            price_extra += extra;
+            const attr = this.pos.data.models["product.template.attribute.value"].get(valueIds[0]);
+            if (attr && attr.attribute_id.create_variant !== "always") {
+                price_extra += extra;
+            }
         });
 
         attribute_value_ids = attribute_value_ids.flat();

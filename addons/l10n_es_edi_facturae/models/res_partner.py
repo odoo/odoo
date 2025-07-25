@@ -74,3 +74,14 @@ class Partner(models.Model):
                 partner.l10n_es_edi_facturae_residence_type = 'U'
             else:
                 partner.l10n_es_edi_facturae_residence_type = 'E'
+
+    def _l10n_es_edi_facturae_export_check(self):
+        errors = {}
+        if invalid_records := self.filtered(lambda partner: not (partner.is_company or partner.vat)):
+            errors["l10n_es_edi_facturae_partner_check"] = {
+                'level': 'danger',
+                'message': _("Partner must be a company or have a VAT number"),
+                'action_text': _("View Partner(s)"),
+                'action': invalid_records._get_records_action(name=_("Check Partner(s)")),
+            }
+        return errors

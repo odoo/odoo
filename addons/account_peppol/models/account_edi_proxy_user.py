@@ -167,6 +167,7 @@ class AccountEdiProxyClientUser(models.Model):
             }
         }
         for edi_user in self:
+            edi_user = edi_user.with_company(edi_user.company_id)
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
@@ -228,6 +229,7 @@ class AccountEdiProxyClientUser(models.Model):
         job_count = self._context.get('peppol_crons_job_count') or BATCH_SIZE
         need_retrigger = False
         for edi_user in self:
+            edi_user = edi_user.with_company(edi_user.company_id)
             edi_user_moves = self.env['account.move'].search(
                 [
                     ('peppol_move_state', '=', 'processing'),
@@ -277,6 +279,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _peppol_get_participant_status(self):
         for edi_user in self:
+            edi_user = edi_user.with_company(edi_user.company_id)
             try:
                 proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:

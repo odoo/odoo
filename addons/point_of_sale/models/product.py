@@ -9,7 +9,8 @@ from odoo.osv.expression import AND
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _name = 'product.template'
+    _inherit = ['product.template', 'pos.load.mixin']
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
     to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
@@ -57,6 +58,14 @@ class ProductTemplate(models.Model):
                 if combo_name:
                     raise UserError(_('You must first remove this product from the %s combo', combo_name))
 
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('id', 'in', list({p['product_tmpl_id'] for p in data['product.product']['data']}))]
+
 
 class ProductProduct(models.Model):
     _name = 'product.product'
@@ -70,7 +79,7 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'id', 'display_name', 'lst_price', 'list_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name',
+            'id', 'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking', 'type', 'service_tracking', 'is_storable',
             'write_date', 'color', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_template_variant_value_ids', 'product_tag_ids',
         ]

@@ -70,7 +70,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: eylemin tetiklendiği ortam"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -98,7 +98,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Eylemler\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -106,6 +106,9 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>Varsayılan hedef kayıt alma yöntemi, başka "
+"bir Odoo örneğinden gelen herhangi bir webhook için kutudan çıkar çıkmaz "
+"çalışır."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -118,7 +121,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> Kullanılabilir değişkenler: </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -158,7 +161,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
-msgstr ""
+msgstr "<strong><i class=\"fa fa-lock\"/> Gizli tutun, güvende tutun.</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -223,7 +226,7 @@ msgstr "Arşivlendi"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "Otomasyon Kuralları ile <em>her şeyi</em> otomatikleştirin"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -250,7 +253,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "Otomasyon Kuralları: kontrol edin ve uygulayın"
 
 #. module: base_automation
 #. odoo-javascript
@@ -285,7 +288,7 @@ msgstr "Hesapla"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create %(model_name)s with name %(value)s"
-msgstr ""
+msgstr "%(value)s adı ile %(model_name)s oluşturun"
 
 #. module: base_automation
 #. odoo-javascript
@@ -484,6 +487,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
 msgstr ""
+"Varsa, bu koşul kaydın güncellenmesinden önce sağlanmalıdır. Kayıt "
+"oluşturulurken kontrol edilmez."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -556,7 +561,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "Otomasyon kuralının çalıştığı model."
 
 #. module: base_automation
 #. odoo-javascript
@@ -569,7 +574,7 @@ msgstr "Aylar"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "Otomasyonun çalıştırılacağı bir kayıt bulunamadı."
 
 #. module: base_automation
 #. odoo-python
@@ -750,6 +755,8 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Bazı tetikleyiciler, bir seçim alanına referans gerektirir. Bu alan, bu "
+"referansı saklamak için kullanılır."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
@@ -773,7 +780,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "Aşama, \"%s\" olarak ayarlandı"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
@@ -796,6 +803,7 @@ msgstr ""
 msgid ""
 "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
+"%(action_names)s eylemlerinin hedef modeli kural modeliyle uyumlu değil."
 
 #. module: base_automation
 #. odoo-python
@@ -813,6 +821,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Otomasyon kuralı, yalnızca bu alanlardan biri güncellendiğinde tetiklenir. "
+"Boş bırakılırsa, tüm alanlar izlenir."
 
 #. module: base_automation
 #. odoo-javascript
@@ -828,6 +838,8 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
+"Otomasyon kuralının hangi kayıt üzerinde çalıştırılacağını belirlemek için "
+"bu kod çalıştırılır."
 
 #. module: base_automation
 #. odoo-javascript
@@ -839,7 +851,7 @@ msgstr ""
 #: model:digest.tip,name:base_automation.digest_tip_base_automation_0
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid "Tip: Automate everything with Automation Rules"
-msgstr ""
+msgstr "İpucu: Otomasyon Kuralları ile her şeyi otomatikleştirin"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -884,7 +896,7 @@ msgstr "URL"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL will be created once the rule is saved."
-msgstr ""
+msgstr "Kural kaydedildiğinde URL oluşturulacak."
 
 #. module: base_automation
 #. odoo-python
@@ -960,6 +972,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Gün bazlı zamanlama koşulu hesaplanırken, çalışma günlerine göre tarihi "
+"hesaplamak için bir takvim kullanılabilir."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -986,6 +1000,8 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
+"Otomasyon Kuralları ile\n"
+"                <em>herhangi</em> bir iş akışını otomatikleştirebilirsiniz."
 
 #. module: base_automation
 #. odoo-javascript
