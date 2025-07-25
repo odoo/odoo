@@ -158,28 +158,52 @@ function boundDatetime(delta) {
     );
 }
 
-const DELTAS = {
-    today: ["", "days = 1"],
-    "last 7 days": ["days = -7", ""],
-    "last 30 days": ["days = -30", ""],
-    "month to date": ["day = 1", "days = 1"],
-    "last month": ["day = 1, months = -1", "day = 1"],
-    "year to date": ["day = 1, month = 1", "days = 1"],
-    "last 12 months": ["day = 1, months = -12", "day = 1"],
-};
+const BOUNDS_SMART_DATES = [
+    ["today", "today", "today +1d"],
+    ["last 7 days", "today -7d", "today"],
+    ["last 30 days", "today -30d", "today"],
+    ["month to date", "today =1d", "today +1d"],
+    ["last month", "today =1d -1m", "today =1d"],
+    ["year to date", "today =1m =1d", "today +1d"],
+    ["last 12 months", "today =1d -12m", "today =1d"],
+];
+const DELTAS = [
+    ["today", "", "days = 1"],
+    ["last 7 days", "days = -7", ""],
+    ["last 30 days", "days = -30", ""],
+    ["month to date", "day = 1", "days = 1"],
+    ["last month", "day = 1, months = -1", "day = 1"],
+    ["year to date", "day = 1, month = 1", "days = 1"],
+    ["last 12 months", "day = 1, months = -12", "day = 1"],
+];
+const BOUNDS_DATE = DELTAS.map(([k, l, r]) => [k, boundDate(l), boundDate(r)]);
+const BOUNDS_DATETIME = DELTAS.map(([k, l, r]) => [k, boundDatetime(l), boundDatetime(r)]);
 
-function introduceInRangeOperators(tree, options) {
+function getBounds(generateSmartDates, fieldType) {
+    return generateSmartDates
+        ? BOUNDS_SMART_DATES
+        : fieldType === "date"
+        ? BOUNDS_DATE
+        : BOUNDS_DATETIME;
+}
+
+function introduceInRangeOperators(tree, options = {}) {
     function _introduceInRangeOperator(c, options) {
         const res1 = isStrictBetween(c);
         if (res1) {
+            const generateSmartDates =
+                "generateSmartDates" in options ? options.generateSmartDates : true;
             // @ts-ignore
             const { path, value1, value2 } = res1;
             const fieldType = options.getFieldDef?.(path)?.type;
             if (["date", "datetime"].includes(fieldType) && isSimplePath(path)) {
-                const toBound = fieldType === "date" ? boundDate : boundDatetime;
-                for (const valueType in DELTAS) {
-                    const [leftBound, rightBound] = DELTAS[valueType].map(toBound);
-                    if (value1._expr === leftBound._expr && value2._expr === rightBound._expr) {
+                const bounds = getBounds(generateSmartDates, fieldType);
+                for (const [valueType, leftBound, rightBound] of bounds) {
+                    if (
+                        generateSmartDates
+                            ? value1 === leftBound && value2 === rightBound
+                            : value1._expr === leftBound._expr && value2._expr === rightBound._expr
+                    ) {
                         return condition(path, "in range", [fieldType, valueType, false, false]);
                     }
                 }
@@ -208,8 +232,8 @@ function introduceInRangeOperators(tree, options) {
     );
 }
 
-function eliminateInRangeOperators(tree) {
-    function _eliminateInRangeOperator(c) {
+function eliminateInRangeOperators(tree, options = {}) {
+    function _eliminateInRangeOperator(c, options) {
         const { negate, path, operator, value } = c;
         // @ts-ignore
         if (operator !== "in range") {
@@ -221,13 +245,15 @@ function eliminateInRangeOperators(tree) {
         if (valueType === "custom range") {
             tree = makeBetween(lastPart, value1, value2);
         } else {
-            const toBound = fieldType === "date" ? boundDate : boundDatetime;
-            const [leftBound, rightBound] = DELTAS[valueType].map(toBound);
+            const generateSmartDates =
+                "generateSmartDates" in options ? options.generateSmartDates : true;
+            const bounds = getBounds(generateSmartDates, fieldType);
+            const [, leftBound, rightBound] = bounds.find(([v]) => v === valueType);
             tree = makeStrictBetween(lastPart, leftBound, rightBound);
         }
         return wrapInAny(tree, initialPath, negate);
     }
-    return operate(_eliminateInRangeOperator, tree);
+    return operate(_eliminateInRangeOperator, tree, options);
 }
 
 function introduceBetweenOperators(tree, options = {}) {
@@ -297,7 +323,7 @@ function removeFalseTrueLeaves(tree) {
     return operate(_removeFalseTrueLeave, tree);
 }
 
-export function introduceVirtualOperators(tree, options) {
+export function introduceVirtualOperators(tree, options = {}) {
     return applyTransformations(
         [
             eliminateAnyOperators,
@@ -311,7 +337,7 @@ export function introduceVirtualOperators(tree, options) {
     );
 }
 
-export function eliminateVirtualOperators(tree) {
+export function eliminateVirtualOperators(tree, options = {}) {
     return applyTransformations(
         [
             eliminateInRangeOperators,
@@ -319,7 +345,8 @@ export function eliminateVirtualOperators(tree) {
             eliminateStartsWithOperators,
             eliminateSetOperators,
         ],
-        tree
+        tree,
+        options
     );
 }
 

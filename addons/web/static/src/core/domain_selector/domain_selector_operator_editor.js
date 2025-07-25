@@ -1,4 +1,4 @@
-export function getDomainDisplayedOperators(fieldDef, params = {}) {
+export function getDomainDisplayedOperators(fieldDef) {
     if (!fieldDef) {
         fieldDef = {};
     }
@@ -25,14 +25,7 @@ export function getDomainDisplayedOperators(fieldDef, params = {}) {
             return ["=", "!=", "ilike", "not ilike", "starts with", "set", "not set"];
         case "date":
         case "datetime":
-            return [
-                ...("allowExpressions" in params && !params.allowExpressions ? [] : ["in range"]),
-                "=",
-                "<",
-                ">",
-                "set",
-                "not set",
-            ];
+            return ["in range", "=", "<", ">", "set", "not set"];
         case "integer":
         case "float":
         case "monetary":
