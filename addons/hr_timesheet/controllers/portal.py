@@ -69,7 +69,7 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
-        Timesheet = request.env['account.analytic.line']
+        Timesheet = request.env['account.analytic.line'].with_context(allowed_company_ids=request.env.user.company_ids.ids)
         domain = Timesheet._timesheet_get_portal_domain()
         Timesheet_sudo = Timesheet.sudo()
 
