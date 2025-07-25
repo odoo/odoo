@@ -84,6 +84,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+" * Πρόχειρο: Η μεταφορά δεν έχει επιβεβαιωθεί ακόμα. Η κράτηση δεν εφαρμόζεται.\n"
+" * Αναμονή για άλλη ενέργεια: Αυτή η μεταφορά περιμένει άλλη ενέργεια πριν είναι έτοιμη.\n"
+" * Αναμονή: Η μεταφορά περιμένει τη διαθεσιμότητα ορισμένων προϊόντων..\n"
+"(a) Η πολιτική αποστολής είναι «Το συντομότερο δυνατό»: κανένα προϊόν δεν μπόρεσε να κρατηθεί.\n"
+"(b) Η πολιτική αποστολής είναι «Όταν όλα τα προϊόντα είναι έτοιμα»: δεν μπόρεσαν να κρατηθούν όλα τα προϊόντα.\n"
+" * Έτοιμο: Η μεταφορά είναι έτοιμη για επεξεργασία.\n"
+"(a) Η πολιτική αποστολής είναι «Το συντομότερο δυνατό»: έχει κρατηθεί τουλάχιστον ένα προϊόν.\n"
+"(b) Η πολιτική αποστολής είναι «Όταν όλα τα προϊόντα είναι έτοιμα»: έχουν κρατηθεί όλα τα προϊόντα.\n"
+" * Ολοκληρώθηκε: Η μεταφορά έχει διεκπεραιωθεί..\n"
+" * Ακυρώθηκε: Η μεταφορά έχει ακυρωθεί."
 
 #. module: stock
 #. odoo-python
@@ -250,6 +260,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Νέο: Η κίνηση αποθέματος έχει δημιουργηθεί αλλά δεν έχει επιβεβαιωθεί.\n"
+"* Αναμονή για άλλη κίνηση: Μια συνδεδεμένη κίνηση αποθέματος πρέπει να ολοκληρωθεί πριν από αυτή.\n"
+"* Αναμονή διαθεσιμότητας: Η κίνηση αποθέματος είναι επιβεβαιωμένη αλλά το προϊόν δεν μπορεί να κρατηθεί.\n"
+"* Διαθέσιμο: Το προϊόν της κίνησης αποθέματος έχει κρατηθεί.\n"
+"* Ολοκληρώθηκε: Το προϊόν έχει μεταφερθεί και η μεταφορά έχει επιβεβαιωθεί."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -266,6 +281,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Τοποθεσία Προμηθευτή: Εικονική τοποθεσία που αναπαριστά την πηγή των προϊόντων που προέρχονται από τους προμηθευτές σας\n"
+"* Προβολή: Εικονική τοποθεσία που χρησιμοποιείται για τη δημιουργία ιεραρχικών δομών στην αποθήκη σας, συγκεντρώνοντας τις θυγατρικές τοποθεσίες, δεν μπορεί να περιέχει προϊόντα απευθείας\n"
+"* Εσωτερική Τοποθεσία: Φυσικές τοποθεσίες μέσα στις αποθήκες σας,\n"
+"* οποθεσία Πελάτη: Εικονική τοποθεσία που αναπαριστά τον προορισμό των προϊόντων που αποστέλλονται στους πελάτες σας\n"
+"* Απώλεια Αποθέματος: Εικονική τοποθεσία που χρησιμεύει ως αντίστοιχο για τις εργασίες απογραφής που διορθώνουν τα επίπεδα αποθέματος (φυσικές απογραφές)Παραγωγή\n"
+"* Παραγωγή: Εικονική αντίστοιχη τοποθεσία για τις εργασίες παραγωγής: αυτή η τοποθεσία καταναλώνει τα συστατικά και παράγει τα τελικά προϊόντα\n"
+"* Τοποθεσία Μεταφοράς: Αντίστοιχη τοποθεσία που χρησιμοποιείται σε δια-εταιρικές ή δια-αποθηκές εργασίες"
 
 #. module: stock
 #. odoo-python
@@ -1574,6 +1596,14 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
+"Ορισμένες χώρες εφαρμόζουν παρακράτηση φόρου στην πηγή επί του ποσού των "
+"τιμολογίων, σύμφωνα με τη δική τους εσωτερική νομοθεσία. Οποιαδήποτε "
+"παρακράτηση φόρου στην πηγή θα καταβληθεί από τον πελάτη στις φορολογικές "
+"αρχές. Σε καμία περίπτωση η εταιρεία μας (My Company - Chicago) δεν μπορεί "
+"να εμπλακεί σε κόστη που σχετίζονται με τη νομοθεσία της εκάστοτε χώρας. "
+"Συνεπώς, το ποσό του τιμολογίου θα καταβληθεί στην εταιρεία μας (My Company "
+"- Chicago) στο σύνολό του και δεν περιλαμβάνει οποιαδήποτε κόστη που αφορούν"
+" τη νομοθεσία της χώρας στην οποία εδρεύει ο πελάτης."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -2565,6 +2595,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Καθορίζει την προεπιλεγμένη μέθοδο που χρησιμοποιείται για την πρόταση της ακριβούς τοποθεσίας (ράφι) από την οποία θα ληφθούν τα προϊόντα, ποιο lot κ.λπ., για αυτήν την τοποθεσία. Αυτή η μέθοδος μπορεί να επιβληθεί στο επίπεδο κατηγορίας προϊόντων, ενώ γίνεται αναδρομή στις γονικές τοποθεσίες εάν δεν έχει οριστεί κάποια εδώ.\n"
+"\n"
+"FIFO: Τα προϊόντα/παρτίδες που αποθηκεύτηκαν πρώτα θα εξέλθουν πρώτα.\n"
+"LIFO: Τα προϊόντα/παρτίδες που αποθηκεύτηκαν τελευταία θα εξέλθουν πρώτα.\n"
+"Πλησιέστερη τοποθεσία: Τα προϊόντα/παρτίδες που βρίσκονται πιο κοντά στον προορισμό θα εξέλθουν πρώτα.\n"
+"FEFO: Τα προϊόντα/παρτίδες με την πλησιέστερη ημερομηνία απομάκρυνσης θα εξέλθουν πρώτα (η διαθεσιμότητα αυτής της μεθόδου εξαρτάται από τη ρύθμιση «Ημερομηνίες Λήξης»)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -4467,7 +4503,7 @@ msgstr "John Doe"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
 msgid "Json Lead Days"
-msgstr ""
+msgstr "Ημέρες παράδοσης σε JSON μορφή"
 
 #. module: stock
 #. odoo-javascript
@@ -4707,7 +4743,7 @@ msgstr "Τελευταία κατάσταση διαθεσιμότητας πρ�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
 msgid "Lead Days Date"
-msgstr ""
+msgstr "Ημερομηνία Προθεσμίας"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__lead_time
@@ -7003,6 +7039,8 @@ msgstr "Quant"
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
+"Η δημιουργία συγκεκριμένου προϊόντος δεν επιτρέπεται – δεν μπορείτε να "
+"εκτελέσετε αυτήν την ενέργεια."
 
 #. module: stock
 #. odoo-python
@@ -7010,6 +7048,8 @@ msgstr ""
 #, python-format
 msgid "Quant's editing is restricted, you can't do this operation."
 msgstr ""
+"Η επεξεργασία συγκεκριμένου προϊόντος δεν επιτρέπεται – δεν μπορείτε να "
+"εκτελέσετε αυτήν την ενέργεια."
 
 #. module: stock
 #. odoo-python
@@ -7128,6 +7168,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Ποσότητα προγραμματισμένων εισερχόμενων προϊόντων.\n"
+"Σε περιβάλλον με μία μόνο Αποθηκευτική Τοποθεσία, αυτό περιλαμβάνει αγαθά που φτάνουν σε αυτή την Τοποθεσία ή σε οποιαδήποτε από τις θυγατρικές της.\n"
+"Σε περιβάλλον με μία μόνο Αποθήκη, αυτό περιλαμβάνει αγαθά που φτάνουν στην Αποθηκευτική Τοποθεσία της Αποθήκης αυτής ή σε οποιαδήποτε από τις θυγατρικές της.\n"
+"Σε άλλη περίπτωση, αυτό περιλαμβάνει αγαθά που φτάνουν σε οποιαδήποτε Αποθηκευτική Τοποθεσία τύπου «εσωτερική»."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -7137,6 +7181,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
+"Ποσότητα προγραμματισμένων εξερχόμενων προϊόντων..\n"
+"Σε περιβάλλον με μία μόνο Αποθηκευτική Τοποθεσία, αυτό περιλαμβάνει αγαθά που φεύγουν από αυτή την Τοποθεσία ή από οποιαδήποτε από τις θυγατρικές της..\n"
+"Σε περιβάλλον με μία μόνο Αποθήκη, αυτό περιλαμβάνει αγαθά που φεύγουν από την Αποθηκευτική Τοποθεσία της Αποθήκης αυτής ή από οποιαδήποτε από τις θυγατρικές της.\n"
+"Σε άλλη περίπτωση, αυτό περιλαμβάνει αγαθά που φεύγουν από οποιαδήποτε Αποθηκευτική Τοποθεσία τύπου «εσωτερική»."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -7196,6 +7244,9 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"Συγκεκριμένα προϊόντα διαγράφονται αυτόματα όταν είναι απαραίτητο. Αν πρέπει"
+" να τα διαγράψετε χειροκίνητα, παρακαλούμε ζητήστε από έναν υπεύθυνο "
+"αποθήκης να το κάνει."
 
 #. module: stock
 #. odoo-python
@@ -11324,7 +11375,7 @@ msgstr "είναι"
 #. module: stock
 #: model:product.removal,method:stock.removal_least_packages
 msgid "least_packages"
-msgstr ""
+msgstr "ελάχιστος αριθμός συσκευασιών"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_lifo
@@ -11358,12 +11409,12 @@ msgstr "προγραμματίστηκε στις"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "επεξεργάστηκε αντί για"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
-msgstr ""
+msgstr "Γράφημα Ποσοτήτων Αποθέματος"
 
 #. module: stock
 #. odoo-javascript
@@ -11390,6 +11441,8 @@ msgid ""
 "the warehouse to consider for the route selection on the next procurement "
 "(if any)."
 msgstr ""
+"η αποθήκη που θα ληφθεί υπόψη για την επιλογή διαδρομής στην επόμενη "
+"προμήθεια (αν υπάρχει)."
 
 #. module: stock
 #. odoo-javascript

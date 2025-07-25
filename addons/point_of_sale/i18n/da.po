@@ -11,6 +11,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Wil Odoo, 2025
 # Sammi Iversen <sammi@vkdata.dk>, 2025
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sammi Iversen <sammi@vkdata.dk>, 2025\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,7 +140,7 @@ msgstr "%s produkt(er) fundet for \"%s\"."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s ubeskattet"
 
 #. module: point_of_sale
 #. odoo-python
@@ -915,7 +916,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Der opstod en fejl under indlæsning af kassesystemet: \n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1871,6 +1872,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Konverteringsfejl: Følgende enhedsomregninger er blevet afrundet til nul "
+"mængde:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -6554,7 +6557,7 @@ msgstr "Angiv flere priser pr. produkt, automatiske rabatter osv."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Angiv den nye rabat"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6987,7 +6990,7 @@ msgstr "Moms ID"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 #, python-format
 msgid "Tax ID: %(vatId)s"
-msgstr ""
+msgstr "Skattenummer: %(vatId)s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -7668,6 +7671,8 @@ msgid ""
 "This journal is associated with payment method %s that is being used by "
 "order %s in the active pos session %s"
 msgstr ""
+"Journalen er tilknyttet betalingsform %s, der bliver brugt af ordre %s i den"
+" aktive kassesessio %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7841,6 +7846,9 @@ msgid ""
 "\n"
 "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
+"For at kunne slette et produkt skal alle kassesessioner være lukkede.\n"
+"\n"
+"At fjerne et produkt, der stadig er tilgængeligt i en åben session, svarer til at forsøge at snuppe en burger ud af hånden på en kunde midt i en bid – det ender i kaos med ketchup og mayonnaise over det hele!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8420,6 +8428,7 @@ msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
 msgstr ""
+"Du kan ikke slette en afrundingsmetode, der bruges i en POS-konfiguration."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8461,6 +8470,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Du har ikke tilladelse til at åbne en kassesession. Prøv venligst at logge "
+"ind med en anden bruger"
 
 #. module: point_of_sale
 #. odoo-python

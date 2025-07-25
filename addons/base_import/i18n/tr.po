@@ -53,6 +53,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
+"Dosyada yalnızca tek bir sütun bulundu, bu genellikle dosya ayırıcısının "
+"yanlış olduğu anlamına gelir."
 
 #. module: base_import
 #. odoo-javascript
@@ -275,7 +277,7 @@ msgstr "Tarihi ayrıştırma hatası [%s: L %d]: %s"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Error at row %s: \"%s\""
-msgstr ""
+msgstr "%s satırında hata: \"%s\""
 
 #. module: base_import
 #. odoo-python
@@ -493,7 +495,7 @@ msgstr "İçe aktarma dosyasında içerik yok veya bozuk"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "İçe aktarma ön izlemesi şu nedenle başarısız oldu: \""
 
 #. module: base_import
 #. odoo-javascript
@@ -524,6 +526,9 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
+"(%(format_type)s) biçimleri desteklenmediğinden, %(cell_format)s biçimi ile "
+"%(row)s satırı, %(col)s:%(cell_value)s sütunundaki hücrede geçersiz hücre "
+"biçimi."
 
 #. module: base_import
 #. odoo-python
@@ -598,7 +603,7 @@ msgstr "Ayraç Yok"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Aşağıdaki ad için eşleşen kayıt bulunamadı"
 
 #. module: base_import
 #. odoo-javascript
@@ -829,7 +834,7 @@ msgstr "Binlik Ayracı:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Birden fazla değeri içe aktarmak için aralarına virgül koyun."
 
 #. module: base_import
 #. odoo-javascript
@@ -905,6 +910,10 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
+"Yıl için YYYY, ay için MM ve gün için DD kullanın. Nokta, eğik çizgi veya "
+"tire gibi ayırıcılar ekleyin. Önerilen formatlara ek olarak özel bir format "
+"da kullanabilirsiniz. Odoo'nun formatı tahmin etmesi için boş bırakın "
+"(önerilir)."
 
 #. module: base_import
 #. odoo-javascript
