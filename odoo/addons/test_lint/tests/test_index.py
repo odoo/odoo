@@ -34,6 +34,7 @@ BTREE_INDEX_IGNORE_FIELDS = {  # str(field)  (fully-qualified field name)
     'mail.presence.guest_id',                           # covered by _guest_unique
     'res.users.settings.user_id',                       # covered by _unique_user_id
     'res.users.log.create_uid',                         # TODO(master): move the field definition in the base module instead of hr_presence, and remove this line
+    'project.collaborator.project_id',                  # covered by first key of _unique_collaborator
 }
 
 @common.tagged('post_install', '-at_install')
