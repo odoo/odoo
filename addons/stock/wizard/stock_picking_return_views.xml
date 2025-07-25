@@ -19,14 +19,14 @@
                         <field name="move_quantity" column_invisible="1"/>
                         <field name="product_id" force_save="1"/>
                         <field name="quantity" decoration-danger="move_quantity &lt; quantity"/>
-                        <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
+                        <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" options="{'no_open': True}"/>
                         <field name="move_id" column_invisible="True"/>
                     </list>
                 </field>
                 <footer>
                     <button name="action_create_returns" string="Return" type="object" class="btn-primary" data-hotkey="q"/>
                     <button name="action_create_returns_all" string="Return All" type="object" class="btn-secondary"/>
-                    <button name="action_create_exchanges" string="Return for Exchange" invisible="picking_type_code not in ('incoming', 'outgoing')" type="object" class="btn-secondary"/>
+                    <button name="action_create_exchanges" string="Exchange" invisible="picking_type_code not in ('incoming', 'outgoing')" type="object" class="btn-primary"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
