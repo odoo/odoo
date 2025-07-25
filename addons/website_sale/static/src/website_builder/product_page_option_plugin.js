@@ -373,8 +373,7 @@ export class ProductAddExtraImageAction extends BaseProductPageAction {
             const onClose = this.dependencies.media.openMediaDialog({
                 addFieldImage: true,
                 multiImages: true,
-                noDocuments: true,
-                noIcons: true,
+                visibleTabs: ["IMAGES", "VIDEOS"],
                 node: el,
                 // Kinda hack-ish but the regular save does not get the information we need
                 save: async (imgEls, selectedMedia, activeTab) => {

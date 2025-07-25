@@ -19,10 +19,7 @@ export class MediaWebsitePlugin extends Plugin {
                 description: _t("Insert a video"),
                 icon: "fa-file-video-o",
                 run: this.dependencies.media.openMediaDialog.bind(this, {
-                    noVideos: false,
-                    noImages: true,
-                    noIcons: true,
-                    extraTabs: false,
+                    visibleTabs: ["VIDEOS"]
                 }),
                 isAvailable: isHtmlContentSupported,
             },

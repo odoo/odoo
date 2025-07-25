@@ -36,12 +36,17 @@ export class MediaDialog extends Component {
     static template = "html_editor.MediaDialog";
     static defaultProps = {
         useMediaLibrary: true,
+        extraTabs: [],
     };
     static components = {
         Dialog,
         Notebook,
     };
-    static props = ["*"];
+    static props = {
+        extraTabs: { type: Array, optional: true, element: Object },
+        visibleTabs: { type: Array, optional: true, element: String },
+        "*": true,
+    };
 
     setup() {
         this.size = "xl";
@@ -58,12 +63,10 @@ export class MediaDialog extends Component {
 
         this.initialIconClasses = [];
 
-        this.tabs = { ...TABS };
-
         this.notebookPages = [];
-        this.addDefaultTabs();
-        this.addExtraTabs();
+        this.addTabs();
         this.notebookPages.sort((a, b) => sequence(a) - sequence(b));
+        this.tabs = Object.fromEntries(this.notebookPages.map((tab) => [tab.id, tab]));
 
         this.errorMessages = {};
 
@@ -97,6 +100,9 @@ export class MediaDialog extends Component {
     }
 
     addTab(tab, additionalProps = {}) {
+        if (this.props.visibleTabs && !this.props.visibleTabs.includes(tab.id)) {
+            return;
+        }
         this.selectedMedia[tab.id] = [];
         this.notebookPages.push({
             ...tab,
@@ -119,15 +125,13 @@ export class MediaDialog extends Component {
         });
     }
 
-    addDefaultTabs() {
+    addTabs() {
         const onlyImages =
             this.props.onlyImages ||
             (this.props.media &&
                 this.props.media.parentElement &&
                 (this.props.media.parentElement.dataset.oeField === "image" ||
                     this.props.media.parentElement.dataset.oeType === "image"));
-        const noIcons = onlyImages || this.props.noIcons;
-        const noVideos = onlyImages || this.props.noVideos;
 
         if (!this.props.noImages) {
             this.addTab(TABS.IMAGES, {
@@ -136,7 +140,11 @@ export class MediaDialog extends Component {
                 addFieldImage: this.props.addFieldImage,
             });
         }
-        if (!noIcons) {
+        if (onlyImages) {
+            return;
+        }
+        const addIcons = !this.props.visibleTabs || this.props.visibleTabs.includes(TABS.ICONS.id);
+        if (addIcons) {
             const fonts = TABS.ICONS.Component.initFonts();
             this.addTab(TABS.ICONS, {
                 fonts,
@@ -159,19 +167,13 @@ export class MediaDialog extends Component {
                 }
             }
         }
-        if (!noVideos) {
+        if (!this.props.noVideos) {
             this.addTab(TABS.VIDEOS, {
                 vimeoPreviewIds: this.props.vimeoPreviewIds,
                 isForBgVideo: this.props.isForBgVideo,
             });
         }
-    }
-
-    addExtraTabs() {
-        for (const tab of this.props.extraTabs || []) {
-            this.addTab(tab);
-            this.tabs[tab.id] = tab;
-        }
+        this.props.extraTabs.forEach((tab) => this.addTab(tab));
     }
 
     /**
@@ -192,7 +194,7 @@ export class MediaDialog extends Component {
                 if (style) {
                     element.setAttribute("style", style);
                 }
-                if (this.state.activeTab === this.tabs.IMAGES.id) {
+                if (this.state.activeTab === TABS.IMAGES.id) {
                     if (this.props.media.dataset.shape) {
                         element.dataset.shape = this.props.media.dataset.shape;
                     }
@@ -304,7 +306,7 @@ export class MediaDialog extends Component {
         // way to simply close the dialog if the media element remains the same.
         const saveSelectedMedia =
             selectedMedia.length &&
-            (this.state.activeTab !== this.tabs.ICONS.id ||
+            (this.state.activeTab !== TABS.ICONS.id ||
                 selectedMedia[0].initialIconChanged ||
                 !this.props.media);
         if (saveSelectedMedia) {

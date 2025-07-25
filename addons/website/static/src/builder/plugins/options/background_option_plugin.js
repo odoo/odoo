@@ -40,9 +40,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
     loadReplaceBackgroundVideo() {
         return new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
-                noIcons: true,
-                noImages: true,
-                noDocuments: true,
+                visibleTabs: ["VIDEOS"],
                 isForBgVideo: true,
                 vimeoPreviewIds: [
                     "528686125",

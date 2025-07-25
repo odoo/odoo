@@ -27,7 +27,7 @@ export class X2ManyMediaViewer extends X2ManyField {
         this.dialogs.add(CustomMediaDialog, {
             save: (el) => {}, // Simple rebound to fake its execution
             multiImages: true,
-            noIcons: true,
+            visibleTabs: ["IMAGES", "VIDEOS"],
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
         });
