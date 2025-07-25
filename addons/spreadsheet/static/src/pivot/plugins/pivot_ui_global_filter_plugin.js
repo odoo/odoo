@@ -134,6 +134,9 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
             case "UPDATE_ODOO_PIVOT_DOMAIN":
                 this._addDomain(cmd.pivotId);
                 break;
+            case "DUPLICATE_PIVOT":
+                this._addDomain(cmd.newPivotId);
+                break;
             case "UNDO":
             case "REDO": {
                 if (
