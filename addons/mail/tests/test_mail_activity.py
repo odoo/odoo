@@ -8,6 +8,7 @@ from odoo import exceptions, fields
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import Form, tagged, HttpCase
+from odoo.tools import mute_logger
 from odoo.tools.misc import format_date
 
 
@@ -178,6 +179,26 @@ class TestMailActivityChatter(HttpCase):
             "mail_activity_schedule_from_chatter",
             login="admin",
         )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_done_date_filter(self):
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+        activity_type.keep_done = True
+
+        test_activity = self.env['mail.activity'].create({
+            'activity_type_id': activity_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': self.test_partner.id,
+        })
+
+        record = self.env['mail.activity'].search([('date_done', '!=', False)])
+        self.assertFalse(record, 'No activity should be found')
+        test_activity.action_done()
+        record = self.env['mail.activity'].search([('date_done', '!=', False)])
+        self.assertRecordValues(record, [{
+            'id': test_activity.id,
+            'activity_type_id': activity_type.id
+        }])
 
 
 @tagged("-at_install", "post_install", "mail_activity")

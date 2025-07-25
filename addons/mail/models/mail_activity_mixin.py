@@ -482,3 +482,19 @@ class MailActivityMixin(models.AbstractModel):
             return False
         self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True
+
+    @api.model
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
+        """Include inactive activities when filtering on activity_ids.date_done."""
+        if any(isinstance(leaf, (list, tuple)) and len(leaf) == 3 and leaf[0] == 'activity_ids.date_done'
+            for leaf in domain or []):
+            return super(MailActivityMixin, self.with_context(active_test=False)).search_fetch(domain, field_names, offset, limit, order)
+        return super().search_fetch(domain, field_names, offset, limit, order)
+
+    @api.model
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        """Include inactive activities when filtering on activity_ids.date_done."""
+        if any(isinstance(leaf, (list, tuple)) and len(leaf) == 3 and leaf[0] == 'activity_ids.date_done'
+            for leaf in domain or []):
+            return super(MailActivityMixin, self.with_context(active_test=False))._search(domain, offset, limit, order, access_rights_uid)
+        return super()._search(domain, offset, limit, order, access_rights_uid)

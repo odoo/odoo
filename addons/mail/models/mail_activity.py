@@ -403,13 +403,20 @@ class MailActivity(models.Model):
 
         The method is inspired by what has been done on mail.message. """
 
+        active_test = self._context.get('active_test', True)
+
+        # Include inactive activities when filtering on date_done
+        if any(isinstance(leaf, (list, tuple)) and len(leaf) == 3 and leaf[0] == 'date_done'
+            for leaf in domain or []):
+            active_test = False
+
         # Rules do not apply to administrator
         if self.env.is_superuser():
-            return super()._search(domain, offset, limit, order, access_rights_uid)
+            return super(MailActivity, self.with_context(active_test=active_test))._search(domain, offset, limit, order, access_rights_uid)
 
         # retrieve activities and their corresponding res_model, res_id
         self.flush_model(['res_model', 'res_id'])
-        query = super()._search(domain, offset, limit, order, access_rights_uid)
+        query = super(MailActivity, self.with_context(active_test=active_test))._search(domain, offset, limit, order, access_rights_uid)
         query_str, params = query.select(
             f'"{self._table}"."id"',
             f'"{self._table}"."res_model"',

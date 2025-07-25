@@ -798,6 +798,27 @@ class TestActivityMixin(TestActivityCommon):
             ])
             self.assertFalse(record, "Should not find record if the only late activity is done")
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_ids_done_date_filter(self):
+        activity_type = self.env.ref('test_mail.mail_act_test_todo')
+        activity_type.keep_done = True
+
+        test_activity = self.env['mail.activity'].create({
+            'activity_type_id': activity_type.id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+        })
+
+        record = self.env['mail.test.activity'].search([('activity_ids.date_done', '!=', False)])
+        self.assertFalse(record, 'No done activity should be found')
+        test_activity.action_done()
+        record = self.env['mail.test.activity'].search([('activity_ids.date_done', '!=', False)])
+        self.assertTrue(record.activity_ids, 'An activity should be found')
+        self.assertRecordValues(record, [{
+            'activity_ids': test_activity.ids,
+            'activity_type_id': activity_type.id
+        }])
+
     @users('employee')
     def test_record_unlink(self):
         test_record = self.test_record.with_user(self.env.user)
