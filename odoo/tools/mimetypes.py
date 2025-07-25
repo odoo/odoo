@@ -75,6 +75,7 @@ def _check_open_container_format(data):
 
         return False
 
+
 _old_ms_office_mimetypes = {
     '.doc': 'application/msword',
     '.xls': 'application/vnd.ms-excel',
@@ -272,6 +273,9 @@ def fix_filename_extension(filename, mimetype):
 
     extension = get_extension(filename)
     if mimetype in _olecf_mimetypes and extension in _old_ms_office_mimetypes:
+        return filename
+
+    if mimetype == 'application/zip' and extension in {'.docx', '.xlsx', '.pptx'}:
         return filename
 
     if extension := mimetypes.guess_extension(mimetype):
