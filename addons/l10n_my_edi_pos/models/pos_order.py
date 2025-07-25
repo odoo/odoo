@@ -94,7 +94,7 @@ class PosOrder(models.Model):
 
             # At this point we don't want to raise anymore, if there are issues it'll be logged on the invoice, and we will
             # move on.
-            self.account_move._l10n_my_edi_send_invoice(commit=False)
+            self.account_move.action_l10n_my_edi_send_invoice()
 
             if self.env.context.get('generate_pdf', True):
                 self.account_move.with_context(skip_invoice_sync=True)._generate_and_send()
@@ -106,7 +106,7 @@ class PosOrder(models.Model):
     # Action methods
     # --------------
 
-    def action_show_consolidated_invoice(self):
+    def action_show_myinvois_documents(self):
         if len(self._get_active_consolidated_invoice()) == 1:
             action_vals = {
                 'type': 'ir.actions.act_window',
@@ -130,6 +130,6 @@ class PosOrder(models.Model):
     # Business methods
     # ----------------
 
-    def _get_active_consolidated_invoice(self):
+    def _get_active_consolidated_invoice(self, including_in_progress=False):
         """ Small helper to get the currently active consolidated invoice if more that one is linked to an order. """
-        return self.env['myinvois.document'].union(*[order.consolidated_invoice_ids.filtered(lambda i: i.myinvois_state != 'cancelled')[:1] for order in self])
+        return self.env['myinvois.document'].union(*[order.consolidated_invoice_ids._get_active_myinvois_document(including_in_progress) for order in self])

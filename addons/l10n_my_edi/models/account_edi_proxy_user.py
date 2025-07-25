@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import logging
-
 from werkzeug.urls import url_join
 
-from odoo import _, fields, models
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo import fields, models
 from odoo.exceptions import UserError
 
-_logger = logging.getLogger(__name__)
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
+    AccountEdiProxyError,
+)
 
 
 class AccountEdiProxyClientUser(models.Model):
@@ -39,8 +37,12 @@ class AccountEdiProxyClientUser(models.Model):
         # EXTENDS 'account_edi_proxy_client'
         if proxy_type == 'l10n_my_edi':
             if not company.vat:
-                raise UserError(_('Please fill the TIN of company "%(company_name)s" before enabling the integration with MyInvois.',
-                                  company_name=company.display_name))
+                raise UserError(
+                    company.env._(
+                        'Please fill the TIN of company "%(company_name)s" before enabling the integration with MyInvois.',
+                        company_name=company.display_name,
+                    )
+                )
             return company.vat
         return super()._get_proxy_identification(company, proxy_type)
 
@@ -57,6 +59,6 @@ class AccountEdiProxyClientUser(models.Model):
             )
         except AccountEdiProxyError as _error:
             # Request error while contacting the IAP server. We assume it is a temporary error.
-            raise UserError(_("Failed to contact the E-Invoicing service. Please try again later."))
+            raise UserError(self.env._("Failed to contact the E-Invoicing service. Please try again later."))
 
         return response
