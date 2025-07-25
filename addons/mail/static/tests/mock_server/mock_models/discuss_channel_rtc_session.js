@@ -59,9 +59,10 @@ export class DiscussChannelRtcSession extends models.ServerModel {
      * @param {number} id
      * @param {{ extra?; boolean }} options
      */
-    _to_store(store, { extra } = {}) {
-        const kwargs = getKwArgs(arguments, "store", "extra");
-        extra = kwargs.extra;
+    _to_store(store, fields, extra) {
+        const kwargs = getKwArgs(arguments, "store", "fields", "extra");
+        fields = kwargs.fields;
+        extra = kwargs.extra ?? false;
 
         store._add_record_fields(this, []);
         for (const rtcSession of this) {
@@ -109,7 +110,10 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const [member] = DiscussChannelMember.browse(session.channel_member_id);
         const [channel] = DiscussChannel.search_read([["id", "=", member.channel_id]]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
-            data: new mailDataHelpers.Store(DiscussChannelRtcSession.browse(id)).get_result(),
+            data: new mailDataHelpers.Store(
+                DiscussChannelRtcSession.browse(id),
+                makeKwArgs({ extra: true })
+            ).get_result(),
             channelId: channel.id,
         });
     }
