@@ -6,7 +6,6 @@ from collections import defaultdict
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from math import ceil
-from pytz import timezone, UTC
 from markupsafe import Markup
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -113,7 +112,7 @@ class HrLeave(models.Model):
         # Note:
         # Without the application of the timezone, days based on UTC datetimes
         # will be returned (and will therefore not be correct for the client).
-        client_tz = timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+        client_tz = self.env.tz
         if values.get('date_from'):
             if not values.get('request_date_from'):
                 values['request_date_from'] = pytz.utc.localize(values['date_from']).astimezone(client_tz)
@@ -780,7 +779,7 @@ Versions:
     @api.depends_context('short_name', 'hide_employee_name', 'groupby')
     def _compute_display_name(self):
         for leave in self:
-            user_tz = timezone(leave.tz)
+            user_tz = pytz.timezone(leave.tz)
             date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             time_off_type_display = leave.holiday_status_id.name
@@ -1005,7 +1004,7 @@ Versions:
             Holiday.browse(meeting.res_id).meeting_id = meeting
 
         for holiday in holidays:
-            user_tz = timezone(holiday.tz)
+            user_tz = pytz.timezone(holiday.tz)
             utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
             notify_partner_ids = holiday.employee_id.user_id.partner_id.ids
             holiday.message_post(
@@ -1530,8 +1529,8 @@ is approved, validated or refused.')
 
     def _to_utc(self, date, hour, resource):
         hour = float_to_time(float(hour))
-        holiday_tz = timezone(resource.tz or self.env.user.tz or 'UTC')
-        return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
+        holiday_tz = pytz.timezone(resource.tz or self.env.user.tz or 'UTC')
+        return holiday_tz.localize(datetime.combine(date, hour)).astimezone(pytz.UTC).replace(tzinfo=None)
 
     def _get_hour_from_to(self, request_date_from, request_date_to, day_period=None):
         """

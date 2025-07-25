@@ -1268,8 +1268,7 @@ class CrmLead(models.Model):
         if not meeting_results:
             return "week", False
 
-        user_tz = self.env.user.tz or self.env.context.get('tz')
-        user_pytz = pytz.timezone(user_tz) if user_tz else pytz.utc
+        user_pytz = self.env.tz
 
         # meeting_dts will contain one tuple of datetimes per meeting : (Start, Stop)
         # meetings_dts and now_dt are as per user time zone.
