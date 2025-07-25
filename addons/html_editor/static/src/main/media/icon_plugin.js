@@ -206,9 +206,7 @@ export class IconPlugin extends Plugin {
             return;
         }
         this.dependencies.dialog.addDialog(MediaDialog, {
-            noVideos: true,
-            noImages: true,
-            noDocuments: true,
+            visibleTabs: ["ICONS"],
             media: selectedIcon,
             save: (el) => this.onSaveIcon(el, selectedIcon),
         });
