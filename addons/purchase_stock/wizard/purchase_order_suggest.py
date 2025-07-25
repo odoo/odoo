@@ -179,6 +179,8 @@ class PurchaseOrderSuggest(models.TransientModel):
             }
         if self.warehouse_id and not self.hide_warehouse:
             context['warehouse_id'] = self.warehouse_id.id
+        context['suggest_based_on'] = self.based_on
+
         return context
 
     def _get_period_of_time(self):

@@ -9,8 +9,13 @@
     <t t-name="purchase_stock.SearchPanelContent" t-inherit="web.SearchPanelContent" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_search_panel')]/section" position="before">
             <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-            <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
-            <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
+            <t t-if="wizard.suggestToggle.isOn">
+                <div class="o_suggest_feature">
+                    <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
+                    <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
+                    <t t-call="PurchaseSuggest.SearchPanel.Footer"/>
+                </div>
+            </t>
         </xpath>
     </t>
     <!-- ───────────────── Header ───────────────── -->
@@ -18,13 +23,18 @@
         <header class="pt-4 pb-2 text-uppercase cursor-default" t-att-title="tooltipTitle">
             <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
             <b class="me-2">Suggest</b>
+            <button name="toggle_suggest_catalog" class="fa fa-lg bg-white border-0 text-primary"
+                t-attf-class="fa-toggle-{{wizard.suggestToggle.isOn ? 'on' : 'off'}}"
+                t-on-click.stop="onSuggestToggle"/>
         </header>
     </t>
     <!-- ───────────────── “Replenish for X day(s)” ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.DaysInput">
         <div class="d-flex align-items-center ms-2">
             <span class="me-2 fw-bold">Replenish for</span>
-            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"/>
+            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
+                t-att-value="wizard.numberOfDays"
+                t-on-input="onDaysInput"/>
             <span class="ms-2">day(s)</span>
         </div>
     </t>
@@ -32,12 +42,26 @@
     <t t-name="PurchaseSuggest.SearchPanel.BasedOn">
         <div class="d-inline-flex align-items-center ms-2 mt-2 fw-bold">Based on</div>
         <div class="d-inline-flex align-items-center ms-1 me-2">
-            <div>
-                Select
+            <div class="o_TimePeriodSelectionField">
+                <TimePeriodSelectionField t-props="timePeriodProps"/>
             </div>
             <span class="m-1">x</span>
-            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"/>
+            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
+                t-att-value="wizard.percentFactor"
+                t-on-input="onPercentFactorInput"/>
             <span>%</span>
+        </div>
+    </t>
+    <!-- ───────────────── Footer ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.Footer">
+        <div class="d-flex align-items-center mt-3 ms-2">
+            <div class="text-info fw-bold">
+                <span class="me-1"><t t-out="wizard.currencySymbol"/></span>
+                <span name="suggest_total"><t t-out="wizard.estimatedPrice"/></span>
+            </div>
+            <button name="suggest_add_all" class="btn btn-sm btn-primary ms-2" t-on-click="addAllProducts">
+                Add All
+            </button>
         </div>
     </t>
 </templates>
