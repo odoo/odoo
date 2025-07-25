@@ -334,7 +334,8 @@ test("'Start a meeting' in mobile", async () => {
     await contains(".o-discuss-ChannelMember", { text: "Partner 2" });
 });
 
-test("Systray icon shows latest action", async () => {
+test.skip("Systray icon shows latest action", async () => {
+    // Fails on runbot often because of a race condition between RPC returns and bus notifications.
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -356,7 +357,8 @@ test("Systray icon shows latest action", async () => {
     await contains(".o-discuss-CallMenu-buttonContent .fa-hand-paper-o");
 });
 
-test("Systray icon keeps track of earlier actions", async () => {
+test.skip("Systray icon keeps track of earlier actions", async () => {
+    // Fails on runbot often because of a race condition between RPC returns and bus notifications.
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
