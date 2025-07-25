@@ -101,6 +101,9 @@ export class BackgroundImageOptionPlugin extends Plugin {
         if (backgroundURL) {
             el.classList.add("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box");
         } else {
+            this.dependencies.builderActions.getAction("selectFilterColor").apply({
+                editingElement: el.classList.contains("s_parallax_bg") ? el.parentElement : el,
+            });
             el.classList.remove(
                 "oe_img_bg",
                 "o_bg_img_center",
@@ -184,7 +187,6 @@ export class ToggleBgImageAction extends BuilderAction {
         return !!getBgImageURLFromEl(editingElement);
     }
     clean({ editingElement }) {
-        editingElement.querySelector(".o_we_bg_filter")?.remove();
         this.dependencies.backgroundImageOption.applyReplaceBackgroundImage({
             editingElement: editingElement,
             loadResult: "",
