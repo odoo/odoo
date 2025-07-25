@@ -20,12 +20,17 @@ export function useImageTransform({ document, closeImageTransformation, buttonSe
             pointerDownInsideTransform = false;
         }
     });
-    useExternalListener(document, "click", (ev) => {
-        if (!isNodeInsideTransform(ev.target) && !pointerDownInsideTransform) {
-            closeImageTransformation();
-        }
-        pointerDownInsideTransform = false;
-    });
+    useExternalListener(
+        document,
+        "click",
+        (ev) => {
+            if (!isNodeInsideTransform(ev.target) && !pointerDownInsideTransform) {
+                closeImageTransformation();
+            }
+            pointerDownInsideTransform = false;
+        },
+        { capture: true }
+    );
     // When we click on any character the image is deleted and we need to close
     // the image transform. We handle this by selectionchange.
     useExternalListener(document, "selectionchange", (ev) => {
