@@ -28,7 +28,7 @@ export class AnimateOptionPlugin extends Plugin {
         builder_options: [
             withSequence(ANIMATE, {
                 OptionComponent: AnimateOption,
-                selector: ".o_animable, section .row > div, img, .fa, .btn, .o_animated_text",
+                selector: ".o_animable, section .row > div, img, .fa, .btn",
                 exclude:
                     "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize",
                 props: this.animateOptionProps,
@@ -62,6 +62,11 @@ export class AnimateOptionPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_animated_text"),
+        collapsed_selection_toolbar_predicate: (selectionData) =>
+            !!closestElement(
+                selectionData.editableSelection.commonAncestorContainer,
+                ".o_animated_text"
+            ),
     };
 
     setup() {
@@ -293,12 +298,13 @@ export class AnimateOptionPlugin extends Plugin {
      * @returns {HTMLElement?}
      */
     getAnimatedText() {
-        const ancestor = closestElement(
-            this.dependencies.selection.getSelectionData().editableSelection
-                .commonAncestorContainer,
-            ".o_animated_text"
-        );
-        if (ancestor && this.dependencies.selection.areNodeContentsFullySelected(ancestor)) {
+        const selection = this.dependencies.selection.getSelectionData().editableSelection;
+        const ancestor = closestElement(selection.commonAncestorContainer, ".o_animated_text");
+        if (
+            ancestor &&
+            (selection.isCollapsed ||
+                this.dependencies.selection.areNodeContentsFullySelected(ancestor))
+        ) {
             return ancestor;
         }
     }
