@@ -309,10 +309,6 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
-    def _can_return(self):
-        self.ensure_one()
-        return super()._can_return() or self.sale_id
-
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'

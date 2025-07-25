@@ -25,6 +25,9 @@
             <xpath expr="//field[@name='move_type']" position="before">
                 <field name="sale_id"/>
             </xpath>
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
+                <attribute name="invisible">not (state == 'done' or sale_id)</attribute>
+            </xpath>
         </field>
     </record>
 
