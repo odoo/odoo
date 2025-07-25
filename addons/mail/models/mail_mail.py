@@ -50,7 +50,8 @@ class MailMail(models.Model):
     headers = fields.Text('Headers', copy=False)
     restricted_attachment_count = fields.Integer('Restricted attachments', compute='_compute_restricted_attachments')
     unrestricted_attachment_ids = fields.Many2many('ir.attachment', string='Unrestricted Attachments',
-        compute='_compute_restricted_attachments', inverse='_inverse_unrestricted_attachment_ids')
+        compute='_compute_restricted_attachments', inverse='_inverse_unrestricted_attachment_ids',
+        bypass_search_access=True)
     # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
     # and during unlink() we will not cascade delete the parent and its attachments
     is_notification = fields.Boolean('Notification Email', help='Mail has been created to notify people of an existing mail.message')

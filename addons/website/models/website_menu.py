@@ -50,6 +50,7 @@ class WebsiteMenu(models.Model):
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
+        groups='base.group_user',
         help="User needs to be at least in one of these groups to see the menu")
     is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)

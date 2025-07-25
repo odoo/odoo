@@ -26,7 +26,7 @@ class SurveyInvite(models.TransientModel):
     # composer content
     attachment_ids = fields.Many2many(
         'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
-        string='Attachments', compute='_compute_attachment_ids', store=True, readonly=False)
+        string='Attachments', compute='_compute_attachment_ids', store=True, readonly=False, bypass_search_access=True)
     # origin
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True,

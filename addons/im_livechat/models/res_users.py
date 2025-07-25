@@ -12,7 +12,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     livechat_channel_ids = fields.Many2many(
-        "im_livechat.channel", "im_livechat_channel_im_user", "user_id", "channel_id"
+        "im_livechat.channel", "im_livechat_channel_im_user", "user_id", "channel_id", copy=False
     )
     livechat_username = fields.Char(
         string="Livechat Username",

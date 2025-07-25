@@ -81,8 +81,11 @@ class TestRules(TransactionCase):
         container_user.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.allowed.id])
 
-        # this should not fail
-        container_user.write({'some_ids': [Command.set(ids)]})
+        # this should fail
+        with self.assertRaises(AccessError):
+            container_user.write({'some_ids': [Command.set(ids)]})
+
+        container_admin.write({'some_ids': [Command.set(ids)]})
         container_user.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.allowed.id])
         container_admin.invalidate_model(['some_ids'])
@@ -127,7 +130,7 @@ class TestRules(TransactionCase):
     def test_check_access_rule_with_inherits(self):
         """
         For models in `_inherits`, verify that both methods `check_access`
-        and `_apply_ir_rules` check the rules from parent models.
+        and `_search` check the rules from parent models.
         """
         ChildModel = self.env['test_access_right.inherits']
         allowed_child, __ = children = ChildModel.create([

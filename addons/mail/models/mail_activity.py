@@ -81,7 +81,9 @@ class MailActivity(models.Model):
     attachment_ids = fields.Many2many(
         'ir.attachment', 'activity_attachment_rel',
         'activity_id', 'attachment_id',
-        string='Attachments')
+        string='Attachments',
+        bypass_search_access=True,
+    )
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',

@@ -13,7 +13,10 @@ class FleetVehicleSendMail(models.TransientModel):
     template_id = fields.Many2one(domain=lambda self: [('model_id', '=', self.env['ir.model']._get('fleet.vehicle').id)])
     attachment_ids = fields.Many2many(
         'ir.attachment', 'fleet_vehicle_mail_compose_message_ir_attachments_rel',
-        'wizard_id', 'attachment_id', string='Attachments')
+        'wizard_id', 'attachment_id',
+        string='Attachments',
+        bypass_search_access=True,
+    )
 
     @api.depends('subject')
     def _compute_render_model(self):
