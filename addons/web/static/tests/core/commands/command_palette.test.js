@@ -1203,6 +1203,52 @@ test("navigate in the command palette with the arrows", async () => {
     expect(".o_command.focused").toHaveText(commands[1].name);
 });
 
+test("navigate in the command palette with the Tab key", async () => {
+    expect.assertions(4);
+
+    await mountWithCleanup(MainComponentsContainer);
+    const action = () => {};
+    const commands = [
+        {
+            name: "Command1",
+            action,
+        },
+        {
+            name: "Command2",
+            action,
+        },
+        {
+            name: "Command3",
+            action,
+        },
+    ];
+    const providers = [
+        {
+            provide: () => commands,
+        },
+    ];
+    const config = {
+        providers,
+    };
+    getService("dialog").add(CommandPalette, {
+        config,
+    });
+    await animationFrame();
+    expect(".o_command.focused").toHaveText(commands[0].name);
+
+    await press("Tab");
+    await animationFrame();
+    expect(".o_command.focused").toHaveText(commands[1].name);
+
+    await press("Tab");
+    await animationFrame();
+    expect(".o_command.focused").toHaveText(commands[2].name);
+
+    await press("Tab");
+    await animationFrame();
+    expect(".o_command.focused").toHaveText(commands[0].name);
+});
+
 test("navigate in the command palette with an empty list", async () => {
     expect.assertions(6);
 

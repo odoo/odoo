@@ -135,6 +135,10 @@ export class CommandPalette extends Component {
             bypassEditableProtection: true,
             allowRepeat: true,
         });
+        useHotkey("Tab", () => this.selectCommandAndScrollTo("NEXT"), {
+            bypassEditableProtection: true,
+            allowRepeat: true,
+        });
         useExternalListener(window, "mousedown", this.onWindowMouseDown);
 
         /**
