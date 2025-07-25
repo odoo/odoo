@@ -6,6 +6,7 @@ from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_c
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command
+import json
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontendCommon(TestPointOfSaleHttpCommon):
@@ -655,3 +656,41 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(orders[1].floating_order_name, "Test")
         self.assertEqual(orders[0].floating_order_name, False)
         self.assertIsNotNone(orders[0].table_id)
+
+    def test_sync_lines_qty_update(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_lines_qty_update')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.lines[0].qty, 3)
+
+    def test_sync_set_partner(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_partner')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.partner_id.name, "Deco Addict")
+
+    def test_sync_set_note(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_note')
+        order = self.pos_config.current_session_id.order_ids[0]
+        note = json.loads(order.internal_note)
+        self.assertEqual(note[0]["text"], "Hello world")
+
+    def test_sync_set_line_note(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_line_note')
+        order = self.pos_config.current_session_id.order_ids[0]
+        note = json.loads(order.lines[0].note)
+        self.assertEqual(note[0]["text"], "Demo note")
+
+    def test_sync_set_pricelist(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_pricelist')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.pricelist_id.name, "Restaurant Pricelist")
+
+    def test_delete_line_release_table(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_delete_line_release_table')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(len(order.lines), 0)
