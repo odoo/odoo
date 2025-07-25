@@ -415,7 +415,7 @@
                                 invisible="not project_id or not allow_milestones"/>
                             <field name="user_ids"
                                 class="o_task_user_field"
-                                options="{'no_open': True, 'no_quick_create': True}"
+                                options="{'no_open': True}"
                                 widget="many2many_avatar_user"/>
                             <field name="role_ids" invisible="not (is_template and has_project_template)" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
@@ -603,7 +603,7 @@
                                domain="[('type_ids', 'in', context.get('default_stage_id')), ('is_template', 'in', [is_template, False])] if context.get('default_stage_id') else [('is_template', 'in', [is_template, False])]"
                                required="is_template"
                         />
-                        <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}"
+                        <field name="user_ids" options="{'no_open': True}"
                             widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>

@@ -65,7 +65,7 @@
                   js_class="todo_list">
                 <field name="state" widget="todo_done_checkmark" nolabel="1" width="20px"/>
                 <field name="name"/>
-                <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
+                <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user"/>
                 <field name="priority" widget="priority" optional="hidden" width="70px"/>
                 <field name="date_deadline" optional="show" widget="remaining_days"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
@@ -108,7 +108,6 @@
                             <field name="user_ids"
                                 widget="many2many_avatar_user"
                                 required="1"
-                                options="{'no_quick_create': True}"
                                 placeholder="Assignees"/>
                             <field name="tag_ids"
                                 widget="many2many_tags"
@@ -163,7 +162,7 @@
                                default_focus="1"/>
                         <field name="user_ids"
                                class="o_task_user_field"
-                               options="{'no_open': True, 'no_quick_create': True}"
+                               options="{'no_open': True}"
                                widget="many2many_avatar_user"/>
                         <field name="tag_ids" widget="many2many_tags"
                                options="{'color_field': 'color', 'no_create_edit': True}"

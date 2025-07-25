@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.UserFormViewDialog.ToMany.buttons" t-inherit="web.FormViewDialog.ToMany.buttons">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace" mode="inner">
+            Send Invitation
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_save_new')]" position="replace">
+            <button class="btn btn-secondary o_form_button_save_new" t-on-click="() => this.saveButtonClicked({saveAndNew: true})" data-hotkey="n">
+                Send &amp; New Invitation
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="mail.UserFormViewDialog.ToOne.buttons" t-inherit="web.FormViewDialog.ToOne.buttons">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace" mode="inner">
+            Send Invitation
+        </xpath>
+    </t>
+</templates>
