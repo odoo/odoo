@@ -1,5 +1,13 @@
 import { before, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, dblclick, queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    dblclick,
+    queryAll,
+    queryFirst,
+    queryOne,
+    freezeTime,
+} from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 import { Component, onWillDestroy, markup, xml } from "@odoo/owl";
 import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -2528,6 +2536,7 @@ describe("debounced (2)", () => {
     });
 
     test("debounced is not called if the interaction is destroyed in the meantime", async () => {
+        freezeTime();
         let debounceTimer;
 
         class Test extends Interaction {
