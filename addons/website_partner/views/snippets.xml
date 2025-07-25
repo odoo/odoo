@@ -4,12 +4,6 @@
 <template id="snippet_options" inherit_id="website.snippet_options" name="Partners Snippet Options">
     <xpath expr="." position="inside">
         <div data-selector="main:has(#oe_structure_website_partner_layout_1)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Partners Page">
-            <t t-if="google_maps_api_key">
-                <we-checkbox string="World Map"
-                            data-customize-website-views="website_partner.ref_country"
-                            data-no-preview="true"
-                            data-reload="/"/>
-            </t>
             <we-checkbox string="Address"
                         data-customize-website-views="website_partner.o_wcrm_partner_address"
                         data-no-preview="true"
@@ -17,7 +11,7 @@
             <we-checkbox string="Companies only"
                         data-customize-website-views="website_partner.companies_only_setting"
                         data-no-preview="true"
-                        data-reload="/"/> 
+                        data-reload="/"/>
             <we-checkbox string="Search"
                         data-customize-website-views="website_partner.search_setting"
                         data-no-preview="true"
