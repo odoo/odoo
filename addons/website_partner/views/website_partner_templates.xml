@@ -17,11 +17,13 @@
 
 <template id="index" name="Find Partners">
     <t t-call="website_partner.layout">
-        <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-            <h1 id="page_title" class="me-auto mb-0 h4">
-                Find a partner<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
-            </h1>
-        </section>
+        <div class="odoo-editor-editable" contenteditable="false">
+            <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
+                <h1 id="page_title" class="me-auto mb-0 h4 o_editable" data-oe-model="ir.ui.view" data-oe-id="" data-oe-field="arch" data-oe-xpath="" contenteditable="true">
+                    Find a partner<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
+                </h1>
+            </section>
+        </div>
         <!-- Off canvas filters on mobile-->
         <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
             <div class="offcanvas-header">
