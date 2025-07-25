@@ -10,6 +10,7 @@ import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { HighlightPlugin } from "./plugins/highlight/highlight_plugin";
 import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
@@ -21,6 +22,7 @@ import { AnimateOptionPlugin } from "./plugins/options/animate_option_plugin";
 import { BuilderComponentPlugin } from "@html_builder/core/builder_component_plugin";
 import { BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin";
 import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_plugin";
+import { ThemeTab } from "./plugins/theme/theme_tab";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsPlugin,
@@ -49,6 +51,10 @@ export class WebsiteBuilder extends Component {
         translation: { type: Boolean },
         builderProps: { type: Object },
     };
+
+    setup() {
+        this.websiteService = useService("website");
+    }
 
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);
@@ -93,6 +99,7 @@ export class WebsiteBuilder extends Component {
                 type: editableEl.dataset["oeType"],
             };
         };
+        builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         return builderProps;
     }
 }
