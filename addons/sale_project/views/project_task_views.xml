@@ -170,7 +170,7 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='milestone_id']" position="attributes">
-                <attribute name="context">{'default_project_id': context.get('default_project_id'), 'default_sale_line_id': sale_line_id}</attribute>
+                <attribute name="context">{'default_project_id': project_id, 'default_sale_line_id': sale_line_id}</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">not allow_billable or has_template_ancestor</attribute>
