@@ -201,9 +201,7 @@ export class MediaPlugin extends Plugin {
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
             noVideos: !this.config.allowMediaDialogVideo,
             noImages: !this.config.allowImage,
-            extraTabs: this.getResource("media_dialog_extra_tabs").filter(
-                (tab) => !(tab.id === "DOCUMENTS" && params.noDocuments)
-            ),
+            extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,
             ...params,
         });
