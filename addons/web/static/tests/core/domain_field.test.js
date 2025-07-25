@@ -17,7 +17,6 @@ import {
     getConditionText,
     getCurrentPath,
     getCurrentValue,
-    getOperatorOptions,
     label,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
@@ -1197,11 +1196,7 @@ test("foldable domain, search_count delayed", async function () {
 
 test(`folded domain field with "in range" operator`, async function () {
     Partner._fields.company_id = fields.Many2one({ relation: "partner" });
-    Partner._records[0].foo = `[
-        "&",
-        ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-        ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-    ]`;
+    Partner._records[0].foo = `["&", ("datetime", ">=", "today"), ("datetime", "<", "today +1d")]`;
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1285,45 +1280,5 @@ test("allow_expressions = false (default)", async function () {
     );
     await animationFrame();
     expect(".o_field_domain").toHaveClass("o_field_invalid");
-    expect.verifySteps(["The domain should not involve non-literals"]);
-});
-
-test(`hide "in range" operator when allow_expressions = False`, async function () {
-    Partner._records[0].foo = `[("datetime", "=", False)]`;
-
-    serverState.debug = "1";
-    replaceNotificationService();
-
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: `
-                <form>
-                    <sheet>
-                        <group>
-                            <field name="foo" widget="domain" options="{'model': 'partner' }" />
-                        </group>
-                    </sheet>
-                </form>`,
-    });
-
-    expect(getOperatorOptions()).toEqual([
-        label("="),
-        "before",
-        "after",
-        label("set"),
-        label("not set"),
-    ]);
-
-    await contains(SELECTORS.debugArea).edit(
-        `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`
-    );
-    await animationFrame();
-    expect(".o_field_domain").toHaveClass("o_field_invalid");
-    expect.verifySteps(["The domain should not involve non-literals"]);
-
-    await clearNotSupported();
-    expect(".o_field_domain").not.toHaveClass("o_field_invalid"); // should we have class? We don't do it in other cases
     expect.verifySteps(["The domain should not involve non-literals"]);
 });

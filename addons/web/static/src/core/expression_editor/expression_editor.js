@@ -33,6 +33,7 @@ export class ExpressionEditor extends Component {
             this.tree = treeFromExpression(props.expression, {
                 getFieldDef: (name) => this.getFieldDef(name, props),
                 distributeNot: !this.isDebugMode,
+                generateSmartDates: false,
             });
         } catch {
             this.tree = null;
@@ -105,6 +106,7 @@ export class ExpressionEditor extends Component {
     update(tree) {
         const expression = expressionFromTree(tree, {
             getFieldDef: (name) => this.getFieldDef(name),
+            generateSmartDates: false,
         });
         this.props.update(expression);
     }
