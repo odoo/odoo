@@ -1520,7 +1520,7 @@ export class HistoryPlugin extends Plugin {
 
         return {
             preview: async (...args) => {
-                revertOperation();
+                await revertOperation();
                 const def = new Deferred();
                 const revertSavePoint = this.makeSavePoint();
                 revertOperation = async () => {
@@ -1528,8 +1528,14 @@ export class HistoryPlugin extends Plugin {
                     revertSavePoint();
                 };
                 this.isPreviewing = true;
-                await operation(...args);
-                def.resolve();
+                try {
+                    await operation(...args);
+                } catch (error) {
+                    revertSavePoint();
+                    throw error;
+                } finally {
+                    def.resolve();
+                }
                 // todo: We should not add a step on preview as it would send
                 // unnecessary steps in collaboration and let the other peer see
                 // what we preview.
@@ -1540,9 +1546,15 @@ export class HistoryPlugin extends Plugin {
                 this.addStep();
             },
             commit: async (...args) => {
-                revertOperation();
+                await revertOperation();
                 this.isPreviewing = false;
-                await operation(...args);
+                const revertSavePoint = this.makeSavePoint();
+                try {
+                    await operation(...args);
+                } catch (error) {
+                    revertSavePoint();
+                    throw error;
+                }
                 this.addStep();
             },
             revert: async () => {
