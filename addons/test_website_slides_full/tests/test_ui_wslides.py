@@ -39,6 +39,7 @@ class TestUi(AccountTestInvoicingCommon, TestUICommon):
             'website_id': self.env.ref('website.default_website').id,
             'company_id': self.env.company.id,
         })
+        cash_journal.inbound_payment_method_line_ids.filtered(lambda l: l.code == 'demo').payment_account_id = self.env['account.chart.template'].ref('account_journal_payment_debit_account_id')
         a_recv = self.env['account.account'].create({
             'code': 'X1012',
             'name': 'Debtors - (test)',
