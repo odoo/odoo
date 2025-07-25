@@ -211,7 +211,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        user_timezone = pytz.timezone(self.env.user.tz or self.env.context.get('tz') or 'UTC')
+        user_timezone = self.env.tz
         # Before creating a timesheet, we need to put a valid employee_id in the vals
         default_user_id = self._default_user()
         user_ids = []

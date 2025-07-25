@@ -18,7 +18,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             date_start = fields.Datetime.from_string(date_start)
         else:
             # start by default today 00:00:00
-            user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+            user_tz = self.env.tz
             today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
             date_start = today.astimezone(pytz.timezone('UTC')).replace(tzinfo=None)
 
