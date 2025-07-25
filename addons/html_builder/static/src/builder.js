@@ -215,7 +215,7 @@ export class Builder extends Component {
     }
 
     discard() {
-        if (this.state.canUndo) {
+        if (this.editor.shared.history.canUndo()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
                 body: _t(
@@ -297,14 +297,14 @@ export class Builder extends Component {
     }
 
     onBeforeUnload(event) {
-        if (!this.isSaving && this.state.canUndo) {
+        if (!this.isSaving && this.editor.shared.history.canUndo()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
     }
 
     async onBeforeLeave() {
-        if (this.state.canUndo && !this.editor.shared.savePlugin.isAlreadySaved()) {
+        if (this.editor.shared.history.canUndo()) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
