@@ -1,7 +1,11 @@
 import { after, afterEach, beforeEach, registerDebugInfo } from "@odoo/hoot";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
-import { translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import {
+    translatedTerms,
+    translatedTermsGlobal,
+    translationLoaded,
+} from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
@@ -109,6 +113,9 @@ export async function makeMockEnv(partialEnv, options) {
             if (translatedTerms[translationLoaded]) {
                 for (const key in translatedTerms) {
                     delete translatedTerms[key];
+                }
+                for (const key in translatedTermsGlobal) {
+                    delete translatedTermsGlobal[key];
                 }
                 translatedTerms[translationLoaded] = false;
             }
