@@ -632,3 +632,39 @@ class TestFrontend(TestFrontendCommon):
             Then, the order is paid from the server, and confirm if the order state is updated correctly.
         """
         self.start_pos_tour("OrderSynchronisationTour")
+
+    def test_sync_lines_qty_update(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_lines_qty_update')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.lines[0].qty, 3)
+
+    def test_sync_set_partner(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_partner')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.partner_id.name, "Deco Addict")
+
+    def test_sync_set_note(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_note')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.internal_note, "Hello world")
+
+    def test_sync_set_line_note(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_line_note')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.lines[0].note, "Demo note")
+
+    def test_sync_set_pricelist(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_set_pricelist')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.pricelist_id.name, "Restaurant Pricelist")
+
+    def test_delete_line_release_table(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_delete_line_release_table')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(len(order.lines), 0)

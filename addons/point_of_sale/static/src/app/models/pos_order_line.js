@@ -752,6 +752,7 @@ export class PosOrderline extends Base {
         for (const line of linesToSetDirty) {
             line.setDirty(processedLines);
         }
+        this.order_id?.setDirty();
     }
 }
 

@@ -171,6 +171,10 @@ export class Base extends WithLazyGetterTrap {
         }
     }
 
+    isDirty() {
+        return this.models.commands[this.model.name].update.has(this.id);
+    }
+
     formatDateOrTime(field, type = "datetime") {
         if (type == "date") {
             return this[field].toLocaleString(DateTime.DATE_SHORT);
@@ -201,10 +205,15 @@ export class Base extends WithLazyGetterTrap {
      * @param {boolean} options.orm - [true] if result is to be sent to the server
      */
     serialize(options = {}) {
-        return recursiveSerialization(this, options, {
+        const result = recursiveSerialization(this, options, {
             X2MANY_TYPES,
             DATE_TIME_TYPE,
         });
+
+        if (options.orm && options.clear) {
+            this.models.commands[this.model.name].update.delete(this.id);
+        }
+        return result;
     }
     getIndexMaps(fieldName) {
         if (!this._indexMaps[fieldName]) {
