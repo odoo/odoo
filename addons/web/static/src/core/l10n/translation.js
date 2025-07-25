@@ -11,6 +11,12 @@ export const translationLoaded = Symbol("translationLoaded");
 export const translatedTerms = {
     [translationLoaded]: false,
 };
+/**
+ * Contains all the translated terms. Unlike "translatedTerms", there is no
+ * "namespacing" by module. It is used as a fallback when no translation is
+ * found within the module's context, or when the context is not known.
+ */
+export const translatedTermsGlobal = {};
 export const translationIsReady = new Deferred();
 
 const Markup = markup().constructor;
@@ -44,7 +50,8 @@ const Markup = markup().constructor;
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
-        const translation = translatedTerms[odoo.translationContext]?.[term] ?? term;
+        const translation =
+            translatedTerms[odoo.translationContext]?.[term] ?? translatedTermsGlobal[term] ?? term;
         if (values.length === 0) {
             return translation;
         }
@@ -63,7 +70,10 @@ class LazyTranslatedString extends String {
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
-            const translation = translatedTerms[this.translationContext]?.[term] ?? term;
+            const translation =
+                translatedTerms[odoo.translationContext]?.[term] ??
+                translatedTermsGlobal[term] ??
+                term;
             if (this.values.length === 0) {
                 return translation;
             }

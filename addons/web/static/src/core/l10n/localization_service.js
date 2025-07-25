@@ -5,7 +5,12 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
-import { translatedTerms, translationLoaded, translationIsReady } from "./translation";
+import {
+    translatedTerms,
+    translatedTermsGlobal,
+    translationLoaded,
+    translationIsReady,
+} from "./translation";
 import { objectToUrlEncodedString } from "../utils/urls";
 import { IndexedDB } from "../utils/indexed_db";
 
@@ -57,6 +62,10 @@ export const localizationService = {
                 }
             }
             Object.assign(translatedTerms, terms);
+            Object.assign(
+                translatedTermsGlobal,
+                Object.values(terms).reduce((acc, x) => ({ ...acc, ...x }), {})
+            );
 
             const userLocalization = result.lang_parameters;
             const dateFormat = strftimeToLuxonFormat(userLocalization.date_format);
