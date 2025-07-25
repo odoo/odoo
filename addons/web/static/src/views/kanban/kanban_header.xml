@@ -22,9 +22,9 @@
                         <i class="fa fa-plus opacity-75 opacity-100-hover" role="img" aria-label="Quick add" title="Quick add"/>
                     </button>
                 </t>
-                <button t-else="" class="o_column_unfold btn d-flex align-items-center justify-content-between flex-nowrap pt-2 pb-3 transition-base">
-                    <i class="fa fa-caret-left lh-lg transition-base" role="img" aria-label="Unfold" title="Unfold" />
-                    <i class="fa fa-caret-right lh-lg" role="img" aria-label="Unfold" title="Unfold" />
+                <button t-else="" class="o_column_unfold btn d-flex align-items-center justify-content-between flex-nowrap transition-base">
+                    <i class="fa fa-caret-left transition-base" role="img" aria-label="Unfold" title="Unfold" />
+                    <i class="fa fa-caret-right" role="img" aria-label="Unfold" title="Unfold" />
                 </button>
             </div>
             <div t-if="(env.isSmall or !group.isFolded) and progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
