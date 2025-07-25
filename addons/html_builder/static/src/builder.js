@@ -211,7 +211,7 @@ export class Builder extends Component {
     }
 
     discard() {
-        if (this.state.canUndo) {
+        if (this.hasUnsavedChanges()) {
             this.dialog.add(ConfirmationDialog, {
                 body: _t(
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
@@ -246,17 +246,28 @@ export class Builder extends Component {
         for (const actionButtonEl of actionButtonEls) {
             actionButtonEl.disabled = true;
         }
+        let editorIsOpen = true;
         try {
+            this.partiallySaved = true;
             await this.editor.shared.savePlugin.save();
+            this.partiallySaved = false;
             this.props.closeEditor();
-        } catch (error) {
-            for (const actionButtonEl of actionButtonEls) {
-                actionButtonEl.removeAttribute("disabled");
+            editorIsOpen = false;
+        } finally {
+            if (editorIsOpen) {
+                for (const actionButtonEl of actionButtonEls) {
+                    actionButtonEl.removeAttribute("disabled");
+                }
+                removeLoadingEffect();
+                this.editor.shared.edit_interaction.restartInteractions();
             }
-            removeLoadingEffect();
-            this.editor.shared.edit_interaction.restartInteractions();
-            throw error;
+            this.isSaving = false;
+            this.editor.config.onChange({ isPreviewing: false });
         }
+    }
+
+    hasUnsavedChanges() {
+        return this.editor.shared.history.canUndo() || this.partiallySaved;
     }
 
     /**
@@ -287,14 +298,14 @@ export class Builder extends Component {
     }
 
     onBeforeUnload(event) {
-        if (!this.isSaving && this.state.canUndo) {
+        if (!this.isSaving && this.hasUnsavedChanges()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
     }
 
     async onBeforeLeave() {
-        if (this.state.canUndo && !this.editor.shared.savePlugin.isAlreadySaved()) {
+        if (this.hasUnsavedChanges()) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
