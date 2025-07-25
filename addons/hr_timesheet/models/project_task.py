@@ -278,9 +278,9 @@ class ProjectTask(models.Model):
         return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
 
     def _get_portal_total_hours_dict(self):
-        if not (timesheetable_tasks := self.filtered('allow_timesheets')):
+        if not (timesheetable_tasks := self.filtered(lambda t: t.allow_timesheets and (not t.parent_id or t.parent_id.id not in self.ids))):
             return {}
         return {
             'allocated_hours': sum(timesheetable_tasks.mapped('allocated_hours')),
-            'effective_hours': sum(timesheetable_tasks.mapped('effective_hours')),
+            'effective_hours': sum(timesheetable_tasks.mapped('total_hours_spent')),
         }

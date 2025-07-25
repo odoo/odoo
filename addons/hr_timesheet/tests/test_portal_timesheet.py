@@ -111,3 +111,46 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         self.project_cows.write({'partner_id': self.user_portal.partner_id.id})
         timesheets = AnalyticLineModel.search(timesheet_domain)
         self.assertIn(timesheet_entry.id, timesheets.ids, "Portal user should see the timesheet when set as the project’s partner.")
+
+    def test_portal_task_hours_no_double_counting(self):
+        """ Test that totals for both allocated and spent hours are calculated correctly, preventing double-counting.
+
+            Test Cases:
+            1. Parent + sub-task in same group → Totals are based on the parent task only.
+            2. Parent alone in group → Totals are based on the parent task only.
+            3. Sub-task alone in group → Totals are based on the sub-task only.
+        """
+
+        parent_task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id': self.project_portal.id,
+            'allocated_hours': 50.0,
+        })
+        sub_task = self.env['project.task'].create({
+            'name': 'Sub-task',
+            'project_id': self.project_portal.id,
+            'parent_id': parent_task.id,
+            'allocated_hours': 8.0,
+        })
+
+        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        self.env['account.analytic.line'].create([
+            {'name': 'Time on parent', 'project_id': self.project_portal.id, 'task_id': parent_task.id, 'unit_amount': 25, 'employee_id': employee.id},
+            {'name': 'Time on sub-task', 'project_id': self.project_portal.id, 'task_id': sub_task.id, 'unit_amount': 5, 'employee_id': employee.id},
+        ])
+
+        # Test Case 1: A group containing both parent and sub-task
+        group_with_parent_and_sub_task = parent_task | sub_task
+        result_group_both = group_with_parent_and_sub_task._get_portal_total_hours_dict()
+        self.assertEqual(result_group_both.get('allocated_hours'), 50.0, "Should exclude sub-task when parent is present (50.0 not 58.0)")
+        self.assertEqual(result_group_both.get('effective_hours'), 30.0, "Time (Spent): Should be the parent's total_hours_spent (30h).")
+
+        # Test Case 2: A group containing only the parent task
+        result_group_parent_only = parent_task._get_portal_total_hours_dict()
+        self.assertEqual(result_group_parent_only.get('allocated_hours'), 50.0, "Total Should be the parent's 50h.")
+        self.assertEqual(result_group_parent_only.get('effective_hours'), 30.0, "Time (Spent): Should be the parent's total_hours_spent (30h).")
+
+        # Test Case 3: A group containing only the sub-task
+        result_group_sub_only = sub_task._get_portal_total_hours_dict()
+        self.assertEqual(result_group_sub_only.get('allocated_hours'), 8.0, "Total Should be the sub-task's 8h.")
+        self.assertEqual(result_group_sub_only.get('effective_hours'), 5.0, "Time (Spent): Should be the sub-task's own total_hours_spent (5h).")
