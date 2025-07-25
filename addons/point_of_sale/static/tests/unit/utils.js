@@ -1,5 +1,6 @@
 import { uuidv4 } from "@point_of_sale/utils";
 import { getService, makeDialogMockEnv } from "@web/../tests/web_test_helpers";
+import { tick, waitUntil } from "@odoo/hoot-dom";
 
 const { DateTime } = luxon;
 
@@ -50,3 +51,8 @@ export const getFilledOrder = async (store) => {
     store.addPendingOrder([order.id]);
     return order;
 };
+
+export async function waitUntilOrdersSynced(store, options) {
+    await waitUntil(() => !store.syncingOrders.size, options);
+    await tick();
+}
