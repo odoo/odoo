@@ -229,11 +229,12 @@ export function delay(duration) {
     return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
-/**
- * @param {boolean} setFreeze
- */
-export function freezeTime(setFreeze) {
-    frozen = setFreeze ?? !frozen;
+export function freezeTime() {
+    frozen = true;
+}
+
+export function unfreezeTime() {
+    frozen = false;
 }
 
 export function getTimeOffset() {

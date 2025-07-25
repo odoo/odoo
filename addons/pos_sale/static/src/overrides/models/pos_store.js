@@ -8,7 +8,10 @@ import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dial
 import { enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
-import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
+import {
+    compute_price_force_price_include,
+    getTaxesAfterFiscalPosition,
+} from "@point_of_sale/app/models/utils/tax_utils";
 
 patch(PosStore.prototype, {
     async onClickSaleOrder(clickedOrderId) {
@@ -49,19 +52,19 @@ patch(PosStore.prototype, {
                 this.notification.add(_t("A new order has been created."));
             }
         }
-        const orderFiscalPos =
-            sale_order.fiscal_position_id &&
-            this.models["account.fiscal.position"].find(
-                (position) => position.id === sale_order.fiscal_position_id
-            );
-        if (orderFiscalPos) {
-            this.get_order().update({
-                fiscal_position_id: orderFiscalPos,
-            });
-        }
+
         if (sale_order.partner_id) {
             this.get_order().set_partner(sale_order.partner_id);
         }
+
+        // Fiscal position should be set after the partner is set
+        // to ensure that the fiscal position is correctly computed
+        // based on sale order.
+        const orderFiscalPos = sale_order.fiscal_position_id;
+        this.get_order().update({
+            fiscal_position_id: orderFiscalPos,
+        });
+
         selectedOption == "settle"
             ? await this.settleSO(sale_order, orderFiscalPos)
             : await this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
@@ -100,15 +103,13 @@ patch(PosStore.prototype, {
                 line.product_id = this.config.down_payment_product_id;
             }
 
+            const taxes = getTaxesAfterFiscalPosition(line.tax_id, orderFiscalPos, this.models);
             const newLineValues = {
                 product_id: line.product_id,
                 qty: line.product_uom_qty,
                 price_unit: line.price_unit,
                 price_type: "automatic",
-                tax_ids:
-                    orderFiscalPos || !line.tax_id
-                        ? undefined
-                        : line.tax_id.map((t) => ["link", t]),
+                tax_ids: taxes.map((tax) => ["link", tax]),
                 sale_order_origin_id: sale_order,
                 sale_order_line_id: line,
                 customer_note: line.customer_note,
@@ -250,9 +251,10 @@ patch(PosStore.prototype, {
             });
 
             // We need to remove the amount of the fixed tax as they will have a separate line
-            const fixed_tax_total_amount = fixed_taxes.reduce((total, tax) => {
-                return total + tax.amount;
-            }, 0);
+            const fixed_tax_total_amount = fixed_taxes.reduce(
+                (total, tax) => total + tax.amount,
+                0
+            );
             const total_price = group.reduce(
                 (total, line) =>
                     (total += line.price_total - line.product_uom_qty * fixed_tax_total_amount),
