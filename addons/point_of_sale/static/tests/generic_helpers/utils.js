@@ -58,3 +58,14 @@ export function elementDoesNotExist(selector) {
         trigger: negate(selector),
     };
 }
+
+export function assertCurrentOrderDirty(dirty = true) {
+    return {
+        trigger: "body",
+        run() {
+            if (posmodel.getOrder().isDirty() !== dirty) {
+                throw new Error("Order should be " + (dirty ? "dirty" : "not dirty"));
+            }
+        },
+    };
+}
