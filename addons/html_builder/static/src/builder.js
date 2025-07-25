@@ -60,6 +60,7 @@ export class Builder extends Component {
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
+        useHotkey("alt+s", () => this.save({ closeAfterSave: false }));
         this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
@@ -230,11 +231,13 @@ export class Builder extends Component {
         }`;
     }
 
-    async save() {
-        this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
+    async save({ closeAfterSave = true } = {}) {
+        this.editor.shared.operation.next(this._save.bind(this, closeAfterSave), {
+            withLoadingEffect: false,
+        });
     }
 
-    async _save() {
+    async _save(closeAfterSave) {
         this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
         const snippetMenuEl = this.builder_sidebarRef.el;
@@ -246,16 +249,23 @@ export class Builder extends Component {
         for (const actionButtonEl of actionButtonEls) {
             actionButtonEl.disabled = true;
         }
+        let editorIsOpened = true;
         try {
             await this.editor.shared.savePlugin.save();
-            this.props.closeEditor();
-        } catch (error) {
-            for (const actionButtonEl of actionButtonEls) {
-                actionButtonEl.removeAttribute("disabled");
+            if (closeAfterSave) {
+                this.props.closeEditor();
+                editorIsOpened = false;
+            } else {
+                this.editor.config.onChange({ isPreviewing: false });
             }
-            removeLoadingEffect();
-            this.editor.shared.edit_interaction.restartInteractions();
-            throw error;
+        } finally {
+            if (editorIsOpened) {
+                for (const actionButtonEl of actionButtonEls) {
+                    actionButtonEl.removeAttribute("disabled");
+                }
+                removeLoadingEffect();
+                this.editor.shared.edit_interaction.restartInteractions();
+            }
         }
     }
 
