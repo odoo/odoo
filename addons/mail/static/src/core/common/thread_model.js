@@ -794,19 +794,6 @@ export class Thread extends Record {
         await chatWindow?.close({ notifyState: false, ...options });
     }
 
-    pin() {
-        if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
-            return;
-        }
-        this.is_pinned = true;
-        return this.store.env.services.orm.silent.call(
-            "discuss.channel",
-            "channel_pin",
-            [this.id],
-            { pinned: true }
-        );
-    }
-
     /** @param {string} name */
     async rename(name) {
         const newName = name.trim();
