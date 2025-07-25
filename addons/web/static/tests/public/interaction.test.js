@@ -201,6 +201,34 @@ describe("adding listeners", () => {
         expect(clicked).toBe(1);
         expect("span").toHaveAttribute("x", "1");
     });
+
+    test("events triggered before interaction is ready are buffered and replayed", async () => {
+        let clicked = 0;
+        const def = new Deferred();
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: { "t-on-click": () => clicked++ },
+            };
+            willStart() {
+                expect.step("willStart");
+                return def;
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(Test, TemplateTest, { waitForStart: false });
+        expect.verifySteps(["willStart"]);
+        expect(clicked).toBe(0);
+        await click("span");
+        expect(clicked).toBe(0);
+        def.resolve();
+        expect.verifySteps([]);
+        await animationFrame();
+        expect.verifySteps(["start"]);
+        expect(clicked).toBe(1);
+    });
 });
 
 describe("using selectors", () => {
@@ -1583,7 +1611,7 @@ describe("t-att-style", () => {
                 span: {
                     "t-att-style": () => ({
                         "background-color": this.bgColor,
-                        "color": this.color,
+                        color: this.color,
                     }),
                 },
             };
@@ -1598,10 +1626,16 @@ describe("t-att-style", () => {
                 }, 1000);
             }
         }
-        await startInteraction(Test, `<div class="test" style="color: black;"><span style="background-color: rgb(0, 0, 255);">Hi</span></div>`);
-        expect("span").toHaveStyle({ "background-color": "rgb(0, 255, 0)", "color": "rgb(255, 0, 0)" });
+        await startInteraction(
+            Test,
+            `<div class="test" style="color: black;"><span style="background-color: rgb(0, 0, 255);">Hi</span></div>`
+        );
+        expect("span").toHaveStyle({
+            "background-color": "rgb(0, 255, 0)",
+            color: "rgb(255, 0, 0)",
+        });
         await advanceTime(1000);
-        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 255)", "color": "rgb(0, 0, 0)" });
+        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 255)", color: "rgb(0, 0, 0)" });
     });
 });
 
@@ -1804,8 +1838,10 @@ describe("t-att and t-out", () => {
                             return markup(this.tOut);
                         },
                     },
-                    "span": {
-                        "t-on-click.noUpdate": () => { expect.step("clicked") },
+                    span: {
+                        "t-on-click.noUpdate": () => {
+                            expect.step("clicked");
+                        },
                     },
                 };
                 setup() {
@@ -1888,7 +1924,6 @@ describe("t-att and t-out", () => {
         expect("span").not.toHaveAttribute("animal");
         expect("span").toHaveAttribute("egg", "mysterious");
     });
-
 });
 
 describe("components", () => {
