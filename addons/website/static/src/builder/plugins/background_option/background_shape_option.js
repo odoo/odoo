@@ -14,7 +14,6 @@ export class BackgroundShapeOption extends BaseOptionComponent {
             const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);
             const shapeInfo = this.backgroundShapePlugin.getBackgroundShapes()[shapeData.shape];
             return {
-                currentShapeLabel: "Choose a shape",
                 shapeName: shapeInfo?.selectLabel || _t("None"),
                 isAnimated: shapeInfo?.animated,
             };
