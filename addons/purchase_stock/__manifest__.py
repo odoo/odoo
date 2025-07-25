@@ -38,8 +38,11 @@
         'web.assets_backend': [
             'purchase_stock/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'purchase_stock/static/tests/tours/**/*',
+        ],
         'web.assets_unit_tests': [
-            'purchase_stock/static/tests/**/*',
+            'purchase_stock/static/tests/*.test.js',
         ],
     },
     'author': 'Odoo S.A.',
