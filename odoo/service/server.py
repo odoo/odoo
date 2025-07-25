@@ -1026,18 +1026,24 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if config['http_enable']:
-            # listen to socket
-            _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
-            family = socket.AF_INET
-            if ':' in self.interface:
-                family = socket.AF_INET6
-
-            # reload
-            if os.environ.get('ODOO_HTTP_SOCKET_FD'):
-                self.socket = socket.socket(fileno=int(os.environ.pop('ODOO_HTTP_SOCKET_FD')))
-
-            # default
+            socket_activation = os.getenv('LISTEN_FDS') == '1' and os.getenv('LISTEN_PID') == str(os.getpid())
+            if socket_activation:
+                _logger.info('HTTP service (werkzeug) running through socket activation')
             else:
+                _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
+
+            if os.environ.get('ODOO_HTTP_SOCKET_FD'):
+                # reload
+                self.socket = socket.socket(fileno=int(os.environ.pop('ODOO_HTTP_SOCKET_FD')))
+            elif socket_activation:
+                # socket activation
+                SD_LISTEN_FDS_START = 3
+                self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
+            else:
+                # default
+                family = socket.AF_INET
+                if ':' in self.interface:
+                    family = socket.AF_INET6
                 self.socket = socket.socket(family, socket.SOCK_STREAM)
                 self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 self.socket.setblocking(0)
