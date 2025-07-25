@@ -1869,6 +1869,18 @@ class AccountTax(models.Model):
                 biggest_total_per_tax['raw_tax_amount_currency'] += delta_raw_tax_amount_currency
                 biggest_total_per_tax['raw_tax_amount'] += delta_raw_tax_amount
 
+                # Suppose a vendor bill of 123.0 with 23% tax.
+                # Your total amounts are 123.0 for the base, 28.29 for the tax and a total of 151.29.
+                # If the tax line says a tax amount of 28.30, we want the total to be 151.30.
+                # So we have to increase the total too since the Portugal computation is based on it.
+                if country_code == 'PT' and delta_raw_tax_amount_currency:
+                    total_per_tax[tax_rounding_key]['raw_total_amount_currency'] += delta_raw_tax_amount_currency
+                    total_per_tax[tax_rounding_key]['raw_total_amount'] += delta_raw_tax_amount
+
+                    base_rounding_key = (tax_line_key[1], tax_rep.document_type == 'refund', tax_rounding_key[4])
+                    total_per_base[base_rounding_key]['raw_total_amount_currency'] += delta_raw_tax_amount_currency
+                    total_per_base[base_rounding_key]['raw_total_amount'] += delta_raw_tax_amount
+
         # Dispatch the delta in term of tax amounts across the tax details when dealing with the 'round_globally' method.
         # Suppose 2 lines:
         # - quantity=12.12, price_unit=12.12, tax=23%
