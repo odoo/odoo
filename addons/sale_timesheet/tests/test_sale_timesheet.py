@@ -4,13 +4,14 @@ from datetime import date, timedelta
 from odoo import Command
 from odoo.fields import Date
 from odoo.tools import float_is_zero
+from odoo.tests.common import HttpCase
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import Form, tagged, new_test_user
 
 @tagged('-at_install', 'post_install')
-class TestSaleTimesheet(TestCommonSaleTimesheet):
+class TestSaleTimesheet(TestCommonSaleTimesheet, HttpCase):
     """ This test suite provide tests for the 3 main flows of selling services:
             - Selling services based on ordered quantities
             - Selling timesheet based on delivered quantities
@@ -1119,6 +1120,58 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             },
         ])
         self.assertEqual(timesheet.timesheet_invoice_type, 'billable_time')
+
+    def test_timesheet_multi_company_access(self):
+        """ Ensure a user with access to multiple companies can view
+          timesheets linked to sales orders across companies.
+        """
+        # Skip if required modules are not installed
+        if self.env['ir.module.module']._get('website').state == 'uninstalled':
+            self.skipTest("This test won't work if sale and website are not installed")
+
+        company_a = self.company_data_2['company']
+        company_b = self.env['res.company'].create([{'name': 'TestCompany2'}])
+
+        self.user_employee_company_B.write({
+            'password': 'gregorclegane',
+            'company_ids': [Command.set([company_a.id, company_b.id])],
+            'groups_id': [Command.set([
+                self.env.ref('hr_timesheet.group_hr_timesheet_user').id
+            ])]
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_order_timesheet3.id,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+            })],
+        })
+
+        sale_order.action_confirm()
+        sale_order.order_line.task_id.project_id.message_subscribe([self.user_employee_company_B.partner_id.id])
+
+        self.env['account.analytic.line'].create({
+            'name': 'Consulting Service',
+            'user_id': self.user_employee_company_B.id,
+            'employee_id': self.employee_company_B.id,
+            'task_id': sale_order.order_line.task_id[0].id,
+            'unit_amount': 5.0,
+            'date': Date.today(),
+            'company_id': company_a.id,
+            'so_line': sale_order.order_line[0].id,
+        })
+        website = self.env['website'].get_current_website()
+        website.company_id = company_b
+
+        self.authenticate(self.user_employee_company_B.login, self.user_employee_company_B.password)
+        response = self.url_open(f'/my/timesheets?search_in=so&search={sale_order.name}')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(sale_order.name, response.text)
+        self.assertIn('Consulting Service', response.text)
 
 
 @tagged('-at_install', 'post_install')
