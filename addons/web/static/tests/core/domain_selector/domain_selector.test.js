@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { press, queryAll, queryOne, queryAllAttributes, queryAllTexts } from "@odoo/hoot-dom";
+import { press, queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 
@@ -12,7 +12,6 @@ import {
     clickOnButtonDeleteNode,
     Country,
     editValue,
-    formatDomain,
     getConditionText,
     getCurrentOperator,
     getCurrentPath,
@@ -1062,7 +1061,7 @@ test("support properties", async () => {
         },
         {
             name: "xphone_prop_5",
-            domain: `[("properties", "any", ["&", ("xphone_prop_5", ">=", context_today().strftime("%Y-%m-%d")), ("xphone_prop_5", "<", (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d"))])]`,
+            domain: `[("properties", "any", ["&", ("xphone_prop_5", ">=", "today"), ("xphone_prop_5", "<", "today +1d")])]`,
             options: [
                 label("in range"),
                 label("="),
@@ -1995,15 +1994,7 @@ test("date/datetime edition: switch is_set to other operators", async () => {
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.clearNotSupported).toHaveCount(0);
     expect(getCurrentValue()).toBe("Today");
-    expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today"), ("datetime", "<", "today +1d")]`]);
 
     await selectOperator("not set");
     expect(".o_datetime_input").toHaveCount(0);
@@ -2435,24 +2426,6 @@ test("remove all conditions in a sub connector", async () => {
     expect.verifySteps([`[("bar", "!=", False)]`]);
 });
 
-test(`hide "in range" operator when allowExpressions = False`, async () => {
-    Team._fields.active = fields.Boolean();
-    await makeDomainSelector({
-        domain: `[("datetime", "=", False)]`,
-        allowExpressions: false,
-        update(domain) {
-            expect.step(domain);
-        },
-    });
-    expect(getOperatorOptions()).toEqual([
-        label("="),
-        label("<", "datetime"),
-        label(">", "datetime"),
-        label("set"),
-        label("not set"),
-    ]);
-});
-
 test("many2one: placeholders for in operator", async () => {
     await makeDomainSelector({
         domain: `[("product_id", "in", [])]`,
@@ -2514,15 +2487,7 @@ test(`datetime: "in range" operator`, async () => {
     ).click();
     expect(getCurrentOperator()).toBe(label("in range"));
     expect(getCurrentValue()).toBe("Today");
-    expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today"), ("datetime", "<", "today +1d")]`]);
 
     expect(getValueOptions()).toEqual([
         "Today",
@@ -2537,82 +2502,38 @@ test(`datetime: "in range" operator`, async () => {
 
     await selectValue("last 7 days");
     expect(getCurrentValue()).toBe("Last 7 days");
-    expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -7), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today -7d"), ("datetime", "<", "today")]`]);
 
     await selectValue("last 30 days");
     expect(getCurrentValue()).toBe("Last 30 days");
-    expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -30), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today -30d"), ("datetime", "<", "today")]`]);
 
     await selectValue("month to date");
     expect(getCurrentValue()).toBe("Month to date");
-    expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today =1d"), ("datetime", "<", "today +1d")]`]);
 
     await selectValue("last month");
     expect(getCurrentValue()).toBe("Last month");
     expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
+        `["&", ("datetime", ">=", "today =1d -1m"), ("datetime", "<", "today =1d")]`,
     ]);
 
     await selectValue("year to date");
     expect(getCurrentValue()).toBe("Year to date");
     expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(day = 1, month = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
+        `["&", ("datetime", ">=", "today =1m =1d"), ("datetime", "<", "today +1d")]`,
     ]);
 
     await selectValue("last 12 months");
     expect(getCurrentValue()).toBe("Last 12 months");
     expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -12), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
+        `["&", ("datetime", ">=", "today =1d -12m"), ("datetime", "<", "today =1d")]`,
     ]);
 
     await selectValue("custom range");
     expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
     expect.verifySteps([
-        formatDomain(
-            `["&", ("datetime", ">=", "2023-04-20 00:00:00"), ("datetime", "<=", "2023-04-20 23:59:59")]`
-        ),
+        `["&", ("datetime", ">=", "2023-04-20 00:00:00"), ("datetime", "<=", "2023-04-20 23:59:59")]`,
     ]);
 
     await contains(".o_datetime_input:last").click();
@@ -2620,23 +2541,13 @@ test(`datetime: "in range" operator`, async () => {
     await press("enter");
     await animationFrame();
     expect.verifySteps([
-        formatDomain(
-            `["&", ("datetime", ">=", "2023-04-20 00:00:00"), ("datetime", "<=", "2023-04-26 23:59:59")]`
-        ),
+        `["&", ("datetime", ">=", "2023-04-20 00:00:00"), ("datetime", "<=", "2023-04-26 23:59:59")]`,
     ]);
 
     await selectValue("today");
     expect(getCurrentOperator()).toBe(label("in range"));
     expect(getCurrentValue()).toBe("Today");
-    expect.verifySteps([
-        formatDomain(
-            `[
-                "&",
-                    ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                    ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-            ]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today"), ("datetime", "<", "today +1d")]`]);
 });
 
 test(`date: "in range" operator`, async () => {
@@ -2653,11 +2564,7 @@ test(`date: "in range" operator`, async () => {
     ).click();
     expect(getCurrentOperator()).toBe(label("in range"));
     expect(getCurrentValue()).toBe("Today");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<", (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today"), ("date", "<", "today +1d")]`]);
 
     expect(getValueOptions()).toEqual([
         "Today",
@@ -2672,74 +2579,42 @@ test(`date: "in range" operator`, async () => {
 
     await selectValue("last 7 days");
     expect(getCurrentValue()).toBe("Last 7 days");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", (context_today() + relativedelta(days = -7)).strftime("%Y-%m-%d")), ("date", "<", context_today().strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today -7d"), ("date", "<", "today")]`]);
 
     await selectValue("last 30 days");
     expect(getCurrentValue()).toBe("Last 30 days");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", (context_today() + relativedelta(days = -30)).strftime("%Y-%m-%d")), ("date", "<", context_today().strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today -30d"), ("date", "<", "today")]`]);
 
     await selectValue("month to date");
     expect(getCurrentValue()).toBe("Month to date");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", (context_today() + relativedelta(day = 1)).strftime("%Y-%m-%d")), ("date", "<", (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today =1d"), ("date", "<", "today +1d")]`]);
 
     await selectValue("last month");
     expect(getCurrentValue()).toBe("Last month");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", (context_today() + relativedelta(day = 1, months = -1)).strftime("%Y-%m-%d")), ("date", "<", (context_today() + relativedelta(day = 1)).strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today =1d -1m"), ("date", "<", "today =1d")]`]);
 
     await selectValue("year to date");
     expect(getCurrentValue()).toBe("Year to date");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", (context_today() + relativedelta(day = 1, month = 1)).strftime("%Y-%m-%d")), ("date", "<", (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today =1m =1d"), ("date", "<", "today +1d")]`]);
 
     await selectValue("last 12 months");
     expect(getCurrentValue()).toBe("Last 12 months");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", (context_today() + relativedelta(day = 1, months = -12)).strftime("%Y-%m-%d")), ("date", "<", (context_today() + relativedelta(day = 1)).strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today =1d -12m"), ("date", "<", "today =1d")]`]);
 
     await selectValue("custom range");
     expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
-    expect.verifySteps([
-        formatDomain(`["&", ("date", ">=", "2023-04-20"), ("date", "<=", "2023-04-20")]`),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "2023-04-20"), ("date", "<=", "2023-04-20")]`]);
 
     await contains(".o_datetime_input:last").click();
     await contains(getPickerCell("26", true)).click();
     await press("enter");
     await animationFrame();
-    expect.verifySteps([
-        formatDomain(`["&", ("date", ">=", "2023-04-20"), ("date", "<=", "2023-04-26")]`),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "2023-04-20"), ("date", "<=", "2023-04-26")]`]);
 
     await selectValue("today");
     expect(getCurrentOperator()).toBe(label("in range"));
     expect(getCurrentValue()).toBe("Today");
-    expect.verifySteps([
-        formatDomain(
-            `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<", (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d"))]`
-        ),
-    ]);
+    expect.verifySteps([`["&", ("date", ">=", "today"), ("date", "<", "today +1d")]`]);
 });
 
 test(`date: default for ">"`, async () => {
@@ -2798,12 +2673,5 @@ test(`swith from [(0, "=", 1)] to other condition`, async () => {
         label("set"),
         label("not set"),
     ]);
-    expect.verifySteps([
-        formatDomain(`
-        [
-            "&",
-                ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-                ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
-        ]`),
-    ]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today"), ("datetime", "<", "today +1d")]`]);
 });

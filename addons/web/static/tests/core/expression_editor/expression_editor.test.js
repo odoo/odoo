@@ -1,27 +1,31 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click, edit, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { click, edit, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
-    Country,
-    Partner,
-    Player,
-    Product,
-    Stage,
-    Team,
     addNewRule,
     clearNotSupported,
     clickOnButtonAddBranch,
     clickOnButtonAddRule,
     clickOnButtonDeleteNode,
+    Country,
     editValue,
     formatExpr,
+    getCurrentOperator,
+    getCurrentValue,
     getOperatorOptions,
     getTreeEditorContent,
     getValueOptions,
     isNotSupportedPath,
     label,
     openModelFieldSelectorPopover,
+    Partner,
+    Player,
+    Product,
     selectOperator,
+    selectValue,
+    Stage,
+    Team,
     toggleConnector,
     SELECTORS as treeEditorSELECTORS,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
@@ -34,7 +38,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { ExpressionEditor } from "@web/core/expression_editor/expression_editor";
 
-import { Component, xml } from "@odoo/owl";
+import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { pick } from "@web/core/utils/objects";
 
 const SELECTORS = {
@@ -452,9 +456,10 @@ test(`"in range" operator`, async () => {
     expect.verifySteps([
         formatExpr(
             `
-            date >= context_today().strftime("%Y-%m-%d")
-                and
-            date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
+                date >= context_today().strftime("%Y-%m-%d")
+                    and
+                date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")
+            `
         ),
     ]);
     expect(getTreeEditorContent()).toEqual([
@@ -463,5 +468,239 @@ test(`"in range" operator`, async () => {
             level: 1,
             value: ["Date", "is in", "Today"],
         },
+    ]);
+});
+
+test(`date: "in range" operator`, async () => {
+    mockDate("2023-04-20 17:00:00", 0);
+    await makeExpressionEditor({
+        expression: `id`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    await openModelFieldSelectorPopover();
+    await contains(
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:eq(2)"
+    ).click();
+    expect(getCurrentOperator()).toBe(label("in range"));
+    expect(getCurrentValue()).toBe("Today");
+    expect.verifySteps([
+        formatExpr(
+            `date >= context_today().strftime("%Y-%m-%d") and date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
+        ),
+    ]);
+
+    expect(getValueOptions()).toEqual([
+        "Today",
+        "Last 7 days",
+        "Last 30 days",
+        "Month to date",
+        "Last month",
+        "Year to date",
+        "Last 12 months",
+        "Custom range",
+    ]);
+
+    await selectValue("last 7 days");
+    expect(getCurrentValue()).toBe("Last 7 days");
+    expect.verifySteps([
+        formatExpr(
+            `date >= (context_today() + relativedelta(days = -7)).strftime("%Y-%m-%d") and date < context_today().strftime("%Y-%m-%d")`
+        ),
+    ]);
+
+    await selectValue("last 30 days");
+    expect(getCurrentValue()).toBe("Last 30 days");
+    expect.verifySteps([
+        formatExpr(
+            `date >= (context_today() + relativedelta(days = -30)).strftime("%Y-%m-%d") and date < context_today().strftime("%Y-%m-%d")`
+        ),
+    ]);
+
+    await selectValue("month to date");
+    expect(getCurrentValue()).toBe("Month to date");
+    expect.verifySteps([
+        formatExpr(
+            `date >= (context_today() + relativedelta(day = 1)).strftime("%Y-%m-%d") and date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
+        ),
+    ]);
+
+    await selectValue("last month");
+    expect(getCurrentValue()).toBe("Last month");
+    expect.verifySteps([
+        formatExpr(
+            `date >= (context_today() + relativedelta(day = 1, months = -1)).strftime("%Y-%m-%d") and date < (context_today() + relativedelta(day = 1)).strftime("%Y-%m-%d")`
+        ),
+    ]);
+
+    await selectValue("year to date");
+    expect(getCurrentValue()).toBe("Year to date");
+    expect.verifySteps([
+        formatExpr(
+            `date >= (context_today() + relativedelta(day = 1, month = 1)).strftime("%Y-%m-%d") and date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
+        ),
+    ]);
+
+    await selectValue("last 12 months");
+    expect(getCurrentValue()).toBe("Last 12 months");
+    expect.verifySteps([
+        formatExpr(
+            `date >= (context_today() + relativedelta(day = 1, months = -12)).strftime("%Y-%m-%d") and date < (context_today() + relativedelta(day = 1)).strftime("%Y-%m-%d")`
+        ),
+    ]);
+
+    await selectValue("custom range");
+    expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
+    expect.verifySteps([formatExpr(`date >= "2023-04-20" and date <= "2023-04-20"`)]);
+
+    await contains(".o_datetime_input:last").click();
+    await contains(getPickerCell("26", true)).click();
+    await press("enter");
+    await animationFrame();
+    expect.verifySteps([formatExpr(`date >= "2023-04-20" and date <= "2023-04-26"`)]);
+
+    await selectValue("today");
+    expect(getCurrentOperator()).toBe(label("in range"));
+    expect(getCurrentValue()).toBe("Today");
+    expect.verifySteps([
+        formatExpr(
+            `date >= context_today().strftime("%Y-%m-%d") and date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
+        ),
+    ]);
+});
+
+test(`datetime: "in range" operator`, async () => {
+    mockDate("2023-04-20 17:00:00", 0);
+    await makeExpressionEditor({
+        expression: `id`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    await openModelFieldSelectorPopover();
+    await contains(
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:eq(3)"
+    ).click();
+    expect(getCurrentOperator()).toBe(label("in range"));
+    expect(getCurrentValue()).toBe("Today");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
+    ]);
+
+    expect(getValueOptions()).toEqual([
+        "Today",
+        "Last 7 days",
+        "Last 30 days",
+        "Month to date",
+        "Last month",
+        "Year to date",
+        "Last 12 months",
+        "Custom range",
+    ]);
+
+    await selectValue("last 7 days");
+    expect(getCurrentValue()).toBe("Last 7 days");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(days = -7), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
+    ]);
+
+    await selectValue("last 30 days");
+    expect(getCurrentValue()).toBe("Last 30 days");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(days = -30), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
+    ]);
+
+    await selectValue("month to date");
+    expect(getCurrentValue()).toBe("Month to date");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
+    ]);
+
+    await selectValue("last month");
+    expect(getCurrentValue()).toBe("Last month");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
+    ]);
+
+    await selectValue("year to date");
+    expect(getCurrentValue()).toBe("Year to date");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(day = 1, month = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
+    ]);
+
+    await selectValue("last 12 months");
+    expect(getCurrentValue()).toBe("Last 12 months");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -12), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
+    ]);
+
+    await selectValue("custom range");
+    expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
+    expect.verifySteps([
+        formatExpr(`datetime >= "2023-04-20 00:00:00" and datetime <= "2023-04-20 23:59:59"`),
+    ]);
+
+    await contains(".o_datetime_input:last").click();
+    await contains(getPickerCell("26", true)).click();
+    await press("enter");
+    await animationFrame();
+    expect.verifySteps([
+        formatExpr(`datetime >= "2023-04-20 00:00:00" and datetime <= "2023-04-26 23:59:59"`),
+    ]);
+
+    await selectValue("today");
+    expect(getCurrentOperator()).toBe(label("in range"));
+    expect(getCurrentValue()).toBe("Today");
+    expect.verifySteps([
+        formatExpr(
+            `
+                datetime >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                    and
+                datetime < datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+            `
+        ),
     ]);
 });

@@ -28,14 +28,12 @@ export class DomainSelector extends Component {
         className: { type: String, optional: true },
         defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
         isDebugMode: { type: Boolean, optional: true },
-        allowExpressions: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         debugUpdate: { type: Function, optional: true },
     };
     static defaultProps = {
         isDebugMode: false,
-        allowExpressions: true,
         readonly: true,
         update: () => {},
     };
@@ -104,15 +102,11 @@ export class DomainSelector extends Component {
     }
 
     getDefaultOperator(fieldDef) {
-        return getDomainDisplayedOperators(fieldDef, {
-            allowExpressions: this.props.allowExpressions,
-        })[0];
+        return getDomainDisplayedOperators(fieldDef)[0];
     }
 
     getOperatorEditorInfo(fieldDef) {
-        const operators = getDomainDisplayedOperators(fieldDef, {
-            allowExpressions: this.props.allowExpressions,
-        });
+        const operators = getDomainDisplayedOperators(fieldDef);
         return getOperatorEditorInfo(operators, fieldDef);
     }
 
