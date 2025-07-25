@@ -741,27 +741,35 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         ])
 
     def test_purchase_order_suggest_frontend(self):
+        """ Tests the purchase catalog suggest component, in particular:
+        - Suggest: Hidding, Estimated price, Add all action, Changing warehouse
+        TODO Kanban View: Adding from record, Monthly demand & forecast on record, order of cards
+        """
         # Create product, and supplier info
         suggest_test = self.env['product.product'].create([{
             'name': "suggest_test",
             'is_storable': True,
         }])
-        self.env['stock.quant']._update_available_quantity(suggest_test, self.stock_location, 12)
         self.env['product.supplierinfo'].create([{
             'partner_id': self.partner_1.id,
             'min_qty': 1,
             'price': 20,
             'product_id': suggest_test.id,
         }])
-        # Create a move yesterday
+        # Create and confirm a move yesterday (used to check monthly_demand/suggest)
+        self.env['stock.quant']._update_available_quantity(suggest_test, self.stock_location, 24)
         self._create_and_process_delivery_at_date(
             [(suggest_test, 12)], date=fields.Datetime.now() - relativedelta(days=1)
         )
-        # Start tour with a monthly demand for our product
-        self.assertEqual(suggest_test.monthly_demand, 12)
+        # Create and confirm 10 days ago (used to check monthly_demand/suggest with 7 days)
+        self._create_and_process_delivery_at_date(
+            [(suggest_test, 12)], date=fields.Datetime.now() - relativedelta(days=10)
+        )
+        self.assertEqual(suggest_test.monthly_demand, 24)
 
         # Create a and mark as todo a move 80 days ago (for checking suggest/forecasted)
         self._create_and_process_delivery_at_date(
             [(suggest_test, 100)], date=fields.Datetime.now() + relativedelta(days=20), to_validate=False
         )
         self.start_tour('/odoo/purchase', "test_purchase_catalog_suggest_search", login='admin')
+        self.start_tour('/odoo/purchase', "test_purchase_catalog_suggest_kanban", login='admin')

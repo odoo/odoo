@@ -371,3 +371,22 @@ class PurchaseOrder(models.Model):
 
     def _is_display_stock_in_catalog(self):
         return True
+
+    def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
+        """ Add suggest_ctx to env in order to trigger product.product compute fields"""
+        if kwargs.get('suggest_based_on'):
+            suggest_ctx_keys = ('suggest_based_on', 'monthly_demand_start_date', 'monthly_demand_limit_date',
+                                'suggest_percent', 'suggest_multiplier', 'warehouse_id', 'actual_from_date',
+                                'actual_to_date', 'suggest_number_days')
+            suggest_ctx = {k: v for k, v in kwargs.items() if k in suggest_ctx_keys}
+            self_ctx = self.with_context(**suggest_ctx)
+            return super(PurchaseOrder, self_ctx)._get_product_catalog_order_line_info(
+                product_ids, child_field=child_field, **kwargs
+            )
+        return super()._get_product_catalog_order_line_info(product_ids, child_field=child_field, **kwargs)
+
+    def _get_product_price_and_data(self, product):
+        """ Fetch the product's data used by the purchase's catalog."""
+        res = super()._get_product_price_and_data(product)
+        res["suggested_qty"] = product.suggested_qty
+        return res

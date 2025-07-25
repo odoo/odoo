@@ -43,6 +43,7 @@
         ],
         'web.assets_unit_tests': [
             'purchase_stock/static/tests/**/*',
+            ('remove', 'purchase_stock/static/tests/tours/**/*'),
         ],
     },
     'author': 'Odoo S.A.',
