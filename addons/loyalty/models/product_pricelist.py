@@ -6,7 +6,7 @@ class ProductPricelist(models.Model):
     _inherit = 'product.pricelist'
 
     def action_archive(self):
-        loyalty_programs = self.env['loyalty.program'].search([
+        loyalty_programs = self.env['loyalty.program'].sudo().search([
             ('active', '=', True),
             ('pricelist_ids', 'in', self.ids)
         ])
