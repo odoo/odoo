@@ -270,7 +270,7 @@ class HrVersion(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_version(self):
         for employee_id, versions in self.grouped('employee_id').items():
-            if employee_id.versions_count == len(versions):
+            if employee_id.version_ids == versions:
                 raise ValidationError(
                     self.env._('Employee %s must always have at least one active version.') % employee_id.name
                 )
@@ -398,7 +398,7 @@ class HrVersion(models.Model):
     def _get_whitelist_fields_from_template(self):
         # Add here any field that you want to copy from a contract template
         # Those fields should have tracking=True in hr.version to see the change
-        return ['job_id', 'department_id', 'contract_type_id', 'structure_type_id', 'wage', 'resource_calendar_id']
+        return ['job_id', 'department_id', 'contract_type_id', 'structure_type_id', 'wage', 'resource_calendar_id', 'hr_responsible_id']
 
     def get_values_from_contract_template(self, contract_template_id):
         if not contract_template_id:
