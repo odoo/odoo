@@ -37,4 +37,4 @@ license = 'LGPL-3'
 nt_service_name = "odoo-server-" + series.replace('~','-')
 
 MIN_PY_VERSION = (3, 10)
-MAX_PY_VERSION = (3, 12)
+MAX_PY_VERSION = (3, 13)

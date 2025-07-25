@@ -1228,7 +1228,10 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
             Country.search([('create_date', '>>', 'foo')])
 
         # TODO make it "Invalid operator"" for consistency
-        with self.assertRaisesRegex(ValueError, r"^stray % in format '%'$"):
+        with self.assertRaisesRegex(
+                ValueError,
+                r"^(time data 'foo' does not match|stray % in) format '%'$",
+        ):
             Country.search([]).filtered_domain([('create_date', '>>', 'foo')])
 
         with self.assertRaisesRegex(ValueError, r"Invalid isoformat string"):
