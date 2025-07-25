@@ -11320,6 +11320,54 @@ test(`multi edition: many2many_tags in many2many field`, async () => {
 });
 
 test.tags("desktop");
+test(`multi edition: set a numeric field to 0`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="int_field"/>
+            </list>
+        `,
+    });
+
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "10",
+        "blip",
+        "9",
+        "gnap",
+        "17",
+        "blip",
+        "-4",
+    ]);
+    await contains(`.o_list_record_selector`).click();
+    expect(".o_data_row_selected").toHaveCount(4);
+
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
+    await contains(`.o_field_widget[name=int_field] input`).edit("0");
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.modal-body`).toHaveText(`Are you sure you want to update 4 records?
+
+Field: Int field
+Update to: 0
+Use the operators "+=", "-=", "*=" and "/=" to update the current value.
+For example, if the value is "1" and you enter "+=2", it will be updated to "3".`);
+    await contains(`.o_dialog footer .btn-primary`).click();
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "0",
+        "blip",
+        "0",
+        "gnap",
+        "0",
+        "blip",
+        "0",
+    ]);
+});
+
+test.tags("desktop");
 test(`multi edition: many2many_tags field: link a record`, async () => {
     stepAllNetworkCalls();
     await mountView({
