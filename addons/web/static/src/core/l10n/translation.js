@@ -44,7 +44,13 @@ const Markup = markup().constructor;
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
-        const translation = translatedTerms[term] ?? term;
+        if (!odoo.translationContext) {
+            throw new Error("No translation context found");
+        }
+        if (!(odoo.translationContext in translatedTerms)) {
+            throw new Error(`Invalid translation context found: ${odoo.translationContext}`);
+        }
+        const translation = translatedTerms[odoo.translationContext]?.[term] ?? term;
         if (values.length === 0) {
             return translation;
         }
@@ -57,12 +63,19 @@ export function _t(term, ...values) {
 class LazyTranslatedString extends String {
     constructor(term, values) {
         super(term);
+        if (!odoo.translationContext) {
+            throw new Error("No translation context found");
+        }
+        this.translationContext = odoo.translationContext;
         this.values = values;
     }
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
-            const translation = translatedTerms[term] ?? term;
+            if (!(this.translationContext in translatedTerms)) {
+                throw new Error(`Invalid translation context found: ${this.translationContext}`);
+            }
+            const translation = translatedTerms[this.translationContext]?.[term] ?? term;
             if (this.values.length === 0) {
                 return translation;
             }
@@ -75,25 +88,6 @@ class LazyTranslatedString extends String {
         return this.valueOf();
     }
 }
-
-/*
- * Setup jQuery timeago:
- * Strings in timeago are "composed" with prefixes, words and suffixes. This
- * makes their detection by our translating system impossible. Use all literal
- * strings we're using with a translation mark here so the extractor can do its
- * job.
- */
-_t("less than a minute ago");
-_t("about a minute ago");
-_t("%d minutes ago");
-_t("about an hour ago");
-_t("%d hours ago");
-_t("a day ago");
-_t("%d days ago");
-_t("about a month ago");
-_t("%d months ago");
-_t("about a year ago");
-_t("%d years ago");
 
 /**
  * Load the installed languages long names and code
@@ -140,4 +134,24 @@ function _safeFormatAndSprintf(str, ...values) {
         return htmlSprintf(str, ...values);
     }
     return sprintf(str, ...values);
+}
+
+/**
+ * This is a wrapper for _t that the transpiler injects in its place
+ * to provide the knowledge of the module from which it was called.
+ *
+ * Providing the context of the module is useful to avoid conflicting
+ * translations, e.g. "table" has a different meaning depending on the module:
+ * the table of a restaurant (POS module) vs. a spreadsheet table.
+ *
+ * @param {string} str The term to translate
+ * @param {string} moduleName The name of the module, used as a context key to
+ * retrieve the translation.
+ * @param  {...any} args The other arguments passed to _t.
+ */
+export function appTranslateFn(str, moduleName, ...args) {
+    odoo.translationContext = moduleName;
+    const translatedTerms = _t(str, ...args);
+    odoo.translationContext = null;
+    return translatedTerms;
 }

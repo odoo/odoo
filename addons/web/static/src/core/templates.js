@@ -1,7 +1,11 @@
-import { applyInheritance } from "@web/core/template_inheritance";
+import {
+    applyContextToTextNode,
+    applyInheritance,
+    deepClone,
+} from "@web/core/template_inheritance";
 
 function getClone(template) {
-    const c = template.cloneNode(true);
+    const c = deepClone(template);
     new Document().append(c); // => c is the documentElement of its ownerDocument
     return c;
 }
@@ -21,6 +25,11 @@ function _getTemplate(name, blockId = null) {
         }
         const templateString = templates[name];
         parsedTemplates[name] = getParsedTemplate(templateString);
+        const inheritFrom = parsedTemplates[name].getAttribute("t-inherit");
+        if (!inheritFrom) {
+            const addon = info[name].url.split("/")[1];
+            parsedTemplates[name].setAttribute("t-translation-context", addon);
+        }
     }
     let processedTemplate = parsedTemplates[name];
 
@@ -46,6 +55,7 @@ function _getTemplate(name, blockId = null) {
         }
     }
 
+    let cloned = false;
     for (const otherBlockId in templateExtensions[name] || {}) {
         if (blockId && otherBlockId > blockId) {
             break;
@@ -66,11 +76,11 @@ function _getTemplate(name, blockId = null) {
             if (!urlFilters.every((filter) => filter(url))) {
                 continue;
             }
-            processedTemplate = applyInheritance(
-                inheritFrom ? processedTemplate : getClone(processedTemplate),
-                getClone(template),
-                url
-            );
+            if (!inheritFrom && !cloned) {
+                cloned = true;
+                processedTemplate = getClone(processedTemplate);
+            }
+            processedTemplate = applyInheritance(processedTemplate, getClone(template), url);
         }
     }
 
@@ -121,6 +131,7 @@ export function clearProcessedTemplates() {
 export function getTemplate(name) {
     if (!processedTemplates.has(name)) {
         processedTemplates.set(name, _getTemplate(name));
+        applyContextToTextNode();
     }
     return processedTemplates.get(name);
 }
@@ -138,6 +149,15 @@ export function registerTemplate(name, url, templateString) {
     }
     templates[name] = templateString;
     info[name] = { blockId, url };
+
+    return () => {
+        delete templates[name];
+        delete info[name];
+        delete parsedTemplates[name];
+        delete parsedTemplateExtensions[name];
+        processedTemplates.delete(name);
+        registered.delete(JSON.stringify([...arguments]));
+    };
 }
 
 export function registerTemplateExtension(inheritFrom, url, templateString) {
@@ -158,6 +178,16 @@ export function registerTemplateExtension(inheritFrom, url, templateString) {
         templateString,
         url,
     });
+
+    return () => {
+        const index = templateExtensions[inheritFrom]?.[blockId]?.findIndex(
+            (ext) => ext.templateString === templateString && ext.url === url
+        );
+        if (Number.isInteger(index) && index > -1) {
+            templateExtensions[inheritFrom][blockId].splice(index, 1);
+        }
+        registered.delete(JSON.stringify([...arguments]));
+    };
 }
 
 /**
@@ -171,5 +201,9 @@ export function registerTemplateProcessor(processor) {
  * @param {typeof urlFilters} filters
  */
 export function setUrlFilters(filters) {
+    const prev = urlFilters;
     urlFilters = filters;
+    return () => {
+        urlFilters = prev;
+    };
 }

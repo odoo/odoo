@@ -1,4 +1,4 @@
-import { patchTranslations, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
+import { defineParams, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
 
 import {
     click,
@@ -20,8 +20,10 @@ defineMailModels();
 preloadBundle("web.assets_emoji");
 
 test("emoji picker works well with translation with double quotes", async () => {
-    patchTranslations({
-        "Japanese “here” button": `Bouton "ici" japonais`,
+    defineParams({
+        translations: {
+            "Japanese “here” button": `Bouton "ici" japonais`,
+        },
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
