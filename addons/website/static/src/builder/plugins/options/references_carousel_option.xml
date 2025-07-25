@@ -7,8 +7,8 @@
             id="'references_carousel_speed'"
             applyTo="'.slider'"
             styleAction="'--duration'"
-            min="0"
-            max="10"
+            min="10"
+            max="1"
             displayRangeValue="true"
             unit="'s'"/>
     </BuilderRow>
@@ -16,6 +16,15 @@
 </t>
 
 <t t-name="website.ReferencesCarouselImagesOption">
+    <style>
+        .o_carousel_thumbnail:hover {
+            border-color: #01bad2 !important;
+        }
+        .o_carousel_thumbnail:focus-within {
+            border-color: #01bad2 !important;
+            outline: none;
+        }
+    </style>
     <div class="p-1 px-2 ps-3">
         <table t-ref="root" class="o_references_carousel_images_list">
             <tbody>
@@ -27,7 +36,10 @@
                     </td>
                     <td width="100%">
                         <div class="d-flex align-items-center">
-                            <div class="me-2" style="background-image: url('/web/static/img/transparent.png'); width: 50%; height: 40px;">
+                            <div class="me-2 o_carousel_thumbnail" style="background-image: url('/web/static/img/transparent.png'); width: 50%; height: 40px; cursor: pointer; border: 2px solid transparent; border-radius: 4px; transition: all 0.2s ease;" 
+                                 t-on-click="() => this.selectImage(item.position)"
+                                 title="Access the image options"
+                                 tabindex="0">
                                 <img t-att-src="item.src" alt="" class="w-100 h-100 object-fit-contain"/>
                             </div>
                             <BuilderButton
@@ -45,7 +57,7 @@
                             class="btn btn-danger"
                             title="Remove image"
                             t-on-click="() => this.removeImage(item.position)">
-                            <i class="fa fa-trash-o"/>
+                            <i class="fa fa-fw fa-trash-o"/>
                         </button>
                     </td>
                 </tr>

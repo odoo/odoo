@@ -177,6 +177,16 @@ export class ReferencesCarouselImagesOption extends BaseOptionComponent {
             });
         });
     }
+
+    selectImage(position) {
+        // Find the corresponding image in the carousel and select it for editing
+        const editingElement = this.env.getEditingElement();
+        const targetImage = editingElement.querySelector(`li.item:nth-of-type(${position}) img`);
+        if (targetImage) {
+            // Use the builder's updateContainers method to select the image
+            this.env.editor.shared.builderOptions.updateContainers(targetImage);
+        }
+    }
 }
 
 export class ReferencesCarouselOption extends BaseOptionComponent {
