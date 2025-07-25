@@ -27,7 +27,7 @@ class ResCompany(models.Model):
         ('back', 'Back Camera'),
     ], string='Barcode Source', default='front')
     attendance_kiosk_delay = fields.Integer(default=10)
-    attendance_kiosk_key = fields.Char(default=lambda s: uuid.uuid4().hex, copy=False, groups='hr_attendance.group_hr_attendance_manager')
+    attendance_kiosk_key = fields.Char(default=lambda s: uuid.uuid4().hex, copy=False, groups='hr_attendance.group_hr_attendance_user')
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
     attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
     attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)

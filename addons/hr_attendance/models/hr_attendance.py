@@ -30,7 +30,7 @@ class HrAttendance(models.Model):
     _inherit = ["mail.thread"]
 
     def _default_employee(self):
-        if self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
+        if self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
             return self.env.user.employee_id
 
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
@@ -180,7 +180,7 @@ class HrAttendance(models.Model):
 
     @api.depends('employee_id')
     def _compute_is_manager(self):
-        have_manager_right = self.env.user.has_group('hr_attendance.group_hr_attendance_manager')
+        have_manager_right = self.env.user.has_group('hr_attendance.group_hr_attendance_user')
         have_officer_right = self.env.user.has_group('hr_attendance.group_hr_attendance_officer')
         for attendance in self:
             attendance.is_manager = have_manager_right or \
@@ -501,7 +501,7 @@ class HrAttendance(models.Model):
 
     @api.model
     def has_demo_data(self):
-        if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
+        if not self.env.user.has_group("hr_attendance.group_hr_attendance_user"):
             return True
         # This record only exists if the scenario has been already launched
         demo_tag = self.env.ref('hr_attendance.resource_calendar_std_38h', raise_if_not_found=False)
@@ -635,7 +635,7 @@ class HrAttendance(models.Model):
         }
 
     def action_try_kiosk(self):
-        if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
+        if not self.env.user.has_group("hr_attendance.group_hr_attendance_user"):
             return {
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
@@ -653,7 +653,7 @@ class HrAttendance(models.Model):
     def _read_group_employee_id(self, resources, domain):
         user_domain = Domain(self.env.context.get('user_domain') or Domain.TRUE)
         employee_domain = Domain('company_id', 'in', self.env.context.get('allowed_company_ids', []))
-        if not self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
+        if not self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
             employee_domain &= Domain('attendance_manager_id', '=', self.env.user.id)
         if user_domain.is_true():
             return self.env['hr.employee'].search(employee_domain)
