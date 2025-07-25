@@ -6,7 +6,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "isAlreadySaved", "saveView", "ignoreDirty"];
+    static shared = ["save", "saveView", "ignoreDirty"];
     static dependencies = ["history"];
 
     resources = {
@@ -105,18 +105,11 @@ export class SavePlugin extends Plugin {
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
         const willSaves = this.getResource("save_handlers").map((c) => c());
         await Promise.all(saveProms.concat(willSaves));
-        this.lastSavedStep = this.dependencies.history.getHistorySteps().at(-1);
+        this.dependencies.history.reset();
     }
 
     groupElementHandler(model, field) {
         return model === "ir.ui.view" && field === "arch" ? uniqueId("view-part-to-save-") : "";
-    }
-
-    isAlreadySaved() {
-        return (
-            !this.dependencies.history.getHistorySteps().length ||
-            this.lastSavedStep === this.dependencies.history.getHistorySteps().at(-1)
-        );
     }
 
     /**
