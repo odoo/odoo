@@ -122,7 +122,7 @@ export class Thread extends Record {
     displayToSelf = fields.Attr(false, {
         compute() {
             return (
-                this.is_pinned ||
+                this.selfMember?.is_pinned ||
                 (["channel", "group"].includes(this.channel_type) &&
                     this.hasSelfAsMember &&
                     !this.parent_channel_id)
@@ -187,12 +187,6 @@ export class Thread extends Record {
                 this.isLoadedDeferred = new Deferred();
                 this.isLoadedDeferred.then(() => def.resolve());
             }
-        },
-    });
-    is_pinned = fields.Attr(undefined, {
-        /** @this {import("models").Thread} */
-        onUpdate() {
-            this.onPinStateUpdated();
         },
     });
     message_main_attachment_id = fields.One("ir.attachment");
@@ -755,7 +749,6 @@ export class Thread extends Record {
         if (this.model !== "discuss.channel" || !this.store.self_partner) {
             return;
         }
-        this.is_pinned = true;
         return this.store.env.services.orm.silent.call(
             "discuss.channel",
             "channel_pin",

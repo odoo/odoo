@@ -23,6 +23,12 @@ export class ChannelMember extends Record {
     custom_notifications;
     /** @type {number} */
     id;
+    is_pinned = fields.Attr(undefined, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            this.channel_id?.onPinStateUpdated();
+        },
+    });
     last_interest_dt = fields.Datetime();
     last_seen_dt = fields.Datetime();
     guest_id = fields.One("mail.guest");

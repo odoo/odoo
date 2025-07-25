@@ -433,6 +433,8 @@ export class MailThread extends models.ServerModel {
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResPartner} */
@@ -446,13 +448,17 @@ export class MailThread extends models.ServerModel {
             // members
             const channels = DiscussChannel.browse(message.res_id);
             for (const channel of channels) {
-                notifications.push([
-                    [channel, "members"],
-                    "mail.record/insert",
-                    new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
-                        is_pinned: true,
-                    }).get_result(),
-                ]);
+                for (const member_id of channel.channel_member_ids) {
+                    const member = DiscussChannelMember.browse(member_id);
+                    const { partner_id, guest_id } = member[0];
+                    const [partner] = ResPartner.search_read([["id", "=", partner_id]]);
+                    const [guest] = MailMessage.search_read([["id", "=", guest_id]]);
+                    notifications.push([
+                        partner ?? guest,
+                        "mail.record/insert",
+                        new mailDataHelpers.Store(member, "is_pinned").get_result(),
+                    ]);
+                }
                 notifications.push([
                     channel,
                     "discuss.channel/new_message",
@@ -466,12 +472,12 @@ export class MailThread extends models.ServerModel {
                 ]);
                 const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
                 if (memberOfCurrentUser) {
-                    this.env["discuss.channel.member"]._set_last_seen_message(
+                    DiscussChannelMember._set_last_seen_message(
                         [memberOfCurrentUser.id],
                         message.id,
                         false
                     );
-                    this.env["discuss.channel.member"]._set_new_message_separator(
+                    DiscussChannelMember._set_new_message_separator(
                         [memberOfCurrentUser.id],
                         message.id + 1,
                         true

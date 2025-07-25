@@ -201,6 +201,9 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             member_emp = discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.partner_employee
             )
+            member_visitor = discuss_channel.channel_member_ids.filtered(
+                lambda m: m.livechat_member_type == "visitor"
+            )
             # data in-between join and leave
             channel_data_join = Store(
                 discuss_channel,
@@ -211,12 +214,12 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
-            channel_data_join["discuss.channel"][0]["is_pinned"] = True
             channel_data_join["discuss.channel"][0]["livechat_operator_id"] = self.chatbot_script.operator_partner_id.id
             channel_data_join["discuss.channel"][0]["member_count"] = 3
             channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
             channel_data_join["discuss.channel.member"].insert(0, member_bot_data)
             channel_data_join["discuss.channel.member"][2]["fetched_message_id"] = False
+            channel_data_join["discuss.channel.member"][2]["is_pinned"] = True
             channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
             channel_data_join["discuss.channel.member"][2]["seen_message_id"] = False
             del channel_data_join["res.partner"][1]
@@ -246,10 +249,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             return (
                 [
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
+                    (self.cr.dbname, "mail.guest", member_visitor.guest_id.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
+                    (self.cr.dbname, "mail.guest", member_visitor.guest_id.id),
+                    (self.cr.dbname, "res.partner", self.partner_employee.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
@@ -262,7 +266,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {
                         "type": "mail.record/insert",
                         "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "is_pinned": True}]
+                            "discuss.channel.member": [{"id": member_visitor.id, "is_pinned": True}]
                         },
                     },
                     {
@@ -283,7 +287,13 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {
                         "type": "mail.record/insert",
                         "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "is_pinned": True}]
+                            "discuss.channel.member": [{"id": member_visitor.id, "is_pinned": True}]
+                        },
+                    },
+                    {
+                        "type": "mail.record/insert",
+                        "payload": {
+                            "discuss.channel.member": [{"id": member_emp.id, "is_pinned": True}]
                         },
                     },
                     {
@@ -335,12 +345,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     ),
                                 }
                             ),
-                        },
-                    },
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "is_pinned": True}]
                         },
                     },
                     {

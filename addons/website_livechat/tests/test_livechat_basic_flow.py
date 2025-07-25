@@ -306,6 +306,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_channel_to_store_after_operator_left(self):
         channel = self._common_basic_flow()
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
+        guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
         agent_left_dt = fields.Datetime.now()
         with freeze_time(agent_left_dt):
             channel.with_user(self.operator).action_unfollow()
@@ -313,10 +314,9 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertFalse(
             channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         )
+        data = Store(channel.with_user(self.user_public).with_context(guest=guest)).get_result()
         self.assertEqual(
-            Store(
-                channel.with_user(self.user_public).with_context(guest=guest),
-            ).get_result()["discuss.channel"],
+            data["discuss.channel"],
             self._filter_channels_fields(
                 {
                     "anonymous_name": f"Visitor #{self.visitor.id}",
@@ -333,7 +333,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "id": channel.id,
                     "invited_member_ids": [("ADD", [])],
                     "is_editable": False,
-                    "is_pinned": True,
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                     "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
                     "livechat_operator_id": self.operator.partner_id.id,
@@ -350,6 +349,29 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "whatsapp_partner_id": False,
                 }
             ),
+        )
+        self.assertEqual(
+            data["discuss.channel.member"],
+            [
+                {
+                    "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                    "create_date": fields.Datetime.to_string(guest.create_date),
+                    "custom_channel_name": False,
+                    "custom_notifications": False,
+                    "fetched_message_id": False,
+                    "guest_id": guest.id,
+                    "id": guest_member.id,
+                    "is_pinned": True,
+                    "last_interest_dt": fields.Datetime.to_string(guest_member.last_interest_dt),
+                    "last_seen_dt": False,
+                    "livechat_member_type": "visitor",
+                    "message_unread_counter": 2,
+                    "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
+                    "mute_until_dt": False,
+                    "new_message_separator": 0,
+                    "seen_message_id": False,
+                }
+            ],
         )
 
     def test_livechat_not_available_with_hide_button_rule(self):
