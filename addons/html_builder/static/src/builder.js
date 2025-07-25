@@ -212,7 +212,7 @@ export class Builder extends Component {
     }
 
     discard() {
-        if (this.state.canUndo) {
+        if (this.editor.shared.history.canUndo()) {
             this.dialog.add(ConfirmationDialog, {
                 body: _t(
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
@@ -288,14 +288,14 @@ export class Builder extends Component {
     }
 
     onBeforeUnload(event) {
-        if (!this.isSaving && this.state.canUndo) {
+        if (!this.isSaving && this.editor.shared.history.canUndo()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
     }
 
     async onBeforeLeave() {
-        if (this.state.canUndo && !this.editor.shared.savePlugin.isAlreadySaved()) {
+        if (this.editor.shared.history.canUndo()) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {

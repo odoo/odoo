@@ -2,7 +2,7 @@ import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, Deferred, queryOne } from "@odoo/hoot-dom";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, defineActions, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
     addActionOption,
@@ -17,9 +17,10 @@ import {
     waitForEndOfOperation,
     wrapExample,
 } from "./website_helpers";
-import { xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
 
 defineWebsiteModels();
 
@@ -393,3 +394,30 @@ function setupSaveAndReloadIframe() {
     });
     return resultSave;
 }
+
+test("'Switch Theme' after a mutation should only ask one confirmation", async () => {
+    class MockSwitchThemeAction extends Component {
+        static props = ["*"];
+        static template = xml`<div class="mock-switch-theme"></div>`;
+    }
+    defineActions([
+        {
+            tag: "__test__switch_theme__action__",
+            xml_id: "website.theme_install_kanban_action",
+            type: "ir.actions.client",
+        },
+    ]);
+    registry.category("actions").add("__test__switch_theme__action__", MockSwitchThemeAction);
+
+    setupSaveAndReloadIframe();
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    await modifyText(getEditor(), getEditableContent());
+    await contains(`.o-snippets-tabs button[data-name="theme"]`).click();
+    await contains(`.o_theme_tab button[data-action-id="switchTheme"]`).click();
+    expect(".modal main").toHaveText(/Changing theme/);
+    await contains(`.modal button:contains(Ok)`).click();
+    expect(".modal").toHaveCount(0, {
+        message: "There should not be the modal telling changes will be lost",
+    });
+    expect(".mock-switch-theme").toHaveCount(1);
+});
