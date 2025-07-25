@@ -1,6 +1,10 @@
 import { describe, test, expect } from "@odoo/hoot";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import {
+    getFilledOrder,
+    setupPosEnv,
+    waitUntilOrdersSynced,
+} from "@point_of_sale/../tests/unit/utils";
 import { MockServer } from "@web/../tests/_framework/mock_server/mock_server";
 
 const { DateTime } = luxon;
@@ -16,6 +20,25 @@ describe("pos_store.js", () => {
         order1.table_id = table;
         store.computeTableCount();
         expect(table.uiState.orderCount).toBe(1);
+    });
+
+    test("sync dirty order when unsetting table", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const order = await getFilledOrder(store);
+        order.table_id = table;
+        expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+        await store.unsetTable();
+        await waitUntilOrdersSynced(store);
+        expect(store.getPendingOrder().orderToCreate).toHaveLength(0);
+        expect(order.isDirty()).toBe(false);
+        //Update the order
+        order.setInternalNote("Test note");
+        expect(order.isDirty()).toBe(true);
+        await store.unsetTable();
+        await waitUntilOrdersSynced(store);
+        expect(order.isDirty()).toBe(false);
+        expect(store.getPendingOrder().orderToUpdate).toHaveLength(0);
     });
 
     describe("class DevicesSynchronisation", () => {

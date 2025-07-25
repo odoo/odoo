@@ -112,7 +112,7 @@ describe("pos_store.js", () => {
             expect(order.lines).toHaveLength(2);
             expect(order.lines[0].id).toBeOfType("string");
             expect(order.lines[1].id).toBeOfType("string");
-            store.syncingOrders.add(order.id);
+            store.syncingOrders.add(order.uuid);
 
             const data = await store.syncAllOrders();
             expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
