@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="purchase_stock.SearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
+            <attribute name="t-call">purchase_stock.SearchPanelContent</attribute>
+        </xpath>
+    </t>
+    <t t-name="purchase_stock.SearchPanelContent" t-inherit="web.SearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_search_panel')]/section" position="before">
+            <t t-call="PurchaseSuggest.SearchPanel.Header"/>
+            <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
+            <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
+        </xpath>
+    </t>
+    <!-- ───────────────── Header ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.Header">
+        <header class="pt-4 pb-2 text-uppercase cursor-default" t-att-title="tooltipTitle">
+            <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
+            <b class="me-2">Suggest</b>
+        </header>
+    </t>
+    <!-- ───────────────── “Replenish for X day(s)” ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.DaysInput">
+        <div class="d-flex align-items-center ms-2">
+            <span class="me-2 fw-bold">Replenish for</span>
+            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"/>
+            <span class="ms-2">day(s)</span>
+        </div>
+    </t>
+    <!-- ───────────────── “Based on … × %” ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.BasedOn">
+        <div class="d-inline-flex align-items-center ms-2 mt-2 fw-bold">Based on</div>
+        <div class="d-inline-flex align-items-center ms-1 me-2">
+            <div>
+                Select
+            </div>
+            <span class="m-1">x</span>
+            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"/>
+            <span>%</span>
+        </div>
+    </t>
+</templates>
