@@ -43,46 +43,92 @@ class ProductsListPageOptionPlugin extends Plugin {
 
 class PreviewTemplateAction extends BuilderAction {
     static id = "previewTemplate";
+    static dependencies = ["savePlugin"];
 
-    apply(...args) {
-        this._previewTemplate(true, ...args);
+    getPreviewTemplateIsPresentClass(templateId) {
+        return `preview_is_present_${templateId?.replace(/\./g, "_")}`;
     }
 
-    clean(...args) {
-        this._previewTemplate(false, ...args);
-    }
-
-    _previewTemplate(
-        apply,
-        {
-            editingElement,
-            params: { templateId, previewClass, placeBefore, placeAfter, placeExcludeRootClosest },
-            selectableContext,
-        }
-    ) {
-        if (!apply && selectableContext) {
-            return;
-        }
-
-        if (templateId && !editingElement.closest(placeExcludeRootClosest)) {
+    async apply({
+        editingElement: el,
+        isPreviewing,
+        params: {
+            templateId,
+            previewClass,
+            placeBefore,
+            placeAfter,
+            placeFirstChild,
+            placeLastChild,
+            placeExcludeRootClosest,
+        },
+    }) {
+        const previewIsPresentClass = this.getPreviewTemplateIsPresentClass(templateId);
+        if (templateId && !el.classList.contains(previewIsPresentClass)) {
             const renderedEl = renderToElement(templateId);
-            if (placeBefore) {
-                for (const el of editingElement.querySelectorAll(placeBefore)) {
-                    el.insertAdjacentElement("beforebegin", renderedEl.cloneNode(true));
+            let targetEl = el;
+            if (placeExcludeRootClosest) {
+                targetEl = el.closest(placeExcludeRootClosest);
+            }
+            let elementInserted = false;
+            if (targetEl) {
+                if (placeBefore) {
+                    for (const el of targetEl.querySelectorAll(placeBefore)) {
+                        el.insertAdjacentElement("beforebegin", renderedEl.cloneNode(true));
+                        elementInserted = true;
+                    }
+                }
+                if (placeAfter) {
+                    for (const el of targetEl.querySelectorAll(placeAfter)) {
+                        el.insertAdjacentElement("afterend", renderedEl.cloneNode(true));
+                        elementInserted = true;
+                    }
+                }
+                if (placeFirstChild) {
+                    for (const el of targetEl.querySelectorAll(placeFirstChild)) {
+                        el.insertAdjacentElement("afterbegin", renderedEl.cloneNode(true));
+                        elementInserted = true;
+                    }
+                }
+                if (placeLastChild) {
+                    for (const el of targetEl.querySelectorAll(placeLastChild)) {
+                        el.insertAdjacentElement("beforeend", renderedEl.cloneNode(true));
+                        elementInserted = true;
+                    }
                 }
             }
-            if (placeAfter) {
-                for (const el of editingElement.querySelectorAll(placeAfter)) {
-                    el.insertAdjacentElement("afterend", renderedEl.cloneNode(true));
-                }
+            if (!isPreviewing && !elementInserted) {
+                // If we can't preview the action (e.g. `targetEl` not found)
+                // we need to reload the editor to show the changes. Note that
+                // the first part of the composite action,
+                // `previewableWebsiteConfig`, has already registered which
+                // views to enable/disable on save.
+                await this.dependencies.savePlugin.save();
+                await this.config.reloadEditor();
             }
+            el.classList.add(previewIsPresentClass);
         }
-
         if (previewClass) {
-            editingElement.classList.add(...previewClass.split(" "));
+            previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
+        }
+    }
+
+    async clean({ editingElement: el, isPreviewing, params: { templateId, previewClass } }) {
+        const previewIsPresentClass = this.getPreviewTemplateIsPresentClass(templateId);
+        if (previewClass) {
+            previewClass.split(/\s+/).forEach((cls) => el.classList.remove(cls));
+        }
+        if (!isPreviewing && !el.classList.contains(previewIsPresentClass)) {
+            // If the preview template is not present, we can't preview the
+            // action by hiding the template. We need to reload the editor to
+            // show the changes. Note that the first part of the composite
+            // action, `previewableWebsiteConfig`, has already registered which
+            // views to enable/disable on save.
+            await this.dependencies.savePlugin.save();
+            await this.config.reloadEditor();
         }
     }
 }
+
 export class SetPpgAction extends BuilderAction {
     static id = "setPpg";
     setup() {

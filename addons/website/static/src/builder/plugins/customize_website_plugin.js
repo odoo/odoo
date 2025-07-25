@@ -33,6 +33,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "isPluginDestroyed",
         "reloadBundles",
         "setViewsOnSave",
+        "willViewsBeDisabledOnSave",
     ];
 
     resources = {
@@ -373,6 +374,9 @@ export class CustomizeWebsitePlugin extends Plugin {
             this.viewsToEnableOnSave = initialViewsToEnableOnSave;
             this.viewsToDisableOnSave = initialViewsToDisableOnSave;
         };
+    }
+    willViewsBeDisabledOnSave(views) {
+        return views.every((view) => this.viewsToDisableOnSave.has(view));
     }
     isPluginDestroyed() {
         return this.isDestroyed;
@@ -722,10 +726,23 @@ export class WebsiteConfigAction extends BuilderAction {
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
     static dependencies = ["customizeWebsite", "history"];
+    async prepare({ actionParam }) {
+        return this.dependencies.customizeWebsite.loadConfigKey(actionParam);
+    }
     getPriority({ params }) {
         return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
     }
     isApplied({ editingElement: el, params }) {
+        if (params.views && params.views.length > 0) {
+            const configKeysIsApplied = params.views.every((v) =>
+                this.dependencies.customizeWebsite.getConfigKey(v)
+            );
+            const viewsAreSetToBeDisabled =
+                this.dependencies.customizeWebsite.willViewsBeDisabledOnSave(params.views);
+            if (configKeysIsApplied === true && !viewsAreSetToBeDisabled) {
+                return true;
+            }
+        }
         if (params.previewClass === undefined || params.previewClass === "") {
             return true;
         }

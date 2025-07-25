@@ -116,6 +116,7 @@ export class CompositeAction extends BuilderAction {
         loadResult,
         dependencyManager,
         selectableContext,
+        isPreviewing,
     }) {
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
@@ -127,6 +128,7 @@ export class CompositeAction extends BuilderAction {
                     loadResult,
                     dependencyManager,
                     selectableContext,
+                    isPreviewing,
                 });
                 await action.apply(actionDescr);
             }
@@ -140,6 +142,7 @@ export class CompositeAction extends BuilderAction {
         dependencyManager,
         selectableContext,
         nextAction,
+        isPreviewing,
     }) {
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
@@ -151,6 +154,7 @@ export class CompositeAction extends BuilderAction {
                 dependencyManager,
                 selectableContext,
                 nextAction,
+                isPreviewing,
             });
             if (action.has("clean")) {
                 action.clean(actionDescr);
@@ -170,6 +174,7 @@ export class CompositeAction extends BuilderAction {
             "dependencyManager",
             "selectableContext",
             "nextAction",
+            "isPreviewing",
         ];
         for (const spec of forwardedSpecs) {
             if (action[spec]) {
