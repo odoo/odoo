@@ -54,13 +54,16 @@
     </template>
 
     <template id="product_category_extra_link" name="Product Category Extra Link">
-        <button  class="btn btn-link btn-sm pe-0" disabled="disabled">
+        <button class="btn btn-link btn-sm pe-0" disabled="disabled">
             <t t-if="len(categories) == 1">Category:</t>
             <t t-else="">Categories:</t>
         </button>
         <t t-foreach="categories" t-as="category">
-            <button class="btn btn-link btn-sm p-0 text-wrap" t-out="category.name"
-                t-attf-onclick="location.href='#{shop_path}/category/#{slug(category)}';return false;"/>
+            <button
+                class="btn btn-link btn-sm p-0 text-wrap"
+                t-out="category.name"
+                t-attf-onclick="location.href='#{shop_path}/category/#{slug(category)}';return false;"
+            />
         </t>
     </template>
 
@@ -403,8 +406,8 @@
                     href="#"
                     role="button"
                     class="btn btn-light a-submit"
-                    aria-label="Shopping cart"
-                    title="Shopping cart"
+                    aria-label="Add to cart"
+                    title="Add to cart"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                 >
                     <span class="fa fa-shopping-cart"/>
@@ -2815,14 +2818,12 @@
                                     name="o_wsale_cart_line_button_container"
                                     t-attf-class="d-none d-md-flex align-items-center gap-2 mt-2 {{'justify-content-between' if is_combo else ''}}"
                                 >
-                                    <a
-                                        href='#'
-                                        class="js_delete_product small"
+                                    <button
+                                        class="btn btn-link btn-sm px-0 js_delete_product"
                                         aria-label="Remove from cart"
-                                        title="Remove from cart"
                                     >
                                         Remove
-                                    </a>
+                                    </button>
                                     <div
                                         t-if="is_combo"
                                         class="d-none d-md-block ms-auto"
@@ -2850,7 +2851,8 @@
                             </div>
                             <button
                                 class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
-                                title="remove"
+                                title="Remove"
+                                aria-label="Remove"
                             >
                                 <i class="fa fa-fw fa-trash-o"/>
                             </button>
@@ -3086,7 +3088,6 @@
                                     />
                                 </h6>
                                 <button
-                                    role="button"
                                     class="js_add_suggested_products btn btn-primary text-nowrap"
                                     t-att-data-product-id="product.id"
                                     t-att-data-product-template-id="product.product_tmpl_id.id"
@@ -3569,7 +3570,6 @@
                                 class="btn btn-light d-flex justify-content-between align-items-center gap-2 w-100 mb-2"
                                 data-bs-toggle="offcanvas"
                                 href="#o_cart_summary_offcanvas"
-                                role="button"
                                 aria-controls="o_cart_summary_offcanvas"
                             >
                                 Order
@@ -3614,7 +3614,6 @@
                                     class="btn btn-light w-100"
                                     type="button"
                                     data-bs-dismiss="offcanvas"
-                                    aria-label="Close"
                                 >
                                     Close
                                 </button>
