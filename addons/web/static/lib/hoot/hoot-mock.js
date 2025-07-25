@@ -12,6 +12,7 @@ export {
     Deferred,
     delay,
     freezeTime,
+    unfreezeTime,
     microTick,
     runAllTimers,
     setFrameRate,
