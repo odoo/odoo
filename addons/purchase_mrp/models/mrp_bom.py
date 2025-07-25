@@ -21,6 +21,20 @@ class MrpBom(models.Model):
                 raise UserError(_("The total cost share for a BoM's component have to be 100"))
         return res
 
+    def _explode_done(self, boms_done, lines_done):
+        for bom_line, line_done in lines_done:
+            cum_cost_share = bom_line.cost_share / 100
+            parent_line = line_done['parent_line']
+            while parent_line:
+                cum_cost_share *= parent_line.cost_share / 100
+                for bom_done in boms_done:
+                    bom_data = bom_done[1]
+                    if bom_data['parent_line'] == parent_line:
+                        parent_line = bom_data['real_parent_line']
+                        break
+            line_done['cost_share'] = cum_cost_share
+        return super()._explode_done(boms_done, lines_done)
+
 
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'

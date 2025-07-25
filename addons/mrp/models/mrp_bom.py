@@ -412,7 +412,7 @@ class MrpBom(models.Model):
                 for bom_line in bom.bom_line_ids:
                     if not bom_line.product_id in product_boms:
                         product_ids.add(bom_line.product_id.id)
-                boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
+                boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line, 'real_parent_line': parent_line}))
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
                 # should be consumed.
@@ -420,7 +420,11 @@ class MrpBom(models.Model):
                 line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
                 lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
 
+        self._explode_done(boms_done, lines_done)
         return boms_done, lines_done
+
+    def _explode_done(self, boms_done, lines_done):
+        return
 
     @api.model
     def get_import_templates(self):
