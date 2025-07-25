@@ -141,12 +141,7 @@ class L10nInEwaybill(models.Model):
     cancel_remarks = fields.Char("Cancel remarks", copy=False, tracking=True)
 
     # Attachment
-    attachment_id = fields.Many2one(
-        'ir.attachment',
-        compute=lambda self: self._compute_linked_attachment_id('attachment_id', 'attachment_file'),
-        depends=['attachment_file'],
-    )
-    attachment_file = fields.Binary(copy=False, attachment=True)
+    attachment_file = fields.Binary(copy=False)
 
     # ------------Generic compute methods to be overriden in l10n_in_ewaybill_stock module---------------
 
@@ -190,20 +185,6 @@ class L10nInEwaybill(models.Model):
         return self.account_move_id.is_outbound()
 
     # -------------- Compute Methods ----------------
-
-    def _compute_linked_attachment_id(self, attachment_field, binary_field):
-        """Helper to retreive Attachment from Binary fields
-        This is needed because fields.Many2one('ir.attachment') makes all
-        attachments available to the user.
-        """
-        attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('res_field', '=', binary_field)
-        ])
-        ewb_vals = {att.res_id: att for att in attachments}
-        for ewb in self:
-            ewb[attachment_field] = ewb_vals.get(ewb._origin.id, False)
 
     @api.depends(lambda self: self._get_ewaybill_dependencies())
     def _compute_ewaybill_document_details(self):
@@ -684,9 +665,9 @@ class L10nInEwaybill(models.Model):
         see https://github.com/odoo/upgrade/pull/6624 for futher information
         """
         self.ensure_one()
-        if self.attachment_id:
+        if self.attachment_file:
             try:
-                res_json = json.loads(self.attachment_id.raw.decode("utf-8"))
+                res_json = json.loads(base64.b64decode(self.attachment_file).decode("utf-8"))
             except ValueError:
                 return False
             ewb_name = res_json.get("ewayBillNo") or res_json.get("EwbNo")
