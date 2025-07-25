@@ -119,6 +119,7 @@ export const monetaryField = {
     ],
     supportedTypes: ["monetary", "float", "integer"],
     displayName: _t("Monetary"),
+    isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: ({ attrs, options }) => ({
         currencyField: options.currency_field,
         inputType: attrs.type,
