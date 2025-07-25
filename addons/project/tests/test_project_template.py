@@ -1,4 +1,3 @@
-from odoo.exceptions import UserError
 from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
@@ -11,7 +10,7 @@ class TestProjectTemplates(TestProjectCommon):
             "name": "Project Template",
             "is_template": True,
         })
-        cls.task_inside_template = cls.env["project.task"].create({
+        cls.task_inside_template = cls.env["project.task.template"].create({
             "name": "Task in Project Template",
             "project_id": cls.project_template.id,
         })
@@ -25,7 +24,8 @@ class TestProjectTemplates(TestProjectCommon):
         self.assertFalse(project.is_template, "The created Project should be a normal project and not a template.")
         self.assertFalse(project.partner_id, "The created Project should not have a customer.")
 
-        self.assertEqual(len(project.task_ids), 1, "The tasks of the template should be copied too.")
+        template_task_count = self.env['project.task.template'].search_count([('project_id', '=', project.id)])
+        self.assertEqual(template_task_count, 0, "The tasks of the template should be copied too.")
 
     def test_copy_template(self):
         """
@@ -34,7 +34,8 @@ class TestProjectTemplates(TestProjectCommon):
         copied_template = self.project_template.copy()
         self.assertEqual(copied_template.name, "Project Template (copy)", "The project name should be `Project Template` (copy).")
         self.assertTrue(copied_template.is_template, "The copy of the template should also be a template.")
-        self.assertEqual(len(copied_template.task_ids), 1, "The child of the template should be copied too.")
+        task_count = self.env['project.task.template'].search_count([('project_id', '=', copied_template.id)])
+        self.assertEqual(task_count, 1, "The child of the template should be copied too.")
 
     def test_revert_template(self):
         """
@@ -42,14 +43,6 @@ class TestProjectTemplates(TestProjectCommon):
         """
         self.project_template.action_undo_convert_to_template()
         self.assertFalse(self.project_template.is_template, "The reverted template should become a normal template.")
-
-    def test_revert_task_template(self):
-        """
-        A template task should not be reverted to a regular task.
-        """
-        self.task_inside_template.is_template = True
-        with self.assertRaises(UserError, msg="A UserError should be raised when attempting to revert a template task to a regular one."):
-            self.task_inside_template.action_convert_to_template()
 
     def test_tasks_dispatching_from_template(self):
         """

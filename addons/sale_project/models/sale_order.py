@@ -6,7 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
 from odoo.exceptions import UserError
-from odoo.addons.project.models.project_task import CLOSED_STATES
+from odoo.addons.project.models.project_task_template import CLOSED_STATES
 
 
 class SaleOrder(models.Model):
