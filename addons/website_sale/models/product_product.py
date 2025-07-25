@@ -136,7 +136,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
-        return not request.website.prevent_zero_price_sale or self._get_contextual_price()
+        return not self._should_hide_add_to_cart(request.website, self._get_contextual_price())
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
@@ -422,3 +422,10 @@ class ProductProduct(models.Model):
             gmc_info['item_group_id'] = self.product_tmpl_id.id
 
         return gmc_info
+
+    def _should_hide_add_to_cart(self, website, price):
+        """
+        Delegate 'hide Add to Cart' logic to the product template.
+        """
+        self.ensure_one()
+        return self.product_tmpl_id._should_hide_add_to_cart(website, price)

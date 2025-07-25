@@ -95,8 +95,8 @@ class Website(models.Model):
         domain=[('model', '=', 'sale.order')],
         default=_default_recovery_mail_template,
     )
-    contact_us_button_url = fields.Char(
-        string="Contact Us Button URL", translate=True, default="/contactus",
+    contact_us_link_url = fields.Char(
+        string="Contact Us Link URL", translate=True, default="/contactus",
     )
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
     send_abandoned_cart_email = fields.Boolean(
@@ -161,7 +161,12 @@ class Website(models.Model):
     )
     product_page_grid_columns = fields.Integer(default=2)
 
-    prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
+    prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' for Zero Price Products")
+
+    prevent_zero_price_categories = fields.Many2many(
+        string='Restrict Zero Price Products by Category',
+        comodel_name='product.public.category',
+    )
 
     enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source")
 

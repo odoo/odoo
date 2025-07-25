@@ -52,13 +52,19 @@ class ResConfigSettings(models.TransientModel):
     )
     salesteam_id = fields.Many2one(related='website_id.salesteam_id', readonly=False)
     website_sale_prevent_zero_price_sale = fields.Boolean(
-        string="Prevent Sale of Zero Priced Product",
+        string="Hide Add to Cart",
         related='website_id.prevent_zero_price_sale',
         readonly=False,
     )
-    website_sale_contact_us_button_url = fields.Char(
+    website_sale_zero_price_categories = fields.Many2many(
+        string='Categories',
+        related='website_id.prevent_zero_price_categories',
+        readonly=False,
+        domain="[('id', '!=', False)]"
+    )
+    website_sale_contact_us_link_url = fields.Char(
         string="Button Url",
-        related='website_id.contact_us_button_url',
+        related='website_id.contact_us_link_url',
         readonly=False,
     )
     website_sale_enabled_portal_reorder_button = fields.Boolean(

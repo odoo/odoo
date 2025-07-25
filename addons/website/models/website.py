@@ -1766,7 +1766,7 @@ class Website(models.Model):
         # eventually calls this method.
 
         # Here, we manually prefetch the needed fields only to avoid prefetching
-        # any translatable field, such as contact_us_button_url by website_sale,
+        # any translatable field, such as contact_us_link_url by website_sale,
         # as translating to an invalid language would result in an error.
         self.fetch(['user_id', 'company_id', 'default_lang_id', 'homepage_url'])
         return {
