@@ -32,10 +32,7 @@ export class DefineCustomIconAction extends BuilderAction {
         let selectedIconClass;
         await new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
-                noImages: true,
-                noDocuments: true,
-                noVideos: true,
-                extraTabs: [],
+                visibleTabs: ["ICONS"],
                 save: (icon) => {
                     selectedIconClass = icon.className;
                     resolve();

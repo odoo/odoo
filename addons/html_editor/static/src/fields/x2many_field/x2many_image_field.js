@@ -24,7 +24,7 @@ export class X2ManyImageField extends ImageField {
             mediaEl.dataset.src = this.props.record.data.video_url;
         }
         this.dialog.add(CustomMediaDialog, {
-            noIcons: true,
+            visibleTabs: ["IMAGES", "VIDEOS"],
             media: mediaEl,
             activeTab: isVideo ? "VIDEOS" : "IMAGES",
             save: (el) => {}, // Simple rebound to fake its execution
