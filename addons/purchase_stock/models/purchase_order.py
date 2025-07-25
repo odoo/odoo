@@ -37,6 +37,25 @@ class PurchaseOrder(models.Model):
        help="Red: Late\n\
             Orange: To process today\n\
             Green: On time")
+    suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
+
+    @api.depends_context("suggest_based_on", "suggest_multiplier", "suggest_days", "warehouse_id")
+    def _compute_suggest_estimated_price(self):
+        ctx = self.env.context
+        for purchase_order in self:
+            estimated_price = 0
+            seller_args = {
+                "partner_id": purchase_order.partner_id,
+                "params": {'order_id': purchase_order}
+            }
+            products = self.env['product.product'].with_context(ctx).browse(ctx.get("suggest_product_ids"))
+            for product in products.filtered(lambda p: p.suggested_qty > 0):
+                # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist
+                seller = product._select_seller(quantity=product.suggested_qty, **seller_args) or \
+                         product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
+                price = seller.price_discounted if seller else product.standard_price
+                estimated_price += price * product.suggested_qty
+            purchase_order.suggest_estimated_price = estimated_price
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):
@@ -113,6 +132,38 @@ class PurchaseOrder(models.Model):
         kanban_view_id = self.env.ref('purchase_stock.product_view_kanban_catalog_purchase_only').id
         action['views'] = [(kanban_view_id, view_type) if view_type == 'kanban' else (view_id, view_type) for (view_id, view_type) in action['views']]
         return action
+
+    @api.model
+    def action_purchase_order_suggest(self, domain, suggest_ctx):
+        """ Adds suggested products to PO, removing products with no suggested_qty, and
+        collapsing existing po_lines into at most 1 orderline. """
+        po = self.browse(suggest_ctx.get("order_id"))
+        po.ensure_one()
+
+        products = self.env['product.product'].with_context(suggest_ctx).search(domain)
+        supplierinfos = self.env['product.supplierinfo'].search([('partner_id', '=', self.partner_id.id)])
+
+        po_lines_commands = []
+        for product in products:
+            supplierinfo = supplierinfos.filtered(lambda supinfo: supinfo.product_id == product)[:1]
+            suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
+                product,
+                product.suggested_qty,
+                product.uom_id,
+                po.company_id,
+                supplierinfo,
+                po
+            )
+            existing_po_lines = po.order_line.filtered(lambda pol: pol.product_id == product)
+            if existing_po_lines:
+                to_unlink = existing_po_lines if product.suggested_qty == 0 else existing_po_lines[:-1]
+                po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
+                if product.suggested_qty > 0:
+                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
+            elif product.suggested_qty > 0:
+                po_lines_commands.append(Command.create(suggest_line))
+
+        po.order_line = po_lines_commands
 
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)
@@ -369,3 +420,19 @@ class PurchaseOrder(models.Model):
 
     def _is_display_stock_in_catalog(self):
         return True
+
+    def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
+        """ Add suggest_ctx to env in order to trigger product.product suggest compute fields"""
+        if kwargs.get('suggest_based_on'):
+            suggest_keys = ('suggest_days', 'suggest_based_on', 'suggest_percent', 'warehouse_id')
+            suggest_ctx = {k: v for k, v in kwargs.items() if k in suggest_keys}
+            return super(PurchaseOrder, self.with_context(suggest_ctx))._get_product_catalog_order_line_info(
+                product_ids, child_field=child_field, **kwargs
+            )
+        return super()._get_product_catalog_order_line_info(product_ids, child_field=child_field, **kwargs)
+
+    def _get_product_price_and_data(self, product):
+        """ Fetch the product's data used by the purchase's catalog."""
+        res = super()._get_product_price_and_data(product)
+        res["suggested_qty"] = product.suggested_qty
+        return res

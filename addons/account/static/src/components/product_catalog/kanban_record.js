@@ -10,11 +10,10 @@ patch(ProductCatalogKanbanRecord.prototype, {
         return super.orderLineComponent;
     },
 
-    addProduct() {
-        if (this.productCatalogData.quantity === 0 && this.productCatalogData.min_qty) {
-            super.addProduct(this.productCatalogData.min_qty);
-        } else {
-            super.addProduct(...arguments);
+    addProduct(qty = 1) {
+        if (this.productCatalogData.quantity === 0 && qty < this.productCatalogData.min_qty) {
+            qty = this.productCatalogData.min_qty; // Take seller's minimum if trying to add less
         }
+        super.addProduct(qty);
     },
-})
+});
