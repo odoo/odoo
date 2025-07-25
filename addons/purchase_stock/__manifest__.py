@@ -27,7 +27,6 @@
         'report/report_stock_rule.xml',
         'wizard/stock_replenishment_info.xml',
         'wizard/product_replenish_views.xml',
-        'wizard/purchase_order_suggest_views.xml',
     ],
     'demo': [
         'data/purchase_stock_demo.xml',
