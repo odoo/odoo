@@ -1665,8 +1665,41 @@ export class PosStore extends WithLazyGetterTrap {
     changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
         return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
     }
+    async checkPreparationStateAndSentOrderInPreparation(order, cancelled = false) {
+        if (typeof order.id !== "number") {
+            return this.sendOrderInPreparation(order, cancelled);
+        }
+
+        const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
+        const rawchange = data.last_order_preparation_change || "{}";
+        const lastChanges = JSON.parse(rawchange);
+        const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
+        const lastLocalDate = DateTime.fromSQL(
+            order.last_order_preparation_change?.metadata?.serverDate
+        ).toUTC();
+
+        if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Order Outdated"),
+                body: _t(
+                    "The order has been modified on another device. If you have modified existing " +
+                        "order lines, check that your changes have not been overwritten.\n\n" +
+                        "The order will be sent to the server with the last changes made on this device."
+                ),
+            });
+
+            // Update before syncing otherwise it will overwrite the last change
+            order.last_order_preparation_change = lastChanges;
+            await this.syncAllOrders({ orders: [order] });
+            return;
+        }
+
+        return this.sendOrderInPreparation(order, cancelled);
+    }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
+        let isPrinted = false;
+
         if (this.config.printerCategories.size && !opts.byPassPrint) {
             try {
                 let reprint = false;
@@ -1694,19 +1727,25 @@ export class PosStore extends WithLazyGetterTrap {
                 if (reprint && opts.orderDone) {
                     return;
                 }
-                await this.printChanges(order, orderChange, reprint);
+                isPrinted = await this.printChanges(order, orderChange, reprint);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
             }
         }
         order.updateLastOrderChange();
+        // Ensure that other devices are aware of the changes
+        // Otherwise several devices can print the same changes
+        // We need to check if a preparation display is configured to avoid unnecessary sync
+        if (isPrinted && !this.models["pos.prep.display"]?.length) {
+            await this.syncAllOrders({ orders: [order] });
+        }
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
             throw new ConnectionLostError();
         }
-        await this.sendOrderInPreparation(o, { cancelled });
+        await this.checkPreparationStateAndSentOrderInPreparation(o, { cancelled });
     }
 
     getStrNotes(note) {
@@ -1800,6 +1839,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async printChanges(order, orderChange, reprint = false, printers = this.unwatched.printers) {
+        let isPrinted = false;
         const unsuccessfulPrints = [];
         const retryPrinters = new Set();
 
@@ -1819,6 +1859,10 @@ export class PosStore extends WithLazyGetterTrap {
                 let result = {};
                 for (const data of receiptsData) {
                     result = await this.printOrderChanges(data, printer);
+                    if (result.successful) {
+                        isPrinted = true;
+                    }
+
                     if (!result.successful) {
                         retryPrinters.add(printer);
                         unsuccessfulPrints.push(printer.config.name + ": " + result.message.body);
@@ -1840,6 +1884,8 @@ export class PosStore extends WithLazyGetterTrap {
                 },
             });
         }
+
+        return isPrinted;
     }
 
     async prepareReceiptGroupedData(data) {
