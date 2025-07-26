@@ -32,6 +32,6 @@ Pro rules and show the errors.
         'wizard/account_move_send_views.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'license': 'LGPL-3',
 }
