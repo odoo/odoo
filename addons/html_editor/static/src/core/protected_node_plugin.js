@@ -9,6 +9,8 @@ const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 /**
  * @typedef { Object } ProtectedNodeShared
  * @property { ProtectedNodePlugin['setProtectingNode'] } setProtectingNode
+ *
+ * @typedef { import("./history_plugin").HistoryMutationRecord } HistoryMutationRecord
  */
 
 export class ProtectedNodePlugin extends Plugin {
@@ -89,25 +91,29 @@ export class ProtectedNodePlugin extends Plugin {
         }
     }
 
+    /**
+     * @param {HistoryMutationRecord[]} records
+     */
     beforeFilteringMutationRecords(records) {
         for (const record of records) {
             if (record.type === "childList") {
                 if (record.target.nodeType !== Node.ELEMENT_NODE) {
                     return;
                 }
+                const addedNodes = record.addedTrees.map((tree) => tree.node);
                 if (
                     (this.protectedNodes.has(record.target) &&
                         !record.target.matches(UNPROTECTED_SELECTOR)) ||
                     record.target.matches(PROTECTED_SELECTOR)
                 ) {
-                    for (const addedNode of record.addedNodes) {
+                    for (const addedNode of addedNodes) {
                         this.protectNode(addedNode);
                     }
                 } else if (
                     !this.protectedNodes.has(record.target) ||
                     record.target.matches(UNPROTECTED_SELECTOR)
                 ) {
-                    for (const addedNode of record.addedNodes) {
+                    for (const addedNode of addedNodes) {
                         this.unProtectNode(addedNode);
                     }
                 }
@@ -116,18 +122,11 @@ export class ProtectedNodePlugin extends Plugin {
     }
 
     /**
-     * @param {MutationRecord} record
+     * @param {HistoryMutationRecord} record
      * @return {boolean}
      */
     isMutationRecordSavable(record) {
-        if (record.type === "attributes") {
-            if (record.attributeName === "contenteditable") {
-                return (
-                    !this.protectedNodes.has(record.target) ||
-                    record.target.matches(UNPROTECTED_SELECTOR)
-                );
-            }
-        } else if (record.target.nodeType === Node.ELEMENT_NODE) {
+        if (record.type === "childList") {
             return !(
                 (this.protectedNodes.has(record.target) &&
                     !record.target.matches(UNPROTECTED_SELECTOR)) ||

@@ -282,7 +282,7 @@ test("should reset from snapshot", async () => {
             expect(peerInfos.c2.historyPlugin.steps.map((x) => x.id)).toEqual([
                 "fake_concurrent_id_1",
             ]);
-            expect(peerInfos.c2.historyPlugin.steps[0].mutations.map((x) => x.id)).toEqual([
+            expect(peerInfos.c2.historyPlugin.steps[0].mutations.map((x) => x.nodeId)).toEqual([
                 "fake_id_4",
             ]);
         },
@@ -425,6 +425,10 @@ describe("sanitize", () => {
     });
 
     test("should sanitize when undo is adding a script node", async () => {
+        // Prevent console.warn from making the test fail due to inexistent node
+        // to remove. The script node is non existent in the collaborator's DOM
+        // (c2) because of sanitization of serialized nodes.
+        patchWithCleanup(console, { warn: () => {} });
         await testMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: "<p>a</p>",

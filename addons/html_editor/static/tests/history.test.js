@@ -259,7 +259,7 @@ describe("selection", () => {
         await pointerUp(pElement);
         await tick();
         const historyPlugin = plugins.get("history");
-        const nodeId = historyPlugin.nodeToIdMap.get(pElement.firstChild);
+        const nodeId = historyPlugin.nodeMap.getId(pElement.firstChild);
         expect(historyPlugin.currentStep.selection).toEqual({
             anchorNodeId: nodeId,
             anchorOffset: 0,
@@ -622,9 +622,9 @@ describe("destroy", () => {
             isMutationRecordSavable(record) {
                 if (
                     record.type === "childList" &&
-                    record.addedNodes.length === 1 &&
-                    record.addedNodes.item(0).nodeType === Node.ELEMENT_NODE &&
-                    record.addedNodes.item(0).matches(".test")
+                    record.addedTrees.length === 1 &&
+                    record.addedTrees[0].node.nodeType === Node.ELEMENT_NODE &&
+                    record.addedTrees[0].node.matches(".test")
                 ) {
                     expect.step("dispatch");
                     return false;
@@ -737,6 +737,38 @@ describe("custom mutation", () => {
     });
 });
 
+describe("same text node mutations", () => {
+    test("should not record same text mutation", async () => {
+        const { el, editor } = await setupEditor(`<p>[]test</p>`);
+        const p = el.querySelector("p");
+        const textNode = editor.document.createTextNode("a");
+        p.append(textNode);
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(`<p>[]testa</p>`);
+        // Replace text node with a new one with the same content
+        p.replaceChild(editor.document.createTextNode("a"), textNode);
+        // addStep returns false when there are no mutations
+        expect(editor.shared.history.addStep()).toBe(false);
+    });
+    test("same text node mutation should not break history", async () => {
+        const { el, editor } = await setupEditor(`<p>[]hello </p>`);
+        const p = el.querySelector("p");
+        const textNode = editor.document.createTextNode("world");
+        p.append(textNode);
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(`<p>[]hello world</p>`);
+        // Replace text node with a new one with the same content
+        p.replaceChild(editor.document.createTextNode("world"), textNode);
+        // It should not create a step but, the old node should be remapped to
+        // the new one and history keep working
+        expect(editor.shared.history.addStep()).toBe(false);
+        editor.shared.history.undo();
+        expect(getContent(el)).toBe(`<p>[]hello </p>`);
+        editor.shared.history.redo();
+        expect(getContent(el)).toBe(`<p>[]hello world</p>`);
+    });
+});
+
 describe("unobserved mutations", () => {
     const withAddStep = (editor, callback) => {
         callback();
@@ -757,6 +789,157 @@ describe("unobserved mutations", () => {
             editor.shared.history.redo();
             expect(p.className).toBe("a c");
         });
+        test("no-op class removal should not be added to history", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.classList.add("a"));
+            editor.shared.history.ignoreDOMMutations(() => p.classList.add("b"));
+            withAddStep(editor, () => p.classList.remove("b")); // no-op from a history perspective
+            editor.shared.history.undo();
+            expect(p.className).toBe("");
+        });
+        test("no-op class addition should not be added to history", async () => {
+            const { editor } = await setupEditor(`<p class="a b">test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.classList.remove("a"));
+            editor.shared.history.ignoreDOMMutations(() => p.classList.remove("b"));
+            withAddStep(editor, () => p.classList.add("b")); // no-op from a history perspective
+            editor.shared.history.undo();
+            expect(p.className).toBe("b a");
+        });
+        test("should produce mutations in undo step even with no class change", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.classList.add("a"));
+            editor.shared.history.ignoreDOMMutations(() => p.classList.remove("a"));
+            expect(p.className).toBe("");
+            editor.shared.history.undo(); // mutation to be added to history: remove "a"
+            expect(p.className).toBe("");
+            editor.shared.history.redo();
+            expect(p.className).toBe("a");
+        });
+    });
+    describe("attributes", () => {
+        test("unobserved attribute mutations should not affect history", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.setAttribute("data-test", "a"));
+            editor.shared.history.ignoreDOMMutations(() => p.setAttribute("data-test", "b"));
+            withAddStep(editor, () => p.setAttribute("data-test", "c"));
+            editor.shared.history.undo();
+            expect(p.getAttribute("data-test")).toBe("a");
+        });
+        test("multiple unobserved attribute mutations", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.setAttribute("data-test", "a"));
+            editor.shared.history.ignoreDOMMutations(() => p.setAttribute("data-test", "b"));
+            editor.shared.history.ignoreDOMMutations(() => p.setAttribute("data-test", "c"));
+            withAddStep(editor, () => p.setAttribute("data-test", "d"));
+            editor.shared.history.undo();
+            expect(p.getAttribute("data-test")).toBe("a");
+        });
+        test("setting an attribute as first observed step", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            editor.shared.history.ignoreDOMMutations(() => p.setAttribute("data-test", "a"));
+            withAddStep(editor, () => p.setAttribute("data-test", "b"));
+            editor.shared.history.undo();
+            expect(p.getAttribute("data-test")).toBe(null);
+        });
+        test("attribute with no value", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.setAttribute("data-test", ""));
+            editor.shared.history.ignoreDOMMutations(() => p.setAttribute("data-test", "a"));
+            withAddStep(editor, () => p.setAttribute("data-test", "b"));
+            editor.shared.history.undo();
+            expect(p.getAttribute("data-test")).toBe("");
+        });
+        test("no-op attribute change should not be added to history", async () => {
+            const { editor } = await setupEditor(`<p data-test="a">test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.setAttribute("data-test", "b"));
+            editor.shared.history.ignoreDOMMutations(() => p.setAttribute("data-test", "c"));
+            withAddStep(editor, () => p.setAttribute("data-test", "b")); // no-op from a history perspective
+            editor.shared.history.undo();
+            expect(p.getAttribute("data-test")).toBe("a");
+        });
+        test("should produce a undo step even with no attribute change", async () => {
+            const { editor } = await setupEditor(`<p data-test="a">test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.setAttribute("data-test", "b"));
+            editor.shared.history.ignoreDOMMutations(() => p.setAttribute("data-test", "a"));
+            editor.shared.history.undo(); // mutation to be added to history: set "data-test" to "a"
+            expect(p.getAttribute("data-test")).toBe("a");
+            editor.shared.history.redo();
+            expect(p.getAttribute("data-test")).toBe("b");
+        });
+    });
+    describe("character data", () => {
+        test("unobserved character data mutations should not affect history", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const textNode = editor.editable.querySelector("p").firstChild;
+            withAddStep(editor, () => (textNode.textContent = "a"));
+            editor.shared.history.ignoreDOMMutations(() => (textNode.textContent = "b"));
+            withAddStep(editor, () => (textNode.textContent = "c"));
+            editor.shared.history.undo();
+            expect(textNode.textContent).toBe("a");
+        });
+    });
+
+    describe("childList", () => {
+        test("unobserved childList mutations should not affect history", async () => {
+            const { editor } = await setupEditor(`<p><span></span></p>`);
+            /** @type {HTMLElement} */
+            const parent = editor.editable.querySelector("p span");
+            const childA = editor.document.createElement("span");
+            const childB = editor.document.createElement("span");
+            withAddStep(editor, () => parent.append(childA));
+            editor.shared.history.ignoreDOMMutations(() => parent.append(childB));
+            withAddStep(editor, () => parent.replaceChildren());
+            editor.shared.history.undo();
+            const childNodes = [...parent.childNodes];
+            expect(childNodes.length).toBe(1);
+            expect(childNodes[0]).toBe(childA);
+        });
+        test("node addition to unobserved node is also unobserved", async () => {
+            const { editor } = await setupEditor(`<p><span></span></p>`);
+            /** @type {HTMLElement} */
+            const parent = editor.editable.querySelector("p span");
+            const nodeA = editor.document.createElement("span");
+            withAddStep(editor, () => parent.append(nodeA));
+            const nodeB = editor.document.createElement("span");
+            // B is an unobserved node
+            editor.shared.history.ignoreDOMMutations(() => nodeA.append(nodeB));
+            const nodeC = editor.document.createElement("span");
+            // addition of C to B should not be observed, thus empty step
+            withAddStep(editor, () => nodeB.append(nodeC));
+            editor.shared.history.undo();
+            // addition of A is reverted
+            expect(nodeA.parentNode).toBe(null);
+        });
+    });
+    test("node addition to descendant of unobserved node is not observed", async () => {
+        const { editor } = await setupEditor(`<p></p>`);
+        const p = editor.editable.querySelector("p");
+        const nodeA = editor.document.createElement("span");
+        const nodeB = editor.document.createElement("span");
+        nodeA.append(nodeB);
+        editor.shared.history.ignoreDOMMutations(() => p.append(nodeA));
+        const nodeC = editor.document.createElement("span");
+        withAddStep(editor, () => nodeB.append(nodeC)); // should be an empty step
+        expect(editor.shared.history.getHistorySteps().length).toBe(1);
     });
 });
 
@@ -777,20 +960,104 @@ describe("serialization", () => {
 
         const historyPlugin = plugins.get("history");
         const mutations = historyPlugin.currentStep.mutations;
-        const idToNode = (id) => historyPlugin.idToNodeMap.get(id);
+        const idToNode = (id) => historyPlugin.nodeMap.getNode(id);
 
         expect(mutations.length).toBe(3);
 
         // Serialized node should not have textNode as child, even though it
         // current has it as child (otherwise it would duplicate it on unserialization)
-        let { nodeId, children } = mutations[0].node;
+        let { nodeId, children } = mutations[0].serializedNode;
         expect(idToNode(nodeId)).toBe(strong);
         expect(children.length).toBe(0);
 
         // 2nd and 3rd mutations: textNode is moved into strong
-        ({ nodeId } = mutations[1].node);
+        ({ nodeId } = mutations[1].serializedNode);
         expect(idToNode(nodeId)).toBe(textNode);
-        ({ nodeId } = mutations[2].node);
+        ({ nodeId } = mutations[2].serializedNode);
         expect(idToNode(nodeId)).toBe(textNode);
+    });
+
+    test("serialized node should have the childlist as it was at mutation time", async () => {
+        const { editor, plugins } = await setupEditor(`<p><br></p>`);
+        const p = editor.editable.querySelector("p");
+        const [a, b, c, d] = ["a", "b", "c", "d"].map((name) => {
+            const span = editor.document.createElement("span");
+            span.className = name;
+            return span;
+        });
+        // A is added with no children.
+        p.append(a);
+
+        // B is added having C as child.
+        b.append(c); // B is not yet observed
+        a.append(b); // B - C is added to A
+
+        // D is added to A with no children.
+        a.append(d);
+
+        // C is moved from B to D (creates 2 records: removal and addition).
+        d.append(c);
+
+        await microTick();
+
+        const historyPlugin = plugins.get("history");
+        const mutations = historyPlugin.currentStep.mutations;
+        const idToNode = (id) => historyPlugin.nodeMap.getNode(id);
+
+        expect(mutations.length).toBe(5);
+
+        // Serialized node A should not have children, even though it currently
+        // has B and D as children.
+        let { nodeId, children } = mutations[0].serializedNode;
+        expect(idToNode(nodeId)).toBe(a);
+        expect(children.length).toBe(0);
+
+        // Serialized node B should have C as child, even though it currently
+        // has no children
+        ({ nodeId, children } = mutations[1].serializedNode);
+        expect(idToNode(nodeId)).toBe(b);
+        expect(children.length).toBe(1);
+        expect(idToNode(children[0].nodeId)).toBe(c);
+
+        // Serialized node D should not have children, even though it currently
+        // has C as child.
+        ({ nodeId, children } = mutations[2].serializedNode);
+        expect(idToNode(nodeId)).toBe(d);
+        expect(children.length).toBe(0);
+
+        // Serialized node C should have no children
+        ({ nodeId, children } = mutations[3].serializedNode);
+        expect(idToNode(nodeId)).toBe(c);
+        expect(children.length).toBe(0);
+
+        ({ nodeId, children } = mutations[4].serializedNode);
+        expect(idToNode(nodeId)).toBe(c);
+        expect(children.length).toBe(0);
+    });
+
+    test("unserialization of text node should not duplicate an existing one", async () => {
+        const { el, editor, plugins } = await setupEditor(`<p><br></p>`);
+        const historyPlugin = plugins.get("history");
+        const p = el.querySelector("p");
+        const textNode = editor.document.createTextNode("test");
+        p.prepend(textNode);
+        editor.shared.history.addStep();
+        const serializedNode = historyPlugin.serializeNode(textNode);
+        const unserializedTextNode = historyPlugin.unserializeNode(serializedNode);
+        expect(unserializedTextNode).toBe(textNode);
+    });
+});
+
+describe("mutations order", () => {
+    test("should revert mutations in the correct order", async () => {
+        const { el, editor } = await setupEditor(`<p>[]<br></p>`);
+        const p = el.querySelector("p");
+        p.replaceChildren(editor.document.createTextNode("a"), editor.document.createTextNode("b"));
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(`<p>[]ab</p>`);
+        p.replaceChildren();
+        editor.shared.history.addStep();
+        editor.shared.history.undo();
+        expect(getContent(el)).toBe(`<p>[]ab</p>`);
     });
 });
