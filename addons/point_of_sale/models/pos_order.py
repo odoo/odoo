@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import json
 from datetime import datetime
 from markupsafe import Markup
 from itertools import groupby
@@ -357,6 +358,34 @@ class PosOrder(models.Model):
         string="Reversal Account Moves",
         help="List of account moves created when this POS order was reversed and invoiced after session close."
     )
+
+    def get_preparation_change(self):
+        self.ensure_one()
+        return {
+            'last_order_preparation_change': self.last_order_preparation_change,
+        }
+
+    def _ensure_to_keep_last_preparation_change(self, vals):
+        for record in self:
+            if record.last_order_preparation_change:
+                change = json.loads(record.last_order_preparation_change)
+                if not change.get('metadata'):
+                    return
+
+                local_change = json.loads(vals.get('last_order_preparation_change', '{}'))
+                if not local_change.get('metadata'):
+                    vals['last_order_preparation_change'] = record.last_order_preparation_change
+                    return
+
+                server_date = fields.Datetime.from_string(change['metadata'].get('serverDate'))
+                local_date = fields.Datetime.from_string(local_change['metadata'].get('serverDate'))
+
+                if server_date > local_date:
+                    _logger.warning("Preparation changes were outdated, probably linked to a synching issue.")
+                    vals['last_order_preparation_change'] = record.last_order_preparation_change
+                else:
+                    local_change['metadata']['serverDate'] = fields.Datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    vals['last_order_preparation_change'] = json.dumps(local_change)
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -1135,6 +1164,7 @@ class PosOrder(models.Model):
 
             existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
+                existing_order._ensure_to_keep_last_preparation_change(order)
                 order_ids.append(self._process_order(order, existing_order))
                 _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
             elif not existing_order:
@@ -1143,6 +1173,7 @@ class PosOrder(models.Model):
             else:
                 # In theory, this situation is unintended
                 # In practice it can happen when "Tip later" option is used
+                existing_order._ensure_to_keep_last_preparation_change(order)
                 order_ids.append(existing_order.id)
                 _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
