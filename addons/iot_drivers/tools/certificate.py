@@ -14,7 +14,7 @@ from odoo.addons.iot_drivers.tools.helpers import (
     start_nginx_server,
     update_conf,
 )
-from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_WINDOWS
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST, IS_WINDOWS
 
 _logger = logging.getLogger(__name__)
 
@@ -66,6 +66,9 @@ def download_odoo_certificate():
     """Send a request to Odoo with customer db_uuid and enterprise_code
     to get a true certificate
     """
+    if IS_TEST:
+        _logger.info("Skipping certificate download in test mode.")
+        return None
     db_uuid = get_conf('db_uuid')
     enterprise_code = get_conf('enterprise_code')
     if not db_uuid:
