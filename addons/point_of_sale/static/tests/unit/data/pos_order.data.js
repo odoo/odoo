@@ -3,6 +3,14 @@ import { models } from "@web/../tests/web_test_helpers";
 export class PosOrder extends models.ServerModel {
     _name = "pos.order";
 
+    get_preparation_change(id) {
+        const read = this.read([id]);
+        const changes = read[0]?.last_order_preparation_change || "{}";
+        return {
+            last_order_preparation_change: changes,
+        };
+    }
+
     _load_pos_data_fields() {
         return [];
     }
