@@ -123,8 +123,6 @@ export class PosConfig extends models.ServerModel {
             fallback_nomenclature_id: false,
             create_date: "2025-07-03 12:40:00",
             write_date: "2025-07-03 14:35:55",
-            module_pos_iot: false,
-            module_pos_urban_piper: false,
             epson_printer_ip: false,
         },
     ];
