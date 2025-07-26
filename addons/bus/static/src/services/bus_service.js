@@ -8,7 +8,12 @@ import { EventBus, reactive } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification", "provide_logs"]);
+const INTERNAL_EVENTS = new Set([
+    "BUS:INITIALIZED",
+    "BUS:OUTDATED",
+    "BUS:NOTIFICATION",
+    "BUS:PROVIDE_LOGS",
+]);
 // Slightly delay the reconnection when coming back online as the network is not
 // ready yet and the exponential backoff would delay the reconnection by a lot.
 export const BACK_ONLINE_RECONNECT_DELAY = 5000;
@@ -16,11 +21,11 @@ export const BACK_ONLINE_RECONNECT_DELAY = 5000;
  * Communicate with a SharedWorker in order to provide a single websocket
  * connection shared across multiple tabs.
  *
- *  @emits connect
- *  @emits disconnect
- *  @emits reconnect
- *  @emits reconnecting
- *  @emits worker_state_updated
+ *  @emits BUS:CONNECT
+ *  @emits BUS:DISCONNECT
+ *  @emits BUS:RECONNECT
+ *  @emits BUS:RECONNECTING
+ *  @emits BUS:WORKER_STATE_UPDATED
  */
 export const busService = {
     dependencies: ["bus.parameters", "localization", "multi_tab", "notification"],
@@ -70,7 +75,7 @@ export const busService = {
         function handleMessage(messageEv) {
             const { type, data } = messageEv.data;
             switch (type) {
-                case "provide_logs": {
+                case "BUS:PROVIDE_LOGS": {
                     const blob = new Blob([JSON.stringify(data, null, 2)], {
                         type: "application/json",
                     });
@@ -84,7 +89,7 @@ export const busService = {
                     URL.revokeObjectURL(url);
                     break;
                 }
-                case "notification": {
+                case "BUS:NOTIFICATION": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
                     state.lastNotificationId = notifications.at(-1).id;
                     multiTab.setSharedValue("last_notification_id", state.lastNotificationId);
@@ -94,15 +99,15 @@ export const busService = {
                     }
                     break;
                 }
-                case "initialized": {
+                case "BUS:INITIALIZED": {
                     isInitialized = true;
                     connectionInitializedDeferred.resolve();
                     break;
                 }
-                case "worker_state_updated":
+                case "BUS:WORKER_STATE_UPDATED":
                     state.workerState = data;
                     break;
-                case "outdated": {
+                case "BUS:OUTDATED": {
                     multiTab.unregister();
                     notification.add(
                         _t(
@@ -148,7 +153,7 @@ export const busService = {
             if (!uid && uid !== undefined) {
                 uid = false;
             }
-            send("initialize_connection", {
+            send("BUS:INITIALIZE_CONNECTION", {
                 websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
                     session.websocket_worker_version
                 }`,
@@ -204,7 +209,7 @@ export const busService = {
             if (!persisted) {
                 // Page is gonna be unloaded, disconnect this client
                 // from the worker.
-                send("leave");
+                send("BUS:LEAVE");
             }
         });
         browser.addEventListener(
@@ -212,7 +217,7 @@ export const busService = {
             () => {
                 backOnlineTimeout = browser.setTimeout(() => {
                     if (state.isActive) {
-                        send("start");
+                        send("BUS:START");
                     }
                 }, BACK_ONLINE_RECONNECT_DELAY);
             },
@@ -222,7 +227,7 @@ export const busService = {
             "offline",
             () => {
                 clearTimeout(backOnlineTimeout);
-                send("stop");
+                send("BUS:STOP");
             },
             {
                 capture: true,
@@ -235,29 +240,29 @@ export const busService = {
                     startWorker();
                 }
                 await connectionInitializedDeferred;
-                send("add_channel", channel);
-                send("start");
+                send("BUS:ADD_CHANNEL", channel);
+                send("BUS:START");
                 state.isActive = true;
             },
             deleteChannel: (channel) => {
-                send("delete_channel", channel);
+                send("BUS:DELETE_CHANNEL", channel);
             },
-            setLoggingEnabled: (isEnabled) => send("set_logging_enabled", isEnabled),
-            downloadLogs: () => send("request_logs"),
-            forceUpdateChannels: () => send("force_update_channels"),
+            setLoggingEnabled: (isEnabled) => send("BUS:SET_LOGGING_ENABLED", isEnabled),
+            downloadLogs: () => send("BUS:REQUEST_LOGS"),
+            forceUpdateChannels: () => send("BUS:FORCE_UPDATE_CHANNELS"),
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
-            send: (eventName, data) => send("send", { event_name: eventName, data }),
+            send: (eventName, data) => send("BUS:SEND", { event_name: eventName, data }),
             start: async () => {
                 if (!worker) {
                     startWorker();
                 }
                 await connectionInitializedDeferred;
-                send("start");
+                send("BUS:START");
                 state.isActive = true;
             },
             stop: () => {
-                send("leave");
+                send("BUS:LEAVE");
                 state.isActive = false;
             },
             isActive: false,

@@ -51,7 +51,7 @@ export class BusBus extends models.Model {
                 message: { payload: JSON.parse(JSON.stringify(payload)), type },
             });
         }
-        getWebSocketWorker().broadcast("notification", values);
+        getWebSocketWorker().broadcast("BUS:NOTIFICATION", values);
     }
 
     /**

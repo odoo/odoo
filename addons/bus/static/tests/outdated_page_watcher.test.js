@@ -20,21 +20,21 @@ describe.current.tags("desktop");
 test("disconnect during vacuum should ask for reload", async () => {
     browser.location.addEventListener("reload", () => asyncStep("reload"));
     addBusServiceListeners(
-        ["connect", () => asyncStep("connect")],
-        ["disconnect", () => asyncStep("disconnect")],
-        ["reconnecting", () => asyncStep("reconnecting")],
-        ["reconnect", () => asyncStep("reconnect")]
+        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")],
+        ["BUS:RECONNECTING", () => asyncStep("BUS:RECONNECTING")],
+        ["BUS:RECONNECT", () => asyncStep("BUS:RECONNECT")]
     );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
     getService("multi_tab").setSharedValue("last_notification_id", 1);
     startBusService();
     await runAllTimers();
-    await waitForSteps(["connect"]);
+    await waitForSteps(["BUS:CONNECT"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    await waitForSteps(["disconnect", "reconnecting"]);
+    await waitForSteps(["BUS:DISCONNECT", "BUS:RECONNECTING"]);
     await runAllTimers();
-    await waitForSteps(["reconnect"]);
+    await waitForSteps(["BUS:RECONNECT"]);
     await waitFor(".o_notification");
     expect(".o_notification_content:first").toHaveText(
         "Save your work and refresh to get the latest updates and avoid potential issues."
@@ -45,20 +45,20 @@ test("disconnect during vacuum should ask for reload", async () => {
 
 test("reconnect after going offline after bus gc should ask for reload", async () => {
     addBusServiceListeners(
-        ["connect", () => asyncStep("connect")],
-        ["disconnect", () => asyncStep("disconnect")]
+        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
     );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
     getService("multi_tab").setSharedValue("last_notification_id", 1);
     startBusService();
     await runAllTimers();
-    await waitForSteps(["connect"]);
+    await waitForSteps(["BUS:CONNECT"]);
     browser.dispatchEvent(new Event("offline"));
-    await waitForSteps(["disconnect"]);
+    await waitForSteps(["BUS:DISCONNECT"]);
     browser.dispatchEvent(new Event("online"));
     await runAllTimers();
-    await waitForSteps(["connect"]);
+    await waitForSteps(["BUS:CONNECT"]);
     await waitFor(".o_notification");
     expect(".o_notification_content:first").toHaveText(
         "Save your work and refresh to get the latest updates and avoid potential issues."

@@ -54,7 +54,7 @@ export class PosData extends Reactive {
 
         browser.addEventListener("online", () => this.checkConnectivity());
         browser.addEventListener("offline", () => this.checkConnectivity());
-        this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
+        this.bus.addEventListener("BUS:CONNECT", this.reconnectWebSocket.bind(this));
     }
 
     async checkConnectivity() {
