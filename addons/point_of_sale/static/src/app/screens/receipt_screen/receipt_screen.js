@@ -34,7 +34,7 @@ export class ReceiptScreen extends Component {
             this.currentOrder.uiState.locked = true;
 
             if (!this.pos.config.module_pos_restaurant) {
-                this.pos.sendOrderInPreparation(order, { orderDone: true });
+                this.pos.checkPreparationStateAndSentOrderInPreparation(order, { orderDone: true });
             }
         });
     }
