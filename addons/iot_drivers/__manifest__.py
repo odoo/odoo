@@ -17,7 +17,7 @@ are found in other modules that must be installed separately.
 
 """,
     'assets': {
-        'web.assets_backend': [
+        'iot_drivers.assets': [  # dummy asset name to make sure it does not load outside of IoT homepage
             'iot_drivers/static/**/*',
         ],
     },
