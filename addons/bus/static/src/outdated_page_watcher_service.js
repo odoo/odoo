@@ -19,23 +19,23 @@ export class OutdatedPageWatcherService {
         this.closeNotificationFn;
         let wasBusAlreadyConnected;
         bus_service.addEventListener(
-            "worker_state_updated",
+            "BUS:WORKER_STATE_UPDATED",
             ({ detail: state }) => {
                 wasBusAlreadyConnected = state !== "IDLE";
             },
             { once: true }
         );
         bus_service.addEventListener(
-            "disconnect",
+            "BUS:DISCONNECT",
             () => (this.lastNotificationId = multi_tab.getSharedValue("last_notification_id"))
         );
-        bus_service.addEventListener("connect", async () => {
+        bus_service.addEventListener("BUS:CONNECT", async () => {
             if (wasBusAlreadyConnected) {
                 this.checkHasMissedNotifications();
             }
             wasBusAlreadyConnected = true;
         });
-        bus_service.addEventListener("reconnect", () => this.checkHasMissedNotifications());
+        bus_service.addEventListener("BUS:RECONNECT", () => this.checkHasMissedNotifications());
         multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key } }) => {
             if (key === "bus.has_missed_notifications") {
                 this.showOutdatedPageNotification();
