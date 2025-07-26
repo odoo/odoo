@@ -15,13 +15,14 @@ import subprocess
 import socket
 from urllib.parse import parse_qs
 import urllib3.util
+import sys
 from threading import Thread, Lock
 import time
 import zipfile
 from werkzeug.exceptions import Locked
 
 from odoo import http, release, service
-from odoo.addons.iot_drivers.tools.system import IOT_RPI_CHAR, IOT_SYSTEM, IOT_WINDOWS_CHAR, IS_RPI, IS_WINDOWS
+from odoo.addons.iot_drivers.tools.system import IOT_CHAR, IOT_RPI_CHAR, IOT_WINDOWS_CHAR, IS_RPI, IS_TEST, IS_WINDOWS
 from odoo.tools.func import reset_cached_properties
 from odoo.tools.misc import file_path
 
@@ -111,6 +112,9 @@ if IS_WINDOWS:
 elif IS_RPI:
     def start_nginx_server():
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
+else:
+    def start_nginx_server():
+        pass
 
 
 def check_image():
@@ -199,6 +203,8 @@ def get_ip():
 def get_identifier():
     if IS_RPI:
         return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+    elif IS_TEST:
+        return 'test_identifier'
 
     # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
     command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
@@ -249,8 +255,10 @@ def get_version(detailed_version=False):
     elif IS_WINDOWS:
         # updated manually when big changes are made to the windows virtual IoT
         image_version = '23.11'
+    elif IS_TEST:
+        image_version = 'test'
 
-    version = IOT_SYSTEM[0] + image_version
+    version = IOT_CHAR + image_version
     if detailed_version:
         # Note: on windows IoT, the `release.version` finish with the build date
         version += f"-{release.version}"
@@ -359,6 +367,7 @@ def get_handlers_files_to_load(handler_path):
         return [x.name for x in Path(handler_path).glob(f'*[!{IOT_WINDOWS_CHAR}].*')]
     elif IS_WINDOWS:
         return [x.name for x in Path(handler_path).glob(f'*[!{IOT_RPI_CHAR}].*')]
+    return []
 
 
 def odoo_restart(delay=0):
@@ -376,10 +385,7 @@ def path_file(*args):
 
     :return: The path to the file
     """
-    if IS_RPI:
-        return Path("~pi", *args).expanduser()  # Path.home() returns odoo user's home instead of pi's
-    elif IS_WINDOWS:
-        return Path().absolute().parent.joinpath(*args)
+    return Path(sys.path[0]).parent.joinpath(*args)
 
 
 def read_file_first_line(filename):
@@ -564,7 +570,7 @@ def reset_log_level():
 
 
 def _get_system_uptime():
-    if IS_WINDOWS:
+    if not IS_RPI:
         return 0
     uptime_string = read_file_first_line("/proc/uptime")
     return float(uptime_string.split(" ")[0])
@@ -576,7 +582,7 @@ def _get_raspberry_pi_model():
 
     :rtype: int
     """
-    if IS_WINDOWS:
+    if not IS_RPI:
         return -1
     with open('/proc/device-tree/model', encoding='utf-8') as model_file:
         match = re.search(r'Pi (\d)', model_file.read())

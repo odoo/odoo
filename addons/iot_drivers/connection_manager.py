@@ -7,7 +7,7 @@ import time
 
 from odoo.addons.iot_drivers.main import iot_devices, manager
 from odoo.addons.iot_drivers.tools import helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST
 
 _logger = logging.getLogger(__name__)
 
@@ -98,7 +98,7 @@ class ConnectionManager(Thread):
         # Save DB URL and token
         helpers.save_conf_server(url, token, db_uuid, enterprise_code)
         # Send already detected devices and IoT Box info to the database
-        manager.send_all_devices()
+        manager._send_all_devices()
         # Switch git branch before restarting, this avoids restarting twice
         upgrade.check_git_branch()
         # Restart to get a certificate, load the IoT handlers...
@@ -111,4 +111,5 @@ class ConnectionManager(Thread):
 
 
 connection_manager = ConnectionManager()
-connection_manager.start()
+if not IS_TEST:
+    connection_manager.start()

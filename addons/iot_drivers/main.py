@@ -72,8 +72,11 @@ class Manager(Thread):
         return changed
 
     @helpers.require_db
-    def send_all_devices(self, server_url=None):
+    def _send_all_devices(self, server_url=None):
         """This method send IoT Box and devices information to Odoo database
+
+        As the server can be down or not started yet (in case of local testing),
+        we retry to send the data several times with a delay between each attempt.
 
         :param server_url: URL of the Odoo server (provided by decorator).
         """
@@ -97,20 +100,32 @@ class Manager(Thread):
         devices_list_to_send = {
             key: value for key, value in devices_list.items() if key != 'distant_display'
         }  # Don't send distant_display to the db
-        try:
-            response = requests.post(
-                server_url + "/iot/setup",
-                json={'params': {'iot_box': iot_box, 'devices': devices_list_to_send}},
-                timeout=5,
-            )
-            response.raise_for_status()
-            data = response.json()
 
-            self.ws_channel = data.get('result', '')
-        except requests.exceptions.RequestException:
-            _logger.exception('Could not reach configured server to send all IoT devices')
-        except ValueError:
-            _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
+        delay = .5
+        max_retries = 5
+        for attempt in range(1, max_retries + 1):
+            try:
+                response = requests.post(
+                    server_url + "/iot/setup",
+                    json={'params': {'iot_box': iot_box, 'devices': devices_list_to_send}},
+                    timeout=5,
+                )
+                response.raise_for_status()
+                data = response.json()
+                self.ws_channel = data.get('result', '')
+                break  # Success, exit the retry loop
+            except requests.exceptions.RequestException:
+                if attempt < max_retries:
+                    _logger.warning(
+                        'Could not reach configured server to send all IoT devices, retrying in %s seconds (%d/%d attempts)',
+                        delay, attempt, max_retries, exc_info=True
+                    )
+                    time.sleep(delay)
+                else:
+                    _logger.exception('Could not reach configured server to send all IoT devices after %d attempts.', max_retries)
+            except ValueError:
+                _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
+                break
 
     def run(self):
         """Thread that will load interfaces and drivers and contact the odoo server
@@ -134,7 +149,7 @@ class Manager(Thread):
 
         # We first add the IoT Box to the connected DB because IoT handlers cannot be downloaded if
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
-        self.send_all_devices()
+        self._send_all_devices()
         helpers.download_iot_handlers()
         helpers.load_iot_handlers()
 
@@ -155,7 +170,7 @@ class Manager(Thread):
         while 1:
             try:
                 if self._get_changes_to_send():
-                    self.send_all_devices()
+                    self._send_all_devices()
                 if IS_RPI and helpers.get_ip() != '10.11.12.1':
                     wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
                 time.sleep(3)

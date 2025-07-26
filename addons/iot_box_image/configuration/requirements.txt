@@ -1,16 +1,19 @@
 # The following requirements are needed only on Raspberry Pi IoT:
-gatt; sys_platform == "linux"
-/home/pi/odoo/addons/iot_box_image/configuration/aiortc-1.4.0-py3-none-any.whl; sys_platform == "linux"
+gatt; sys_platform == "linux" and "rpi" in platform_release
+/home/pi/odoo/addons/iot_box_image/configuration/aiortc-1.4.0-py3-none-any.whl; sys_platform == "linux" and "rpi" in platform_release
 
 # The following requirements are needed only on Windows Virtual IoT:
 aiortc==1.4.0; sys_platform == "win32"
 ghostscript==0.7; sys_platform == "win32"
 
-# The following requirements are needed on both platforms, but are installed
+# The following requirements are needed on every platforms, but are installed
 # via apt-get on the Raspberry Pi:
 PyKCS11==1.5.16; sys_platform == "win32"
 schedule==1.2.1; sys_platform == "win32"
 
-# The following requirements are needed on both platforms:
+# The following requirements are needed on every platforms:
 python-escpos==3.1
 websocket-client==1.6.3
+
+# The following requirements are needed only on Test IoT server:
+./addons/iot_box_image/configuration/aiortc-1.4.0-py3-none-any.whl; sys_platform == "linux" and "rpi" not in platform_release
