@@ -7,7 +7,7 @@ import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
-import { formatDate, deserializeDate } from "@web/core/l10n/dates";
+import { formatDate, deserializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -36,6 +36,7 @@ export class PosOrder extends Base {
             ? JSON.parse(vals.last_order_preparation_change)
             : {
                   lines: {},
+                  metadata: {},
                   general_customer_note: "",
                   internal_note: "",
                   sittingMode: 0,
@@ -345,6 +346,9 @@ export class PosOrder extends Base {
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
         this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+        this.last_order_preparation_change.metadata = {
+            serverDate: serializeDateTime(DateTime.now()),
+        };
     }
 
     isEmpty() {
