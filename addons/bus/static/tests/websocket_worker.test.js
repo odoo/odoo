@@ -35,36 +35,36 @@ const startWebSocketWorker = async (onBroadcast) => {
 
 test("connect event is broadcasted after calling start", async () => {
     await startWebSocketWorker((type) => {
-        if (type !== "worker_state_updated") {
+        if (type !== "BUS:WORKER_STATE_UPDATED") {
             asyncStep(`broadcast ${type}`);
         }
     });
-    await waitForSteps(["broadcast connect"]);
+    await waitForSteps(["broadcast BUS:CONNECT"]);
 });
 
 test("disconnect event is broadcasted", async () => {
     const worker = await startWebSocketWorker((type) => {
-        if (type !== "worker_state_updated") {
+        if (type !== "BUS:WORKER_STATE_UPDATED") {
             asyncStep(`broadcast ${type}`);
         }
     });
-    await waitForSteps(["broadcast connect"]);
+    await waitForSteps(["broadcast BUS:CONNECT"]);
     worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
     await runAllTimers();
-    await waitForSteps(["broadcast disconnect"]);
+    await waitForSteps(["broadcast BUS:DISCONNECT"]);
 });
 
 test("reconnecting/reconnect event is broadcasted", async () => {
     const worker = await startWebSocketWorker((type) => {
-        if (type !== "worker_state_updated") {
+        if (type !== "BUS:WORKER_STATE_UPDATED") {
             asyncStep(`broadcast ${type}`);
         }
     });
-    await waitForSteps(["broadcast connect"]);
+    await waitForSteps(["broadcast BUS:CONNECT"]);
     worker.websocket.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    await waitForSteps(["broadcast disconnect", "broadcast reconnecting"]);
+    await waitForSteps(["broadcast BUS:DISCONNECT", "broadcast BUS:RECONNECTING"]);
     await runAllTimers();
-    await waitForSteps(["broadcast reconnect"]);
+    await waitForSteps(["broadcast BUS:RECONNECT"]);
 });
 
 test("notification event is broadcasted", async () => {
@@ -80,28 +80,28 @@ test("notification event is broadcasted", async () => {
         },
     ];
     await startWebSocketWorker((type, message) => {
-        if (type === "notification") {
+        if (type === "BUS:NOTIFICATION") {
             expect(message).toEqual(notifications);
         }
-        if (["connect", "notification"].includes(type)) {
+        if (["BUS:CONNECT", "BUS:NOTIFICATION"].includes(type)) {
             asyncStep(`broadcast ${type}`);
         }
     });
-    await waitForSteps(["broadcast connect"]);
+    await waitForSteps(["broadcast BUS:CONNECT"]);
     for (const serverWs of MockServer.current._websockets) {
         serverWs.send(JSON.stringify(notifications));
     }
-    await waitForSteps(["broadcast notification"]);
+    await waitForSteps(["broadcast BUS:NOTIFICATION"]);
 });
 
 test("disconnect event is sent when stopping the worker", async () => {
     const worker = await startWebSocketWorker((type) => {
-        if (type !== "worker_state_updated") {
+        if (type !== "BUS:WORKER_STATE_UPDATED") {
             expect.step(`broadcast ${type}`);
         }
     });
-    await expect.waitForSteps(["broadcast connect"]);
+    await expect.waitForSteps(["broadcast BUS:CONNECT"]);
     worker._stop();
     await runAllTimers();
-    await expect.waitForSteps(["broadcast disconnect"]);
+    await expect.waitForSteps(["broadcast BUS:DISCONNECT"]);
 });

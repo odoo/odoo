@@ -37,7 +37,7 @@ export const imStatusService = {
                 becomeAwayTimeout = browser.setTimeout(() => updateBusPresence(), awayTime);
             }
         };
-        bus_service.addEventListener("connect", () => updateBusPresence(), { once: true });
+        bus_service.addEventListener("BUS:CONNECT", () => updateBusPresence(), { once: true });
         bus_service.subscribe(
             "bus.bus/im_status_updated",
             async ({ presence_status, im_status, partner_id, guest_id, debounce = true }) => {

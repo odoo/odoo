@@ -12,7 +12,7 @@ function logout() {
                 await animationFrame();
                 await new Promise((resolve) => {
                     const bus = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
-                    bus.addEventListener("connect", resolve, { once: true });
+                    bus.addEventListener("BUS:CONNECT", resolve, { once: true });
                     if (bus.workerState === WORKER_STATE.CONNECTED) {
                         resolve();
                     }
