@@ -354,7 +354,7 @@ class ProductProduct(models.Model):
         return gmc_info
 
     def _prepare_gmc_shipping_info(self, delivery_methods_sudo, countries):
-        """ Computes the best shipping method info per country. This includes, per country:
+        """ Computes the best delivery method info per country. This includes, per country:
 
         - the best price for which the product can be shipped to the country,
         - the best delivery method name shipping the product for the price,
