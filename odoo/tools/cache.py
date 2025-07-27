@@ -102,10 +102,7 @@ class ormcache:
                 str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
                 for params in signature(self.method).parameters.values()
             )
-            if self.args:
-                code = "lambda %s: (%s,)" % (args, ", ".join(self.args))
-            else:
-                code = "lambda %s: ()" % (args,)
+            code = f"lambda {args}: ({''.join(a for arg in self.args for a in (arg, ','))})"
             self.key = unsafe_eval(code)
         else:
             # backward-compatible function that uses self.skiparg
@@ -146,6 +143,7 @@ class ormcache_context(ormcache):
     """
     def __init__(self, *args: str, keys, skiparg=None, **kwargs):
         assert skiparg is None, "ormcache_context() no longer supports skiparg"
+        warnings.warn("Since 19.0, use ormcache directly, context values are available as `self.env.context.get`", DeprecationWarning)
         super().__init__(*args, **kwargs)
         self.keys = keys
 
