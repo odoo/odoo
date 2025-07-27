@@ -268,8 +268,3 @@ class WebsitePage(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('website.view_view_form_extend').id,
         }
-
-
-# this is just a dummy function to be used as ormcache key
-def _cached_response():
-    pass
