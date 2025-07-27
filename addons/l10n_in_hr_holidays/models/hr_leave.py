@@ -15,12 +15,19 @@ class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
-    linked_sandwich_leave_id = fields.Many2one(
+    before_linked_sandwich_leave_id = fields.Many2one(
         "hr.leave",
-        string="Linked Sandwich Leave",
-        help="The leave linked to this one as part of the sandwich rule."
+        string="Before Linked Sandwich Leave", ondelete='set null',
+        help="The leave before this one linked as part of the sandwich rule.",
+    )
+    after_linked_sandwich_leave_id = fields.Many2one(
+        "hr.leave",
+        string="After Linked Sandwich Leave", ondelete='set null',
+        help="The leave after this one linked as part of the sandwich rule.",
     )
     has_edge_public_leave = fields.Boolean()
+    has_calculated_sandwich_from_before = fields.Boolean()
+    has_calculated_sandwich_from_after = fields.Boolean()
 
     @api.constrains("holiday_status_id", "request_date_from", "request_date_to")
     def _l10n_in_check_optional_holiday_request_dates(self):
@@ -56,9 +63,9 @@ class HrLeave(models.Model):
                 self.env._("The following leaves are not on Optional Holidays:\n - %s", "\n - ".join(invalid_leaves))
             )
 
-    @api.depends('date_from', 'date_to', 'resource_calendar_id', 'holiday_status_id.request_unit', 'holiday_status_id.l10n_in_is_sandwich_leave')
+    @api.depends('holiday_status_id.l10n_in_is_sandwich_leave', 'before_linked_sandwich_leave_id', 'after_linked_sandwich_leave_id')
     def _compute_duration(self):
-        return super()._compute_duration()
+        super()._compute_duration()
 
     def _l10n_in_apply_sandwich_rule(self, leave_days, public_holidays, employee_leaves):
         def is_non_working_day(date):
@@ -78,11 +85,22 @@ class HrLeave(models.Model):
             current = start_date + timedelta(days=step)
             while is_non_working_day(current):
                 current += timedelta(days=step)
-            if linked_leave := leaves_by_date.get(current):
-                linked_leave.has_edge_public_leave = any(
-                    edge in public_holiday_dates
-                    for edge in (linked_leave.request_date_from, linked_leave.request_date_to)
-                )
+            linked_leave = leaves_by_date.get(current)
+            if not linked_leave:
+                return None
+            if (
+                reverse
+                and linked_leave.after_linked_sandwich_leave_id._origin
+                and linked_leave.has_calculated_sandwich_from_after
+            ) or (
+                not reverse
+                and linked_leave.before_linked_sandwich_leave_id._origin
+                and linked_leave.has_calculated_sandwich_from_before
+            ):
+                return None
+
+            edge_date = linked_leave.request_date_to if reverse else linked_leave.request_date_from
+            linked_leave.has_edge_public_leave = edge_date in public_holiday_dates
             return linked_leave
 
         self.ensure_one()
@@ -117,16 +135,22 @@ class HrLeave(models.Model):
         linked_before = find_linked_leave(date_from, reverse=True)
         if linked_before:
             total_leaves += count_adjacent_non_working_days(date_from, reverse=True)
+            if not self.before_linked_sandwich_leave_id:
+                self.before_linked_sandwich_leave_id = linked_before
+                linked_before.after_linked_sandwich_leave_id = self
+            self.has_calculated_sandwich_from_before = True
         elif is_non_working_from:
             total_leaves -= count_adjacent_non_working_days(date_from, include_start=True)
 
         linked_after = find_linked_leave(date_to)
         if linked_after:
             total_leaves += count_adjacent_non_working_days(date_to)
+            if not self.after_linked_sandwich_leave_id:
+                self.after_linked_sandwich_leave_id = linked_after
+                linked_after.before_linked_sandwich_leave_id = self
+            self.has_calculated_sandwich_from_after = True
         elif is_non_working_to:
             total_leaves -= count_adjacent_non_working_days(date_to, reverse=True, include_start=True)
-
-        self.linked_sandwich_leave_id = linked_before or linked_after
 
         return total_leaves
 
@@ -162,13 +186,67 @@ class HrLeave(models.Model):
             aggregates=['id:recordset'],
         ))
         for leave in indian_leaves:
+            if leave.state in ['validate', 'validate1'] and not self.env.user.has_group('group_hr_holidays_user'):
+                continue
             leave_days, hours = result[leave.id]
             updated_days = leave._l10n_in_apply_sandwich_rule(
                 leave_days, public_holidays_dict.get(leave.employee_id.company_id), leaves_by_employee.get(leave.employee_id, []))
-            if updated_days != leave_days and leave.state not in ['validate', 'validate1']:
+            if updated_days != leave_days:
                 updated_hours = updated_days * (hours / leave_days) if leave_days else hours
                 result[leave.id] = (updated_days, updated_hours)
                 leave.l10n_in_contains_sandwich_leaves = True
             else:
                 leave.l10n_in_contains_sandwich_leaves = False
+        return result
+
+    def action_warning_refuse(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('Refuse Time Off'),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'hr.holidays.refuse.leave.warning',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'context': {
+                'default_leave_id': self.id,
+                'dialog_size': "medium",
+            },
+        }
+
+    def action_refuse(self):
+        result = super().action_refuse()
+        before_leave = self.before_linked_sandwich_leave_id
+        after_leave = self.after_linked_sandwich_leave_id
+        while before_leave and before_leave.state != 'refuse':
+            before_leave.action_refuse()
+            before_leave = before_leave.before_linked_sandwich_leave_id
+        if self.before_linked_sandwich_leave_id:
+            self.before_linked_sandwich_leave_id.after_linked_sandwich_leave_id = None
+            self.before_linked_sandwich_leave_id = None
+
+        while after_leave and after_leave.state != 'refuse':
+            after_leave.action_refuse()
+            after_leave = after_leave.after_linked_sandwich_leave_id
+        if self.after_linked_sandwich_leave_id:
+            self.after_linked_sandwich_leave_id.before_linked_sandwich_leave_id = None
+            self.after_linked_sandwich_leave_id = None
+
+        return result
+
+    def _action_user_cancel(self, reason=None):
+        result = super()._action_user_cancel(reason)
+        self._traverse_and_unlink_sandwich_leaves(
+            action_fn=lambda leave: leave.sudo()._force_cancel(reason, 'mail.mt_note'),
+            target_state='cancel',
+        )
+        before_leave = self.before_linked_sandwich_leave_id
+        after_leave = self.after_linked_sandwich_leave_id
+        while before_leave and before_leave.state != 'cancel':
+            before_leave.sudo()._force_cancel(reason, 'mail.mt_note')
+            before_leave = before_leave.before_linked_sandwich_leave_id
+
+        while after_leave and after_leave.state != 'cancel':
+            after_leave.sudo()._force_cancel(reason, 'mail.mt_note')
+            after_leave = after_leave.after_linked_sandwich_leave_id
         return result

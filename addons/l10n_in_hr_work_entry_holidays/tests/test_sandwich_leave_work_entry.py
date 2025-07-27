@@ -402,6 +402,7 @@ class TestSandwichLeaveWorkEntry(TransactionCase):
         """
         This test case verifies that if a sandwich leave is created with a different leave type, it should still be
         considered as a sandwich leave, and work entries should be created accordingly.
+        Also checks the leave days after refusing the before sandwich leave.
             -- Working Days: 4th(Friday) and 7th July (Monday)
             -- Non-working Days: 5th and 6th July (weekends)
         """
@@ -434,3 +435,112 @@ class TestSandwichLeaveWorkEntry(TransactionCase):
         self.assertEqual(len(work_entry_create_vals), 4, 'Should have generated 4 work entries.')
         # Newly created work entries should have the work entry type of the after leave
         self.check_work_entry_type_for_work_entry(work_entry_create_vals, self.work_entry_type_leave_1)
+        before_sandwich_leave.action_refuse()
+        self.assertEqual(after_sandwich_leave.state, 'refuse', 'After refusing before sandwich leave, after sandwich leave should be refused')
+        self.assertEqual(after_sandwich_leave.number_of_days, 1, 'After refusing before sandwich leave, after sandwich leave should be 1 day long')
+        self.assertFalse(before_sandwich_leave.after_linked_sandwich_leave_id)
+        self.assertFalse(after_sandwich_leave.before_linked_sandwich_leave_id)
+
+    def test_multi_sandwich_leave_with_edge_public_holiday(self):
+        """
+        """
+        self.env['resource.calendar.leaves'].create([{
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 7, 4, 00, 00, 00),
+            'date_to': datetime(2025, 7, 4, 23, 59, 59),
+            'calendar_id': self.in_resource_calendar_id.id,
+            'company_id': self.company_in.id,
+            'work_entry_type_id': self.work_entry_type_public_leave.id,
+        }, {
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 7, 14, 00, 00, 00),
+            'date_to': datetime(2025, 7, 14, 23, 59, 59),
+            'calendar_id': self.in_resource_calendar_id.id,
+            'company_id': self.company_in.id,
+            'work_entry_type_id': self.work_entry_type_public_leave.id,
+        }])
+
+        before_leave = self.Leave.create({
+            'name': 'Test Leave Before',
+            'employee_id': self.kohli_emp.id,
+            'holiday_status_id': self.leave_type_test.id,
+            'request_date_from': "2025-07-04",
+            'request_date_to': "2025-07-11",
+        })
+        self.assertEqual(before_leave.number_of_days, 5, 'Created leave should be 5 days long')
+        after_leave = self.Leave.create({
+            'name': 'Test Leave After',
+            'employee_id': self.kohli_emp.id,
+            'holiday_status_id': self.leave_type_test.id,
+            'request_date_from': "2025-07-14",
+            'request_date_to': "2025-07-18",
+        })
+        self.assertTrue(after_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(after_leave.number_of_days, 7, 'Created leave should be 7 days long')
+        (before_leave + after_leave)._action_validate()
+        work_entry_create_vals = self.kohli_version._get_version_work_entries_values(
+            datetime(2025, 7, 14),
+            datetime(2025, 7, 18, 23, 59, 59),
+        )
+        # - 8 entries for working days (14th-18th July)
+        # - 2 entries for non-working days (12th, 13th July)
+        # - 2 entiries for public holiday(14th July)
+        self.assertEqual(len(work_entry_create_vals), 12, 'Should have generated 12 work entries.')
+        self.check_work_entry_type_for_work_entry(work_entry_create_vals, self.work_entry_type_leave)
+
+    def test_bidirectional_sandwich_leave(self):
+        """
+            This test case verifies that if a sandwich leave is created with a before and after linked sandwich leave,
+            it should adjust the dates accordingly and create work entries for the non-working days.
+                -- public holiday: 9th July(wednesday)
+                -- working days: 3th-4th(Thu-Fri) July, 7th-8th(Mon-Tue) July, 10th-11th(Thu-Fri) July
+                -- non-working days: 5th-6th(Sat-Sun) July,
+        """
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 7, 9, 00, 00, 00),
+            'date_to': datetime(2025, 7, 9, 23, 59, 59),
+            'calendar_id': self.in_resource_calendar_id.id,
+            'company_id': self.company_in.id,
+            'work_entry_type_id': self.work_entry_type_public_leave.id,
+        })
+        before_leave = self.Leave.create({
+            'name': 'Test Leave Before',
+            'employee_id': self.kohli_emp.id,
+            'holiday_status_id': self.leave_type_test.id,
+            'request_date_from': "2025-07-03",
+            'request_date_to': "2025-07-04",
+        })
+        before_leave._action_validate()
+        self.assertEqual(before_leave.number_of_days, 2, 'Created leave should be 2 days long')
+
+        after_leave = self.Leave.create({
+            'name': 'Test Leave After',
+            'employee_id': self.kohli_emp.id,
+            'holiday_status_id': self.leave_type_test.id,
+            'request_date_from': "2025-07-10",
+            'request_date_to': "2025-07-11",
+        })
+        after_leave._action_validate()
+        self.assertEqual(after_leave.number_of_days, 2, 'Created leave should be 2 days long')
+
+        middle_sandwich_leave = self.Leave.create({
+            'name': 'Test Leave',
+            'employee_id': self.kohli_emp.id,
+            'holiday_status_id': self.leave_type_test.id,
+            'request_date_from': "2025-07-07",
+            'request_date_to': "2025-07-08",
+        })
+        middle_sandwich_leave._action_validate()
+        self.assertTrue(middle_sandwich_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(middle_sandwich_leave.number_of_days, 5, 'Created leave should be 5 days long')
+
+        work_entry_create_vals = self.kohli_version._get_version_work_entries_values(
+            datetime(2025, 7, 7),
+            datetime(2025, 7, 9, 23, 59, 59),
+        )
+        # - 4 entries for working day
+        # - 2 entries for non-working days
+        # - 2 entries for public holiday(9th July)
+        self.assertEqual(len(work_entry_create_vals), 8, 'Should have generated 8 work entries.')
+        self.check_work_entry_type_for_work_entry(work_entry_create_vals, self.work_entry_type_leave)
