@@ -72,7 +72,7 @@ class HrVersion(models.Model):
                 leave_work_entry_type = holiday_status_cache[holiday_status_id]
 
                 # Adjust leave dates to fit within the given range
-                leave_start_dt, leave_end_dt = self._adjust_leave_dates(leave, start_dt, end_dt, tz, version_calendar_id)
+                leave_start_dt, leave_end_dt = self._adjust_leave_dates(leave, start_dt, end_dt, version_calendar_id)
                 filtered_public_holidays = public_holidays.filtered(lambda public_holiday:
                     (not leave.company_id or public_holiday.company_id == leave.company_id) and
                     (not public_holiday.calendar_id or public_holiday.calendar_id == version_calendar_id) and
@@ -88,9 +88,9 @@ class HrVersion(models.Model):
                     for i in range((leave_end_dt - leave_start_dt).days + 1)
                 }
                 public_holiday_dates = {
-                    holiday.date_from.date()
+                    holiday.date_from.astimezone(tz).date()
                     for holiday in filtered_public_holidays
-                } if leave.linked_sandwich_leave_id else set()
+                } if (leave.before_linked_sandwich_leave_id or leave.after_linked_sandwich_leave_id) else set()
                 missing_dates = leave_dates - attendance_dates - public_holiday_dates
                 work_entry_values.extend(
                     {
@@ -122,7 +122,7 @@ class HrVersion(models.Model):
             dt = pytz.utc.localize(dt)
         return dt.astimezone(pytz.utc)
 
-    def _adjust_leave_dates(self, leave, start_dt, end_dt, tz, version_calendar_id):
+    def _adjust_leave_dates(self, leave, start_dt, end_dt, version_calendar_id):
         """
             Adjust the leave dates to ensure they are within the specified range and handle linked sandwich leaves.
             If the leave is linked to another sandwich leave, it will adjust the dates accordingly.
@@ -130,14 +130,20 @@ class HrVersion(models.Model):
         """
         leave_start_dt = max(start_dt, self._ensure_timezone(leave.date_from))
         leave_end_dt = min(end_dt, self._ensure_timezone(leave.date_to))
+        before_leave = leave.before_linked_sandwich_leave_id
+        after_leave = leave.after_linked_sandwich_leave_id
 
-        if linked_leave := leave.linked_sandwich_leave_id:
-            leave_start_dt = min(leave_start_dt, self._ensure_timezone(linked_leave.date_to))
-            leave_end_dt = max(leave_end_dt, self._ensure_timezone(linked_leave.date_from))
-            if not linked_leave.has_edge_public_leave:
+        if before_leave:
+            leave_start_dt = min(leave_start_dt, self._ensure_timezone(before_leave.date_to))
+            if not before_leave.has_edge_public_leave:
                 leave_start_dt += timedelta(days=1)
+        if after_leave:
+            leave_end_dt = max(leave_end_dt, self._ensure_timezone(after_leave.date_from))
+            if not after_leave.has_edge_public_leave:
                 leave_end_dt += timedelta(days=-1)
-        elif not version_calendar_id._works_on_date(leave_start_dt) and not version_calendar_id._works_on_date(leave_end_dt):
+
+        # If still non-working days at edges, adjust to nearest working day
+        if not version_calendar_id._works_on_date(leave_start_dt) and not version_calendar_id._works_on_date(leave_end_dt):
             leave_start_dt = self._get_working_day(version_calendar_id, leave_start_dt)
             leave_end_dt = self._get_working_day(version_calendar_id, leave_end_dt, reverse=True)
         leave_start_dt = datetime.combine(leave_start_dt.date(), time.min)
@@ -164,10 +170,10 @@ class HrVersion(models.Model):
             work_entry for work_entry in work_entry_values
             if not work_entry.get('leave_id') and (
                 (
-                    leave.linked_sandwich_leave_id and
+                    (leave.before_linked_sandwich_leave_id or leave.after_linked_sandwich_leave_id) and
                     leave_start_dt.date() <= work_entry['date_start'].date() <= leave_end_dt.date()
                 ) or (
-                    not leave.linked_sandwich_leave_id and
+                    not (leave.before_linked_sandwich_leave_id or leave.after_linked_sandwich_leave_id) and
                     leave_start_dt.date() < work_entry['date_start'].date() < leave_end_dt.date()
                 )
             )
