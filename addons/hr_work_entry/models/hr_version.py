@@ -40,7 +40,7 @@ class HrVersion(models.Model):
         for version in self:
             version.work_entry_source_calendar_invalid = version.work_entry_source == 'calendar' and not version.resource_calendar_id
 
-    @ormcache('self.structure_type_id')
+    @ormcache()
     def _get_default_work_entry_type_id(self):
         attendance = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
