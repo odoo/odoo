@@ -386,16 +386,6 @@ class StockPickingType(models.Model):
 
         self._prepare_graph_data(summaries)
 
-    def _compute_ready_items_label(self):
-        for pt in self:
-            label = _('To Process')
-            match pt.code:
-                case 'incoming':
-                    label = _('To Receive')
-                case 'outgoing':
-                    label = _('To Deliver')
-            pt.ready_items_label = label
-
     @api.onchange('sequence_code')
     def _onchange_sequence_code(self):
         if not self.sequence_code:
