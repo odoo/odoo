@@ -8,7 +8,7 @@ class IrUiMenu(models.Model):
     _inherit = 'ir.ui.menu'
 
     @api.model
-    @tools.ormcache_context('self.env.uid', keys=('lang', 'force_action'))
+    @tools.ormcache('self.env.uid', 'self.env.lang', 'self.env.context.get("force_action")')
     def load_menus_root(self):
         root_menus = super().load_menus_root()
         if self.env.context.get('force_action'):

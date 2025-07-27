@@ -15,7 +15,7 @@ class ResLang(models.Model):
                 raise UserError(_("Cannot deactivate a language that is currently used on a website."))
         return super().write(vals)
 
-    @tools.ormcache_context(keys=("website_id", "web_force_installed_langs"))
+    @tools.ormcache('self.env.context.get("website_id")', 'self.env.context.get("web_force_installed_langs")')
     def _get_frontend(self) -> LangDataDict:
         """ Return the available languages for current request
         :return: LangDataDict({code: LangData})

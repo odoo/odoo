@@ -1347,7 +1347,7 @@ class IrModelFields(models.Model):
         return self._get_fields_cached(model_name).get(field_name, {}).get('selection', [])
 
     @api.model
-    @tools.ormcache_context('model_name', keys=('lang',))
+    @tools.ormcache('model_name', 'self.env.lang')
     def _get_fields_cached(self, model_name):
         """ Return the translated information of all model field's in the context's language.
         Note that the result contains the available translations only.
@@ -2054,7 +2054,7 @@ class IrModelAccess(models.Model):
 
     # The context parameter is useful when the method translates error messages.
     # But as the method raises an exception in that case,  the key 'lang' might
-    # not be really necessary as a cache key, unless the `ormcache_context`
+    # not be really necessary as a cache key, unless the `ormcache`
     # decorator catches the exception (it does not at the moment.)
 
     @tools.ormcache('self.env.uid', 'mode')
