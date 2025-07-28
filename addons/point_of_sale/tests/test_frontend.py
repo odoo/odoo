@@ -1751,7 +1751,32 @@ class TestUi(TestPointOfSaleHttpCommon):
             two_last_orders[1].picking_ids.move_line_ids_without_package.owner_id.id,
             "The owner of the refund is not the same as the owner of the original order")
 
+    def test_only_existing_lots(self):
+        product = self.env['product.product'].create({
+            'name': 'Product with existing lots',
+            'is_storable': True,
+            'tracking': 'lot',
+            'available_in_pos': True,
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create([{
+            'product_id': product.id,
+            'inventory_quantity': 1,
+            'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
+            'lot_id': self.env['stock.lot'].create({'name': '1001', 'product_id': product.id}).id,
+        }, {
+            'product_id': product.id,
+            'inventory_quantity': 1,
+            'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
+            'lot_id': self.env['stock.lot'].create({'name': '1002', 'product_id': product.id}).id,
+        }]).sudo().action_apply_inventory()
 
+        self.main_pos_config.picking_type_id.write({
+            "use_create_lots": False,
+            "use_existing_lots": True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_only_existing_lots', login="pos_user")
 
     def test_product_search(self):
         """Verify that the product search works correctly"""
