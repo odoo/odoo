@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-05-09 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,27 +23,28 @@ msgstr ""
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
 msgid "A client id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "ID клиента, выданный Pine Labs напрямую продавцу."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
 msgid "A merchant id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "ID продавца, выданный Pine Labs напрямую продавцу."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "A security token issued directly to the merchant by Pine Labs."
 msgstr ""
+"Токен безопасности, выданный непосредственно продавцу компанией Pine Labs."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "A store id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "ID магазина, выданный Pine Labs напрямую продавцу."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
 msgid "Accepted payment modes by Pine Labs for transactions."
-msgstr ""
+msgstr "Разрешенные методы оплаты в Pine Labs для проведения операций."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__all
@@ -63,78 +65,78 @@ msgstr "Карточка"
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
 msgid "Pine Labs Allowed Payment Modes"
-msgstr ""
+msgstr "Разрешенные методы оплаты Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_client
 msgid "Pine Labs Client ID"
-msgstr ""
+msgstr "ID клиента Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs Error"
-msgstr ""
+msgstr "Ошибка Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
 msgid "Pine Labs Merchant ID"
-msgstr ""
+msgstr "ID продавца Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-python
 #: code:addons/pos_pine_labs/models/pos_payment_method.py:0
 msgid ""
 "Pine Labs POS transaction cancelled. Retry again for collecting payment."
-msgstr ""
+msgstr "Транзакция Pine Labs отменена. Повторите попытку оплаты."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr ""
+msgstr "Pine Labs PlutusTransactionReferenceID"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "Pine Labs Security Token"
-msgstr ""
+msgstr "Токен безопасности Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "Pine Labs Store ID"
-msgstr ""
+msgstr "ID магазина Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Pine Labs Test Mode"
-msgstr ""
+msgstr "Тестовый режим Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs get payment status request failed"
-msgstr ""
+msgstr "Ошибка при получении статуса оплаты от Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs make payment request failed"
-msgstr ""
+msgstr "Ошибка при отправке запроса на оплату в Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs payment cancellation request failed"
-msgstr ""
+msgstr "Ошибка при отправке запроса на отмену оплаты в Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Способы оплаты в торговых точках"
+msgstr "Методы оплаты в POS"
 
 #. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Платежи в точках продаж"
+msgstr "Платежи POS"
 
 #. module: pos_pine_labs
 #. odoo-javascript
@@ -149,11 +151,13 @@ msgid ""
 "https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
 "request-for-Void-ICB-on-UPI-transaction"
 msgstr ""
+"Необходимо для возврата: https://developer.pinelabs.com/in/instore/cloud-"
+"integration#Example-JSON-request-for-Void-ICB-on-UPI-transaction"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Test Pine Labs transaction process."
-msgstr ""
+msgstr "Тестовая транзакция через Pine Labs."
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -161,7 +165,7 @@ msgstr ""
 msgid ""
 "The expected error code for the Pine Labs POS status request was not "
 "included in the response."
-msgstr ""
+msgstr "Ожидаемый код ошибки в ответе от Pine Labs не найден."
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -173,9 +177,9 @@ msgstr "Этот платежный терминал поддерживает т
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Transaction failed due to inactivity"
-msgstr "Транзакция отклонена из-за бездействия"
+msgstr "Транзакция не удалась из-за бездействия"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
-msgstr ""
+msgstr "UPI"
