@@ -51,7 +51,7 @@
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
                 <field name="move_ids"/>
             </xpath>
-            <field name="invoice_status" position="before">
+            <field name="origin" position="after">
                 <field name="receipt_status" invisible="state != 'purchase'"/>
             </field>
             <xpath expr="//field[@name='order_line']/form//field[@name='analytic_distribution']" position="before">
@@ -64,7 +64,7 @@
                 <attribute name="column_invisible">parent.state != 'purchase'</attribute>
                 <attribute name="readonly">product_type == 'consu'</attribute>
             </xpath>
-            <xpath expr="//page[@name='purchase_delivery_invoice']/group/group" position="inside">
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
                 <field name="default_location_dest_id_usage" invisible="1"/>
                 <field name="incoterm_id" readonly="locked"/>
                 <field name="incoterm_location"  readonly="locked"/>
