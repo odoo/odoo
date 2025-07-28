@@ -899,7 +899,9 @@ patch(PosOrder.prototype, {
     processGiftCard(newGiftCardCode, points, expirationDate) {
         const partner_id = this.partner_id?.id || false;
         const product_id = this.getSelectedOrderline().product_id.id;
-        const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
+        const program =
+            this.getSelectedOrderline()._e_wallet_program_id ||
+            this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
 
         let couponId;
         const couponData = {
