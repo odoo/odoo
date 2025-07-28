@@ -51,6 +51,7 @@ export class FormOptionPlugin extends Plugin {
         "applyFormModel",
         "addHiddenField",
         "fetchAuthorizedFields",
+        "loadFieldOptionData",
         "prepareFields",
         "replaceField",
         "prepareConditionInputs",
@@ -1077,7 +1078,8 @@ export class MultiCheckboxDisplayAction extends BuilderAction {
 }
 export class SetLabelTextAction extends BuilderAction {
     static id = "setLabelText";
-    apply({ editingElement: fieldEl, value }) {
+    static dependencies = ["websiteFormOption"];
+    async apply({ editingElement: fieldEl, value }) {
         const labelEl = fieldEl.querySelector(".s_website_form_label_content");
         labelEl.textContent = value;
         if (isFieldCustom(fieldEl)) {
@@ -1087,17 +1089,16 @@ export class SetLabelTextAction extends BuilderAction {
                 multiple.dataset.name = value;
             }
             const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
-            const previousInputName = fieldEl.name;
+            const previousInputName = inputEls[0].name;
             inputEls.forEach((el) => (el.name = value));
 
             // Synchronize the fields whose visibility depends on this field
-            const dependentEls = fieldEl
-                .closest("form")
-                .querySelectorAll(
-                    `.s_website_form_field[data-visibility-dependency="${CSS.escape(
-                        previousInputName
-                    )}"]`
-                );
+            const dependentEls = fieldEl.closest("form").querySelectorAll(
+                `.s_website_form_field[data-visibility-dependency="${CSS.escape(
+                    previousInputName
+                )}"],
+                    .s_website_form_field[data-visibility-dependency="${CSS.escape(value)}"]`
+            );
             for (const dependentEl of dependentEls) {
                 if (findCircular(fieldEl, dependentEl)) {
                     // For all the fields whose visibility depends on this
@@ -1110,15 +1111,21 @@ export class SetLabelTextAction extends BuilderAction {
                     dependentEl.dataset.visibilityDependency = value;
                 }
             }
-            /* TODO: make sure this is handled on non-preview:
-            if (!previewMode) {
-                // TODO: @owl-options is this still true ?
-                // As the field label changed, the list of available visibility
-                // dependencies needs to be updated in order to not propose a
-                // field that would create a circular dependency.
-                this.rerender = true;
-            }
-            */
+            const fieldWithVisibilityDependencyEls = [
+                ...fieldEl.closest("form").querySelectorAll("[data-visibility-dependency]"),
+            ];
+            await Promise.all(
+                fieldWithVisibilityDependencyEls.map(async (fieldWithConditionEl) => {
+                    const conditionFieldName = fieldWithConditionEl.dataset.visibilityDependency;
+                    const fieldData = await this.dependencies.websiteFormOption.loadFieldOptionData(
+                        fieldWithConditionEl
+                    );
+                    const names = fieldData.conditionInputs.map((entry) => CSS.escape(entry.name));
+                    if (!names.includes(conditionFieldName)) {
+                        deleteConditionalVisibility(fieldWithConditionEl);
+                    }
+                })
+            );
         }
     }
     getValue({ editingElement: fieldEl }) {

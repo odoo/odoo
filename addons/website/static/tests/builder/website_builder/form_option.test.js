@@ -203,3 +203,52 @@ test("Set 'Message' as form success action and show/hide the message preview", a
     await contains(".options-container [data-action-id='toggleEndMessage']").click();
     expect(":iframe .o_show_form_success_message").toHaveCount(0);
 });
+
+const formWithCondition = `
+<section class="s_website_form"><form data-model_name="mail.mail">
+     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+         <div class="row s_col_no_resize s_col_no_bgcolor">
+             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="first">
+                 <span class="s_website_form_label_content">a</span>
+             </label>
+             <div class="col-sm">
+                 <input class="form-control s_website_form_input" type="text" name="a" id="first"/>
+             </div>
+         </div>
+     </div>
+     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-comparator="set">
+         <div class="row s_col_no_resize s_col_no_bgcolor">
+             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
+                 <span class="s_website_form_label_content">b</span>
+             </label>
+             <div class="col-sm">
+                 <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
+             </div>
+         </div>
+     </div>
+     <div class="s_website_form_submit">
+        <div class="s_website_form_label"/>
+        <a>Submit</a>
+    </div>
+</form></section>
+`;
+
+test("Remove visibility dependency on field unavailable (change first)", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(formWithCondition);
+    getEditor();
+    await contains(":iframe input[name=a]").click();
+    await contains("[data-label=Label] input").click();
+    await contains("[data-label=Label] input").edit("b");
+    expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(2);
+});
+
+test("Remove visibility dependency on field unavailable (change second)", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(formWithCondition);
+    getEditor();
+    await contains(":iframe input[name=b]").click();
+    await contains("[data-label=Label] input").click();
+    await contains("[data-label=Label] input").edit("a");
+    expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(2);
+});
