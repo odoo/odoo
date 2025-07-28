@@ -1,5 +1,5 @@
 import { Builder } from "@html_builder/builder";
-import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin_translate";
+import { BuilderOptionsTranslationPlugin } from "@html_builder/core/builder_options_plugin_translate";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { DisableSnippetsPlugin } from "@html_builder/core/disable_snippets_plugin_translation";
 import { OperationPlugin } from "@html_builder/core/operation_plugin";
@@ -22,11 +22,12 @@ import { AnimateOptionPlugin } from "./plugins/options/animate_option_plugin";
 import { BuilderComponentPlugin } from "@html_builder/core/builder_component_plugin";
 import { BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin";
 import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_plugin";
+import { CarouselOptionTranslationPlugin } from "./plugins/carousel_option_translation_plugin";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
 
 const TRANSLATION_PLUGINS = [
-    BuilderOptionsPlugin,
+    BuilderOptionsTranslationPlugin,
     BuilderActionsPlugin,
     BuilderComponentPlugin,
     CoreBuilderActionPlugin,
@@ -44,6 +45,7 @@ const TRANSLATION_PLUGINS = [
     OperationPlugin,
     EditInteractionPlugin,
     BuilderContentEditablePlugin,
+    CarouselOptionTranslationPlugin,
 ];
 
 export class WebsiteBuilder extends Component {
