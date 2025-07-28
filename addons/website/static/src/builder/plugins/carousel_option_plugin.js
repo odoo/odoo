@@ -8,6 +8,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { between } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export const CAROUSEL_CARDS_SEQUENCE = between(WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW);
 
@@ -16,7 +17,28 @@ const carouselWrapperSelector =
 const carouselControlsSelector =
     ".carousel-control-prev, .carousel-control-next, .carousel-indicators";
 
-const carouselItemOptionSelector = ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
+const carouselItemOptionSelector =
+    ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
+
+export class CarouselOption extends BaseOptionComponent {
+    static template = "website.CarouselOption";
+    static selector = "section";
+    static exclude =
+        ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)";
+    static applyTo = ":scope > .carousel";
+}
+
+export class CarouselBottomControllersOption extends BaseOptionComponent {
+    static template = "website.CarouselBottomControllersOption";
+    static selector = "section";
+    static applyTo = ".s_carousel_intro, .s_quotes_carousel_compact";
+}
+
+export class CarouselCardsOption extends BaseOptionComponent {
+    static template = "website.CarouselCardsOption";
+    static selector = "section";
+    static applyTo = ".s_carousel_cards";
+}
 
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
@@ -25,23 +47,9 @@ export class CarouselOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            {
-                template: "website.CarouselOption",
-                selector: "section",
-                exclude:
-                    ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)",
-                applyTo: ":scope > .carousel",
-            },
-            {
-                template: "website.CarouselBottomControllersOption",
-                selector: "section",
-                applyTo: ".s_carousel_intro, .s_quotes_carousel_compact",
-            },
-            withSequence(CAROUSEL_CARDS_SEQUENCE, {
-                template: "website.CarouselCardsOption",
-                selector: "section",
-                applyTo: ".s_carousel_cards",
-            }),
+            CarouselOption,
+            CarouselBottomControllersOption,
+            withSequence(CAROUSEL_CARDS_SEQUENCE, CarouselCardsOption),
         ],
         builder_header_middle_buttons: {
             Component: CarouselItemHeaderMiddleButtons,
@@ -81,7 +89,7 @@ export class CarouselOptionPlugin extends Plugin {
      */
     restoreCarousels(rootEl = this.editable) {
         // Set the first slide as the active one.
-        for (const carouselEl of selectElements(rootEl,".carousel")) {
+        for (const carouselEl of selectElements(rootEl, ".carousel")) {
             carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
                 itemEl.classList.remove("next", "prev", "left", "right");
                 itemEl.classList.toggle("active", i === 0);
@@ -188,32 +196,36 @@ export class CarouselOptionPlugin extends Plugin {
         });
 
         return new Promise((resolve) => {
-            editingElement.addEventListener("slid.bs.carousel", () => {
-                // slid.bs.carousel is most of the time fired too soon by bootstrap
-                // since it emulates the transitionEnd with a setTimeout. We wait
-                // here an extra 20% of the time before retargeting edition, which
-                // should be enough...
-                const slideDuration = window.performance.now() - this.slideTimestamp;
-                setTimeout(() => {
-                    // Setting the active indicator manually, as Bootstrap could
-                    // not do it because the `data-bs-slide-to` attribute is not
-                    // here in edit mode anymore.
-                    const itemEls = editingElement.querySelectorAll(".carousel-item");
-                    const activeItemEl = editingElement.querySelector(".carousel-item.active");
-                    const activeIndex = [...itemEls].indexOf(activeItemEl);
-                    const indicatorEls = editingElement.querySelectorAll(
-                        ".carousel-indicators > *"
-                    );
-                    const activeIndicatorEl = [...indicatorEls][activeIndex];
-                    activeIndicatorEl.classList.add("active");
-                    activeIndicatorEl.setAttribute("aria-current", "true");
+            editingElement.addEventListener(
+                "slid.bs.carousel",
+                () => {
+                    // slid.bs.carousel is most of the time fired too soon by bootstrap
+                    // since it emulates the transitionEnd with a setTimeout. We wait
+                    // here an extra 20% of the time before retargeting edition, which
+                    // should be enough...
+                    const slideDuration = window.performance.now() - this.slideTimestamp;
+                    setTimeout(() => {
+                        // Setting the active indicator manually, as Bootstrap could
+                        // not do it because the `data-bs-slide-to` attribute is not
+                        // here in edit mode anymore.
+                        const itemEls = editingElement.querySelectorAll(".carousel-item");
+                        const activeItemEl = editingElement.querySelector(".carousel-item.active");
+                        const activeIndex = [...itemEls].indexOf(activeItemEl);
+                        const indicatorEls = editingElement.querySelectorAll(
+                            ".carousel-indicators > *"
+                        );
+                        const activeIndicatorEl = [...indicatorEls][activeIndex];
+                        activeIndicatorEl.classList.add("active");
+                        activeIndicatorEl.setAttribute("aria-current", "true");
 
-                    // Activate the active item.
-                    this.dependencies["builderOptions"].setNextTarget(activeItemEl);
+                        // Activate the active item.
+                        this.dependencies.builderOptions.setNextTarget(activeItemEl);
 
-                    resolve();
-                }, 0.2 * slideDuration);
-            }, { once: true });
+                        resolve();
+                    }, 0.2 * slideDuration);
+                },
+                { once: true }
+            );
 
             const carouselInstance = window.Carousel.getOrCreateInstance(editingElement, {
                 ride: false,
@@ -300,7 +312,7 @@ export class CarouselOptionPlugin extends Plugin {
             updateCarouselIndicators(carouselEl, newPosition);
 
             // Activate the active slide.
-            this.dependencies["builderOptions"].setNextTarget(activeItemEl);
+            this.dependencies.builderOptions.setNextTarget(activeItemEl);
         }
     }
 }

@@ -4,7 +4,6 @@ import { getCSSVariableValue } from "@html_editor/utils/formatting";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
-    static props = {};
     setup() {
         super.setup();
         this.palettes = this.getPalettes();

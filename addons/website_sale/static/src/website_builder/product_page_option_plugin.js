@@ -9,18 +9,12 @@ import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/bu
 import { BuilderAction } from "@html_builder/core/builder_action";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
-export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
-    static shared = ["forceCarouselRedraw"];
+    static shared = ["forceCarouselRedraw", "getZoomLevels"];
     resources = {
-        builder_options: {
-            OptionComponent: ProductPageOption,
-            selector: productPageSelector,
-            editableOnly: false,
-            title: _t("Product Page"),
-        },
+        builder_options: ProductPageOption,
         builder_actions: {
             ProductPageContainerWidthAction,
             ProductPageContainerOrderAction,
@@ -51,7 +45,7 @@ class ProductPageOptionPlugin extends Plugin {
                 el.textContent = el.getAttribute("placeholder");
             }
 
-            const mainEl = el.querySelector(productPageSelector);
+            const mainEl = el.querySelector(ProductPageOption.selector);
             if (!mainEl) {
                 return;
             }
@@ -86,7 +80,7 @@ class ProductPageOptionPlugin extends Plugin {
     };
 
     setup() {
-        const mainEl = this.document.querySelector(productPageSelector);
+        const mainEl = this.document.querySelector(ProductPageOption.selector);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
@@ -191,7 +185,7 @@ export class BaseProductPageAction extends BuilderAction {
     static id = "baseProductPage";
     setup() {
         this.reload = {};
-        const mainEl = this.document.querySelector(productPageSelector);
+        const mainEl = this.document.querySelector(ProductPageOption.selector);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');

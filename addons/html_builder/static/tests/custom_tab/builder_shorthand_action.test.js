@@ -1,4 +1,5 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { fill } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
@@ -8,15 +9,17 @@ describe.current.tags("desktop");
 
 describe("classAction", () => {
     test("should reset when cliking on an empty classAction", async () => {
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
                     <BuilderButtonGroup>
                         <BuilderButton classAction="''"/>
                         <BuilderButton classAction="'x'"/>
                     </BuilderButtonGroup>
-                `,
-        });
+                `;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target x">a</div>`);
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
@@ -27,15 +30,17 @@ describe("classAction", () => {
         expect(":iframe .test-options-target").not.toHaveClass("x");
     });
     test("set multiples classes", async () => {
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
                     <BuilderButtonGroup>
                         <BuilderButton classAction="'x'"/>
                         <BuilderButton classAction="'x y z'"/>
                     </BuilderButtonGroup>
-                `,
-        });
+                `;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target x">b</div>`);
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
@@ -55,15 +60,17 @@ describe("classAction", () => {
         expect("[data-class-action='x y z']").not.toHaveClass("active");
     });
     test("toggle class when not inside a BuilderButtonGroup", async () => {
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
                     <BuilderButton classAction="'x'"/>
                     <BuilderButtonGroup>
                         <BuilderButton classAction="'y'"/>
                     </BuilderButtonGroup>
-                `,
-        });
+                `;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
@@ -81,13 +88,15 @@ describe("classAction", () => {
 
 describe("styleAction", () => {
     test("should set a plain style", async () => {
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
                     <BuilderNumberInput styleAction="'width'" unit="'px'"
                     />
-                `,
-        });
+                `;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target" style="width: 10px;">a</div>`);
         await contains(":iframe .test-options-target").click();
         expect("input").toHaveValue("10");
@@ -105,13 +114,15 @@ describe("styleAction", () => {
         expect(":iframe .test-options-target").toHaveAttribute("style", "width: 0px;");
     });
     test("should set a style with its associated class", async () => {
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
                     <BuilderNumberInput styleAction="{ mainParam: 'border-width', extraClass: 'border' }" unit="'px'" min="0" composable="true"
                     />
-                `,
-        });
+                `;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target border">a</div>`, {
             styleContent: ".border { border: solid; border-width: 1px !important; }",
         });
@@ -138,13 +149,15 @@ describe("styleAction", () => {
         expect(":iframe .test-options-target").toHaveClass("border");
     });
     test("should set a composite style with its associated class", async () => {
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
                     <BuilderNumberInput styleAction="{ mainParam: 'border-width', extraClass: 'border' }" unit="'px'" min="0" composable="true"
                     />
-                `,
-        });
+                `;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target">a</div>`, {
             styleContent: ".border { border: solid; border-width: 1px !important; }",
         });
@@ -211,15 +224,17 @@ describe("styleAction", () => {
     });
 
     test("button isApplied is properly computed with percentage width values", async () => {
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
                     <BuilderButtonGroup styleAction="'width'">
                         <BuilderButton styleActionValue="''">Default</BuilderButton>
                         <BuilderButton styleActionValue="'50%'">50%</BuilderButton>
                     </BuilderButtonGroup>
-                `,
-        });
+                `;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target x">a</div>`);
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();

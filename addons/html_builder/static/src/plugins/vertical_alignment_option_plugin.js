@@ -20,6 +20,7 @@ export class VerticalAlignmentOptionPlugin extends Plugin {
                 name: "verticalAlignmentOption",
             }),
         ],
+        builder_options: [withSequence(VERTICAL_ALIGNMENT, VerticalAlignmentOption)],
         builder_actions: {
             SetVerticalAlignmentAction,
         },

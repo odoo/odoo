@@ -4,6 +4,8 @@ import { FormFieldOption } from "./form_field_option";
 export class FormFieldOptionRedraw extends BaseOptionComponent {
     static template = "website.s_website_form_field_option_redraw";
     static props = FormFieldOption.props;
+    static selector = ".s_website_form_field";
+    static exclude = ".s_website_form_dnone";
     static components = { FormFieldOption };
 
     setup() {

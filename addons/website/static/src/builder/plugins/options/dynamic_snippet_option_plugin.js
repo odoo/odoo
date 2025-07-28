@@ -25,21 +25,13 @@ class DynamicSnippetOptionPlugin extends Plugin {
         "isSingleModeSnippetTemplate",
         "setOptionsDefaultValues",
         "updateTemplate",
+        "getModelNameFilter",
     ];
-    selector = ".s_dynamic_snippet";
     modelNameFilter = "";
     fetchedDynamicFilters = [];
     fetchedDynamicFilterTemplates = [];
     resources = {
-        builder_options: [
-            withSequence(DYNAMIC_SNIPPET, {
-                OptionComponent: DynamicSnippetOption,
-                props: {
-                    modelNameFilter: this.modelNameFilter,
-                },
-                selector: this.selector,
-            }),
-        ],
+        builder_options: [withSequence(DYNAMIC_SNIPPET, DynamicSnippetOption)],
         builder_actions: {
             DynamicFilterAction,
             DynamicSnippetTemplateAction,
@@ -63,8 +55,11 @@ class DynamicSnippetOptionPlugin extends Plugin {
         this.dynamicFiltersCache.invalidate();
         this.dynamicFilterTemplatesCache.invalidate();
     }
+    getModelNameFilter() {
+        return this.modelNameFilter;
+    }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(this.selector)) {
+        if (snippetEl.matches(DynamicSnippetOption.selector)) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
     }

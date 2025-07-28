@@ -2,10 +2,14 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export class HeaderElementsOption extends BaseOptionComponent {
     static template = "website.HeaderElementsOption";
+    static dependencies = ["customizeWebsite"];
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
 
     setup() {
         super.setup();
-        this.customizeWebsite = this.env.editor.shared.customizeWebsite;
+        this.customizeWebsite = this.dependencies.customizeWebsite;
         const views = ["website.option_header_brand_logo", "website.option_header_brand_name"];
         this.customizeWebsite.loadConfigKey({ views });
     }

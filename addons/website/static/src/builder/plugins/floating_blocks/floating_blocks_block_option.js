@@ -8,5 +8,5 @@ export class FloatingBlocksBlockOption extends BaseOptionComponent {
         BorderConfigurator,
         AddElementOption,
     };
-    static props = {};
+    static selector = ".s_floating_blocks .s_floating_blocks_block";
 }

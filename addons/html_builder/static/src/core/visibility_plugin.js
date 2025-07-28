@@ -107,7 +107,7 @@ export class VisibilityPlugin extends Plugin {
             const show = !isTargetVisible(deviceInvisibleEl);
             const isShown = this.toggleVisibilityStatus(deviceInvisibleEl, show, true);
             if (!isShown && deviceInvisibleEl.contains(currentContainerTargetEl)) {
-                this.dependencies["builderOptions"].deactivateContainers();
+                this.dependencies.builderOptions.deactivateContainers();
             }
         }
     }
