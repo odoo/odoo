@@ -10,11 +10,11 @@ class AccountFiscalPosition(models.Model):
         string='AFIP Responsibility Types', help='List of AFIP responsibilities where this fiscal position '
         'should be auto-detected')
 
-    def _get_fpos_ranking_functions(self, partner):
+    def _get_fpos_ranking_functions(self, delivery_partner, vat_partner):
         if self.env.company.country_id.code != "AR":
-            return super()._get_fpos_ranking_functions(partner)
+            return super()._get_fpos_ranking_functions(delivery_partner, vat_partner)
         return [
             ('l10n_ar_afip_responsibility_type_id', lambda fpos: (
-                partner.l10n_ar_afip_responsibility_type_id in fpos.l10n_ar_afip_responsibility_type_ids
+                delivery_partner.l10n_ar_afip_responsibility_type_id in fpos.l10n_ar_afip_responsibility_type_ids
             ))
-        ] + super()._get_fpos_ranking_functions(partner)
+        ] + super()._get_fpos_ranking_functions(delivery_partner, vat_partner)
