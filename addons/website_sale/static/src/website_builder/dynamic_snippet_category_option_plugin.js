@@ -13,21 +13,24 @@ const TEMPLATE_OPTIONS = {
     'default': 'website_sale.dynamic_filter_template_product_public_category_default',
 }
 
+const modelNameFilter = 'product.public.category';
+
+export class DynamicSnippetCategoryOption2 extends DynamicSnippetCategoryOption {
+    static selector = 'section.s_dynamic_snippet_category';
+    static defaultProps = {
+        modelNameFilter,
+    };
+    static groups = ['website.group_website_designer'];
+}
+
 export class DynamicSnippetCategoryOptionPlugin extends Plugin {
     static id = 'dynamicSnippetCategoryOptionPlugin';
     static dependencies = ['dynamicSnippetOption'];
-    selector = 'section.s_dynamic_snippet_category';
-    modelNameFilter = 'product.public.category';
+    selector = DynamicSnippetCategoryOption2.selector;
+    modelNameFilter = modelNameFilter;
     resources = {
         builder_options: [
-            withSequence(DEVICE_VISIBILITY, {
-                OptionComponent: DynamicSnippetCategoryOption,
-                props: {
-                    modelNameFilter: this.modelNameFilter,
-                },
-                selector: this.selector,
-                groups: ['website.group_website_designer'],
-            }),
+            withSequence(DEVICE_VISIBILITY, DynamicSnippetCategoryOption2),
         ],
         builder_actions: { ToggleClickableAction },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),

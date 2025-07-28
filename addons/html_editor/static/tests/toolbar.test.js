@@ -51,6 +51,7 @@ import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
+import { Editor } from "@html_editor/editor";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -959,7 +960,7 @@ describe("compact toolbar", () => {
     });
 
     const patchToUseOnlyTestButtons = () =>
-        patchWithCleanup(ToolbarPlugin.prototype, {
+        patchWithCleanup(Editor.prototype, {
             getResource(resourceName) {
                 const result = super.getResource(resourceName);
                 if (resourceName === "toolbar_groups") {

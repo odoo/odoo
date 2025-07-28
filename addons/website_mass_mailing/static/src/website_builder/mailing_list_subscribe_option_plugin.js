@@ -3,8 +3,8 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
-import { NewsletterSubscribeCommonOption } from "./newsletter_subscribe_common_option";
-import { getElementsWithOption, getSelectorParams } from "@html_builder/utils/utils";
+import {  NewsletterSubscribeCommonOptionBase } from "./newsletter_subscribe_common_option";
+import { getElementsWithOption, filterExtends } from "@html_builder/utils/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 class MailingListSubscribeOptionPlugin extends Plugin {
@@ -20,15 +20,15 @@ class MailingListSubscribeOptionPlugin extends Plugin {
     };
 
     setup() {
-        this.selectorParams = getSelectorParams(
+        this.newsletterOptions = filterExtends(
             this.getResource("builder_options"),
-            NewsletterSubscribeCommonOption
+            NewsletterSubscribeCommonOptionBase,
         );
     }
 
     async onSnippetDropped({ snippetEl }) {
         const newsLetterEls = [];
-        for (const { selector, exclude, applyTo } of this.selectorParams) {
+        for (const { selector, exclude, applyTo } of this.newsletterOptions) {
             newsLetterEls.push(...getElementsWithOption(snippetEl, selector, exclude, applyTo));
         }
         if (!newsLetterEls.length) {
@@ -86,7 +86,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
 
     cleanForSave({ root }) {
         const newsLetterEls = [];
-        for (const { selector, exclude, applyTo } of this.selectorParams) {
+        for (const { selector, exclude, applyTo } of this.newsletterOptions) {
             newsLetterEls.push(...getElementsWithOption(root, selector, exclude, applyTo));
         }
         for (const newsLetterEl of newsLetterEls) {

@@ -158,7 +158,7 @@ export class DragAndDropPlugin extends Plugin {
                     this.dragState.restoreCallbacks?.forEach((restore) => restore());
                     restoreDragSavePoint();
                     dragAndDropResolve();
-                    this.dependencies["builderOptions"].updateContainers(this.overlayTarget);
+                    this.dependencies.builderOptions.updateContainers(this.overlayTarget);
                 };
 
                 this.dragStarted = true;
@@ -232,7 +232,7 @@ export class DragAndDropPlugin extends Plugin {
 
                 // Remove the dragged element and deactivate the options.
                 this.overlayTarget.remove();
-                this.dependencies["builderOptions"].deactivateContainers();
+                this.dependencies.builderOptions.deactivateContainers();
 
                 // Add the dropzones.
                 dropzoneEls = this.dependencies.dropzone.activateDropzones(selectors, {
@@ -389,7 +389,7 @@ export class DragAndDropPlugin extends Plugin {
                 }
 
                 dragAndDropResolve();
-                this.dependencies["builderOptions"].updateContainers(this.overlayTarget);
+                this.dependencies.builderOptions.updateContainers(this.overlayTarget);
             },
         };
 

@@ -5,22 +5,19 @@ import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class BackgroundImageOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundImageOption";
-    static props = {};
+    static dependencies = ["history", "backgroundImageOption"];
     static components = { ImageSize };
     setup() {
         this.editingElement = this.env.getEditingElement();
+        super.setup();
         // done here because we have direct access to the editing element
         // (which we don't have in the normalize of the current plugin)
         this.toggleBgImageClasses();
-        super.setup();
     }
     toggleBgImageClasses() {
-        this.env.editor.shared.history.ignoreDOMMutations(() => {
+        this.dependencies.history.ignoreDOMMutations(() => {
             const backgroundURL = getBgImageURLFromEl(this.editingElement);
-            this.env.editor.shared.backgroundImageOption.setImageBackground(
-                this.editingElement,
-                backgroundURL
-            );
+            this.dependencies.backgroundImageOption.setImageBackground(this.editingElement, backgroundURL);
         });
     }
     showMainColorPicker() {

@@ -11,6 +11,9 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { FooterTemplateChoice, FooterTemplateOption } from "./footer_template_option";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 const [
     FOOTER_TEMPLATE,
@@ -36,58 +39,66 @@ export {
     FOOTER_BORDER,
 };
 
+export class FooterWidthOption extends BaseOptionComponent {
+    static template = "website.FooterWidthOption";
+    static selector = "#wrapwrap > footer";
+    static applyTo =
+        ":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+}
+
+export class FooterColorsOption extends BaseOptionComponent {
+    static template = "website.FooterColorsOption";
+    static selector = "#wrapwrap > footer";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+}
+
+export class FooterSlideoutOption extends BaseOptionComponent {
+    static template = "website.FooterSlideoutOption";
+    static selector = "#wrapwrap > footer";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+}
+
+export class ToggleFooterCopyrightOption extends BaseOptionComponent {
+    static template = "website.ToggleFooterCopyrightOption";
+    static selector = "#wrapwrap > footer";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+}
+
+export class FooterBorder extends BaseOptionComponent {
+    static template = "website.FooterBorder";
+    static selector = "#wrapwrap > footer";
+    static applyTo = "#footer";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+    static components = { BorderConfigurator, ShadowOption };
+}
+
+export class FooterScrollToTopOption extends BaseOptionComponent {
+    static template = "website.FooterScrollToTopOption";
+    static selector = "#wrapwrap > footer";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+}
+
 class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
     static dependencies = ["customizeWebsite", "builderActions"];
+    static shared = ["getFooterTemplates"];
 
     resources = {
         builder_options: [
-            withSequence(FOOTER_TEMPLATE, {
-                OptionComponent: FooterTemplateOption,
-                props: { getTemplates: this.getFooterTemplates.bind(this) },
-                selector: "#wrapwrap > footer",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(FOOTER_WIDTH, {
-                template: "website.FooterWidthOption",
-                selector: "#wrapwrap > footer",
-                applyTo:
-                    ":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(FOOTER_COLORS, {
-                template: "website.FooterColorsOption",
-                selector: "#wrapwrap > footer",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(FOOTER_SLIDEOUT, {
-                template: "website.FooterSlideoutOption",
-                selector: "#wrapwrap > footer",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(FOOTER_COPYRIGHT, {
-                template: "website.ToggleFooterCopyrightOption",
-                selector: "#wrapwrap > footer",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(FOOTER_BORDER, {
-                template: "website.FooterBorder",
-                selector: "#wrapwrap > footer",
-                applyTo: "#footer",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(FOOTER_SCROLL_TO, {
-                template: "website.FooterScrollToTopOption",
-                selector: "#wrapwrap > footer",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            }),
+            withSequence(FOOTER_TEMPLATE, FooterTemplateOption),
+            withSequence(FOOTER_WIDTH, FooterWidthOption),
+            withSequence(FOOTER_COLORS, FooterColorsOption),
+            withSequence(FOOTER_SLIDEOUT, FooterSlideoutOption),
+            withSequence(FOOTER_COPYRIGHT, ToggleFooterCopyrightOption),
+            withSequence(FOOTER_BORDER, FooterBorder),
+            withSequence(FOOTER_SCROLL_TO, FooterScrollToTopOption),
         ],
         builder_actions: {
             WebsiteConfigFooterAction,

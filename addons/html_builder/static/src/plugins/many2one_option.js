@@ -4,7 +4,9 @@ import { useService } from "@web/core/utils/hooks";
 
 export class Many2OneOption extends BaseOptionComponent {
     static template = "html_builder.Many2OneOption";
-    static props = [];
+    static selector = "[data-oe-many2one-model]:not([data-oe-readonly])";
+    static editableOnly = false;
+
     setup() {
         super.setup();
         this.orm = useService("orm");

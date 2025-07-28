@@ -36,6 +36,16 @@ import { setElementContent } from "@web/core/utils/html";
  * @property { boolean } [dropImageAsAttachment]
  * @property { CollaborationConfig } [collaboration]
  * @property { Function } getRecordInfo
+ *
+ * @typedef { Object } EditorContext
+ * @property { Document } document
+ * @property { HTMLElement } editable
+ * @property { SharedMethods } dependencies
+ * @property { import("./editor").EditorConfig } config
+ * @property { * } services
+ * @property { Editor['getResource'] } getResource
+ * @property { Editor['dispatchTo'] } dispatchTo
+ * @property { Editor['delegateTo'] } delegateTo
  */
 
 function sortPlugins(plugins) {
@@ -136,27 +146,17 @@ export class Editor {
     preparePlugins() {
         const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
         this.config = Object.assign({}, ...Plugins.map((P) => P.defaultConfig), this.config);
-        const plugins = new Map();
+        this.pluginsMap = new Map();
         for (const P of Plugins) {
             if (P.id === "") {
                 throw new Error(`Missing plugin id (class ${P.name})`);
             }
-            if (plugins.has(P.id)) {
+            if (this.pluginsMap.has(P.id)) {
                 throw new Error(`Duplicate plugin id: ${P.id}`);
             }
-            const imports = {};
-            for (const dep of P.dependencies) {
-                if (plugins.has(dep)) {
-                    imports[dep] = {};
-                    for (const h of plugins.get(dep).shared) {
-                        imports[dep][h] = this.shared[dep][h];
-                    }
-                } else {
-                    throw new Error(`Missing dependency for plugin ${P.id}: ${dep}`);
-                }
-            }
-            plugins.set(P.id, P);
-            const plugin = new P(this.document, this.editable, imports, this.config, this.services);
+            this.pluginsMap.set(P.id, P);
+            const plugin = new P(this.getEditorContext(P.dependencies));
+            plugin.__editor = this;
             this.plugins.push(plugin);
             const exports = {};
             for (const h of P.shared) {
@@ -180,6 +180,17 @@ export class Editor {
         }
         this.resources["normalize_handlers"].forEach((cb) => cb(this.editable));
         this.resources["start_edition_handlers"].forEach((cb) => cb());
+    }
+
+    getDependencies(dependencies) {
+        const deps = {};
+        for (const depName of dependencies) {
+            if (!(depName in this.shared)) {
+                throw new Error(`Missing dependency: ${depName}`);
+            }
+            deps[depName] = this.shared[depName];
+        }
+        return deps;
     }
 
     createResources() {
@@ -221,6 +232,22 @@ export class Editor {
     }
 
     /**
+     * @return { EditorContext }
+     */
+    getEditorContext(dependencies = []) {
+        return {
+            document: this.document,
+            editable: this.editable,
+            dependencies: this.getDependencies(dependencies),
+            config: this.config,
+            services: this.services,
+            getResource: this.getResource.bind(this),
+            dispatchTo: this.dispatchTo.bind(this),
+            delegateTo: this.delegateTo.bind(this),
+        };
+    }
+
+    /**
      * @param {string} resourceId
      * @returns {Array}
      */
@@ -229,14 +256,51 @@ export class Editor {
     }
 
     /**
-     * Executes the functions registered under resourceId with the given
+     * Execute the functions registered under resourceId with the given
      * arguments.
      *
+     * This function is meant to enhance code readability by clearly expressing
+     * its intent.
+     *
+     * This function can be thought as an event dispatcher, calling the handlers
+     * with `args` as the payload.
+     *
+     * Example:
+     * ```js
+     * this.dispatchTo("my_event_handlers", arg1, arg2);
+     * ```
+     *
      * @param {string} resourceId
-     * @param  {...any} args The arguments to pass to the handlers
+     * @param  {...any} args The arguments to pass to the handlers.
      */
     dispatchTo(resourceId, ...args) {
         this.getResource(resourceId).forEach((handler) => handler(...args));
+    }
+    /**
+     * Execute a series of functions until one of them returns a truthy value.
+     *
+     * This function is meant to enhance code readability by clearly expressing
+     * its intent.
+     *
+     * A command "delegates" its execution to one of the overriding functions,
+     * which return a truthy value to signal it has been handled.
+     *
+     * It is the the caller's responsability to stop the execution when this
+     * function returns true.
+     *
+     * Example:
+     * ```js
+     * if (this.delegateTo("my_command_overrides", arg1, arg2)) {
+     *   return;
+     * }
+     * ```
+     *
+     * @param {string} resourceId
+     * @param  {...any} args The arguments to pass to the overrides.
+     * @returns {boolean} Whether one of the overrides returned a truthy value.
+     */
+    delegateTo(resourceId, ...args) {
+        return this.getResource(resourceId).some((fn) => fn(...args));
     }
 
     getContent() {

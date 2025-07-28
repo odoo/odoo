@@ -15,11 +15,14 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
-export const REPLACE_MEDIA_EXCLUDE =
-    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
-
+export class ImageAndFaOption extends BaseOptionComponent {
+    static template = "html_builder.ImageAndFaOption";
+    static selector = "span.fa, i.fa, img";
+    static exclude = "[data-oe-type='image'] > img, [data-oe-xpath]";
+    static name = "imageAndFaOption";
+}
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = [
@@ -33,24 +36,9 @@ class ImageToolOptionPlugin extends Plugin {
     static shared = ["getCSSColorValue"];
     resources = {
         builder_options: [
-            withSequence(REPLACE_MEDIA, {
-                OptionComponent: ReplaceMediaOption,
-                selector: REPLACE_MEDIA_SELECTOR,
-                exclude: REPLACE_MEDIA_EXCLUDE,
-                name: "replaceMediaOption",
-            }),
-            withSequence(IMAGE_TOOL, {
-                OptionComponent: ImageToolOption,
-                selector: "img",
-                exclude: "[data-oe-type='image'] > img",
-                name: "imageToolOption",
-            }),
-            withSequence(ALIGNMENT_STYLE_PADDING, {
-                template: "html_builder.ImageAndFaOption",
-                selector: "span.fa, i.fa, img",
-                exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
-                name: "imageAndFaOption",
-            }),
+            withSequence(REPLACE_MEDIA, ReplaceMediaOption),
+            withSequence(IMAGE_TOOL, ImageToolOption),
+            withSequence(ALIGNMENT_STYLE_PADDING, ImageAndFaOption),
         ],
         builder_actions: {
             CropImageAction,
@@ -184,7 +172,7 @@ export class ReplaceMediaAction extends BuilderAction {
     static id = "replaceMedia";
     static dependencies = ["media_website"];
     async apply({ editingElement: mediaEl }) {
-        await this.dependencies["media_website"].replaceMedia(mediaEl);
+        await this.dependencies.media_website.replaceMedia(mediaEl);
     }
 }
 export class SetLinkAction extends BuilderAction {

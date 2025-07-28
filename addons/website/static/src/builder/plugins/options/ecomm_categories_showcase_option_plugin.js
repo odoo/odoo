@@ -7,6 +7,20 @@ import {
     VERTICAL_ALIGNMENT,
 } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class EcommCategoriesShowcaseOption extends BaseOptionComponent {
+    static template = "website.EcommCategoriesShowcaseOption";
+    static selector = ".s_ecomm_categories_showcase";
+}
+export class EcommCategoriesShowcaseBlockDesign extends BaseOptionComponent {
+    static template = "website.EcommCategoriesShowcaseBlockDesign";
+    static selector = ".s_ecomm_categories_showcase_block";
+}
+export class EcommCategoriesShowcaseBlocksDesign extends BaseOptionComponent {
+    static template = "website.EcommCategoriesShowcaseBlocksDesign";
+    static selector = ".s_ecomm_categories_showcase";
+}
 
 class EcommCategoriesShowcaseOptionPlugin extends Plugin {
     static id = "ecommCategoriesShowcaseOption";
@@ -28,18 +42,9 @@ class EcommCategoriesShowcaseOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC_BEFORE, {
-                template: "website.EcommCategoriesShowcaseOption",
-                selector: ".s_ecomm_categories_showcase",
-            }),
-            withSequence(VERTICAL_ALIGNMENT, {
-                template: "website.EcommCategoriesShowcaseBlockDesign",
-                selector: ".s_ecomm_categories_showcase_block",
-            }),
-            withSequence(END, {
-                template: "website.EcommCategoriesShowcaseBlocksDesign",
-                selector: ".s_ecomm_categories_showcase",
-            }),
+            withSequence(SNIPPET_SPECIFIC_BEFORE, EcommCategoriesShowcaseOption),
+            withSequence(VERTICAL_ALIGNMENT, EcommCategoriesShowcaseBlockDesign),
+            withSequence(END, EcommCategoriesShowcaseBlocksDesign),
         ],
         builder_actions: {
             BlockCountAction,
