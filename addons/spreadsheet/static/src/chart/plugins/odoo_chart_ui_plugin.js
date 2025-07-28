@@ -179,6 +179,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
         this.charts[dataSourceId] = new ChartDataSource(this.custom, definition);
+        this._addDomain(chartId);
     }
 
     /**
