@@ -13,6 +13,7 @@ over the network.
 import dataclasses
 import datetime
 import enum
+import io
 import struct
 
 try:
@@ -31,11 +32,120 @@ except ImportError:
     lzma = None
 
 
-FILE_HEADER_STRUCT = '<4sHHHHHIIIHH'
-FILE_HEADER_LENGTH = struct.calcsize(FILE_HEADER_STRUCT)
+DEFAULT_VERSION = 20
+ZIP64_VERSION = 45
 
-DATA_DESCRIPTOR_STRUCT = '<4sIII'
-DATA_DESCRIPTOR_LENGTH = struct.calcsize(DATA_DESCRIPTOR_STRUCT)
+
+@dataclasses.dataclass
+class ZipDataDescriptor:
+    _signature = b'PK\7\x08'
+    _struct = '<4sIII'
+    _struct_64 = '<4sIQQ'
+
+    crc32: int
+    compressed_size: int
+    uncompressed_size: int
+
+    def pack(self, zip64=None):
+        if zip64 is None:
+            zip64 = self.uncompressed_size > 0xFF_FF_FF_FF
+        return struct.pack(
+            self._struct_64 if zip64 else self._struct,
+            self._signature,
+            self.crc32,
+            self.compressed_size,
+            self.uncompressed_size,
+        )
+
+    @classmethod
+    def unpack(cls, data, zip64=False):
+        dd_struct = cls._struct_64 if zip64 else cls._struct
+        if len(data) == struct.calcsize(dd_struct) - 4:
+            data = cls._signature + data
+        sign, crc32, csize, usize = struct.unpack(dd_struct, data)
+        if sign != cls._signature:
+            raise ValueError
+        return cls(crc32, csize, usize)
+
+
+@dataclasses.dataclass
+class ZipLocalFileHeader:
+    _signature = b'PK\3\4'
+    _struct = '<4sHHHHHIIIHH'
+    _length = struct.calcsize(_struct)
+
+    signature: bytes
+    version: int
+    flags: 'ZipFlags'
+    compression: 'CompressionMethod'
+    modification: datetime.datetime
+    crc32: int
+    compressed_size: int
+    uncompressed_size: int
+    filename: bytes
+    extra_fields: dict['ExtraFieldId', '_ExtraField | bytes']
+
+    def pack(self):
+        extra_fields = b''.join([ef.pack() for ef in self.extra_fields])
+        return struct.pack(
+            self._struct,
+            self._signature,
+            self.version,
+            self.flags.pack(),
+            self.compression,
+            *self.format_time_date(self.modification),
+            self.crc32,
+            self.compressed_size,
+            self.uncompressed_size,
+            len(self.filename),
+            len(extra_fields),
+        ) + self.filename + extra_fields
+
+    @classmethod
+    def unpack(cls, file_header):
+        signature, *headers, filename_len, extra_fields_len = list(struct.unpack(
+            cls._struct, file_header[:cls._length]))
+        if signature != cls._signature:
+            e = "invalid signature"
+            raise ValueError(e)
+        if len(file_header) != (cls._length + filename_len + extra_fields_len):
+            e = "invalid length"
+            raise ValueError(e)
+        headers[1] = ZipFlags.unpack(headers[1])
+        headers[2] = CompressionMethod(headers[2])
+        headers[3:5] = [cls.parse_time_date(headers[3], headers[4])]
+        filename = file_header[cls._length:cls._length + filename_len]
+        extra_fields_data = file_header[cls._length + filename_len:]
+
+        i = 0
+        extra_fields = {}
+        while i < extra_fields_len:
+            id_, size = struct.unpack('HH', extra_fields_data[i:i + 4])
+            extra_field = extra_fields[i:i + size]
+            extra_fields[id_] = (
+                extra_field_cls.unpack(extra_field)
+                if (extra_field_cls := _ExtraField._registry.get(id_)) else
+                extra_field
+            )
+            i += 4 + size
+
+        return cls(signature, *headers, filename, extra_fields)
+
+    @staticmethod
+    def parse_time_date(ziptime: int, zipdate: int) -> datetime.datetime:
+        second = (ziptime & 0b11111)
+        minute = (ziptime & 0b11111100000) >> 5
+        hour = (ziptime & 0b1111100000000000) >> 11
+        day = (zipdate & 0b11111)
+        month = (zipdate & 0b111100000) >> 5
+        year = (zipdate & 0b1111111000000000) >> 9
+        return datetime.datetime(1980 + year, month, day, hour, minute, second * 2)
+
+    @staticmethod
+    def format_time_date(dt: datetime.datetime) -> tuple[int, int]:
+        ziptime = dt.second // 2 + (dt.minute << 5) + (dt.hour << 11)
+        zipdate = dt.day + (dt.month << 5) + (dt.year << 9)
+        return (ziptime, zipdate)
 
 
 class CompressionMethod(enum.IntEnum):
@@ -58,21 +168,21 @@ class CompressionMethod(enum.IntEnum):
 
 @dataclasses.dataclass
 class ZipFlags:
-    encrypted_file: bool
-    compression_option1: bool
-    compression_option2: bool
-    data_descriptor: bool
-    enhanced_deflation: bool
-    compressed_patched_data: bool
-    strong_encryption: bool
-    _1: bool = dataclasses.field(repr=False)  # reserved flag
-    _2: bool = dataclasses.field(repr=False)  # reserved flag
-    _3: bool = dataclasses.field(repr=False)  # reserved flag
-    language_encoding: bool
-    _4: bool = dataclasses.field(repr=False)  # reserved flag
-    mask_header_values: bool
-    _5: bool = dataclasses.field(repr=False)  # reserved flag
-    _6: bool = dataclasses.field(repr=False)  # reserved flag
+    encrypted_file: bool = False
+    compression_option1: bool = False
+    compression_option2: bool = False
+    data_descriptor: bool = False
+    enhanced_deflation: bool = False
+    compressed_patched_data: bool = False
+    strong_encryption: bool = False
+    _1: bool = dataclasses.field(default=False, repr=False)  # reserved flag
+    _2: bool = dataclasses.field(default=False, repr=False)  # reserved flag
+    _3: bool = dataclasses.field(default=False, repr=False)  # reserved flag
+    language_encoding: bool = False
+    _4: bool = dataclasses.field(default=False, repr=False)  # reserved flag
+    mask_header_values: bool = False
+    _5: bool = dataclasses.field(default=False, repr=False)  # reserved flag
+    _6: bool = dataclasses.field(default=False, repr=False)  # reserved flag
 
     @classmethod
     def unpack(cls, encoded_flags: int):
@@ -81,131 +191,121 @@ class ZipFlags:
 
     def pack(self):
         bits = [
-            '1' if getattr(self, field_name) else '0'
-            for field_name in dataclasses.fields(self)
+            '1' if getattr(self, field.name) else '0'
+            for field in dataclasses.fields(self)
         ]
-        return int(bits, 2)
+        return int(''.join(bits), 2)
+
+
+class ExtraFieldId(enum.IntEnum):
+    ZIP64 = 0x0001
+
+
+class _ExtraField:
+    _registry = {}
+    id: ExtraFieldId
+
+    @classmethod
+    def unpack(cls, data):
+        id_, _size, *args = struct.unpack(cls._struct, data)
+        assert id_ == cls.id
+        return cls(*args)
+
+    def pack(self):
+        return struct.pack(
+            self._struct,
+            self.id,
+            self._struct_size - 4,
+            *(
+                getattr(self, field.name)
+                for field in dataclasses.fields(self)
+            ),
+        )
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if _ExtraField in cls.__bases__:
+            cls._registry[cls.id] = cls
 
 
 @dataclasses.dataclass
-class ZipFileHeader:
-    signature: bytes
-    version: int
-    flags: ZipFlags
-    compression: CompressionMethod
-    modification: datetime.datetime
-    crc32: int
+class _Zip64(_ExtraField):
+    id = ExtraFieldId.ZIP64
+    _struct = 'HHQQQI'
+    _struct_size = struct.calcsize(_struct)
+
+    original_size: int
     compressed_size: int
-    uncompressed_size: int
-    filename: bytes
-    extra_fields: bytes
+    relative_header_offset: int
+    disk_start: int
 
-    def pack(self):
-        raise NotImplementedError
 
-    @classmethod
-    def unpack(cls, file_header):
-        signature, *headers, filename_len, extra_field_len = list(struct.unpack(
-            FILE_HEADER_STRUCT, file_header[:FILE_HEADER_LENGTH]))
-        if signature != b'PK\3\4':
-            e = "invalid signature"
-            raise ValueError(e)
-        if len(file_header) != (FILE_HEADER_LENGTH + filename_len + extra_field_len):
-            e = "invalid length"
-            raise ValueError(e)
-        headers[1] = ZipFlags.unpack(headers[1])
-        headers[2] = CompressionMethod(headers[2])
-        headers[3:5] = [cls.parse_time_date(headers[3], headers[4])]
-        filename = file_header[FILE_HEADER_LENGTH:FILE_HEADER_LENGTH + filename_len]
-        extra_fields = file_header[FILE_HEADER_LENGTH + filename_len:]
-        return cls(signature, *headers, filename, extra_fields)
+def write(attachments):
+    pos = 0
 
-    @staticmethod
-    def parse_time_date(ziptime, zipdate):
-        second = (ziptime & 0b11111)
-        minute = (ziptime & 0b11111100000) >> 5
-        hour = (ziptime & 0b1111100000000000) >> 11
-        day = (zipdate & 0b11111)
-        month = (zipdate & 0b111100000) >> 5
-        year = (zipdate & 0b1111111000000000) >> 9
-        return datetime.datetime(1980 + year, month, day, hour, minute, second * 2)
+    def send(chunk):
+        nonlocal pos
+        pos += len(chunk)
+        return chunk
 
-    @property
-    def uses_data_descriptor(self):
-        return (
-            self.flags.data_descriptor
-            and not self.crc32
-            and not self.uncompressed_size
-            and not self.compressed_size
+    for att in attachments:
+        need_zip64 = att.file_size > 0xFF_FF_FF_FF
+
+        # assume non-text mimetypes are compressed already
+        compression = (
+            CompressionMethod.DEFLATED
+            if (att.mimetype or '').startswith('text/') else
+            CompressionMethod.NO_COMPRESSION
         )
 
+        extra_fields = {}
+        if need_zip64:
+            extra_fields[ExtraFieldId.ZIP64] = _Zip64(
+                original_size=0,
+                compressed_size=0,
+                relative_header_offset=0,
+                disk_start=0,
+            )
 
-def _find_data_descriptor(data, content_start):
-    search_from = content_start
-    while True:
-        index = data.find(b'PK\x07\x08', search_from)
-        if index == -1:
-            e = "coun't not find data descriptor"
-            raise ValueError(e)
-        _, crc32, csize, usize = struct.unpack(
-            DATA_DESCRIPTOR_STRUCT,
-            data[index:index + DATA_DESCRIPTOR_LENGTH],
+        local_file_header = ZipLocalFileHeader(
+            ZipLocalFileHeader._signature,
+            version=45 if need_zip64 else 20,
+            flags=ZipFlags(
+                data_descriptor=True,
+            ),
+            compression=compression,
+            modification=att.write_date,
+            crc32=0,
+            compressed_size=0,
+            uncompressed_size=0,
+            filename=att.name,
+            extra_fields=extra_fields,
         )
-        if index - content_start == csize:
-            # if proved unreliable, then test the crc32 and verify that
-            # b'PK\1\3' or b'PK\3\4' follows too.
-            return crc32, csize, usize
-        search_from = index + 4
+        yield send(local_file_header.pack())
 
+        crc32 = 0
+        if compression:
+            compress = zlib.compressobj(wbits=-15)
+            compressed_size = 0
 
-def get_first_file(partial_zip: bytes) -> tuple[ZipFileHeader, bytes]:
-    """
-    Attempt to locate and read the first file of a partial zip.
+        path = werkzeug.security.safe_join(
+            os.path.abspath(config.filestore(att.env.cr.dbname)),
+            att.store_fname)
+        with open(path, 'rb') as file:
+            while chunk := file.read(io.DEFAULT_BUFFER_SIZE):
+                crc32 = zlib.crc32(chunk, crc32)
+                if compression:
+                    chunk = compress.compress(chunk)
+                    compressed_size += len(chunk)
+                yield send(chunk)
 
-    :param partial_zip: Enough bytes from the zip to read the first
-        compressed file.
-    :returns: a 2-item tuple with the header (filename, size, ...) and
-        the compressed content of the first file of the zip.
-    :raises ValueError: When it is not a zip, or that there isn't enough
-        data available to read the first file in its entirety.
-    """
-    if not partial_zip.startswith(b'PK\3\4'):
-        e = "not a zipfile, or no file in zip"
-        raise ValueError(e)
-    if len(partial_zip) < FILE_HEADER_LENGTH:
-        e = "not enought data to read zipfile header"
-        raise ValueError(e)
-    *_, filename_len, extra_field_len = struct.unpack(
-        FILE_HEADER_STRUCT, partial_zip[:FILE_HEADER_LENGTH])
-    if len(partial_zip) < FILE_HEADER_LENGTH + filename_len + extra_field_len:
-        e = "not enought data to read zipfile filename and extra fields"
-        raise ValueError(e)
+        yield send(struct.pack(
+            '<4sIQQ' if need_zip64 else '<4sIII',
+            b'PK\7\x08',
+            crc32,
+            compressed_size if compression else att.file_size,
+            att.file_size,
+        ))
 
-    header_len = FILE_HEADER_LENGTH + filename_len + extra_field_len
-    header = ZipFileHeader.unpack(partial_zip[:header_len])
-    if header.uses_data_descriptor:
-        header.crc32, header.compressed_size, header.uncompressed_size = (
-            _find_data_descriptor(partial_zip, header_len)
-        )
-
-    if header.compressed_size > len(partial_zip) - header_len:
-        e = "not enought data"
-        raise ValueError(e)
-    compressed_content = partial_zip[header_len:header_len + header.compressed_size]
-
-    return (header, compressed_content)
-
-
-def decompress_file(header: ZipFileHeader, compressed_content: bytes) -> bytes:
-    match header.compression:
-        case CompressionMethod.NO_COMPRESSION:
-            return compressed_content
-        case CompressionMethod.DEFLATED if zlib:
-            return zlib.decompress(compressed_content, wbits=-15)
-        case CompressionMethod.BZIP2 if bz2:
-            return bz2.decompress(compressed_content)
-        case CompressionMethod.LZMA if lzma:
-            return lzma.decompress(compressed_content)
-        case compression:
-            e = f"can't decompress {compression}"
-            raise ValueError(e)
+    # TODO: central directory
+    ...
