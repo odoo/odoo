@@ -69,12 +69,16 @@ class PortalChatter(ThreadController):
         # extract domain from the 'website_message_ids' field
         model = request.env[thread_model]
         field = model._fields['website_message_ids']
-        domain = Domain.AND([
-            self._setup_portal_message_fetch_extra_domain(kw),
-            field.get_comodel_domain(model),
-            [('res_id', '=', thread_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False),
-             ("subtype_id", "=", request.env.ref("mail.mt_comment").id)]
-        ])
+        domain = (
+            Domain(self._setup_portal_message_fetch_extra_domain(kw))
+            & Domain(field.get_comodel_domain(model))
+            & Domain("res_id", "=", thread_id)
+            & Domain("subtype_id", "=", request.env.ref("mail.mt_comment").id)
+            & (
+                Domain("body", "not in", [False, '<span class="o-mail-Message-edited"></span>'])
+                | Domain("attachment_ids", "!=", False)
+            )
+        )
 
         # Check access
         Message = request.env['mail.message']
