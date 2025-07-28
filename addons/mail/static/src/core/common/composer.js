@@ -776,7 +776,9 @@ export class Composer extends Component {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
                 onConfirm: () => {
-                    this.message.remove();
+                    this.message.remove({
+                        removeFromThread: this.shouldHideFromMessageListOnDelete,
+                    });
                     this.props.onDiscardCallback?.();
                 },
                 prompt: _t("Are you sure you want to delete this message?"),
@@ -865,5 +867,9 @@ export class Composer extends Component {
             composer.emailAddSignature = config.emailAddSignature;
             composer.text = config.text;
         }
+    }
+
+    get shouldHideFromMessageListOnDelete() {
+        return false;
     }
 }

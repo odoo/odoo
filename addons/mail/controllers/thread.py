@@ -220,7 +220,7 @@ class ThreadController(http.Controller):
         # sudo: mail.message - access is checked in _get_with_access and _can_edit_message
         message = message.sudo()
         body = Markup(body) if body else body  # may contain HTML such as @mentions
-        thread = guest.env[message.model].browse(message.res_id)
+        thread = request.env[message.model].browse(message.res_id)
         update_data = {
             "attachment_ids": attachment_ids,
             "body": body,
