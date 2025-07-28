@@ -2850,10 +2850,15 @@ def render(template_name, values, load, **options):
         def _get_asset_nodes(self, *args):
             raise NotImplementedError("Assets are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
 
+    class MockCr:
+        def __init__(self):
+            self.cache = {}
+
     class MockEnv(dict):
         def __init__(self):
             super().__init__()
             self.context = {}
+            self.cr = MockCr()
 
         def __call__(self, cr=None, user=None, context=None, su=None):
             """ Return an mocked environment based and update the sent context.
