@@ -68,6 +68,7 @@
                             t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
                             t-on-paste="onPaste"
                             t-model="props.composer.text"
+                            t-on-input="(ev) => this.onInput(ev)"
                             t-att-placeholder="placeholder"
                             t-att-readOnly="!state.active"
                             tabindex="0"

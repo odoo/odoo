@@ -463,6 +463,12 @@ export class Composer extends Component {
         }
     }
 
+    onInput(ev) {
+        if (!this.props.composer.isDirty) {
+            this.props.composer.isDirty = true;
+        }
+    }
+
     /**
      * This doesn't work on firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1699743
      */
