@@ -3,7 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo import fields, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from collections import defaultdict
 from unittest.mock import patch
@@ -4777,3 +4777,20 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "<p>Manually written terms by user</p>",
             "Narration should be preserved after partner change when invoice terms are disabled"
         )
+
+    def test_invoice_currency_rate_onchange_sets_to_one(self):
+        """ Ensure that invoice_currency_rate is set to 1 if set to 0 or negative for foreign currency invoices. """
+        invoice = self.invoice
+        invoice.currency_id = self.other_currency
+
+        # Test invoice_currency_rate with 0 value
+        with self.assertRaises(ValidationError):
+            with Form(invoice) as move_form:
+                move_form.invoice_currency_rate = 0
+        self.assertEqual(invoice.invoice_currency_rate, 2.0)
+
+        # Test invoice_currency_rate with negative value
+        with self.assertRaises(ValidationError):
+            with Form(invoice) as move_form:
+                move_form.invoice_currency_rate = -420
+        self.assertEqual(invoice.invoice_currency_rate, 2.0)

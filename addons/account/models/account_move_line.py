@@ -661,7 +661,7 @@ class AccountMoveLine(models.Model):
     def _compute_currency_rate(self):
         for line in self:
             if line.move_id.is_invoice(include_receipts=True):
-                line.currency_rate = line.move_id.invoice_currency_rate
+                line.currency_rate = line.move_id.invoice_currency_rate or 1.0
             elif line.currency_id:
                 line.currency_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=line.company_currency_id,
