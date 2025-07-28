@@ -224,6 +224,10 @@ class TestUi(TestUICommon):
             },
         )
 
+    def test_course_review_modification(self):
+        user_demo = self.user_demo
+        self.start_tour("/slides", "course_review_modification", login=user_demo.login)
+
 @tests.common.tagged('post_install', '-at_install')
 class TestUiPublisher(HttpCaseGamification):
 

@@ -1203,12 +1203,14 @@ class Message(models.Model):
 
     def _filter_empty(self):
         """ Return subset of "void" messages """
-        return self.filtered(
-            lambda msg:
-                (not msg.body or tools.is_html_empty(msg.body)) and
-                (not msg.subtype_id or not msg.subtype_id.description) and
-                not msg.attachment_ids and
-                not msg.tracking_value_ids
+        return self.filtered(self._is_empty)
+
+    def _is_empty(self, message):
+        return (
+            (not message.body or tools.is_html_empty(message.body))
+            and (not message.subtype_id or not message.subtype_id.description)
+            and not message.attachment_ids
+            and not message.tracking_value_ids
         )
 
     @api.model
