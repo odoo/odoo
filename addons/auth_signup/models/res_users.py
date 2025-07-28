@@ -213,10 +213,10 @@ class ResUsers(models.Model):
                     mail.send()
             if signup_type == 'reset':
                 _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
-                message = _('A reset password link was send by email')
+                message = _('A reset password link was sent by email')
             else:
                 _logger.info("Signup email sent for user <%s> to <%s>", user.login, user.email)
-                message = _('A signup link was send by email')
+                message = _('A signup link was sent by email')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
