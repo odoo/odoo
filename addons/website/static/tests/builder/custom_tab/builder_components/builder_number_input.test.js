@@ -549,6 +549,29 @@ describe("unit & saveUnit", () => {
         expect.verifySteps(["customAction 57000ms"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("57000ms");
     });
+    test("should handle saveUnit even without explicit unit", async () => {
+        addActionOption({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
+        // note that 5000 has no unit of measure
+        await setupWebsiteBuilder(`
+                    <div class="test-options-target">5000</div>
+                `);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        await click(".options-container input");
+        const input = queryFirst(".options-container input");
+        expect(input).toHaveValue("5");
+    });
     test("should handle empty saveUnit", async () => {
         addActionOption({
             customAction: class extends BuilderAction {
