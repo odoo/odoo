@@ -2,10 +2,11 @@
 
 import pprint
 
-from odoo import http
+from odoo import fields, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 
@@ -15,6 +16,52 @@ _logger = get_payment_logger(__name__)
 class MercadoPagoController(http.Controller):
     _return_url = '/payment/mercado_pago/return'
     _webhook_url = '/payment/mercado_pago/webhook'
+
+    @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
+    def mercado_pago_payment(
+        self, provider_id, reference, transaction_amount, payer, payment_method_id, token=None,
+        issuer_id=None
+    ):
+        """Make a payment request and process the payment data.
+
+        :param int provider_id: The provider handling the transaction, as a `payment.provider` id
+        :param str reference: The reference of the transaction
+        :param int transaction_amount: The amount of the transaction in minor units of the currency
+        :param int payment_method_id: The payment method of the transaction.
+        :param int payer: The payer making the transaction.
+        :param dict payment_method_id: The details of the payment method used for the transaction.
+        :param int token: The transaction token of card received from Mercado Pago.
+        :param int issuer_id: The issuer id of the card received from Mercado Pago.
+        :return: The JSON-formatted content of the response
+        :rtype: dict
+        """
+
+        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
+        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+
+        data = tx_sudo._mercado_pago_prepare_payment_request_payload()
+        data.update({
+            'transaction_amount': float(transaction_amount),
+            'payment_method_id': payment_method_id,
+            'token': token,
+            'issuer_id': issuer_id,
+        })
+
+        if provider_sudo.mercado_pago_access_token:
+            if provider_sudo.mercado_pago_access_token_expiry < fields.Datetime.now():
+                provider_sudo._mercado_pago_refresh_token()
+
+        response_content = tx_sudo._send_api_request(
+            'POST',
+            endpoint='/v1/payments',
+            json=data,
+            idempotency_key=payment_utils.generate_idempotency_key(
+                tx_sudo, scope='payment_request_token'
+            )
+        )
+        tx_sudo._process(
+            'mercado_pago', dict(response_content, merchantReference=reference, token=token)
+        )
 
     @http.route(_return_url, type='http', methods=['GET'], auth='public')
     def mercado_pago_return_from_checkout(self, **data):

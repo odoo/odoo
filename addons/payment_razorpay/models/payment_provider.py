@@ -4,11 +4,9 @@ import hashlib
 import hmac
 import uuid
 from datetime import timedelta
-from urllib.parse import urlencode
 
 from odoo import _, fields, models
 from odoo.exceptions import RedirectWarning
-from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay import const
@@ -89,7 +87,7 @@ class PaymentProvider(models.Model):
         if self.code != 'razorpay':
             return super().action_start_onboarding(menu_id=menu_id)
 
-        if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES:
+        if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES: #TODO ANKO the error message should refer to currency
             raise RedirectWarning(
                 _(
                     "Razorpay is not available in your country; please use another payment"
@@ -99,12 +97,10 @@ class PaymentProvider(models.Model):
                 _("Other Payment Providers"),
             )
 
-        params = {
-            'return_url': f'{self.get_base_url()}{RazorpayController.OAUTH_RETURN_URL}',
-            'provider_id': self.id,
-            'csrf_token': request.csrf_token(),
-        }
-        authorization_url = f'{const.OAUTH_URL}/authorize?{urlencode(params)}'
+        authorization_url = self._get_oauth_url(
+            proxy_url=const.OAUTH_URL,
+            return_endpoint=RazorpayController.OAUTH_RETURN_URL
+        )
         return {
             'type': 'ir.actions.act_url',
             'url': authorization_url,
@@ -205,7 +201,7 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - OAUTH FLOW === #
 
-    def _razorpay_refresh_access_token(self):
+    def _razorpay_refresh_access_token(self): # TODO ANKO this doesn't seem to be called anywhere it seems like it was forgotten to remove when it was moved to iap_repo
         """ Refresh the access token.
 
         Note: `self.ensure_one()`

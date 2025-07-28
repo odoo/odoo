@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from hashlib import sha1
+from werkzeug.exceptions import Forbidden
 
 from odoo import fields
-from odoo.http import request
+from odoo.http import request, _logger
 from odoo.tools import consteq, float_round
 from odoo.tools.misc import hmac as hmac_tool
 
@@ -236,3 +237,9 @@ def generate_idempotency_key(tx, scope=None):
     """
     database_uuid = tx.env['ir.config_parameter'].sudo().get_param('database.uuid')
     return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
+
+
+def check_csrf_token(csrf_token):
+    if not request.validate_csrf(csrf_token):
+        _logger.warning("CSRF token verification failed.")
+        raise Forbidden()

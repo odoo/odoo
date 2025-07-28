@@ -16,31 +16,39 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
     def test_no_item_missing_from_preference_request_payload(self):
         """ Test that the request values are conform to the transaction fields. """
         tx = self._create_transaction(flow='redirect')
-        request_payload = tx._mercado_pago_prepare_preference_request_payload()
+        request_payload = tx._mercado_pago_prepare_payment_request_payload()
         self.maxDiff = 10000  # Allow comparing large dicts.
         return_url = self._build_url('/payment/mercado_pago/return')
         webhook_url = self._build_url('/payment/mercado_pago/webhook')
         sanitized_reference = url_quote(tx.reference)
         self.assertDictEqual(request_payload, {
+            'external_reference': tx.reference,
+            'notification_url': f'{webhook_url}/{sanitized_reference}',
             'auto_return': 'all',
             'back_urls': {
                 'failure': return_url,
                 'pending': return_url,
                 'success': return_url,
             },
-            'external_reference': tx.reference,
+
             'items': [{
                 'currency_id': tx.currency_id.name,
                 'quantity': 1,
                 'title': tx.reference,
                 'unit_price': tx.amount,
             }],
-            'notification_url': f'{webhook_url}/{sanitized_reference}',
+
             'payer': {
                 'address': {'street_name': tx.partner_address, 'zip_code': tx.partner_zip},
                 'email': tx.partner_email,
                 'name': tx.partner_name,
                 'phone': {'number': tx.partner_phone},
+            },
+            'payment_methods': {
+                'excluded_payment_types': [
+                    {'id': 'credit_card'},
+                    {'id': 'debit_card'},
+                ],
             },
         })
 
@@ -81,7 +89,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         )
         self.amount = 999.99
         tx = self._create_transaction(flow='redirect')
-        request_payload = tx._mercado_pago_prepare_preference_request_payload()
+        request_payload = tx._mercado_pago_prepare_payment_request_payload()
         self.assertEqual(
             request_payload['items'][0]['unit_price'],
             999,

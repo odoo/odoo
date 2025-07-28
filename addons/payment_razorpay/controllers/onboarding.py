@@ -4,11 +4,11 @@ import logging
 import pprint
 from datetime import timedelta
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import _, fields
 from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
+
+from odoo.addons.payment import utils as payment_utils
 
 
 _logger = logging.getLogger(__name__)
@@ -39,9 +39,7 @@ class RazorpayController(Controller):
             raise ValidationError(_("Could not find Razorpay provider with id %s", provider_sudo))
 
         # Verify the CSRF token.
-        if not request.validate_csrf(csrf_token):
-            _logger.warning("CSRF token verification failed.")
-            raise Forbidden()
+        payment_utils.check_csrf_token(csrf_token)
 
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
@@ -53,7 +51,7 @@ class RazorpayController(Controller):
             {'authorization_code': authorization_code}
         )
         try:
-            response_content = provider_sudo._send_api_request(
+            response_content = provider_sudo._send_api_request( # TODO ANKO check if it shouldn't be a is_proxy_call
                 'POST', '/get_access_token', json=proxy_payload
             )
         except ValidationError as e:
