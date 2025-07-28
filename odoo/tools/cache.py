@@ -44,8 +44,8 @@ class ormcache_counter:
         return 100.0 * self.hit / (self.hit + self.miss or 1)
 
 
-STAT: defaultdict[tuple[str, str, Callable], ormcache_counter] = defaultdict(ormcache_counter)
-"""statistic counters dictionary, maps (dbname, modelname, method) to counter"""
+_COUNTERS: defaultdict[tuple[str, Callable], ormcache_counter] = defaultdict(ormcache_counter)
+"""statistic counters dictionary, maps (dbname, method) to counter"""
 
 
 class ormcache:
@@ -113,10 +113,9 @@ class ormcache:
 
     def lookup(self, method, *args, **kwargs):
         model: BaseModel = args[0]
-        model_name = model._name or ''
         d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
         key = self.key(*args, **kwargs)
-        counter = STAT[model.pool.db_name, model_name, self.method]
+        counter = _COUNTERS[model.pool.db_name, self.method]
         counter.cache_name = self.cache_name
         try:
             r = d[key]
@@ -173,19 +172,57 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
         _logger.info('Stopping logging ORM cache stats')
         return False
 
+    class StatsLine:
+        def __init__(self, method, counter: ormcache_counter):
+            self.sz_entries_sum: int = 0
+            self.sz_entries_max: int = 0
+            self.nb_entries: int = 0
+            self.counter = counter
+            self.method = method
+
     def _log_ormcache_stats():
         """ Log statistics of ormcache usage by database, model, and method. """
         from odoo.modules.registry import Registry  # noqa: PLC0415
         try:
-            log_msgs = ['Caches stats:']
-            # {dbname: sz_entries_all}
-            db_size = defaultdict(lambda: 0)
-            # {dbname: {(model, method): [sz_entries_sum, sz_entries_max, nb_entries, stat]}}
-            cache_stats = defaultdict(lambda: defaultdict(lambda: [0, 0, 0, None]))
+            # {dbname: {method: StatsLine}}
+            cache_stats: defaultdict[str, dict[Callable, StatsLine]] = defaultdict(dict)
 
+            # browse the values in cache
+            registries = Registry.registries.snapshot
+            class_slots = {}
+            for i, (dbname, registry) in enumerate(registries.items(), start=1):
+                if not check_continue_logging():
+                    return
+                _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
+                db_cache_stats = cache_stats[dbname]
+                for cache in registry._Registry__caches.values():
+                    for cache_key, cache_value in cache.snapshot.items():
+                        method = cache_key[1]
+                        stats = db_cache_stats.get(method)
+                        if stats is None:
+                            stats = db_cache_stats[method] = StatsLine(method, _COUNTERS[dbname, method])
+                        stats.nb_entries += 1
+                        if not show_size:
+                            continue
+                        size = get_cache_size(cache_value, cache_info=method.__qualname__, class_slots=class_slots)
+                        stats.sz_entries_sum += size
+                        stats.sz_entries_max = max(stats.sz_entries_max, size)
+
+            # add counters that have no values in cache
+            for (dbname, method), counter in _COUNTERS.copy().items():  # copy to avoid concurrent modification
+                if not check_continue_logging():
+                    return
+                db_cache_stats = cache_stats[dbname]
+                stats = db_cache_stats.get(method)
+                if stats is None:
+                    db_cache_stats[method] = StatsLine(method, counter)
+
+            # Output the stats
+            log_msgs = ['Caches stats:']
             size_column_info = (
-                f"{'Memory SUM [Bytes]':>20},"
-                f"{'Memory MAX [Bytes]':>20},"
+                f"{'Memory %':>10},"
+                f"{'Memory SUM':>12},"
+                f"{'Memory MAX':>12},"
             ) if show_size else ''
             column_info = (
                 f"{'Cache Name':>25},"
@@ -194,60 +231,35 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                 f"{'Hit':>6},"
                 f"{'Miss':>6},"
                 f"{'Err':>6},"
-                f"{'Gen Time [s]':>14},"
-                f"{'Hit Ratio':>11},"
-                f"{'Model.Method':>15}"
+                f"{'Gen Time [s]':>13},"
+                f"{'Hit Ratio':>10},"
+                "  Method"
             )
-
-            registries = Registry.registries.snapshot
-            for i, (dbname, registry) in enumerate(registries.items(), start=1):
-                if not check_continue_logging():
-                    return
-                _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
-                db_cache_stats = cache_stats[dbname]
-                sz_entries_all = 0
-                for cache in registry._Registry__caches.values():
-                    for cache_key, cache_value in cache.snapshot.items():
-                        model_name, method = cache_key[:2]
-                        stats = db_cache_stats[model_name, method]
-                        stats[2] += 1  # nb_entries
-                        if not show_size:
-                            continue
-                        cache_info = f'{model_name}.{method.__name__}'
-                        size = get_cache_size(cache_value, cache_info=cache_info)
-                        sz_entries_all += size
-                        stats[0] += size  # sz_entries_sum
-                        stats[1] = max(stats[1], size)  # sz_entries_max
-                db_size[dbname] = sz_entries_all
-
-            for (dbname, model_name, method), stat in STAT.copy().items():  # copy to avoid concurrent modification
-                if not check_continue_logging():
-                    return
-                cache_stats[dbname][model_name, method][3] = stat
 
             for dbname, db_cache_stats in sorted(cache_stats.items(), key=lambda k: k[0] or '~'):
                 if not check_continue_logging():
                     return
-                sz_entries_all = db_size[dbname]
                 log_msgs.extend((f'Database {dbname or "<no_db>"}:', column_info))
 
-                # sort by -sz_entries_sum, model and method_name
-                db_cache_stat = sorted(db_cache_stats.items(), key=lambda k: (-k[1][0], k[0][0], k[0][1].__name__))
-                for (model_name, method), (sz_entries_sum, sz_entries_max, nb_entries, stat) in db_cache_stat:
+                # sort by -sz_entries_sum and method_name
+                db_cache_stat = sorted(db_cache_stats.items(), key=lambda k: (-k[1].sz_entries_sum, k[0].__name__))
+                sz_entries_all = sum(stat.sz_entries_sum for _, stat in db_cache_stat)
+                for method, stat in db_cache_stat:
                     size_data = (
-                        f'{sz_entries_sum:11d} ({sz_entries_sum / (sz_entries_all or 1) * 100:5.1f}%),'
-                        f'{sz_entries_max:20d},'
+                        f'{stat.sz_entries_sum / (sz_entries_all or 1) * 100:9.1f}%,'
+                        f'{stat.sz_entries_sum:12d},'
+                        f'{stat.sz_entries_max:12d},'
                     ) if show_size else ''
                     log_msgs.append(
-                        f'{stat.cache_name:>25},'
-                        f'{nb_entries:7d},'
+                        f'{stat.counter.cache_name:>25},'
+                        f'{stat.nb_entries:7d},'
                         f'{size_data}'
-                        f'{stat.hit:6d},'
-                        f'{stat.miss:6d},'
-                        f'{stat.err:6d},'
-                        f'{stat.gen_time:14.3f},'
-                        f'{stat.ratio:10.1f}%,'
-                        f'   {model_name}.{method.__name__}'
+                        f'{stat.counter.hit:6d},'
+                        f'{stat.counter.miss:6d},'
+                        f'{stat.counter.err:6d},'
+                        f'{stat.counter.gen_time:13.3f},'
+                        f'{stat.counter.ratio:9.1f}%,'
+                        f'  {method.__qualname__}'
                     )
             _logger.info('\n'.join(log_msgs))
         except Exception:  # noqa: BLE001
@@ -267,14 +279,13 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                          name="odoo.signal.log_ormcache_stats_with_size").start()
 
 
-def get_cache_key_counter(bound_method: Callable, *args, **kwargs):
+def get_cache_key_counter(bound_method: Callable, *args, **kwargs) -> tuple[LRU, tuple, ormcache_counter]:
     """ Return the cache, key and stat counter for the given call. """
     model: BaseModel = bound_method.__self__  # type: ignore
     ormcache_instance: ormcache = bound_method.__cache__  # type: ignore
     cache: LRU = model.pool._Registry__caches[ormcache_instance.cache_name]  # type: ignore
     key = ormcache_instance.key(model, *args, **kwargs)
-    model_name = model._name or ''
-    counter = STAT[model.pool.db_name, model_name, ormcache_instance.method]
+    counter = _COUNTERS[model.pool.db_name, ormcache_instance.method]
     return cache, key, counter
 
 
