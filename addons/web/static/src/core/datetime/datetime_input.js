@@ -20,6 +20,7 @@ const dateTimeInputOwnProps = {
     onChange: { type: Function, optional: true },
     onApply: { type: Function, optional: true },
     placeholder: { type: String, optional: true },
+    disabled: { type: Boolean, optional: true },
 };
 
 /** @extends {Component<DateTimeInputProps>} */

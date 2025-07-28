@@ -531,7 +531,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Check that gift cards are used (Whiteboard Pen price is 1.20)
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
         loyalty_history = self.env['loyalty.history'].search([('card_id','=',gift_card_program.coupon_ids.id)])
-        self.assertEqual(loyalty_history.used, 3.2)
+        self.assertEqual(loyalty_history[0].used, 3.2)
+        last_order = self.env['pos.order'].search([], order='id desc', limit=1).name
+        self.assertEqual(loyalty_history[1].description, f"Assigning order {last_order}")
 
     def test_ewallet_program(self):
         """
@@ -3135,6 +3137,83 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_max_usage_partner_with_point",
             login="pos_user",
         )
+
+    def test_physical_gift_card(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        example_order = self.env['pos.order'].create({
+            'name': 'Gift Card Sold',
+            'amount_paid': 60.0,
+            'amount_total': 60.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'session_id': self.main_pos_config.current_session_id.id,
+        })
+        gift_card_valid = self.env['loyalty.card'].create({
+            'program_id': gift_card_program.id,
+            'source_pos_order_id': example_order.id,
+            'code': 'gift_card_valid',
+            'points': 60.0,
+            'history_ids': [(0, 0, {
+                'order_model': 'pos.order',
+                'order_id': example_order.id,
+                'description': 'sold',
+                'used': 0,
+                'issued': 60.0,
+            })]
+        })
+        gift_card_partner = self.env['loyalty.card'].create({
+            'program_id': gift_card_program.id,
+            'source_pos_order_id': example_order.id,
+            'code': 'gift_card_partner',
+            'points': 60.0,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'history_ids': [(0, 0, {
+                'order_model': 'pos.order',
+                'order_id': example_order.id,
+                'description': 'sold',
+                'used': 0,
+                'issued': 60.0,
+            })]
+        })
+        gift_card_expired = self.env['loyalty.card'].create({
+            'program_id': gift_card_program.id,
+            'code': 'gift_card_expired',
+            'points': 60.0,
+            'expiration_date': date.today() - timedelta(days=1),
+        })
+        gift_card_sold = self.env['loyalty.card'].create({
+            'program_id': gift_card_program.id,
+            'source_pos_order_id': example_order.id,
+            'code': 'gift_card_sold',
+            'points': 60.0,
+            'history_ids': [(0, 0, {
+                'order_model': 'pos.order',
+                'order_id': example_order.id,
+                'description': 'sold',
+                'used': 0,
+                'issued': 60.0,
+            })]
+        })
+        gift_card_generated_but_not_sold = self.env['loyalty.card'].create({
+            'program_id': gift_card_program.id,
+            'code': 'gift_card_generated_but_not_sold',
+            'points': 60.0,
+        })
+
+        self.start_pos_tour("test_physical_gift_card")
+        self.assertEqual(gift_card_valid.points, 56.80)
+        self.assertEqual(gift_card_sold.points, 53.60)
+        self.assertEqual(gift_card_partner.points, 56.80)
+        self.assertEqual(gift_card_generated_but_not_sold.points, 47.20)
+        self.assertEqual(gift_card_expired.points, 60.0)
+
+        created_gift_card = self.env['loyalty.card'].search([('points', '=', 999)], order='id desc', limit=1)
+        last_order = self.env['pos.order'].search([], order='id desc', limit=1)
+        self.assertEqual(created_gift_card.points, 999.00)
+        self.assertEqual(created_gift_card.partner_id.name, 'A powerful PoS man!')
+        self.assertEqual(created_gift_card.source_pos_order_id.id, last_order.id)
 
     def test_combo_product_dont_grant_point(self):
         """
