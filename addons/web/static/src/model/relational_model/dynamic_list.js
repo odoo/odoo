@@ -1,4 +1,4 @@
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { unique } from "@web/core/utils/arrays";
@@ -365,12 +365,8 @@ export class DynamicList extends DataPoint {
         const discardInvalidRecords = () => invalidRecords.forEach((record) => record._discard());
 
         if (validRecords.length === 0) {
+            editedRecord._displayInvalidFieldNotification();
             discardInvalidRecords();
-            this.model.dialog.add(AlertDialog, {
-                body: _t("No valid record to save"),
-                confirm: () => this.leaveEditMode({ discard: true }),
-                dismiss: () => this.leaveEditMode({ discard: true }),
-            });
             return false;
         }
 
