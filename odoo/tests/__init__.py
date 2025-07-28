@@ -7,4 +7,3 @@ See https://github.com/python/cpython/tree/3.10/Lib/unittest for reference files
 
 from . import common
 from .common import *
-from . import test_parse_inline_template
