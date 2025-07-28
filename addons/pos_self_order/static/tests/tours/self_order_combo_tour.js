@@ -56,18 +56,20 @@ registry.category("web_tour.tours").add("self_combo_selector", {
 });
 
 registry.category("web_tour.tours").add("self_combo_selector_category", {
-    steps: () => [
-        Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Test Combo"),
-        ...ProductPage.setupCombo([
-            {
-                product: "Combo Product 5",
-                attributes: [],
-            },
-        ]),
-        Utils.clickBtn("Checkout"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
-        Utils.checkIsNoBtn("Order Now"),
-    ],
+    steps: () =>
+        [
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickOnCategoryNotLoaded("Test Category"),
+            ProductPage.clickProduct("Test Combo"),
+            ProductPage.setupCombo([
+                {
+                    product: "Combo Product 5",
+                    attributes: [],
+                },
+            ]),
+            Utils.clickBtn("Checkout"),
+            Utils.clickBtn("Order"),
+            Utils.clickBtn("Ok"),
+            Utils.checkIsNoBtn("Order Now"),
+        ].flat(),
 });

@@ -32,6 +32,7 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
         // Normal product
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-In"),
+        ...ProductPage.clickOnCategoryNotLoaded("Miscellaneous"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.checkIsNoBtn("Checkout"),
         // Product with attributes
@@ -77,7 +78,6 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-In"),
         ProductPage.clickCategory("Miscellaneous"),
-
         ProductPage.clickProduct("Coca-Cola"),
         Utils.checkIsNoBtn("Checkout"),
 

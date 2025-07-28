@@ -6,6 +6,7 @@ import { onMounted, onWillUnmount } from "@odoo/owl";
  * @param {string} categoryId - Initial selected category id
  * @param {Object} categoryScrollContainerRef - Ref to the scrollable container holding the category names
  * @param {Object} productScrollContainerRef - Ref to the scrollable container holding the product items grouped by categories
+ * @param {Function} [getScrollCategories] - Function that returns the list of categories with their top position and their id.
  * @param {Function} [onCategoryVisible=() => {}] - Callback invoked when the category becomes visible
  * @param {Object} [options={}]
  * @param {number} [options.categoryScrollOffsetLeft=-5] - Horizontal scroll offset applied when scrolling to a category name
@@ -17,6 +18,7 @@ export function useCategoryScrollSpy(
     categoryId,
     categoryScrollContainerRef,
     productScrollContainerRef,
+    getScrollCategories,
     onCategoryVisible = () => {},
     options = {}
 ) {
@@ -26,7 +28,6 @@ export function useCategoryScrollSpy(
         visibleThreshold = 100,
     } = options;
 
-    let categorySections = [];
     let isScrolling = false;
 
     let selectedCategoryId = categoryId;
@@ -47,15 +48,11 @@ export function useCategoryScrollSpy(
     }
 
     function scrollToCategory(categoryId) {
-        const section = categorySections.find((el) => el.dataset.category === "" + categoryId);
+        const scrollCategory = getScrollCategories().find((category) => category.id === categoryId);
         const { el: scrollEl } = productScrollContainerRef;
 
-        if (section) {
-            const containerTop = scrollEl.getBoundingClientRect().top;
-            const sectionTop = section.getBoundingClientRect().top;
-            const scrollOffset =
-                sectionTop - containerTop + scrollEl.scrollTop + productScrollOffsetTop;
-            scrollEl.scrollTo({ top: scrollOffset });
+        if (scrollCategory) {
+            scrollEl.scrollTo({ top: scrollCategory.top + productScrollOffsetTop });
         }
 
         //Ensure the category is correctly selected and visible
@@ -63,29 +60,24 @@ export function useCategoryScrollSpy(
     }
 
     function onProductScroll() {
-        let topCategory = null;
-        let minTop = Infinity;
-        const containerTop =
-            productScrollContainerRef.el.getBoundingClientRect().top + visibleThreshold;
+        let topCategoryId = null;
+        const containerTop = productScrollContainerRef.el.scrollTop;
+        const containerTopThreshold = containerTop + visibleThreshold;
+        const scrollCategories = getScrollCategories();
 
-        // Loop through each category section to determine which is closest to the top
-        for (const section of categorySections) {
-            const distanceFromTop = section.getBoundingClientRect().top - containerTop;
-            const absDistanceFromTop = Math.abs(distanceFromTop);
+        // Loop until one category is above the threshold
+        // And take the previous one as the top category
+        for (let i = 0; i < scrollCategories.length; i++) {
+            const scrollCategory = scrollCategories[i];
+            const categoryTop = scrollCategory.top;
 
-            if (distanceFromTop <= 0 && absDistanceFromTop < minTop) {
-                topCategory = section.dataset.category;
-                minTop = absDistanceFromTop;
-            } else if (distanceFromTop > 0) {
-                if (!topCategory) {
-                    topCategory = section.dataset.category;
-                }
+            if (categoryTop > containerTopThreshold) {
+                topCategoryId = scrollCategories[i - 1]?.id || null;
                 break;
             }
         }
 
-        const topCategoryId = Number(topCategory);
-        if (selectedCategoryId !== topCategoryId) {
+        if (topCategoryId !== null && selectedCategoryId !== topCategoryId) {
             selectCategory(topCategoryId);
         }
     }
@@ -101,9 +93,7 @@ export function useCategoryScrollSpy(
     }
 
     onMounted(() => {
-        const scrollEl = productScrollContainerRef.el;
-        categorySections = [...scrollEl.querySelectorAll("[data-category]")];
-        scrollEl.addEventListener("scroll", deferScroll);
+        productScrollContainerRef.el.addEventListener("scroll", deferScroll);
         onProductScroll();
     });
 
