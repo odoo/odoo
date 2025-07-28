@@ -2620,7 +2620,7 @@ class freeze_time:
             time_to_freeze=time_to_freeze,
             tz_offset=tz_offset,
             tick=tick,
-            as_kwarg=as_kwarg,
+            as_arg=as_kwarg,
             auto_tick_seconds=auto_tick_seconds,
         )
 
