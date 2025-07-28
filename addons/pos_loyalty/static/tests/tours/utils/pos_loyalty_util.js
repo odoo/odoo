@@ -4,6 +4,8 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
 export function selectRewardLine(rewardName) {
     return [
@@ -147,6 +149,38 @@ export function checkAddedLoyaltyPoints(points) {
             trigger: `.loyalty-points-won:contains("${points}")`,
         },
     ];
+}
+
+export function useExistingLoyaltyCard(code, valid = true) {
+    const steps = [
+        {
+            trigger: `a:contains("Sell physical gift card?")`,
+            run: "click",
+        },
+        {
+            content: `Input code '${code}'`,
+            trigger: `input[id="code"]`,
+            run: `edit ${code}`,
+        },
+        {
+            content: "Not loading",
+            trigger: negate(".gift-card-loading"),
+        },
+    ];
+
+    if (!valid) {
+        steps.push(Dialog.confirm("Ok"));
+        steps.push(Dialog.cancel());
+        steps.push({
+            trigger: `a:contains("Sell physical gift card?")`,
+            run: () => {},
+        });
+    } else {
+        steps.push(...Chrome.waitRequest());
+        steps.push(Dialog.confirm());
+    }
+
+    return steps;
 }
 
 export function createManualGiftCard(code, amount, date = false) {

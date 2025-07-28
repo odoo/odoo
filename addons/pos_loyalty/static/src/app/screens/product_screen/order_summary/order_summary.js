@@ -3,7 +3,7 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 import { patch } from "@web/core/utils/patch";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ManageGiftCardPopup } from "@pos_loyalty/app/components/popups/manage_giftcard_popup/manage_giftcard_popup";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
@@ -14,6 +14,14 @@ patch(OrderSummary.prototype, {
     },
     async updateSelectedOrderline({ buffer, key }) {
         const selectedLine = this.currentOrder.getSelectedOrderline();
+        if (selectedLine?.gift_code && key !== "Backspace" && key !== "Delete") {
+            this.dialog.add(AlertDialog, {
+                title: _t("Gift Card"),
+                body: _t("You cannot change the quantity or price of a physical gift card."),
+            });
+            return;
+        }
+
         if (key === "-") {
             if (selectedLine && selectedLine._e_wallet_program_id) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
@@ -138,10 +146,11 @@ patch(OrderSummary.prototype, {
         selectedLine.gift_code = code;
     },
 
-    manageGiftCard() {
+    manageGiftCard(line) {
         this.dialog.add(ManageGiftCardPopup, {
             title: _t("Sell/Manage physical gift card"),
             placeholder: _t("Enter Gift Card Number"),
+            line: line,
             getPayload: async (code, points, expirationDate) => {
                 points = parseFloat(points);
                 if (isNaN(points)) {
@@ -154,17 +163,6 @@ patch(OrderSummary.prototype, {
                     return;
                 }
                 code = code.trim();
-                const res = await this.pos.data.searchRead(
-                    "loyalty.card",
-                    ["&", ["program_type", "=", "gift_card"], ["code", "=", code]],
-                    []
-                );
-                if (res.length > 0) {
-                    this.notification.add(_t("This Gift card has already been sold."), {
-                        type: "danger",
-                    });
-                    return;
-                }
 
                 // check for duplicate code
                 if (this.currentOrder.duplicateCouponChanges(code)) {
