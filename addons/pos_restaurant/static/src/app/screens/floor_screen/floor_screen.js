@@ -719,14 +719,12 @@ export class FloorScreen extends Component {
             title: _t("New Floor"),
             placeholder: _t("Floor name"),
             getPayload: async (newName) => {
-                const lightMode = cookie.get("pos_color_scheme") !== "dark";
-                const backgroundColor = lightMode ? "#E4E4E4" : "#1B1D26";
                 const floor = await this.pos.data.create(
                     "restaurant.floor",
                     [
                         {
                             name: newName,
-                            background_color: backgroundColor,
+                            background_color: "white",
                             pos_config_ids: [this.pos.config.id],
                         },
                     ],
@@ -898,7 +896,7 @@ export class FloorScreen extends Component {
     }
     _getColors() {
         const lightModeColors = {
-            white: [242, 245, 250],
+            white: [249, 250, 251],
             red: [220, 80, 90],
             green: [60, 160, 90],
             blue: [30, 130, 210],
@@ -911,7 +909,7 @@ export class FloorScreen extends Component {
         };
 
         const darkModeColors = {
-            white: [220, 220, 225],
+            white: [60, 62, 75],
             red: [200, 60, 75],
             green: [50, 130, 80],
             blue: [40, 90, 180],
