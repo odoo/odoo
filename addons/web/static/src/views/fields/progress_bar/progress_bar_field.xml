@@ -16,9 +16,7 @@
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-att-value="formatCurrentValue() or ''"
                         t-att-required="props.required"
-                        t-on-change="onCurrentValueChange"
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
                     />
@@ -33,8 +31,6 @@
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-att-value="formatCurrentValue()"
-                        t-on-change="onCurrentValueChange"
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
                     />
@@ -47,8 +43,6 @@
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-att-value="formatMaxValue()"
-                        t-on-change="onMaxValueChange"
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
                     />
