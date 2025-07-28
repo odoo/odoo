@@ -102,28 +102,28 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             trigger: "#cart_products:has(.o_cart_product:eq(3)):not(:has(.o_cart_product:eq(4)))",
         },
         {
-            trigger: `a.js_delete_product:first`,
+            trigger: `button.js_delete_product:first`,
             run: "click",
         },
         {
             trigger: "#cart_products:has(.o_cart_product:eq(2)):not(:has(.o_cart_product:eq(3)))",
         },
         {
-            trigger: `a.js_delete_product:first`,
+            trigger: `button.js_delete_product:first`,
             run: "click",
         },
         {
             trigger: "#cart_products:has(.o_cart_product:eq(1)):not(:has(.o_cart_product:eq(2)))",
         },
         {
-            trigger: `a.js_delete_product:first`,
+            trigger: `button.js_delete_product:first`,
             run: "click",
         },
         {
             trigger: "#cart_products:has(.o_cart_product:eq(0)):not(:has(.o_cart_product:eq(1)))",
         },
         {
-            trigger: `a.js_delete_product:first`,
+            trigger: `button.js_delete_product:first`,
             run: "click",
             expectUnloadPage: true,
         },
