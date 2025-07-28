@@ -79,7 +79,7 @@ export class SelectLotPopup extends Component {
                 sticky: false,
             });
         }
-        if (!lot.create || !this.props.customInput) {
+        if (!lot.create) {
             return this.notification.add(_t("The Lot/Serial number is not valid"), {
                 type: "warning",
                 sticky: false,
@@ -100,7 +100,8 @@ export class SelectLotPopup extends Component {
             return (
                 itemValue !== "" &&
                 !this.props.isLotNameUsed(itemValue) &&
-                (this.props.customInput || this.props.options.includes(itemValue))
+                (this.props.customInput ||
+                    this.props.options.map((o) => o.name).includes(itemValue))
             );
         });
         const filteredValues = this.props.uniqueValues
