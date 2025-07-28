@@ -21,7 +21,7 @@ export const Status = {
 /**
  * @typedef Dashboard
  * @property {number} id
- * @property {string} displayName
+ * @property {Object} data
  * @property {string} status
  * @property {Model} [model]
  * @property {Error} [error]
@@ -89,10 +89,8 @@ export class DashboardLoader {
         const dashboards = this.groups.map((group) => group.dashboards).flat();
         for (const dashboard of dashboards) {
             this.dashboards[dashboard.id] = {
-                id: dashboard.id,
-                displayName: dashboard.name,
+                data: dashboard,
                 status: Status.NotLoaded,
-                isFavorite: dashboard.is_favorite,
             };
         }
     }
@@ -118,8 +116,7 @@ export class DashboardLoader {
             id: section.id,
             name: section.name,
             dashboards: section.dashboards.map((dashboard) => ({
-                id: dashboard.id,
-                displayName: dashboard.name,
+                data: dashboard,
                 status: this._getDashboard(dashboard.id).status,
             })),
         }));
@@ -140,14 +137,16 @@ export class DashboardLoader {
         const groups = await this.orm.webSearchRead(
             "spreadsheet.dashboard.group",
             [["published_dashboard_ids", "!=", false]],
-            {
-                specification: {
-                    name: {},
-                    published_dashboard_ids: { fields: { name: {}, is_favorite: {} } },
-                },
-            }
+            { specification: this._getFetchGroupsSpecification() }
         );
         return groups.records;
+    }
+
+    _getFetchGroupsSpecification() {
+        return {
+            name: {},
+            published_dashboard_ids: { fields: { name: {}, is_favorite: {} } },
+        };
     }
 
     /**
@@ -158,14 +157,9 @@ export class DashboardLoader {
         const favoriteDashboards = [];
         this.groups
             .flatMap((group) => group.dashboards)
-            .forEach((dashboard) => {
-                const dashboardData = this._getDashboard(dashboard.id);
-                if (dashboardData.isFavorite) {
-                    favoriteDashboards.push({
-                        id: dashboard.id,
-                        displayName: dashboard.name,
-                        status: dashboardData.status,
-                    });
+            .forEach((dashboardData) => {
+                if (dashboardData.is_favorite) {
+                    favoriteDashboards.push(this._getDashboard(dashboardData.id));
                 }
             });
 
@@ -179,7 +173,7 @@ export class DashboardLoader {
      */
     _getDashboard(id) {
         if (!this.dashboards[id]) {
-            this.dashboards[id] = { status: Status.NotLoaded, id, displayName: "" };
+            this.dashboards[id] = { status: Status.NotLoaded, id, data: {} };
         }
         return this.dashboards[id];
     }

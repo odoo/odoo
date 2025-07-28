@@ -17,12 +17,12 @@
                                     <b t-esc="group.name"/>
                                 </header>
                                 <ul class="list-group d-block o_search_panel_field">
-                                    <li t-foreach="group.dashboards" t-as="dashboard" t-key="dashboard.id" t-on-click="() => this.onDashboardSelected(dashboard.id)" class="o_search_panel_category_value list-group-item py-1 o_cursor_pointer border-0 ps-0 pe-2">
-                                        <header class="list-group-item list-group-item-action d-flex align-items-center p-0 border-0" t-att-class="{'active text-900 fw-bold': dashboard.id === props.activeDashboard.id}">
+                                    <li t-foreach="group.dashboards" t-as="dashboard" t-key="dashboard.data.id" t-on-click="() => this.onDashboardSelected(dashboard.data.id)" class="o_search_panel_category_value list-group-item py-1 o_cursor_pointer border-0 ps-0 pe-2">
+                                        <header class="list-group-item list-group-item-action d-flex align-items-center p-0 border-0" t-att-class="{'active text-900 fw-bold': dashboard.data.id === props.activeDashboard.data.id}">
                                             <div class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 o_cursor_pointer mb-0">
                                                 <!-- empty button to mimick the standard search panel -->
                                                 <button class="o_toggle_fold btn p-0 flex-shrink-0 text-center"/>
-                                                <span t-esc="dashboard.displayName" class="o_search_panel_label_title text-truncate"/>
+                                                <span t-esc="dashboard.data.name" class="o_search_panel_label_title text-truncate"/>
                                             </div>
 
                                         </header>
