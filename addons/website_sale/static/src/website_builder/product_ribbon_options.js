@@ -3,13 +3,13 @@ import { onWillStart, useState } from "@odoo/owl";
 
 export class ProductsRibbonOption extends BaseOptionComponent {
     static template = 'website_sale.ProductsRibbonOptionPlugin';
-    static props = {
-        loadInfo: Function,
-        count: Object,
-    };
+    static dependencies = ['productsRibbonOptionPlugin'];
 
     setup() {
         super.setup();
+
+        const {loadInfo, getCount} = this.dependencies.productsRibbonOptionPlugin;
+        this.count = useState(getCount());
 
         this.state = useState({
             ribbons: [],
@@ -17,7 +17,7 @@ export class ProductsRibbonOption extends BaseOptionComponent {
         });
 
         onWillStart(async () => {
-            this.state.ribbons = await this.props.loadInfo();
+            this.state.ribbons = await loadInfo();
         });
     }
 }

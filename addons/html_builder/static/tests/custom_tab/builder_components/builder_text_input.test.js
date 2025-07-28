@@ -4,6 +4,7 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -11,14 +12,18 @@ import { contains } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 
 test("hide/display base on applyTo", async () => {
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
-    });
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`<BuilderTextInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderTextInput applyTo="'.my-custom-class'" action="'customAction'"/>`;
+        }
+    );
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";

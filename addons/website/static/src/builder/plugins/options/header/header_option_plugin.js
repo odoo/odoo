@@ -36,12 +36,6 @@ export {
     HEADER_END,
 };
 
-export const basicHeaderOptionSettings = {
-    editableOnly: false,
-    selector: "#wrapwrap > header",
-    groups: ["website.group_website_designer"],
-};
-
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite", "menuDataPlugin"];
@@ -58,22 +52,10 @@ class HeaderOptionPlugin extends Plugin {
             },
         ],
         builder_options: [
-            withSequence(HEADER_TEMPLATE, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderTemplateOption,
-            }),
-            withSequence(HEADER_FONT, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderFontOption,
-            }),
-            withSequence(HEADER_ELEMENTS, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderElementsOption,
-            }),
-            withSequence(HEADER_ICON_BACKGROUND, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderIconBackgroundOption,
-            }),
+            withSequence(HEADER_TEMPLATE, HeaderTemplateOption),
+            withSequence(HEADER_FONT, HeaderFontOption),
+            withSequence(HEADER_ELEMENTS, HeaderElementsOption),
+            withSequence(HEADER_ICON_BACKGROUND, HeaderIconBackgroundOption),
         ],
     };
 }

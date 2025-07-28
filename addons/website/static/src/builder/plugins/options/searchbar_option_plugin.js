@@ -7,17 +7,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 class SearchbarOptionPlugin extends Plugin {
     static id = "searchbarOption";
     resources = {
-        builder_options: [
-            {
-                OptionComponent: SearchbarOption,
-                selector: ".s_searchbar_input",
-                applyTo: ".search-query",
-                props: {
-                    getOrderByItems: () => this.getResource("searchbar_option_order_by_items"),
-                    getDisplayItems: () => this.getResource("searchbar_option_display_items"),
-                },
-            },
-        ],
+        builder_options: [SearchbarOption],
         builder_actions: {
             SetSearchTypeAction,
             SetOrderByAction,
