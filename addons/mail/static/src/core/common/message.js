@@ -483,6 +483,10 @@ export class Message extends Component {
         this.state.showTranslation =
             !this.state.showTranslation && Boolean(message.translationValue);
     }
+
+    get shouldHideFromMessageListOnDelete() {
+        return false;
+    }
 }
 
 discussComponentRegistry.add("Message", Message);

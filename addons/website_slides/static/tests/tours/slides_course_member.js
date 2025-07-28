@@ -196,5 +196,9 @@ registry.category("web_tour.tours").add("course_member", {
             trigger: 'a[id="review-tab"]',
             run: "click",
         },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains('This is a great course. I highly recommend it!')",
+        },
     ],
 });

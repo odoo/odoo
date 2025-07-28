@@ -777,7 +777,10 @@ export class Composer extends Component {
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
-                onConfirm: () => this.message.remove(),
+                onConfirm: () =>
+                    this.message.remove({
+                        removeFromThread: this.shouldHideFromMessageListOnDelete,
+                    }),
                 prompt: _t("Are you sure you want to bid farewell to this message forever?"),
             });
         }
@@ -877,5 +880,9 @@ export class Composer extends Component {
         if (Number.isInteger(config.replyToMessageId)) {
             composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
         }
+    }
+
+    get shouldHideFromMessageListOnDelete() {
+        return false;
     }
 }

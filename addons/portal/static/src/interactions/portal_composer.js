@@ -128,7 +128,7 @@ export class PortalComposer extends Interaction {
     }
 
     prepareMessageData() {
-        return Object.assign(this.options || {}, {
+        return {
             thread_model: this.options.res_model,
             thread_id: this.options.res_id,
             post_data: {
@@ -141,7 +141,7 @@ export class PortalComposer extends Interaction {
             token: this.options.token,
             hash: this.options.hash,
             pid: this.options.pid,
-        });
+        };
     }
 
     async onSubmitButtonClick(ev, currentTargetEl) {
