@@ -1384,6 +1384,9 @@ export class Rtc extends Record {
         if (camera) {
             await this.toggleVideo("camera");
         }
+        if (!this.selfSession) {
+            return;
+        }
         await this._initConnection();
         await this.resetMicAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
@@ -1844,6 +1847,10 @@ export class Rtc extends Record {
                     : _t('%s" requires "screen recording" access', window.location.host);
             this.notification.add(str, { type: "warning" });
             stopVideo();
+            return;
+        }
+        if (!this.selfSession) {
+            closeStream(sourceStream);
             return;
         }
         let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;
