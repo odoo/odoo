@@ -35,6 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'p2107',
                 'income_account_id': 'p20011',
                 'l10n_in_withholding_account_id': 'p100595',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }
 

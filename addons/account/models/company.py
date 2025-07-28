@@ -125,9 +125,9 @@ class ResCompany(models.Model):
     account_sale_receipt_tax_id = fields.Many2one('account.tax', string="Default Sale Receipt Tax", check_company=True)
     account_purchase_receipt_tax_id = fields.Many2one('account.tax', string="Default Purchase Receipt Tax", check_company=True)
     tax_calculation_rounding_method = fields.Selection([
+        ('round_globally', 'Round per Tax'),
         ('round_per_line', 'Round per Line'),
-        ('round_globally', 'Round Globally'),
-        ], default='round_per_line', string='Tax Calculation Rounding Method')
+        ], default='round_globally', string='Tax Calculation Rounding Method')
     currency_exchange_journal_id = fields.Many2one('account.journal', string="Exchange Gain or Loss Journal", domain=[('type', '=', 'general')])
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',

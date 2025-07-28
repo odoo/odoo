@@ -1049,7 +1049,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.product_line_vals_2,
                 'currency_id': self.other_currency.id,
                 'amount_currency': 160.0,
-                'debit': 53.33,
+                'debit': 53.34,
             },
             {
                 **self.tax_line_vals_1,
@@ -1067,7 +1067,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'currency_id': self.other_currency.id,
                 'amount_currency': -208.006,
-                'credit': 69.33,
+                'credit': 69.34,
                 'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {

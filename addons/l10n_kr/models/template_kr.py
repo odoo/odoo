@@ -41,5 +41,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'l10n_kr_620014',
                 'expense_account_id': 'l10n_kr_510001',
                 'income_account_id': 'l10n_kr_410001',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }

@@ -23,10 +23,10 @@ class TestTax(TestTaxCommon):
             taxes,
             {
                 'total_included': 100.0,
-                'total_excluded': 83.34,
+                'total_excluded': 83.33,
                 'taxes': (
-                    (83.34, 8.33),
-                    (83.34, 8.33),
+                    (83.333333, 8.33),
+                    (83.333333, 8.33),
                 ),
             },
             100.0,

@@ -34,6 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'eg_standard_purchase_14',
                 'expense_account_id': 'egy_account_400028',
                 'income_account_id': 'egy_account_500001',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }
 

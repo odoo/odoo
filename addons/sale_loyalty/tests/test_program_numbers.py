@@ -367,7 +367,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertRecordValues(order, [{
             'amount_total': 1711.0,
-            'amount_untaxed': 1435.46,
+            'amount_untaxed': 1435.45,
         }])
         self.assertEqual(len(order.order_line.ids), 12, "Order should contains 5 regular product lines, 3 free product lines and 4 discount lines (one for every tax)")
 
@@ -375,13 +375,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         order.order_line._compute_tax_ids()
         self.assertRecordValues(order, [{
             'amount_total': 1711.0,
-            'amount_untaxed': 1435.46,
+            'amount_untaxed': 1435.45,
         }])
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
         self._auto_rewards(order, self.all_programs)
         self.assertRecordValues(order, [{
             'amount_total': 1711.0,
-            'amount_untaxed': 1435.46,
+            'amount_untaxed': 1435.45,
         }])
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
         # -- End test inside the test
@@ -413,7 +413,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertRecordValues(order, [{
             'amount_total': 1628.2,
-            'amount_untaxed': 1363.46,
+            'amount_untaxed': 1363.45,
         }])
         self.assertEqual(len(order.order_line.ids), 13, "Order should have a new discount line for 20% on Large Cabinet")
 
@@ -436,7 +436,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
         # Large Cabinet        |  4  |    100.00  | 15% excl |  400.00 |  460.00 |   60.00
-        # Conference Chair     |  4  |    100.00  | 10% incl |  363.64 |  400.00 |   36.36
+        # Conference Chair     |  4  |    100.00  | 10% incl |  363.63 |  400.00 |   36.36
         # Pedal Bins           |  5  |    100.00  | /        |  500.00 |  500.00 |       /
         # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
         # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
@@ -451,9 +451,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # 10% on tax 35+50%    |  1  |    -30.00  | 35% incl |  -22.22 |  -41.11 |  -18.89
         #                                           50% excl
         # --------------------------------------------------------------------------------
-        # TOTAL                                              | 1445.28 | 1718.20 |  272.92
+        # TOTAL                                              | 1445.27 | 1718.20 |  272.92
 
-        self.assertEqual(order.amount_untaxed, 1445.28, "The order should have one more paid Conference Chair with 10% incl tax and discounted by 10%")
+        self.assertEqual(order.amount_untaxed, 1445.27, "The order should have one more paid Conference Chair with 10% incl tax and discounted by 10%")
 
         # Check that if you remove a product, his reward lines got removed, especially the discount per tax one
         sol2.unlink()
@@ -742,14 +742,14 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._auto_rewards(order, self.all_programs)
         self._apply_promo_code(order, 'test_10pc')
         self._auto_rewards(order, self.all_programs)
-        self.assertAlmostEqual(order.amount_tax, 1.13, 2)
+        self.assertAlmostEqual(order.amount_tax, 1.14, 2)
         self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
         # It should stay the same after a recompute, order matters
         self._auto_rewards(order, self.all_programs)
-        self.assertAlmostEqual(order.amount_tax, 1.13, 2)
+        self.assertAlmostEqual(order.amount_tax, 1.14, 2)
         self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
 
     def test_coupon_and_coupon_discount_fixed_amount_tax_incl(self):
         """ Ensure multiple coupon can cohexists without making
@@ -921,9 +921,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # 25% discount         |  1  |    -16.50  |       /  |  -16.50 |  -16.50 |   0.00
         # 25% discount         |  1  |    -12.50  | 30% incl |   -9.62 |  -12.50 |  -2.88
         # --------------------------------------------------------------------------------
-        # TOTAL                                              |   78.34 |   87.00 |   8.66
+        # TOTAL                                              |   78.35 |   87.00 |   8.66
         self.assertEqual(order.amount_total, 87.00, "Total untaxed should be as per above comment")
-        self.assertEqual(order.amount_untaxed, 78.34, "Total with taxes should be as per above comment")
+        self.assertEqual(order.amount_untaxed, 78.35, "Total with taxes should be as per above comment")
 
     def test_program_numbers_free_prod_with_min_amount_and_qty_on_same_prod(self):
         # This test focus on giving a free product based on both

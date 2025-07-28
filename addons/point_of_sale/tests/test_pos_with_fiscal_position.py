@@ -17,6 +17,7 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         super(TestPoSWithFiscalPosition, cls).setUpClass()
 
         cls.config = cls.basic_config
+        cls.company.tax_calculation_rounding_method = 'round_per_line'
 
         cls.new_tax_17 = cls.env['account.tax'].create({'name': 'New Tax 17%', 'amount': 17})
         cls.new_tax_17.invoice_repartition_line_ids.write({'account_id': cls.tax_received_account.id})
