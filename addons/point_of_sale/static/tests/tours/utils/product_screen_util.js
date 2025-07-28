@@ -739,3 +739,22 @@ export function addDiscount(discount) {
             .flatMap((key) => Numpad.click(key)),
     ].flat();
 }
+
+export function clickOrderMenu() {
+    return [
+        {
+            content: "Click Orders dropdown item",
+            trigger: '.dropdown-item.with-badge.py-2:contains("Orders")',
+        },
+    ];
+}
+
+export function doubleClickOrder(name) {
+    return [
+        {
+            content: `Select order`,
+            trigger: `.order-row:contains("${name}")`,
+            run: 'dblclick',
+        },
+    ];
+}

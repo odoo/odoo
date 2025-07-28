@@ -29,4 +29,18 @@ patch(PosOrder.prototype, {
             this.tracking_number = "S" + this.tracking_number;
         }
     },
+
+    export_as_JSON() {
+        var json = super.export_as_JSON();
+        if (this.table_stand_number) {
+            json.table_stand_number = this.table_stand_number;
+        }
+        return json;
+    },
+
+    init_from_JSON(json) {
+        super.init_from_JSON(...arguments);
+        this.table_stand_number = json.table_stand_number;
+    },
+
 });

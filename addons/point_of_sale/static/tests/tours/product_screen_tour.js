@@ -722,3 +722,19 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_table_stand_number_exported", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuButton(),
+            ProductScreen.clickOrderMenu(),
+            ProductScreen.doubleClickOrder("12345678901234"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

@@ -67,3 +67,9 @@ class PosOrder(models.Model):
         for config in config_ids:
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('login_number', 0))
             config._notify('ORDER_STATE_CHANGED', {})
+
+    def _export_for_ui(self, order):
+        order_for_ui = super()._export_for_ui(order)
+        if order_for_ui and order.table_stand_number:
+            order_for_ui['table_stand_number'] = order.table_stand_number
+        return order_for_ui
