@@ -319,6 +319,20 @@ actual arch.
 
     @api.depends('arch', 'inherit_id')
     def _compute_invalid_locators(self):
+        def assess_locator(source, spec):
+            with suppress(ValidationError):  # Syntax error
+                # If locate_node returns None here:
+                # Invalid expression: Ok Syntax, but cannot be anchored to the parent view.
+                node = self.locate_node(source, spec)
+
+            if node is None:
+                return {
+                    "tag": spec.tag,
+                    "attrib": dict(spec.attrib),
+                    "sourceline": spec.sourceline,
+                }
+            return None
+
         self.invalid_locators = []
         for view in self:
             if not view.inherit_id or not view.arch:
@@ -346,23 +360,23 @@ actual arch.
                 if spec.tag == 'data':
                     specs.extend(spec)
                     continue
-                # Capture 'move' nodes to handles cases where move operations are nested within other xpath operations
-                # <xpath expr="parent" position="after">
-                #   <xpath expr="child" position="move"/>
-                # </xpath>
-                specs.extend(c for c in spec if c.get("position") == 'move')
-                node = None
-                with suppress(ValidationError):  # Syntax error
-                    # If locate_node returns None here:
-                    # Invalid expression: Ok Syntax, but cannot be anchored to the parent view.
-                    node = self.locate_node(source, spec)
-                if node is None:
-                    invalid_locators.append({
-                        "tag": spec.tag,
-                        "attrib": dict(spec.attrib),
-                        "sourceline": spec.sourceline
-                    })
+
+                if invalid_locator := assess_locator(source, spec):
+                    invalid_locators.append(invalid_locator)
                 else:
+                    position, mode = spec.get("position"), spec.get("mode")
+                    for sub_spec in spec:
+                        sub_position = sub_spec.get("position")
+                        if sub_position == "move" and (position != "replace" or mode != "inner"):
+                            if invalid_move := assess_locator(source, sub_spec):
+                                invalid_locators.append(invalid_move)
+                        elif sub_position:
+                            invalid_locators.append({
+                                "tag": sub_spec.tag,
+                                "attrib": dict(sub_spec.attrib),
+                                "sourceline": sub_spec.sourceline,
+                            })
+
                     try:
                         # Since subsequent xpaths may be dependent on previous xpaths, we apply the spec.
                         source = apply_inheritance_specs(source, spec)
