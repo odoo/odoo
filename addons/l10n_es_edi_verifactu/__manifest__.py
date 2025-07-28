@@ -5,6 +5,7 @@
     'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': "Module for sending Spanish Veri*Factu XML to the AEAT",
+    'website': "https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/spain.html#veri-factu",
     'depends': ['l10n_es'],
     'data': [
         'security/ir.model.access.csv',
