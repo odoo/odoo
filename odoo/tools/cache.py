@@ -28,7 +28,7 @@ _logger_state = ''
 
 class ormcache_counter:
     """ Statistic counters for cache entries. """
-    __slots__ = ['hit', 'miss', 'err', 'gen_time', 'cache_name']
+    __slots__ = ['cache_name', 'err', 'gen_time', 'hit', 'miss', 'tx_err', 'tx_hit', 'tx_miss']
 
     def __init__(self):
         self.hit: int = 0
@@ -36,10 +36,21 @@ class ormcache_counter:
         self.err: int = 0
         self.gen_time: float = 0.0
         self.cache_name: str = ''
+        self.tx_hit: int = 0
+        self.tx_miss: int = 0
+        self.tx_err: int = 0
 
     @property
     def ratio(self) -> float:
         return 100.0 * self.hit / (self.hit + self.miss or 1)
+
+    @property
+    def tx_ratio(self) -> float:
+        return 100.0 * self.tx_hit / (self.tx_hit + self.tx_miss or 1)
+
+    @property
+    def tx_calls(self) -> int:
+        return self.tx_hit + self.tx_miss
 
 
 _COUNTERS: defaultdict[tuple[str, Callable], ormcache_counter] = defaultdict(ormcache_counter)
@@ -114,13 +125,24 @@ class ormcache:
         d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
         key = self.key(*args, **kwargs)
         counter = _COUNTERS[model.pool.db_name, self.method]
-        counter.cache_name = self.cache_name
+
+        tx_calls = set()
+        if not isinstance(model, type):  # skip classmethods
+            tx_calls = model.env.cr.cache.setdefault('_orm_cache_called', tx_calls)
+        is_tx = key not in tx_calls
+        if is_tx:
+            counter.cache_name = self.cache_name
+            tx_calls.add(key)
+        del tx_calls
+
         try:
             r = d[key]
             counter.hit += 1
+            counter.tx_hit += is_tx
             return r
         except KeyError:
             counter.miss += 1
+            counter.tx_miss += is_tx
             start = time.monotonic()
             value = self.method(*args, **kwargs)
             counter.gen_time += time.monotonic() - start
@@ -129,6 +151,7 @@ class ormcache:
         except TypeError:
             _logger.warning("cache lookup error on %r", key, exc_info=True)
             counter.err += 1
+            counter.tx_err += is_tx
             return self.method(*args, **kwargs)
 
 
@@ -235,6 +258,8 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                 f"{'Err':>6},"
                 f"{'Gen Time [s]':>13},"
                 f"{'Hit Ratio':>10},"
+                f"{'TX Hit Ratio':>13},"
+                f"{'TX Calls':>8},"
                 "  Method"
             )
 
@@ -267,6 +292,8 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                         f'{stat.counter.err:6d},'
                         f'{stat.counter.gen_time:13.3f},'
                         f'{stat.counter.ratio:9.1f}%,'
+                        f'{stat.counter.tx_ratio:12.1f}%,'
+                        f'{stat.counter.tx_calls:8d},'
                         f'  {method.__qualname__}'
                     )
             _logger.info('\n'.join(log_msgs))

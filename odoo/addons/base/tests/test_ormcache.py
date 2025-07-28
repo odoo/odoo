@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase, tagged
@@ -32,6 +31,8 @@ class TestOrmCache(TransactionCase):
         cache, key, counter = get_cache_key_counter(IMD._xmlid_lookup, XMLID)
         hit = counter.hit
         miss = counter.miss
+        tx_hit = counter.tx_hit
+        tx_miss = counter.tx_miss
 
         # clear the caches of ir.model.data, retrieve its key and
         self.env.registry.clear_cache()
@@ -41,18 +42,24 @@ class TestOrmCache(TransactionCase):
         self.env.ref(XMLID)
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss + 1)
+        self.assertEqual(counter.tx_hit, tx_hit)
+        self.assertEqual(counter.tx_miss, tx_miss + 1)
         self.assertIn(key, cache)
 
         # lookup again
         self.env.ref(XMLID)
         self.assertEqual(counter.hit, hit + 1)
         self.assertEqual(counter.miss, miss + 1)
+        self.assertEqual(counter.tx_hit, tx_hit)
+        self.assertEqual(counter.tx_miss, tx_miss + 1)
         self.assertIn(key, cache)
 
         # lookup again
         self.env.ref(XMLID)
         self.assertEqual(counter.hit, hit + 2)
         self.assertEqual(counter.miss, miss + 1)
+        self.assertEqual(counter.tx_hit, tx_hit)
+        self.assertEqual(counter.tx_miss, tx_miss + 1)
         self.assertIn(key, cache)
 
     def test_invalidation(self):
