@@ -101,9 +101,6 @@ class Store:
             assert not as_thread, f"expected not as_thread with model name {data}: {kwargs}"
             model_name = data
         assert isinstance(model_name, str), f"expected str for model name: {model_name}: {values}"
-        # skip empty values
-        if not values:
-            return self
         ids = ids_by_model[model_name]
         # handle singleton model: update single record in place
         if not ids:
