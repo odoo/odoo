@@ -545,6 +545,51 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(child_view3.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 2}])
         self.assertEqual(child_view4.invalid_locators, False)
 
+    def test_nested_move_invalid_locator(self):
+        """ Check ir.ui.view's invalid_locators field is computed correctly."""
+        base_view_arch = """
+            <form string="View">
+                <div name="div1">
+                    <div>
+                        <span />
+                    </div>
+                </div>
+            </form>
+        """
+        base_view = self.makeView('invalid_xpath_base_view', arch=base_view_arch)
+
+        child_view = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'inherit_id': base_view.id,
+            'priority': 10,
+            'active': False,
+            'arch': """
+            <data>
+                <xpath expr="/form/div/div" position="replace">
+                    <xpath expr="/form/div/div/span" position="move" />
+                </xpath>
+            </data>
+            """,
+        })
+        self.assertEqual(child_view.invalid_locators, False)
+
+        child_view.arch = """
+            <data>
+                <xpath expr="/form/div/div" position="replace">
+                    <xpath expr="/form/div/div/h1" position="move" />
+                </xpath>
+            </data>"""
+        self.assertEqual(child_view.invalid_locators,
+            [{
+                'attrib': {
+                    'expr': '/form/div/div/h1',
+                    'position': 'move',
+                },
+                'sourceline': 3,
+                'tag': 'xpath',
+            }])
+
     def test_broken_hierarchy_locators(self):
         self.patch(self.env.registry.get("ir.ui.view"), "_check_xml", lambda self: True)
         view = self.View.create({
