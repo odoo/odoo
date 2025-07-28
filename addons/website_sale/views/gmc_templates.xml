@@ -21,6 +21,7 @@
                         <t t-foreach="item['shipping']" t-as="shipping">
                             <g:shipping>
                                 <g:country t-out="shipping['country']"/>
+                                <g:region t-out="shipping['region']"/>
                                 <g:service t-out="shipping['service']"/>
                                 <g:price t-out="shipping['price']"/>
                             </g:shipping>
