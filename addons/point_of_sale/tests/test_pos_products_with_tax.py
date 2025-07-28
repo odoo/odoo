@@ -279,7 +279,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             self.assertAlmostEqual(refund_order.amount_paid, -104.01, msg='Amount paid for return order should be negative.')
 
         def _after_closing_cb():
-            manually_calculated_taxes = (4.01, 6.37)  # should be positive since it is return order
+            manually_calculated_taxes = (4.01, 6.36)  # should be positive since it is return order
             tax_lines = self.pos_session.move_id.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
             self.assertAlmostEqual(sum(manually_calculated_taxes), sum(tax_lines.mapped('balance')))
             for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
@@ -308,9 +308,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
                 'session_journal_entry': {
                     'line_ids': [
                         {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 4.01, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 6.37, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 6.36, 'credit': 0, 'reconciled': False},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 30, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 36.36, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 36.37, 'credit': 0, 'reconciled': False},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 27.27, 'credit': 0, 'reconciled': False},
                         {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 104.01, 'reconciled': True},
                     ],

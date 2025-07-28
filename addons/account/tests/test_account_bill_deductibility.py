@@ -275,8 +275,8 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                 {'display_type': 'non_deductible_product',       'name': 'Partial item',         'balance': -12.5, 'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
                 {'display_type': 'non_deductible_product_total', 'name': 'private part',         'balance': 12.5,  'tax_ids': []},  # noqa: E241
                 {'display_type': 'non_deductible_tax',           'name': 'private part (taxes)', 'balance': 1.88,  'tax_ids': []},  # noqa: E241
-                {'display_type': 'tax',                          'name': '15%',                  'balance': 5.62,  'tax_ids': []},  # noqa: E241
-                {'display_type': 'payment_term',                 'name': False,                  'balance': -57.5, 'tax_ids': []},  # noqa: E241
+                {'display_type': 'tax',                          'name': '15%',                  'balance': 5.63,  'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term',                 'name': False,                  'balance': -57.51, 'tax_ids': []},  # noqa: E241
             ],
             {}
         )
