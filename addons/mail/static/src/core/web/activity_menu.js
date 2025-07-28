@@ -68,7 +68,7 @@ export class ActivityMenu extends Component {
             context["search_default_activities_upcoming_all"] = 1;
         }
 
-        let domain = [];
+        let domain = [["activity_ids.active", "=", true]];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
         }
