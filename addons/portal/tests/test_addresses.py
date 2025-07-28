@@ -168,10 +168,9 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             [{**self.default_address_values, 'vat': 'BE0926372368'}],
         )
 
-    def test_cannot_update_vat_on_child_addresses(self):
-        """Check that the VAT cannot be updated on a child address.
-
-        Customers are supposed to update it through their main address (and the route /my/account)
+    def test_update_vat_on_child_addresses(self):
+        """
+        Check that the VAT can be updated on a child address, without updating the parent's VAT.
         """
         self.authenticate(self.account_a.login, self.account_a.login)
         csrf_token = Request.csrf_token(self)
@@ -182,7 +181,15 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'csrf_token': csrf_token,
             'partner_id': self.account_a.partner_id.id,
         })
-        self.assertIn('vat', res['invalid_fields'])
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
+        self.assertRecordValues(
+            self.account_a.partner_id,
+            [{**self.default_address_values, 'vat': 'BE0926372368'}],
+        )
+        self.assertRecordValues(
+            self.account_a.partner_id.parent_id,
+            [{'vat': False}],
+        )
 
     def test_main_address_update(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
