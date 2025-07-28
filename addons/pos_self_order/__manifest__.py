@@ -90,6 +90,9 @@
             "web_tour/static/src/tour_service/**/*",
             "pos_self_order/static/tests/**/*",
         ],
+        "web.assets_tests": [
+            "pos_self_order/static/tests/tours/test_self_order_pos.js",
+        ],
     },
     'post_init_hook': '_post_self_order_post_init',
     "license": "LGPL-3",
