@@ -157,7 +157,7 @@ export class PosStore extends Reactive {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
 
-        window.addEventListener("online", () => {
+        window.addEventListener("pos-network-online", () => {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
