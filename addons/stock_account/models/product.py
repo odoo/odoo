@@ -738,6 +738,14 @@ will update the cost of every lot/serial number in stock."),
 
         # empty out the stock for the impacted products
         empty_stock_svl_list = []
+        lots_by_product = defaultdict(lambda: self.env['stock.lot'])
+        res = self.env["stock.valuation.layer"]._read_group(
+            [("product_id", "in", impacted_products.ids), ("remaining_qty", "!=", 0)],
+            ["product_id"],
+            ["lot_id:recordset"],
+        )
+        for group in res:
+            lots_by_product[group[0].id] |= group[1]
         for product in impacted_products:
             # FIXME sle: why not use products_orig_quantity_svl here?
             if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
@@ -745,13 +753,13 @@ will update the cost of every lot/serial number in stock."),
                 continue
             if product.lot_valuated:
                 if float_compare(product.quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
-                    for lot in product.stock_valuation_layer_ids.filtered(lambda l: l.remaining_qty).lot_id:
+                    for lot in lots_by_product[product.id]:
                         svsl_vals = product._prepare_out_svl_vals(lot.quantity_svl, self.env.company, lot=lot)
                         svsl_vals['description'] = description + svsl_vals.pop('rounding_adjustment', '')
                         svsl_vals['company_id'] = self.env.company.id
                         empty_stock_svl_list.append(svsl_vals)
                 else:
-                    for lot in product.stock_valuation_layer_ids.filtered(lambda l: l.remaining_qty).lot_id:
+                    for lot in lots_by_product[product.id]:
                         svsl_vals = product._prepare_in_svl_vals(abs(lot.quantity_svl), lot.value_svl / lot.quantity_svl, lot=lot)
                         svsl_vals['description'] = description + svsl_vals.pop('rounding_adjustment', '')
                         svsl_vals['company_id'] = self.env.company.id
