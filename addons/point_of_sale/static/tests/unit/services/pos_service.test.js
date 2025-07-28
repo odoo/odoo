@@ -123,12 +123,91 @@ describe("pos_store.js", () => {
         });
     });
 
+    test("addLineToCurrentOrder", async () => {
+        const store = await setupPosEnv();
+        store.setOrder(null);
+        expect(store.getOrder()).toBe(undefined);
+        // Should create order if none exist
+        const product = store.models["product.product"].get(5);
+        await store.addLineToCurrentOrder({ product_tmpl_id: product.product_tmpl_id });
+        expect(store.getOrder()).not.toBe(undefined);
+        expect(store.getOrder().lines.length).toBe(1);
+        expect(store.getOrder().lines[0].product_id.id).toBe(product.id);
+        expect(store.getOrder().lines[0].qty).toBe(1);
+        await store.addLineToCurrentOrder({ product_tmpl_id: product.product_tmpl_id, qty: 3 }, {});
+        expect(store.getOrder().lines[0].qty).toBe(4);
+    });
+
+    test("generateReceiptsDataToPrint", async () => {
+        const store = await setupPosEnv();
+        const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
+        const order = await getFilledOrder(store);
+        order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
+        const orderChange = store.changesToOrder(order, store.config.preparationCategories, false);
+
+        const { orderData, changes } = store.generateOrderChange(
+            order,
+            orderChange,
+            pos_categories,
+            false
+        );
+
+        const receiptsData = await store.generateReceiptsDataToPrint(
+            orderData,
+            changes,
+            orderChange
+        );
+        expect(receiptsData.length).toBe(1);
+        expect(receiptsData[0].changes.title).toBe("NEW");
+        expect(receiptsData[0].changes.data.length).toBe(2);
+        expect(receiptsData[0].changes.data[0]).toEqual({
+            uuid: order.lines[0].uuid,
+            name: "TEST",
+            basic_name: "TEST",
+            product_id: 5,
+            attribute_value_names: [],
+            quantity: 3,
+            note: "",
+            pos_categ_id: 1,
+            pos_categ_sequence: 0,
+            display_name: "TEST",
+            group: undefined,
+            isCombo: undefined,
+        });
+        expect(receiptsData[0].changes.data[1]).toEqual({
+            uuid: order.lines[1].uuid,
+            name: "TEST 2",
+            basic_name: "TEST 2",
+            product_id: 6,
+            attribute_value_names: [],
+            quantity: 2,
+            note: "Wait",
+            pos_categ_id: 2,
+            pos_categ_sequence: 0,
+            display_name: "TEST 2",
+            group: undefined,
+            isCombo: undefined,
+        });
+    });
+
     test("deleteOrders", async () => {
         const store = await setupPosEnv();
         const order1 = await getFilledOrder(store);
         await store.syncAllOrders();
         await store.deleteOrders([order1]);
         expect(store.models["pos.order"].getBy("uuid", order1.uuid).state).toBe("cancel");
+    });
+
+    test("deleteOrders multiple orders", async () => {
+        const store = await setupPosEnv();
+        await getFilledOrder(store);
+        store.addNewOrder();
+        let openOrders = store.getOpenOrders();
+        expect(openOrders.length).toBe(3);
+        const deletedOrders = await store.deleteOrders(openOrders);
+        expect(deletedOrders).toBe(true);
+        openOrders = store.getOpenOrders();
+        expect(openOrders.length).toBe(0);
     });
 
     test("productsToDisplay", async () => {
@@ -181,5 +260,51 @@ describe("pos_store.js", () => {
         expect(grouped.length).toBe(2);
         expect(grouped[0][1][0].name).toBe("TEST");
         expect(grouped[1][1][0].name).toBe("TEST 2");
+    });
+
+    test("onDeleteOrder", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const deletedOrder = await store.onDeleteOrder(order);
+        expect(order.uiState.displayed).toBe(false);
+        expect(deletedOrder).toBe(true);
+    });
+
+    test("getNextOrderRefs", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await store.getNextOrderRefs(order);
+        expect(order.pos_reference).toBeOfType("string");
+        expect(order.pos_reference.length).toBeGreaterThan(1);
+        expect(order.sequence_number).toBeOfType("integer");
+        expect(order.sequence_number).toBeGreaterThan(0);
+        expect(order.tracking_number).toBeOfType("string");
+        expect(order.tracking_number.length).toBeGreaterThan(2);
+    });
+
+    test("pending orders", async () => {
+        const store = await setupPosEnv();
+        let { orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder();
+        expect(orderToCreate).toHaveLength(0);
+        expect(orderToUpdate).toHaveLength(0);
+        expect(orderToDelete).toHaveLength(0);
+        const order = await getFilledOrder(store);
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(order.id).toBe(orderToCreate[0].id);
+        // After sync, order should be in 'orderToUpdate'
+        await store.syncAllOrders({ orders: [order] });
+        store.addPendingOrder([order.id]);
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(orderToCreate).toHaveLength(0);
+        expect(orderToUpdate).toHaveLength(1);
+        // Remove pending order
+        store.addPendingOrder([order.id], true);
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(orderToUpdate).toHaveLength(0);
+        expect(orderToDelete).toHaveLength(1);
+        // Clear pending orders
+        store.clearPendingOrder();
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(orderToDelete).toHaveLength(0);
     });
 });
