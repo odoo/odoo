@@ -2194,3 +2194,25 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         intercom_location = self.env.ref('stock.stock_location_inter_company')
         self.assertEqual(so.picking_ids.location_dest_id, intercom_location)
         self.assertEqual(so.picking_ids.move_ids.location_dest_id, intercom_location)
+
+    def test_sale_order_line_quantity_forecast_widget_display(self):
+        """
+        Ensure the availability widget is visible when the sale order line is linked to a move, and hidden if the related moves are all cancelled or done.
+        """
+        self.product_a.is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.company_data['default_warehouse'].lot_stock_id, 15)
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_uom_qty': 5}),
+            ],
+        })
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.order_line.display_qty_widget)
+        picking = sale_order.picking_ids
+        picking.move_ids[0].quantity = 2
+        backorder_wizard_dict = picking.button_validate()
+        backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
+        backorder_wizard_form.save().process_cancel_backorder()
+        self.assertFalse(sale_order.order_line.display_qty_widget)
