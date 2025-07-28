@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-04 18:39+0000\n"
+"POT-Creation-Date: 2025-07-25 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -986,6 +986,7 @@ msgstr "Kortingen"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__display_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__display_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__display_name
+#: model:ir.model.fields,field_description:loyalty.field_product_pricelist__display_name
 #: model:ir.model.fields,field_description:loyalty.field_product_product__display_name
 #: model:ir.model.fields,field_description:loyalty.field_product_template__display_name
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__display_name
@@ -1290,6 +1291,7 @@ msgstr "Geschiedenis voor klantenkaarten en e-wallets"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__id
+#: model:ir.model.fields,field_description:loyalty.field_product_pricelist__id
 #: model:ir.model.fields,field_description:loyalty.field_product_product__id
 #: model:ir.model.fields,field_description:loyalty.field_product_template__id
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__id
@@ -1642,6 +1644,7 @@ msgid "Portal Visible"
 msgstr "Zichtbaar in portaal"
 
 #. module: loyalty
+#: model:ir.model,name:loyalty.model_product_pricelist
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
 msgid "Pricelist"
 msgstr "Prijslijst"
@@ -1991,6 +1994,16 @@ msgid ""
 msgstr ""
 "Dit is het maximale bedrag dat deze beloning mag verminderen, laat op 0 "
 "staan voor geen limiet."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/product_pricelist.py:0
+msgid ""
+"This pricelist may not be archived. It is being used for active promotion "
+"programs: %s"
+msgstr ""
+"Deze prijslijst kan niet worden gearchiveerd. Ze wordt gebruikt voor actieve"
+" promotieprogramma's: %s"
 
 #. module: loyalty
 #. odoo-python
