@@ -76,7 +76,7 @@ def download_odoo_certificate():
         response = requests.post(
             'https://www.odoo.com/odoo-enterprise/iot/x509',
             json={'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
-            timeout=5,
+            timeout=10,
         )
         response.raise_for_status()
         response_body = response.json()
