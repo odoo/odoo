@@ -3,6 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { FontFamilyPicker } from "../fontfamily_picker";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export const OPTION_POSITIONS = {
     BODY: 10,
@@ -68,7 +69,10 @@ class DesignTabPlugin extends Plugin {
     };
 
     getDesignOptionBlock(id, options) {
-        options.selector = "*";
+        const Option = class extends BaseOptionComponent {
+            static selector = "*";
+        }
+        Object.assign(Option, options);
 
         return {
             id: id,
@@ -77,7 +81,7 @@ class DesignTabPlugin extends Plugin {
             headerMiddleButton: false,
             isClonable: false,
             isRemovable: false,
-            options: [options],
+            options: [Option],
             optionsContainerTopButtons: [],
             snippetModel: {},
         };

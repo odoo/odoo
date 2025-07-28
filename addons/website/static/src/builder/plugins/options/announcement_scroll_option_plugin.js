@@ -4,6 +4,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { after } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class SetItemTextAction extends BuilderAction {
     static id = "setItemTextAction";
@@ -17,15 +18,17 @@ class SetItemTextAction extends BuilderAction {
     }
 }
 
+export class AnnouncementScrollOption extends BaseOptionComponent {
+    static template = "website.AnnouncementScrollOption";
+    static selector = "section.s_announcement_scroll";
+}
+
 export class AnnouncementScrollOptionPlugin extends Plugin {
     static id = "announcementScrollOptionPlugin";
-    selector = "section.s_announcement_scroll";
+    selector = AnnouncementScrollOption.selector;
     resources = {
         builder_options: [
-            withSequence(after(WEBSITE_BACKGROUND_OPTIONS), {
-                template: "website.AnnouncementScrollOption",
-                selector: this.selector,
-            }),
+            withSequence(after(WEBSITE_BACKGROUND_OPTIONS), AnnouncementScrollOption),
         ],
         builder_actions: {
             SetItemTextAction,

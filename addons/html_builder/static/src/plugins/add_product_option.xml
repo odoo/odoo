@@ -6,9 +6,9 @@
         <BuilderButton
             type="'success'"
             action="'addItem'"
-            actionParam="`${props.productSelector}:last-of-type`"
+            actionParam="`${this.productSelector}:last-of-type`"
             preview="false"
-            applyTo="props.applyTo">
+            applyTo="this.buttonApplyTo">
             Add Product
         </BuilderButton>
     </BuilderRow>

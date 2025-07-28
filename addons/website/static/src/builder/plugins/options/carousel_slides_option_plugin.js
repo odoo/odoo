@@ -1,19 +1,20 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
+export class CarouselSlidesOption extends BaseOptionComponent {
+    static template = "website.CarouselSlidesOption";
+    static selector = ".carousel .carousel-item";
+    static exclude = ".s_image_gallery .carousel-item";
+}
+
 export class CarouselSlidesOptionPlugin extends Plugin {
     static id = "carouselSlidesOption";
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.CarouselSlidesOption",
-                selector: ".carousel .carousel-item",
-                exclude: ".s_image_gallery .carousel-item",
-            }),
-        ],
+        builder_options: [withSequence(SNIPPET_SPECIFIC_END, CarouselSlidesOption)],
         builder_actions: {
             MakeSlideClickableAction,
             SetSlideAnchorUrlAction,

@@ -15,15 +15,15 @@ const { DateTime } = luxon;
 
 export class FormFieldOption extends BaseOptionComponent {
     static template = "website.s_website_form_field_option";
+    static dependencies = ["websiteFormOption"];
     static props = {
-        fetchModels: Function,
-        loadFieldOptionData: Function,
         redrawSequence: { type: Number, optional: true },
     };
     static components = { FormActionFieldsOption, FormModelRequiredFieldAlert };
 
     setup() {
         super.setup();
+        const { loadFieldOptionData } = this.dependencies.websiteFormOption;
         this.state = useState({
             availableFields: [],
             conditionInputs: [],
@@ -98,7 +98,7 @@ export class FormFieldOption extends BaseOptionComponent {
 
         onWillStart(async () => {
             const el = this.env.getEditingElement();
-            const fieldOptionData = await this.props.loadFieldOptionData(el);
+            const fieldOptionData = await loadFieldOptionData(el);
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
@@ -106,7 +106,7 @@ export class FormFieldOption extends BaseOptionComponent {
         });
         onWillUpdateProps(async (props) => {
             const el = this.env.getEditingElement();
-            const fieldOptionData = await props.loadFieldOptionData(el);
+            const fieldOptionData = await loadFieldOptionData(el);
             this.state.availableFields.length = 0;
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.length = 0;

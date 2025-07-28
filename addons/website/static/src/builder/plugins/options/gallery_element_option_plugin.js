@@ -3,18 +3,19 @@ import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class GalleryElementOption extends BaseOptionComponent {
+    static template = "website.GalleryElementOption";
+    static selector =
+        ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
+}
 
 export class GalleryElementOptionPlugin extends Plugin {
     static id = "galleryElementOption";
 
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC, {
-                template: "website.GalleryElementOption",
-                selector:
-                    ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
-            }),
-        ],
+        builder_options: [withSequence(SNIPPET_SPECIFIC, GalleryElementOption)],
         builder_actions: {
             SetGalleryElementPositionAction,
         },

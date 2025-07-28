@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 
 export class CoverPropertiesOption extends BaseOptionComponent {
     static template = "website.CoverPropertiesOption";
-    static props = {};
+    static selector = ".o_record_cover_container";
+    static editableOnly = false;
 
     setup() {
         super.setup();

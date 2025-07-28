@@ -7,13 +7,7 @@ import { renderToElement } from "@web/core/utils/render";
 class MasonryBlockTemplateOptionPlugin extends Plugin {
     static id = "mass_mailing.MasonryBlock";
     resources = {
-        builder_options: [
-            {
-                groups: ["base.group_user"],
-                OptionComponent: MasonryBlockTemplateOption,
-                selector: ".s_masonry_block",
-            },
-        ],
+        builder_options: [MasonryBlockTemplateOption],
         builder_actions: {
             ChangeMasonryTemplate,
         },
@@ -22,6 +16,8 @@ class MasonryBlockTemplateOptionPlugin extends Plugin {
 
 class MasonryBlockTemplateOption extends BaseOptionComponent {
     static template = "mass_mailing.MasonryBlockTemplateOption";
+    static selector = ".s_masonry_block";
+    static groups = ["base.group_user"];
 }
 
 class ChangeMasonryTemplate extends BuilderAction {

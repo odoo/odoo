@@ -1,10 +1,28 @@
+import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { Plugin } from "@html_editor/plugin";
+import { BuilderOptionsPlugin } from "./builder_options_plugin";
 
 export class BuilderOptionsTranslationPlugin extends Plugin {
     static id = "builderOptions";
-    static shared = ["deactivateContainers", "getTarget", "updateContainers", "setNextTarget"];
+    static shared = [
+        "deactivateContainers",
+        "getTarget",
+        "updateContainers",
+        "setNextTarget",
+        "getBuilderOptionContext",
+    ];
     static dependencies = ["history"];
 
+    setup() {
+        this.builderOptions = this.getResource("translate_options");
+        this.builderOptionsContext = new Map();
+        this.builderOptionsDependencies = new Map();
+        const options = this.builderOptions.concat([OptionsContainer]);
+        for (const Option of options) {
+            this.getBuilderDependencies(Option);
+            this.getBuilderOptionContext(Option);
+        }
+    }
     deactivateContainers() {}
     getTarget() {}
     updateContainers() {}
@@ -13,3 +31,8 @@ export class BuilderOptionsTranslationPlugin extends Plugin {
         this.dependencies.history.setStepExtra("nextTarget", targetEl);
     }
 }
+
+BuilderOptionsTranslationPlugin.prototype.getBuilderDependencies =
+    BuilderOptionsPlugin.prototype.getBuilderDependencies;
+BuilderOptionsTranslationPlugin.prototype.getBuilderOptionContext =
+    BuilderOptionsPlugin.prototype.getBuilderOptionContext;

@@ -8,12 +8,7 @@ import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 export class GridColumnsOptionPlugin extends Plugin {
     static id = "GridColumnsOption";
     resources = {
-        builder_options: [
-            withSequence(GRID_COLUMNS, {
-                OptionComponent: GridColumnsOption,
-                selector: ".row:not(.s_col_no_resize) > div",
-            }),
-        ],
+        builder_options: [withSequence(GRID_COLUMNS, GridColumnsOption)],
         builder_actions: {
             SetGridColumnsPaddingAction,
         },

@@ -9,9 +9,10 @@ import { Plugin } from "@html_editor/plugin";
 import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 describe.current.tags("desktop");
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 test("Do not set contenteditable to true on elements inside o_not_editable", async () => {
     class TestPlugin extends Plugin {
@@ -58,14 +59,18 @@ test("Media should not be replaceable if not inside a savable zone", async () =>
 
 test("clone of editable media inside not editable area should be editable", async () => {
     onRpc("/html_editor/get_image_info", () => ({}));
-    addBuilderOption({
-        selector: "section",
-        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
-    });
-    addBuilderOption({
-        selector: "img",
-        template: xml`<BuilderButton classAction="'test'">Test Image</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = "section";
+            static template = xml`<BuilderButton classAction="'test'">Test</BuilderButton>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = "img";
+            static template = xml`<BuilderButton classAction="'test'">Test Image</BuilderButton>`;
+        }
+    );
     const { waitSidebarUpdated } = await setupHTMLBuilder(`
         <section>
             <div class="o_not_editable">
@@ -89,14 +94,18 @@ const setupEditable = async (contentEl) => {
         };
     }
     addBuilderPlugin(TestPlugin);
-    addBuilderOption({
-        selector: ".parent",
-        template: xml`<BuilderButton action="'customAction'">Custom Action</BuilderButton>`,
-    });
-    addBuilderOption({
-        selector: ".parent",
-        template: xml`<BuilderButton classAction="'dummy'">Dummy action</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent";
+            static template = xml`<BuilderButton action="'customAction'">Custom Action</BuilderButton>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent";
+            static template = xml`<BuilderButton classAction="'dummy'">Dummy action</BuilderButton>`;
+        }
+    );
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";

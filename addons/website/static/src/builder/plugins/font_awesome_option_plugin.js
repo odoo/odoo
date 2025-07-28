@@ -9,15 +9,7 @@ import { BorderConfigurator } from "@html_builder/plugins/border_configurator_op
 class FontAwesomeOptionPlugin extends Plugin {
     static id = "fontAwesomeOptionPlugin";
     resources = {
-        builder_options: [
-            withSequence(FONT_AWESOME, {
-                // converted to option component to handle rendering of
-                // options based on the context(social media and share icons).
-                OptionComponent: FontAwesomeOptionComponent,
-                selector: "span.fa, i.fa",
-                exclude: "[data-oe-xpath]",
-            }),
-        ],
+        builder_options: [withSequence(FONT_AWESOME, FontAwesomeOptionComponent)],
         builder_actions: {
             FaResizeAction,
         },
@@ -34,6 +26,8 @@ export class FaResizeAction extends ClassAction {
 }
 export class FontAwesomeOptionComponent extends BaseOptionComponent {
     static template = "website.FontAwesomeOption";
+    static selector = "span.fa, i.fa";
+    static exclude = "[data-oe-xpath]";
     static components = { BorderConfigurator };
     setup() {
         super.setup();

@@ -2,7 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class GridImageOption extends BaseOptionComponent {
     static template = "website.GridImageOption";
-    static props = {};
+    static selector = "img";
 
     setup() {
         super.setup();
