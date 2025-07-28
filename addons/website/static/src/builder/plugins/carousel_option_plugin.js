@@ -205,7 +205,7 @@ export class CarouselOptionPlugin extends Plugin {
 
                     resolve();
                 }, 0.2 * slideDuration);
-            });
+            }, { once: true });
 
             const carouselInstance = window.Carousel.getOrCreateInstance(editingElement, {
                 ride: false,
