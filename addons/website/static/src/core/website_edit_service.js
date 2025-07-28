@@ -78,9 +78,7 @@ registry.category("services").add("website_edit", {
             } else {
                 publicInteractions.startInteractions(target);
             }
-            
         };
-        
 
         const refresh = (target) => {
             publicInteractions.isRefreshing = true;
@@ -285,6 +283,10 @@ registry.category("services").add("website_edit", {
             applyAction,
             callShared,
         };
+
+        window.parent.document.addEventListener("edit_page", (ev) => {
+            stop(ev.detail.iframeDocument);
+        });
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
         window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
