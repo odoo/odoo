@@ -24,6 +24,8 @@ if typing.TYPE_CHECKING:
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
+_logger_lock = threading.RLock()
+_logger_state: typing.Literal['wait', 'abort', 'run'] = 'wait'
 
 
 class ormcache_counter:
@@ -164,24 +166,28 @@ class ormcache_context(ormcache):
         self.key = unsafe_eval(code)
 
 
-class OrmCacheStatsLogger:
-    loggings = set()
-    stop_time = 0.0
+def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are there for signals)
+    # collect and log data in a separate thread to avoid blocking the main thread
+    # and avoid using logging module directly in the signal handler
+    # https://docs.python.org/3/library/logging.html#thread-safety
+    global _logger_state  # noqa: PLW0603
+    with _logger_lock:
+        if _logger_state != 'wait':
+            # send the signal again to stop the logging thread
+            _logger_state = 'abort'
+            return
+        _logger_state = 'run'
 
-    def __init__(self, start_time):
-        self.start_time = start_time
-
-    def check_continue_logging(self):
-        if self.start_time > self.stop_time:
+    def check_continue_logging():
+        if _logger_state == 'run':
             return True
         _logger.info('Stopping logging ORM cache stats')
         return False
 
-    def log_ormcache_stats(self, size=False):
+    def _log_ormcache_stats():
         """ Log statistics of ormcache usage by database, model, and method. """
         from odoo.modules.registry import Registry  # noqa: PLC0415
         try:
-            self.loggings.add(self)
             log_msgs = ['Caches stats:']
             # {dbname: sz_entries_all}
             db_size = defaultdict(lambda: 0)
@@ -191,7 +197,7 @@ class OrmCacheStatsLogger:
             size_column_info = (
                 f"{'Memory SUM [Bytes]':>20},"
                 f"{'Memory MAX [Bytes]':>20},"
-            ) if size else ''
+            ) if show_size else ''
             column_info = (
                 f"{'Cache Name':>25},"
                 f"{'Entry':>7},"
@@ -206,7 +212,7 @@ class OrmCacheStatsLogger:
 
             registries = Registry.registries.snapshot
             for i, (dbname, registry) in enumerate(registries.items(), start=1):
-                if not self.check_continue_logging():
+                if not check_continue_logging():
                     return
                 _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
                 db_cache_stats = cache_stats[dbname]
@@ -216,7 +222,7 @@ class OrmCacheStatsLogger:
                         model_name, method = cache_key[:2]
                         stats = db_cache_stats[model_name, method]
                         stats[2] += 1  # nb_entries
-                        if not size:
+                        if not show_size:
                             continue
                         cache_info = f'{model_name}.{method.__name__}'
                         size = get_cache_size(cache_value, cache_info=cache_info)
@@ -226,16 +232,15 @@ class OrmCacheStatsLogger:
                 db_size[dbname] = sz_entries_all
 
             for (dbname, model_name, method), stat in STAT.copy().items():  # copy to avoid concurrent modification
-                if not self.check_continue_logging():
+                if not check_continue_logging():
                     return
                 cache_stats[dbname][model_name, method][3] = stat
 
             for dbname, db_cache_stats in sorted(cache_stats.items(), key=lambda k: k[0] or '~'):
-                if not self.check_continue_logging():
+                if not check_continue_logging():
                     return
                 sz_entries_all = db_size[dbname]
-                log_msgs.append(f'Database {dbname or "<no_db>"}:')
-                log_msgs.append(column_info)
+                log_msgs.extend((f'Database {dbname or "<no_db>"}:', column_info))
 
                 # sort by -sz_entries_sum, model and method_name
                 db_cache_stat = sorted(db_cache_stats.items(), key=lambda k: (-k[1][0], k[0][0], k[0][1].__name__))
@@ -243,7 +248,7 @@ class OrmCacheStatsLogger:
                     size_data = (
                         f'{sz_entries_sum:11d} ({sz_entries_sum / (sz_entries_all or 1) * 100:5.1f}%),'
                         f'{sz_entries_max:20d},'
-                    ) if size else ''
+                    ) if show_size else ''
                     log_msgs.append(
                         f'{stat.cache_name:>25},'
                         f'{nb_entries:7d},'
@@ -256,26 +261,20 @@ class OrmCacheStatsLogger:
                         f'   {model_name}.{method.__name__}'
                     )
             _logger.info('\n'.join(log_msgs))
-        except Exception as e:  # noqa: BLE001
-            _logger.error(e)
+        except Exception:  # noqa: BLE001
+            _logger.exception()
         finally:
-            self.loggings.remove(self)
+            global _logger_state  # noqa: PLW0603
+            with _logger_lock:
+                _logger_state = 'wait'
 
-
-def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are there for signals)
-    # collect and log data in a separate thread to avoid blocking the main thread
-    # and avoid using logging module directly in the signal handler
-    # https://docs.python.org/3/library/logging.html#thread-safety
-    cur_time = time.monotonic()
-    if OrmCacheStatsLogger.loggings:
-        # send the signal again to stop the logging thread
-        OrmCacheStatsLogger.stop_time = cur_time
-        return
+    show_size = False
     if sig == signal.SIGUSR1:
-        threading.Thread(target=OrmCacheStatsLogger(cur_time).log_ormcache_stats,
+        threading.Thread(target=_log_ormcache_stats,
                          name="odoo.signal.log_ormcache_stats").start()
     elif sig == signal.SIGUSR2:
-        threading.Thread(target=OrmCacheStatsLogger(cur_time).log_ormcache_stats, args=(True,),
+        show_size = True
+        threading.Thread(target=_log_ormcache_stats,
                          name="odoo.signal.log_ormcache_stats_with_size").start()
 
 
