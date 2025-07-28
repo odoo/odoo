@@ -159,7 +159,7 @@ test("Change gallery restore the container to the cloned equivalent image", asyn
         `
     );
     const editor = getEditor();
-    const builderOptions = editor.shared["builderOptions"];
+    const builderOptions = editor.shared.builderOptions;
     const expectOptionContainerToInclude = (elem) => {
         expect(builderOptions.getContainers().map((container) => container.element)).toInclude(
             elem

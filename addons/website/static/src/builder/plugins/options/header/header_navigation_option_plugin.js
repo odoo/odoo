@@ -1,24 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { HeaderNavigationOption } from "./header_navigation_option";
-import { HEADER_NAVIGATION, basicHeaderOptionSettings } from "./header_option_plugin";
-import { withSequence } from "@html_editor/utils/resource";
 
 class HeaderNavigationOptionPlugin extends Plugin {
     static id = "HeaderNavigationOptionPlugin";
     static dependencies = ["customizeWebsite"];
 
     resources = {
-        builder_options: [
-            withSequence(HEADER_NAVIGATION, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderNavigationOption,
-                props: {
-                    getCurrentActiveViews: this.getCurrentActiveViews.bind(this),
-                },
-                reloadTarget: true,
-            }),
-        ],
+        builder_options: [HeaderNavigationOption],
     };
 
     setup() {

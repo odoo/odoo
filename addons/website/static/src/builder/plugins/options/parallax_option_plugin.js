@@ -1,8 +1,8 @@
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
-import { getSelectorParams } from "@html_builder/utils/utils";
+import { filterExtends } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { WebsiteBackgroundOption } from "./background_option";
+import { BaseWebsiteBackgroundOption } from "./background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 class WebsiteParallaxPlugin extends Plugin {
@@ -18,9 +18,9 @@ class WebsiteParallaxPlugin extends Plugin {
         get_target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {
-        this.backgroundOptionSelectorParams = getSelectorParams(
+        this.backgroundOptionClasses = filterExtends(
             this.getResource("builder_options"),
-            WebsiteBackgroundOption
+            BaseWebsiteBackgroundOption
         );
     }
     applyParallaxType({ editingElement, value }) {
@@ -62,11 +62,11 @@ class WebsiteParallaxPlugin extends Plugin {
         }
     }
     onBgImageHide(rootEl) {
-        for (const backgroundOptionSelector of this.backgroundOptionSelectorParams) {
+        for (const backgroundClass of this.backgroundOptionClasses) {
             applyFunDependOnSelectorAndExclude(
                 this.removeParallax.bind(this),
                 rootEl,
-                backgroundOptionSelector
+                backgroundClass
             );
         }
     }

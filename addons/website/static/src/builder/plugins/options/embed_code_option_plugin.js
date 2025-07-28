@@ -6,17 +6,18 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { cloneContentEls } from "@website/js/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class EmbedCodeOption extends BaseOptionComponent {
+    static template = "website.EmbedCodeOption";
+    static selector = ".s_embed_code";
+}
 
 class EmbedCodeOptionPlugin extends Plugin {
     static id = "embedCodeOption";
 
     resources = {
-        builder_options: [
-            withSequence(BEGIN, {
-                template: "website.EmbedCodeOption",
-                selector: ".s_embed_code",
-            }),
-        ],
+        builder_options: [withSequence(BEGIN, EmbedCodeOption)],
         so_content_addition_selector: [".s_embed_code"],
         builder_actions: {
             EditCodeAction,

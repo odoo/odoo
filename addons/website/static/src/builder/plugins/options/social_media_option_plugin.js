@@ -9,6 +9,7 @@ import { SocialMediaLinks } from "./social_media_links";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /**
  * @typedef { Object } SocialMediaInfo
@@ -106,6 +107,11 @@ const socialMediaInfo = new Map(
 
 const defaultAriaLabel = _t("Other social network");
 
+export class SocialMediaOption extends BaseOptionComponent {
+    static template = "website.SocialMediaOption";
+    static selector = ".s_share, .s_social_media";
+}
+
 class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
     static dependencies = ["history"];
@@ -117,21 +123,13 @@ class SocialMediaOptionPlugin extends Plugin {
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
+        "getRecordedSocialMediaNames",
+        "reorderSocialMediaLink",
     ];
     resources = {
         builder_options: [
-            withSequence(TITLE_LAYOUT_SIZE, {
-                template: "website.SocialMediaOption",
-                selector: ".s_share, .s_social_media",
-            }),
-            withSequence(SNIPPET_SPECIFIC, {
-                OptionComponent: SocialMediaLinks,
-                props: {
-                    getRecordedSocialMediaNames: this.getRecordedSocialMediaNames.bind(this),
-                    reorderSocialMediaLink: this.reorderSocialMediaLink.bind(this),
-                },
-                selector: ".s_social_media",
-            }),
+            withSequence(TITLE_LAYOUT_SIZE, SocialMediaOption),
+            withSequence(SNIPPET_SPECIFIC, SocialMediaLinks),
         ],
         so_content_addition_selector: [".s_share", ".s_social_media"],
         builder_actions: {

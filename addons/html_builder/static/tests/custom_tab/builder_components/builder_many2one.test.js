@@ -51,10 +51,12 @@ test("many2one: async load", async () => {
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10"/>`;
+        }
+    );
     const { getEditableContent } = await setupHTMLBuilder(
         `<div class="test-options-target">b</div>`
     );
@@ -95,6 +97,7 @@ test("dependency definition should not be outdated", async () => {
         },
     });
     class TestMany2One extends BaseOptionComponent {
+        static selector = ".test-options-target";
         static template = xml`
             <BuilderMany2One action="'testAction'" model="'test'" limit="10" id="'test_many2one_opt'"/>
             <BuilderRow t-if="getItemValueJSON('test_many2one_opt')?.id === 2"><span>Dependant</span></BuilderRow>
@@ -108,10 +111,7 @@ test("dependency definition should not be outdated", async () => {
             return value && JSON.parse(value);
         }
     }
-    addBuilderOption({
-        selector: ".test-options-target",
-        Component: TestMany2One,
-    });
+    addBuilderOption(TestMany2One);
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();

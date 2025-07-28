@@ -3,33 +3,36 @@ import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { AddProductOption } from "@html_builder/plugins/add_product_option";
+import { BaseAddProductOption } from "@html_builder/plugins/add_product_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+
+export class PriceListBoxedDescriptionOption extends BaseOptionComponent {
+    static template = "website.PriceListBoxedDescriptionOption";
+    static selector = ".s_pricelist_boxed";
+    static components = { BorderConfigurator };
+}
+
+export class AddProductPricelistBoxedOption extends BaseAddProductOption {
+    static selector = ".s_pricelist_boxed";
+    buttonApplyTo =
+        ":scope > :has(.s_pricelist_boxed_item):not(:has(.row > div .s_pricelist_boxed_item))";
+    productSelector = ".s_pricelist_boxed_item";
+}
+
+export class AddProductPricelistBoxedSectionOption extends BaseAddProductOption {
+    static selector = ".s_pricelist_boxed_section";
+    buttonApplyTo = ":scope > :has(.s_pricelist_boxed_item)";
+    productSelector = ".s_pricelist_boxed_item";
+}
 
 class PriceListBoxedOptionPlugin extends Plugin {
     static id = "priceListBoxedOption";
     resources = {
         builder_options: [
-            withSequence(BEGIN, {
-                selector: ".s_pricelist_boxed",
-                OptionComponent: AddProductOption,
-                props: {
-                    applyTo:
-                        ":scope > :has(.s_pricelist_boxed_item):not(:has(.row > div .s_pricelist_boxed_item))",
-                    productSelector: ".s_pricelist_boxed_item",
-                },
-            }),
-            withSequence(BEGIN, {
-                selector: ".s_pricelist_boxed_section",
-                OptionComponent: AddProductOption,
-                props: {
-                    applyTo: ":scope > :has(.s_pricelist_boxed_item)",
-                    productSelector: ".s_pricelist_boxed_item",
-                },
-            }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.PriceListBoxedDescriptionOption",
-                selector: ".s_pricelist_boxed",
-            }),
+            withSequence(BEGIN, AddProductPricelistBoxedOption),
+            withSequence(BEGIN, AddProductPricelistBoxedSectionOption),
+            withSequence(SNIPPET_SPECIFIC_END, PriceListBoxedDescriptionOption),
         ],
         dropzone_selector: {
             selector: ".s_pricelist_boxed_item",

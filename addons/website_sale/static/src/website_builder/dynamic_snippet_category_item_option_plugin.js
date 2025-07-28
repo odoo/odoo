@@ -1,19 +1,21 @@
 import { BuilderAction } from '@html_builder/core/builder_action';
+import { BaseOptionComponent } from '@html_builder/core/utils';
 import { Plugin } from '@html_editor/plugin';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 
+export class DynamicSnippetCategoryItemOptions extends BaseOptionComponent {
+    static template = 'website_sale.dynamicSnippetCategoryItemOptions';
+    static selector = '.s_dynamic_category_item, .all_products';
+    static title = _t("Category");
+    static editableOnly = false;
+}
 
 export class DynamicSnippetCategoryItemOptionPlugin extends Plugin {
     static id = 'dynamicSnippetCategoryItemOptionPlugin';
     resources = {
-        builder_options: {
-            template: 'website_sale.dynamicSnippetCategoryItemOptions',
-            selector: '.s_dynamic_category_item, .all_products',
-            editableOnly: false,
-            title: _t("Category"),
-        },
+        builder_options: DynamicSnippetCategoryItemOptions,
         builder_actions: { SetCategoryImageAction },
     }
 }

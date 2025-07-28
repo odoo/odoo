@@ -10,7 +10,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <FormActionFieldsOption activeForm="state.activeForm" prepareFormModel="props.prepareFormModel"/>
+    <FormActionFieldsOption activeForm="state.activeForm"/>
     <BuilderRow label.translate="Marked Fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
@@ -88,7 +88,7 @@
 
 <t t-name="website.s_website_form_field_option">
     <t t-if="domState.elClassList.includes('s_website_form_model_required')">
-        <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" fetchModels="props.fetchModels"/>
+        <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" />
     </t>
     <BuilderRow label.translate="Type">
         <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"

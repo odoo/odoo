@@ -15,9 +15,9 @@ describe.current.tags("desktop");
 describe("useDomState", () => {
     test("Should not update the state of an async useDomState if a new step has been made", async () => {
         let currentResolve;
-        addBuilderOption({
-            selector: ".test-options-target",
-            Component: class extends BaseOptionComponent {
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
                 static template = xml`<div t-att-data-letter="getLetter()"/>`;
                 setup() {
                     super.setup(...arguments);
@@ -34,8 +34,8 @@ describe("useDomState", () => {
                     expect.step(`state: ${this.state.delay}`);
                     return this.state.delay;
                 }
-            },
-        });
+            }
+        );
         const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
         await animationFrame();
         await contains(":iframe .test-options-target").click();
@@ -92,6 +92,7 @@ describe("waitSidebarUpdated", () => {
             }
         }
         class TestOptionComponent extends BaseOptionComponent {
+            static selector = "div.test";
             static template = xml`
                 <div class="test-value-parent">
                     <t t-out="state.value"/>
@@ -116,10 +117,7 @@ describe("waitSidebarUpdated", () => {
                 });
             }
         }
-        addBuilderOption({
-            selector: "div.test",
-            Component: TestOptionComponent,
-        });
+        addBuilderOption(TestOptionComponent);
         const { waitSidebarUpdated } = await setupHTMLBuilder(
             `<div class="test" data-value="a">a</div>`
         );

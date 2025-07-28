@@ -42,6 +42,7 @@ import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
+import { Plugin } from "@html_editor/plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -71,6 +72,15 @@ const TRANSLATION_PLUGINS = [
     MonetaryFieldPlugin,
     Many2OneOptionPlugin,
     CustomizeTranslationTabPlugin,
+    // Those plugin are depended by other Plugin but not used in translation
+    // mode.
+    // Todo: find a better way to handle that.
+    class FakeRemovePlugin extends Plugin {
+        static id = "remove";
+    },
+    class FakeClonePlugin extends Plugin {
+        static id = "clone";
+    },
 ];
 
 export class WebsiteBuilder extends Component {

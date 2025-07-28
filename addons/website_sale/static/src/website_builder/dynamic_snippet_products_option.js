@@ -1,19 +1,17 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { DynamicSnippetCarouselOption } from "@website/builder/plugins/options/dynamic_snippet_carousel_option";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
 import { onWillStart, useState } from "@odoo/owl";
 
 export class DynamicSnippetProductsOption extends BaseOptionComponent {
     static template = "website_sale.DynamicSnippetProductsOption";
-    static props = {
-        ...DynamicSnippetCarouselOption.props,
-        fetchCategories: Function,
-    };
+    static dependencies = ["dynamicSnippetProductsOption"];
+    static selector = ".s_dynamic_snippet_products";
     setup() {
         super.setup();
+        const { fetchCategories, getModelNameFilter } = this.dependencies.dynamicSnippetProductsOption;
         const contextualFilterDomain = getContextualFilterDomain(this.env.editor.editable);
         this.dynamicOptionParams = useDynamicSnippetOption(
-            this.props.modelNameFilter,
+            getModelNameFilter(),
             contextualFilterDomain
         );
         this.state = useState({
@@ -26,7 +24,7 @@ export class DynamicSnippetProductsOption extends BaseOptionComponent {
             Object.values(this.dynamicOptionParams.dynamicFilters).length > 1 &&
             !this.domState.isAlternative;
         onWillStart(async () => {
-            this.state.categories.push(...(await this.props.fetchCategories()));
+            this.state.categories.push(...(await fetchCategories()));
         });
     }
 }

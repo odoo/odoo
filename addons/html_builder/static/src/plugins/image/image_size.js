@@ -6,7 +6,7 @@ const imageCacheSize = new Map();
 
 export class ImageSize extends BaseOptionComponent {
     static template = "html_builder.ImageSize";
-    static props = {};
+
     setup() {
         super.setup();
         this.imagePostProcess = this.env.editor.shared.imagePostProcess;

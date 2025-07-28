@@ -26,19 +26,34 @@
  * @property { Object[] } items
  */
 
+/**
+ * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
+ */
+
 export class BuilderAction {
     /** @type { string[] } */
     static dependencies = [];
-    constructor(plugin, dependencies) {
-        this.window = plugin.window;
-        this.document = plugin.document;
-        this.editable = plugin.editable;
-        this.dependencies = dependencies;
-        this.services = plugin.services;
-        this.config = plugin.config;
-        this.getResource = plugin.getResource.bind(plugin);
-        this.dispatchTo = plugin.dispatchTo.bind(plugin);
-        this.delegateTo = plugin.delegateTo.bind(plugin);
+    /**
+     * @param { EditorContext } context
+     */
+    constructor(context) {
+        /** @type { EditorContext['document'] } **/
+        this.document = context.document;
+        this.window = context.document.defaultView;
+        /** @type { EditorContext['editable'] } **/
+        this.editable = context.editable;
+        /** @type { EditorContext['config'] } **/
+        this.config = context.config;
+        /** @type { EditorContext['services'] } **/
+        this.services = context.services;
+        /** @type { EditorContext['dependencies'] } **/
+        this.dependencies = context.dependencies;
+        /** @type { EditorContext['getResource'] } **/
+        this.getResource = context.getResource;
+        /** @type { EditorContext['dispatchTo'] } **/
+        this.dispatchTo = context.dispatchTo;
+        /** @type { EditorContext['delegateTo'] } **/
+        this.delegateTo = context.delegateTo;
 
         this.setup();
 

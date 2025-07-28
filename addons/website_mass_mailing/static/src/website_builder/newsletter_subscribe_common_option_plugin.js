@@ -3,37 +3,23 @@ import { POPUP } from "@website/builder/plugins/options/popup_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { NewsletterSubscribeCommonOption } from "./newsletter_subscribe_common_option";
+import { NewsletterSubscribeCommonOption, NewsletterSubscribeCommonPopupOption } from "./newsletter_subscribe_common_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export const NEWSLETTER_SELECT = before(POPUP);
 
+export class MailingListSubscribeFormOption extends BaseOptionComponent {
+    static template = "website_mass_mailing.MailingListSubscribeFormOption";
+    static selector = ".s_newsletter_subscribe_form";
+}
+
 class NewsletterSubscribeCommonOptionPlugin extends Plugin {
     static id = "newsletterSubscribeCommonOption";
-    static dependencies = ["mailingListSubscribeOption", "recaptchaSubscribeOption"];
     resources = {
         builder_options: [
-            withSequence(NEWSLETTER_SELECT, {
-                OptionComponent: NewsletterSubscribeCommonOption,
-                props: this.getProps(),
-                selector: ".s_newsletter_list",
-                exclude: [
-                    ".s_newsletter_block .s_newsletter_list",
-                    ".o_newsletter_popup .s_newsletter_list",
-                    ".s_newsletter_box .s_newsletter_list",
-                    ".s_newsletter_centered .s_newsletter_list",
-                    ".s_newsletter_grid .s_newsletter_list",
-                ].join(", "),
-            }),
-            withSequence(NEWSLETTER_SELECT, {
-                OptionComponent: NewsletterSubscribeCommonOption,
-                props: this.getProps(),
-                selector: ".o_newsletter_popup",
-                applyTo: ".s_newsletter_list",
-            }),
-            withSequence(SNIPPET_SPECIFIC, {
-                template: "website_mass_mailing.MailingListSubscribeFormOption",
-                selector: ".s_newsletter_subscribe_form",
-            }),
+            withSequence(NEWSLETTER_SELECT, NewsletterSubscribeCommonOption),
+            withSequence(NEWSLETTER_SELECT, NewsletterSubscribeCommonPopupOption),
+            withSequence(SNIPPET_SPECIFIC, MailingListSubscribeFormOption),
         ],
         dropzone_selector: [
             {
@@ -43,13 +29,6 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
             },
         ],
     };
-
-    getProps() {
-        return {
-            fetchMailingLists: this.dependencies.mailingListSubscribeOption.fetchMailingLists,
-            hasRecaptcha: this.dependencies.recaptchaSubscribeOption.hasRecaptcha,
-        };
-    }
 }
 
 registry
