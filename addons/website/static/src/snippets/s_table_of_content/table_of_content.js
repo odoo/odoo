@@ -247,9 +247,3 @@ patch(AnchorSlide.prototype, {
 registry
     .category("public.interactions")
     .add("website.table_of_content", TableOfContent);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.table_of_content", {
-        Interaction: TableOfContent,
-    });
