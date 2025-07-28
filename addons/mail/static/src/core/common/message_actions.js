@@ -149,7 +149,9 @@ registerMessageAction("delete", {
                 prompt: _t("Are you sure you want to bid farewell to this message forever?"),
                 onConfirm: () => {
                     def.resolve(true);
-                    message.remove();
+                    message.remove({
+                        removeFromThread: component.shouldHideFromMessageListOnDelete,
+                    });
                 },
             },
             { context: component, onClose: () => def.resolve(false) }

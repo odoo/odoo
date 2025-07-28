@@ -15,7 +15,7 @@ patch(Message.prototype, {
     },
 
     get ratingValue() {
-        return this.message.rating_id?.rating || this.message.rating_value;
+        return this.message.rating_value || this.message.rating_id?.rating;
     },
 
     onClikEditComment() {

@@ -62,14 +62,6 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            content: "Reload page (fetch message)",
-            trigger: "body:not(:has(.modal.show))",
-            run() {
-                location.reload();
-            },
-            expectUnloadPage: true,
-        },
-        {
             trigger: "a[id=review-tab]",
             run: "click",
         },
