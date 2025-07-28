@@ -23,21 +23,38 @@ test("from the discuss app", async () => {
             .search_read([["id", "=", serverState.groupLivechatId]])
             .map(({ id }) => id),
     });
-    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const [guestId_1, guestId_2] = pyEnv["mail.guest"].create([
+        { name: "guest_1" },
+        { name: "guest_2" },
+    ]);
     const livechatChannelId = pyEnv["im_livechat.channel"].create({
         name: "HR",
         user_ids: [serverState.userId],
     });
-    pyEnv["discuss.channel"].create({
-        channel_type: "livechat",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
-        ],
-        livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
-        create_uid: serverState.publicUserId,
-    });
+    pyEnv["discuss.channel"].create([
+        {
+            channel_type: "livechat",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ guest_id: guestId_1 }),
+            ],
+            livechat_active: true,
+            livechat_channel_id: livechatChannelId,
+            livechat_operator_id: serverState.partnerId,
+            create_uid: serverState.publicUserId,
+        },
+        {
+            channel_type: "livechat",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ guest_id: guestId_2 }),
+            ],
+            livechat_active: false,
+            livechat_channel_id: livechatChannelId,
+            livechat_operator_id: serverState.partnerId,
+            create_uid: serverState.publicUserId,
+        },
+    ]);
     await start();
     await openDiscuss();
     await click("[title='Leave HR']", {
@@ -47,10 +64,16 @@ test("from the discuss app", async () => {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
     await click("[title='Chat Actions']", {
-        parent: [".o-mail-DiscussSidebarChannel", { text: "Visitor" }],
+        parent: [".o-mail-DiscussSidebarChannel", { text: "guest_1" }],
     });
     await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button:contains(Leave Conversation)");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "guest_1", count: 0 });
+    await click("[title='Chat Actions']", {
+        parent: [".o-mail-DiscussSidebarChannel", { text: "guest_2" }],
+    });
+    await click(".o-dropdown-item:contains('Leave Channel')");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "guest_2", count: 0 });
     await click("[title='Leave HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
