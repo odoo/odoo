@@ -477,6 +477,146 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id
 
+<<<<<<< 36f666f20498f583f49b912a5e7c42e7bba16226
+||||||| 3a6bc3b060fc3881eeb28f468f474d929960ce67
+    def _account_entry_move(self, qty, description, svl_id, cost):
+        """ Accounting Valuation Entries """
+        self.ensure_one()
+        am_vals = []
+        if not self.product_id.is_storable:
+            # no stock valuation for consumable products
+            return am_vals
+        if self._should_exclude_for_valuation():
+            return am_vals
+
+        move_directions = self.env.context.get('move_directions') or False
+
+        self_is_out_move = self_is_in_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+            self_is_in_move = move_directions.get(self.id) and 'in' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+            self_is_in_move = self._is_in()
+
+        company_from = self_is_out_move and self.mapped('move_line_ids.location_id.company_id') or False
+        company_to = self_is_in_move and self.mapped('move_line_ids.location_dest_id.company_id') or False
+
+        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+        # Create Journal Entry for products arriving in the company; in case of routes making the link between several
+        # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
+        if self_is_in_move:
+            if self._is_returned(valued_type='in'):
+                am_vals.append(self.with_company(company_to).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
+            else:
+                am_vals.append(self.with_company(company_to)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost))
+
+        # Create Journal Entry for products leaving the company
+        if self_is_out_move:
+            cost = -1 * cost
+            if self._is_returned(valued_type='out'):
+                am_vals.append(self.with_company(company_from).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
+            else:
+                am_vals.append(self.with_company(company_from)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost))
+
+        if self.company_id.anglo_saxon_accounting:
+            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
+            anglosaxon_am_vals = self._prepare_anglosaxon_account_move_vals(acc_src, acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
+            if anglosaxon_am_vals:
+                am_vals.append(anglosaxon_am_vals)
+
+        return am_vals
+
+    def _prepare_anglosaxon_account_move_vals(self, acc_src, acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost):
+        anglosaxon_am_vals = {}
+        if self._is_dropshipped():
+            if cost > 0:
+                anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
+            else:
+                cost = -1 * cost
+                anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
+        elif self._is_dropshipped_returned():
+            if cost > 0 and self.location_dest_id._should_be_valued():
+                anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
+            elif cost > 0:
+                anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
+            else:
+                cost = -1 * cost
+                anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
+        return anglosaxon_am_vals
+
+    def _get_analytic_distribution(self):
+        return {}
+
+=======
+    def _account_entry_move(self, qty, description, svl_id, cost):
+        """ Accounting Valuation Entries """
+        self.ensure_one()
+        am_vals = []
+        if not self.product_id.is_storable:
+            # no stock valuation for consumable products
+            return am_vals
+        if self._should_exclude_for_valuation():
+            return am_vals
+
+        move_directions = self.env.context.get('move_directions') or False
+
+        self_is_out_move = self_is_in_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+            self_is_in_move = move_directions.get(self.id) and 'in' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+            self_is_in_move = self._is_in()
+
+        company_from = self_is_out_move and self.mapped('move_line_ids.location_id.company_id') or False
+        company_to = self_is_in_move and self.mapped('move_line_ids.location_dest_id.company_id') or False
+
+        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+        # Create Journal Entry for products arriving in the company; in case of routes making the link between several
+        # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
+        if self_is_in_move:
+            if self._is_returned(valued_type='in'):
+                am_vals.append(self.with_company(company_to).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
+            else:
+                am_vals.append(self.with_company(company_to)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost))
+
+        # Create Journal Entry for products leaving the company
+        if self_is_out_move:
+            cost = -1 * cost
+            if self._is_returned(valued_type='out'):
+                am_vals.append(self.with_company(company_from).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
+            else:
+                am_vals.append(self.with_company(company_from)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost))
+
+        if self.company_id.anglo_saxon_accounting:
+            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
+            anglosaxon_am_vals = self._prepare_anglosaxon_account_move_vals(acc_src, acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
+            if anglosaxon_am_vals:
+                am_vals.append(anglosaxon_am_vals)
+
+        return am_vals
+
+    def _prepare_anglosaxon_account_move_vals(self, acc_src, acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost):
+        anglosaxon_am_vals = {}
+        if self._is_dropshipped():
+            if cost > 0:
+                anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
+            else:
+                cost = -1 * cost
+                anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
+        elif self._is_dropshipped_returned():
+            if cost > 0:
+                anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
+            else:
+                cost = -1 * cost
+                anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
+        return anglosaxon_am_vals
+
+    def _get_analytic_distribution(self):
+        return {}
+
+>>>>>>> 9906725dc2da013edeb2f29beea7f9977ad083f7
     def _get_related_invoices(self):  # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt
         to the way they mix stock moves with invoices.
