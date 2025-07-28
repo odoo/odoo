@@ -150,7 +150,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
-        window.addEventListener("online", () => {
+        window.addEventListener("pos-network-online", () => {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
