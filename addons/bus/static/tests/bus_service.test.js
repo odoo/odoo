@@ -520,3 +520,35 @@ test("worker state is available from the bus service", async () => {
     await waitForSteps(["BUS:CONNECT"]);
     expect(getService("bus_service").workerState).toBe(WORKER_STATE.CONNECTED);
 });
+
+test("channel is kept until deleted as many times as added", async () => {
+    onWebsocketEvent("subscribe", (data) =>
+        expect.step(`subscribe - [${data.channels.toString()}]`)
+    );
+    await makeMockEnv();
+    const worker = getWebSocketWorker();
+    patchWithCleanup(worker, {
+        _deleteChannel() {
+            super._deleteChannel(...arguments);
+            expect.step("delete channel");
+        },
+        _addChannel(client, channel) {
+            super._addChannel(client, channel);
+            expect.step(`add channel - ${channel}`);
+        },
+    });
+    startBusService();
+    const busService = getService("bus_service");
+    await expect.waitForSteps(["subscribe - []"]);
+    busService.addChannel("foo");
+    await expect.waitForSteps(["add channel - foo", "subscribe - [foo]"]);
+    busService.addChannel("foo");
+    await expect.waitForSteps(["add channel - foo"]);
+    await runAllTimers();
+    busService.deleteChannel("foo");
+    await expect.waitForSteps(["delete channel"]);
+    await runAllTimers();
+    await expect.waitForSteps([]);
+    busService.deleteChannel("foo");
+    await expect.waitForSteps(["delete channel", "subscribe - []"]);
+});

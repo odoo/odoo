@@ -63,4 +63,27 @@ threadActionsRegistry
         sidebarSequence: 10,
         sidebarSequenceGroup: 5,
         toggle: true,
+    })
+    .add("join-livechat-needing-help", {
+        condition: (comp) =>
+            comp.thread?.livechat_status === "need_help" && !comp.thread?.selfMember,
+        icon: "fa fa-fw fa-sign-in",
+        iconLarge: "fa fa-fw fa-lg fa-sign-in",
+        name: _t("Join Chat"),
+        nameClass: "text-success",
+        async open(component) {
+            const thread = component.thread;
+            const hasJoined = await component.env.services.orm.call(
+                "discuss.channel",
+                "livechat_join_channel_needing_help",
+                [[thread.id]]
+            );
+            if (!hasJoined && thread.isDisplayed) {
+                component.env.services.notification.add(
+                    _t("Someone has already joined this conversation"),
+                    { type: "warning" }
+                );
+            }
+        },
+        sequence: 5,
     });
