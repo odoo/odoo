@@ -459,3 +459,27 @@ registry.category("web_tour.tours").add("test_down_payment_displayed", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_salesperson_in_quotation_dialog", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickControlButton("Quotation/Order"),
+            {
+                content: "Select the quotation with the correct salesperson",
+                trigger: '.modal .o_list_view .o_data_row:contains("Because I am accountman!") td',
+                run: "click",
+            },
+            {
+                content: `Choose to settle the order`,
+                trigger: `.modal:not(.o_inactive_modal) .selection-item:contains('Settle the order')`,
+                run: "click",
+            },
+            Order.hasLine({
+                productName: "product_a",
+                quantity: "1.0",
+                price: "115.0",
+            }),
+        ].flat(),
+});
