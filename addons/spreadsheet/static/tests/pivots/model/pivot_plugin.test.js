@@ -1009,6 +1009,34 @@ test("Can group by many2many field ", async () => {
     expect(getCellValue(model, "C5")).toBe("");
 });
 
+test("pivot grouped by ID displays values correctly", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                rows: [{ fieldName: "id" }],
+                columns: [],
+                domain: [],
+                measures: [
+                    {
+                        id: "probability:sum",
+                        fieldName: "probability",
+                        aggregator: "sum",
+                    },
+                ],
+                model: "partner",
+            },
+        },
+    };
+
+    const { model } = await createModelWithDataSource({ spreadsheetData });
+
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"#id",1)`);
+    await waitForDataLoaded(model);
+
+    expect(getCellValue(model, "A1")).toBe("Raoul");
+});
+
 test("PIVOT.HEADER grouped by date field without value", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot({
         arch: /* xml */ `

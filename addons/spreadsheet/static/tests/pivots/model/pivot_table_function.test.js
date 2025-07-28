@@ -281,14 +281,14 @@ test("PIVOT with multiple row groups", async function () {
         [null,          "xphone",       "xpad",         "Total"],
         [null,         "Probability",  "Probability",  "Probability"],
         [1,             "",             11,             11],
-        [2,             "",             11,             11],
+        ["Steven",      "",             11,             11],
         [2,             "",             15,             15],
-        [4,             "",             15,             15],
+        ["Zara",        "",             15,             15],
         [12,            10,             "",             10],
-        [1,             10,             "",             10],
+        ["Raoul",       10,             "",             10],
         [17,            "",             95,             95],
-        [3,             "",             95,             95],
-        ["Total",       10,             121,              131],
+        ["Taylor",      "",             95,             95],
+        ["Total",       10,             121,            131],
     ]);
     model.dispatch("CREATE_SHEET", { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1")`, "42");
@@ -298,14 +298,14 @@ test("PIVOT with multiple row groups", async function () {
         ["(#1) Partner Pivot",  "xphone",       "xpad",         "Total"],
         ["",                    "Probability",  "Probability",  "Probability"],
         [1,                     "",             11,             11],
-        [2,                     "",             11,             11],
+        ["Steven",              "",             11,             11],
         [2,                     "",             15,             15],
-        [4,                     "",             15,             15],
+        ["Zara",                "",             15,             15],
         [12,                    10,             "",             10],
-        [1,                     10,             "",             10],
+        ["Raoul",               10,             "",             10],
         [17,                    "",             95,             95],
-        [3,                     "",             95,             95],
-        ["Total",               10,             121,              131],
+        ["Taylor",              "",             95,             95],
+        ["Total",               10,             121,            131],
     ]);
     setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
     // values from the PIVOT function without any group totals
@@ -314,13 +314,13 @@ test("PIVOT with multiple row groups", async function () {
         ["(#1) Partner Pivot", "xphone",       "xpad",         null],
         ["",                   "Probability",  "Probability",  null],
         [1,                    "",             "",             null], // group header but without total values
-        [2,                    "",             11,             null],
+        ["Steven",             "",             11,             null],
         [2,                    "",             "",             null], // group header but without total values
-        [4,                    "",             15,             null],
+        ["Zara",               "",             15,             null],
         [12,                   "",             "",             null], // group header but without total values
-        [1,                    10,             "",             null],
+        ["Raoul",              10,             "",             null],
         [17,                   "",             "",             null], // group header but without total values
-        [3,                    "",             95,             null],
+        ["Taylor",             "",             95,             null],
         [null,                 null,           null,           null],
     ]);
 });
