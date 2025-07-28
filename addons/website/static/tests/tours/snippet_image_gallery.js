@@ -60,8 +60,8 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     trigger: ":iframe .s_image_gallery .carousel-item.active  img",
     run: "click",
 }, {
-    content: "Check that the Snippet Editor of the clicked image has been loaded",
-    trigger: ".o-tab-content [data-container-title='Image Gallery']",
+    content: "Check that the Snippet Editor of the clicked image has been loaded with its size",
+    trigger: ".o-tab-content [data-container-title='Image']:has([title='Size']:contains(/^.+ kB$/)",
 }, {
     content: "Click on Remove Block",
     trigger: ".o_customize_tab .options-container[data-container-title='Image Gallery'] .oe_snippet_remove",
