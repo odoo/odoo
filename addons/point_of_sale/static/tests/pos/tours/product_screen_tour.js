@@ -895,3 +895,18 @@ registry.category("web_tour.tours").add("test_load_pos_demo_data_by_pos_user", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_only_existing_lots", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product with existing lots"),
+            ProductScreen.selectNthLotNumber(1),
+            ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
+            inLeftSide({
+                trigger: ".order-container .orderline .lot-number:contains('Lot Number 1001')",
+            }),
+            Chrome.endTour(),
+        ].flat(),
+});
