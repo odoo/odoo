@@ -45,7 +45,7 @@ const StorePatch = {
             model: "mail.box",
         };
         this.starred = {
-            display_name: _t("Starred"),
+            display_name: _t("Starred messages"),
             id: "starred",
             model: "mail.box",
         };

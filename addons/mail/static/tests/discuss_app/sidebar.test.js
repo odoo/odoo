@@ -203,15 +203,15 @@ test("default thread rendering", async () => {
     await start();
     await openDiscuss();
     await contains("button", { text: "Inbox" });
-    await contains("button", { text: "Starred" });
+    await contains("button", { text: "Starred messages" });
     await contains("button", { text: "History" });
     await contains(".o-mail-DiscussSidebar-item", { text: "General" });
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-Thread", {
         text: "Your inbox is emptyChange your preferences to receive new notifications in your inbox.",
     });
-    await click("button", { text: "Starred" });
-    await contains("button.o-active", { text: "Starred" });
+    await click("button", { text: "Starred messages" });
+    await contains("button.o-active", { text: "Starred messages" });
     await contains(".o-mail-Thread", {
         text: "No starred messages You can mark any message as 'starred', and it shows up in this mailbox.",
     });
@@ -1272,7 +1272,7 @@ test("Redirect to the thread containing the starred message and highlight the me
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await click(".o-mail-Message [title='Mark as Todo']");
-    await click("button", { text: "Starred", contains: [".badge", { count: 1 }] });
+    await click("button", { text: "Starred messages", contains: [".badge", { count: 1 }] });
     await click(".o-mail-Message-header a", { text: "#General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
     await contains(".o-mail-Message.o-highlighted", { text: "Hello there!!!" });
