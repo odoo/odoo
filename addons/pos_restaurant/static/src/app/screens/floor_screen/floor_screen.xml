@@ -137,7 +137,7 @@
                                     t-attf-style="
                                                 border: 3px solid {{table.color || 'var(--tableOccupied-bg-color, #35d374)'}};
                                                 border-radius: {{table.shape === 'round' ? 1000 : 6}}px;
-                                                background: {{isOccupied ? table.color || 'var(--tableOccupied-bg-color, #35d374)' : 'var(--table-bg-color, #00000030)'}};
+                                                background: {{isOccupied ? table.color || 'var(--tableOccupied-bg-color, #35d374)' : 'var(--table-bg-color, #ffffff65)'}};
                                                 color: {{isOccupied ? 'var(--tableOccupied-color, #000000)' : 'var(--table-color, #FFFFFF)'}};
                                                 opacity: {{state.potentialLink ? (isIntersecting or isIntersected ? 1 : 0.25) : 1}};
                                                 {{isKanban ?

@@ -22,12 +22,12 @@
                     label.translate="Customer Note"
                     class="buttonClass"
                     icon="'fa fa-sticky-note'"/>
-                <button t-if="this.pos.cashier._role != 'minimal'" class="o_pricelist_button btn btn-secondary btn-lg py-5" t-on-click="() => this.clickPricelist()">
+                <button t-if="this.pos.cashier._role != 'minimal'" class="o_pricelist_button" t-att-class="buttonClass" t-on-click="() => this.clickPricelist()">
                     <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
                     <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />
                     <t t-else="">Pricelist</t>
                 </button>
-                <button t-if="this.pos.cashier._role != 'minimal'" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.clickRefund()">
+                <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.clickRefund()">
                     <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
                     Refund
                 </button>
@@ -40,10 +40,10 @@
                     <t t-if="currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name" />
                     <t t-else="">Tax</t>
                 </button>
-                <button t-if="this.displayProductInfoBtn()" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onProductInfoClick(currentOrder.getSelectedOrderline().product_id.product_tmpl_id)">
+                <button t-if="this.displayProductInfoBtn()" t-att-class="buttonClass" t-on-click="() => this.pos.onProductInfoClick(currentOrder.getSelectedOrderline().product_id.product_tmpl_id)">
                     <i class="fa fa-info-circle me-1" role="img" aria-label="Product Info" title="Product Info" /> Info
                 </button>
-                <button t-if="this.pos.cashier._role != 'minimal'" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())">
+                <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())">
                     <i class="fa fa-trash me-1" role="img" /> Cancel Order 
                 </button>
             </div>

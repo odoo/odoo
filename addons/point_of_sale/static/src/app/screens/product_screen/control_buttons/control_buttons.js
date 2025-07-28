@@ -130,7 +130,9 @@ export class ControlButtons extends Component {
 
     get buttonClass() {
         return this.props.showRemainingButtons
-            ? "btn btn-secondary btn-lg py-5"
+            ? this.ui.isSmall
+                ? "btn bg-100 btn-md py-2 text-start"
+                : "btn btn-secondary btn-lg py-5"
             : "btn btn-secondary btn-lg lh-lg";
     }
 
