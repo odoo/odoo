@@ -219,41 +219,41 @@ class AccountFiscalPosition(models.Model):
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
         return super(AccountFiscalPosition, self).write(vals)
 
-    def _get_first_matching_fpos(self, partner):
+    def _get_first_matching_fpos(self, delivery_partner, vat_partner):
         sorted_fpos = self.sorted(key=lambda f: (-len(f.company_id.parent_ids), f.sequence))  # company specific first, then sequence
         for fpos in sorted_fpos:
-            if all(fn(fpos) for fn in self._get_fpos_validation_functions(partner)):
+            if all(fn(fpos) for fn in self._get_fpos_validation_functions(delivery_partner, vat_partner)):
                 return fpos
         return self.env['account.fiscal.position']
 
-    def _get_fpos_validation_functions(self, partner):
+    def _get_fpos_validation_functions(self, delivery_partner, vat_partner):
         """ Returns a list of functions to validate fiscal positions against a partner.
         """
         return [
             # vat required
             lambda fpos: (
-                not fpos.vat_required or partner._get_vat_required_valid(company=self.env.company)
+                not fpos.vat_required or vat_partner._get_vat_required_valid(company=self.env.company)
             ),
             # zip code
             lambda fpos:(
                 not (fpos.zip_from and fpos.zip_to)
-                or (partner.zip and (fpos.zip_from <= partner.zip <= fpos.zip_to))
+                or (delivery_partner.zip and (fpos.zip_from <= delivery_partner.zip <= fpos.zip_to))
             ),
             # state
             lambda fpos: (
                 not fpos.state_ids
-                or (partner.state_id in fpos.state_ids)
+                or (delivery_partner.state_id in fpos.state_ids)
             ),
             # country
             lambda fpos: (
                 not fpos.country_id
-                or (partner.country_id == fpos.country_id)
+                or (delivery_partner.country_id == fpos.country_id)
             ),
             # country group
             lambda fpos: (
                 not fpos.country_group_id
-                or (partner.country_id in fpos.country_group_id.country_ids and
-                    (not partner.state_id or partner.state_id not in fpos.country_group_id.exclude_state_ids))
+                or (delivery_partner.country_id in fpos.country_group_id.country_ids and
+                    (not delivery_partner.state_id or delivery_partner.state_id not in fpos.country_group_id.exclude_state_ids))
             ),
         ]
 
@@ -267,15 +267,9 @@ class AccountFiscalPosition(models.Model):
             return self.env['account.fiscal.position']
 
         company = self.env.company
-        intra_eu = vat_exclusion = False
-        if company.vat and partner.vat:
-            eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
-            intra_eu = company.vat[:2] in eu_country_codes and partner.vat[:2] in eu_country_codes
-            vat_exclusion = company.vat[:2] == partner.vat[:2]
-
-        # If company and partner have the same vat prefix (and are both within the EU), use invoicing
-        if not delivery or (intra_eu and vat_exclusion):
+        if not delivery:
             delivery = partner
+        vat_partner = delivery if delivery in partner.child_ids else partner
 
         # partner manually set fiscal position always win
         manual_fiscal_position = (
@@ -290,7 +284,7 @@ class AccountFiscalPosition(models.Model):
 
         all_auto_apply_fpos = self.search(self._check_company_domain(self.env.company) + [('auto_apply', '=', True)])
 
-        return all_auto_apply_fpos._get_first_matching_fpos(delivery)
+        return all_auto_apply_fpos._get_first_matching_fpos(delivery, vat_partner)
 
     def action_open_related_taxes(self):
         list_view = self.env.ref('account.account_tax_fiscal_position_view_tree', raise_if_not_found=False)

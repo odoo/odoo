@@ -153,6 +153,10 @@ class TestFiscalPosition(common.TransactionCase):
             'vat': 'BE0477472701',
             'country_id': self.be.id,
         })
+        partner_be_no_vat = self.env['res.partner'].create({
+            'name': 'BE NO VAT',
+            'country_id': self.be.id,
+        })
         partner_nl_vat = self.env['res.partner'].create({
             'name': 'NL VAT',
             'vat': 'NL123456782B90',
@@ -166,19 +170,26 @@ class TestFiscalPosition(common.TransactionCase):
             'name': 'US NO VAT',
             'country_id': self.us.id,
         })
+        partner_fr_vat_delivery_child = self.env['res.partner'].create({
+            'name': 'FR VAT',
+            'vat': 'FR23334175221',
+            'country_id': self.fr.id,
+            'type': 'delivery',
+            'parent_id': partner_be_vat.id,
+        })
 
         # Case : 1
         # Billing (VAT/country) : BE/BE
         # Delivery (VAT/country) : NL/NL
-        # Expected FP : Régime National
+        # Expected FP : Régime Intra-Communautaire
         self.assertEqual(
             self.env['account.fiscal.position']._get_fiscal_position(partner_be_vat, partner_nl_vat),
-            fp_be_nat
+            fp_eu_intra
         )
 
         # Case : 2
         # Billing (VAT/country) : NL/NL
-        # Delivery (VAT/country) : BE/BE
+        # Delivery (VAT/country) : BE/BE - not a child company
         # Expected FP : Régime National
         self.assertEqual(
             self.env['account.fiscal.position']._get_fiscal_position(partner_nl_vat, partner_be_vat),
@@ -188,10 +199,10 @@ class TestFiscalPosition(common.TransactionCase):
         # Case : 3
         # Billing (VAT/country) : BE/BE
         # Delivery (VAT/country) : None/NL
-        # Expected FP : Régime National
+        # Expected FP : Régime Intra-Communautaire
         self.assertEqual(
             self.env['account.fiscal.position']._get_fiscal_position(partner_be_vat, partner_nl_no_vat),
-            fp_be_nat
+            fp_eu_intra
         )
 
         # Case : 4
@@ -219,6 +230,24 @@ class TestFiscalPosition(common.TransactionCase):
         self.assertEqual(
             self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_us_no_vat),
             fp_eu_extra
+        )
+
+        # Case : 7
+        # Billing (VAT/country) : BE/BE
+        # Delivery (VAT/country) : FR/FR - a child company of the billing company
+        # Expected FP : Régime Intra-Communautaire
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_be_vat, partner_fr_vat_delivery_child),
+            fp_eu_intra
+        )
+
+        # Case : 8
+        # Billing (VAT/country) : None/BE
+        # Delivery (VAT/country) : NL/NL - not a child company
+        # Expected FP : EU privé
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_be_no_vat, partner_nl_vat),
+            fp_eu_priv
         )
 
     def test_domestic_fp_map_self(self):
