@@ -149,6 +149,34 @@ export function checkAddedLoyaltyPoints(points) {
     ];
 }
 
+export function useExistingLoyaltyCard(code, valid = true) {
+    const steps = [
+        {
+            trigger: `a:contains("Sell physical gift card?")`,
+            run: "click",
+        },
+        {
+            content: `Input code '${code}'`,
+            trigger: `input[id="code"]`,
+            run: `edit ${code}`,
+        },
+        {
+            trigger: `.btn-primary:contains("Add Balance")`,
+            run: "click",
+        },
+    ];
+
+    if (!valid) {
+        steps.push(Dialog.confirm("Ok"));
+        steps.push({
+            trigger: `a:contains("Sell physical gift card?")`,
+            run: () => {},
+        });
+    }
+
+    return steps;
+}
+
 export function createManualGiftCard(code, amount, date = false) {
     const steps = [
         {

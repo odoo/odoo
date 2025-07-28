@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
         special_display_products = self.env['product.product'].browse(loyality_products)
         # Include trigger products from loyalty programs of type 'gift_card' or 'ewallet'
         special_display_products += self.env['loyalty.program'].search([
-            ('program_type', 'in', ['gift_card', 'ewallet']),
+            ('program_type', 'in', ['ewallet']),
             ('pos_config_ids', 'in', [False, config.id]),
         ]).trigger_product_ids
 
