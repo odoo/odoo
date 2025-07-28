@@ -259,6 +259,13 @@ export class WebsiteBuilderClientAction extends Component {
         this.websiteContext.showResourceEditor = false;
         this.blockIframe();
         await this.loadIframeAndBundles(true);
+        window.document.dispatchEvent(
+            new CustomEvent("edit_page", {
+                detail: {
+                    iframeDocument: this.websiteContent.el.contentDocument.document,
+                },
+            })
+        );
         this.unblockIframe();
         this.state.isEditing = true;
     }

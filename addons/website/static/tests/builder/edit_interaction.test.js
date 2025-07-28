@@ -21,13 +21,12 @@ test("dropping a new snippet starts its interaction", async () => {
     patchWithCleanup(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();
-            this.websiteEditService.update = () => expect.step("update");
             this.websiteEditService.refresh = () => expect.step("refresh");
         },
     });
     await openBuilderSidebar();
     await waitFor(".o-website-builder_sidebar.o_builder_sidebar_open");
-    expect.verifySteps(["update"]);
+    expect.verifySteps(["refresh"]);
     await contains(
         `.o-snippets-menu #snippet_groups .o_snippet[data-snippet-group='text'] .o_snippet_thumbnail_area`
     ).click();
@@ -54,15 +53,15 @@ test("ensure order of operations when hovering an option", async () => {
         template: xml`<BuilderButton action="'customAction'"/>`,
     });
     patchWithCleanup(EditInteractionPlugin.prototype, {
-        restartInteractions() {
-            expect.step("restartInteractions");
+        refreshInteractions(element) {
+            expect.step("refreshInteractions");
         },
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
-    expect.verifySteps(["restartInteractions"]);
+    expect.verifySteps(["refreshInteractions"]);
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").hover();
-    expect.verifySteps(["load", "apply", "restartInteractions"]);
+    expect.verifySteps(["load", "apply", "refreshInteractions"]);
 });
 
 describe("exit builder", () => {
