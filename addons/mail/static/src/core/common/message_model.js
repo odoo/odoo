@@ -311,12 +311,7 @@ export class Message extends Record {
     isEmpty = fields.Attr(false, {
         /** @this {import("models").Message} */
         compute() {
-            return (
-                this.isBodyEmpty &&
-                this.attachment_ids.length === 0 &&
-                this.trackingValues.length === 0 &&
-                !this.subtype_id?.description
-            );
+            return this.computeIsEmpty();
         },
     });
     isBodyEmpty = fields.Attr(undefined, {
@@ -339,6 +334,15 @@ export class Message extends Record {
             );
         },
     });
+
+    computeIsEmpty() {
+        return (
+            this.isBodyEmpty &&
+            this.attachment_ids.length === 0 &&
+            this.trackingValues.length === 0 &&
+            !this.subtype_id?.description
+        );
+    }
 
     /**
      * Determines if the link preview is actually the main content of the
@@ -559,6 +563,7 @@ export class Message extends Record {
         if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
+        return data;
     }
 
     /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
@@ -612,19 +617,26 @@ export class Message extends Record {
         );
     }
 
-    async remove() {
-        await rpc("/mail/message/update_content", {
+    async remove({ removeFromThread = false } = {}) {
+        const data = await rpc("/mail/message/update_content", {
             message_id: this.id,
-            update_data: {
-                attachment_ids: [],
-                attachment_tokens: [],
-                body: "",
-                partner_ids: [],
-            },
+            update_data: this.removeParams,
         });
-        this.body = "";
-        this.attachment_ids = [];
+        this.store.insert(data);
+        if (this.thread && removeFromThread) {
+            this.thread.messages = this.thread.messages.filter((message) => message.notEq(this));
+        }
         this.composer = undefined;
+        return data;
+    }
+
+    get removeParams() {
+        return {
+            attachment_ids: [],
+            attachment_tokens: [],
+            body: "",
+            partner_ids: [],
+        };
     }
 
     async setDone() {
