@@ -74,7 +74,7 @@ export class BuilderNumberInput extends Component {
             const { savedValue, savedUnit } = value.match(
                 /(?<savedValue>[\d.e+-]+)(?<savedUnit>\w*)/
             ).groups;
-            if (savedUnit) {
+            if (savedUnit || this.props.saveUnit) {
                 // Convert value from saveUnit to unit
                 value = convertNumericToUnit(
                     savedValue,
