@@ -1,5 +1,4 @@
 import { markRaw, markup, toRaw } from "@odoo/owl";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
@@ -498,17 +497,7 @@ export class Record extends DataPoint {
         }
         const isValid = !this._invalidFields.size;
         if (!isValid && displayNotification) {
-            const items = [...this._invalidFields].map(
-                (fieldName) => markup`<li>${this.fields[fieldName].string || fieldName}</li>`,
-                this
-            );
-            this._closeInvalidFieldsNotification = this.model.notification.add(
-                markup`<ul>${htmlJoin(items)}</ul>`,
-                {
-                    title: _t("Invalid fields: "),
-                    type: "danger",
-                }
-            );
+            this._closeInvalidFieldsNotification = this._displayInvalidFieldNotification();
         }
         return isValid;
     }
@@ -656,6 +645,17 @@ export class Record extends DataPoint {
         this._closeInvalidFieldsNotification();
         this._closeInvalidFieldsNotification = () => {};
         this._restoreActiveFields();
+    }
+
+    _displayInvalidFieldNotification() {
+        const items = [...this._invalidFields].map(
+            (fieldName) => markup`<li>${this.fields[fieldName].string || fieldName}</li>`,
+            this
+        );
+        return this.model.notification.add(markup`<ul>${htmlJoin(items)}</ul>`, {
+            title: _t("Invalid fields: "),
+            type: "danger",
+        });
     }
 
     _formatServerValue(fieldType, value) {
@@ -1255,21 +1255,15 @@ export class Record extends DataPoint {
         if (canProceed === false) {
             return;
         }
-        if (
-            this.selected &&
-            this.model.multiEdit &&
-            this.model.root._recordToDiscard !== this &&
-            !this._invalidFields.has(fieldName)
-        ) {
-            await this.model.dialog.add(AlertDialog, {
-                body: _t("No valid record to save"),
-                confirm: async () => {
-                    await this.discard();
-                    this.switchMode("readonly");
-                },
-            });
+        if (toRaw(this._invalidFields).has(fieldName)) {
+            return;
         }
         this._invalidFields.add(fieldName);
+        if (this.selected && this.model.multiEdit && this.model.root._recordToDiscard !== this) {
+            this._displayInvalidFieldNotification();
+            await this.discard();
+            this.switchMode("readonly");
+        }
     }
 
     _resetFieldValidity(fieldName) {
