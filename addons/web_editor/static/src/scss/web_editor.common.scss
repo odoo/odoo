@@ -342,7 +342,7 @@ div.media_iframe_video {
         height: 0;
     }
 
-    .media_iframe_video_size_for_vertical {
+    &[data-is-vertical="true"] .media_iframe_video_size {
         padding-bottom: 177.78%; /* 9:16 aspect ratio */
         position: relative;
         width: 100%;
@@ -358,7 +358,7 @@ div.media_iframe_video {
     }
 }
 
-div.media_iframe_video:has(.media_iframe_video_size_for_vertical) {
+div.media_iframe_video[data-is-vertical="true"] {
     max-width: 315px;
 }
 
