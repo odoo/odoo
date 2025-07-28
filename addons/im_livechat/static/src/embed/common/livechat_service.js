@@ -111,14 +111,12 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread>}
      */
     async _createThread({ originThread, persist = false }) {
+        const operatorLookupParams = this.getOperatorLookupParams(originThread)
         const { store_data, channel_id } = await rpc(
             "/im_livechat/get_session",
             {
                 channel_id: this.options.channel_id,
-                chatbot_script_id:
-                    originThread?.chatbot?.script.id ??
-                    this.store.livechat_rule?.chatbot_script_id?.id,
-                previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
+                operator_lookup_params: operatorLookupParams,
                 persisted: persist,
             },
             { silent: true }
@@ -136,6 +134,12 @@ export class LivechatService {
             ONE_DAY_TTL * 7
         );
         return thread;
+    }
+
+    getOperatorLookupParams(originThread){
+        const chatbot_script_id = originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id
+        const previous_operator_id = expirableStorage.getItem(OPERATOR_STORAGE_KEY)
+        return { chatbot_script_id, previous_operator_id }
     }
 
     get options() {

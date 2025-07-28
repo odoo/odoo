@@ -28,11 +28,11 @@ async function get_session(request) {
 
     let {
         channel_id,
-        previous_operator_id,
+        operator_lookup_params,
         persisted,
         context = {},
     } = await parseRequestParams(request);
-    previous_operator_id = parseInt(previous_operator_id);
+    const previous_operator_id = parseInt(operator_lookup_params['previous_operator_id'])
     const agent = LivechatChannel._get_operator(channel_id, previous_operator_id);
     if (!agent) {
         return false;

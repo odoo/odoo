@@ -189,9 +189,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
         operator_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
-        self.assertEqual(
-            Store(channel).get_result(),
-            {
+        expected_result = {
                 "discuss.channel": [
                     {
                         "anonymous_name": f"Visitor #{self.visitor.id}",
@@ -291,7 +289,12 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "website_id": self.env.ref("website.default_website").id,
                     }
                 ],
-            },
+            }
+        if 'ai.agent' in self.env:
+            expected_result['discuss.channel'][0]['livechat_with_ai_agent'] = False
+        self.assertEqual(
+            Store(channel).get_result(),
+            expected_result
         )
 
     def test_channel_to_store_after_operator_left(self):
@@ -304,34 +307,38 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertFalse(
             channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         )
+        expected_result = [
+            {
+                "anonymous_name": f"Visitor #{self.visitor.id}",
+                "channel_type": "livechat",
+                "country_id": False,
+                "create_uid": self.user_public.id,
+                "default_display_mode": False,
+                "fetchChannelInfoState": "fetched",
+                "id": channel.id,
+                "invited_member_ids": [("ADD", [])],
+                "is_editable": False,
+                "is_pinned": True,
+                "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
+                "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
+                "livechat_operator_id": self.operator.partner_id.id,
+                "member_count": 1,
+                "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": 0,
+                "name": f"Visitor #{self.visitor.id} El Deboulonnator",
+                "requested_by_operator": False,
+                "rtc_session_ids": [("ADD", [])],
+                "uuid": channel.uuid,
+            }
+        ]
+        if 'ai.agent' in self.env:
+            expected_result[0]['livechat_with_ai_agent'] = False
+
         self.assertEqual(
             Store(
                 channel.with_user(self.user_public).with_context(guest=guest),
             ).get_result()["discuss.channel"],
-            [
-                {
-                    "anonymous_name": f"Visitor #{self.visitor.id}",
-                    "channel_type": "livechat",
-                    "country_id": False,
-                    "create_uid": self.user_public.id,
-                    "default_display_mode": False,
-                    "fetchChannelInfoState": "fetched",
-                    "id": channel.id,
-                    "invited_member_ids": [("ADD", [])],
-                    "is_editable": False,
-                    "is_pinned": True,
-                    "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
-                    "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
-                    "livechat_operator_id": self.operator.partner_id.id,
-                    "member_count": 1,
-                    "message_needaction_counter": 0,
-                    "message_needaction_counter_bus_id": 0,
-                    "name": f"Visitor #{self.visitor.id} El Deboulonnator",
-                    "requested_by_operator": False,
-                    "rtc_session_ids": [("ADD", [])],
-                    "uuid": channel.uuid,
-                },
-            ],
+            expected_result,
         )
 
     def test_livechat_not_available_with_hide_button_rule(self):

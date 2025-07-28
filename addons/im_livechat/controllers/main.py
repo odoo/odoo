@@ -76,9 +76,9 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
-    def get_session(self, channel_id, previous_operator_id=None, chatbot_script_id=None, persisted=True):
-        agent = request.env["res.users"]
-        chatbot_script = request.env["chatbot.script"]
+    def get_session(self, channel_id, operator_lookup_params=None, persisted=True):
+        if operator_lookup_params is None:
+            operator_lookup_params = {}
         channel = request.env["discuss.channel"]
         country = request.env["res.country"]
         guest = request.env["mail.guest"]
@@ -97,21 +97,12 @@ class LivechatController(http.Controller):
             country = request.env["res.country"].search(
                 [("code", "=", request.geoip.country_code)], limit=1
             )
-        if chatbot_script_id and chatbot_script_id in livechat_channel.rule_ids.chatbot_script_id.ids:
-            chatbot_script = (
-                request.env["chatbot.script"]
-                .sudo()
-                .with_context(lang=request.env["chatbot.script"]._get_chatbot_language())
-                .search([("id", "=", chatbot_script_id)])
-            )
-        else:
-            agent = livechat_channel._get_operator(
-                previous_operator_id=previous_operator_id,
-                lang=request.cookies.get("frontend_lang"),
-                country_id=country.id,
-            )
-        if not chatbot_script and not agent:
+        operator_lookup_params.update({'country': country, 'lang': request.cookies.get("frontend_lang")})
+        operator_info = livechat_channel._get_operator_info(operator_lookup_params)
+        if not operator_info['operator_partner']:
             return False
+
+        chatbot_script = operator_info['chatbot_script']
 
         if not persisted:
             channel_id = -1  # only one temporary thread at a time, id does not matter.
@@ -124,7 +115,7 @@ class LivechatController(http.Controller):
                 }
                 store.add(chatbot_script)
                 store.add(welcome_steps)
-            operator_partner = agent.partner_id if agent else chatbot_script.operator_partner_id
+            operator_partner = operator_info['operator_partner']
             channel_info = {
                 "fetchChannelInfoState": "fetched",
                 "id": channel_id,
@@ -146,9 +137,7 @@ class LivechatController(http.Controller):
                 )
                 livechat_channel = livechat_channel.with_context(guest=guest)
                 request.update_context(guest=guest)
-            channel_vals = livechat_channel._get_livechat_discuss_channel_vals(
-                chatbot_script=chatbot_script, agent=agent
-            )
+            channel_vals = livechat_channel._get_livechat_discuss_channel_vals(operator_info)
             lang = request.env["res.lang"].search(
                 [("code", "=", request.cookies.get("frontend_lang"))]
             )

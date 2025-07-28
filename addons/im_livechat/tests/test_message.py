@@ -62,7 +62,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             "/im_livechat/get_session",
             {
                 "channel_id": self.livechat_channel.id,
-                "chatbot_script_id": self.chatbot_script.id,
+                "operator_lookup_params": {'chatbot_script_id': self.chatbot_script.id},
                 "persisted": True,
             },
         )
@@ -127,7 +127,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             self.make_jsonrpc_request(
                 "/im_livechat/get_session",
                 {
-                    "previous_operator_id": self.users[0].partner_id.id,
+                    "operator_lookup_params": {"previous_operator_id": self.users[0].partner_id.id},
                     "channel_id": im_livechat_channel.id,
                 },
             )["channel_id"]
@@ -237,7 +237,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             self.make_jsonrpc_request(
                 "/im_livechat/get_session",
                 {
-                    "previous_operator_id": self.users[0].partner_id.id,
+                    "operator_lookup_params": {"previous_operator_id": self.users[0].partner_id.id},
                     "channel_id": im_livechat_channel.id,
                 },
             )["channel_id"]
