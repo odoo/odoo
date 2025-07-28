@@ -82,7 +82,12 @@ patch(Thread.prototype, {
         }
     },
     async leaveChannel({ force = false } = {}) {
-        if (this.channel_type === "livechat" && this.channel_member_ids.length <= 2 && !force) {
+        if (
+            this.channel_type === "livechat" &&
+            this.channel_member_ids.length <= 2 &&
+            !this.livechat_end_dt &&
+            !force
+        ) {
             await this.askLeaveConfirmation(_t("Leaving will end the livechat. Proceed leaving?"));
         }
         super.leaveChannel(...arguments);
