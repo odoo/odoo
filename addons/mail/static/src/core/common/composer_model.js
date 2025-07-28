@@ -1,4 +1,5 @@
 import { OR, Record } from "@mail/core/common/record";
+import { convertBrToLineBreak } from "@mail/utils/common/format";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
@@ -28,7 +29,15 @@ export class Composer extends Record {
     mentionedPartners = Record.many("Persona");
     mentionedChannels = Record.many("Thread");
     cannedResponses = Record.many("mail.canned.response");
-    text = "";
+    isDirty = false;
+    text = Record.attr("", {
+        compute() {
+            if (!this.isDirty && this.message) {
+                return convertBrToLineBreak(this.message.body || "");
+            }
+            return this.text;
+        },
+    });
     thread = Record.one("Thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
