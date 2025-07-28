@@ -92,7 +92,7 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {number | undefined}
      */
     get activeDashboardId() {
-        return this.state.activeDashboard ? this.state.activeDashboard.id : undefined;
+        return this.state.activeDashboard ? this.state.activeDashboard.data.id : undefined;
     }
 
     /**
@@ -128,7 +128,7 @@ export class SpreadsheetDashboardAction extends Component {
         }
         const [firstSection] = this.getDashboardGroups();
         if (firstSection && firstSection.dashboards.length) {
-            return firstSection.dashboards[0].id;
+            return firstSection.dashboards[0].data.id;
         }
     }
 
@@ -172,9 +172,9 @@ export class SpreadsheetDashboardAction extends Component {
             return;
         }
 
-        const { id, isFavorite } = this.state.activeDashboard;
+        const { id, is_favorite } = this.state.activeDashboard.data;
         await this.orm.call("spreadsheet.dashboard", "action_toggle_favorite", [id]);
-        this.state.activeDashboard.isFavorite = !isFavorite;
+        this.state.activeDashboard.data.is_favorite = !is_favorite;
     }
 
     toggleSidebar() {
@@ -185,7 +185,7 @@ export class SpreadsheetDashboardAction extends Component {
         return this.getDashboardGroups().find(
             (group) =>
                 group.id !== "favorites" && // Skip the FAVORITES group
-                group.dashboards.some((d) => d.id === this.activeDashboardId)
+                group.dashboards.some(({ data }) => data.id === this.activeDashboardId)
         )?.name;
     }
 }

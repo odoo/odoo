@@ -22,7 +22,7 @@ export class DashboardMobileSearchPanel extends Component {
 
     get searchBarText() {
         return this.props.activeDashboard
-            ? this.props.activeDashboard.displayName
+            ? this.props.activeDashboard.data.name
             : _t("Choose a dashboard....");
     }
 
