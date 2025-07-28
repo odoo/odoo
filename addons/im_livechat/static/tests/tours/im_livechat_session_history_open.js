@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("im_livechat_session_history_open", {
             run: "fill Sessions",
         },
         {
-            trigger: ".o_command:contains(Live Chat / Sessions)",
+            trigger: ".o_command:contains(All Conversations)",
             run: "click",
         },
         {

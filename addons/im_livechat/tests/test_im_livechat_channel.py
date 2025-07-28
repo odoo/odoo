@@ -102,8 +102,8 @@ class TestImLivechatChannel(TestImLivechatCommon, TestGetOperator):
 
     def test_ongoing_session_count(self):
         livechat_channel = self.livechat_channel
-        session_1 = self._create_chat(livechat_channel, livechat_channel.user_ids[0])
-        session_2 = self._create_chat(livechat_channel, livechat_channel.user_ids[0])
+        session_1 = self._create_conversation(livechat_channel, livechat_channel.user_ids[0])
+        session_2 = self._create_conversation(livechat_channel, livechat_channel.user_ids[0])
         self.assertEqual(livechat_channel.ongoing_session_count, 2)
         session_1.livechat_end_dt = Datetime.now() - timedelta(minutes=4)
         self.assertEqual(livechat_channel.ongoing_session_count, 1)

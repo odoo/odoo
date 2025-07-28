@@ -211,12 +211,8 @@ export class WebsocketWorker {
      * @param {string} channel
      */
     _addChannel(client, channel) {
-        const clientChannels = this.channelsByClient.get(client);
-        if (!clientChannels.includes(channel)) {
-            clientChannels.push(channel);
-            this.channelsByClient.set(client, clientChannels);
-            this._debouncedUpdateChannels();
-        }
+        this.channelsByClient.get(client).push(channel);
+        this._debouncedUpdateChannels();
     }
 
     /**
