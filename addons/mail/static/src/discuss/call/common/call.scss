@@ -13,6 +13,10 @@
         &.o-compact {
             height: 10%;
             min-height: #{"max(10%, 100px)"};
+            &.o-hasVideo.o-selfInCall {
+                width: 100%;
+                height: calc(100vw * 9 / 16);
+            }
         }
     }
 }
