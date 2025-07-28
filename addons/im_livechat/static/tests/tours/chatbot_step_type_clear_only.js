@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add("change_chatbot_step_type", {
             run: "click",
         },
         {
-            trigger: ".o_form_view",
+            trigger: ".o_form_saved",
         },
     ],
 });
