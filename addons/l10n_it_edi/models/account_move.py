@@ -941,7 +941,8 @@ class AccountMove(models.Model):
         }
 
     def _l10n_it_edi_get_document_type(self):
-        """ Compare the features of the invoice to the requirements of each Document Type (TDxx)
+        """ Retrieve document type from the move. If not set, compare the features
+        of the invoice to the requirements of each Document Type (TDxx)
         FatturaPA until you find a valid one. """
 
         def compare(actual_values, expected_values):
@@ -954,6 +955,9 @@ class AccountMove(models.Model):
                 return actual_values in expected_values
             # We compare other features directly, one on one
             return actual_values == expected_values
+
+        if self.l10n_it_document_type:
+            return self.l10n_it_document_type.code
 
         invoice_features = self._l10n_it_edi_features_for_document_type_selection()
         for document_type_code, document_type_features in self._l10n_it_edi_document_type_mapping().items():
