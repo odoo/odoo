@@ -44,7 +44,7 @@
     <t t-if="domState.hasImages">
 	    <BuilderRow label.translate="Zoom" level="1">
 	        <BuilderSelect action="'websiteConfig'" id="'o_wsale_zoom_mode'">
-	            <t t-foreach="props.getZoomLevels()" t-as="zoomLevel" t-key="zoomLevel.id">
+	            <t t-foreach="this.getZoomLevels()" t-as="zoomLevel" t-key="zoomLevel.id">
 	                <t t-if="zoomLevel.visible">
                         <BuilderSelectItem id="zoomLevel.id" actionParam="{ views: zoomLevel.views }" t-out="zoomLevel.label"/>
 	                </t>

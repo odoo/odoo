@@ -3,7 +3,7 @@
 
 <t t-name="website_mass_mailing.RecaptchaSubscribeOption">
 
-    <BuilderRow label.translate="Show reCaptcha Policy" t-if="this.props.hasRecaptcha()">
+    <BuilderRow label.translate="Show reCaptcha Policy" t-if="this.hasRecaptcha()">
         <BuilderCheckbox dataAttributeAction="'toggleRecaptchaLegal'" dataAttributeActionValue="'true'" action="'toggleRecaptchaLegal'"/>
     </BuilderRow>
 

@@ -10,15 +10,7 @@ export class MegaMenuOptionPlugin extends Plugin {
     static shared = ["getTemplatePrefix"];
 
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC_NEXT, {
-                OptionComponent: MegaMenuOption,
-                selector: ".o_mega_menu",
-                props: {
-                    getTemplatePrefix: this.getTemplatePrefix.bind(this),
-                },
-            }),
-        ],
+        builder_options: [withSequence(SNIPPET_SPECIFIC_NEXT, MegaMenuOption)],
         dropzone_selector: {
             selector: ".o_mega_menu .nav > .nav-link",
             dropIn: ".o_mega_menu nav",

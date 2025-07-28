@@ -4,27 +4,21 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { connectorOptionParams, ProcessStepsOption } from "./process_steps_option";
-import { WebsiteBackgroundOption } from "./background_option";
+import { BaseWebsiteBackgroundOption } from "./background_option";
+
+export class WebsiteBackgroundProcessStepOption extends BaseWebsiteBackgroundOption {
+    static selector = ".s_process_step .s_process_step_number";
+    static defaultProps = {
+        withColors: true,
+        withImages: false,
+        withColorCombinations: false,
+    };
+}
 
 class ProcessStepsOptionPlugin extends Plugin {
     static id = "processStepsOption";
-    selector = ".s_process_steps";
     resources = {
-        builder_options: [
-            {
-                OptionComponent: ProcessStepsOption,
-                selector: this.selector,
-            },
-            {
-                OptionComponent: WebsiteBackgroundOption,
-                selector: ".s_process_step .s_process_step_number",
-                props: {
-                    withColors: true,
-                    withImages: false,
-                    withColorCombinations: false,
-                },
-            },
-        ],
+        builder_options: [ProcessStepsOption, WebsiteBackgroundProcessStepOption],
         builder_actions: {
             ChangeConnectorAction,
             ChangeArrowColorAction,
@@ -36,7 +30,7 @@ class ProcessStepsOptionPlugin extends Plugin {
         // snippet is being resized).
         content_updated_handlers: (rootEl) =>
             applyFunDependOnSelectorAndExclude(reloadConnectors, rootEl, {
-                selector: this.selector,
+                selector: ProcessStepsOption.selector,
             }),
         dropzone_selector: {
             selector: ".s_process_step",

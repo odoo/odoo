@@ -4,7 +4,6 @@ import { isMobileView } from "@html_builder/utils/utils";
 
 export class SelectNumberColumn extends BaseOptionComponent {
     static template = "html_builder.SelectNumberColumn";
-    static props = {};
 
     setup() {
         super.setup();

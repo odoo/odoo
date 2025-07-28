@@ -1,28 +1,32 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { onWillStart, onMounted, useState, useRef } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class ProductsItemOption extends BaseOptionComponent {
     static template = "website_sale.ProductsItemOptionPlugin";
-    static props = {
-        loadInfo: Function,
-        itemSize: Object,
-        count: Object,
-    };
+    static dependencies = ["productsItemOptionPlugin"];
+    static selector = "#products_grid .oe_product";
+    static title = _t("Product");
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
 
     setup() {
         super.setup();
         this.orm = useService("orm");
         this.tableRef = useRef("table");
 
+        const { loadInfo, getItemSize, getCount } = this.dependencies.productsItemOptionPlugin;
+
         this.state = useState({
             ribbons: [],
             ribbonEditMode: false,
-            itemSize: this.props.itemSize,
+            itemSize: getItemSize(),
+            count: getCount(),
         });
 
         onWillStart(async () => {
-            const [ribbons, defaultSort] = await this.props.loadInfo();
+            const [ribbons, defaultSort] = await loadInfo();
             this.state.ribbons = ribbons;
             this.defaultSort = defaultSort;
 

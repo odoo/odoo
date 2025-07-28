@@ -5,22 +5,27 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class NavTabsStyleOption extends BaseOptionComponent {
+    static template = "website.NavTabsStyleOption";
+    static selector = ".s_tabs";
+    static applyTo = ".s_tabs_main";
+}
+
+export class NavTabsImagesStyleOption extends BaseOptionComponent {
+    static template = "website.NavTabsImagesStyleOption";
+    static selector = ".s_tabs_images";
+    static applyTo = ".s_tabs_main";
+}
 
 class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
     static shared = ["isNavItem", "getActiveOverlayButtons", "moveNavItem"];
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.NavTabsStyleOption",
-                selector: ".s_tabs",
-                applyTo: ".s_tabs_main",
-            }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.NavTabsImagesStyleOption",
-                selector: ".s_tabs_images",
-                applyTo: ".s_tabs_main",
-            }),
+            withSequence(SNIPPET_SPECIFIC_END, NavTabsStyleOption),
+            withSequence(SNIPPET_SPECIFIC_END, NavTabsImagesStyleOption),
         ],
         builder_actions: {
             SetStyleAction,

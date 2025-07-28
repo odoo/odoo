@@ -3,7 +3,6 @@ import {
     convertToNormalColumn,
     reloadLazyImages,
     toggleGridMode,
-    layoutOptionSelector,
 } from "@html_builder/utils/grid_layout_utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
@@ -17,16 +16,8 @@ class LayoutOptionPlugin extends Plugin {
     static dependencies = ["clone", "selection"];
     resources = {
         builder_options: [
-            withSequence(LAYOUT, {
-                OptionComponent: LayoutOption,
-                ...layoutOptionSelector,
-            }),
-            withSequence(LAYOUT_GRID, {
-                OptionComponent: LayoutGridOption,
-                selector:
-                    "section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro",
-                applyTo: ":scope > *:has(> .row)",
-            }),
+            withSequence(LAYOUT, LayoutOption),
+            withSequence(LAYOUT_GRID, LayoutGridOption),
         ],
         on_cloned_handlers: this.onCloned.bind(this),
         builder_actions: {

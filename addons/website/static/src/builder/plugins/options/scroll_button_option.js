@@ -3,7 +3,9 @@ import { _t } from "@web/core/l10n/translation";
 
 export class ScrollButtonOption extends BaseOptionComponent {
     static template = "website.ScrollButtonOption";
-    static props = {};
+    static selector = "section";
+    static exclude =
+        "[data-snippet] :not(.oe_structure) > [data-snippet],.s_instagram_page,.o_mega_menu > section,.s_appointments .s_dynamic_snippet_content,.s_floating_blocks,.s_floating_blocks .s_floating_blocks_block";
 
     setup() {
         super.setup();

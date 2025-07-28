@@ -6,12 +6,7 @@ export class CustomerFilterOptionPlugin extends Plugin {
     static id = "customerFilterOption";
 
     resources = {
-        builder_options: {
-            OptionComponent: CustomerFilterOption,
-            selector: ".o_wcrm_filters_top",
-            groups: ["website.group_website_designer"],
-            editableOnly: false,
-        },
+        builder_options: CustomerFilterOption,
     };
 }
 

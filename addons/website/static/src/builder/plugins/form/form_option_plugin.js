@@ -41,6 +41,13 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { FormOption } from "./form_option";
 import { isSmallInteger } from "@html_builder/utils/utils";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class WebsiteFormSubmitOption extends BaseOptionComponent {
+    static template = "website.s_website_form_submit_option";
+    static selector = ".s_website_form_submit";
+    static exclude = ".s_website_form_no_submit_options";
+}
 
 const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
 export class FormOptionPlugin extends Plugin {
@@ -57,6 +64,8 @@ export class FormOptionPlugin extends Plugin {
         "replaceField",
         "prepareConditionInputs",
         "setLabelsMark",
+        "fetchModels",
+        "loadFieldOptionData",
     ];
     resources = {
         builder_header_middle_buttons: [
@@ -102,34 +111,7 @@ export class FormOptionPlugin extends Plugin {
                 reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
-        builder_options: [
-            {
-                OptionComponent: FormOption,
-                props: {
-                    fetchModels: this.fetchModels.bind(this),
-                    prepareFormModel: this.prepareFormModel.bind(this),
-                    fetchFieldRecords: this.fetchFieldRecords.bind(this),
-                    applyFormModel: this.applyFormModel.bind(this),
-                },
-                selector: ".s_website_form",
-                applyTo: "form",
-                cleanForSave: this.whitelistForms.bind(this),
-            },
-            {
-                OptionComponent: FormFieldOptionRedraw,
-                props: {
-                    fetchModels: this.fetchModels.bind(this),
-                    loadFieldOptionData: this.loadFieldOptionData.bind(this),
-                },
-                selector: ".s_website_form_field",
-                exclude: ".s_website_form_dnone",
-            },
-            {
-                template: "website.s_website_form_submit_option",
-                selector: ".s_website_form_submit",
-                exclude: ".s_website_form_no_submit_options",
-            },
-        ],
+        builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
         builder_actions: {
             // Form actions
             // Components that use this action MUST await fetchModels before they start.
@@ -413,26 +395,7 @@ export class FormOptionPlugin extends Plugin {
             limit: 1000, // Safeguard to not crash DBs
         });
     }
-    async whitelistForms(el) {
-        for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
-            sigEl.remove();
-        }
 
-        for (const formEl of selectElements(el, ".s_website_form form[data-model_name]")) {
-            const model = formEl.dataset.model_name;
-            const fields = [
-                ...formEl.querySelectorAll(
-                    ".s_website_form_field:not(.s_website_form_custom) .s_website_form_input"
-                ),
-            ].map((el) => el.name);
-            if (fields.length) {
-                this.services.orm.call("ir.model.fields", "formbuilder_whitelist", [
-                    model,
-                    [...new Set(fields)],
-                ]);
-            }
-        }
-    }
     /**
      * Set the correct mark on all fields.
      */
@@ -476,7 +439,7 @@ export class FormOptionPlugin extends Plugin {
         field.formatInfo.mark = getMark(formEl);
         const newFieldEl = renderField(field);
         fieldEl.insertAdjacentElement("afterend", newFieldEl);
-        this.dependencies["builderOptions"].setNextTarget(newFieldEl);
+        this.dependencies.builderOptions.setNextTarget(newFieldEl);
     }
     /**
      * To be used in load for any action that uses getActiveField or
@@ -654,7 +617,11 @@ export class FormOptionPlugin extends Plugin {
                     for (const el of inputsInDependencyContainer) {
                         conditionValueList.push({
                             value: el.value,
-                            textContent: inputsInDependencyContainer.length === 1 ? el.value : dependencyContainerEl.querySelector(`label[for="${el.id}"]`).textContent,
+                            textContent:
+                                inputsInDependencyContainer.length === 1
+                                    ? el.value
+                                    : dependencyContainerEl.querySelector(`label[for="${el.id}"]`)
+                                          .textContent,
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {

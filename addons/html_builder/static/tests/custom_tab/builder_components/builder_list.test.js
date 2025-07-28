@@ -1,5 +1,6 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test, describe } from "@odoo/hoot";
 import { Component, onError, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -16,14 +17,16 @@ function defaultValueWithIds(ids) {
 }
 
 test("writes a list of numbers to a data attribute", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderList
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderList
                           dataAttributeAction="'list'"
                           itemShape="{ value: 'number', title: 'text' }"
                           default="${defaultValueStr}"
-                      />`,
-    });
+                      />`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -47,14 +50,16 @@ test("writes a list of numbers to a data attribute", async () => {
 });
 
 test("supports arbitrary number of text and number inputs on entries", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderList
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderList
                           dataAttributeAction="'list'"
                           itemShape="{ a: 'number', b: 'text', c: 'text', d: 'number' }"
                           default="{ a: '4', b: '3', c: '2', d: '1' }"
-                      />`,
-    });
+                      />`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container .builder_list_add_item").click();
@@ -75,14 +80,16 @@ test("supports arbitrary number of text and number inputs on entries", async () 
 });
 
 test("delete an item", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderList
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderList
                           dataAttributeAction="'list'"
                           itemShape="{ value: 'number', title: 'text' }"
                           default="${defaultValueStr}"
-                      />`,
-    });
+                      />`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -96,14 +103,16 @@ test("delete an item", async () => {
 });
 
 test("reorder items", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderList
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderList
                           dataAttributeAction="'list'"
                           itemShape="{ value: 'number', title: 'text' }"
                           default="${defaultValueStr}"
-                      />`,
-    });
+                      />`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -151,10 +160,11 @@ async function testBuilderListFaultyProps(template) {
             });
         }
     }
-    addBuilderOption({
-        selector: ".test-options-target",
-        Component: Test,
-    });
+    addBuilderOption(
+        class extends Test {
+            static selector = ".test-options-target";
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect.verifySteps(["threw"]);
@@ -209,15 +219,17 @@ test("throws error if itemShape contains reserved key '_id'", async () => {
 });
 
 test("hides hiddenProperties from options", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderList
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderList
                           dataAttributeAction="'list'"
                           itemShape="{ a: 'number', b: 'text', c: 'number', d: 'text' }"
                           default="{ a: '4', b: 'three', c: '2', d: 'one' }"
                           hiddenProperties="['b', 'c']"
-                      />`,
-    });
+                      />`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -267,10 +279,11 @@ test("do not lose id when adjusting 'selected'", async () => {
             ]);
         }
     }
-    addBuilderOption({
-        selector: ".test-options-target",
-        Component: Test,
-    });
+    addBuilderOption(
+        class extends Test {
+            static selector = ".test-options-target";
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 

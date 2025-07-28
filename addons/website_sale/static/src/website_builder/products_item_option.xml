@@ -27,7 +27,7 @@
             </BuilderButtonGroup>
         </BuilderRow>
         <BuilderRow label.translate="Ribbon">
-            <BuilderSelect action="'setRibbon'" t-key="props.count.value" className="'o_wsale_ribbon_select'" t-on-click="()=>state.ribbonEditMode=false">
+            <BuilderSelect action="'setRibbon'" t-key="this.state.count.value" className="'o_wsale_ribbon_select'" t-on-click="()=>state.ribbonEditMode=false">
                 <BuilderSelectItem actionValue="''" id="'no_ribbon_opt'">
                     None
                 </BuilderSelectItem>

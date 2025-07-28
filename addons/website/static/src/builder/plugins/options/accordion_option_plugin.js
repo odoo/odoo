@@ -3,19 +3,24 @@ import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class AccordionOption extends BaseOptionComponent {
+    static template = "website.AccordionOption";
+    static selector = ".s_accordion";
+}
+
+export class AccordionItemOption extends BaseOptionComponent {
+    static template = "website.AccordionItemOption";
+    static selector = ".s_accordion .accordion-item";
+}
 
 class accordionOptionPlugin extends Plugin {
     static id = "accordionOptionPlugin";
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC, {
-                template: "website.AccordionOption",
-                selector: ".s_accordion",
-            }),
-            withSequence(SNIPPET_SPECIFIC, {
-                template: "website.AccordionItemOption",
-                selector: ".s_accordion .accordion-item",
-            }),
+            withSequence(SNIPPET_SPECIFIC, AccordionOption),
+            withSequence(SNIPPET_SPECIFIC, AccordionItemOption),
         ],
         so_content_addition_selector: [".s_accordion"],
         builder_actions: {

@@ -2,6 +2,7 @@ import { isProtected, isProtecting, isUnprotecting } from "./utils/dom_info";
 
 /**
  * @typedef { import("./editor").Editor } Editor
+ * @typedef { import("./editor").EditorContext } EditorContext
  * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
  */
 
@@ -12,29 +13,28 @@ export class Plugin {
     static defaultConfig = {};
 
     /**
-     * @param {Editor['document']} document
-     * @param {Editor['editable']} editable
-     * @param {SharedMethods} dependencies
-     * @param {import("./editor").EditorConfig} config
-     * @param {*} services
+     * @param { EditorContext } context
      */
-    constructor(document, editable, dependencies, config, services) {
-        /** @type { Document } **/
-        this.document = document;
-        /** @type { Window } */
-        this.window = document.defaultView;
-        /** @type { HTMLElement } **/
-        this.editable = editable;
-        /** @type { EditorConfig } **/
-        this.config = config;
-        this.services = services;
-        /** @type { SharedMethods } **/
-        this.dependencies = dependencies;
+    constructor(context) {
+        /** @type { EditorContext['document'] } **/
+        this.document = context.document;
+        this.window = context.document.defaultView;
+        /** @type { EditorContext['editable'] } **/
+        this.editable = context.editable;
+        /** @type { EditorContext['config'] } **/
+        this.config = context.config;
+        /** @type { EditorContext['services'] } **/
+        this.services = context.services;
+        /** @type { EditorContext['dependencies'] } **/
+        this.dependencies = context.dependencies;
+        /** @type { EditorContext['getResource'] } **/
+        this.getResource = context.getResource;
+        /** @type { EditorContext['dispatchTo'] } **/
+        this.dispatchTo = context.dispatchTo;
+        /** @type { EditorContext['delegateTo'] } **/
+        this.delegateTo = context.delegateTo;
+
         this._cleanups = [];
-        /**
-         * The resources aggregated from all the plugins by the editor.
-         */
-        this._resources = null; // set before start
         this.isDestroyed = false;
     }
 
@@ -77,63 +77,6 @@ export class Plugin {
      */
     addGlobalDomListener(eventName, fn, capture = false) {
         this.addDomListener(this.document, eventName, fn, capture, true);
-    }
-
-    /**
-     * @param {string} resourceId
-     * @returns {Array}
-     */
-    getResource(resourceId) {
-        return this._resources[resourceId] || [];
-    }
-
-    /**
-     * Execute the functions registered under resourceId with the given
-     * arguments.
-     *
-     * This function is meant to enhance code readability by clearly expressing
-     * its intent.
-     *
-     * This function can be thought as an event dispatcher, calling the handlers
-     * with `args` as the payload.
-     *
-     * Example:
-     * ```js
-     * this.dispatchTo("my_event_handlers", arg1, arg2);
-     * ```
-     *
-     * @param {string} resourceId
-     * @param  {...any} args The arguments to pass to the handlers.
-     */
-    dispatchTo(resourceId, ...args) {
-        this.getResource(resourceId).forEach((handler) => handler(...args));
-    }
-
-    /**
-     * Execute a series of functions until one of them returns a truthy value.
-     *
-     * This function is meant to enhance code readability by clearly expressing
-     * its intent.
-     *
-     * A command "delegates" its execution to one of the overriding functions,
-     * which return a truthy value to signal it has been handled.
-     *
-     * It is the the caller's responsability to stop the execution when this
-     * function returns true.
-     *
-     * Example:
-     * ```js
-     * if (this.delegateTo("my_command_overrides", arg1, arg2)) {
-     *   return;
-     * }
-     * ```
-     *
-     * @param {string} resourceId
-     * @param  {...any} args The arguments to pass to the overrides.
-     * @returns {boolean} Whether one of the overrides returned a truthy value.
-     */
-    delegateTo(resourceId, ...args) {
-        return this.getResource(resourceId).some((fn) => fn(...args));
     }
 
     destroy() {

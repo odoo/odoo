@@ -36,19 +36,12 @@ export class GoogleMapsOptionPlugin extends Plugin {
         "failedToInitializeGoogleMaps",
         "shouldRefetchApiKey",
         "shouldNotRefetchApiKey",
+        "commitPlace",
+        "getPlace",
+        "getMapsAPI",
     ];
     resources = {
-        builder_options: [
-            {
-                OptionComponent: GoogleMapsOption,
-                selector: ".s_google_map",
-                props: {
-                    getMapsAPI: this.getMapsAPI.bind(this),
-                    getPlace: this.getPlace.bind(this),
-                    onPlaceChanged: this.commitPlace.bind(this),
-                },
-            },
-        ],
+        builder_options: [GoogleMapsOption],
         so_content_addition_selector: [".s_google_map"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         builder_actions: {

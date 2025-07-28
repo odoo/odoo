@@ -2,7 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class GridColumnsOption extends BaseOptionComponent {
     static template = "website.GridColumnsOption";
-    static props = {};
+    static selector = ".row:not(.s_col_no_resize) > div";
 
     setup() {
         super.setup();
