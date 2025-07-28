@@ -10,6 +10,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE, ANIMATE } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { AnimateOption } from "./animate_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /**
  * @typedef { Object } SocialMediaInfo
@@ -107,6 +108,16 @@ const socialMediaInfo = new Map(
 
 const defaultAriaLabel = _t("Other social network");
 
+export class SocialMediaOption extends BaseOptionComponent {
+    static template = "website.SocialMediaOption";
+    static selector = ".s_share, .s_social_media";
+}
+
+export class SocialMediaAnimateOption extends AnimateOption {
+    static selector = ".s_social_media, .s_share";
+    static applyTo = ".s_social_media i.fa, .s_share i.fa";
+}
+
 class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
     static dependencies = ["history", "animateOption"];
@@ -118,36 +129,14 @@ class SocialMediaOptionPlugin extends Plugin {
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
+        "getRecordedSocialMediaNames",
+        "reorderSocialMediaLink",
     ];
-    animateOptionProps = {
-        getDirectionsItems: this.dependencies.animateOption.getDirectionsItems.bind(this),
-        getEffectsItems: this.dependencies.animateOption.getEffectsItems.bind(this),
-        canHaveHoverEffect: async (el) => {
-            const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
-            const allowed = (await Promise.all(proms)).filter((allowed) => allowed != null);
-            return allowed.length && allowed.every(Boolean);
-        },
-    };
     resources = {
         builder_options: [
-            withSequence(TITLE_LAYOUT_SIZE, {
-                template: "website.SocialMediaOption",
-                selector: ".s_share, .s_social_media",
-            }),
-            withSequence(SNIPPET_SPECIFIC, {
-                OptionComponent: SocialMediaLinks,
-                props: {
-                    getRecordedSocialMediaNames: this.getRecordedSocialMediaNames.bind(this),
-                    reorderSocialMediaLink: this.reorderSocialMediaLink.bind(this),
-                },
-                selector: ".s_social_media",
-            }),
-            withSequence(ANIMATE, {
-                OptionComponent: AnimateOption,
-                selector: ".s_social_media, .s_share",
-                applyTo: ".s_social_media i.fa, .s_share i.fa",
-                props: this.animateOptionProps,
-            }),
+            withSequence(TITLE_LAYOUT_SIZE, SocialMediaOption),
+            withSequence(SNIPPET_SPECIFIC, SocialMediaLinks),
+            withSequence(ANIMATE, SocialMediaAnimateOption),
         ],
         so_content_addition_selector: [".s_share", ".s_social_media"],
         builder_actions: {

@@ -8,6 +8,12 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { uniqueId } from "@web/core/utils/functions";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class ImageGalleryImagesOption extends BaseOptionComponent {
+    static template = "website.ImageGalleryImagesOption";
+    static selector = ".s_image_gallery";
+}
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -23,14 +29,8 @@ class ImageGalleryOption extends Plugin {
     static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC, {
-                template: "website.ImageGalleryImagesOption",
-                selector: ".s_image_gallery",
-            }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                OptionComponent: ImageGalleryComponent,
-                selector: ".s_image_gallery",
-            }),
+            withSequence(SNIPPET_SPECIFIC, ImageGalleryImagesOption),
+            withSequence(SNIPPET_SPECIFIC_END, ImageGalleryComponent),
         ],
         builder_actions: {
             AddImageAction,
@@ -80,7 +80,7 @@ class ImageGalleryOption extends Plugin {
     restoreSelection(imageToSelect, isPreviewing) {
         if (imageToSelect && !isPreviewing) {
             // Activate the containers of the equivalent cloned image.
-            this.dependencies["builderOptions"].setNextTarget(imageToSelect);
+            this.dependencies.builderOptions.setNextTarget(imageToSelect);
         }
     }
 
@@ -129,7 +129,7 @@ class ImageGalleryOption extends Plugin {
 
                 // Activate the active image.
                 const activeImageEl = galleryEl.querySelector(".carousel-item.active img");
-                this.dependencies["builderOptions"].setNextTarget(activeImageEl);
+                this.dependencies.builderOptions.setNextTarget(activeImageEl);
             }
         }
     }
@@ -287,7 +287,7 @@ class ImageGalleryOption extends Plugin {
     onCarouselSlid(ev) {
         // When the carousel slides, update the builder options to select the active image
         const activeImageEl = ev.target.querySelector(".carousel-item.active img");
-        this.dependencies["builderOptions"].updateContainers(activeImageEl);
+        this.dependencies.builderOptions.updateContainers(activeImageEl);
     }
 
     async processImages(editingElement, newImages = []) {
@@ -340,7 +340,7 @@ class ImageGalleryOption extends Plugin {
         const clonedImgs = [];
         const imgLoaded = [];
         let imageToSelect;
-        const currentContainers = this.dependencies["builderOptions"].getContainers();
+        const currentContainers = this.dependencies.builderOptions.getContainers();
         for (const image of imagesHolder) {
             // Only on Chrome: appended images are sometimes invisible
             // and not correctly loaded from cache, we use a clone of the

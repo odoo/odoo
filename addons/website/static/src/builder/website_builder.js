@@ -43,6 +43,7 @@ import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plug
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
 import { WebsiteSavePlugin } from "@website/builder/plugins/website_save_plugin";
+import { Plugin } from "@html_editor/plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -73,6 +74,15 @@ const TRANSLATION_PLUGINS = [
     Many2OneOptionPlugin,
     CustomizeTranslationTabPlugin,
     WebsiteSavePlugin,
+    // Those plugin are depended by other Plugin but not used in translation
+    // mode.
+    // Todo: find a better way to handle that.
+    class FakeRemovePlugin extends Plugin {
+        static id = "remove";
+    },
+    class FakeClonePlugin extends Plugin {
+        static id = "clone";
+    },
 ];
 
 export class WebsiteBuilder extends Component {

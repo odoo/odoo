@@ -6,6 +6,7 @@ import { deepCopy } from "@web/core/utils/objects";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
+    static dependencies = ["customizeTab", "imageShapeOption"];
     static props = {
         withAnimatedShapes: { type: Boolean, optional: true },
     };
@@ -14,8 +15,8 @@ export class ImageShapeOption extends BaseOptionComponent {
     };
     setup() {
         super.setup();
-        this.customizeTabPlugin = this.env.editor.shared.customizeTab;
-        this.imageShapeOption = this.env.editor.shared.imageShapeOption;
+        this.customizeTabPlugin = this.dependencies.customizeTab;
+        this.imageShapeOption = this.dependencies.imageShapeOption;
         this.toRatio = toRatio;
         this.state = useDomState((editingElement) => {
             const shape = editingElement.dataset.shape;

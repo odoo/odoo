@@ -4,17 +4,20 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class WishlistPageOption extends BaseOptionComponent {
+    static template = "website_sale_wishlist.WishlistPageOption";
+    static selector = ".o_wishlist_table"
+    static editableOnly = false;
+    static title = _t("Wishlist Page");
+    static groups = ["website.group_website_designer"];
+}
 
 class WishlistPageOptionPlugin extends Plugin {
     static id = "wishlistPageOption";
     resources = {
-        builder_options: {
-            template: "website_sale_wishlist.WishlistPageOption",
-            selector: ".o_wishlist_table",
-            editableOnly: false,
-            title: _t("Wishlist Page"),
-            groups: ["website.group_website_designer"],
-        },
+        builder_options: WishlistPageOption,
         builder_actions: {
             WishlistGridColumnsAction,
             WishlistMobileColumnsAction,

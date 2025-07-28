@@ -45,7 +45,7 @@
                         <BuilderTextInput
                             action="'updateDatasetLabel'"
                             actionParam="dataset.key"
-                            style="domState.isPieChart ? '' : ('border: 2px solid ' + (props.getColor(dataset.backgroundColor) || props.getColor(dataset.borderColor)))"/>
+                            style="domState.isPieChart ? '' : ('border: 2px solid ' + (getColor(dataset.backgroundColor) || getColor(dataset.borderColor)))"/>
                     </th>
                 </t>
 
@@ -66,8 +66,8 @@
                 </th>
 
                 <t t-foreach="domState.data.datasets" t-as="dataset" t-key="dataset.key">
-                    <t t-set="backgroundColor" t-value="props.getColor(dataset.backgroundColor[label_index])"/>
-                    <t t-set="borderColor" t-value="props.getColor(dataset.borderColor[label_index])"/>
+                    <t t-set="backgroundColor" t-value="getColor(dataset.backgroundColor[label_index])"/>
+                    <t t-set="borderColor" t-value="getColor(dataset.borderColor[label_index])"/>
                     <td>
                         <BuilderNumberInput
                             action="'updateDatasetValue'"
