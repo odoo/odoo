@@ -180,6 +180,16 @@ export function createManualGiftCard(code, amount, date = false) {
     return steps;
 }
 
+export function clickGiftCardProgram(name) {
+    return [
+        {
+            content: `Click gift card program '${name}'`,
+            trigger: `button.selection-item:has(span:contains("${name}"))`,
+            run: "click",
+        },
+    ];
+}
+
 export function clickPhysicalGiftCard(code = "Sell physical gift card?") {
     return [
         {
