@@ -432,6 +432,11 @@ export class PosData extends Reactive {
             this.debouncedSynchronizeLocalDataInIndexedDB.bind(this)
         );
 
+        this.models["pos.order.line"].addEventListener(
+            "update",
+            this.debouncedSynchronizeLocalDataInIndexedDB.bind(this)
+        );
+
         const ignore = Object.keys(this.opts.databaseTable);
         for (const model of Object.keys(this.relations)) {
             if (ignore.includes(model)) {
