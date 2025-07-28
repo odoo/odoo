@@ -8,24 +8,24 @@ class TestWebSave(TransactionCase):
     def test_web_save_create(self):
         ''' Test the web_save method on a new record. '''
         # Create a new record, without unity specification (it should return only the id)
-        self.env['test_orm.person'].search([]).unlink()
-        result = self.env['test_orm.person'].web_save({'name': 'ged'}, {})
-        person = self.env['test_orm.person'].search([])
+        self.env['test_web.person'].search([]).unlink()
+        result = self.env['test_web.person'].web_save({'name': 'ged'}, {})
+        person = self.env['test_web.person'].search([])
         self.assertTrue(person.exists())
         self.assertEqual(person.name, 'ged')
         self.assertEqual(len(result), 1)
         self.assertEqual(result, [{'id': person.id}])
 
         # Create a new record, with unity specification
-        result = self.env['test_orm.person'].web_save({'name': 'ged'}, {'display_name': {}})
-        person = self.env['test_orm.person'].browse(result[0]['id'])
+        result = self.env['test_web.person'].web_save({'name': 'ged'}, {'display_name': {}})
+        person = self.env['test_web.person'].browse(result[0]['id'])
         self.assertTrue(person.exists())
         self.assertEqual(result, [{'id': person.id, 'display_name': 'ged'}])
 
     def test_web_save_write(self):
         ''' Test the web_save method on an existing record. '''
 
-        person = self.env['test_orm.person'].create({'name': 'ged'})
+        person = self.env['test_web.person'].create({'name': 'ged'})
 
         # Modify an existing record, without unity specification (it should return only the id)
         result = person.web_save({'name': 'aab'}, {})
@@ -38,7 +38,7 @@ class TestWebSave(TransactionCase):
         self.assertEqual(result, [{'id': person.id, 'display_name': 'lpe'}])
 
     def test_web_save_computed_stored_binary(self):
-        [result] = self.env['test_orm.binary_svg'].web_save(
+        [result] = self.env['test_web.binary_svg'].web_save(
             {'name': 'test', 'image_wo_attachment': SVG},
             {'image_wo_attachment': {}, 'image_wo_attachment_related': {}},
         )
@@ -46,7 +46,7 @@ class TestWebSave(TransactionCase):
         self.assertEqual(result['image_wo_attachment_related'], b'400.00 bytes')  # From human_size
 
         # check cache values
-        record = self.env['test_orm.binary_svg'].browse(result['id'])
+        record = self.env['test_web.binary_svg'].browse(result['id'])
         self.assertEqual(record.image_wo_attachment, SVG)
         self.assertEqual(record.image_wo_attachment, record.image_wo_attachment_related)
 
@@ -74,7 +74,7 @@ class TestWebSave(TransactionCase):
         self.assertEqual(record.image_wo_attachment, record.image_wo_attachment_related)
 
     def test_web_save_multi(self):
-        Model = self.env['test_orm.mixed']
+        Model = self.env['test_web.mixed']
         records = Model.create([
             {'foo': 'Record 1', 'count': 100, 'number': 2.5},
             {'foo': 'Record 2', 'count': 200, 'number': 3.5},

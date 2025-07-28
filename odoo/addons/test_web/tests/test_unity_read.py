@@ -12,17 +12,17 @@ class TestUnityRead(TransactionCase):
         super().setUpClass()
 
         cls.only_course_user = new_test_user(cls.env, 'no acc', 'base.group_public')
-        cls.author = cls.env['test_orm.person'].create({'name': 'ged'})
-        cls.teacher = cls.env['test_orm.person'].create({'name': 'aab'})
-        cls.account = cls.env['test_orm.person.account'].create({
+        cls.author = cls.env['test_web.person'].create({'name': 'ged'})
+        cls.teacher = cls.env['test_web.person'].create({'name': 'aab'})
+        cls.account = cls.env['test_web.person.account'].create({
             'person_id': cls.teacher.id,
             'login': 'aab',
         })
-        cls.course = cls.env['test_orm.course'].create({
+        cls.course = cls.env['test_web.course'].create({
             'name': 'introduction to OWL',
             'author_id': cls.author.id,
         })
-        cls.lesson_day1 = cls.env['test_orm.lesson'].create({
+        cls.lesson_day1 = cls.env['test_web.lesson'].create({
             'name': 'first day',
             'date': fields.Date.today(),
             'course_id': cls.course.id,
@@ -31,7 +31,7 @@ class TestUnityRead(TransactionCase):
                              Command.create({'name': '456'}),
                              Command.create({'name': '789'})],
         })
-        cls.lesson_day2 = cls.env['test_orm.lesson'].create({
+        cls.lesson_day2 = cls.env['test_web.lesson'].create({
             'name': 'second day',
             'date': fields.Date.today() + relativedelta(days=1),
             'course_id': cls.course.id,
@@ -42,7 +42,7 @@ class TestUnityRead(TransactionCase):
         cls.course.m2o_reference_model = cls.lesson_day1._name
         cls.course.m2o_reference_id = cls.lesson_day1.id
 
-        cls.course_no_author = cls.env['test_orm.course'].create({'name': 'some other course without author'})
+        cls.course_no_author = cls.env['test_web.course'].create({'name': 'some other course without author'})
 
         cls.env.invalidate_all()
 
@@ -217,19 +217,19 @@ class TestUnityRead(TransactionCase):
         }])
 
     def test_multilevel_query_count(self):
-        author = self.env['test_orm.person'].create({'name': 'AAA'})
-        teacher1 = self.env['test_orm.person'].create({'name': 'BBB'})
-        teacher2 = self.env['test_orm.person'].create({'name': 'FFF'})
-        course = self.env['test_orm.course'].create({
+        author = self.env['test_web.person'].create({'name': 'AAA'})
+        teacher1 = self.env['test_web.person'].create({'name': 'BBB'})
+        teacher2 = self.env['test_web.person'].create({'name': 'FFF'})
+        course = self.env['test_web.course'].create({
             'name': 'CCC',
             'author_id': author.id,
         })
-        self.env['test_orm.lesson'].create({
+        self.env['test_web.lesson'].create({
             'name': 'DDD',
             'course_id': course.id,
             'teacher_id': teacher1.id,
         })
-        self.env['test_orm.lesson'].create({
+        self.env['test_web.lesson'].create({
             'name': 'EEE',
             'course_id': course.id,
             'teacher_id': teacher2.id,
@@ -366,8 +366,8 @@ class TestUnityRead(TransactionCase):
             }])
 
     def test_one2many_with_order_respects_field_context(self):
-        archived = self.env['test_orm.person'].create({'name': 'Archived', 'active': False})
-        employer = self.env['test_orm.employer'].create({
+        archived = self.env['test_web.person'].create({'name': 'Archived', 'active': False})
+        employer = self.env['test_web.employer'].create({
             'name': 'JS Corp',
             'all_employee_ids': [Command.set([archived.id, self.teacher.id, self.author.id])],
         })
@@ -856,7 +856,7 @@ class TestUnityRead(TransactionCase):
 
     def test_properties(self):
         """Check that the display name of the relational properties are always loaded."""
-        discussion = self.env['test_orm.discussion'].create({
+        discussion = self.env['test_web.discussion'].create({
             'name': 'Test Discussion',
             'attributes_definition': [{
                 'name': 'discussion_color_code',
@@ -867,12 +867,12 @@ class TestUnityRead(TransactionCase):
                 'name': 'moderator_partner_id',
                 'string': 'Partner',
                 'type': 'many2one',
-                'comodel': 'test_orm.partner',
+                'comodel': 'test_web.partner',
             }],
             'participants': [Command.link(self.env.user.id)],
         })
-        partner = self.env['test_orm.partner'].create({'name': 'Test Partner Properties'})
-        message = self.env['test_orm.message'].create({
+        partner = self.env['test_web.partner'].create({'name': 'Test Partner Properties'})
+        message = self.env['test_web.message'].create({
             'name': 'Test Message',
             'discussion': discussion.id,
             'author': self.env.user.id,
