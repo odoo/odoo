@@ -1592,9 +1592,13 @@ export class PivotModel extends Model {
         const { metaData } = config;
         const fieldName = groupBy.split(":")[0];
         if (fieldName && metaData.fields[fieldName]) {
-            if (metaData.fields[fieldName].type === "boolean") {
+            const field = metaData.fields[fieldName];
+            if (field.type === "boolean") {
                 return value === undefined ? _t("None") : value ? _t("Yes") : _t("No");
-            } else if (metaData.fields[fieldName].type === "integer") {
+            } else if (field.type === "integer") {
+                if (fieldName === "id" && Array.isArray(value)) {
+                    return value[1];
+                }
                 return value || "0";
             }
         }

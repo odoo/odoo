@@ -736,6 +736,16 @@ function orderByField(model, orderBy, records) {
         let v1 = r1[fieldNameSpec];
         let v2 = r2[fieldNameSpec];
         switch (field.type) {
+            case "integer": {
+                // For id fields grouped as [id, label]
+                if (Array.isArray(v1)) {
+                    v1 = v1[0];
+                }
+                if (Array.isArray(v2)) {
+                    v2 = v2[0];
+                }
+                break;
+            }
             case "boolean": {
                 v1 = Number(v1);
                 v2 = Number(v2);
@@ -1903,6 +1913,14 @@ export class Model extends Array {
                         }
                     } else {
                         group[groupbySpec] = false;
+                    }
+                } else if (fieldName === "id") {
+                    if (!value) {
+                        group[groupbySpec] = false;
+                    } else {
+                        const relatedRecord = this.env[this._name].find(({ id }) => id === value);
+                        const displayName = relatedRecord?.display_name || "";
+                        group[groupbySpec] = [value, displayName];
                     }
                 }
 

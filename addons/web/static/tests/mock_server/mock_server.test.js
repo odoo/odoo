@@ -1046,6 +1046,29 @@ test("performRPC: formatted_read_group, group by m2o", async () => {
     ]);
 });
 
+test("performRPC: formatted_read_group, group by id", async () => {
+    Bar._records = [
+        { id: 1, name: "A" },
+        { id: 2, name: "B" },
+    ];
+
+    await makeMockServer();
+    const result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [],
+            groupby: ["id"],
+            aggregates: ["__count"],
+        },
+    });
+
+    expect(result).toEqual([
+        { id: [1, "A"], __extra_domain: [["id", "=", 1]], __count: 1 },
+        { id: [2, "B"], __extra_domain: [["id", "=", 2]], __count: 1 },
+    ]);
+});
+
 test("performRPC: formatted_read_group, group by integer", async () => {
     await makeMockServer();
 
