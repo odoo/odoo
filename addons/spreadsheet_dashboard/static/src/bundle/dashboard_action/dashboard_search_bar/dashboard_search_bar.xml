@@ -2,31 +2,65 @@
 <templates>
     <t t-name="spreadsheet_dashboard.DashboardSearchBar">
         <div class="o_sp_dashboard_search d-flex input-group mt-1 mt-md-0">
-            <div class="o_searchview form-control d-flex align-items-center py-1 border-end-0" t-on-click="openFilterValueDropdown">
-                <button class="btn border-0 p-0">
-                    <i class="oi oi-search me-2"></i>
-                </button>
-                <div class="d-flex flex-grow-1 flex-wrap gap-1 mw-100">
-                    <t t-foreach="facets" t-as="facet" t-key="facet.id">
-                        <DashboardFacet facet="facet" clearFilter="() => this.clearFilter(facet.id)" onClick.bind="openFilterValueDropdown"/>
+            <Dropdown
+                state="inputDropdownState"
+                manual="true"
+                noClasses="true"
+                position="'bottom-fit'"
+                menuClass="'o_searchview_autocomplete'"
+                navigationOptions="inputDropdownNavOptions"
+                onStateChanged.bind="onInputDropdownChanged"
+                menuRef="menuRef"
+                bottomSheet="false"
+            >
+
+                <div
+                    class="o_searchview form-control d-flex align-items-center py-1 border-end-0 gap-1">
+                    <button class="btn border-0 p-0" t-on-click="onSearchClick">
+                        <i class="oi oi-search me-2"></i>
+                    </button>
+                    <div
+                        class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100">
+                        <t t-foreach="facets" t-as="facet" t-key="facet.id">
+                            <DashboardFacet facet="facet"
+                                clearFilter="() => this.clearFilter(facet.id)"
+                                onClick.bind="openFilterValueDropdown" />
+                        </t>
+                        <input type="text"
+                            class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
+                            t-att-tabindex="env.isSmall ? -1 : 0"
+                            accesskey="Q"
+                            placeholder="Search..."
+                            role="searchbox"
+                            t-ref="autofocus"
+                            t-on-click="onSearchClick"
+                            t-on-input="onSearchInput"
+                            t-on-keydown="onSearchInputKeydown"
+                            t-on-pointerdown="onSearchInputPointerDown"
+                        />
+                    </div>
+                    <t t-set-slot="content">
+                        <t t-call="web.SearchBar.QuickSearchItems" />
                     </t>
+
                 </div>
-            </div>
+            </Dropdown>
             <Dropdown menuClass="'pt-0 px-2'"
                 manual="true"
                 position="'bottom-end'"
                 state="filtersValuesDropdown">
-                <button class="o_searchview_dropdown_toggler btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown"
-                    t-on-click="toggleFilterValueDropdown"/>
+                <button
+                    class="o_searchview_dropdown_toggler btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown"
+                    t-on-click="toggleFilterValueDropdown" />
                 <t t-set-slot="content">
                     <div class="p-2">
-                        <FilterValuesList model="props.model" close.bind="closeFilterValueDropdown"/>
+                        <FilterValuesList model="props.model" close.bind="closeFilterValueDropdown" />
                     </div>
                 </t>
             </Dropdown>
             <div class="o_sp_date_filter_button ms-2 d-flex" t-if="firstDateFilter">
                 <DashboardDateFilter value="firstDateFilterValue"
-                                 update.bind="updateFirstDateFilter"/>
+                                update.bind="updateFirstDateFilter" />
             </div>
         </div>
     </t>
