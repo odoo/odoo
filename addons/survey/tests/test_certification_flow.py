@@ -213,3 +213,41 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'skipped': 0,
             }
         }, "With the configured randomization, there should be exactly 1 correctly answered question in the 'Page 1' section.")
+
+    def test_layout_change_with_existing_user_input(self):
+        """Test that changing survey layout doesn't break navigation for existing user inputs."""
+
+        with self.with_user('survey_user'):
+            survey = self.env['survey.survey'].create({
+                'title': 'Layout Change Test Survey',
+                'access_mode': 'public',
+                'questions_layout': 'page_per_question',
+            })
+
+            q01 = self._add_question(
+                None, 'First Question', 'simple_choice',
+                sequence=1, survey_id=survey.id,
+                labels=[{'value': 'Answer 1'}]
+            )
+
+            self._add_question(
+                None, 'Second Question', 'simple_choice',
+                sequence=1, survey_id=survey.id,
+                labels=[{'value': 'Answer 2'}]
+            )
+
+        self.authenticate('user_emp', 'user_emp')
+        self._access_start(survey)
+        user_input = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
+
+        with self.with_user('survey_user'):
+            page = self._add_question(None, 'Main Section', None, sequence=1, survey_id=survey.id, is_page=True)
+            q01.write({'page_id': page.id, 'sequence': 2})
+            survey.write({'questions_layout': 'page_per_section'})
+
+        pages_or_questions = survey._get_pages_or_questions(user_input)
+        self.assertNotIn(q01.id, pages_or_questions.ids)
+
+        next_page = survey._get_next_page_or_question(user_input, q01.id, go_back=False)
+        expected_first_page = pages_or_questions[0] if pages_or_questions else self.env['survey.question']
+        self.assertEqual(next_page, expected_first_page)

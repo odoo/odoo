@@ -643,6 +643,8 @@ class Survey(models.Model):
             if page_or_question_id == 0:
                 return pages_or_questions[0]
 
+        if page_or_question_id not in pages_or_questions.ids:
+            return pages_or_questions[0] if pages_or_questions else Question
         current_page_index = pages_or_questions.ids.index(page_or_question_id)
 
         # Get previous and we are on first page  OR Get Next and we are on last page
