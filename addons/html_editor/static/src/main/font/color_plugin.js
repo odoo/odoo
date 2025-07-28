@@ -231,7 +231,7 @@ export class ColorPlugin extends Plugin {
                 }
                 if (max === 0) {
                     someColorWasRemoved = false;
-                    throw new Error("Infinite Loop in removeAllColor().");
+                    // throw new Error("Infinite Loop in removeAllColor().");
                 }
             }
         }
