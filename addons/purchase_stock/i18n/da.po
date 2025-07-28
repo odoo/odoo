@@ -1123,7 +1123,7 @@ msgstr "Total antal/sum"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Spor lagerbeholdning"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
@@ -1137,6 +1137,8 @@ msgid ""
 "Unable to cancel purchase order(s): %s since they have receipts that are "
 "already done."
 msgstr ""
+"Det er ikke muligt at annullere indkøbsordre(r): %s, fordi varerne allerede "
+"er blevet modtaget."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -1178,7 +1180,7 @@ msgstr "Leverandører"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
 msgid "Visibility Days applied on the purchase routes."
-msgstr ""
+msgstr "Synlighedsdage anvendt på indkøbsruter."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
@@ -1200,6 +1202,9 @@ msgid ""
 "created to fulfill the need.<br/>Note: This rule will be used in combination"
 " with the rules<br/>of the reception route(s)"
 msgstr ""
+"Når produkter skal bruges i <b>%s</b>, <br/> vil en anmodning om tilbud "
+"blive oprettet for at opfylde behovet.<br/>Bemærk: Reglen anvendes sammen "
+"med de definerede<br/>modtagelsesrute(r)"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__partner_id
@@ -1238,4 +1243,4 @@ msgstr "bestilt i stedet for"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
-msgstr ""
+msgstr "dette produkt bør genopfyldes manuelt."

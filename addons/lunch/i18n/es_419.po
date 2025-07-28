@@ -272,7 +272,7 @@ msgstr ""
 "        <p>\n"
 "        Apreciable <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "        </p><p>\n"
-"        Estas son las órdenes de hoy para <t t-out=\"order.get('company_name', '')\">Empresa</t>:\n"
+"        Estas son las órdenes de hoy para <t t-out=\"order.get('company_name', '')\">Empresa_de_comida</t>:\n"
 "        </p>\n"
 "\n"
 "        <t t-if=\"sites\">\n"
@@ -322,7 +322,7 @@ msgstr ""
 "            </tbody>\n"
 "        </table>\n"
 "\n"
-"        <p>Contáctenos si tiene alguna pregunta.</p>\n"
+"        <p>Contáctanos si tienes alguna pregunta.</p>\n"
 "    </div>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -339,13 +339,13 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    <t t-out=\"user.company_id.name or ''\">SuEmpresa</t>\n"
+"                    <t t-out=\"user.company_id.name or ''\">TuEmpresa</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
 "                    <t t-if=\"user.company_id.email\">\n"
-"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@suempresa.com</a>\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@tuempresa.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
 "                    <t t-if=\"user.company_id.website\">\n"
@@ -376,9 +376,9 @@ msgid ""
 "            An expense is automatically created at the order receipt.<br>\n"
 "            A payment represents the employee reimbursement to the company."
 msgstr ""
-"Un movimiento de efectivo puede ser un gasto o un pago.<br>\n"
-"           Un gasto se crea automáticamente en el recibo de la orden.<br>\n"
-"            Un pago representa el reembolso del empleado a la empresa."
+"Los movimientos de efectivo pueden ser gastos o pagos.<br>\n"
+"           Los gastos se crean en automático al recibir la orden.<br>\n"
+"            Los pagos representan el reembolso que realiza el empleado a la empresa."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
@@ -715,7 +715,7 @@ msgstr "Configuración"
 #. odoo-javascript
 #: code:addons/lunch/static/src/mixins/lunch_renderer_mixin.js:0
 msgid "Configure Your Order"
-msgstr "Configure su orden"
+msgstr "Configura tu orden"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -1285,7 +1285,7 @@ msgstr "Almuerzo de salmón 20 pzas."
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
-msgstr "Proveedor de almuerzo"
+msgstr "Proveedor del almuerzo"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_temaki
@@ -1518,7 +1518,7 @@ msgstr "No se encontró una ubicación"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "No lunch location available."
-msgstr "No se ubicación una ubicación de almuerzo disponible."
+msgstr "No hay ninguna ubicación de almuerzo disponible."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1637,7 +1637,7 @@ msgstr "Hora de orden"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action_order
 msgid "Order Your Lunch"
-msgstr "Ordene su almuerzo"
+msgstr "Ordena tu almuerzo"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -1703,7 +1703,7 @@ msgstr "Pizza"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_funghi
 msgid "Pizza Funghi"
-msgstr "Pizza de hongos"
+msgstr "Pizza de champiñones"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_italiana
@@ -1725,12 +1725,12 @@ msgstr "Pizza vegetariana"
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "Please create a location to start ordering."
-msgstr "Cree una ubicación antes de empezar a ordenar."
+msgstr "Crea una ubicación antes de empezar a ordenar."
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
 msgid "Please order"
-msgstr "Ordene"
+msgstr "Ordena"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
@@ -2038,7 +2038,7 @@ msgstr "Temaki"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_country
 msgid "The Country"
-msgstr "The Country"
+msgstr "Sándwich Country"
 
 #. module: lunch
 #. odoo-python
@@ -2112,8 +2112,8 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
 msgstr ""
-"No hay ninguna orden anterior registrada. Haga clic en \"Mi almuerzo\" y "
-"luego cree una nueva orden."
+"No hay ninguna orden anterior registrada. Haz clic en \"Mi almuerzo\" y crea"
+" una nueva orden."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -2162,7 +2162,7 @@ msgstr "Por pagar"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
-msgstr "Contacte a su gerente de almuerzo para agregar dinero a su monedero."
+msgstr "Contacta a tu gerente de almuerzo para agregar dinero a tu billetera."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
