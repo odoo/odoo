@@ -201,6 +201,10 @@ class MailThread(models.AbstractModel):
         if rating_value:
             message.rating_id.rating = rating_value
             message.rating_id.feedback = tools.html2plaintext(body)
+        elif rating_value is False:
+            rating_ids = message.rating_ids
+            rating_ids.message_id = False
+            rating_ids.unlink()
         return super()._message_update_content(
             message, body, *args, rating_value=rating_value, **kwargs
         )

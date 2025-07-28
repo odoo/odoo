@@ -24,4 +24,8 @@ patch(Composer.prototype, {
         }
         return super.allowUpload;
     },
+
+    get shouldHideFromMessageListOnDelete() {
+        return true;
+    }
 });
