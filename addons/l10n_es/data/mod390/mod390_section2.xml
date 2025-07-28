@@ -1745,9 +1745,9 @@
                                 <field name="expression_ids">
                                     <record id="mod_390_casilla_639_balance" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">aeat_mod_303_40.balance</field>
-                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
                                     </record>
                                 </field>
                             </record>
@@ -1758,9 +1758,9 @@
                                 <field name="expression_ids">
                                     <record id="mod_390_casilla_62_balance" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">aeat_mod_303_41.balance</field>
-                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
                                     </record>
                                 </field>
                             </record>
@@ -1836,7 +1836,8 @@
                             aeat_mod_390_57.balance + aeat_mod_390_59.balance +
                             aeat_mod_390_598.balance + aeat_mod_390_61.balance +
                             aeat_mod_390_652.balance + aeat_mod_390_63.balance +
-                            aeat_mod_390_522.balance
+                            aeat_mod_390_522.balance + aeat_mod_390_661.balance +
+                            aeat_mod_390_62.balance
                         </field>
                     </record>
                     <record id="mod_390_casilla_65" model="account.report.line">
