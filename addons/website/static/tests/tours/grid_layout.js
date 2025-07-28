@@ -40,7 +40,7 @@ registerWebsitePreviewTour('website_replace_grid_image', {
     },
     {
         content: "Add new image column",
-        trigger: "[data-action-id='addElImage']",
+        trigger: "[data-action-id='addGridElement'][data-action-param='image']",
         run: "click",
     },
     {
@@ -73,7 +73,7 @@ registerWebsitePreviewTour("scroll_to_new_grid_item", {
     ...clickOnSnippet({id: "s_text_image", name: "Text - Image"}),
     changeOption("Text - Image", "setGridLayout"),
     // Add a new grid item.
-    changeOption("Text - Image", "addElImage"),
+    changeOption("Text - Image", "[data-action-id='addGridElement'][data-action-param='image']"),
     {
         content: "Select the new image in the media dialog",
         trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',

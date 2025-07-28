@@ -6,25 +6,25 @@ import { registry } from "@web/core/registry";
 
 export class AddElementOptionPlugin extends Plugin {
     static id = "addElementOption";
-    static dependencies = ["history", "media"];
-    static shared = ["addElement"];
+    static dependencies = ["builderOptions"];
+    static shared = ["addGridElement"];
     resources = {
         builder_actions: {
-            AddElTextAction,
-            AddElImageAction,
-            AddElButtonAction,
+            AddGridElementAction,
         },
     };
 
     /**
-     * Adds an image, some text or a button in the grid.
+     * Adds a new grid item in the grid with the given content and properties.
      *
-     * It can probaly be refactored and improved.
-     *
-     * @see this.selectClass for parameters
-     * @see based on addons/web_editor/static/src/js/editor/snippets.options.js::addElement()
+     * @param {HTMLElement} rowEl the grid
+     * @param {HTMLElement} contentEl the content to add in the column
+     * @param {Number} columnSpan the grid item column span
+     * @param {Number} rowSpan the grid item row span
+     * @param {Array<String>} [extraClasses = []] classes to add to the grid
+     *     item
      */
-    addElement(container, element, colSize, rowSize, classes) {
+    addGridElement(rowEl, contentEl, columnSpan, rowSpan, extraClasses = []) {
         // If it has been less than 15 seconds that we have added an element,
         // shift the new element right and down by one cell. Otherwise, put it
         // in the top left corner.
@@ -38,27 +38,34 @@ export class AddElementOptionPlugin extends Plugin {
 
         // Create the new column.
         const newColumnEl = document.createElement("div");
-        newColumnEl.classList.add("o_grid_item", ...classes);
-        newColumnEl.appendChild(element);
+        newColumnEl.classList.add("o_grid_item", ...extraClasses);
+        newColumnEl.classList.add(
+            `g-col-lg-${columnSpan}`,
+            `col-lg-${columnSpan}`,
+            `g-height-${rowSpan}`
+        );
+        newColumnEl.appendChild(contentEl);
 
         // Place the column in the grid.
         const rowStart = this.lastStartPosition[0];
         let columnStart = this.lastStartPosition[1];
-        if (columnStart + colSize > 13) {
+        if (columnStart + columnSpan > 13) {
             columnStart = 1;
             this.lastStartPosition[1] = columnStart;
         }
-        newColumnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowStart + rowSize} / ${
-            columnStart + colSize
-        }`;
+        newColumnEl.style.gridArea = `
+            ${rowStart} / ${columnStart} / ${rowStart + rowSpan} / ${columnStart + columnSpan}
+        `;
 
-        // Setting the z-index to the maximum of the grid.
-        setElementToMaxZindex(newColumnEl, container);
+        // Set the z-index to the maximum of the grid.
+        setElementToMaxZindex(newColumnEl, rowEl);
 
         // Add the new column and update the grid height.
-        container.appendChild(newColumnEl);
-        resizeGrid(container);
+        rowEl.appendChild(newColumnEl);
+        resizeGrid(rowEl);
 
+        // Scroll to the new column if more than half of it is hidden (= out of
+        // the viewport or hidden by an other element).
         const newColumnPosition = newColumnEl.getBoundingClientRect();
         const middleX = (newColumnPosition.left + newColumnPosition.right) / 2;
         const middleY = (newColumnPosition.top + newColumnPosition.bottom) / 2;
@@ -66,88 +73,56 @@ export class AddElementOptionPlugin extends Plugin {
         if (!sameCoordinatesEl || !newColumnEl.contains(sameCoordinatesEl)) {
             newColumnEl.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-        this.dependencies.history.addStep();
+        // Activate the new column options.
+        this.dependencies.builderOptions.setNextTarget(newColumnEl);
     }
 }
 
-export class AddElTextAction extends BuilderAction {
-    static id = "addElText";
-    static dependencies = ["addElementOption"];
-    apply({ editingElement }) {
-        const colSize = 4;
-        const rowSize = 2;
+/**
+ * Adds an image, some text or a button in the grid.
+ */
+export class AddGridElementAction extends BuilderAction {
+    static id = "addGridElement";
+    static dependencies = ["addElementOption", "media"];
 
-        const newElement = document.createElement("p");
-        newElement.textContent = _t("Write something...");
-
-        this.dependencies.addElementOption.addElement(
-            editingElement,
-            newElement,
-            colSize,
-            rowSize,
-            ["col-lg-4", "g-col-lg-4", "g-height-2"]
-        );
-    }
-}
-export class AddElImageAction extends BuilderAction {
-    static id = "addElImage";
-    static dependencies = ["media", "addElementOption"];
-    async load({ editingElement }) {
-        let selectedImage;
-        await new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                onlyImages: true,
-                node: editingElement,
-                save: (images) => {
-                    selectedImage = images;
-                    resolve();
-                },
+    async apply({ editingElement: rowEl, params: { mainParam: elementType } }) {
+        if (elementType === "image") {
+            // Choose an image with the media dialog.
+            let imageEl, imageLoadedPromise;
+            await new Promise((resolve) => {
+                const onClose = this.dependencies.media.openMediaDialog({
+                    onlyImages: true,
+                    noDocuments: true,
+                    save: (selectedImageEl) => {
+                        imageEl = selectedImageEl;
+                        imageLoadedPromise = new Promise((resolve) => {
+                            imageEl.addEventListener("load", () => resolve(), { once: true });
+                        });
+                    },
+                });
+                onClose.then(resolve);
             });
-            onClose.then(resolve);
-        });
-        if (!selectedImage) {
-            return;
+            if (!imageEl) {
+                return;
+            }
+            // Wait for the image to be loaded.
+            await imageLoadedPromise;
+            this.dependencies.addElementOption.addGridElement(rowEl, imageEl, 6, 6, [
+                "o_grid_item_image",
+            ]);
+        } else if (elementType === "text") {
+            // Create default text content.
+            const pEl = document.createElement("p");
+            pEl.textContent = _t("Write something...");
+            this.dependencies.addElementOption.addGridElement(rowEl, pEl, 4, 2);
+        } else if (elementType === "button") {
+            // Create default button.
+            const aEl = document.createElement("a");
+            aEl.href = "#";
+            aEl.classList.add("mb-2", "btn", "btn-primary");
+            aEl.textContent = _t("Button");
+            this.dependencies.addElementOption.addGridElement(rowEl, aEl, 2, 1);
         }
-
-        await new Promise((resolve) => {
-            selectedImage.addEventListener("load", () => resolve(), {
-                once: true,
-            });
-        });
-        return selectedImage;
-    }
-    apply({ editingElement, loadResult: image }) {
-        if (!image) {
-            return;
-        }
-        const colSize = 6;
-        const rowSize = 6;
-
-        this.dependencies.addElementOption.addElement(editingElement, image, colSize, rowSize, [
-            "col-lg-6",
-            "g-col-lg-6",
-            "g-height-6",
-            "o_grid_item_image",
-        ]);
-    }
-}
-export class AddElButtonAction extends BuilderAction {
-    static id = "addElButton";
-    static dependencies = ["addElementOption"];
-    apply({ editingElement }) {
-        const colSize = 2;
-        const rowSize = 1;
-
-        const newButton = document.createElement("a");
-        newButton.href = "#";
-        newButton.classList.add("mb-2", "btn", "btn-primary");
-        newButton.textContent = "Button";
-
-        this.dependencies.addElementOption.addElement(editingElement, newButton, colSize, rowSize, [
-            "col-lg-2",
-            "g-col-lg-2",
-            "g-height-1",
-        ]);
     }
 }
 
