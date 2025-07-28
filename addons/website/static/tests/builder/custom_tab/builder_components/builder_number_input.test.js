@@ -1,6 +1,14 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { describe, expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, clear, click, fill, queryFirst } from "@odoo/hoot-dom";
+import {
+    advanceTime,
+    animationFrame,
+    clear,
+    click,
+    fill,
+    freezeTime,
+    queryFirst,
+} from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -454,6 +462,7 @@ describe("keyboard triggers", () => {
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "-1");
     });
     test("apply preview on keydown and debounce commit operation", async () => {
+        freezeTime();
         addActionOption({
             customAction: class extends BuilderAction {
                 static id = "customAction";
@@ -479,9 +488,9 @@ describe("keyboard triggers", () => {
         await contains(".options-container input").keyDown("ArrowUp");
         await advanceTime(500); // Default browser delay between 1st & 2nd keydown.
         await contains(".options-container input").keyDown("ArrowUp");
-        await advanceTime();
+        await advanceTime(50);
         await contains(".options-container input").keyDown("ArrowUp");
-        await advanceTime();
+        await advanceTime(50);
         expect(":iframe .test-options-target").toHaveInnerHTML("13");
         // 3 previews
         expect.verifySteps(["customAction 11", "customAction 12", "customAction 13"]);
