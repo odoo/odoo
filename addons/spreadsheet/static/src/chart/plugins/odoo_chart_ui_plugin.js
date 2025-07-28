@@ -134,8 +134,94 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         return this.charts[dataSourceId];
     }
 
+<<<<<<< a25a654e1501e73fc0efc3b16d0a83824d3e682c
     getOdooEnv() {
         return this.custom.env;
+||||||| 74eecadb39e0c260f4cfc1ae9478c84eda815132
+    /**
+     * Get the callback used for onClick and onHover in an Odoo Chart
+     */
+    getChartDatasetActionCallbacks(chart) {
+        const { datasets, labels } = chart.dataSource.getData();
+        const env = this.custom.env;
+        return {
+            onClick: async (event, items) => {
+                if (!items.length ||  !env || items[0].datasetIndex >= datasets.length ) {
+                    return;
+                }
+                const { datasetIndex, index } = items[0];
+                const dataset = datasets[datasetIndex];
+                let name = labels[index];
+                if (dataset.label) {
+                    name += ` / ${dataset.label}`;
+                }
+                await navigateTo(
+                    env,
+                    chart.actionXmlId,
+                    {
+                        name,
+                        type: "ir.actions.act_window",
+                        res_model: chart.metaData.resModel,
+                        views: [
+                            [false, "list"],
+                            [false, "form"],
+                        ],
+                        domain: dataset.domains[index],
+                    },
+                    { viewType: "list" }
+                );
+            },
+            onHover: (event, items) => {
+                if (items.length > 0) {
+                    event.native.target.style.cursor = "pointer";
+                } else {
+                    event.native.target.style.cursor = "";
+                }
+            },
+        };
+=======
+    /**
+     * Get the callback used for onClick and onHover in an Odoo Chart
+     */
+    getChartDatasetActionCallbacks(chart) {
+        const { datasets, labels } = chart.dataSource.getData();
+        const env = this.custom.env;
+        return {
+            onClick: async (event, items) => {
+                if (!items.length || !env || items[0].datasetIndex >= datasets.length) {
+                    return;
+                }
+                const { datasetIndex, index } = items[0];
+                const dataset = datasets[datasetIndex];
+                let name = labels[index];
+                if (dataset.label) {
+                    name += ` / ${dataset.label}`;
+                }
+                await navigateTo(
+                    env,
+                    chart.actionXmlId,
+                    {
+                        name,
+                        type: "ir.actions.act_window",
+                        res_model: chart.metaData.resModel,
+                        views: [
+                            [false, "list"],
+                            [false, "form"],
+                        ],
+                        domain: dataset.domains[index],
+                    },
+                    { viewType: "list" }
+                );
+            },
+            onHover: (event, items) => {
+                if (items.length > 0) {
+                    event.native.target.style.cursor = "pointer";
+                } else {
+                    event.native.target.style.cursor = "";
+                }
+            },
+        };
+>>>>>>> 7afbc969f9912222214aa20a3449e805522ad210
     }
 
     // -------------------------------------------------------------------------
@@ -192,6 +278,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
         this.charts[dataSourceId] = new ChartDataSource(this.custom, definition);
+        this._addDomain(chartId);
     }
 
     /**
