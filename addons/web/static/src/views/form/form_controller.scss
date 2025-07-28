@@ -199,12 +199,6 @@
         flex: 1 1 auto;
     }
 
-    // rules for fields borders: only on hover/focus by default
-    // except when used with o_field_highlight (on parent or on the field)
-    .o_input {
-        padding: $o-input-padding-y $o-input-padding-x;
-    }
-
     &:not(.o_field_highlight) .o_field_widget:not(.o_field_invalid):not(.o_field_highlight) .o_input:not(:hover):not(:focus) {
         --o-input-border-color: transparent;
     }
