@@ -186,6 +186,8 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
         try:
             # {dbname: {method: StatsLine}}
             cache_stats: defaultdict[str, dict[Callable, StatsLine]] = defaultdict(dict)
+            # {dbname: (cache_name, entries, count, total_size)}
+            cache_usage: defaultdict[str, list[tuple[str, int, int, int]]] = defaultdict(list)
 
             # browse the values in cache
             registries = Registry.registries.snapshot
@@ -195,7 +197,9 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                     return
                 _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
                 db_cache_stats = cache_stats[dbname]
-                for cache in registry._Registry__caches.values():
+                db_cache_usage = cache_usage[dbname]
+                for cache_name, cache in registry._Registry__caches.items():
+                    cache_total_size = 0
                     for cache_key, cache_value in cache.snapshot.items():
                         method = cache_key[1]
                         stats = db_cache_stats.get(method)
@@ -205,8 +209,10 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                         if not show_size:
                             continue
                         size = get_cache_size(cache_value, cache_info=method.__qualname__, class_slots=class_slots)
+                        cache_total_size += size
                         stats.sz_entries_sum += size
                         stats.sz_entries_max = max(stats.sz_entries_max, size)
+                    db_cache_usage.append((cache_name, len(cache), cache.count, cache_total_size))
 
             # add counters that have no values in cache
             for (dbname, method), counter in _COUNTERS.copy().items():  # copy to avoid concurrent modification
@@ -239,11 +245,17 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
             for dbname, db_cache_stats in sorted(cache_stats.items(), key=lambda k: k[0] or '~'):
                 if not check_continue_logging():
                     return
-                log_msgs.extend((f'Database {dbname or "<no_db>"}:', column_info))
+                log_msgs.append(f'Database {dbname or "<no_db>"}:')
+                log_msgs.extend(
+                    f" * {cache_name}: {entries}/{count}{' (' if cache_total_size else ''}{cache_total_size}{' bytes)' if cache_total_size else ''}"
+                    for cache_name, entries, count, cache_total_size in db_cache_usage
+                )
+                log_msgs.append('Details:')
 
                 # sort by -sz_entries_sum and method_name
                 db_cache_stat = sorted(db_cache_stats.items(), key=lambda k: (-k[1].sz_entries_sum, k[0].__name__))
                 sz_entries_all = sum(stat.sz_entries_sum for _, stat in db_cache_stat)
+                log_msgs.append(column_info)
                 for method, stat in db_cache_stat:
                     size_data = (
                         f'{stat.sz_entries_sum / (sz_entries_all or 1) * 100:9.1f}%,'
