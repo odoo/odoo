@@ -356,6 +356,48 @@ test("Data reloaded upon domain update for charts other than pie/bar/line", asyn
     expect.verifySteps(["formatted_read_group"]); // Data re-loaded on domain update
 });
 
+test("Updating the domain keeps the global filters domain", async () => {
+    let lastReadGroupDomain = undefined;
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_line",
+        mockRPC: async function (route, args) {
+            if (args.method === "formatted_read_group") {
+                expect.step("formatted_read_group");
+                lastReadGroupDomain = args.kwargs.domain;
+            }
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+    const definition = model.getters.getChartDefinition(chartId);
+    const filter = {
+        id: "42",
+        type: "relation",
+        label: "filter",
+        modelName: "product",
+        defaultValue: [41],
+    };
+    await addGlobalFilter(model, filter, {
+        chart: { [chartId]: { chain: "product", type: "many2one" } },
+    });
+
+    model.getters.getChartRuntime(chartId); // force runtime computation
+    await waitForDataLoaded(model);
+    expect.verifySteps(["formatted_read_group", "formatted_read_group"]);
+    expect(lastReadGroupDomain).toEqual([["product", "in", [41]]]);
+
+    const updatedDefinition = {
+        ...definition,
+        searchParams: { ...definition.searchParams, domain: [["1", "=", "1"]] },
+    };
+    model.dispatch("UPDATE_CHART", { definition: updatedDefinition, figureId: chartId, sheetId });
+
+    model.getters.getChartRuntime(chartId); // force runtime computation
+    await waitForDataLoaded(model);
+    expect.verifySteps(["formatted_read_group"]);
+    expect(lastReadGroupDomain).toEqual(["&", ["1", "=", "1"], ["product", "in", [41]]]);
+});
+
 test("Can import/export an Odoo chart", async () => {
     const { model } = await createModelWithDataSource();
     insertChartInSpreadsheet(model, "odoo_line");
