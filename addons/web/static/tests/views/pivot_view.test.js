@@ -90,6 +90,7 @@ class Partner extends models.Model {
             id: 1,
             foo: 12,
             bar: true,
+            display_name: "Raoul",
             date: "2016-12-14",
             product_id: 37,
             customer: 1,
@@ -107,6 +108,7 @@ class Partner extends models.Model {
             id: 2,
             foo: 1,
             bar: true,
+            display_name: "Steven",
             date: "2016-10-26",
             product_id: 41,
             customer: 2,
@@ -121,6 +123,7 @@ class Partner extends models.Model {
             id: 3,
             foo: 17,
             bar: true,
+            display_name: "Taylor",
             date: "2016-12-15",
             product_id: 41,
             customer: 2,
@@ -135,6 +138,7 @@ class Partner extends models.Model {
             id: 4,
             foo: 2,
             bar: false,
+            display_name: "Zara",
             date: "2016-04-11",
             product_id: 41,
             customer: 1,
@@ -300,6 +304,22 @@ test("Pivot with integer row group by with 0 as header", async () => {
     expect(".o_pivot table tr td.o_pivot_cell_value").toHaveCount(2);
     expect(".o_pivot table tbody tr:eq(0) th:eq(0)").toHaveText("Total");
     expect(".o_pivot table tbody tr:eq(0) td:eq(0)").toHaveText("0");
+});
+
+test("pivot groupby id shows label, not empty cell", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="id" type="row"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+    });
+
+    const rows = queryAllTexts("tbody th");
+    expect(rows).toEqual(["Total", "Raoul", "Steven", "Taylor", "Zara"]);
+    expect(".o_pivot_cell_value").toHaveCount(5);
 });
 
 test("Pivot with integer col group by with 0 as header", async () => {
