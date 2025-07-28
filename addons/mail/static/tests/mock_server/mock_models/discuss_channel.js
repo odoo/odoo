@@ -172,6 +172,7 @@ export class DiscussChannel extends models.ServerModel {
                     .get_result()
             );
         }
+        return DiscussChannelMember.browse(insertedChannelMembers);
     }
 
     /**

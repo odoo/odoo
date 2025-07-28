@@ -1,10 +1,10 @@
 from odoo.tests import new_test_user, tagged
-from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
 
 
 @tagged("-at_install", "post_install")
-class TestDiscussChannel(TestImLivechatCommon, MailCase):
+class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
     def test_unfollow_from_non_member_does_not_close_livechat(self):
         bob_user = new_test_user(
             self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_manager"
@@ -154,3 +154,20 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
             partner_ids=bob_operator.partner_id.ids
         )
         self.assertEqual(channel_1.livechat_status, "need_help")
+
+    def test_join_livechat_needing_help(self):
+        bob = self._create_operator()
+        john = self._create_operator()
+        jane = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Livechat Channel", "user_ids": (bob + jane + john).ids},
+        )
+        chat = self._create_conversation(livechat_channel, bob)
+        chat.livechat_status = "need_help"
+        has_joined = chat.with_user(john).livechat_join_channel_needing_help()
+        self.assertTrue(has_joined)
+        self.assertIn(john.partner_id, chat.channel_member_ids.partner_id)
+        self.assertEqual(chat.livechat_status, "in_progress")
+        has_joined = chat.with_user(jane).livechat_join_channel_needing_help()
+        self.assertFalse(has_joined)
+        self.assertNotIn(jane.partner_id, chat.channel_member_ids.partner_id)
