@@ -1085,7 +1085,7 @@ class AccountAccount(models.Model):
         if vals.get('deprecated') and self.env["account.tax.repartition.line"].search_count([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_("You cannot deprecate an account that is used in a tax distribution."))
 
-        res = super(AccountAccount, self.with_context(defer_account_code_checks=True, prefetch_fields=any(field in vals for field in ['code', 'account_type']))).write(vals)
+        res = super(AccountAccount, self.with_context(defer_account_code_checks=True, prefetch_fields=not any(field in vals for field in ['code', 'account_type']))).write(vals)
 
         if not self.env.context.get('defer_account_code_checks') and {'company_ids', 'code', 'code_mapping_ids'} & vals.keys():
             self._ensure_code_is_unique()
