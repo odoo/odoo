@@ -6,7 +6,6 @@ from collections import defaultdict
 from collections.abc import Mapping, Collection
 from decorator import decorator
 from inspect import signature, Parameter
-from itertools import chain
 import logging
 import signal
 import sys
@@ -208,7 +207,7 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                         stats.nb_entries += 1
                         if not show_size:
                             continue
-                        size = get_cache_size(cache_value, cache_info=method.__qualname__, class_slots=class_slots)
+                        size = get_cache_size((cache_key, cache_value), cache_info=method.__qualname__, class_slots=class_slots)
                         cache_total_size += size
                         stats.sz_entries_sum += size
                         stats.sz_entries_max = max(stats.sz_entries_max, size)
@@ -313,9 +312,10 @@ def get_cache_size(
     from odoo.api import Environment  # noqa: PLC0415
 
     if seen_ids is None:
-        seen_ids = set()
+        # count internal constants as 0 bytes
+        seen_ids = set(map(id, (None, False, True)))
     if class_slots is None:
-        class_slots = {}  # {class_name: combined_slots}
+        class_slots = {}  # {class_id: combined_slots}
     total_size = 0
     objects = [obj]
 
@@ -333,12 +333,14 @@ def get_cache_size(
 
         if hasattr(cur_obj, '__slots__'):
             cur_obj_cls = type(cur_obj)
-            if cur_obj_cls not in class_slots:
-                class_slots[cur_obj_cls] = tuple(set(chain.from_iterable(
-                    getattr(cls, '__slots__', ())
+            attributes = class_slots.get(id(cur_obj_cls))
+            if attributes is None:
+                class_slots[id(cur_obj_cls)] = attributes = tuple({
+                    f'_{cls.__name__}{attr}' if attr.startswith('__') else attr
                     for cls in cur_obj_cls.mro()
-                )))
-            objects.extend(getattr(cur_obj, s) for s in class_slots[cur_obj_cls] if hasattr(cur_obj, s))
+                    for attr in getattr(cls, '__slots__', ())
+                })
+            objects.extend(getattr(cur_obj, attr, None) for attr in attributes)
         if hasattr(cur_obj, '__dict__'):
             objects.append(object.__dict__)
 
