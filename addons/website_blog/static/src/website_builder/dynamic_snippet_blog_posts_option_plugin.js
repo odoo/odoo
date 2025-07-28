@@ -22,6 +22,7 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
             selector: this.selector,
         }),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        skip_refresh_on_snippet_save: [this.selector],
     };
     setup() {
         this.blogs = undefined;

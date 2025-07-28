@@ -26,6 +26,7 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
         }),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        skip_refresh_on_snippet_save: [this.selector],
     };
     onTemplateUpdated({ el, template }) {
         if (el.matches(this.selector)) {
