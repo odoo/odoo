@@ -740,11 +740,10 @@ export class PosStore extends WithLazyGetterTrap {
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         let order = this.getOrder();
-        order.assertEditable();
-
         if (!order) {
             order = this.addNewOrder();
         }
+        order.assertEditable();
         return await this.addLineToOrder(vals, order, opts, configure);
     }
 
@@ -1245,12 +1244,12 @@ export class PosStore extends WithLazyGetterTrap {
         const orderToUpdate = this.models["pos.order"]
             .readMany(Array.from(this.pendingOrder.write))
             .filter(Boolean);
-        const orderToDelele = this.models["pos.order"]
+        const orderToDelete = this.models["pos.order"]
             .readMany(Array.from(this.pendingOrder.delete))
             .filter(Boolean);
 
         return {
-            orderToDelele,
+            orderToDelete,
             orderToCreate,
             orderToUpdate,
         };
