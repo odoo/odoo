@@ -5,6 +5,8 @@ import logging
 import pytz
 import textwrap
 import urllib.parse
+import markupsafe
+from lxml import html
 
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -14,7 +16,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_date, format_datetime, format_time, frozendict
-from odoo.tools.mail import is_html_empty, html_to_inner_content
+from odoo.tools.mail import is_html_empty, html_sanitize, html2plaintext
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
 
@@ -739,8 +741,20 @@ class EventEvent(models.Model):
         Reference Docs for URL limit -: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
         """
         self.ensure_one()
-        description = html_to_inner_content(self.description)
-        return textwrap.shorten(description, 1900)
+        source_html = self.description
+        if is_html_empty(source_html):
+            return ''
+        if not isinstance(source_html, markupsafe.Markup):
+            source_html = html_sanitize(source_html)
+
+        # Remove all non-visible blocks
+        element = html.fromstring(str(source_html))
+        for el in element.xpath('//*[contains(@class, "d-none")]'):
+            el.drop_tree()
+
+        description = html2plaintext(html.tostring(element))
+        w = textwrap.TextWrapper(width=1900, max_lines=1, break_long_words=False, replace_whitespace=False)
+        return w.fill(description)
 
     def _get_external_description_url_encoded(self):
         """Get a url-encoded version of the description for mail templates."""
