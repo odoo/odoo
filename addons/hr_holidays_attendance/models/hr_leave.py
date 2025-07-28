@@ -71,7 +71,7 @@ class HRLeave(models.Model):
     def action_reset_confirm(self):
         overtime_leaves = self.filtered('overtime_deductible')
         res = super().action_reset_confirm()
-        overtime_leaves.overtime_id.sudo().unlink()
+        self._check_overtime_deductible(self)
         return res
     
     def action_confirm(self):
