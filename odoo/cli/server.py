@@ -29,20 +29,23 @@ _logger = logging.getLogger('odoo')
 
 
 def check_root_user():
-    """Warn if the process's user is 'root' (on POSIX system)."""
+    """ Warn if the process's user is 'root' (on POSIX system). """
     if os.name == 'posix':
         import getpass
         if getpass.getuser() == 'root':
             sys.stderr.write("Running as user 'root' is a security risk.\n")
 
+
 def check_postgres_user():
     """ Exit if the configured database user is 'postgres'.
 
-    This function assumes the configuration has been initialized.
+        This function assumes the configuration has been initialized.
     """
-    if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
+    db_user = config['db_user'] or os.environ.get('PGUSER')
+    if db_user == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
+
 
 def report_configuration():
     """ Log the server version and some configuration values.
@@ -93,6 +96,22 @@ def setup_pid_file():
         atexit.register(rm_pid_file, pid)
 
 
+def ensure_database_exists(db_name):
+    from odoo.service import db  # noqa: PLC0415
+    try:
+        db._create_empty_database(db_name)
+        _logger.info("Creating database %s", db_name)
+        config['init']['base'] = True
+    except InsufficientPrivilege as err:
+        # We use an INFO loglevel on purpose in order to avoid
+        # reporting unnecessary warnings on build environment
+        # using restricted database access.
+        _logger.info("Could not determine if database %s exists, "
+                     "skipping auto-creation: %s", db_name, err)
+    except db.DatabaseExists:
+        pass
+
+
 def main(args):
     check_root_user()
     config.parse_config(args, setup_logging=True)
@@ -100,18 +119,7 @@ def main(args):
     report_configuration()
 
     for db_name in config['db_name']:
-        from odoo.service import db  # noqa: PLC0415
-        try:
-            db._create_empty_database(db_name)
-            config['init']['base'] = True
-        except InsufficientPrivilege as err:
-            # We use an INFO loglevel on purpose in order to avoid
-            # reporting unnecessary warnings on build environment
-            # using restricted database access.
-            _logger.info("Could not determine if database %s exists, "
-                         "skipping auto-creation: %s", db_name, err)
-        except db.DatabaseExists:
-            pass
+        ensure_database_exists(db_name)
 
     stop = config["stop_after_init"]
 
