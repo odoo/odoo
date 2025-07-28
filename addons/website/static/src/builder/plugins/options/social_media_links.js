@@ -4,15 +4,16 @@ import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class SocialMediaLinks extends BaseOptionComponent {
     static template = "website.SocialMediaLinks";
-    static props = {
-        getRecordedSocialMediaNames: { type: Function },
-        reorderSocialMediaLink: { type: Function },
-    };
+    static selector = ".s_social_media";
 
     setup() {
         super.setup();
+
+        const { getRecordedSocialMediaNames, reorderSocialMediaLink } =
+            this.env.editor.shared.socialMediaOptionPlugin;
+
         onWillStart(async () => {
-            this.recordedSocialMediaNames = await this.props.getRecordedSocialMediaNames();
+            this.recordedSocialMediaNames = await getRecordedSocialMediaNames();
         });
         this.rootRef = useRef("root");
         this.domState = useDomState((editingElement) => ({
@@ -62,7 +63,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
                     .find((i) => this.idsElMap.get(i)?.isConnected);
 
                 if (this.idsElMap.get(elId)?.isConnected && oldNext !== newNext) {
-                    this.props.reorderSocialMediaLink({
+                    reorderSocialMediaLink({
                         editingElement: this.env.getEditingElement(),
                         element: this.idsElMap.get(elId),
                         elementAfter: this.idsElMap.get(newNext),

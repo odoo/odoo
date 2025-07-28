@@ -290,7 +290,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 continue;
             }
             for (const el of getElementsWithOption(root, selector, exclude)) {
-                cleanForSave(el);
+                cleanForSave(el, { services: this.env.services });
             }
         }
     }

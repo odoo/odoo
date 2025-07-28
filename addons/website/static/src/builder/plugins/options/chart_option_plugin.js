@@ -1,9 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { ChartOption, DATASET_KEY_PREFIX } from "./chart_option";
+import { ChartOption, DATASET_KEY_PREFIX, getColor } from "./chart_option";
 import { Plugin } from "@html_editor/plugin";
-import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { registry } from "@web/core/registry";
-import { isCSSColor } from "@web/core/utils/colors";
 
 class ChartOptionPlugin extends Plugin {
     static id = "chartOptionPlugin";
@@ -14,7 +12,6 @@ class ChartOptionPlugin extends Plugin {
                 OptionComponent: ChartOption,
                 selector: ".s_chart",
                 props: {
-                    isPieChart,
                     getColor: (color) => getColor(color, this.window, this.document),
                 },
             },
@@ -35,17 +32,6 @@ class ChartOptionPlugin extends Plugin {
     };
 }
 
-function isPieChart(editingElement) {
-    return ["pie", "doughnut"].includes(editingElement.dataset.type);
-}
-function getColor(color, win, doc) {
-    if (!color) {
-        return "";
-    }
-    return isCSSColor(color)
-        ? color
-        : getCSSVariableValue(color, win.getComputedStyle(doc.documentElement));
-}
 export class BaseChartAction extends BuilderAction {
     static id = "baseChart";
     updateDOMData(editingElement, data) {
@@ -71,7 +57,7 @@ export class BaseChartAction extends BuilderAction {
     }
 
     isPieChart(editingElement) {
-        return isPieChart(editingElement);
+        return this.isPieChart(editingElement);
     }
 
     getColor(color) {

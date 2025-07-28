@@ -10,14 +10,7 @@ import { SCROLL_BUTTON } from "@website/builder/option_sequence";
 class ScrollButtonOptionPlugin extends Plugin {
     static id = "scrollButtonOption";
     resources = {
-        builder_options: [
-            withSequence(SCROLL_BUTTON, {
-                OptionComponent: ScrollButtonOption,
-                selector: "section",
-                exclude:
-                    "[data-snippet] :not(.oe_structure) > [data-snippet],.s_instagram_page,.o_mega_menu > section,.s_appointments .s_dynamic_snippet_content,.s_floating_blocks,.s_floating_blocks .s_floating_blocks_block",
-            }),
-        ],
+        builder_options: [withSequence(SCROLL_BUTTON, ScrollButtonOption)],
         builder_actions: {
             AddScrollButtonAction,
             ScrollButtonSectionHeightClassAction,

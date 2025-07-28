@@ -6,6 +6,8 @@ import { WebsiteBackgroundOption } from "@website/builder/plugins/options/backgr
 // TODO: BorderConfigurator and ShadowOption directly in BaseOptionComponent ?
 export class MediaListItemOption extends BaseOptionComponent {
     static template = "website.MediaListItemOption";
+    static selector = ".s_media_list_item";
+
     static components = {
         BorderConfigurator,
         ShadowOption,

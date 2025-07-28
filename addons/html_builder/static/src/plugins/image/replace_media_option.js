@@ -1,8 +1,14 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
+export const REPLACE_MEDIA_EXCLUDE =
+    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
 
 export class ReplaceMediaOption extends BaseOptionComponent {
     static template = "html_builder.ReplaceMediaOption";
     static props = {};
+    static selector = REPLACE_MEDIA_SELECTOR;
+    static exclude = REPLACE_MEDIA_EXCLUDE;
+    static name = "replaceMediaOption";
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({

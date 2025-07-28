@@ -4,6 +4,10 @@ import { useService } from "@web/core/utils/hooks";
 
 export class WebsiteCRMPartnersPage extends BaseOptionComponent {
     static template = "website_crm_partner_assign.PartnersPageOption";
+    static selector = "main:has(#oe_structure_website_crm_partner_assign_layout_1)";
+    static title = _t("Partners Page");
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
 
     setup() {
         super.setup();

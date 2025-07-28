@@ -7,9 +7,19 @@ import { VisibilityOption } from "./visibility_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { CONDITIONAL_VISIBILITY, DEVICE_VISIBILITY } from "@website/builder/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export const VISIBILITY_OPTION_SELECTOR = "section, .s_hr";
 export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";
+
+export class DeviceVisibilityOption extends BaseOptionComponent {
+    static template = "website.DeviceVisibilityOption";
+    static dependencies = ["visibility"];
+    static selector = DEVICE_VISIBILITY_OPTION_SELECTOR;
+    static exclude = ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize";
+    static cleanForSave = (el, { dependencies }) => {
+        dependencies.visibility.cleanForSaveVisibility(el);
+    };
+}
 
 class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
@@ -17,20 +27,8 @@ class VisibilityOptionPlugin extends Plugin {
     static shared = ["clean", "isApplied"];
     resources = {
         builder_options: [
-            withSequence(CONDITIONAL_VISIBILITY, {
-                OptionComponent: VisibilityOption,
-                props: {
-                    websiteSession: this.dependencies.websiteSession.getSession(),
-                },
-                selector: VISIBILITY_OPTION_SELECTOR,
-                cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
-            }),
-            withSequence(DEVICE_VISIBILITY, {
-                template: "website.DeviceVisibilityOption",
-                selector: DEVICE_VISIBILITY_OPTION_SELECTOR,
-                exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
-                cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
-            }),
+            withSequence(CONDITIONAL_VISIBILITY, VisibilityOption),
+            withSequence(DEVICE_VISIBILITY, DeviceVisibilityOption),
         ],
         builder_actions: {
             ForceVisibleAction,
@@ -109,7 +107,7 @@ class VisibilityOptionPlugin extends Plugin {
     }
 
     onSnippetDropped({ snippetEl }) {
-        const selector = [VISIBILITY_OPTION_SELECTOR, DEVICE_VISIBILITY_OPTION_SELECTOR].join(", ");
+        const selector = [VisibilityOption.selector, DEVICE_VISIBILITY_OPTION_SELECTOR].join(", ");
         const droppedEls = getElementsWithOption(snippetEl, selector);
         droppedEls.forEach((droppedEl) =>
             this.dependencies.visibility.toggleTargetVisibility(droppedEl, true, true)
@@ -117,7 +115,7 @@ class VisibilityOptionPlugin extends Plugin {
     }
 
     normalizeCSSSelectors(rootEl) {
-        for (const el of selectElements(rootEl, VISIBILITY_OPTION_SELECTOR)) {
+        for (const el of selectElements(rootEl, VisibilityOption.selector)) {
             this.updateCSSSelectors(el);
         }
     }

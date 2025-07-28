@@ -1,4 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
@@ -6,16 +7,18 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 
+export class CountdownOption extends BaseOptionComponent {
+    static template = "website.CountdownOption";
+    static selector = ".s_countdown";
+    static cleanForSave = (editingEl) => {
+        editingEl.classList.remove("s_countdown_enable_preview");
+    };
+}
+
 class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";
     resources = {
-        builder_options: [
-            withSequence(before(SNIPPET_SPECIFIC_END), {
-                template: "website.CountdownOption",
-                selector: ".s_countdown",
-                cleanForSave,
-            }),
-        ],
+        builder_options: [withSequence(before(SNIPPET_SPECIFIC_END), CountdownOption)],
         so_content_addition_selector: [".s_countdown"],
         builder_actions: {
             // TODO AGAU: update after merging generalized restart interactions
@@ -34,9 +37,6 @@ class CountdownOptionPlugin extends Plugin {
     };
 }
 
-function cleanForSave(editingEl) {
-    editingEl.classList.remove("s_countdown_enable_preview");
-}
 export class BaseCountdownAction extends BuilderAction {
     static id = "baseCountdown";
     /**
@@ -49,7 +49,7 @@ export class BaseCountdownAction extends BuilderAction {
     editingElEndMessages = new WeakMap();
 
     cleanForSave(editingEl) {
-        return cleanForSave(editingEl);
+        return CountdownOption.cleanForSave(editingEl);
     }
 
     setEndAction({ editingElement, value }) {

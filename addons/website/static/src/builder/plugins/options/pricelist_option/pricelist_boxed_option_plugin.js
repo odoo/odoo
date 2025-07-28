@@ -3,12 +3,19 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { AddProductOption } from "./add_product_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class PriceListBoxedDescriptionOption extends BaseOptionComponent {
+    static template = "website.PriceListBoxedDescriptionOption";
+    static selector = ".s_pricelist_boxed";
+}
 
 class PriceListBoxedOptionPlugin extends Plugin {
     static id = "priceListBoxedOption";
     resources = {
         builder_options: [
             withSequence(BEGIN, {
+                // todoo: multi-usage-option
                 selector: ".s_pricelist_boxed",
                 OptionComponent: AddProductOption,
                 props: {
@@ -18,6 +25,7 @@ class PriceListBoxedOptionPlugin extends Plugin {
                 },
             }),
             withSequence(BEGIN, {
+                // todoo: multi-usage-option
                 selector: ".s_pricelist_boxed_section",
                 OptionComponent: AddProductOption,
                 props: {
@@ -25,10 +33,7 @@ class PriceListBoxedOptionPlugin extends Plugin {
                     productSelector: ".s_pricelist_boxed_item",
                 },
             }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.PriceListBoxedDescriptionOption",
-                selector: ".s_pricelist_boxed",
-            }),
+            withSequence(SNIPPET_SPECIFIC_END, PriceListBoxedDescriptionOption),
         ],
         dropzone_selector: {
             selector: ".s_pricelist_boxed_item",

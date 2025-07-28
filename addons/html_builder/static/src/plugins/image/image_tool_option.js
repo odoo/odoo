@@ -12,6 +12,8 @@ export class ImageToolOption extends BaseOptionComponent {
         ImageFormatOption,
         ImageTransformOption,
     };
+    static selector = "img";
+    static exclude = "[data-oe-type='image'] > img";
     static props = {};
     setup() {
         super.setup();

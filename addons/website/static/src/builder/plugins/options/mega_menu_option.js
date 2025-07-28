@@ -9,8 +9,9 @@ export class MegaMenuOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        const { getTemplatePrefix } = this.env.editor.shared.megaMenuOptionPlugin;
         this.state = useDomState((el) => ({
-            templatePrefix: this.props.getTemplatePrefix(el),
+            templatePrefix: getTemplatePrefix(el),
         }));
     }
 

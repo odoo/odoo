@@ -9,14 +9,10 @@ class HeaderNavbarOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
+                OptionComponent: HeaderNavbarOption,
                 props: {
                     getCurrentActiveViews: this.getCurrentActiveViews.bind(this),
                 },
-                OptionComponent: HeaderNavbarOption,
-                editableOnly: false,
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
-                reloadTarget: true,
             },
         ],
     };

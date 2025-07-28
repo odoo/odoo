@@ -3,12 +3,19 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { AddProductOption } from "./add_product_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class ProductCatalogDescriptionOption extends BaseOptionComponent {
+    static template = "website.ProductCatalogDescriptionOption";
+    static selector = ".s_product_catalog";
+}
 
 class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";
     resources = {
         builder_options: [
             withSequence(BEGIN, {
+                // todoo: multi-usage-option
                 selector: ".s_product_catalog",
                 OptionComponent: AddProductOption,
                 props: {
@@ -18,6 +25,7 @@ class ProductCatalogOptionPlugin extends Plugin {
                 },
             }),
             withSequence(BEGIN, {
+                // todoo: multi-usage-option
                 selector: ".s_product_catalog .row > div",
                 OptionComponent: AddProductOption,
                 props: {
@@ -25,10 +33,7 @@ class ProductCatalogOptionPlugin extends Plugin {
                     productSelector: ".s_product_catalog_dish",
                 },
             }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.ProductCatalogDescriptionOption",
-                selector: ".s_product_catalog",
-            }),
+            withSequence(SNIPPET_SPECIFIC_END, ProductCatalogDescriptionOption),
         ],
         dropzone_selector: {
             selector: ".s_product_catalog_dish",

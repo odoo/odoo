@@ -9,12 +9,7 @@ class ImageGridOptionPlugin extends Plugin {
     static id = "imageGridOption";
 
     resources = {
-        builder_options: [
-            withSequence(GRID_IMAGE, {
-                OptionComponent: ImageGridOption,
-                selector: "img",
-            }),
-        ],
+        builder_options: [withSequence(GRID_IMAGE, ImageGridOption)],
         builder_actions: {
             SetGridImageModeAction,
         },
