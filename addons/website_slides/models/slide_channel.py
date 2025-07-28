@@ -594,6 +594,7 @@ class SlideChannel(models.Model):
                 ("author_id", "=", message.author_id.id),
                 ("model", "=", "slide.channel"),
                 ("subtype_id", "=", self.env.ref("mail.mt_comment").id),
+                ("rating_ids", "!=", False),
             ]
             if self.env["mail.message"].search_count(domain, limit=2) > 1:
                 raise ValidationError(_("Only a single review can be posted per course."))

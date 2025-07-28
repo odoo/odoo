@@ -28,6 +28,9 @@ export class RatingPopupComposer extends Interaction {
             "user_id": user.userId,
             "reloadRatingPopupComposer": this.onReloadRatingPopupComposer.bind(this),
         }, options, {});
+        this.env.bus.addEventListener("reload_rating_popup_composer", (ev) =>
+            this.onReloadRatingPopupComposer(ev.detail)
+        );
     }
 
     start() {
@@ -89,9 +92,10 @@ export class RatingPopupComposer extends Interaction {
     }
 
     /**
-     * @param {Object} data
+     * @param {OdooEvent|Object} eventOrData
      */
-    onReloadRatingPopupComposer(data) {
+    onReloadRatingPopupComposer(eventOrData) {
+        const data = eventOrData.data || eventOrData;
         // Refresh the internal state of the widget
         this.rating_avg = data.rating_avg || data["mail.thread"][0].rating_avg;
         this.rating_count = data.rating_count || data["mail.thread"][0].rating_count;
@@ -110,13 +114,20 @@ export class RatingPopupComposer extends Interaction {
      * @param {Object} data
      */
     updateOptions(data) {
+        const message = data["mail.message"] && data["mail.message"][0];
         const defaultOptions = {
             default_message:
-                data.default_message ||
-                (data["mail.message"] && data["mail.message"][0].body[1].replace(/<[^>]+>/g, "")),
-            default_message_id: data.default_message_id || data["mail.message"][0].id,
+                data.default_message || (message && message.body[1].replace(/<[^>]+>/g, "")),
+            default_message_id:
+                data.default_message_id ||
+                (message &&
+                    (message.body[1].replace(/<[^>]+>/g, "") ||
+                        message.attachment_ids.length ||
+                        message.rating_id) &&
+                    message.id),
             default_attachment_ids: data.default_attachment_ids || data["ir.attachment"],
-            default_rating_value: data.default_rating_value || this.rating_value,
+            default_rating_value:
+                data.default_rating_value || this.rating_value || 4,
         };
         Object.assign(data, defaultOptions);
         this.options = Object.assign(this.options, data);
