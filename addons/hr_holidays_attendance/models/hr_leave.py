@@ -68,6 +68,12 @@ class HrLeave(models.Model):
                     'duration': -1 * duration,
                 })
 
+    def action_reset_confirm(self):
+        self.filtered('overtime_deductible')
+        res = super().action_reset_confirm()
+        self._check_overtime_deductible(self)
+        return res
+
     def action_confirm(self):
         res = super().action_confirm()
         self._check_overtime_deductible(self)
