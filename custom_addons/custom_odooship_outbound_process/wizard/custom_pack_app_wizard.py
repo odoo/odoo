@@ -279,7 +279,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
     def update_packed_qty_after_success(self, picking_name, packed_lines):
         """
-        Update packed_qty for stock moves after a successful payload response.
+        Update packed_qty on stock moves and sale order lines for a given picking.
 
         :param picking_name: String - name of the picking
         :param packed_lines: List of dicts, each with 'sku' and 'qty'
@@ -288,20 +288,33 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not picking:
             raise ValidationError(_("Picking '%s' not found.") % picking_name)
 
+        sale_order = picking.sale_id
+
         for line in packed_lines:
             sku = line.get('sku')
-            packed_qty = line.get('qty', 0.0)
+            qty = line.get('qty', 0.0)
 
+            # --- Update stock.move ---
             move = self.env['stock.move'].search([
                 ('picking_id', '=', picking.id),
                 ('product_id.default_code', '=', sku)
             ], limit=1)
-
             if move:
-                move.packed_qty = packed_qty
-                _logger.info("Updated packed_qty = %.2f for SKU [%s] in picking %s", packed_qty, sku, picking_name)
+                move.packed_qty = qty
+                _logger.info("Updated stock.move packed_qty = %.2f for SKU [%s] in picking %s", qty, sku, picking_name)
             else:
-                _logger.warning("Move not found for SKU [%s] in picking %s", sku, picking_name)
+                _logger.warning("Stock.move not found for SKU [%s] in picking %s", sku, picking_name)
+
+            # --- Update sale.order.line ---
+            if sale_order:
+                so_line = sale_order.order_line.filtered(lambda l: l.product_id.default_code == sku)
+                if so_line:
+                    # Assuming you have a `packed_qty` field on sale.order.line
+                    so_line[0].packed_qty = qty
+                    _logger.info("Updated sale.order.line packed_qty = %.2f for SKU [%s] in SO %s", qty, sku,
+                                 sale_order.name)
+                else:
+                    _logger.warning("Sale.order.line not found for SKU [%s] in SO %s", sku, sale_order.name)
 
     def _get_package_box_id(self, tenant_id, site_id, incoterm):
         """
@@ -703,10 +716,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                                      f"{line.picking_id.partner_id.state_id.code if line.picking_id.partner_id.state_id else ''}, "
                                      f"{line.picking_id.partner_id.country_id.code if line.picking_id.partner_id.country_id else ''}, "
                                      f"{line.picking_id.partner_id.zip or ''}",
-                "customer_email": line.picking_id.partner_id.email,
-                "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
-                "site_code": line.site_code_id.name if line.site_code_id else "",
-                "receipt_number": line.picking_id.name,
+                "customer_email": line.picking_id.partner_id.email or "",
+                "tenant_code": line.tenant_code_id.name or "",
+                "site_code": line.site_code_id.name or "",
+                "receipt_number": line.picking_id.name or "",
                 "partner_id": line.picking_id.partner_id.name or "",
                 "business_name": line.picking_id.partner_id.business_name or "",
                 "origin": line.picking_id.origin or "",
@@ -715,12 +728,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "length": line.package_box_type_id.length or "",
                 "width": line.package_box_type_id.width or "",
                 "height": line.package_box_type_id.height or "",
-                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "",
-                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "",
-                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "",
-                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "",
+                "sales_order_number": line.picking_id.sale_id.name or "",
+                "sales_order_carrier": line.picking_id.sale_id.service_type or "",
+                "sales_order_origin": line.picking_id.sale_id.origin or "",
+                "customer_reference": line.picking_id.sale_id.client_order_ref or "",
                 "incoterm_location": line.incoterm_location or "",
-                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "",
+                "status": line.picking_id.sale_id.post_category or "",
                 "carrier": line.picking_id.sale_id.carrier or "",
                 "hs_code": line.product_id.hs_code or "",
                 "cost_price": line.product_id.standard_price or "0.0",
@@ -729,6 +742,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "items": line.picking_id.sale_id.items or "",
                 "international":international_flag,
                 "product_category":line.product_id.categ_id.name or "other",
+                "docs": line.picking_id.sale_id.docs or "",
             })
 
         payload = {
@@ -769,80 +783,74 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
     def _prepare_old_logic_payload_multi_picks(self):
         """
-        Prepares and returns the old format payload for multiple picks for:
-        Site Code: SHIPEROOALTONA
-        Tenant Code: STONEHIVE
-
-        This method groups lines per product and builds a flat payload list as required by
-        the old Shiperoo API.
+        Prepares and returns the old format payload for multiple picks.
         """
-        # if self.site_code_id.name != "SHIPEROOALTONA" or self.tenant_code_id.name != "STONEHIVE":
-        #     raise ValidationError("This method should only be called for SHIPEROOALTONA and STONEHIVE.")
         product_lines = []
 
         scanned_lines = self.line_ids.filtered(lambda l: l.scanned)
         if not scanned_lines:
             raise UserError(
-                _("No scanned lines found to build legacy multi-pick payload. Please scan at least one SKU."))
+                _("No scanned lines found to build legacy multi-pick payload. Please scan at least one SKU.")
+            )
 
         for line in scanned_lines:
             partner = scanned_lines[0].picking_id.partner_id if scanned_lines else False
             country_code = partner.country_id.code if partner and partner.country_id else "AU"
             international_flag = 1 if country_code.upper() != "AU" else 0
+
             product_lines.append({
-                "sku_code": line.product_id.default_code,
-                "name": line.product_id.name,
-                "quantity": line.quantity,
-                "remaining_quantity": line.remaining_quantity,
-                "weight": line.weight or 0.4,
-                "picking_id": line.picking_id.name if line.picking_id else "",
+                "sku_code": line.product_id.default_code or "",
+                "name": line.product_id.name or "",
+                "quantity": line.quantity or 0,
+                "remaining_quantity": line.remaining_quantity or 0,
+                "weight": line.weight or 0.0,
+                "picking_id": line.picking_id.name or "",
                 "customer_name": line.picking_id.partner_id.name or "",
                 "shipping_address": f"{line.picking_id.partner_id.name or ''}, {line.picking_id.partner_id.street or ''}, "
-                                     f"{line.picking_id.partner_id.street2 or ''}, {line.picking_id.partner_id.city or ''}, "
-                                     f"{line.picking_id.partner_id.state_id.code if line.picking_id.partner_id.state_id else ''}, "
-                                     f"{line.picking_id.partner_id.country_id.code if line.picking_id.partner_id.country_id else ''}, "
-                                     f"{line.picking_id.partner_id.zip or ''}",
-                "customer_email": line.picking_id.partner_id.email,
-                "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
-                "site_code": line.site_code_id.name if line.site_code_id else "",
-                "receipt_number": line.picking_id.name,
-                "partner_id": line.picking_id.partner_id.name,
+                                    f"{line.picking_id.partner_id.street2 or ''}, {line.picking_id.partner_id.city or ''}, "
+                                    f"{line.picking_id.partner_id.state_id.code or '' if line.picking_id.partner_id.state_id else ''}, "
+                                    f"{line.picking_id.partner_id.country_id.code or '' if line.picking_id.partner_id.country_id else ''}, "
+                                    f"{line.picking_id.partner_id.zip or ''}",
+                "customer_email": line.picking_id.partner_id.email or "",
+                "tenant_code": line.tenant_code_id.name or "",
+                "site_code": line.site_code_id.name or "",
+                "receipt_number": line.picking_id.name or "",
+                "partner_id": line.picking_id.partner_id.name or "",
                 "business_name": line.picking_id.partner_id.business_name or "",
                 "origin": line.picking_id.origin or "",
-                "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
-                    line.product_package_number),
+                "package_name": f"{(line.package_box_type_id.name or 'NoBox')}_{str(line.product_package_number or '')}",
                 "length": line.package_box_type_id.length or "",
                 "width": line.package_box_type_id.width or "",
                 "height": line.package_box_type_id.height or "",
-                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "",
-                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "",
-                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "",
-                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "",
-                "incoterm_location": line.sale_order_id.packaging_source_type if line.sale_order_id else "",
-                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "",
-                "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "",
+                "sales_order_number": line.picking_id.sale_id.name or "",
+                "sales_order_carrier": line.picking_id.sale_id.service_type or "",
+                "sales_order_origin": line.picking_id.sale_id.origin or "",
+                "customer_reference": line.picking_id.sale_id.client_order_ref or "",
+                "incoterm_location": line.sale_order_id.packaging_source_type or "",
+                "status": line.picking_id.sale_id.post_category or "",
+                "carrier": line.picking_id.sale_id.carrier or "",
                 "hs_code": line.product_id.hs_code or "",
                 "so_reference": line.picking_id.sale_id.client_order_ref or "",
-                "cost_price": line.product_id.standard_price or "0.0",
-                "sale_price": line.product_id.list_price or "0.0",
+                "cost_price": str(line.product_id.standard_price or "0.0"),
+                "sale_price": str(line.product_id.list_price or "0.0"),
                 "shipment_id": line.picking_id.sale_id.shipmentid or "",
-                "items":line.picking_id.sale_id.items or "",
+                "items": line.picking_id.sale_id.items or "",
                 "international": international_flag,
                 "product_category": line.product_id.categ_id.name or "other",
+                "docs": line.picking_id.sale_id.docs or "",
             })
-
         payload = {
             "header": {
                 "user_id": "system",
                 "user_key": "system",
-                "warehouse_code": self.warehouse_id.name
+                "warehouse_code": self.warehouse_id.name or ""
             },
             "body": {
                 "receipt_list": [
                     {
                         "product_lines": product_lines,
-                        "pack_bench_number": self.pack_bench_id.name,
-                        "pack_bench_ip": self.pack_bench_id.printer_ip
+                        "pack_bench_number": self.pack_bench_id.name or "",
+                        "pack_bench_ip": self.pack_bench_id.printer_ip or ""
                     }
                 ]
             }
