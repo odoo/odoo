@@ -8,8 +8,6 @@ from odoo.exceptions import ValidationError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    report_grids = fields.Boolean(string="Print Variant Grids", default=True, help="If set, the matrix of configurable products will be shown on the report of this order.")
-
     """ Matrix loading and update: fields and methods :
 
     NOTE: The matrix functionality was done in python, server side, to avoid js
@@ -141,19 +139,18 @@ class PurchaseOrder(models.Model):
     def get_report_matrixes(self):
         """Reporting method."""
         matrixes = []
-        if self.report_grids:
-            grid_configured_templates = self.order_line.filtered('is_configurable_product').product_template_id
-            # TODO is configurable product and product_variant_count > 1
-            # configurable products are only configured through the matrix in purchase, so no need to check product_add_mode.
-            for template in grid_configured_templates:
-                if len(self.order_line.filtered(lambda line: line.product_template_id == template)) > 1:
-                    matrix = self._get_matrix(template)
-                    matrix_data = []
-                    for row in matrix['matrix']:
-                        if any(column['qty'] != 0 for column in row[1:]):
-                            matrix_data.append(row)
-                    matrix['matrix'] = matrix_data
-                    matrixes.append(matrix)
+        grid_configured_templates = self.order_line.filtered('is_configurable_product').product_template_id
+        # TODO is configurable product and product_variant_count > 1
+        # configurable products are only configured through the matrix in purchase, so no need to check product_add_mode.
+        for template in grid_configured_templates:
+            if len(self.order_line.filtered(lambda line: line.product_template_id == template)) > 1:
+                matrix = self._get_matrix(template)
+                matrix_data = []
+                for row in matrix['matrix']:
+                    if any(column['qty'] != 0 for column in row[1:]):
+                        matrix_data.append(row)
+                matrix['matrix'] = matrix_data
+                matrixes.append(matrix)
         return matrixes
 
 
