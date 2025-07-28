@@ -25,9 +25,9 @@
                 </div>
                 <div class="d-flex">
                     <Dropdown t-if="hasUnusedGlobalFilters">
-                        <a href="#" class="pt-2 o-add-global-filter">
+                        <button class="btn btn-link o-add-global-filter">
                             Add filter
-                        </a>
+                        </button>
                         <t t-set-slot="content">
                             <t t-foreach="unusedGlobalFilters" t-as="filter" t-key="filter.id">
                                 <DropdownItem onSelected="() => this.activateFilter(filter)">
