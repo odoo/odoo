@@ -60,8 +60,11 @@ export class Parallax extends Interaction {
         this.styleBottom = -Math.abs(this.ratio) + "px";
 
         const parallaxType = this.el.dataset.parallaxType;
-        this.isZoomIn = parallaxType === "zoom_in";
-        this.isZoomOut = parallaxType === "zoom_out";
+        // Compatibility: Previously, "zoom_out" and "zoom_in" had their
+        // behavior reversed. The previous "zoom_out" correspond to the
+        // current "zoomIn" type.
+        this.isZoomIn = parallaxType === "zoomIn" || parallaxType === "zoom_out";
+        this.isZoomOut = parallaxType === "zoomOut" || parallaxType === "zoom_in";
 
         this.onScroll();
     }
@@ -83,12 +86,12 @@ export class Parallax extends Interaction {
             Math.max(0, (currentPosition - this.minScrollPos) / scrollRange)
         );
 
-        if (this.isZoomIn) {
+        if (this.isZoomOut) {
             const initialZoom = 1;
             const maxZoom = this.speed + 1;
 
             this.styleTransform = `scale(${initialZoom + (maxZoom - initialZoom) * progress})`;
-        } else if (this.isZoomOut) {
+        } else if (this.isZoomIn) {
             const initialZoom = this.speed + 1;
 
             this.styleTransform = `scale(${initialZoom - (initialZoom - 1) * progress})`;
