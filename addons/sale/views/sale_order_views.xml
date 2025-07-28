@@ -129,8 +129,8 @@
 
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                 <field name="date_order" optional="show" readonly="state in ['cancel', 'sale']"/>
-                <field name="commitment_date" optional="hide"/>
-                <field name="expected_date" optional="hide"/>
+                <field name="commitment_date" optional="hide" widget="datetime_placeholder_field" options="{'placeholder_field': 'expected_date'}"/>
+                <field name="expected_date" column_invisible="True"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
@@ -857,8 +857,8 @@
                             <group name="sale_shipping" string="Shipping">
                                 <label for="commitment_date" string="Delivery Date"/>
                                 <div name="commitment_date_div" class="o_row">
-                                    <field name="commitment_date" readonly="state == 'cancel' or locked"/>
-                                    <span name="expected_date_span" invisible="not expected_date" class="text-muted">Expected: <field name="expected_date" class="oe_inline"/></span>
+                                    <field name="commitment_date" readonly="state == 'cancel' or locked" options="{'placeholder_field': 'expected_date'}"/>
+                                    <field name="expected_date" invisible="1"/>
                                 </div>
                             </group>
                             <group name="sale_reporting" string="Tracking">
