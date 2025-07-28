@@ -59,6 +59,8 @@ export class PosData extends Reactive {
 
     async checkConnectivity() {
         try {
+            clearTimeout(this.checkConnectivityTimeout);
+            this.checkConnectivityTimeout = null;
             // Runbot tests will soon be run in dockers with no access to the outside world,
             // so all their interfaces will be disconnected. The problem is that the browser
             // considers itself offline when no interface is connected. However, in this case,
@@ -73,9 +75,17 @@ export class PosData extends Reactive {
 
             this.network.offline = false;
             this.network.warningTriggered = false;
+
+            window.dispatchEvent(new CustomEvent("pos-network-online"));
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 this.network.offline = true;
+                if (navigator.onLine) {
+                    this.checkConnectivityTimeout = setTimeout(
+                        () => this.checkConnectivity(),
+                        2000
+                    );
+                }
             }
         }
     }
