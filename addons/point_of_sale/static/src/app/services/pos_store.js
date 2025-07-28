@@ -162,7 +162,7 @@ export class PosStore extends WithLazyGetterTrap {
             });
         }
 
-        window.addEventListener("online", () => {
+        window.addEventListener("pos-network-online", () => {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
