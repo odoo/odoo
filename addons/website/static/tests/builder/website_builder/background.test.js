@@ -7,7 +7,7 @@ defineWebsiteModels();
 
 test("test parallax zoom", async () => {
     await setupWebsiteAndOpenParallaxOptions();
-    await contains("[data-action-value='zoom_in']").click();
+    await contains("[data-action-value='zoomOut']").click();
     await waitFor("[data-label='Intensity'] input");
     expect(":iframe section").not.toHaveStyle("background-image", { inline: true });
     expect("[data-label='Intensity'] input").toBeVisible();
