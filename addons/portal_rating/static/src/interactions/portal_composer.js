@@ -89,26 +89,24 @@ patch(PortalComposer.prototype, {
      * @override
      */
     prepareMessageData() {
-        const options = super.prepareMessageData(...arguments);
         if (this.options.force_submit_url === "/mail/message/update_content") {
             return {
-                body: this.options.post_data.body,
                 hash: this.options.hash,
                 message_id: parseInt(this.options.default_message_id),
                 update_data: {
-                    body: this.options.post_data.body,
-                    attachment_ids: this.options.post_data.attachment_ids,
+                    attachment_ids: this.attachments.map((a) => a.id),
                     attachment_tokens: this.attachments.map((a) => a.ownership_token),
+                    body: this.el.querySelector('textarea[name="message"]').value,
+                    rating_value: this.ratingInputEl.value,
                 },
                 pid: this.options.pid,
-                rating_value: this.ratingInputEl.value,
                 token: this.options.token,
             };
         }
-        return Object.assign(options || {}, {
-            message_id: this.options.default_message_id,
-            post_data: { ...options.post_data, rating_value: this.ratingInputEl.value },
-        });
+        const res = super.prepareMessageData(...arguments)
+        res.message_id = this.options.default_message_id;
+        res.post_data.rating_value = this.ratingInputEl.value;
+        return res;
     },
 
     onClickStar(ev, oldFn, currentTargetEl) {
