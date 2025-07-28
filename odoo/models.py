@@ -3648,6 +3648,20 @@ class BaseModel(metaclass=MetaModel):
                     # patch the field definition by adding an override
                     _logger.debug("Patching %s.%s with translate=True", cls._name, name)
                     fields_.append(type(fields_[0])(translate=True))
+            if f'{cls._name}.{name}' in cls.pool._database_company_dependent_fields:
+                # the field is currently company dependent in the database; ensure
+                # the field is company dependent to avoid converting its column to
+                # the base data type
+                company_dependent = next((
+                    field._args__['company_dependent'] for field in reversed(fields_) if 'company_dependent' in field._args__
+                ), False)
+                if not company_dependent:
+                    # validate column type again in case the column type is changed by upgrade script
+                    rows = self.env.execute_query(SQL('SELECT data_type FROM information_schema.columns WHERE table_name = %s AND column_name = %s', cls._table, name))
+                    if rows and rows[0][0] == 'jsonb':
+                        # patch the field definition by adding an override
+                        _logger.warning("Patching %s.%s with company_dependent=True", cls._name, name)
+                        fields_.append(type(fields_[0])(company_dependent=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
