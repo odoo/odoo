@@ -636,6 +636,24 @@ class TestEventData(TestEventInternalsCommon):
         self.env['event.registration'].create(new_open_registration)
         reg_draft.write({'state': 'open'})
 
+    @users('user_eventmanager')
+    def test_event_external_description_with_hidden_value(self):
+        """Ensure `_get_external_description` works properly with hidden values in sections."""
+        event = self.event_0.with_user(self.env.user)
+        event.description = (
+            "<div class=\"oe_structure\">"
+            "<h5>Visible Title</h5>"
+            "<section class=\"s_countdown d-none\">"
+            "<h2>Hidden Content</h2>"
+            "</section>"
+            "<p>Visible End</p>"
+            "</div>"
+        )
+        external_description = event._get_external_description()
+        self.assertIn("Visible Title", external_description)
+        self.assertIn("Visible End", external_description)
+        self.assertNotIn("Hidden Content", external_description)
+
 
 @tagged('event_registration')
 class TestEventRegistrationData(TestEventInternalsCommon):
