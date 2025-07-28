@@ -346,12 +346,7 @@ export class Message extends Record {
     isEmpty = Record.attr(false, {
         /** @this {import("models").Message} */
         compute() {
-            return (
-                this.isBodyEmpty &&
-                this.attachment_ids.length === 0 &&
-                this.trackingValues.length === 0 &&
-                !this.subtype_description
-            );
+            return this.computeIsEmpty();
         },
     });
     isBodyEmpty = Record.attr(undefined, {
@@ -374,6 +369,15 @@ export class Message extends Record {
             );
         },
     });
+
+    computeIsEmpty() {
+        return (
+            this.isBodyEmpty &&
+            this.attachment_ids.length === 0 &&
+            this.trackingValues.length === 0 &&
+            !this.subtype_description
+        );
+    }
 
     /**
      * Determines if the link preview is actually the main content of the
@@ -483,6 +487,7 @@ export class Message extends Record {
         if (this.hasLink && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
+        return data;
     }
 
     async react(content) {
@@ -501,15 +506,19 @@ export class Message extends Record {
     }
 
     async remove() {
-        await rpc("/mail/message/update_content", {
+        const data = await rpc("/mail/message/update_content", this.removeParams);
+        this.store.insert(data, { html: true });
+        return data;
+    }
+
+    get removeParams() {
+        return {
             attachment_ids: [],
             attachment_tokens: [],
             body: "",
             message_id: this.id,
             ...this.thread.rpcParams,
-        });
-        this.body = "";
-        this.attachment_ids = [];
+        };
     }
 
     async setDone() {

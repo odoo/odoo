@@ -741,7 +741,8 @@ class WebsiteSlides(WebsiteProfile):
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('subtype_id', '=', subtype_comment_id)
+                ('subtype_id', '=', subtype_comment_id),
+                ("rating_ids", "!=", False),
             ], order='write_date DESC', limit=1)
 
             if last_message:

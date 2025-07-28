@@ -12,7 +12,7 @@ patch(Message.prototype, {
             (channel) => channel !== undefined
         );
         const allChannels = this.store.Thread.insert([...validChannels, ...mentionedChannels]);
-        super.edit(body, attachments, {
+        return await super.edit(body, attachments, {
             mentionedChannels: allChannels,
             mentionedPartners,
         });
