@@ -29,7 +29,7 @@ export class RestaurantFloor extends models.ServerModel {
         {
             id: 3,
             name: "Patio",
-            background_color: "rgb(130, 233, 171)",
+            background_color: "white",
             table_ids: [14, 15, 16],
             sequence: 1,
             pos_config_ids: [1],
