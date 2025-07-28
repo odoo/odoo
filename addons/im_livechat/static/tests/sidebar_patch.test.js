@@ -405,6 +405,7 @@ test("Message unread counter", async () => {
 test("unknown livechat can be displayed and interacted with", async () => {
     mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [

@@ -162,6 +162,7 @@ test("Message (hard) delete notification", async () => {
     // Note: This isn't a notification from when user click on "Delete message" action:
     // this happens when mail_message server record is effectively deleted (unlink)
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",
         model: "res.partner",
@@ -178,12 +179,12 @@ test("Message (hard) delete notification", async () => {
     await openDiscuss();
     await click("[title='Mark as Todo']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
-    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { text: "1" }] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
 });

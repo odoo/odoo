@@ -4,13 +4,7 @@
         <xpath expr="//*[@name='empty-message']" position="replace">
             <t t-if="props.thread.isEmpty and props.thread.model === 'mail.box'">
                 <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
-                    <div t-if="store.self.main_user_id?.notification_type !== 'inbox'" class="align-items-center text-center">
-                        <h4 class="mb-3 fw-bolder">Your inbox is empty</h4>
-                        <t t-esc="preferenceButtonText.before"/>
-                        <button class="btn btn-link m-0 p-0 align-baseline o-hover-text-underline" t-on-click="onClickPreferences" t-esc="preferenceButtonText.inside"/>
-                        <t t-esc="preferenceButtonText.after"/>
-                    </div>
-                    <div t-else="" class="align-items-center text-center">
+                    <div class="align-items-center text-center">
                         <h4 class="mb-3 fw-bolder">Congratulations, your inbox is empty</h4>
                         New messages appear here.
                     </div>
