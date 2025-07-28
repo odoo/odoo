@@ -20,26 +20,15 @@ class ProductsItemOptionPlugin extends Plugin {
         "getRibbons",
         "deleteRibbon",
         "setRibbon",
+        "loadInfo",
+        "getItemSize",
+        "getCount",
     ];
     itemSize = reactive({ x: 1, y: 1 });
     count = reactive({ value: 0 });
 
     resources = {
-        builder_options: [
-            {
-                OptionComponent: ProductsItemOption,
-                props: {
-                    loadInfo: this.loadInfo.bind(this),
-                    itemSize: this.itemSize,
-                    count: this.count,
-                },
-                selector: "#products_grid .oe_product",
-                editableOnly: false,
-                title: _t("Product"),
-                groups: ["website.group_website_designer"],
-            },
-        ],
-
+        builder_options: [ProductsItemOption],
         builder_actions: {
             SetItemSizeAction,
             ChangeSequenceAction,
@@ -76,6 +65,12 @@ class ProductsItemOptionPlugin extends Plugin {
         this.originalRibbons = JSON.parse(JSON.stringify(this.ribbonsObject));
 
         return [this.ribbons, this.defaultSort];
+    }
+    getItemSize() {
+        return this.itemSize;
+    }
+    getCount() {
+        return this.count;
     }
 
     async loadRibbons() {

@@ -9,26 +9,26 @@ export const DYNAMIC_SNIPPET_CAROUSEL = DYNAMIC_SNIPPET;
 
 class DynamicSnippetCarouselOptionPlugin extends Plugin {
     static id = "dynamicSnippetCarouselOption";
-    static shared = ["setOptionsDefaultValues", "updateTemplateSnippetCarousel"];
+    static shared = [
+        "setOptionsDefaultValues",
+        "updateTemplateSnippetCarousel",
+        "getModelNameFilter",
+    ];
     static dependencies = ["dynamicSnippetOption"];
-    selector = ".s_dynamic_snippet_carousel";
     modelNameFilter = "";
     resources = {
         builder_actions: {
             SetCarouselSliderSpeedAction,
         },
-        builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, {
-            OptionComponent: DynamicSnippetCarouselOption,
-            props: {
-                modelNameFilter: this.modelNameFilter,
-            },
-            selector: this.selector,
-        }),
+        builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, DynamicSnippetCarouselOption),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
+    getModelNameFilter() {
+        return this.modelNameFilter;
+    }
     onTemplateUpdated({ el, template }) {
-        if (el.matches(this.selector)) {
+        if (el.matches(DynamicSnippetCarouselOption.selector)) {
             this.updateTemplateSnippetCarousel(el, template);
         }
     }
@@ -45,7 +45,7 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
         }
     }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(this.selector)) {
+        if (snippetEl.matches(DynamicSnippetCarouselOption.selector)) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
     }

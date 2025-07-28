@@ -16,6 +16,7 @@ import { registry } from "@web/core/registry";
 import { HeaderBorderOption } from "./header_border_option";
 import { HeaderElementOption } from "./header_element_option";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 const [
     HEADER_TEMPLATE,
@@ -39,56 +40,55 @@ export {
     HEADER_END,
 };
 
+export class HeaderTemplateOption extends BaseOptionComponent {
+    static template = "website.headerTemplateOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderContentWidthOption extends BaseOptionComponent {
+    static template = "website.headerContentWidthOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderSidebarWidthOption extends BaseOptionComponent {
+    static template = "website.headerSidebarWidthOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderBackgroundOption extends BaseOptionComponent {
+    static template = "website.headerBackgroundOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderScrollEffectOption extends BaseOptionComponent {
+    static template = "website.headerScrollEffectOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite"];
 
     resources = {
         builder_options: [
-            withSequence(HEADER_TEMPLATE, {
-                editableOnly: false,
-                template: "website.headerTemplateOption",
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, {
-                editableOnly: false,
-                template: "website.headerContentWidthOption",
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, {
-                editableOnly: false,
-                template: "website.headerSidebarWidthOption",
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, {
-                editableOnly: false,
-                template: "website.headerBackgroundOption",
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
-            }),
+            withSequence(HEADER_TEMPLATE, HeaderTemplateOption),
+            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, HeaderContentWidthOption),
+            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, HeaderSidebarWidthOption),
+            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, HeaderBackgroundOption),
             // TODO Header box (border & shadow) ?
-            withSequence(HEADER_SCROLL_EFFECT, {
-                editableOnly: false,
-                template: "website.headerScrollEffectOption",
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(HEADER_ELEMENT, {
-                editableOnly: false,
-                OptionComponent: HeaderElementOption,
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
-            }),
-            withSequence(HEADER_BORDER, {
-                editableOnly: false,
-                OptionComponent: HeaderBorderOption,
-                selector: "#wrapwrap > header",
-                applyTo: ".navbar:not(.d-none)",
-                groups: ["website.group_website_designer"],
-            }),
+            withSequence(HEADER_SCROLL_EFFECT, HeaderScrollEffectOption),
+            withSequence(HEADER_ELEMENT, HeaderElementOption),
+            withSequence(HEADER_BORDER, HeaderBorderOption),
         ],
         builder_actions: {
             StyleActionHeaderAction,

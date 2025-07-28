@@ -8,21 +8,12 @@ import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
 import { WebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
-    static shared = ["getDisabledOtherZoomViews"];
+    static shared = ["getDisabledOtherZoomViews", "getZoomLevels"];
     resources = {
-        builder_options: {
-            OptionComponent: ProductPageOption,
-            props: {
-                getZoomLevels: this.getZoomLevels.bind(this),
-            },
-            selector: productPageSelector,
-            editableOnly: false,
-            title: _t("Product Page"),
-        },
+        builder_options: ProductPageOption,
         builder_actions: {
             ProductPageImageWidthAction,
             ProductPageImageLayoutAction,
@@ -33,7 +24,7 @@ class ProductPageOptionPlugin extends Plugin {
             ProductRemoveAllExtraImagesAction,
         },
         clean_for_save_handlers: ({ root: el }) => {
-            const mainEl = el.querySelector(productPageSelector);
+            const mainEl = el.querySelector(ProductPageOption.selector);
             if (!mainEl) {
                 return;
             }
@@ -59,7 +50,7 @@ class ProductPageOptionPlugin extends Plugin {
         },
     };
     setup() {
-        const mainEl = this.document.querySelector(productPageSelector);
+        const mainEl = this.document.querySelector(ProductPageOption.selector);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
@@ -75,7 +66,7 @@ class ProductPageOptionPlugin extends Plugin {
             this.productPageGrid = mainEl.querySelector("#o-grid-product");
         }
     }
-    
+
     getZoomLevels() {
         const hasImages = this.productDetailMain.dataset.image_width != "none";
         const isFullImage = this.productDetailMain.dataset.image_width == "100_pc";
@@ -173,7 +164,7 @@ export class BaseProductPageAction extends BuilderAction {
     static id = "baseProductPage";
     setup() {
         this.reload = {};
-        const mainEl = this.document.querySelector(productPageSelector);
+        const mainEl = this.document.querySelector(ProductPageOption.selector);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');

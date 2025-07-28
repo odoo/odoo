@@ -4,6 +4,7 @@ import { fonts } from "@html_editor/utils/fonts";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class AlertOptionPlugin extends Plugin {
     static id = "alertOption";
@@ -11,15 +12,15 @@ class AlertOptionPlugin extends Plugin {
         builder_actions: {
             AlertIconAction,
         },
-        builder_options: [
-            withSequence(before(WIDTH), {
-                template: "html_builder.AlertOption",
-                selector: ".s_alert",
-                name: "alertTypeOption",
-            }),
-        ],
+        builder_options: [withSequence(before(WIDTH), AlertOption)],
         so_content_addition_selector: [".s_alert"],
     };
+}
+
+export class AlertOption extends BaseOptionComponent {
+    static template = "html_builder.AlertOption";
+    static selector = ".s_alert";
+    static name = "alertTypeOption";
 }
 
 export class AlertIconAction extends BuilderAction {

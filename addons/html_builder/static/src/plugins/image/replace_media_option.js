@@ -2,7 +2,10 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class ReplaceMediaOption extends BaseOptionComponent {
     static template = "html_builder.ReplaceMediaOption";
-    static props = {};
+    static selector = "img, .media_iframe_video, span.fa, i.fa";
+    static exclude =
+        "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
+    static name = "replaceMediaOption";
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({

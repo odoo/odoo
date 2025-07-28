@@ -3,8 +3,9 @@ import { BorderConfigurator } from "@html_builder/plugins/border_configurator_op
 
 export class ImageGalleryComponent extends BaseOptionComponent {
     static template = "website.ImageGalleryOption";
+    static selector = ".s_image_gallery";
+
     static components = { BorderConfigurator };
-    static props = {};
 
     setup() {
         super.setup();

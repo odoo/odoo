@@ -18,6 +18,10 @@ import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 
+/**
+ * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
+ */
+
 function isConnectedElement(el) {
     return el && el.isConnected && !!el.ownerDocument.defaultView;
 }
@@ -616,7 +620,7 @@ function useOperationWithReload(callApply, reload) {
         await callApply(...args);
         env.editor.shared.history.addStep();
         await env.editor.shared.savePlugin.save();
-        const target = env.editor.shared["builderOptions"].getReloadSelector(editingElement);
+        const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
         const url = reload.getReloadUrl?.();
         await env.editor.config.reloadEditor({ target, url });
     };
@@ -990,15 +994,39 @@ export function convertParamToObject(param) {
     }
     return param;
 }
+
 export class BaseOptionComponent extends Component {
     static components = {};
     static props = {};
     static template = "";
 
     setup() {
+        /** @type {EditorContext} */
+        const context = this.env.editor.shared.builderOptions.getBuilderOptionContext(
+            this.constructor
+        );
+        /** @type { EditorContext['document'] } **/
+        this.document = context.document;
+        this.window = context.document.defaultView;
+        /** @type { EditorContext['editable'] } **/
+        this.editable = context.editable;
+        /** @type { EditorContext['config'] } **/
+        this.config = context.config;
+        /** @type { EditorContext['services'] } **/
+        this.services = context.services;
+        /** @type { EditorContext['dependencies'] } **/
+        this.dependencies = context.dependencies;
+        /** @type { EditorContext['getResource'] } **/
+        this.getResource = context.getResource;
+        /** @type { EditorContext['dispatchTo'] } **/
+        this.dispatchTo = context.dispatchTo;
+        /** @type { EditorContext['delegateTo'] } **/
+        this.delegateTo = context.delegateTo;
+
         this.isActiveItem = useIsActiveItem();
         const comp = useComponent();
         const editor = comp.env.editor;
+
         if (!comp.constructor.components) {
             comp.constructor.components = {};
         }

@@ -2,6 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class BorderConfigurator extends BaseOptionComponent {
     static template = "html_builder.BorderConfiguratorOption";
+    static dependencies = ["builderActions"];
     static props = {
         label: { type: String },
         direction: { type: String, optional: true },
@@ -30,7 +31,7 @@ export class BorderConfigurator extends BaseOptionComponent {
         return property;
     }
     hasBorder(editingElement) {
-        const getAction = this.env.editor.shared.builderActions.getAction;
+        const { getAction } = this.dependencies.builderActions;
         const styleActionValue = getAction("styleAction").getValue({
             editingElement,
             params: {

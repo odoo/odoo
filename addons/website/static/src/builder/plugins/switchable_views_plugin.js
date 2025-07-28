@@ -6,22 +6,11 @@ import { SwitchableViews } from "./switchable_views";
 export class SwitchableViewsPlugin extends Plugin {
     static id = "switchableViews";
     static dependencies = ["customizeWebsite"];
+    static shared = ["getSwitchableRelatedViews"];
 
     resources = {
-        builder_options: {
-            OptionComponent: SwitchableViews,
-            selector: ".o_portal_wrap",
-            props: {
-                getSwitchableRelatedViews: this.getSwitchableRelatedViews.bind(this),
-            },
-            groups: ["website.group_website_designer"],
-            editableOnly: false,
-        },
+        builder_options: [SwitchableViews],
     };
-
-    setup() {
-        this.prom = null;
-    }
 
     getSwitchableRelatedViews() {
         if (!this.prom) {

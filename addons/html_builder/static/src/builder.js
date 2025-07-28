@@ -160,7 +160,6 @@ export class Builder extends Component {
                         wrapWithSaveSnippetHandlers
                     ),
                 snippetModel: this.snippetModel,
-                getShared: () => this.editor.shared,
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
                 allowTargetBlank: true,
@@ -266,7 +265,7 @@ export class Builder extends Component {
         this.setTab(tab);
         // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
         if (tab === "theme" || tab === "blocks") {
-            this.editor.shared["builderOptions"].deactivateContainers();
+            this.editor.shared.builderOptions.deactivateContainers();
         }
     }
 

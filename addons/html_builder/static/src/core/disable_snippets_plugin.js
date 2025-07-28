@@ -40,7 +40,7 @@ export class DisableSnippetsPlugin extends Plugin {
      * TODO: trigger the computation in the situation that needs it.
      */
     disableUndroppableSnippets() {
-        const editableAreaEls = this.dependencies["setup_editor_plugin"].getEditableAreas();
+        const editableAreaEls = this.dependencies.setup_editor_plugin.getEditableAreas();
         const rootEl = this.dependencies.dropzone.getDropRootElement();
         const dropAreasBySelector = this.getDropAreas(editableAreaEls, rootEl);
 
