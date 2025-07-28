@@ -77,7 +77,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.4rem;
-    left: -3px;
+    left: 0px;
 
     .o-mail-DiscussSidebarChannel-container.o-bordered & {
         &.o-mail-DiscussSidebarChannel, &.o-compact {
@@ -86,7 +86,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     }
 
     .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
-        left: map-get($spacers, 2) + map-get($spacers, 1) / 2;
+        left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
     }
 }
 
