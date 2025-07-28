@@ -36,7 +36,6 @@ from odoo.tools import (
 )
 from odoo.tools.mail import email_re, email_split, is_html_empty, generate_tracking_message_id
 from odoo.tools.misc import StackMap
-from odoo.fields import Domain
 
 
 _logger = logging.getLogger(__name__)
@@ -1339,25 +1338,6 @@ class AccountMove(models.Model):
                     }
 
     def _compute_payments_widget_to_reconcile_info(self):
-        def get_common_domain(commercial_partner_id):
-            return [
-                ('parent_state', '=', 'posted'),
-                ('partner_id', '=', commercial_partner_id),
-                ('partner_id', '!=', False),
-            ]
-
-        def append_payment_widget_vals(move, line, amount):
-            if move.currency_id.is_zero(amount):
-                return
-            payments_widget_vals['content'].append({
-                'journal_name': line.ref or line.move_id.name,
-                'amount': amount,
-                'currency_id': move.currency_id.id,
-                'id': line.id,
-                'move_id': line.move_id.id,
-                'date': fields.Date.to_string(line.date),
-                'account_payment_id': line.payment_id.id,
-            })
 
         for move in self:
             move.invoice_outstanding_credits_debits_widget = False
@@ -1372,21 +1352,14 @@ class AccountMove(models.Model):
             pay_term_lines = move.line_ids\
                 .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
-            domain = Domain(get_common_domain(move.commercial_partner_id.id)) & Domain([
-                    ('account_id', 'in', pay_term_lines.account_id.ids),
-                    ('balance', '<' if move.is_inbound() else '>', 0.0),
-                    ('reconciled', '=', False),
-                ])
-            bank_domain = Domain(get_common_domain(move.commercial_partner_id.id)) & Domain([
-                    ('account_id.account_type', '=', 'asset_cash'),
-                    ('journal_id', 'in', self.env['account.journal']._search([
-                        *self.env['account.journal']._check_company_domain(move.company_id.id),
-                        ('type', '=', 'bank')
-                    ])),
-                    ('balance', '>' if move.is_inbound() else '<', 0.0),
-                    ('statement_line_id', '!=', False),
-                    ('move_id.line_ids', 'any', [('account_id', '=', move.company_id.account_journal_suspense_account_id.id)])
-                ])
+            domain = [
+                ('account_id', 'in', pay_term_lines.account_id.ids),
+                ('parent_state', '=', 'posted'),
+                ('partner_id', '=', move.commercial_partner_id.id),
+                ('reconciled', '=', False),
+                ('balance', '<' if move.is_inbound() else '>', 0.0),
+                '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
+            ]
 
             payments_widget_vals = {
                 'outstanding': True,
@@ -1407,24 +1380,19 @@ class AccountMove(models.Model):
                         move.company_id,
                         line.date,
                     )
-                append_payment_widget_vals(move, line, amount)
 
-            for line in self.env['account.move.line'].search(bank_domain):
-                st_line = line.statement_line_id
-                if st_line.line_ids.filtered(lambda l: l.reconciled):
+                if move.currency_id.is_zero(amount):
                     continue
-                if st_line.foreign_currency_id == move.currency_id:
-                    amount = abs(st_line.amount_residual)
-                elif st_line.currency_id == move.currency_id:
-                    amount = abs(st_line.amount)
-                else:
-                    amount = st_line.foreign_currency_id._convert(
-                        from_amount=abs(st_line.amount_residual),
-                        to_currency=move.currency_id,
-                        company=move.company_id,
-                        date=line.date,
-                    )
-                append_payment_widget_vals(move, line, amount)
+
+                payments_widget_vals['content'].append({
+                    'journal_name': line.ref or line.move_id.name,
+                    'amount': amount,
+                    'currency_id': move.currency_id.id,
+                    'id': line.id,
+                    'move_id': line.move_id.id,
+                    'date': fields.Date.to_string(line.date),
+                    'account_payment_id': line.payment_id.id,
+                })
 
             if payments_widget_vals['content']:
                 move.invoice_outstanding_credits_debits_widget = payments_widget_vals
@@ -5605,8 +5573,6 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
         lines = self.env['account.move.line'].browse(line_id)
-        if lines.account_id.account_type == 'asset_cash' and lines.statement_line_id:
-            return lines.statement_line_id.set_line_bank_statement_line(self.line_ids.filtered(lambda line: line.account_id.account_type in ['asset_receivable', 'liability_payable']).ids)
         lines += self.line_ids.filtered(lambda line: line.account_id == lines.account_id and not line.reconciled)
         return lines.reconcile()
 
@@ -5617,10 +5583,7 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
         partial = self.env['account.partial.reconcile'].browse(partial_id)
-        if st_line := self.statement_line_id:
-            st_line.delete_reconciled_line(self.line_ids.filtered(lambda line: line.account_id.account_type in ['asset_receivable', 'liability_payable']).ids)
-        else:
-            partial.unlink()
+        partial.unlink()
 
     def button_set_checked(self):
         for move in self:
