@@ -8,11 +8,15 @@
   <cbc:UUID>___ignore___</cbc:UUID>
   <cbc:IssueDate>2025-06-24</cbc:IssueDate>
   <cbc:InvoiceTypeCode>SATIS</cbc:InvoiceTypeCode>
-  <cbc:Note>YALNIZ : YÜZONBEŞ TRY SIFIR KURUS</cbc:Note>
-  <cbc:Note>YALNIZ : YÜZONBEŞ USD SIFIR CENTS</cbc:Note>
+  <cbc:Note>YALNIZ : YÜZÜÇ TRY ELLI KURUS</cbc:Note>
+  <cbc:Note>YALNIZ : YÜZÜÇ USD ELLI CENTS</cbc:Note>
   <cbc:Note>KUR : 1.000000 TL</cbc:Note>
   <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
   <cbc:LineCountNumeric>3</cbc:LineCountNumeric>
+  <cac:InvoicePeriod>
+    <cbc:StartDate>2025-07-01</cbc:StartDate>
+    <cbc:EndDate>2025-07-31</cbc:EndDate>
+  </cac:InvoicePeriod>
   <cac:OrderReference>
     <cbc:ID>INV/2025/00001</cbc:ID>
     <cbc:IssueDate>2025-06-24</cbc:IssueDate>
@@ -95,11 +99,16 @@
     <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
     <cbc:PaymentDueDate>2025-06-24</cbc:PaymentDueDate>
   </cac:PaymentMeans>
+  <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+    <cbc:Amount currencyID="USD">10.00</cbc:Amount>
+  </cac:AllowanceCharge>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="USD">15.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="USD">13.50</cbc:TaxAmount>
     <cac:TaxSubtotal>
-      <cbc:TaxableAmount currencyID="USD">100.00</cbc:TaxableAmount>
-      <cbc:TaxAmount currencyID="USD">15.00</cbc:TaxAmount>
+      <cbc:TaxableAmount currencyID="USD">90.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="USD">13.50</cbc:TaxAmount>
       <cbc:Percent>15.0</cbc:Percent>
       <cac:TaxCategory>
         <cac:TaxScheme>
@@ -110,21 +119,25 @@
     </cac:TaxSubtotal>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
-    <cbc:LineExtensionAmount currencyID="USD">100.00</cbc:LineExtensionAmount>
-    <cbc:TaxExclusiveAmount currencyID="USD">100.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="USD">115.00</cbc:TaxInclusiveAmount>
-    <cbc:AllowanceTotalAmount currencyID="USD">0.00</cbc:AllowanceTotalAmount>
-    <cbc:PayableAmount currencyID="USD">115.00</cbc:PayableAmount>
+    <cbc:LineExtensionAmount currencyID="USD">90.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="USD">90.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="USD">103.50</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="USD">10.00</cbc:AllowanceTotalAmount>
+    <cbc:PayableAmount currencyID="USD">103.50</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
     <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="USD">100.00</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="USD">90.00</cbc:LineExtensionAmount>
+    <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+      <cbc:Amount currencyID="USD">10.00</cbc:Amount>
+    </cac:AllowanceCharge>
     <cac:TaxTotal>
-      <cbc:TaxAmount currencyID="USD">15.00</cbc:TaxAmount>
+      <cbc:TaxAmount currencyID="USD">13.50</cbc:TaxAmount>
       <cac:TaxSubtotal>
-        <cbc:TaxableAmount currencyID="USD">100.00</cbc:TaxableAmount>
-        <cbc:TaxAmount currencyID="USD">15.00</cbc:TaxAmount>
+        <cbc:TaxableAmount currencyID="USD">90.00</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="USD">13.50</cbc:TaxAmount>
         <cbc:Percent>15.0</cbc:Percent>
         <cac:TaxCategory>
           <cac:TaxScheme>

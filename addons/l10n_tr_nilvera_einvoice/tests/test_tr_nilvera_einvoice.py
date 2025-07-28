@@ -144,7 +144,7 @@ class TestTRNilveraEInvoice(AccountTestInvoicingCommon):
 
             cls.partner.flush_recordset()
 
-    def _generate_invoice_xml(self):
+    def _generate_invoice_xml(self, register_payment=False, payment_amount=0):
         invoice = self.env['account.move'].create({
             'company_id': self.company_data['company'].id,
             'move_type': 'out_invoice',
@@ -155,11 +155,20 @@ class TestTRNilveraEInvoice(AccountTestInvoicingCommon):
                 Command.create({
                     'product_id': self.product_a.id,
                     'price_unit': 100,
+                    'discount': 10,
+                    'deferred_start_date': '2025-07-01',
+                    'deferred_end_date': '2025-07-31',
                 }),
             ],
         })
 
         invoice.action_post()
+
+        if register_payment:
+            action = invoice.action_register_payment()
+            self.env['account.payment.register'].with_context(action['context']).create(
+                {'amount': payment_amount}
+            )._create_payments()
 
         generated_xml = BytesIO(self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0])
         generated_xml.name = 'invoice.xml'
@@ -168,6 +177,17 @@ class TestTRNilveraEInvoice(AccountTestInvoicingCommon):
 
     def test_generate_xml(self):
         generated_xml, _ = self._generate_invoice_xml()
+
+        with file_open('l10n_tr_nilvera_einvoice/tests/test_files/invoice.xml', 'rb') as expected_file:
+            expected_xml = expected_file.read()
+
+        self.assertXmlTreeEqual(
+            self.get_xml_tree_from_string(generated_xml.read()),
+            self.get_xml_tree_from_string(expected_xml)
+        )
+
+    def test_generate_xml_after_payment_registered(self):
+        generated_xml, _ = self._generate_invoice_xml(register_payment=True, payment_amount=50)
 
         with file_open('l10n_tr_nilvera_einvoice/tests/test_files/invoice.xml', 'rb') as expected_file:
             expected_xml = expected_file.read()
