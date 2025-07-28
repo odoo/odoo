@@ -66,19 +66,19 @@ msgstr "%(name)sのタイムシート"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s (%(days)s日)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)s時間%(minutes)s分)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)s時間)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -164,6 +164,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        おっと! 削除しようとしている従業員には、まだ未処理のタイムシートが残っているため、削除できません。\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            それらのタイムシートを削除するか、代わりに従業員をアーカイブすることを検討してください。\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            まずは、その従業員のすべてのタイムシートを削除してください。\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        これらの従業員を本当に削除しますか?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -330,7 +342,7 @@ msgstr "顧客に電話し、プロジェクトについて話す"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "タイムシートを作成する従業員を選択してください。"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -338,7 +350,7 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected employees on the chosen dates"
-msgstr ""
+msgstr "日付をクリックするか、日付範囲を選択して、選択された従業員のタイムシートをその期間で作成します。"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -346,14 +358,14 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected project on the chosen dates"
-msgstr ""
+msgstr "日付をクリックするか、日付範囲を選択して、選択されたプロジェクトのタイムシートをその期間で作成します。"
 
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar_my_timesheets/timesheet_calendar_my_timesheets_side_panel/timesheet_calendar_my_timesheets_side_panel.xml:0
 msgid ""
 "Click on a day or select a range of days to permanently delete its contents"
-msgstr ""
+msgstr "日付をクリックするか、日付範囲を選択して、その内容を完全に削除します。"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -570,7 +582,7 @@ msgstr "追加時間"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_side_panel/timesheet_calendar_side_panel.xml:0
 msgid "Filter by specific employees to view only their timesheets"
-msgstr ""
+msgstr "特定の従業員でフィルタして、その人のタイムシートのみを表示します。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -785,7 +797,7 @@ msgstr "取引先"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "カレンダービューで従業員に対する個人用フィルタ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -941,7 +953,7 @@ msgstr "管理設定"
 msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
-msgstr ""
+msgstr "これらのタスクに紐づいているタイムシートの記録があります!それらを削除すると、タスクを削除できます。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1476,7 +1488,7 @@ msgstr "日付"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "例: メール送信"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

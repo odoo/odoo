@@ -198,10 +198,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Leveringsdatoen du kan love din kunde, udregnet fra minimums ledetiden for "
-"ordrelinjerne i tilfælde af service produkter. I tilfælde af forsendelser, "
-"vil der blive taget højde for forsendelsens policen for ordren, til enten at"
-" bruge minimum eller maksimum ledetiden for ordrelinjerne."
+"Den leveringsdato, du kan love kunden, beregnes ud fra den korteste "
+"gennemløbstid for ordrelinjerne ved serviceprodukter. Ved fysiske "
+"forsendelser tages der højde for ordrens forsendelsespolitik, hvor enten den"
+" korteste eller længste gennemløbstid for ordrelinjerne anvendes."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
@@ -333,8 +333,8 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Hvis du levere alle produkter samtidigt, vil leveringsordren blive planlagt "
-"ud fra den længste produkt ledetid. Ellers vil den være baseret på den "
+"Hvis du leverer alle produkter samtidigt, vil leveringsordren blive planlagt"
+" ud fra den længste produkttid. Hvis ikke, vil den blive baseret på den "
 "korteste."
 
 #. module: sale_stock
@@ -415,7 +415,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr "Leveringstid"
+msgstr "Gennemløbstid"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
@@ -648,12 +648,12 @@ msgstr "Planlagt dato"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "Sikkerhedsmargin"
+msgstr "Sikkerhedsgennemløbstid for produktion"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "Sikkerhedsmargin ved salg"
+msgstr "Sikkerhedsgennemløbstid for salg"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
@@ -751,7 +751,7 @@ msgstr "Dette produkt genopfyldes per efterspørgsel."
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Spor lagerbeholdning"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking

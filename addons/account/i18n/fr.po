@@ -280,13 +280,13 @@ msgstr "%s, ou non applicable"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (extrait de '%(root_filename)s', type=%(type)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (type=%(type)s)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -954,6 +954,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge text-bg-info\">\n"
+"                                        À réviser\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -2162,7 +2165,7 @@ msgstr "Nombre d’écritures comptables"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 msgid "Account Move Line Items"
-msgstr ""
+msgstr "Lignes d'écriture comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -3537,7 +3540,7 @@ msgstr "Pièce jointe"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Attachment %(filename)s not imported: %(reason)s"
-msgstr ""
+msgstr "Pièce jointe %(filename)s non importée : %(reason)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
@@ -4246,7 +4249,7 @@ msgstr "Budgets"
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
 msgid "Business document import mixin"
-msgstr ""
+msgstr "Mixin d’importation de document commercial"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -6297,7 +6300,7 @@ msgstr "Compte débiteur par défaut du point de vente"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_tax_id
 msgid "Default Purchase Receipt Tax"
-msgstr ""
+msgstr "Taxe par défaut reçu d'achat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -6308,7 +6311,7 @@ msgstr "Taxe d'achat par défaut"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_receipt_tax_id
 msgid "Default Sale Receipt Tax"
-msgstr ""
+msgstr "Taxe par défaut reçu de vente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -6862,7 +6865,7 @@ msgstr "Afficher le code QR SEPA"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__display_send_button
 msgid "Display Send Button"
-msgstr ""
+msgstr "Afficher le bouton Envoyer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__display_type
@@ -7499,7 +7502,7 @@ msgstr "Fonds propres"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
+msgstr "Erreur d’importation pièce jointe %(filename)s :"
 
 #. module: account
 #. odoo-python
@@ -7543,7 +7546,7 @@ msgstr "TVA Union européenne"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Even magicians can't post nothing!"
-msgstr ""
+msgstr "Même les magiciens ne peuvent comptabiliser... rien du tout !"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -8589,7 +8592,7 @@ msgstr "Nom le plus élevé"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highlight_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__highlight_send_button
 msgid "Highlight Send Button"
-msgstr ""
+msgstr "Mettre en évidence le bouton Envoyer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -10600,6 +10603,8 @@ msgstr "Verrouiller les champs fiduciaires"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
 msgstr ""
+"Consigner de façon immuable les modifications des écritures comptables "
+"validées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11749,6 +11754,8 @@ msgid ""
 "Once a document has been posted once, its type is set in stone and you can't"
 " change it anymore."
 msgstr ""
+"Une fois qu’un document a été comptabilisé, son type est figé et ne peut "
+"plus être modifié."
 
 #. module: account
 #. odoo-javascript
@@ -11865,6 +11872,9 @@ msgid ""
 "Oops! You can only change the period or account for items that are not yet "
 "reconciled! Other ones aren't up for an adventure like that!"
 msgstr ""
+"Oups ! Vous pouvez uniquement modifier la période ou le compte pour les "
+"éléments qui n'ont pas encore été lettrés ! Les autres ne sont pas prêts "
+"pour une telle aventure !"
 
 #. module: account
 #. odoo-python
@@ -11873,6 +11883,9 @@ msgid ""
 "Oops! You can only change the period or account for posted entries! Other "
 "ones aren't up for an adventure like that!"
 msgstr ""
+"Oups ! Vous pouvez uniquement modifier la période ou le compte pour les "
+"écritures comptabilisées ! Les autres ne sont pas prêtes pour une telle "
+"aventure !"
 
 #. module: account
 #. odoo-python
@@ -13048,7 +13061,7 @@ msgstr "Produit"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Product Accounts:"
-msgstr ""
+msgstr "Comptes produits :"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
@@ -13154,6 +13167,8 @@ msgid ""
 "Propose to validate bills automatically when AI accuracy is right 3 times in"
 " a row for a vendor."
 msgstr ""
+"Proposer de valider automatiquement les factures lorsqu'une précision "
+"correcte est détectée trois fois de suite par l’IA pour un fournisseur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
@@ -13877,14 +13892,14 @@ msgstr "Revoir le plan comptable"
 #. module: account
 #: model:ir.actions.server,name:account.accountant_confirm_entries_action
 msgid "Review Entries"
-msgstr ""
+msgstr "Réviser les écritures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__checked
 #: model:ir.model.fields,field_description:account.field_account_move__checked
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reviewed"
-msgstr ""
+msgstr "Révisé"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -14739,7 +14754,7 @@ msgstr "Afficher les caractéristiques d'inaltérabilité"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.js:0
 msgid "Show Label Warning"
-msgstr ""
+msgstr "Afficher l’avertissement étiquette"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -15298,7 +15313,7 @@ msgstr "Toutes taxes comprises"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_label
 msgid "Tax Label"
-msgstr ""
+msgstr "Libellé de taxe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
@@ -15673,6 +15688,8 @@ msgid ""
 "The 'Customer' field is required to validate the invoice.\n"
 "You probably don't want to explain to your auditor that you invoiced an invisible man :)"
 msgstr ""
+"Le champ Client est requis pour valider la facture.\n"
+"Vous ne voulez probablement pas expliquer à votre auditeur que vous avez facturé un homme invisible :)"
 
 #. module: account
 #. odoo-python
@@ -16229,7 +16246,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice already contains lines."
-msgstr ""
+msgstr "La facture contient déjà des lignes."
 
 #. module: account
 #. odoo-javascript
@@ -16817,6 +16834,9 @@ msgid ""
 "registration is necessary. You've got your finances under control like a "
 "boss!"
 msgstr ""
+"Il ne reste rien à payer pour les écritures sélectionnées, aucun "
+"enregistrement de paiement n’est nécessaire. Vos finances sont sous "
+"contrôle, comme un pro !"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -16936,6 +16956,7 @@ msgstr ""
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "This document was created from the following attachment(s)."
 msgstr ""
+"Ce document a été créé à partir de la ou des pièce(s) jointe(s) suivante(s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -17286,13 +17307,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "To reverse a journal entry, it has to be posted first."
-msgstr ""
+msgstr "Pour annuler une écriture, celle-ci doit d’abord être comptabilisée."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/char_with_placeholder_field_to_check/char_with_placeholder_field.xml:0
 msgid "To review"
-msgstr ""
+msgstr "À réviser"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17618,6 +17639,9 @@ msgid ""
 "there are still some records referencing them. How about archiving them "
 "instead?"
 msgstr ""
+"Oups ! Ces conditions de paiement sont largement utilisées et ne peuvent pas"
+" être supprimées car elles sont encore référencées par certains "
+"enregistrements. Et si vous les archiviez à la place ?"
 
 #. module: account
 #. odoo-python
@@ -17850,7 +17874,7 @@ msgstr "Mis à jour"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Updated Data"
-msgstr ""
+msgstr "Données mises à jour"
 
 #. module: account
 #. odoo-javascript
@@ -17921,6 +17945,7 @@ msgstr "Utilisé dans la clôture fiscale"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use negative numbers to reverse original entries"
 msgstr ""
+"Utilisez des nombres négatifs pour contrepasser les écritures d’origine"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
@@ -18098,6 +18123,7 @@ msgstr "Validé"
 #: code:addons/account/models/account_move.py:0
 msgid "Validated entries can only be changed by your accountant."
 msgstr ""
+"Seules les écritures validées peuvent être modifiées par votre comptable."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -19219,7 +19245,7 @@ msgstr "Vous n'avez pas le droit de faire confiance ou non à des comptes."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You don't have the access rights to perform this action."
-msgstr ""
+msgstr "Vous n’avez pas les droits d’accès pour effectuer cette action."
 
 #. module: account
 #. odoo-python

@@ -1233,7 +1233,7 @@ msgstr "全ての返品移動"
 msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
-msgstr ""
+msgstr "製品の販売時に、受注生産や購買オーダを自動化し、関連書類同士を直接リンクさせます。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1563,6 +1563,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"利用可能数量(手持数量 - 引当数量 - 除去予定数量)\n"
+"単一のストックロケーションを持つコンテキストでは、このロケーションに格納されている製品、またはその子製品が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーションに保管されている製品またはその子製品が含まれます。\n"
+"それ以外の場合は、「内部」タイプの在庫ロケーションに保管されている製品が含まれます。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -3549,6 +3553,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"予測数量(受注数量 - 受注数量+入庫数量−除去予定数量)\n"
+"単一のストックロケーションを持つコンテキストでは、このロケーションに格納されている製品、またはその子製品が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーションに保管されている製品またはその子製品が含まれます。\n"
+"それ以外の場合は、「内部」タイプの在庫ロケーションに保管されている製品が含まれます。"
 
 #. module: stock
 #. odoo-javascript
@@ -5648,7 +5656,7 @@ msgstr "シリアル/ロット番号を生成するためのプロダクトが�
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr "製品が見つかりません。作ってみよう！"
+msgstr "プロダクトが見つかりません。作成しましょう!"
 
 #. module: stock
 #. odoo-python
@@ -5661,7 +5669,7 @@ msgstr "返品する製品はありません(返品できるのは、完了状�
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 msgid "No putaway rule found. Let's create one!"
-msgstr "入庫規則が見つかりません。作ってみましょう!"
+msgstr "入庫規則が見つかりません。作成しましょう!"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -5701,7 +5709,7 @@ msgstr "表示する在庫なし"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No transfer found. Let's create one!"
-msgstr "転送が見つかりません。作ってみましょう!"
+msgstr "転送が見つかりません。作成しましょう!"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -5859,7 +5867,7 @@ msgstr "手持在庫数"
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
-msgstr ""
+msgstr "移動で引当されておらず、なおかつ「新しい」と見なされる在庫数量(プロダクトのデフォルト単位で表示)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -8062,7 +8070,7 @@ msgstr "廃棄済"
 msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
-msgstr "プロダクトを廃棄すると、在庫から削除されます。プロダクトは廃棄ロケーションに移動され、レポート作成時に使用されます。"
+msgstr "プロダクトを廃棄すると、在庫から除去されます。プロダクトは廃棄ロケーションに移動され、レポート作成時に使用されます。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -9272,6 +9280,7 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"これは受注補充(MTO)ルートをプロダクトに適用できるようにします。販売オーダなどが確定されると、需要に応じて補充が自動的に行われ、関連付けられたと直接リンクされます。プロダクトに設定された補充方法(購買または製造)のルートに基づいて、購買オーダや製造オーダなどが自動的に作成されます。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10548,7 +10557,7 @@ msgid ""
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
 "梱包全体を移動することなく、梱包内の数量を移動しようとしています。\n"
-"これらの数量は次の梱包から削除されます:"
+"これらの数量は次の梱包から除去されます:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
