@@ -34,14 +34,14 @@ class WebsiteParallaxPlugin extends Plugin {
             fixed: 1,
             top: 1.5,
             bottom: -1.5,
-            zoom_in: 1.2,
-            zoom_out: 0.2,
+            zoomIn: 0.2,
+            zoomOut: 1.2,
         };
         editingElement.dataset.scrollBackgroundRatio = typeValues[value];
         // Set a parallax type only if there is a zoom option selected.
         // This is to avoid useless element in the DOM since in the animation
         // we need the type only for zoom options.
-        if (value === "zoom_in" || value === "zoom_out") {
+        if (value === "zoomIn" || value === "zoomOut") {
             editingElement.dataset.parallaxType = value;
         } else {
             delete editingElement.dataset.parallaxType;
@@ -105,6 +105,15 @@ export class SetParallaxTypeAction extends BuilderAction {
         }
         const parallaxType = editingElement.dataset.parallaxType;
         if (parallaxType) {
+            // Compatibility: Previously, "zoom_out" and "zoom_in" had their
+            // behavior reversed. The previous "zoom_out" correspond to the
+            // current "zoomIn" type.
+            if (parallaxType === "zoom_out") {
+                return value === "zoomIn";
+            }
+            if (parallaxType === "zoom_in") {
+                return value === "zoomOut";
+            }
             return value === parallaxType;
         }
         return attributeValue > 0 ? value === "top" : value === "bottom";
