@@ -4772,6 +4772,10 @@ class MailThread(models.AbstractModel):
         return res
 
     @api.model
+    def _get_allowed_message_update_params(self):
+        return {"attachment_ids", "body", "partner_ids"}
+
+    @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
         thread = self.browse(thread_id)
         if thread.exists() and thread.sudo(False).has_access(mode):
