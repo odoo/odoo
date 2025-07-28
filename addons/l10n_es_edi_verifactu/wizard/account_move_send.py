@@ -87,13 +87,11 @@ class AccountMoveSend(models.TransientModel):
         created_document = invoices_to_send._l10n_es_edi_verifactu_mark_for_next_batch()
 
         for invoice in invoices_to_send:
-            # The creation of a document is skipped for `invoice` in case there are waiting documents
-            document = created_document.get(invoice)
-            if document and document.state == 'creating_failed':
+            if not created_document[invoice].chain_index:
                 invoices_data[invoice]['error'] = {
-                    'error_title': _("The Veri*Factu record XML could not be created for all invoices."),
+                    'error_title': _("The Veri*Factu document could not be created for all invoices."),
                     'errors': [_("See the 'Veri*Factu' tab for more information.")],
                 }
 
-        if self._can_commit():
+        if created_document and self._can_commit():
             self._cr.commit()
