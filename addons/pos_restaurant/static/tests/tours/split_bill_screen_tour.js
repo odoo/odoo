@@ -196,7 +196,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             SplitBillScreen.orderlineHas("Combo Product 4", "2", "0"),
             SplitBillScreen.orderlineHas("Combo Product 7", "2", "0"),
 
-            ...SplitBillScreen.subtotalIs("97.14"),
+            ...SplitBillScreen.subtotalIs("97.15"),
             ...SplitBillScreen.clickButton("Split"),
             ProductScreen.totalAmountIs("97.13"),
             ProductScreen.clickPayButton(),

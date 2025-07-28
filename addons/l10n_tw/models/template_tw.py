@@ -35,6 +35,5 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tw_tax_purchase_5',
                 'expense_account_id': 'tw_511100',
                 'income_account_id': 'tw_411100',
-                'tax_calculation_rounding_method': 'round_globally',
             },
         }

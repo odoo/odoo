@@ -35,5 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_cn_purchase_excluded_13',
                 'expense_account_id': 'l10n_cn_account_5401',
                 'income_account_id': 'l10n_cn_account_5001',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }

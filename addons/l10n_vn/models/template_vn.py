@@ -40,5 +40,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_production_wip_account_id': 'chart1542',
                 'default_cash_difference_income_account_id': 'chart711',
                 'default_cash_difference_expense_account_id': 'chart811',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }

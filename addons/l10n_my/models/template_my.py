@@ -29,5 +29,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_sale_tax_id': 'l10n_my_tax_sale_10',
                 'income_account_id': 'l10n_my_41',
                 'expense_account_id': 'l10n_my_51',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }

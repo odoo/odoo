@@ -273,7 +273,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         self._auto_rewards(order, programs)
         # 872.73 - (20% of 1 iPad) = 872.73 - 58.18 = 814.55
-        self.assertAlmostEqual(order.amount_untaxed, 1105.46, 2, "One large cabinet should be discounted by 20%")
+        self.assertAlmostEqual(order.amount_untaxed, 1105.45, 2, "One large cabinet should be discounted by 20%")
 
     def test_free_shipping_reward_last_line(self):
         """

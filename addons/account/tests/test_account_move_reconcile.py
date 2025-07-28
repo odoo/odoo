@@ -4070,7 +4070,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)]).line_ids,
             [
                 {
-                    'debit': 200,
+                    'debit': 200.01,
                     'credit': 0,
                     'amount_currency': 100,
                     'currency_id': currency.id,
@@ -4080,7 +4080,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 },
                 {
                     'debit': 0,
-                    'credit': 200,
+                    'credit': 200.01,
                     'amount_currency': -100,
                     'currency_id': currency.id,
                     'tax_ids': self.cash_basis_tax_a_third_amount.ids,
@@ -4113,7 +4113,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             [
                 {
                     'debit': 0,
-                    'credit': 300,
+                    'credit': 300.01,
                     'amount_currency': -100,
                     'currency_id': currency.id,
                     'tax_ids': [],
@@ -4121,7 +4121,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'tax_tag_ids': [],
                 },
                 {
-                    'debit': 300,
+                    'debit': 300.01,
                     'credit': 0,
                     'amount_currency': 100,
                     'currency_id': currency.id,

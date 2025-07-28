@@ -40,6 +40,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'uae_purchase_tax_5',
                 'expense_account_id': 'uae_account_400001',
                 'income_account_id': 'uae_account_500001',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }
 

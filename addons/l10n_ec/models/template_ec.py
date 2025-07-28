@@ -37,6 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_vat_15_510_sup_01',
                 'expense_account_id': 'ec110307',
                 'income_account_id': 'ec410101',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }
 

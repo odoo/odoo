@@ -32,5 +32,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'tr380',
                 'expense_account_id': 'tr150',
                 'income_account_id': 'tr600',
+                'tax_calculation_rounding_method': 'round_per_line',
             },
         }
