@@ -57,7 +57,7 @@ _REGISTRY_CACHES = {
     'routing': 1024,  # 2 entries per website
     'routing.rewrites': 8192,  # url_rewrite entries
     'templates.cached_values': 2048, # arbitrary
-    'groups': 1,  # contains all res.groups
+    'groups': 8,  # see res.groups
 }
 
 # cache invalidation dependencies, as follows:
