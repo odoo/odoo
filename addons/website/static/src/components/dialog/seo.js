@@ -27,7 +27,8 @@ const seoContext = reactive({
 });
 
 const getSeo = async (self, onlyKeywords = false) => {
-    const pageTextContentEl = self.website.pageDocument.documentElement.querySelector("#wrap");
+    const pageTextContentEl =
+        self.website.pageDocument.documentElement.querySelector("#wrap, main, body");
     const lang = self.state.language || "en";
     const tagWeights = {
         h1: 5,
