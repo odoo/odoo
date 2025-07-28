@@ -10,4 +10,8 @@ export class ImStatus extends Component {
     get persona() {
         return this.props.persona ?? this.props.member?.persona;
     }
+
+    get hideImStatus() {
+        return this.persona?.im_status === "im_partner" && this.env.embedLivechat;
+    }
 }
