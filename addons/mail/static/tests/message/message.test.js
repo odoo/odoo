@@ -964,14 +964,14 @@ test("toggle_star message", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
     await click(".o-mail-Message [title='Mark as Todo']");
-    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { text: "1" }] });
     await waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star");
     await click(".o-mail-Message [title='Mark as Todo']");
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
     await waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
@@ -1293,7 +1293,7 @@ test("Toggle star should update starred counter on all tabs", async () => {
     await click(".o-mail-Message [title='Mark as Todo']", { target: env1 });
     await contains("button", {
         target: env2,
-        text: "Starred",
+        text: "Starred messages",
         contains: [".badge", { text: "1" }],
     });
 });

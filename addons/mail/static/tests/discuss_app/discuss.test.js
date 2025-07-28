@@ -531,7 +531,7 @@ test("basic rendering: sidebar", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar button", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebar button", { text: "Starred" });
+    await contains(".o-mail-DiscussSidebar button", { text: "Starred messages" });
     await contains(".o-mail-DiscussSidebar button", { text: "History" });
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
@@ -554,10 +554,10 @@ test("sidebar: change active", async () => {
     await start();
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
-    await contains("button:not(.o-active)", { text: "Starred" });
-    await click("button", { text: "Starred" });
+    await contains("button:not(.o-active)", { text: "Starred messages" });
+    await click("button", { text: "Starred messages" });
     await contains("button:not(.o-active)", { text: "Inbox" });
-    await contains("button.o-active", { text: "Starred" });
+    await contains("button.o-active", { text: "Starred messages" });
 });
 
 test("sidebar: basic channel rendering", async () => {
@@ -645,7 +645,7 @@ test("initially load messages from inbox", async () => {
 test("default active id on mailbox", async () => {
     await start();
     await openDiscuss("mail.box_starred");
-    await contains("button.o-active", { text: "Starred" });
+    await contains("button.o-active", { text: "Starred messages" });
 });
 
 test("basic top bar rendering", async () => {
@@ -655,9 +655,9 @@ test("basic top bar rendering", async () => {
     await openDiscuss();
     await contains("button:disabled", { text: "Mark all read" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await click("button", { text: "Starred" });
+    await click("button", { text: "Starred messages" });
     await contains("button:disabled", { text: "Unstar all" });
-    await contains(".o-mail-Discuss-threadName", { value: "Starred" });
+    await contains(".o-mail-Discuss-threadName", { value: "Starred messages" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await contains(".o-mail-Discuss-header button", { count: 9 });
@@ -977,9 +977,9 @@ test("starred: unstar all", async () => {
     await start();
     await openDiscuss("mail.box_starred");
     await contains(".o-mail-Message", { count: 2 });
-    await contains("button", { text: "Starred", contains: [".badge", { text: "2" }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { text: "2" }] });
     await click("button:enabled", { text: "Unstar all" });
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:disabled", { text: "Unstar all" });
 });
@@ -1719,9 +1719,9 @@ test("select another mailbox", async () => {
     await openDiscuss();
     await contains(".o-mail-Discuss");
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await click("button", { text: "Starred" });
+    await click("button", { text: "Starred messages" });
     await contains("button:disabled", { text: "Unstar all" });
-    await contains(".o-mail-Discuss-threadName", { value: "Starred" });
+    await contains(".o-mail-Discuss-threadName", { value: "Starred messages" });
 });
 
 test('auto-select "Inbox nav bar" when discuss had inbox as active thread', async () => {
