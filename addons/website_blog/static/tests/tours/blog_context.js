@@ -31,7 +31,9 @@ registerWebsitePreviewTour(
         {
             content: "Click on Blog Post",
             trigger: "#o_new_content_menu_choices button[title='Blog Post']",
-            run: "click",
+            run() {
+                this.anchor.click();
+            },
         },
         {
             content: "Check in dialog current Selected Blog is 'aaa Blog Test'",
