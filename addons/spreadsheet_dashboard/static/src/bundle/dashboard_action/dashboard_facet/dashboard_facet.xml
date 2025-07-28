@@ -9,7 +9,7 @@
                     <i class="fa fa-fw fa-cog"></i>
                 </span>
             </div>
-            <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden">
+            <div class="o_facet_values position-relative d-flex flex-wrap align-items-center rounded-end-2 text-wrap overflow-hidden">
                 <span><small class="o_facet_values_sep small mx-1 opacity-50" t-esc="props.facet.operator" t-att-title="props.facet.operator"/></span>
                 <span t-foreach="props.facet.values" t-as="value" t-key="value_index">
                     <em t-if="!value_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="props.facet.separator"/>
