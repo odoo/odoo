@@ -4,9 +4,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang
 
-# TODO RROS: Add this line when the input component will changed for spinner :)
-# from sys import maxsize
-
 
 class EventEventTicket(models.Model):
     """ Ticket model allowing to have different kind of registrations for a given
@@ -81,7 +78,7 @@ class EventEventTicket(models.Model):
     def _compute_limit_per_order(self):
         for ticket in self:
             if not ticket.seats_limited and not ticket.seats_available:
-                ticket.limit_per_order = ticket.limit_max_per_order or 1000
+                ticket.limit_per_order = ticket.limit_max_per_order or 0  # 0 represents infinity here
             elif ticket.seats_available:
                 ticket.limit_per_order = min(ticket.seats_available, ticket.limit_max_per_order) if ticket.limit_max_per_order else ticket.seats_available
             else:
