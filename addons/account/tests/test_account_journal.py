@@ -63,10 +63,11 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
                 'payment_type': 'inbound'
             })
 
-            journals = self.env['account.journal'].search([('inbound_payment_method_line_ids.code', '=', 'multi')])
+        bank_journals_count = self.env['account.journal'].search_count([('type', '=', 'bank')])
+        edited_journals_count = self.env['account.journal'].search_count([('inbound_payment_method_line_ids.code', '=', 'multi')])
 
-            # The two bank journals have been set
-            self.assertEqual(len(journals), 2)
+        # The bank journals have been set
+        self.assertEqual(bank_journals_count, edited_journals_count)
 
     def test_remove_payment_method_lines(self):
         """

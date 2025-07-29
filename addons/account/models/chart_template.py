@@ -697,7 +697,7 @@ class AccountChartTemplate(models.AbstractModel):
         company.get_unaffected_earnings_account()
 
         # Set newly created Cash difference and Suspense accounts to the Cash and Bank journals
-        for journal in [self.ref(kind, raise_if_not_found=False) for kind in ('bank', 'cash', 'credit')]:
+        for journal in self.env['account.journal'].search([('type', 'in', ['cash', 'bank', 'credit']), ('company_id', '=', company.id)]):
             if journal:
                 journal.suspense_account_id = journal.suspense_account_id or company.account_journal_suspense_account_id
                 journal.profit_account_id = journal.profit_account_id or company.default_cash_difference_income_account_id
