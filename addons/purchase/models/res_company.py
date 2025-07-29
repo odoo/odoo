@@ -7,12 +7,6 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    po_lead = fields.Float(string='Purchase Lead Time', required=True,
-        help="Margin of error for vendor lead times. When the system "
-             "generates Purchase Orders for procuring products, "
-             "they will be scheduled that many days earlier "
-             "to cope with unexpected vendor delays.", default=0.0)
-
     po_lock = fields.Selection([
         ('edit', 'Allow to edit purchase orders'),
         ('lock', 'Confirmed purchase orders are not editable')

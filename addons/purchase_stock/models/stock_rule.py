@@ -189,11 +189,6 @@ class StockRule(models.Model):
             delays['purchase_delay'] += supplier_delay
             if not bypass_delay_description:
                 delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
-        security_delay = buy_rule.picking_type_id.company_id.po_lead
-        delays['total_delay'] += security_delay
-        delays['security_lead_days'] += security_delay
-        if not bypass_delay_description:
-            delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
         days_to_order = buy_rule.company_id.days_to_purchase
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:
