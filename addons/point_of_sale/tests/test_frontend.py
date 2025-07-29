@@ -2654,15 +2654,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         if loaded_demo_data(self.env):
             self.skipTest('Cannot test with demo data.')
 
-        # Unlink existing product records
-        Product = self.env['product.product']
-        pos_product_domain = [('available_in_pos', '=', True)]
-        Product.search(pos_product_domain).action_archive()
+        # archive existing product records
+        archive_products(self.env)
 
         # cannot load by pos user
         self.start_pos_tour('test_load_pos_demo_data_by_pos_user', login='pos_user')
-        pos_products = Product.search(pos_product_domain)
-        self.assertFalse(pos_products, 'Demo data should not be loaded by user.')
+        products = self.env['product.template'].search_count([('available_in_pos', '=', True)])
+        self.assertFalse(products, 'Demo data should not be loaded by user.')
 
     def test_combo_variant_mix(self):
         color_attribute = self.env['product.attribute'].create({
