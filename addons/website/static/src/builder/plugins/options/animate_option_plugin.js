@@ -28,12 +28,7 @@ export class AnimateOptionPlugin extends Plugin {
         builder_options: [
             withSequence(ANIMATE, {
                 OptionComponent: AnimateOption,
-                selector: ".o_animable, section .row > div, img, .fa, .btn",
-                exclude:
-                    "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize",
                 props: this.animateOptionProps,
-                // todo: to implement
-                // textSelector: ".o_animated_text",
             }),
         ],
         toolbar_items: [

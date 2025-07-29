@@ -4,12 +4,19 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { AddProductOption } from "./add_product_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class PriceListCafeDescriptionOption extends BaseOptionComponent {
+    static template = "website.PriceListCafeDescriptionOption";
+    static selector = ".s_pricelist_cafe";
+}
 
 class PriceListCafePlugin extends Plugin {
     static id = "priceList";
     resources = {
         builder_options: [
             withSequence(BEGIN, {
+                // todoo: multi-usage-option
                 selector: ".s_pricelist_cafe",
                 OptionComponent: AddProductOption,
                 props: {
@@ -19,11 +26,13 @@ class PriceListCafePlugin extends Plugin {
                 },
             }),
             withSequence(BEGIN, {
+                // todoo: multi-usage-option
                 selector: ".s_pricelist_cafe",
                 OptionComponent: VerticalAlignmentOption,
                 applyTo: ".row:has(.s_pricelist_cafe_col)",
             }),
             withSequence(BEGIN, {
+                // todoo: multi-usage-option
                 selector: ".s_pricelist_cafe .row > div",
                 OptionComponent: AddProductOption,
                 props: {
@@ -31,10 +40,7 @@ class PriceListCafePlugin extends Plugin {
                     productSelector: ".s_pricelist_cafe_item",
                 },
             }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.PriceListCafeDescriptionOption",
-                selector: ".s_pricelist_cafe",
-            }),
+            withSequence(SNIPPET_SPECIFIC_END, PriceListCafeDescriptionOption),
         ],
         dropzone_selector: {
             selector: ".s_pricelist_cafe_item",

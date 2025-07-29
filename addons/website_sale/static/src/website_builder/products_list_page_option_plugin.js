@@ -9,16 +9,7 @@ class ProductsListPageOptionPlugin extends Plugin {
     static id = "productsListPageOptionPlugin";
 
     resources = {
-        builder_options: [
-            {
-                OptionComponent: ProductsListPageOption,
-                selector: "main:has(.o_wsale_products_page)",
-                applyTo: "#o_wsale_container",
-                editableOnly: false,
-                title: _t("Products Page"),
-                groups: ["website.group_website_designer"],
-            },
-        ],
+        builder_options: [ProductsListPageOption],
         builder_actions: {
             SetPpgAction,
             SetPprAction,

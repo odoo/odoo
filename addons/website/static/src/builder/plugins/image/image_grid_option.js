@@ -2,6 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class ImageGridOption extends BaseOptionComponent {
     static template = "website.ImageGridOption";
+    static selector = "img";
     static props = {};
 
     setup() {

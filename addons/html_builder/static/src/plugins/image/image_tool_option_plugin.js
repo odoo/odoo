@@ -18,11 +18,13 @@ import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
-export const REPLACE_MEDIA_EXCLUDE =
-    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
-
+export class ImageAndFaOption extends BaseOptionComponent {
+    static template = "html_builder.ImageAndFaOption";
+    static selector = "span.fa, i.fa, img";
+    static exclude = "[data-oe-type='image'] > img, [data-oe-xpath]";
+}
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = [
@@ -35,22 +37,9 @@ class ImageToolOptionPlugin extends Plugin {
     ];
     resources = {
         builder_options: [
-            withSequence(REPLACE_MEDIA, {
-                OptionComponent: ReplaceMediaOption,
-                selector: REPLACE_MEDIA_SELECTOR,
-                exclude: REPLACE_MEDIA_EXCLUDE,
-                name: "replaceMediaOption",
-            }),
-            withSequence(IMAGE_TOOL, {
-                OptionComponent: ImageToolOption,
-                selector: "img",
-                exclude: "[data-oe-type='image'] > img",
-            }),
-            withSequence(ALIGNMENT_STYLE_PADDING, {
-                template: "html_builder.ImageAndFaOption",
-                selector: "span.fa, i.fa, img",
-                exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
-            }),
+            withSequence(REPLACE_MEDIA, ReplaceMediaOption),
+            withSequence(IMAGE_TOOL, ImageToolOption),
+            withSequence(ALIGNMENT_STYLE_PADDING, ImageAndFaOption),
         ],
         builder_actions: {
             CropImageAction,

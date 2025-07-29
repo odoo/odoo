@@ -4,7 +4,11 @@ import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 export class HeaderBorderOption extends BaseOptionComponent {
     static template = "website.HeaderBorderOption";
-    static props = {};
+    static selector = "#wrapwrap > header";
+    static applyTo = ".navbar:not(.d-none)";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+
     static components = { BorderConfigurator, ShadowOption };
 
     setup() {

@@ -2,6 +2,8 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class DynamicSvgOption extends BaseOptionComponent {
     static template = "website.DynamicSvgOption";
+    static selector = "img[src^='/html_editor/shape/'], img[src^='/web_editor/shape/']";
+
     static props = {};
 
     setup() {

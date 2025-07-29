@@ -6,6 +6,11 @@ export class HeaderNavbarOption extends BaseOptionComponent {
     static props = {
         getCurrentActiveViews: Function,
     };
+    static selector = "#wrapwrap > header";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+    static reloadTarget = true;
+
     setup() {
         super.setup();
         this.currentActiveViews = {};

@@ -976,6 +976,8 @@ export class BaseOptionComponent extends Component {
         this.isActiveItem = useIsActiveItem();
         const comp = useComponent();
         const editor = comp.env.editor;
+        this.document = editor.document;
+        this.window = this.document.defaultView;
         if (!comp.constructor.components) {
             comp.constructor.components = {};
         }

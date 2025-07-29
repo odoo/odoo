@@ -2,6 +2,9 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export class HeaderElementOption extends BaseOptionComponent {
     static template = "website.headerElementOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
 
     setup() {
         super.setup();

@@ -4,15 +4,21 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class BlockquoteOption extends BaseOptionComponent {
+    static template = "website.BlockquoteOption";
+    static selector = ".s_blockquote";
+}
 
 class BlockquoteOptionPlugin extends Plugin {
     static id = "blockquoteOption";
     selector = ".s_blockquote";
     resources = {
-        mark_color_level_selector_params: [{ selector: this.selector }],
+        mark_color_level_selector_params: [{ selector: ".s_blockquote" }],
         builder_options: [
             withSequence(after(ANIMATE), {
-                selector: this.selector,
+                selector: ".s_blockquote",
                 OptionComponent: WebsiteBackgroundOption,
                 props: {
                     withColors: true,
@@ -21,10 +27,7 @@ class BlockquoteOptionPlugin extends Plugin {
                     withColorCombinations: true,
                 },
             }),
-            withSequence(END, {
-                template: "website.BlockquoteOption",
-                selector: this.selector,
-            }),
+            withSequence(END, BlockquoteOption),
         ],
     };
 }

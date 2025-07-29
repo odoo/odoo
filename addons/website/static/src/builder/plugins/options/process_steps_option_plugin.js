@@ -8,13 +8,9 @@ import { WebsiteBackgroundOption } from "./background_option";
 
 class ProcessStepsOptionPlugin extends Plugin {
     static id = "processStepsOption";
-    selector = ".s_process_steps";
     resources = {
         builder_options: [
-            {
-                OptionComponent: ProcessStepsOption,
-                selector: this.selector,
-            },
+            ProcessStepsOption,
             {
                 OptionComponent: WebsiteBackgroundOption,
                 selector: ".s_process_step .s_process_step_number",
@@ -36,7 +32,7 @@ class ProcessStepsOptionPlugin extends Plugin {
         // snippet is being resized).
         content_updated_handlers: (rootEl) =>
             applyFunDependOnSelectorAndExclude(reloadConnectors, rootEl, {
-                selector: this.selector,
+                selector: ProcessStepsOption.selector,
             }),
         dropzone_selector: {
             selector: ".s_process_step",

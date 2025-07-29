@@ -3,6 +3,9 @@ import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_me
 
 export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";
+    static selector = ".o_animable, section .row > div, img, .fa, .btn";
+    static exclude =
+        "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize";
     static props = {
         getDirectionsItems: Function,
         getEffectsItems: Function,

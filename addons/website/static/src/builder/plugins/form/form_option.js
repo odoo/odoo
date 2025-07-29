@@ -2,9 +2,12 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getModelName, getParsedDataFor } from "./utils";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class FormOption extends BaseOptionComponent {
     static template = "website.s_website_form_form_option";
+    static selector = ".s_website_form";
+    static applyTo = "form";
     static props = {
         fetchModels: Function,
         prepareFormModel: Function,
@@ -12,6 +15,26 @@ export class FormOption extends BaseOptionComponent {
         applyFormModel: Function,
     };
     static components = { FormActionFieldsOption };
+    static cleanForSave(el, { services }) {
+        for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
+            sigEl.remove();
+        }
+
+        for (const formEl of selectElements(el, ".s_website_form form[data-model_name]")) {
+            const model = formEl.dataset.model_name;
+            const fields = [
+                ...formEl.querySelectorAll(
+                    ".s_website_form_field:not(.s_website_form_custom) .s_website_form_input"
+                ),
+            ].map((el) => el.name);
+            if (fields.length) {
+                services.orm.call("ir.model.fields", "formbuilder_whitelist", [
+                    model,
+                    [...new Set(fields)],
+                ]);
+            }
+        }
+    }
 
     setup() {
         super.setup();

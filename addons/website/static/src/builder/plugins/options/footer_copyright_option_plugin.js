@@ -6,14 +6,7 @@ class FooterCopyrightOptionPlugin extends Plugin {
     static id = "footerCopyrightOption";
 
     resources = {
-        builder_options: [
-            {
-                OptionComponent: FooterCopyrightOption,
-                selector: ".o_footer_copyright",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            },
-        ],
+        builder_options: [FooterCopyrightOption],
     };
 }
 
