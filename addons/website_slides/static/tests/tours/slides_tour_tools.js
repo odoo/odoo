@@ -1,5 +1,5 @@
 import { getDataURLFromFile } from "@web/core/utils/urls";
-
+import { stepUtils } from "@web_tour/tour_utils";
 /*
  * Constant
  */
@@ -116,11 +116,11 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 	run: `edit ${pageName}`,
 }, {
     content: 'eLearning: click on tags',
-    trigger: prefix + 'button.o_select_menu_toggler:last',
+    trigger: prefix + 'input.o_select_menu_toggler',
     run: "click",
 }, {
     content: 'eLearning: select Practice tag',
-    trigger: prefix + 'div.o_select_menu_item_label:contains("Practice")',
+    trigger: prefix + 'span.o_select_menu_item:contains("Practice")',
     run: "click",
 }, {
 	content: 'eLearning: fill article completion time',
@@ -130,6 +130,7 @@ var addArticleToSection = function (sectionName, pageName, backend) {
     content: 'eLearning: create and publish slide',
     trigger: prefix + 'footer.modal-footer button:contains("Publish")',
     run: "click",
+    expectUnloadPage: true,
 }];
 };
 
@@ -248,9 +249,10 @@ const addPdfToSection = function (sectionName, pageName, backend) {
     trigger: `${prefix} a.o_wslides_js_slides_list_slide_link:contains(Exercise)[href$="?fullscreen=1"]`,
     run: "click",
 },
+stepUtils.waitIframeIsReady(),
 {
     content: 'eLearning: check uploaded pdf presence and perform comparison',
-    trigger: (backend ? '.o_iframe:iframe ' : '') + '.o_wslides_fs_content :iframe #PDFSlideViewer',
+    trigger: (backend ? ':iframe ' : '') + '.o_wslides_fs_content :iframe #PDFSlideViewer',
     run: async (helpers) => {
         if (await compareBase64Content(helpers.anchor.getAttribute('data-slideurl'), 'Exercise.pdf', 'application/pdf', testPdf)) {
             helpers.anchor.classList.add('o_wslides_tour_pdf_upload_success');
