@@ -484,36 +484,17 @@ class Website(models.Model):
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
+    def _apply_configurator_snippet_defaults(self, snippet, el):
+        """
+        Set Default attribute values for dynamic snippets to completely load via configurator.
+        """
+        pass
+
     @api.model
     def _get_snippet_view_key(self, snippet, page_code):
         if '.' in snippet:
             return snippet
         return f'website.configurator_{page_code}_{snippet}'
-
-    @api.model
-    def _get_final_snippet_list(self, page_code, configurator_snippets):
-        snippet_list = list(configurator_snippets.get(page_code, []))
-        if page_code != 'homepage':
-            return snippet_list
-
-        dynamic_snippets = configurator_snippets.get(f'{page_code}_website_sale', [])
-        installed_modules = self.env['ir.module.module']._installed()
-
-        dynamic_snippets_to_insert = []
-        for position, snippet in dynamic_snippets:
-            module = snippet.split('.')[0]
-            if module in installed_modules:
-                dynamic_snippets_to_insert.append((position, snippet))
-            else:
-                logger.warning(
-                    "Skipping snippet '%s' as module '%s' is not installed",
-                    snippet, module,
-                )
-
-        for position, snippet in sorted(dynamic_snippets_to_insert, key=lambda x: x[0]):
-            snippet_list.insert(min(position, len(snippet_list)), snippet)
-
-        return snippet_list
 
     @api.model
     def get_theme_configurator_snippets(self, theme_name):
@@ -764,6 +745,29 @@ class Website(models.Model):
         # Generate text for the pages
         requested_pages = set(pages_views.keys()).union({'homepage'})
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
+
+        configurator_snippets_addons = {
+            **get_manifest('website').get('configurator_snippets_addons', {}),
+            **get_manifest(theme_name).get('configurator_snippets_addons', {}),
+        }
+
+        installed_modules = self.env['ir.module.module']._installed()
+
+        for module_name, module_addon in configurator_snippets_addons.items():
+            if module_name not in installed_modules:
+                continue
+            for page, snippets_to_insert in module_addon.items():
+                existing = configurator_snippets.setdefault(page, [])
+                for snippet_name, position, target in snippets_to_insert:
+                    if snippet_name in existing:
+                        continue
+                    try:
+                        target_idx = existing.index(target)
+                        insert_idx = target_idx + (1 if position == 'after' else 0)
+                    except ValueError:
+                        insert_idx = len(existing)
+                    existing.insert(insert_idx, snippet_name)
+
         industry = kwargs['industry_name']
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
@@ -882,7 +886,7 @@ class Website(models.Model):
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
         generated_content = {}
         for page_code in requested_pages - {'privacy_policy'}:
-            snippet_list = website._get_final_snippet_list(page_code, configurator_snippets)
+            snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
                 if snippet_key := website._get_snippet_view_key(snippet, page_code):
                     render, placeholders = _render_snippet(snippet_key)
@@ -970,7 +974,7 @@ class Website(models.Model):
 
         # Configure the pages
         for page_code in requested_pages:
-            snippet_list = website._get_final_snippet_list(page_code, configurator_snippets)
+            snippet_list = configurator_snippets.get(page_code, [])
             if page_code == 'homepage':
                 page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
@@ -989,6 +993,8 @@ class Website(models.Model):
                     # Add the data-snippet attribute to identify the snippet
                     # for compatibility code
                     el.attrib['data-snippet'] = snippet
+
+                    website._apply_configurator_snippet_defaults(snippet, el)
 
                     # Remove the previews needed for the snippets dialog
                     dialog_preview_els = el.find_class('s_dialog_preview')

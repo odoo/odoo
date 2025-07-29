@@ -9,7 +9,6 @@ export class DynamicSnippetCarousel extends DynamicSnippet {
     setup() {
         super.setup();
         this.templateKey = "website.s_dynamic_snippet.carousel";
-        this.el.dataset.carouselInterval = 5000;
     }
 
     getQWebRenderOptions() {

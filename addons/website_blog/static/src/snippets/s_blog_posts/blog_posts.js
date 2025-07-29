@@ -4,18 +4,6 @@ import { registry } from "@web/core/registry";
 export class BlogPosts extends DynamicSnippet {
     static selector = ".s_dynamic_snippet_blog_posts";
 
-    setup() {
-        super.setup();
-        this.el.dataset.filterByBlogId ||= -1;
-    }
-
-    /**
-     * @override
-     */
-    getModelNameFilter() {
-        return 'blog.post';
-    }
-
     /**
      * @override
      */

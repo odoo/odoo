@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import models, _
 
 
 class Website(models.Model):
     _inherit = "website"
-
-    @api.model
-    def get_available_snippets(self):
-        return super().get_available_snippets() | {'website_blog.s_blog_posts'}
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
@@ -36,6 +32,21 @@ class Website(models.Model):
             else:
                 self.env['website.menu'].create(blog_menu_values)
         super().configurator_set_menu_links(menu_company, module_data)
+
+    def _apply_configurator_snippet_defaults(self, snippet, el):
+        super()._apply_configurator_snippet_defaults(snippet, el)
+        if snippet != 'website_blog.s_blog_posts':
+            return
+
+        filter_record = self.env.ref('website_blog.dynamic_filter_latest_blog_posts')
+        el.attrib.update({
+            'data-filter-id': str(filter_record.id),
+            'data-template-key': 'website_blog.dynamic_filter_template_blog_post_big_picture',
+            'data-number-of-records': str(filter_record.limit),
+            'data-extra-classes': 'g-3',
+            'data-column-classes': 'col-12 col-sm-6 col-lg-4',
+            'data-filter-by-blog-id': '-1',
+        })
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)

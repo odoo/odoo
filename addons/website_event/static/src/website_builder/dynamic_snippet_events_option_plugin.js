@@ -1,5 +1,7 @@
-import { DYNAMIC_SNIPPET } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
-import { setDatasetIfUndefined, setOptionsDefaultValues } from '@website/js/dynamic_snippet_utils';
+import {
+    DYNAMIC_SNIPPET,
+    setDatasetIfUndefined,
+} from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -23,7 +25,7 @@ class DynamicSnippetEventsOptionPlugin extends Plugin {
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(this.selector)) {
             setDatasetIfUndefined(snippetEl, "numberOfRecords", 3);
-            await setOptionsDefaultValues(
+            await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter
             );

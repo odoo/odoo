@@ -223,9 +223,20 @@ class Website(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    @api.model
-    def get_available_snippets(self):
-        return super().get_available_snippets() | {'website_sale.s_dynamic_snippet_products'}
+    def _apply_configurator_snippet_defaults(self, snippet, el):
+        super()._apply_configurator_snippet_defaults(snippet, el)
+        if snippet != 'website_sale.s_dynamic_snippet_products':
+            return
+
+        filter_record = self.env.ref('website_sale.dynamic_filter_newest_products')
+        el.attrib.update({
+            'data-filter-id': str(filter_record.id),
+            'data-template-key': 'website_sale.dynamic_filter_template_product_product_borderless_1',
+            'data-number-of-records': str(filter_record.limit),
+            'data-carousel-interval': '5000',
+            'data-product-category-id': 'all',
+            'data-show-variants': 'true',
+        })
 
     @api.model
     def get_configurator_shop_page_styles(self):
@@ -250,10 +261,6 @@ class Website(models.Model):
             {'option': option, 'img_src': config['img_src'], 'title': config['title']}
             for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
         ]
-
-    @api.model
-    def get_requested_homepage(self):
-        return 'homepage_website_sale'
 
     @api.model
     def configurator_apply(

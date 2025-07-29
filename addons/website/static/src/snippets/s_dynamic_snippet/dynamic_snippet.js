@@ -5,7 +5,6 @@ import { rpc } from "@web/core/network/rpc";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToFragment } from "@web/core/utils/render";
-import { setOptionsDefaultValues } from '@website/js/dynamic_snippet_utils';
 import { verifyHttpsUrl } from "@website/utils/misc";
 
 import { markup } from "@odoo/owl";
@@ -44,14 +43,6 @@ export class DynamicSnippet extends Interaction {
     }
 
     async willStart() {
-        const { filterId, templateKey } = this.el.dataset;
-        if (!filterId || !templateKey) {
-            await setOptionsDefaultValues(
-                this.el,
-                this.getModelNameFilter(),
-                this.getContextualFilterDomain?.() || [],
-            );
-        }
         await this.fetchData();
     }
 
@@ -73,14 +64,6 @@ export class DynamicSnippet extends Interaction {
      */
     isConfigComplete() {
         return this.el.dataset.filterId !== undefined && this.el.dataset.templateKey !== undefined;
-    }
-
-    /**
-     * To be overridden
-     * Get the model name filter.
-     */
-    getModelNameFilter() {
-        return '';
     }
 
     /**
