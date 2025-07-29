@@ -360,8 +360,23 @@ class HrAttendance(models.Model):
                     continue
 
                 if not unfinished_shifts and attendances:
+                    # The employee is on a flexible schedule
+                    if emp.is_flexible:
+                        weekly_required_hours = calendar.full_time_required_hours
+                        daily_required_hours = calendar.hours_per_day
+                        monday = attendance_date - timedelta(days=attendance_date.weekday())
+                        current_week_attendances = all_attendances.search([['check_in', '>=', monday], ['check_out', '<', monday + timedelta(days=7)]]) - attendances
+                        current_week_total_hours_worked = sum(att.worked_hours for att in current_week_attendances)
+
+                        attendance_date_worked_hours = sum(attendances.mapped('worked_hours'))
+                        potential_daily_overtime = attendance_date_worked_hours - daily_required_hours
+
+                        new_current_week_total = current_week_total_hours_worked + attendance_date_worked_hours
+                        potential_weekly_overtime = max(new_current_week_total - weekly_required_hours, 0)
+                        overtime_duration = max(potential_weekly_overtime, potential_daily_overtime) if potential_weekly_overtime != 0 else potential_daily_overtime
+                        overtime_duration_real = overtime_duration
                     # The employee usually doesn't work on that day
-                    if not working_times[attendance_date]:
+                    elif not working_times[attendance_date]:
                         # User does not have any resource_calendar_attendance for that day (week-end for example)
                         overtime_duration = sum(attendances.mapped('worked_hours'))
                         overtime_duration_real = overtime_duration
