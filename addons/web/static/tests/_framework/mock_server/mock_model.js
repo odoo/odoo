@@ -217,16 +217,16 @@ function findView(model, viewType, viewId) {
 }
 
 /**
- * @param {Record<string, FieldDefinition>} fields
+ * @param {FieldType} fieldType
  * @param {string} groupByField
  * @param {unknown} val
  */
-function formatFieldValue(fields, groupByField, val) {
+function formatFieldValue(fieldType, groupByField, val) {
     if (val === false || val === undefined) {
         return false;
     }
-    const [fieldName, granularityFunction = false] = safeSplit(groupByField, ":");
-    const { type } = fields[fieldName];
+    const [, granularityFunction = false] = safeSplit(groupByField, ":");
+    const type = fieldType;
 
     if (["date", "datetime"].includes(type) && !granularityFunction) {
         throw new MockServer(`Granularity should be always explicit for ${groupByField}`);
@@ -341,11 +341,21 @@ function getOrderByField({ _fields, _name }, fieldNameSpec) {
     if (fieldNameSpec === "__count") {
         return _fields["id"];
     }
-    const fieldName = fieldNameSpec?.split(":")[0] || ("sequence" in _fields ? "sequence" : "id");
+    const fieldPath = fieldNameSpec?.split(":")[0] || ("sequence" in _fields ? "sequence" : "id");
+    const fieldNames = fieldPath.split(".");
+    for (const fieldName of fieldNames.slice(0, -1)) {
+        if (!(fieldName in _fields)) {
+            throw fieldNotFoundError(_name, fieldName, "could not order records");
+        }
+        const relation = getRelation(_fields[fieldName]);
+        _fields = relation._fields;
+        _name = relation._name;
+    }
+    const fieldName = fieldNames.at(-1);
     if (!(fieldName in _fields)) {
         throw fieldNotFoundError(_name, fieldName, "could not order records");
     }
-    return _fields[fieldName];
+    return _fields[fieldNames.at(-1)];
 }
 
 /**
@@ -1386,7 +1396,7 @@ const INHERITED_PRIMITIVE_KEYS = [
     ["_rec_name", null],
     ["_related", (set) => new Set(set)],
 ];
-const READ_GROUP_NUMBER_GRANULARITY = [
+const READ_GROUP_NUMBER_GRANULARITY = /** @type {const} */ ([
     "day_of_month",
     "day_of_week",
     "day_of_year",
@@ -1397,7 +1407,11 @@ const READ_GROUP_NUMBER_GRANULARITY = [
     "quarter_number",
     "second_number",
     "year_number",
-];
+]);
+
+/**
+ * @typedef {READ_GROUP_NUMBER_GRANULARITY[number]} ReadGroupNumberGranularity
+ */
 
 const MAX_NUMBER_OPENED_GROUPS = 10;
 
@@ -1862,9 +1876,10 @@ export class Model extends Array {
             const recordGroupsValues = [{}];
             for (const groupbySpec of groupby) {
                 const [fieldName] = String(groupbySpec).split(":");
-                const value = formatFieldValue(this._fields, groupbySpec, record[fieldName]);
+                const [recordValue, field] = this._followRelation(record, fieldName.split("."));
+                const value = formatFieldValue(field.type, groupbySpec, recordValue);
 
-                if (this._fields[fieldName].type == "many2many" && value) {
+                if (field.type == "many2many" && value) {
                     // groups by many2many duplicate recordGroupsValues for each values and record
                     // can be inside multiple groups
                     for (const group of [...recordGroupsValues]) {
@@ -1900,11 +1915,12 @@ export class Model extends Array {
                 __extra_domain: [],
             };
             for (const groupbySpec of groupby) {
-                const [fieldName, granularity] = safeSplit(groupbySpec, ":");
+                const [fieldPath, granularity] = safeSplit(groupbySpec, ":");
                 const value = Number.isInteger(group[groupbySpec])
                     ? group[groupbySpec]
                     : group[groupbySpec] || false;
-                const { relation, type } = this._fields[fieldName];
+                const [, field] = this._followRelation({}, fieldPath.split("."));
+                const { relation, type } = field;
 
                 if (relation && !Array.isArray(value)) {
                     const relatedRecord = this.env[relation].find(({ id }) => id === value);
@@ -1917,7 +1933,7 @@ export class Model extends Array {
                     } else {
                         group[groupbySpec] = false;
                     }
-                } else if (fieldName === "id") {
+                } else if (fieldPath === "id") {
                     if (!value) {
                         group[groupbySpec] = false;
                     } else {
@@ -1926,12 +1942,11 @@ export class Model extends Array {
                         group[groupbySpec] = [value, displayName];
                     }
                 }
-
                 if (isDateField(type)) {
                     if (value) {
                         if (READ_GROUP_NUMBER_GRANULARITY.includes(granularity)) {
                             group.__extra_domain = [
-                                [`${fieldName}.${granularity}`, "=", value],
+                                ...this._readGroupExtraDomain(fieldPath, value, granularity),
                                 ...group.__extra_domain,
                             ];
                         } else {
@@ -1978,17 +1993,22 @@ export class Model extends Array {
                             const from = serialize(startDate);
                             const to = serialize(endDate);
                             group.__extra_domain = [
-                                [fieldName, ">=", from],
-                                [fieldName, "<", to],
+                                ...this._readGroupDateRangeExtraDomain(fieldPath, from, to),
                                 ...group.__extra_domain,
                             ];
                             group[groupbySpec] = [from, group[groupbySpec]];
                         }
                     } else {
-                        group.__extra_domain = [[fieldName, "=", value], ...group.__extra_domain];
+                        group.__extra_domain = [
+                            ...this._readGroupExtraDomain(fieldPath, value),
+                            ...group.__extra_domain,
+                        ];
                     }
                 } else {
-                    group.__extra_domain = [[fieldName, "=", value], ...group.__extra_domain];
+                    group.__extra_domain = [
+                        ...this._readGroupExtraDomain(fieldPath, value),
+                        ...group.__extra_domain,
+                    ];
                 }
             }
             aggregateFields(aggregatedFields, group, groupRecords);
@@ -3136,8 +3156,8 @@ export class Model extends Array {
         const field = this._fields[fieldName];
         const fieldNames = safeSplit(field.related, ".");
         for (const record of this) {
-            const [value, fieldType] = this._followRelation(record, fieldNames);
-            if (!fieldType) {
+            const [value, field] = this._followRelation(record, fieldNames);
+            if (!field) {
                 // The related field is not found on the record, so we
                 // remove the compute function.
                 this.env[this._name]._related.delete(fieldName);
@@ -3145,7 +3165,7 @@ export class Model extends Array {
             }
             if (value === undefined) {
                 // Value is null: assign default value (if null)
-                record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldType]();
+                record[fieldName] ??= DEFAULT_FIELD_VALUES[field.type]();
             } else {
                 // Value is not null: override
                 record[fieldName] = value;
@@ -3267,10 +3287,6 @@ export class Model extends Array {
             if (!currentField) {
                 break;
             }
-            if (!currentRecord) {
-                value = undefined;
-                break;
-            }
             value = currentRecord?.[fieldName];
             const relation = getRelation(currentField, currentRecord);
             if (relation) {
@@ -3280,7 +3296,7 @@ export class Model extends Array {
             }
         }
 
-        return [value, currentField?.type];
+        return [value, currentField];
     }
 
     /**
@@ -3670,6 +3686,57 @@ export class Model extends Array {
                 record[fieldName] = value;
             }
             i++;
+        }
+    }
+
+    /**
+     * @param {string} fieldPath
+     * @param {any} value
+     * @param {ReadGroupNumberGranularity} [numberGranularity]
+     * @returns {DomainListRepr}
+     * @private
+     */
+    _readGroupExtraDomain(fieldPath, value, numberGranularity) {
+        const [fieldName, ...remainingPath] = fieldPath.split(".");
+        if (remainingPath.length) {
+            const relation = getRelation(this._fields[fieldName]);
+            const subDomain = relation._readGroupExtraDomain(
+                remainingPath.join("."),
+                value,
+                numberGranularity
+            );
+            return value
+                ? [[fieldName, "any", subDomain]]
+                : ["|", [fieldName, "not any", []], [fieldName, "any", subDomain]];
+        } else if (numberGranularity) {
+            return [[`${fieldName}.${numberGranularity}`, "=", value]];
+        } else {
+            return [[fieldName, "=", value]];
+        }
+    }
+
+    /**
+     * @param {string} fieldPath
+     * @param {string} from
+     * @param {string} to
+     * @returns {DomainListRepr}
+     * @private
+     */
+    _readGroupDateRangeExtraDomain(fieldPath, from, to) {
+        const [fieldName, ...remainingPath] = fieldPath.split(".");
+        if (remainingPath.length) {
+            const relation = getRelation(this._fields[fieldName]);
+            const subDomain = relation._readGroupDateRangeExtraDomain(
+                remainingPath.join("."),
+                from,
+                to
+            );
+            return [[fieldName, "any", subDomain]];
+        } else {
+            return [
+                [fieldName, ">=", from],
+                [fieldName, "<", to],
+            ];
         }
     }
 }
