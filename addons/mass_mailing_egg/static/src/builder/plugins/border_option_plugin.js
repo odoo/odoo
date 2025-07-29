@@ -8,7 +8,7 @@ export class BorderOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(before(WIDTH), {
-                template: "mass_mailing.BorderOptionNoRoundedCornersDependency",
+                template: "mass_mailing.BorderOption",
                 selector:
                     ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div",
                 applyTo: ".card",

@@ -175,6 +175,7 @@ export class MassMailingHtmlField extends HtmlMailField {
         delete config.Plugins;
         return {
             ...config,
+            allowMediaDialogVideo: false, // videos aren't allowed in mails
             withBuilder: true,
             // TODO EGGMAIL?: allow the builder to show the theme selection again
             // Applying a new Theme from the builder should CREATE AN EDITOR STEP

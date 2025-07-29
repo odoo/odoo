@@ -45,6 +45,7 @@ export class Builder extends Component {
         toggleFullscreen: { type: Function, optional: true },
         toggleCodeView: { type: Function, optional: true },
         getExternalScrollableAncestor: { type: Function, optional: true },
+        fullscreenLogo: { type: String, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},

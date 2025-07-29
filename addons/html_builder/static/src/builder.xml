@@ -13,7 +13,10 @@
                 <button t-if="props.toggleCodeView" t-on-click="props.toggleCodeView"
                     class="o-hb-btn btn d-flex align-items-center o_codeview_btn" title="Code View" accesskey="d"><i class="fa fa-code"/></button>
                 <button t-if="props.toggleFullscreen" t-on-click="props.toggleFullscreen"
-                    class="o-hb-btn btn d-flex align-items-center" title="Fullscreen" accesskey="f">FS</button>
+                    class="o-hb-btn btn d-flex align-items-center" title="Fullscreen" accesskey="f">
+                    <span t-if="props.fullscreenLogo" t-attf-class="fa #{props.fullscreenLogo}"/>
+                    <t t-else="">FS</t>
+                </button>
                 <button t-if="props.closeEditor" type="button"  t-on-click="discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
                 <button t-if="props.closeEditor" type="button" t-on-click="save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
             </div>

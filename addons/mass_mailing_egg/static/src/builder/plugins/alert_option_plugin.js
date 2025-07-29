@@ -13,7 +13,7 @@ class AlertOptionPlugin extends Plugin {
             }),
             withSequence(after(WIDTH), {
                 selector: ".s_mail_alert .s_alert",
-                template: "mass_mailing.BorderOptionNoRoundedCornersDependency"
+                template: "mass_mailing.BorderOption",
             }),
         ],
         patch_builder_options: [

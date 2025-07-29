@@ -43,9 +43,9 @@
     <template id="theme_event_template">
         <style id="design-element">
             h3 {
-                color: #2b3b58;
-                font-size: 18px;
-                font-weight: bolder;
+                --h3-color: #2b3b58;
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
@@ -174,33 +174,28 @@
     <!-- Theme "Blogging" default template -->
     <template id="theme_blogging_template">
         <style id="design-element">
-            h1 {
-                font-weight: bolder;
-                color: #36a6d2;
-                font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-            }
-            h2 {
-                font-weight: bolder;
-                font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-                color: #36a6d2;
-                font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-            }
-            p, p > *, li, li > * {
-                color: #adadad;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #36a6d2;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #36a6d2;
-                border-color: #36a6d2;
-            }
-            hr {
-                border-top-color: #e9ecef !important;
+
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-weight: bolder;
+                --h1-color: #36a6d2;
+                --h1-font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+
+                --h2-font-weight: bolder;
+                --h2-font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+                --h3-color: #36a6d2;
+                --h3-font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+
+                --text-color: #adadad;
+
+                --link-color: #36a6d2;
+
+                --btn-primary-background-color: #36a6d2;
+                --btn-primary-border-color: #36a6d2;
+
+                --separator-border-color: #e9ecef !important;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
@@ -345,36 +340,29 @@
     <!-- Theme "Coupon" default template -->
     <template id="theme_coupon_template">
         <style id="design-element">
-            h1 {
-                font-size: 48px;
-                font-weight: bolder;
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            h2 {
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            p, p > *, li, li > * {
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #C69678;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #C69678;
-                border-color: #C69678;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                background-color: #fadcc0;
-                color: #242530;
-                border-color: #c69678;
-            }
-            hr {
-                border-top-color: #c69678 !important;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+
+                --h1-font-size: 48px;
+                --h1-font-weight: bolder;
+                --h1-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --h2-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+                --h3-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --text-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --link-color: #C69678;
+
+                --btn-primary-background-color: #C69678;
+                --btn-primary-border-color: #C69678;
+                --btn-secondary-background-color: #fadcc0;
+                --btn-secondary-color: #242530;
+                --btn-secondary-border-color: #c69678;
+
+                --separator-border-color: #c69678 !important;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
@@ -485,29 +473,24 @@
     <!-- Theme "Magazine" default template -->
     <template id="theme_magazine_template">
         <style id="design-element">
-            h1 {
-                font-weight: bolder;
-                font-family: Tahoma, Verdana, Segoe, sans-serif;
-            }
-            h2 {
-                font-size: 18px;
-                font-weight: bolder;
-                font-family: Tahoma, Verdana, Segoe, sans-serif;
-            }
-            h3 {
-                font-size: 14px;
-                font-weight: bolder;
-                color: #ffffff;
-                font-family: Tahoma, Verdana, Segoe, sans-serif;
-            }
-            p, p > *, li, li > * {
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #6c757d;
-            }
-            hr {
-                border-top-color: #ced4da !important;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-weight: bolder;
+                --h1-font-family: Tahoma, Verdana, Segoe, sans-serif;
+
+                --h2-font-size: 18px;
+                --h2-font-weight: bolder;
+                --h2-font-family: Tahoma, Verdana, Segoe, sans-serif;
+
+                --h3-font-size: 14px;
+                --h3-font-weight: bolder;
+                --h3-color: #ffffff;
+                --h3-font-family: Tahoma, Verdana, Segoe, sans-serif;
+
+                --text-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+                --link-color: #6c757d;
+
+                --separator-border-color: #ced4da !important;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
@@ -675,29 +658,29 @@
     <!-- Theme "Big News" default template -->
     <template id="theme_bignews_template">
         <style id="design-element">
-            h1 {
-                font-size: 36px;
-                font-weight: bolder;
-                font-style: italic;
-                color: #BA0013;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 36px;
+                --h1-font-weight: bolder;
+                --h1-font-style: italic;
+                --h1-color: #BA0013;
             }
             h2 {
-                font-size: 14px;
-                font-weight: bolder;
+                --h2-font-size: 14px;
+                --h2-font-weight: bolder;
             }
             h3 {
-                font-size: 18px;
-                font-weight: bolder;
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
             }
             p, p > *, li, li > * {
-                color: #6c757d;
+                --text-color: #6c757d;
             }
             a:not(.btn), a.btn.btn-link{
-                color: #BA0013;
+                --link-color: #BA0013;
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #BA0013;
-                border-color: #BA0013;
+                --btn-primary-background-color: #BA0013;
+                --btn-primary-border-color: #BA0013;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
@@ -780,25 +763,20 @@
     <!-- Theme "Promotion" default template -->
     <template id="theme_promotion_template">
         <style id="design-element">
-            h1 {
-                font-weight: bolder;
-            }
-            h2 {
-                font-weight: bolder;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #000000;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #000000;
-                border-color: #000000;
-            }
-            hr {
-                width: 75%;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-weight: bolder;
+
+                --h2-font-weight: bolder;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+
+                --link-color: #000000;
+
+                --btn-primary-background-color: #000000;
+                --btn-primary-border-color: #000000;
+
+                --separator-width: 75%;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
@@ -913,34 +891,29 @@
     <!-- Theme "CoffeeBreak" default template -->
     <template id="theme_coffeebreak_template">
         <style id="design-element">
-            h1 {
-                font-size: 42px;
-                font-weight: bolder;
-                color: #543427;
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            h2 {
-                font-size: 14px;
-                color: #937853;
-            }
-            h3 {
-                font-size: 14px;
-                font-weight: bolder;
-                color: #543427;
-            }
-            a:not(.btn), a.btn.btn-link {
-                text-decoration-line: underline;
-                color: #397B21;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                color: #543427;
-                background-color: #D3C5B1;
-                border-color: #D3C5B1;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                color: #FFFFFF;
-                background-color: #543427;
-                border-color: #543427;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 42px;
+                --h1-font-weight: bolder;
+                --h1-color: #543427;
+                --h1-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --h2-font-size: 14px;
+                --h2-color: #937853;
+
+                --h3-font-size: 14px;
+                --h3-font-weight: bolder;
+                --h3-color: #543427;
+
+                --link-text-decoration-line: underline;
+                --link-color: #397B21;
+
+                --btn-primary-color: #543427;
+                --btn-primary-background-color: #D3C5B1;
+                --btn-primary-border-color: #D3C5B1;
+
+                --btn-secondary-color: #FFFFFF;
+                --btn-secondary-background-color: #543427;
+                --btn-secondary-border-color: #543427;
             }
             hr {
                 background-color: rgba(0,0,0,0);
@@ -1083,32 +1056,26 @@
     <!-- Theme "Newsletter" default template -->
     <template id="theme_newsletter_template">
         <style id="design-element">
-            h1 {
-                color: #CE0000;
-                font-size: 54px;
-            }
-            h2{
-                font-weight: bolder;
-            }
-            h3 {
-                font-size: 16px;
-                font-weight: bolder;
-            }
-            p, p > *, li, li > * {
-                font-size: 16px;
-            }
-            a:not(.btn), a.btn.btn-link {
-                text-decoration-line: underline;
-                color: #212529;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #CE0000;
-                border-color: #CE0000;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                color: #CE0000;
-                background-color: #FFFFFF;
-                border-color: #CE0000;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-color: #CE0000;
+                --h1-font-size: 54px;
+
+                --h2-font-weight: bolder;
+
+                --h3-font-size: 16px;
+                --h3-font-weight: bolder;
+
+                --text-font-size: 16px;
+
+                --text-text-decoration-line: underline;
+                --text-color: #212529;
+
+                --btn-primary-background-color: #CE0000;
+                --btn-primary-border-color: #CE0000;
+
+                --btn-secondary-color: #CE0000;
+                --btn-secondary-background-color: #FFFFFF;
+                --btn-secondary-border-color: #CE0000;
             }
         </style>
         <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb0" style="text-align: left; padding-left: 15px; padding-right: 15px; color: rgb(183, 191, 199) !important" data-snippet="s_mail_block_header_view" data-name="View Online"><a href="/view" class="" target="_blank" data-bs-original-title="" title="">View Online</a> - <span style="color: rgb(183, 191, 199); font-size: 12.25px" t-out="datetime.datetime.now().strftime('%B %d %Y')"></span></section>
@@ -1282,19 +1249,16 @@
     <!-- Roadshow 1 -->
     <template id="theme_roadshow1_template">
         <style id="design-element">
-            h1 {
-                font-size: 24px;
-                font-weight: bolder;
-            }
-            h2 {
-                font-size: 21px;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #35979c;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 24px;
+                --h1-font-weight: bolder;
+
+                --h2-font-size: 21px;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+
+                --link-color: #35979c;
             }
         </style>
         <section class="s_text_block o_mail_snippet_general pt40 px-3 pb0" data-snippet="s_text_block" data-name="Text">
@@ -1414,19 +1378,16 @@
     <!-- Roadshow 2 -->
     <template id="theme_roadshow2_template">
         <style id="design-element">
-            h1 {
-                font-size: 24px;
-                font-weight: bolder;
-            }
-            h2 {
-                font-size: 21px;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #35979c;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 24px;
+                --h1-font-weight: bolder;
+
+                --h2-font-size: 21px;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+
+                --link-color: #35979c;
             }
         </style>
         <section class="s_text_block o_mail_snippet_general px-3 pt40 pb0" data-snippet="s_text_block" data-name="Text">
@@ -1504,32 +1465,26 @@
             * :not(.fa) {
                 font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif !important;
             }
-            h1 {
-                color: rgb(255, 255, 255);
-                font-size: 39px;
-            }
-            h3 {
-                color: rgb(20, 102, 184);
-            }
-            p, p > *, li, li > * {
-                color: rgb(91, 119, 143);
-                font-size: 14px;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: rgb(20, 102, 184);
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                color: rgb(255, 255, 255);
-                background-color: rgb(67, 128, 219);
-                font-size: 14px;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                color: rgb(255, 255, 255);
-                background-color: rgb(255, 152, 0);
-            }
-            hr {
-                border-top-color: rgb(67, 129, 219);
-                border-top-width: 2px;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-color: rgb(255, 255, 255);
+                --h1-font-size: 39px;
+
+                --h3-color: rgb(20, 102, 184);
+
+                --text-color: rgb(91, 119, 143);
+                --text-font-size: 14px;
+
+                --link-color: rgb(20, 102, 184);
+
+                --btn-primary-color: rgb(255, 255, 255);
+                --btn-primary-background-color: rgb(67, 128, 219);
+                --btn-primary-font-size: 14px;
+
+                --btn-secondary-color: rgb(255, 255, 255);
+                --btn-secondary-background-color: rgb(255, 152, 0);
+
+                --separator-border-top-color: rgb(67, 129, 219);
+                --separator-border-top-width: 2px;
             }
         </style>
         <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(220, 234, 255);">
