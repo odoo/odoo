@@ -2,9 +2,9 @@ import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
-import { cookie } from "@web/core/browser/cookie";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 import { POSITION_BUS } from "../position/position_hook";
+import { session } from "@web/session";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -100,7 +100,7 @@ export class ColorPicker extends Component {
     }
 
     get isDarkTheme() {
-        return cookie.get("color_scheme") === "dark";
+        return session.color_scheme === "dark";
     }
 
     setTab(tab) {
