@@ -2603,12 +2603,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         if loaded_demo_data(self.env):
             self.skipTest('Cannot test with demo data.')
 
-        # Unlink existing product records
-        self.env['product.product'].sudo().search([]).unlink()
+        # archive existing product records
+        archive_products(self.env)
 
         # cannot load by pos user
         self.start_pos_tour('test_load_pos_demo_data_by_pos_user', login='pos_user')
-        products = self.env['product.product'].search([])
+        products = self.env['product.template'].search_count([('available_in_pos', '=', True)])
         self.assertFalse(products, 'Demo data should not be loaded by user.')
 
         # pos admin group access
@@ -2617,7 +2617,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         # can load by pos admin
         self.start_pos_tour('test_load_pos_demo_data_by_pos_admin', login='pos_admin')
-        products = self.env['product.product'].search([])
+        products = self.env['product.template'].search_count([('available_in_pos', '=', True)])
         self.assertTrue(products, 'Demo data should be loaded by admin.')
 
     def test_combo_variant_mix(self):
