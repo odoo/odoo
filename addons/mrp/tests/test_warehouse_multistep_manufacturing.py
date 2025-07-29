@@ -17,6 +17,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         cls.env.user.group_ids += cls.env.ref('product.group_product_variant')
         # Required for `manufacture_steps` to be visible in the view
         cls.env.user.group_ids += cls.env.ref('stock.group_adv_location')
+        # Required for `product_id` to be visible in the view
+        cls.env.user.group_ids += cls.env.ref('product.group_product_variant')
         # Create warehouse
         cls.customer_location = cls.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
         warehouse_form = Form(cls.env['stock.warehouse'])
@@ -878,3 +880,18 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             {'product_id': self.product_1.id, 'product_uom_qty': 0, 'product_qty_available': 0},
             {'product_id': self.product_3.id, 'product_uom_qty': 5, 'product_qty_available': 20},
         ])
+
+    def test_3_steps_manufacturing_forecast(self):
+        """Check that a confirmed MO influence the forecast of the warehouse stock"""
+        self.warehouse_1.manufacture_steps = 'pbm_sam'
+        lovely_product = self.bom_1.product_id.copy({'uom_id': self.uom_unit.id})
+        self.bom_1.product_id = lovely_product
+        self.assertEqual(lovely_product.with_context(location_id=self.warehouse_1.lot_stock_id.id).virtual_available, 0.0)
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'product_qty': 3.0,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(lovely_product.with_context(location_id=self.warehouse_1.lot_stock_id.id).virtual_available, 3.0)

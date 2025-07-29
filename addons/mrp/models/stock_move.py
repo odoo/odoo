@@ -387,6 +387,8 @@ class StockMove(models.Model):
                 values['date_deadline'] = mo.date_deadline
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
+                if not values.get('location_final_id'):
+                    values['location_final_id'] = mo.warehouse_id.lot_stock_id.id
         return super().create(vals_list)
 
     def write(self, vals):
