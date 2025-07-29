@@ -46,6 +46,11 @@ patch(Composer.prototype, {
             );
         }
     },
+    /** @override */
+    onInput(ev) {
+        super.onInput(ev);
+        this.detectTyping(ev);
+    },
     detectTyping() {
         const value = this.props.composer.text;
         if (this.thread?.model === "discuss.channel" && value.startsWith("/")) {
