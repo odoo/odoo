@@ -732,8 +732,8 @@ export const accountTaxHelpers = {
                 }
 
                 if (index === 0) {
-                    tax_details.total_excluded_currency = tax_data.base_amount_currency;
-                    tax_details.total_excluded = tax_data.base_amount;
+                    tax_details.total_excluded_currency = tax_details.total_included_currency = tax_data.base_amount_currency;
+                    tax_details.total_excluded = tax_details.total_included = tax_data.base_amount;
                 }
 
                 let raw_tax_amount_currency = null;
@@ -762,6 +762,8 @@ export const accountTaxHelpers = {
                     currency.rounding
                 );
                 tax_data.tax_amount = roundPrecision(raw_tax_amount, company.currency_id.rounding);
+                tax_details.total_included_currency += tax_data.tax_amount_currency;
+                tax_details.total_included += tax_data.tax_amount;
 
                 const tax_rounding_key = [
                     tax.id,
@@ -842,11 +844,11 @@ export const accountTaxHelpers = {
 
             // If not, just account the base amounts.
             if (!taxes_data.length) {
-                tax_details.total_excluded_currency = roundPrecision(
+                tax_details.total_excluded_currency = tax_details.total_included_currency = roundPrecision(
                     tax_details.raw_total_excluded_currency,
                     currency.rounding
                 );
-                tax_details.total_excluded = roundPrecision(
+                tax_details.total_excluded = tax_details.total_included = roundPrecision(
                     tax_details.raw_total_excluded,
                     company.currency_id.rounding
                 );

@@ -89,11 +89,14 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
     def _compute_amount(self):
+        AccountTax = self.env['account.tax']
         for line in self:
+            company = line.company_id or self.env.company
             base_line = line._prepare_base_line_for_taxes_computation()
-            self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
-            line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
-            line.price_total = base_line['tax_details']['raw_total_included_currency']
+            AccountTax._add_tax_details_in_base_line(base_line, company)
+            AccountTax._round_base_lines_tax_details([base_line], company)
+            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
+            line.price_total = base_line['tax_details']['total_included_currency']
             line.price_tax = line.price_total - line.price_subtotal
 
     def _prepare_base_line_for_taxes_computation(self):
