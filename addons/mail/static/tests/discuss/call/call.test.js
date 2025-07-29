@@ -746,3 +746,41 @@ test("single 'join' (with camera) button when last call had camera on", async ()
         contains: [".fa-video-camera"],
     });
 });
+
+test("dynamic focus switches to talking participant", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const aliceSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+        }),
+        channel_id: channelId,
+    });
+    const bobSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
+        }),
+        channel_id: channelId,
+    });
+
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await click(".o-discuss-CallParticipantCard[title='Alice']");
+    await contains(".o-discuss-CallParticipantCard[title='Alice']");
+    await contains(".o-discuss-CallParticipantCard[title='Bob']", {
+        count: 0,
+    });
+    rtc.updateSessionInfo({ [bobSessionId]: { isTalking: true } });
+    await contains(".o-discuss-CallParticipantCard[title='Bob']");
+    rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: true } });
+    await contains(".o-discuss-CallParticipantCard[title='Bob']", {
+        count: 0,
+    });
+    await contains(".o-discuss-CallParticipantCard[title='Alice']");
+    rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: false } });
+    await contains(".o-discuss-CallParticipantCard[title='Bob']");
+});

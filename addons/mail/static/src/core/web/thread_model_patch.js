@@ -18,15 +18,21 @@ const threadPatch = {
                 r.remove();
             },
         });
+        this.isDisplayedInDiscussAppDesktop = fields.Attr(undefined, {
+            /** @this {import("models").Thread} */
+            compute() {
+                if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+                    return this.eq(this.store.discuss.thread);
+                }
+                return false;
+            },
+        });
     },
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.length;
     },
     computeIsDisplayed() {
-        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-            return this.eq(this.store.discuss.thread);
-        }
-        return super.computeIsDisplayed();
+        return this.isDisplayedInDiscussAppDesktop || super.computeIsDisplayed();
     },
     async leave() {
         await this.closeChatWindow();
