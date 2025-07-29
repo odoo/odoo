@@ -296,12 +296,16 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     /**
-     * Activates the containers of the given element. They will be activated
-     * once the current step is added (see `onStepAdded`).
+     * Activates the containers of the given element or deactivate them if false
+     * is given. They will be (de)activated once the current step is added (see
+     * `onStepAdded`).
      *
-     * @param {HTMLElement} targetEl the element to activate
+     * @param {HTMLElement|Boolean} targetEl the element to activate or `false`
      */
     setNextTarget(targetEl) {
+        if (this.dependencies.history.getIsPreviewing()) {
+            return;
+        }
         // Store the next target to activate in the current step.
         this.dependencies.history.setStepExtra("nextTarget", targetEl);
     }
@@ -317,6 +321,8 @@ export class BuilderOptionsPlugin extends Plugin {
         const nextTargetEl = step.extraStepInfos.nextTarget;
         if (nextTargetEl) {
             this.updateContainers(nextTargetEl, { forceUpdate: true });
+        } else if (nextTargetEl === false) {
+            this.deactivateContainers();
         } else {
             this.updateContainers();
         }
@@ -333,13 +339,18 @@ export class BuilderOptionsPlugin extends Plugin {
             let targetEl = revertedStep.extraStepInfos.currentTarget;
             // If the step was supposed to activate another target, activate
             // this one instead.
-            if (mode === "redo" && revertedStep.extraStepInfos.nextTarget) {
-                targetEl = revertedStep.extraStepInfos.nextTarget;
+            const nextTarget = revertedStep.extraStepInfos.nextTarget;
+            if (mode === "redo" && (nextTarget || nextTarget === false)) {
+                targetEl = nextTarget;
             }
-            this.updateContainers(targetEl, { forceUpdate: true });
-            // Scroll to the target if not visible.
-            if (!isElementInViewport(targetEl)) {
-                targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            if (targetEl) {
+                this.updateContainers(targetEl, { forceUpdate: true });
+                // Scroll to the target if not visible.
+                if (!isElementInViewport(targetEl)) {
+                    targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            } else {
+                this.deactivateContainers();
             }
         }
     }
