@@ -124,12 +124,19 @@ class test_guess_mimetype(BaseCase):
         self.assertEqual(mimetype, 'application/zip')
 
     def test_mimetype_xml(self):
+        expected_mimetype = 'application/xml' if magic is None else 'text/xml'
         mimetype = guess_mimetype(XML, default='test')
+<<<<<<< 74eecadb39e0c260f4cfc1ae9478c84eda815132
         self.assertIn(mimetype, ('application/xml', 'text/xml'))
 
     def test_mimetype_txt(self):
         mimetype = guess_mimetype(TXT, default='test')
         self.assertEqual(mimetype, 'text/plain')
+||||||| db9cd0e0f2450d7c1cfea50376b8b6f3106332ed
+        self.assertEqual(mimetype, 'application/xml')
+=======
+        self.assertEqual(mimetype, expected_mimetype)
+>>>>>>> a5c56643b5ebf9d79c4f6e3f32a112dc4abcb047
 
     def test_mimetype_get_extension(self):
         self.assertEqual(get_extension('filename.Abc'), '.abc')
