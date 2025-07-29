@@ -330,6 +330,10 @@ export class Thread extends Record {
      * @param {import("models").Persona} persona
      */
     getPersonaName(persona) {
+        // Guest do not implement `displayName` and can safely use `name`.
+        if (persona.type === "guest") {
+            return persona.name;
+        }
         return persona.displayName;
     }
 

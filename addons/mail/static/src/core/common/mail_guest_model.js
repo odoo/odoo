@@ -35,11 +35,6 @@ export class MailGuest extends Record {
     /** @type {number} */
     id;
     debouncedSetImStatus;
-    displayName = fields.Attr(undefined, {
-        compute() {
-            return this._computeDisplayName();
-        },
-    });
     monitorPresence = fields.Attr(false, {
         compute() {
             return this.store.env.services.bus_service.isActive && this.id > 0;
@@ -90,10 +85,6 @@ export class MailGuest extends Record {
         },
     });
     write_date = fields.Datetime();
-
-    _computeDisplayName() {
-        return this.name;
-    }
 
     get avatarUrl() {
         const accessTokenParam = {};
