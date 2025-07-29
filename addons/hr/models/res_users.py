@@ -16,7 +16,6 @@ HR_READABLE_FIELDS = [
     'child_ids',
     'employee_id',
     'employee_ids',
-    'can_edit',
     'is_hr_user',
     'is_system',
     'employee_resource_calendar_id',
@@ -99,18 +98,12 @@ class ResUsers(models.Model):
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
 
-    can_edit = fields.Boolean(compute='_compute_can_edit')
     is_system = fields.Boolean(compute="_compute_is_system")
     is_hr_user = fields.Boolean(compute='_compute_is_hr_user')
 
     @api.depends_context('uid')
     def _compute_is_system(self):
         self.is_system = self.env.user._is_system()
-
-    def _compute_can_edit(self):
-        can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
-        for user in self:
-            user.can_edit = can_edit
 
     def _compute_is_hr_user(self):
         is_hr_user = self.env.user.has_group('hr.group_hr_user')
@@ -185,7 +178,11 @@ class ResUsers(models.Model):
         return ['name', 'email', 'image_1920', 'tz']
 
     def _get_personal_info_partner_ids_to_notify(self, employee):
-        # To override in appropriate module
+        if employee.version_id.hr_responsible_id:
+            return (
+                _("You are receiving this message because you are the HR Responsible of this employee."),
+                employee.version_id.hr_responsible_id.partner_id.ids,
+            )
         return ('', [])
 
     def write(self, vals):
@@ -199,10 +196,6 @@ class ResUsers(models.Model):
             for field_name, field in self._fields.items()
             if field.related_field and field.related_field.model_name == 'hr.employee' and field_name in vals
         }
-        can_edit_self = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
-        if hr_fields and not can_edit_self:
-            # Raise meaningful error message
-            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))
 
         employee_domain = [
             *self.env['hr.employee']._check_company_domain(self.env.company),
@@ -239,8 +232,6 @@ class ResUsers(models.Model):
                 without_image = self.env['hr.employee'].sudo().search(employee_domain + [('image_1920', '=', False)])
                 with_image = self.env['hr.employee'].sudo().search(employee_domain + [('image_1920', '!=', False)])
                 without_image.write(employee_values)
-                if not can_edit_self:
-                    employee_values.pop('image_1920')
                 with_image.write(employee_values)
             else:
                 employees = self.env['hr.employee'].sudo().search(employee_domain)
