@@ -1677,6 +1677,23 @@ export class Rtc extends Record {
     }
 
     /**
+     * Applies blur effect to a video stream using BlurManager.
+     *
+     * @param {MediaStream} videoStream - input video stream.
+     * @returns {Promise<{stream: MediaStream, close: Function}>} - Blurred video stream and a function to close the blur manager.
+     */
+    async applyBlurEffect(videoStream) {
+        const blurManager = new BlurManager(videoStream, {
+            backgroundBlur: this.store.settings.backgroundBlurAmount,
+            edgeBlur: this.store.settings.edgeBlurAmount,
+        });
+        return {
+            stream: await blurManager.stream,
+            close: () => blurManager.close(),
+        };
+    }
+
+    /**
      * @param {string} type
      * @param {Object} [param1]
      * @param {boolean} [param1.force]
@@ -1882,20 +1899,16 @@ export class Rtc extends Record {
             }
         }
         if (this.store.settings.useBlur && type === "camera") {
+            this.blurManager?.close();
+            this.blurManager = undefined;
             try {
-                this.blurManager?.close();
-                this.blurManager = new BlurManager(sourceStream, {
-                    backgroundBlur: this.store.settings.backgroundBlurAmount,
-                    edgeBlur: this.store.settings.edgeBlurAmount,
-                });
-                const bluredStream = await this.blurManager.stream;
-                outputTrack = bluredStream.getVideoTracks()[0];
+                this.blurManager = await this.applyBlurEffect(sourceStream);
+                const blurredStream = this.blurManager.stream;
+                outputTrack = blurredStream.getVideoTracks()[0];
             } catch (_e) {
-                this.notification.add(
-                    _t("%(name)s: %(message)s)", { name: _e.name, message: _e.message }),
-                    { type: "warning" }
-                );
+                this.notification.add(_e.message, { type: "warning" });
                 this.store.settings.useBlur = false;
+                outputTrack = sourceStream.getVideoTracks()[0];
             }
         }
         switch (type) {

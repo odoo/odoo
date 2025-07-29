@@ -116,7 +116,6 @@ export class CallSettings extends Component {
 
     onChangeBlur(ev) {
         this.store.settings.useBlur = ev.target.checked;
-        browser.localStorage.setItem("mail_user_setting_use_blur", this.store.settings.useBlur);
     }
 
     onChangeShowOnlyVideo(ev) {

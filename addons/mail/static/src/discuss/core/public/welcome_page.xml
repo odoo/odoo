@@ -24,6 +24,9 @@
                     <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.videoStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickVideo">
                         <i class="fa fa-camera"/>
                     </button>
+                    <button t-if="state.videoStream"  class="btn fa-stack p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ store.settings.useBlur ? 'btn-secondary' : 'btn-dark' }}" t-on-click="onClickBlur" t-att-title="blurButtonTitle">
+                        <i class="fa fa-photo" t-att-class="{ 'opacity-50': !store.settings.useBlur }"/>
+                    </button>
                 </div>
                 <audio autoplay="" t-ref="audio"/>
             </div>
