@@ -1,20 +1,18 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
-export class ImageGridOption extends BaseOptionComponent {
-    static template = "website.ImageGridOption";
+export class GridImageOption extends BaseOptionComponent {
+    static template = "website.GridImageOption";
     static props = {};
 
     setup() {
         super.setup();
-        this.state = useDomState((editingElement) => {
-            const imageGridItemEl = editingElement.closest(".o_grid_item_image");
-            return {
-                isOptionActive: this.isOptionActive(editingElement, imageGridItemEl),
-            };
-        });
+        this.state = useDomState((editingElement) => ({
+            isOptionActive: this.isOptionActive(editingElement),
+        }));
     }
 
-    isOptionActive(editingElement, imageGridItemEl) {
+    isOptionActive(editingElement) {
+        const imageGridItemEl = editingElement.closest(".o_grid_item_image");
         // Special conditions for the hover effects.
         const hasSquareShape = editingElement.dataset.shape === "web_editor/geometric/geo_square";
         const effectAllowsOption = !["dolly_zoom", "outline", "image_mirror_blur"].includes(
