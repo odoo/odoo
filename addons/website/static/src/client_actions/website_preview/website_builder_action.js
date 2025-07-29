@@ -127,6 +127,12 @@ export class WebsiteBuilderClientAction extends Component {
         onMounted(() => {
             this.addListeners(document);
             this.addSystrayItems();
+            this.websiteService.context.showNewContentModal =
+                this.props.display_new_content ||
+                router.current.display_new_content;
+            this.websiteService.context.newInstalledModule =
+                this.props.display_dialog_after_module_install ||
+                router.current.display_dialog_after_module_install;
             const edition = !!(this.enableEditor || this.editTranslations);
             if (edition) {
                 this.onEditPage();
