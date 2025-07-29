@@ -142,7 +142,7 @@
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="print_quotation" string="Print" type="object" groups="base.group_user" data-hotkey="k" invisible="state == 'purchase'"/>
                     <button name="%(purchase.action_report_purchase_order)d" string="Print" type="action" groups="base.group_user" data-hotkey="k" invisible="state != 'purchase'"/>
-                    <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase')" string="Cancel" type="object" data-hotkey="x" />
+                    <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase') or locked" string="Cancel" type="object" data-hotkey="x"/>
                     <button name="button_lock" type="object" string="Lock" invisible="locked or state != 'purchase' or not lock_confirmed_po == 'lock'" data-hotkey="l"/>
                     <button name="button_unlock" type="object" string="Unlock" invisible="not locked" groups="purchase.group_purchase_manager" data-hotkey="l"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
