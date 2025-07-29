@@ -875,7 +875,7 @@ test("Embed video by pasting video URL", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html"/>
+                <field name="txt" widget="html" options="{ 'allowVideo': True, 'embedded_components': False }"/>
             </form>`,
     });
 
@@ -1072,39 +1072,14 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     ]);
 });
 
-test("MediaDialog contains 'Videos' tab when 'allowMediaDialogVideo' = false (allowEmbeddedVideo is true by default)", async () => {
+test("MediaDialog does not contain 'Videos' tab in html field when 'allowVideo' = false", async () => {
     await mountView({
         type: "form",
         resId: 1,
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{'allowMediaDialogVideo': False}"/>
-            </form>`,
-    });
-    setSelectionInHtmlField();
-    await insertText(htmlEditor, "/media");
-    await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
-
-    await press("Enter");
-    await animationFrame();
-    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
-        "Images",
-        "Documents",
-        "Icons",
-        "Videos",
-    ]);
-});
-
-test("MediaDialog does not contain 'Videos' tab in html field when 'allowMediaDialogVideo' = false and allowEmbeddedVideo = false", async () => {
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-            <form>
-            <field name="txt" widget="html" options="{'allowMediaDialogVideo': False, 'allowEmbeddedVideo': False}"/>
+            <field name="txt" widget="html" options="{'allowVideo': False}"/>
             </form>`,
     });
 
@@ -1122,7 +1097,7 @@ test("MediaDialog does not contain 'Videos' tab in html field when 'allowMediaDi
     ]);
 });
 
-test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () => {
+test("MediaDialog does not contain 'Videos' tab when sanitize = true and embedded_components = false", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
 
@@ -1137,7 +1112,7 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
         resModel: "sanitize.partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{'allowEmbeddedVideo': False}"/>
+                <field name="txt" widget="html" options="{'embedded_components': False}"/>
             </form>`,
     });
     setSelectionInHtmlField();
@@ -1154,7 +1129,7 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
     ]);
 });
 
-test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowMediaDialogVideo' = true", async () => {
+test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowVideo' = true", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
 
@@ -1169,7 +1144,7 @@ test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowMedi
         resModel: "sanitize.partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{'allowMediaDialogVideo': True}"/>
+                <field name="txt" widget="html" options="{'allowVideo': True}"/>
             </form>`,
     });
     setSelectionInHtmlField();

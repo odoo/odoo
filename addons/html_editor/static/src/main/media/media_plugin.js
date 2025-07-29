@@ -34,7 +34,6 @@ export class MediaPlugin extends Plugin {
     static shared = ["savePendingImages", "openMediaDialog"];
     static defaultConfig = {
         allowImage: true,
-        allowMediaDialogVideo: true,
         allowMediaDocuments: true,
     };
     resources = {
@@ -49,7 +48,9 @@ export class MediaPlugin extends Plugin {
             {
                 id: "insertMedia",
                 title: _t("Media"),
-                description: this.getMediaCommandDescription(),
+                description: this.config.allowVideo
+                    ? _t("Insert image, icon or video")
+                    : _t("Insert image or icon"),
                 keywords: [_t("Image"), _t("Icon")],
                 icon: "fa-file-image-o",
                 run: this.openMediaDialog.bind(this),
@@ -199,7 +200,6 @@ export class MediaPlugin extends Plugin {
             ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
             media: params.node,
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-            noVideos: !this.config.allowMediaDialogVideo,
             noImages: !this.config.allowImage,
             extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,
@@ -375,10 +375,5 @@ export class MediaPlugin extends Plugin {
         if (isCollapsed && closestElement(anchorNode, isIconElement)) {
             this.dependencies.selection.selectAroundNonEditable();
         }
-    }
-
-    getMediaCommandDescription() {
-        const hasVideo = this.config.allowMediaDialogVideo || this.config.allowEmbeddedVideo;
-        return hasVideo ? _t("Insert image, icon or video") : _t("Insert image or icon");
     }
 }
