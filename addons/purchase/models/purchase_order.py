@@ -528,6 +528,11 @@ class PurchaseOrder(models.Model):
         self.filtered(lambda po: po.state == 'draft').write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
+    def print_purchaseorder(self):
+        if any(order.state != 'purchase' for order in self):
+            raise UserError(_("Unable to print the Purchase Order because one or more orders are not in the 'Purchase' state."))
+        return self.env.ref('purchase.action_report_purchase_order').report_action(self)
+
     def button_approve(self, force=False):
         self = self.filtered(lambda order: order._approval_allowed())
         self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
