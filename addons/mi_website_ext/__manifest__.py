@@ -13,6 +13,9 @@
         "portal",
     ],
     "assets": {
+        'web.assets_backend': [
+            ('after', 'hr_holidays/static/src/components/float_time_selection/float_time_selection_popover.js', 'mi_website_ext/static/src/js/time_format_widget_override.js'),
+        ],
         "web.assets_frontend": [
             "mi_website_ext/static/src/js/notify_button_handler.js",
             "mi_website_ext/static/src/js/startup_popups.js",
@@ -42,7 +45,6 @@
             "mi_website_ext/static/src/css/modal.css",
             "mi_website_ext/static/src/css/profile.css",
         ],
-        "web.assets_backend": [],
     },
     "data": [
         "security/ir.model.access.csv",
