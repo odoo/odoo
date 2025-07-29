@@ -46,7 +46,7 @@ class WebsiteParallaxPlugin extends Plugin {
         } else {
             delete editingElement.dataset.parallaxType;
         }
-        let parallaxEl = editingElement.querySelector(".s_parallax_bg");
+        let parallaxEl = editingElement.querySelector(":scope > .s_parallax_bg");
         if (isParallax) {
             if (!parallaxEl) {
                 parallaxEl = document.createElement("span");
@@ -69,7 +69,7 @@ class WebsiteParallaxPlugin extends Plugin {
         }
     }
     removeParallax(editingEl) {
-        const parallaxEl = editingEl.querySelector(".s_parallax_bg");
+        const parallaxEl = editingEl.querySelector(":scope > .s_parallax_bg");
         const bgImage = parallaxEl?.style.backgroundImage;
         if (
             !parallaxEl ||
