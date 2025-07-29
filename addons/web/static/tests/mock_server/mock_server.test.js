@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { mockTimeZone } from "@odoo/hoot-mock";
 import {
     defineModels,
     fields,
@@ -1352,6 +1353,300 @@ test("performRPC: formatted_read_group with count_distinct", async () => {
             "partner_ref:count_distinct": 2,
         },
     ]);
+});
+
+describe("groupby chain of fields", () => {
+    class RelatedBar extends models.Model {
+        _name = "test_read_group.related_bar";
+        name = fields.Char();
+
+        _records = [];
+    }
+    class RelatedFoo extends models.Model {
+        _name = "test_read_group.related_foo";
+        name = fields.Char();
+        bar_id = fields.Many2one({ relation: "test_read_group.related_bar" });
+        schedule_datetime = fields.Datetime();
+        date = fields.Date();
+
+        _records = [];
+    }
+    class RelatedBase extends models.Model {
+        _name = "test_read_group.related_base";
+        name = fields.Char();
+        foo_id = fields.Many2one({ relation: "test_read_group.related_foo" });
+
+        _records = [];
+    }
+    defineModels([RelatedBar, RelatedFoo, RelatedBase]);
+
+    test("groupby chain fnames many2one", async () => {
+        RelatedBar._records = [
+            { id: 1, name: "bar_a" },
+            { id: 2, name: false },
+        ];
+        RelatedFoo._records = [
+            { id: 1, name: "foo_a_bar_a", bar_id: 1 },
+            { id: 2, name: "foo_b_bar_false", bar_id: 2 },
+            { id: 3, name: false, bar_id: 1 },
+            { id: 4, name: false, bar_id: false },
+        ];
+        RelatedBase._records = [
+            { id: 1, name: "base_foo_a_1", foo_id: 1 },
+            { id: 2, name: "base_foo_a_2", foo_id: 1 },
+            { id: 3, name: "base_foo_b_bar_false", foo_id: 2 },
+            { id: 4, name: "base_false_foo_bar_a", foo_id: 3 },
+            { id: 5, name: "base_false_foo", foo_id: 4 },
+        ];
+        await makeMockServer();
+        const result = await ormRequest({
+            model: "test_read_group.related_base",
+            method: "formatted_read_group",
+            kwargs: {
+                groupby: ["foo_id.bar_id"],
+                aggregates: ["__count"],
+            },
+        });
+        expect(result).toEqual([
+            {
+                __count: 3,
+                __extra_domain: [["foo_id", "any", [["bar_id", "=", 1]]]],
+                "foo_id.bar_id": [1, "bar_a"],
+            },
+            {
+                __count: 1,
+                __extra_domain: [["foo_id", "any", [["bar_id", "=", 2]]]],
+                "foo_id.bar_id": [2, false],
+            },
+            {
+                __count: 1,
+                __extra_domain: [
+                    "|",
+                    ["foo_id", "not any", []],
+                    ["foo_id", "any", [["bar_id", "=", false]]],
+                ],
+                "foo_id.bar_id": false,
+            },
+        ]);
+    });
+
+    test("groupby chain fnames char", async () => {
+        RelatedBar._records = [
+            { id: 1, name: "bar_a" },
+            { id: 2, name: false },
+        ];
+        RelatedFoo._records = [
+            { id: 1, name: "foo_a_bar_a", bar_id: 1 },
+            { id: 2, name: "foo_b_bar_false", bar_id: 2 },
+            { id: 3, name: false, bar_id: 1 },
+            { id: 4, name: false, bar_id: false },
+        ];
+        RelatedBase._records = [
+            { id: 1, name: "base_foo_a_1", foo_id: 1 },
+            { id: 2, name: "base_foo_a_2", foo_id: 1 },
+            { id: 3, name: "base_foo_b_bar_false", foo_id: 2 },
+            { id: 4, name: "base_false_foo_bar_a", foo_id: 3 },
+            { id: 5, name: "base_false_foo", foo_id: 4 },
+        ];
+        await makeMockServer();
+        const result = await ormRequest({
+            model: "test_read_group.related_base",
+            method: "formatted_read_group",
+            kwargs: {
+                groupby: ["foo_id.bar_id.name"],
+                aggregates: ["__count"],
+            },
+        });
+        expect(result).toEqual([
+            {
+                __count: 3,
+                __extra_domain: [["foo_id", "any", [["bar_id", "any", [["name", "=", "bar_a"]]]]]],
+                "foo_id.bar_id.name": "bar_a",
+            },
+            {
+                __count: 2,
+                __extra_domain: [
+                    "|",
+                    ["foo_id", "not any", []],
+                    [
+                        "foo_id",
+                        "any",
+                        ["|", ["bar_id", "not any", []], ["bar_id", "any", [["name", "=", false]]]],
+                    ],
+                ],
+                "foo_id.bar_id.name": false,
+            },
+        ]);
+    });
+
+    test("groupby chain fnames date", async () => {
+        RelatedFoo._records = [
+            { id: 1, schedule_datetime: false },
+            { id: 2, schedule_datetime: "1916-08-18 12:30:00" },
+            { id: 3, schedule_datetime: "1916-08-18 12:50:00" },
+            { id: 4, schedule_datetime: "1916-08-19 01:30:00" },
+            { id: 5, schedule_datetime: "1916-10-18 23:30:00" },
+        ];
+        RelatedBase._records = [
+            { id: 1, foo_id: 1 },
+            { id: 2, foo_id: 2 },
+            { id: 3, foo_id: 3 },
+            { id: 4, foo_id: 4 },
+            { id: 5, foo_id: 5 },
+            { id: 6, foo_id: 5 },
+        ];
+        mockTimeZone(0); // UTC
+        await makeMockServer();
+        const result = await ormRequest({
+            model: "test_read_group.related_base",
+            method: "formatted_read_group",
+            kwargs: {
+                groupby: ["foo_id.schedule_datetime:day"],
+                aggregates: ["__count"],
+            },
+        });
+        expect(result).toEqual([
+            {
+                __count: 2,
+                __extra_domain: [
+                    [
+                        "foo_id",
+                        "any",
+                        [
+                            ["schedule_datetime", ">=", "1916-08-18 00:00:00"],
+                            ["schedule_datetime", "<", "1916-08-19 00:00:00"],
+                        ],
+                    ],
+                ],
+                "foo_id.schedule_datetime:day": ["1916-08-18 00:00:00", "1916-08-18"],
+            },
+            {
+                __count: 1,
+                __extra_domain: [
+                    [
+                        "foo_id",
+                        "any",
+                        [
+                            ["schedule_datetime", ">=", "1916-08-19 00:00:00"],
+                            ["schedule_datetime", "<", "1916-08-20 00:00:00"],
+                        ],
+                    ],
+                ],
+                "foo_id.schedule_datetime:day": ["1916-08-19 00:00:00", "1916-08-19"],
+            },
+            {
+                __count: 2,
+                __extra_domain: [
+                    [
+                        "foo_id",
+                        "any",
+                        [
+                            ["schedule_datetime", ">=", "1916-10-18 00:00:00"],
+                            ["schedule_datetime", "<", "1916-10-19 00:00:00"],
+                        ],
+                    ],
+                ],
+                "foo_id.schedule_datetime:day": ["1916-10-18 00:00:00", "1916-10-18"],
+            },
+            {
+                __count: 1,
+                __extra_domain: [
+                    "|",
+                    ["foo_id", "not any", []],
+                    ["foo_id", "any", [["schedule_datetime", "=", false]]],
+                ],
+                "foo_id.schedule_datetime:day": false,
+            },
+        ]);
+    });
+
+    test("groupby chain fnames date with date part", async () => {
+        RelatedFoo._records = [
+            { id: 1, schedule_datetime: false },
+            { id: 2, schedule_datetime: "1916-08-18 12:30:00" },
+        ];
+        RelatedBase._records = [
+            { id: 1, foo_id: 1 },
+            { id: 2, foo_id: 2 },
+        ];
+        mockTimeZone(0); // UTC
+        await makeMockServer();
+        const result = await ormRequest({
+            model: "test_read_group.related_base",
+            method: "formatted_read_group",
+            kwargs: {
+                groupby: ["foo_id.schedule_datetime:month_number"],
+                aggregates: ["__count"],
+            },
+        });
+        expect(result).toEqual([
+            {
+                "foo_id.schedule_datetime:month_number": 8,
+                __extra_domain: [["foo_id", "any", [["schedule_datetime.month_number", "=", 8]]]],
+                __count: 1,
+            },
+            {
+                "foo_id.schedule_datetime:month_number": false,
+                __extra_domain: [
+                    "|",
+                    ["foo_id", "not any", []],
+                    ["foo_id", "any", [["schedule_datetime", "=", false]]],
+                ],
+                __count: 1,
+            },
+        ]);
+    });
+
+    test("groupby chain fnames with formatted_read_grouping_sets", async () => {
+        RelatedBar._records = [
+            { id: 1, name: "bar_a" },
+            { id: 2, name: false },
+        ];
+        RelatedFoo._records = [
+            { id: 1, name: "foo_a_bar_a", bar_id: 1 },
+            { id: 2, name: "foo_b_bar_false", bar_id: 2 },
+            { id: 3, name: false, bar_id: 1 },
+            { id: 4, name: false, bar_id: false },
+        ];
+        RelatedBase._records = [
+            { id: 1, name: "base_foo_a_1", foo_id: 1 },
+            { id: 2, name: "base_foo_a_2", foo_id: 1 },
+            { id: 3, name: "base_foo_b_bar_false", foo_id: 2 },
+            { id: 4, name: "base_false_foo_bar_a", foo_id: 3 },
+            { id: 5, name: "base_false_foo", foo_id: 4 },
+        ];
+        await makeMockServer();
+        const grouping_sets = [
+            ["foo_id.bar_id.name", "foo_id.bar_id", "foo_id", "name"],
+            ["foo_id.bar_id.name", "foo_id.bar_id"],
+            ["name"],
+            [],
+        ];
+        // Compute expected result as a list of formatted_read_group for each groupby in grouping_sets
+        const expected = [];
+        for (const groupby of grouping_sets) {
+            expected.push(
+                await ormRequest({
+                    model: "test_read_group.related_base",
+                    method: "formatted_read_group",
+                    kwargs: {
+                        groupby,
+                        aggregates: ["__count", "name:array_agg"],
+                    },
+                })
+            );
+        }
+        const result = await ormRequest({
+            model: "test_read_group.related_base",
+            method: "formatted_read_grouping_sets",
+            kwargs: {
+                domain: [],
+                grouping_sets,
+                aggregates: ["__count", "name:array_agg"],
+            },
+        });
+        expect(result).toEqual(expected);
+    });
 });
 
 test("performRPC: read_progress_bar grouped by boolean", async () => {
