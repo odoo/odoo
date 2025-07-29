@@ -1,9 +1,11 @@
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 export const patchAvatarCardPopover = {
     setup() {
         super.setup();
+        this.orm = useService("orm");
         this.userInfoTemplate = "hr.avatarCardUserInfos";
     },
     get fieldNames() {
