@@ -54,7 +54,7 @@ export const spreadsheetLinkMenuCellService = {
                     }
                     return {
                         url,
-                        label: _t(label),
+                        label,
                         isExternal: false,
                         isUrlEditable: false,
                     };
@@ -77,7 +77,7 @@ export const spreadsheetLinkMenuCellService = {
                     _getIrMenuByXmlId(xmlId); // Validate the XML ID exists
                     return {
                         url,
-                        label: _t(label),
+                        label,
                         isExternal: false,
                         isUrlEditable: false,
                     };
@@ -100,7 +100,7 @@ export const spreadsheetLinkMenuCellService = {
                 createLink(url, label) {
                     return {
                         url,
-                        label: _t(label),
+                        label,
                         isExternal: false,
                         isUrlEditable: false,
                     };
