@@ -330,7 +330,7 @@ export class Thread extends Record {
      * @param {import("models").Persona} persona
      */
     getPersonaName(persona) {
-        return persona.displayName;
+        return persona.displayName || persona.name;
     }
 
     get hasAttachmentPanel() {
