@@ -37,6 +37,6 @@ export class VersionControlPlugin extends Plugin {
         const snippet = this.config.snippetModel.getOriginalSnippet(snippetKey);
         const cloneEl = snippet.content.cloneNode(true);
         el.replaceWith(cloneEl);
-        this.dependencies["builderOptions"].updateContainers(cloneEl);
+        this.dependencies.builderOptions.setNextTarget(cloneEl);
     }
 }
