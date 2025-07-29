@@ -300,8 +300,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ('product_id.default_code', '=', sku)
             ], limit=1)
             if move:
-                move.packed_qty = qty
-                _logger.info("Updated stock.move packed_qty = %.2f for SKU [%s] in picking %s", qty, sku, picking_name)
+                move.packed_qty += qty
+                _logger.info("Updated stock.move packed_qty += %.2f for SKU [%s] in picking %s", qty, sku, picking_name)
             else:
                 _logger.warning("Stock.move not found for SKU [%s] in picking %s", sku, picking_name)
 
@@ -309,9 +309,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             if sale_order:
                 so_line = sale_order.order_line.filtered(lambda l: l.product_id.default_code == sku)
                 if so_line:
-                    # Assuming you have a `packed_qty` field on sale.order.line
-                    so_line[0].packed_qty = qty
-                    _logger.info("Updated sale.order.line packed_qty = %.2f for SKU [%s] in SO %s", qty, sku,
+                    so_line[0].packed_qty += qty
+                    _logger.info("Updated sale.order.line packed_qty += %.2f for SKU [%s] in SO %s", qty, sku,
                                  sale_order.name)
                 else:
                     _logger.warning("Sale.order.line not found for SKU [%s] in SO %s", sku, sale_order.name)
@@ -770,7 +769,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         print("\n\n\n old logic Aup[opst payload single pick=====", api_url)
         _logger.info(f"[OLD LOGIC] Sending legacy payload:\n{json.dumps(payload, indent=4)}")
         self.send_payload_to_api(api_url, payload)
-        #
+        # Update packed_qty
+        packed_data = [
+            {'sku': line.product_id.default_code, 'qty': line.quantity or 1.0}
+            for line in scanned_lines if line.scanned
+        ]
+        self.update_packed_qty_after_success(picking.name, packed_data)
         # # Optional: update state after sending
         # picking.write({'current_state': 'pack'})
         # picking.sale_id.write({
@@ -1131,7 +1135,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         if country_code.upper() != "AU":
             payload["shipment"]["international"] = {
-                "incoterms": "DAP",
+                "incoterms": "DDP",
                 "customs_declaration": {
                     "description": "Apparell",
                     "total_value": round(declared_value, 2),
@@ -1144,13 +1148,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         _logger.info(f"[ONETRAKER][SINGLE PICK PAYLOAD] Sending payload:\n{json.dumps(payload, indent=4)}")
 
         #  Send to OneTraker and print label
-        label_url, con_id = self.send_payload_and_print_label(payload, main_picking.name)
+        label_url, con_id, shipment_id = self.send_payload_and_print_label(payload, main_picking.name)
 
         # Print all docs attached to the sale order, if any, after OneTraker success
         if getattr(sale, "docs", None):
             self.print_all_docs_from_sale_order(sale)
 
-        if (sale.carrier).upper() == "COURIERSPLEASE":
+        if (sale.carrier or '').upper() == "DHLEXPRESS":
+            tracking_url = f"https://mydhl.express.dhl/us/en/tracking.html#/results?id={shipment_id}"
+        elif (sale.carrier or '').upper() == "COURIERSPLEASE":
             tracking_url = f'https://www.couriersplease.com.au/tools-track?no={con_id}'
         else:
             tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
@@ -1158,14 +1164,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         sale.write({
             'carrier': carrier,
             'pick_status': 'packed',
-            'consignment_number': con_id,
+            'consignment_number': con_id if (sale.carrier or '').upper() != "DHLEXPRESS" else shipment_id,
             'status': label_url,
             'tracking_url': tracking_url,
         })
 
         self.send_tracking_update_to_ot_orders(
             so_number=sale.name,
-            con_id=con_id,
+            con_id=con_id if (sale.carrier or '').upper() != "DHLEXPRESS" else shipment_id,
             carrier=carrier,
             origin=sale.origin or main_picking.origin or "N/A",
             tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
@@ -1524,7 +1530,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         if country_code.upper() != "AU":
             payload["shipment"]["international"] = {
-                "incoterms": "DAP",
+                "incoterms": "DDP",
                 "customs_declaration": {
                     "description": "Apparell",
                     "total_value": round(declared_value, 2),
@@ -1580,8 +1586,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 #     origin=sale.origin or "N/A",
                 #     tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
                 # )
-                picking.button_validate()
-                return True
+                # picking.button_validate()
+                # return True
 
             if generic.get("apiSuccessStatus") != "True":
                 raise ValidationError(generic.get("apiStatusMessage", "Unknown error"))
@@ -1589,14 +1595,16 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                 {}).get("url")
             con_id = resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
-
+            shipment_id = resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("shipment_id")
             #  Fire-and-forget label printing
             if label_url:
                 self._send_label_to_print_api(label_url)
             else:
                 _logger.warning(f"[PRINT API] No label_url found in response for multi-pick: {order_number}")
             # Update DB
-            if (sale.carrier).upper() == "COURIERSPLEASE":
+            if (sale.carrier or '').upper() == "DHLEXPRESS":
+                tracking_url = f"https://mydhl.express.dhl/us/en/tracking.html#/results?id={con_id}"
+            elif (sale.carrier or '').upper() == "COURIERSPLEASE":
                 tracking_url = f'https://www.couriersplease.com.au/tools-track?no={con_id}'
             else:
                 tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
@@ -1608,14 +1616,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'carrier': carrier,
                 'pick_status': 'packed',
                 # 'delivery_status': 'partial',
-                'consignment_number': con_id,
+                'consignment_number': con_id if (sale.carrier or '').upper() != "DHLEXPRESS" else shipment_id,
                 'status': label_url,
                 'tracking_url': tracking_url,
             })
 
             self.send_tracking_update_to_ot_orders(
                 so_number=sale.name,
-                con_id=con_id,
+                con_id=con_id if (sale.carrier or '').upper() != "DHLEXPRESS" else shipment_id,
                 carrier=carrier,
                 origin=sale.origin or "N/A",
                 tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
@@ -1627,9 +1635,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'payload_json': json.dumps(payload),
                 'response_json': json.dumps(resp_data),
                 'status': 'success',
-                'consignment_number': con_id,
-                'tracking_url': (f'https://www.couriersplease.com.au/tools-track?no={con_id}' if (sale.carrier or '').upper() == "COURIERSPLEASE"
-                                 else f'https://auspost.com.au/mypost/track/details/{con_id}'),
+                'consignment_number': con_id if (sale.carrier or '').upper() != "DHLEXPRESS" else shipment_id,
+                'tracking_url': tracking_url,
                 'label_url': label_url,
                 'attempted_at': fields.Datetime.now(),
                 'carrier': sale.carrier if sale else '',
