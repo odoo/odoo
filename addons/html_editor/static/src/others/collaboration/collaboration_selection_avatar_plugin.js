@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -79,7 +79,9 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         if (!anchorNode || !focusNode || !anchorNode.isConnected || !focusNode.isConnected) {
             return;
         }
-        const anchorBlock = closestBlock(anchorNode);
+        const anchorBlock =
+            closestElement(anchorNode, (el) => isBlock(el) && el.parentElement === this.editable) ||
+            closestBlock(anchorNode);
         if (!anchorBlock) {
             return;
         }
