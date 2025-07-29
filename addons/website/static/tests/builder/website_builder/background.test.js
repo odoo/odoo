@@ -40,6 +40,26 @@ test("remove parallax changes editing element", async () => {
     expect(":iframe section").toHaveClass("o_bg_img_opt_repeat");
 });
 
+test("remove parallax from block containing an inner block with parallax", async () => {
+    const backgroundImageUrl = "url('/web/image/123/transparent.png')";
+    await setupWebsiteBuilder(`
+        <section id="section_a" style="background-image: ${backgroundImageUrl} !important;">
+            <section id="section_b">
+                <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
+            </section>
+        </section>`);
+    await contains(":iframe section#section_a").click();
+    await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
+    await contains("[data-action-value='top']").click();
+    expect(":iframe section#section_a").toHaveClass("parallax");
+    expect(":iframe section#section_a > .s_parallax_bg").toHaveCount();
+    await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
+    await contains("[data-action-value='none']").click();
+    expect(":iframe section#section_a > .s_parallax_bg").not.toHaveCount();
+    expect(":iframe section#section_b > .s_parallax_bg").toHaveCount();
+
+});
+
 async function setupWebsiteAndOpenParallaxOptions({ editingElClasses = "" } = {}) {
     const backgroundImageUrl = "url('/web/image/123/transparent.png')";
     const editingElClass = editingElClasses ? `class=${editingElClasses}` : "";
