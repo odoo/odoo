@@ -63,3 +63,42 @@ registry
             },
         ],
    });
+
+   registry
+    .category('web_tour.tours')
+    .add('website_sale_combo_configurator_with_optional_products', {
+        url: '/shop',
+        steps: () => [
+            ...wsTourUtils.addToCart({ productName: "Combo product", search: false , expectUnloadPage: true}),
+            comboConfiguratorTourUtils.selectComboItem("Product B2"),
+            {
+                content: "Continue shopping to product configurator",
+                trigger: 'button:contains(Continue Shopping)',
+                run: 'click',
+            },
+            {
+                content: "Add Optional product",
+                trigger: `
+                    td.o_sale_product_configurator_price button:contains("Add")
+                `,
+                run: 'click',
+            },
+            {
+                content: "verify that we cannot reduce main product quantity",
+                trigger: ':not(button[name="sale_quantity_button_minus"])',
+            },
+            {
+                content: "verify that we cannot increase main product quantity",
+                trigger: ':not(button[name="sale_quantity_button_plus"])',
+            },
+            {
+                content: "Proceed to checkout",
+                trigger: 'button:contains(Proceed to Checkout)',
+                run: 'click',
+                expectUnloadPage: true,
+            },
+            ...wsTourUtils.assertCartContains({ productName: "Product A1" }),
+            ...wsTourUtils.assertCartContains({ productName: "Product B2" }),
+            ...wsTourUtils.assertCartContains({ productName: "Optional Product" }),
+        ],
+    });

@@ -56,6 +56,61 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         )
         self.start_tour('/', 'sale_combo_configurator', login='salesman')
 
+    def test_sale_combo_configurator_with_optional_products(self):
+        if self.env['ir.module.module']._get('sale_management').state != 'installed':
+            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
+
+        combo_a = self.env['product.combo'].create({
+            'name': "Combo A",
+            'combo_item_ids': [
+                Command.create({'product_id': self._create_product(name="Product A1").id}),
+            ],
+        })
+        combo_b = self.env['product.combo'].create({
+            'name': "Combo B",
+            'combo_item_ids': [
+                Command.create({'product_id': self._create_product(name="Product B1").id}),
+                Command.create({'product_id': self._create_product(name="Product B2").id}),
+            ],
+        })
+        optional_product = self.env['product.template'].create({
+            'name': "Optional Product",
+        })
+        combo_product = self.env['product.template'].create({
+            'name': "Combo product",
+            'list_price': 25,
+            'type': 'combo',
+            'combo_ids': [
+                Command.link(combo_a.id),
+                Command.link(combo_b.id),
+            ],
+            'optional_product_ids': [Command.link(optional_product.id)],
+        })
+        self.start_tour('/', 'sale_combo_configurator_with_optional_products', login='salesman')
+
+        order = self.env['sale.order'].search([('partner_id.name', '=', 'Test Partner')], limit=1)
+        self.assertTrue(order, "A new Sale order should be created.")
+        self.assertEqual(
+            order.order_line[0].product_template_id,
+            combo_product,
+            "The main combo product should be added",
+        )
+        self.assertEqual(
+            order.order_line[1].product_template_id.name,
+            'Product A1',
+            "Product A1 should be added as a part of this combo",
+        )
+        self.assertEqual(
+            order.order_line[2].product_template_id.name,
+            'Product B2',
+            "Product B2 should be added as a part of this combo",
+        )
+        self.assertEqual(
+            order.order_line[3].product_template_id,
+            optional_product,
+            "Optional product should be added as a part of this combo",
+        )
+
     def test_sale_combo_configurator_preselect_single_unconfigurable_items(self):
         self.env['res.users'].search([('login', '=', 'salesman')]).group_ids += self.env.ref("product.group_product_manager")
         if self.env['ir.module.module']._get('sale_management').state != 'installed':

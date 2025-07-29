@@ -28,6 +28,14 @@ export class Product extends Component {
         parent_exclusions: Object,
         parent_product_tmpl_id: { type: Number, optional: true },
         price_info: { type: String, optional: true },
+        selectedComboItems: {
+            type: Array,
+            element: Object,
+            shape: {
+                name: String,
+            },
+            optional: true,
+        },
     };
 
     //--------------------------------------------------------------------------

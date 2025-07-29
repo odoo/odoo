@@ -312,16 +312,17 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      */
     async _onClickAdd(ev) {
         ev.preventDefault();
-        var def = () => {
+        var def = async () => {
             this._updateRootProduct((ev.currentTarget).closest('form'));
             const isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
             const isConfigured = ev.currentTarget.parentElement.id === 'add_to_cart_wrap';
             const showQuantity = Boolean(ev.currentTarget.dataset.showQuantity);
-            return this.call('cart', 'add', this.rootProduct, {
+            const res = await this.call('cart', 'add', this.rootProduct, {
                 isBuyNow: isBuyNow,
                 isConfigured: isConfigured,
                 showQuantity: showQuantity,
             });
+            return res.quantity;
         };
         if ($('.js_add_cart_variants').children().length) {
             return this._getCombinationInfo(ev).then(() => {
