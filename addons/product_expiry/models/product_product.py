@@ -78,7 +78,13 @@ class ProductProduct(models.Model):
 
         # A & C
         wh = self.env['stock.warehouse'].search([])
-        domain_quant[1] = ('location_id', 'in', wh.mapped('wh_qc_stock_loc_id').ids + wh.mapped('wh_input_stock_loc_id').ids)
+        transit_locations_to_exclude = []
+        parent_path = self._context.get('location') and self.env['stock.location'].browse(self._context['location']).parent_path
+        for transit_loc in wh.mapped('wh_qc_stock_loc_id') | wh.mapped('wh_input_stock_loc_id'):
+            if not parent_path or parent_path in transit_loc.parent_path:
+                # only if this transit location is a sublocation of the original search location
+                transit_locations_to_exclude.append(transit_loc.id)
+        domain_quant[1] = ('location_id', 'in', transit_locations_to_exclude)
         to_remove_in_transit = {product.id: quantity for product, quantity in Quant._read_group(domain_quant, ['product_id'], ['reserved_quantity:sum'])}
 
         for product in expiration_products:
