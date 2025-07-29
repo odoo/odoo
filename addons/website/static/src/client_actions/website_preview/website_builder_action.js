@@ -65,6 +65,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.websiteService.websiteRootInstance = undefined;
         this.iframeFallbackUrl = "/website/iframefallback";
         this.iframefallback = useRef("iframefallback");
+        this.newInstalledModule = router.current.module_installed;
 
         this.websiteContent = useRef("iframe");
         this.builderSidebarRef = useRef("builder_sidebar");
@@ -237,6 +238,7 @@ export class WebsiteBuilderClientAction extends Component {
             onNewPage: this.onNewPage.bind(this),
             onEditPage: this.onEditPage.bind(this),
             iframeLoaded: this.iframeLoaded,
+            newInstalledModule: this.newInstalledModule,
         };
     }
 

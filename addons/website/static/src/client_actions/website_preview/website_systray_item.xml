@@ -7,7 +7,7 @@
         <PublishSystrayItem t-if="this.canPublish"/>
         <MobilePreviewSystrayItem t-if="this.isRestrictedEditor" />
         <EditInBackendSystrayItem t-if="this.hasEditableRecordInBackend"/>
-        <NewContentSystrayItem t-if="this.isRestrictedEditor" onNewPage="this.props.onNewPage"/>
+        <NewContentSystrayItem t-if="this.isRestrictedEditor" onNewPage="this.props.onNewPage" newInstalledModule="this.props.newInstalledModule"/>
         <EditWebsiteSystrayItem t-if="this.isRestrictedEditor and this.canEdit" t-props="this.editWebsiteSystrayItemProps"/>
     </div>
 </t>
