@@ -683,6 +683,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         """
         Receive a negative quantity, the picking should be a delivery and the quantity received
         negative. """
+        self.product_id_2.type = 'consu'
         po_vals = {
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
