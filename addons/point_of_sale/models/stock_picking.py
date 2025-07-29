@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
+from odoo.tools.sql import create_index
 
 from itertools import groupby
 from collections import defaultdict
@@ -181,6 +182,10 @@ class ProcurementGroup(models.Model):
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
+
+    def init(self):
+        create_index(self.env.cr, 'stock_move__product_id_write_date_idx', 'stock_move', ['product_id', 'write_date desc'])
+        super().init()
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
