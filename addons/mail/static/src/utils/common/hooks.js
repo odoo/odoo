@@ -16,6 +16,7 @@ import { browser } from "@web/core/browser/browser";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
@@ -423,10 +424,21 @@ export function useMicrophoneVolume() {
                 state.value = 0;
                 return;
             }
-            const audioStream = await browser.navigator.mediaDevices.getUserMedia({
-                audio: store.settings.audioConstraints,
-            });
-            const track = audioStream.getAudioTracks()[0];
+            let track;
+            try {
+                const audioStream = await browser.navigator.mediaDevices.getUserMedia({
+                    audio: store.settings.audioConstraints,
+                });
+                track = audioStream.getAudioTracks()[0];
+            } catch {
+                store.env.services.notification.add(
+                    _t('"%(hostname)s" requires microphone access', {
+                        hostname: browser.location.host,
+                    }),
+                    { type: "warning" }
+                );
+                return;
+            }
             if (isClosed) {
                 track.stop();
                 return;
