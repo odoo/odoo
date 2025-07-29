@@ -1,4 +1,5 @@
 import { Composer } from "@mail/core/common/composer";
+import { DiscussActions } from "@mail/core/common/discuss_actions";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -11,7 +12,6 @@ import { isEventHandled } from "@web/core/utils/misc";
 import { Component, toRaw, useChildSubEnv, useRef, useState, useSubEnv } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -28,8 +28,8 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 export class ChatWindow extends Component {
     static components = {
         CountryFlag,
+        DiscussActions,
         Dropdown,
-        DropdownItem,
         Thread,
         Composer,
         ThreadIcon,
@@ -90,8 +90,8 @@ export class ChatWindow extends Component {
 
     get attClass() {
         return {
-            'w-100 h-100 o-mobile': this.ui.isSmall,
-            'rounded-4 border border-dark mb-2': !this.ui.isSmall,
+            "w-100 h-100 o-mobile": this.ui.isSmall,
+            "rounded-4 border border-dark mb-2": !this.ui.isSmall,
         };
     }
 
@@ -144,8 +144,13 @@ export class ChatWindow extends Component {
         }
     }
 
-    onClickHeader() {
-        if (this.ui.isSmall || this.state.editingName || this.props.chatWindow.actionsDisabled) {
+    onClickHeader(ev) {
+        if (
+            this.ui.isSmall ||
+            this.state.editingName ||
+            this.props.chatWindow.actionsDisabled ||
+            isEventHandled(ev, "DiscussAction.onSelected")
+        ) {
             return;
         }
         this.toggleFold();

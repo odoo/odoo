@@ -11,15 +11,14 @@ threadActionsRegistry
         condition(component) {
             return component.thread?.allowCalls && !component.thread?.eq(component.rtc.channel);
         },
-        icon: "fa fa-fw fa-phone text-success",
-        iconLarge: "fa fa-fw fa-lg fa-phone text-success",
+        icon: "fa fa-fw fa-phone",
+        iconLarge: "fa fa-fw fa-lg fa-phone",
         name(component) {
             if (component.thread.rtc_session_ids.length > 0) {
                 return _t("Join the Call");
             }
             return _t("Start Call");
         },
-        nameClass: "text-success",
         open(component) {
             component.rtc.toggleCall(component.thread);
         },
@@ -31,20 +30,20 @@ threadActionsRegistry
         },
         sidebarSequence: 10,
         sidebarSequenceGroup: 10,
+        success: true,
     })
     .add("camera-call", {
         condition(component) {
             return component.thread?.allowCalls && !component.thread?.eq(component.rtc.channel);
         },
-        icon: "fa fa-fw fa-video-camera text-success",
-        iconLarge: "fa fa-fw fa-lg fa-video-camera text-success",
+        icon: "fa fa-fw fa-video-camera",
+        iconLarge: "fa fa-fw fa-lg fa-video-camera",
         name(component) {
             if (component.thread.rtc_session_ids.length > 0) {
                 return _t("Join the Call with Camera");
             }
             return _t("Start Video Call");
         },
-        nameClass: "text-success",
         open(component) {
             component.rtc.toggleCall(component.thread, { camera: true });
         },
@@ -56,6 +55,7 @@ threadActionsRegistry
         },
         sidebarSequence: 20,
         sidebarSequenceGroup: 10,
+        success: true,
     })
     .add("call-settings", {
         component: CallSettings,
@@ -81,11 +81,11 @@ threadActionsRegistry
     })
     .add("disconnect", {
         condition: (component) => component.rtc.selfSession?.in(component.thread?.rtc_session_ids),
+        danger: true,
         open: (component) => component.rtc.toggleCall(component.thread),
         icon: "fa fa-fw fa-phone text-danger",
         iconLarge: "fa fa-fw fa-lg fa-phone text-danger",
         name: _t("Disconnect"),
-        nameClass: "text-danger",
         partition: false,
         setup() {
             const component = useComponent();

@@ -85,6 +85,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
     outline: 1px solid $o-gray-300;
 }
 
+.o-hover-text-underline:hover {
+    text-decoration: underline;
+}
+
 $o-mail-spacers-sizes: () !default;
 $o-mail-spacers-sizes: map-merge(
     $o-mail-spacers-sizes,
@@ -214,6 +218,10 @@ $o-mail-utilities: map-merge(
 
 @each $key, $utility in $o-mail-utilities {
     @include generate-utility($utility)
+}
+
+.o-fs-small {
+    font-size: $o-font-size-base-small !important;
 }
 
 .o-scrollbar-thin {
