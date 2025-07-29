@@ -172,9 +172,7 @@ class StockRule(models.Model):
         pass  # Override in sale_purchase_stock and purchase_mrp to notify salesperson or MO responsible
 
     def _get_lead_days(self, product, **values):
-        """Add the company security lead time and the supplier delay to the cumulative delay
-        and cumulative description. The company lead time is always displayed for onboarding
-        purpose in order to indicate that those options are available.
+        """Add the supplier delay to the cumulative delay and cumulative description.
         """
         delays, delay_description = super()._get_lead_days(product, **values)
         bypass_delay_description = self.env.context.get('bypass_delay_description')
@@ -189,11 +187,6 @@ class StockRule(models.Model):
             delays['purchase_delay'] += supplier_delay
             if not bypass_delay_description:
                 delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
-        security_delay = buy_rule.picking_type_id.company_id.po_lead
-        delays['total_delay'] += security_delay
-        delays['security_lead_days'] += security_delay
-        if not bypass_delay_description:
-            delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
         days_to_order = buy_rule.company_id.days_to_purchase
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:

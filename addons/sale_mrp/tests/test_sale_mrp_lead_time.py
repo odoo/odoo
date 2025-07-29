@@ -63,8 +63,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         company = self.env.ref('base.main_company')
 
         # Update company with Manufacturing Lead Time and Sales Safety Days
-        company.write({'manufacturing_lead': 3.0,
-                       'security_lead': 3.0})
+        company.security_lead = 3
 
         # Create sale order of product_1
         order_form = Form(self.env['sale.order'])
@@ -95,7 +94,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date and deadline of manufacturing order
-        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=company.manufacturing_lead)
+        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay)
         self.assertAlmostEqual(
             fields.Datetime.from_string(manufacturing_order.date_start), mo_date_start,
             delta=timedelta(seconds=1),
@@ -168,7 +167,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date and deadline date of manufacturing order
-        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=warehouse.delivery_route_id.rule_ids[0].delay) - timedelta(days=self.env.ref('base.main_company').manufacturing_lead)
+        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=warehouse.delivery_route_id.rule_ids[0].delay)
         self.assertAlmostEqual(
             fields.Datetime.from_string(manufacturing_order.date_start), mo_date_start,
             delta=timedelta(seconds=1),

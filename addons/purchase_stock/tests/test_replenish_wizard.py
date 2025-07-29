@@ -363,7 +363,6 @@ class TestReplenishWizard(PurchaseTestCommon):
             'min_qty': 2,
             'delay' : 0
         })
-        self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
         self.env.company.days_to_purchase = 0
 
         with freeze_time("2023-01-01"):
@@ -396,7 +395,6 @@ class TestReplenishWizard(PurchaseTestCommon):
             'min_qty': 2,
             'delay': 2
         })
-        self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
         self.env.company.days_to_purchase = 5
 
         with freeze_time("2023-01-01"):

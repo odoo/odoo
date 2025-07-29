@@ -657,9 +657,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
 
     def test_compute_bom_days_00(self):
-        """Check Days to prepare Manufacturing Order are correctly computed when
-        Security Lead Time and Days to Purchase are set.
-        """
+        """ Check Days to prepare Manufacturing Order are correctly computed when Days to Purchase is set. """
         purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
         manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
         vendor = self.env['res.partner'].create({'name': 'super vendor'})
@@ -669,12 +667,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'name': 'TestCompany2',
         })
 
-        company_1.po_lead = 0
         company_1.days_to_purchase = 0
-        company_1.manufacturing_lead = 0
-        company_2.po_lead = 0
         company_2.days_to_purchase = 0
-        company_2.manufacturing_lead = 0
 
         components = self.component_a | self.component_b | self.component_c | self.component_d | self.component_e | self.component_f | self.component_g
         kits = self.kit_parent | self.kit_1 | self.kit_2 | self.kit_3
@@ -693,37 +687,30 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
 
-        # set "Security Lead Time" for Purchase and manufacturing, and "Days to Purchase"
-        company_1.po_lead = 10
+        # set "Days to Purchase"
         company_1.days_to_purchase = 10
-        company_1.manufacturing_lead = 10
-        company_2.po_lead = 20
         company_2.days_to_purchase = 20
-        company_2.manufacturing_lead = 20
 
-        # check "Security Lead Time" and "Days to Purchase" will also be included if bom has company_id
+        # check "Days to Purchase" will also be included if bom has company_id
         bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 10 + 10 + 10 + 10 + 1)
+        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 10 + 1)
 
         self.kit_1.bom_ids.company_id = company_2
         bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 20 + 20 + 20 + 10 + 1)
+        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 20 + 1)
 
-        # check "Security Lead Time" and "Days to Purchase" will won't be included if bom doesn't have company_id
+        # check "Days to Purchase" won't be included if bom doesn't have company_id
         kits.bom_ids.company_id = False
         bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
 
+    # TODO: manufacturing_lead doesn't exist anymore, remove?
     def test_orderpoint_with_manufacture_security_lead_time(self):
         """
         Test that a manufacturing order is created with the correct date_start
         when we have an order point with the preferred route set to "manufacture"
         and the current company has a manufacturing security lead time set.
         """
-        # set purchase security lead time to 20 days
-        self.env.company.po_lead = 20
-        # set manufacturing security lead time to 25 days
-        self.env.company.manufacturing_lead = 25
         # set horizon days to 0
         self.env.company.horizon_days = 0
 
@@ -746,15 +733,15 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'produce_delay': 1,
             'product_qty': 1,
         })
-        # create a orderpoint to generate a need of the product with perefered route manufacture
+        # create a orderpoint to generate a need of the product with preferred route manufacture
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': product.id,
             'qty_to_order': 5,
             'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('mrp.route_warehouse0_manufacture').id,
         })
-        # lead_horizon_date should be today + horizon days + manufacturing security lead time + product manufacturing lead time
-        self.assertEqual(orderpoint.lead_horizon_date, (fields.Date.today() + timedelta(days=25) + timedelta(days=1)))
+        # lead_horizon_date should be today + product manufacturing lead time
+        self.assertEqual(orderpoint.lead_horizon_date, (fields.Date.today() + timedelta(days=1)))
         orderpoint.action_replenish()
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(mo.product_uom_qty, 5)

@@ -4089,17 +4089,16 @@ class TestMrpOrder(TestMrpCommon):
         warehouse = self.warehouse_1
         rule = warehouse.manufacture_pull_id
 
-        self.env.company.manufacturing_lead = 1
         self.bom_1.days_to_prepare_mo = 2
         self.bom_1.produce_delay = 3
         delays, _ = rule._get_lead_days(self.bom_1.product_id, bom=self.bom_1)
-        self.assertEqual(delays['total_delay'], self.env.company.manufacturing_lead + self.bom_1.days_to_prepare_mo + self.bom_1.produce_delay)
+        self.assertEqual(delays['total_delay'], + self.bom_1.days_to_prepare_mo + self.bom_1.produce_delay)
 
         # switch to the 3 steps, only pre-production rules delays will be taken into account
         warehouse.manufacture_steps = 'pbm_sam'
         warehouse.pbm_route_id.rule_ids.delay = 100
         delays, _ = rule._get_lead_days(self.bom_1.product_id, bom=self.bom_1)
-        self.assertEqual(delays['total_delay'], self.env.company.manufacturing_lead + self.bom_1.days_to_prepare_mo + self.bom_1.produce_delay + 100 * 2)
+        self.assertEqual(delays['total_delay'], + self.bom_1.days_to_prepare_mo + self.bom_1.produce_delay + 100 * 2)
 
     def test_use_kit_as_component_in_production_without_bom(self):
         """

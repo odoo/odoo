@@ -672,8 +672,8 @@ class ProductProduct(models.Model):
         rules = self._get_rules_from_location(location, route_ids=route_ids)
         delays, _ = rules.with_context(bypass_delay_description=True)._get_lead_days(self)
         return {
-            'date_planned': date - relativedelta(days=delays['security_lead_days']),
-            'date_order': date - relativedelta(days=delays['security_lead_days'] + delays['purchase_delay']),
+            'date_planned': date,
+            'date_order': date - relativedelta(days=delays['purchase_delay']),
         }
 
     def _get_only_qty_available(self):

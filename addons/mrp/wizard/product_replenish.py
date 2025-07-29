@@ -38,8 +38,6 @@ class ProductReplenish(models.TransientModel):
             return date
         delay = 0
         product_tmpl_id = kwargs.get('product_tmpl_id') or self.product_tmpl_id
-        if bool(self.env['ir.config_parameter'].sudo().get_param('mrp.use_manufacturing_lead')):
-            delay += self.env.company.manufacturing_lead
         if product_tmpl_id and product_tmpl_id.bom_ids:
             delay += product_tmpl_id.bom_ids[0].produce_delay + product_tmpl_id.bom_ids[0].days_to_prepare_mo
         return fields.Datetime.add(date, days=delay)
