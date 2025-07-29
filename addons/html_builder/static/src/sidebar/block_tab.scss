@@ -21,10 +21,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
         .o_snippet_thumbnail_img {
             width: 100%;
-            padding-top: 75%;
+            padding-top: 65%;
             background-repeat: no-repeat;
-            background-size: contain;
-            background-position: top center;
+            background-size: cover;
+            background-position: center;
             overflow: hidden;
         }
     }
@@ -41,7 +41,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 .o_block_tab {
     background-color: $o-we-sidebar-blocks-content-bg;
-    padding-left: map-get($spacers, 2) ;
+    padding: map-get($spacers, 2);
     height: 100%; // give enough space for tips pointing at snippets after a snippet search
     z-index: 1;
 
@@ -54,7 +54,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         position: sticky;
         top: 0;
         background-color: $o-we-sidebar-blocks-content-bg;
-        padding-top: $o-we-sidebar-blocks-content-spacing * .5;
+        padding-top: $o-we-sidebar-blocks-content-spacing;
         z-index: 1;
     }
 
@@ -64,6 +64,17 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
         z-index: 0;
         position: relative;
+
+        &.o_snippets_container_body_row_cols_2 {
+            .o_snippet {
+                width: 50%;
+            }
+            .o_snippet_thumbnail_img {
+                padding-top: 45%;
+                background-size: contain;
+                background-position: center top;
+            }
+        }
 
         .o_snippet {
             flex: 0 0 auto;

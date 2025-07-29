@@ -6,10 +6,11 @@
     <t t-set="disabledBlockTooltip">This block cannot be dropped anywhere on this page.</t>
     <div class="o_block_tab"
          t-att-class="{'o_we_ongoing_insertion': this.state.ongoingInsertion}"
-         t-ref="block-tab">
+         t-ref="block-tab"
+         role="tabpanel"
+         aria-labelledby="blocks-tab">
         <div class="o_snippets_container" id="snippet_groups">
-            <div class="o_snippets_container_header"><span>Categories</span></div>
-            <div class="o_snippets_container_body">
+            <div class="o_snippets_container_body o_snippets_container_body_row_cols_2">
                 <t t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"

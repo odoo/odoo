@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.CustomizeTab">
-    <div class="o_customize_tab h-100">
+    <div class="o_customize_tab h-100" role="tabpanel" aria-labelledby="customize-tab">
         <t t-set="currentOptionsContainers" t-value="this.getCurrentOptionsContainers()"/>
         <t t-if="!currentOptionsContainers.length || !this.state.hasContent">
             <div class="text-center pt-5">

@@ -32,9 +32,9 @@
         --border-color: #{$o-we-color-accent};
         --bg-color: #{rgba($o-we-color-accent, .15)};
 
-        width: CALC(#{percentage(1/3)} - var(--gap));
+        width: percentage(1/3);
         transition: all .5s, transform .25s;
-        border: $o-we-border-width solid var(--border-color);
+        border-bottom: #{$o-we-sidebar-tabs-active-border-width} solid var(--border-color);
         background-color: var(--bg-color);
         transform: translateX(var(--x));
 
@@ -63,30 +63,48 @@
         }
     }
 
-    .o-hb-btn {
-        --btn-bg: transparent;
-        --btn-color: #{$o-we-fg-light};
-        --btn-hover-bg: transparent;
-        --btn-hover-color: #{$o-we-fg-lighter};
-        --btn-active-bg: transparent;
-        --btn-active-color: #{$o-we-fg-lighter};
+    .nav-underline {
+        --nav-underline-gap: 0;
+        --nav-link-color: #{$o-we-fg-light};
+        --nav-link-hover-color: #{$o-we-fg-lighter};
+        --nav-underline-link-active-color: #{$o-we-fg-light};
 
-        &[data-name="blocks"] {
+        .nav-item {
+            width:  percentage(1/3);
+        }
+
+        .nav-link {
+            transition: none;
+        }
+
+        .nav-link[data-name="blocks"]{
             --o-snippets-tabs-accent-color: #{$o-we-color-success};
+            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-success, .5)};
         }
-        &[data-name="customize"] {
+
+        .nav-link[data-name="customize"] {
             --o-snippets-tabs-accent-color: #{$o-we-color-accent};
+            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-accent, .5)};
         }
-        &[data-name="theme"] {
+
+        .nav-link[data-name="theme"] {
             --o-snippets-tabs-accent-color: #{$o-we-color-global};
+            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-global, .5)};
         }
 
-        & i {
+        .nav-link.active, .nav-link:hover, & .show > .nav-link {
+            border-bottom-color: var(--o-snippets-tabs-border-color-hover);
+        }
+
+        .nav-link:focus-visible {
+            box-shadow: none;
+            outline: 1px solid var(--o-snippets-tabs-accent-color);
+            outline-offset: -1px;
+            border-bottom-color: transparent;
+        }
+
+        & .fa {
             color: var(--o-snippets-tabs-accent-color);
-        }
-
-        &:focus-visible, &:active {
-            box-shadow: 0 0 0 #{$o-we-border-width} var(--o-snippets-tabs-accent-color);
         }
     }
 }

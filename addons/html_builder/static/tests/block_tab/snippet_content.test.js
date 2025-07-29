@@ -193,5 +193,5 @@ test("click just after drop is redispatched in next operation", async () => {
     await animationFrame();
     expect.verifySteps(["onClick", "next", "updateContainers"]); // On click redispatched
     await animationFrame();
-    expect(".o-snippets-tabs .o-hb-btn.active").toHaveText("Edit");
+    expect(".o-snippets-tabs .o-hb-tab.active").toHaveText("Style");
 });
