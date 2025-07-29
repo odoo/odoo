@@ -86,11 +86,13 @@ class PosOrder(models.Model):
         coupon_data = {int(k): v for k, v in coupon_data.items()}
 
         self._check_existing_loyalty_cards(coupon_data)
+        updated_gift_cards = self._process_existing_gift_cards(coupon_data)
+
         # Map negative id to newly created ids.
         coupon_new_id_map = {k: k for k in coupon_data.keys() if k > 0}
 
         # Create the coupons that were awarded by the order.
-        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId')}
+        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0}
         coupon_create_vals = [{
             'program_id': p['program_id'],
             'partner_id': get_partner_id(p.get('partner_id', False)),
@@ -103,18 +105,6 @@ class PosOrder(models.Model):
 
         # Pos users don't have the create permission
         new_coupons = self.env['loyalty.card'].with_context(action_no_send_mail=True).sudo().create(coupon_create_vals)
-
-        # We update the gift card that we sold when the gift_card_settings = 'scan_use'.
-        gift_cards_to_update = [v for v in coupon_data.values() if v.get('giftCardId')]
-        updated_gift_cards = self.env['loyalty.card']
-        for coupon_vals in gift_cards_to_update:
-            gift_card = self.env['loyalty.card'].browse(coupon_vals.get('giftCardId'))
-            gift_card.write({
-                'points': coupon_vals['points'],
-                'source_pos_order_id': self.id,
-                'partner_id': get_partner_id(coupon_vals.get('partner_id', False)),
-            })
-            updated_gift_cards |= gift_card
 
         # Map the newly created coupons
         for old_id, new_id in zip(coupons_to_create.keys(), new_coupons):
@@ -170,6 +160,59 @@ class PosOrder(models.Model):
             )],
             'coupon_report': coupon_per_report,
         }
+
+    def _process_existing_gift_cards(self, coupon_data):
+        updated_gift_cards = self.env['loyalty.card']
+        coupon_key_to_remove = []
+        for coupon_id, coupon_vals in coupon_data.items():
+            program_id = self.env['loyalty.program'].browse(coupon_vals['program_id'])
+            if program_id.program_type == 'gift_card':
+                updated = False
+                gift_card = self.env['loyalty.card'].search([
+                    ('|'),
+                    ('code', '=', coupon_vals.get('code', '')),
+                    ('id', '=', coupon_vals.get('coupon_id', False))
+                ])
+                if not gift_card.exists():
+                    continue
+
+                if not gift_card.partner_id and self.partner_id:
+                    updated = True
+                    gift_card.partner_id = self.partner_id
+                    gift_card.history_ids.create({
+                        'card_id': gift_card.id,
+                        'description': _('Assigning partner %s', self.partner_id.name),
+                        'used': 0,
+                        'issued': gift_card.points,
+                    })
+
+                if len([id for id in gift_card.history_ids.mapped('order_id') if id != 0]) == 0:
+                    updated = True
+                    gift_card.source_pos_order_id = self.id
+                    gift_card.history_ids.create({
+                        'card_id': gift_card.id,
+                        'order_model': self._name,
+                        'order_id': self.id,
+                        'description': _('Assigning order %s', self.display_name),
+                        'used': 0,
+                        'issued': gift_card.points,
+                    })
+
+                if coupon_vals.get('points') != gift_card.points:
+                    # Coupon vals contains negative points
+                    updated = True
+                    new_value = gift_card.points + coupon_vals['points']
+                    gift_card.points = new_value
+
+                if updated:
+                    updated_gift_cards |= gift_card
+
+                coupon_key_to_remove.append(coupon_id)
+
+        for key in coupon_key_to_remove:
+            coupon_data.pop(key, None)
+
+        return updated_gift_cards
 
     def _check_existing_loyalty_cards(self, coupon_data):
         coupon_key_to_modify = []
