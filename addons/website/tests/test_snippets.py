@@ -36,6 +36,7 @@ class TestSnippets(HttpCase):
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
             's_map',  # avoid call to maps.google.com
+            's_store_locator',  # avoid call to nominatim.openstreetmap.org
             's_instagram_page',  # avoid call to instagram.com
             's_image',  # Avoid specific case where the media dialog opens on drop
             's_snippet_group',  # Snippet groups are not snippets
