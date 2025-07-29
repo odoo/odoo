@@ -106,7 +106,7 @@ test("click on 'Show/hide on mobile' in mobile view", async () => {
     await contains("button[data-action='mobile']").click();
 
     await contains("button[data-action-id='toggleDeviceVisibility']:last").click();
-    expect(".o-snippets-tabs button:contains('Add')").toHaveClass("active");
+    expect(".o-snippets-tabs button:contains('Blocks')").toHaveClass("active");
     expect(":iframe .col-lg-3[data-invisible='1']").toHaveClass("o_snippet_mobile_invisible");
 });
 

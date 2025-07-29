@@ -61,10 +61,10 @@ test("systray in translate mode", async () => {
 
 test("snippets menu in translate mode", async () => {
     await setupSidebarBuilderForTranslation({ websiteContent: `<h1> Homepage </h1>` });
-    expect(".o-snippets-tabs button:contains('Add')").toHaveAttribute("disabled");
+    expect(".o-snippets-tabs button:contains('Blocks')").toHaveAttribute("disabled");
     expect(".o-snippets-tabs button:contains('THEME')").toHaveAttribute("disabled");
-    expect(".o-snippets-tabs button:contains('Edit')").toHaveClass("active");
-    expect(".o-snippets-tabs button:contains('Edit')").not.toHaveAttribute("disabled");
+    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
+    expect(".o-snippets-tabs button:contains('Style')").not.toHaveAttribute("disabled");
 });
 
 test("invisible elements in translate mode", async () => {
