@@ -59,6 +59,9 @@ class StockMoveLine(models.Model):
             else:
                 move.pick_status = 'fully_pack'
                 move.packed = True
+            #  Check if all lines in the picking are packed
+            if move.picking_id and all(m.packed for m in move.picking_id.move_ids_without_package):
+                move.picking_id.current_state = 'pack'
 
     def _update_picking_current_state(self):
         for move in self:
@@ -99,14 +102,19 @@ class StockMoveLine(models.Model):
             # Update remaining_picked_qty if picked_qty changed
             if 'picked_qty' in vals:
                 move.remaining_picked_qty = move.product_uom_qty - move.picked_qty
-            # Update remaining_packed_qty if packed_qty changed
-            if 'packed_qty' in vals:
-                move.remaining_packed_qty = move.picked_qty - move.packed_qty
                 # If pick_status changed to 'partial_pick', set allow_partial if allowed by tenant
                 if vals.get('pick_status') == 'partial_pick' and move.picking_id:
                     tenant = move.picking_id.tenant_code_id or move.picking_id.sale_id.tenant_code_id
                     if tenant and tenant.allow_partial_packing:
                         move.picking_id.allow_partial = True
+            # Update remaining_packed_qty if packed_qty changed
+            if 'packed_qty' in vals:
+                move.remaining_packed_qty = move.picked_qty - move.packed_qty
+                move.packed = move.remaining_packed_qty == 0
+                move.pick_status = 'fully_pack' if move.packed else 'partial_pack'
+                # If all moves are packed, update picking state
+                if move.picking_id and all(m.packed for m in move.picking_id.move_ids_without_package):
+                    move.picking_id.current_state = 'pack'
         self._ensure_pc_barcode_config()
         if 'picked_qty' in vals:
             self._update_picking_current_state()
