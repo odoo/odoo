@@ -807,22 +807,21 @@ class ResUsers(models.Model):
                     _logger.exception("Failed to update web.base.url configuration parameter")
         return auth_info
 
-    @classmethod
+    @api.model
     @tools.ormcache('uid', 'passwd')
-    def check(cls, db, uid, passwd):
-        """Verifies that the given (uid, password) is authorized for the database ``db`` and
+    def _check_uid_passwd(self, uid, passwd):
+        """Verifies that the given (uid, password) is authorized and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
 
-        with contextlib.closing(cls.pool.cursor()) as cr:
-            self = api.Environment(cr, uid, {})[cls._name]
-            with self._assert_can_auth(user=uid):
-                if not self.env.user.active:
-                    raise AccessDenied()
-                credential = {'login': self.env.user.login, 'password': passwd, 'type': 'password'}
-                self._check_credentials(credential, {'interactive': False})
+        with self._assert_can_auth(user=uid):
+            user = self.with_user(uid).env.user
+            if not user.active:
+                raise AccessDenied()
+            credential = {'login': user.login, 'password': passwd, 'type': 'password'}
+            user._check_credentials(credential, {'interactive': False})
 
     def _get_session_token_fields(self):
         return {'id', 'login', 'password', 'active'}
