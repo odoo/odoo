@@ -23,7 +23,7 @@ class ProductTemplate(models.Model):
             domain,
             fields,
             limit=config.get_limited_product_count(),
-            order='sequence,default_code,name',
+            order='sequence,name',
             load=False
         )
 
@@ -32,7 +32,7 @@ class ProductTemplate(models.Model):
             [("id", 'in', combo_products.combo_ids.combo_item_ids.product_id.product_tmpl_id.ids), ("id", "not in", [p['id'] for p in products])],
             fields,
             limit=config.get_limited_product_count(),
-            order='sequence,default_code,name',
+            order='sequence,name',
             load=False
         )
         products.extend(combo_products_choice)

@@ -234,7 +234,7 @@ class ProductTemplate(models.Model):
         domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
-            order='sequence,default_code,name',
+            order='sequence,name',
             offset=offset,
             limit=limit if limit else False
         )

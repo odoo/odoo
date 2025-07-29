@@ -15,9 +15,8 @@ class ProductTemplate(models.Model):
     )
     gelato_product_uid = fields.Char(
         string="Gelato Product UID",
-        compute='_compute_gelato_product_uid',
-        inverse='_inverse_gelato_product_uid',
-        readonly=True,
+        related='single_variant_id.gelato_product_uid',
+        depends=[],
     )
     gelato_image_ids = fields.One2many(
         string="Gelato Print Images",
@@ -31,13 +30,6 @@ class ProductTemplate(models.Model):
     )
 
     # === COMPUTE METHODS === #
-
-    @api.depends('product_variant_ids.gelato_product_uid')
-    def _compute_gelato_product_uid(self):
-        self._compute_template_field_from_variant_field('gelato_product_uid')
-
-    def _inverse_gelato_product_uid(self):
-        self._set_product_variant_field('gelato_product_uid')
 
     @api.depends('gelato_image_ids')
     def _compute_gelato_missing_images(self):
