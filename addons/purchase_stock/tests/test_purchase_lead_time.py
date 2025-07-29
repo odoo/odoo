@@ -15,11 +15,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         """ To check dates, set product's Delivery Lead Time
             and company's Purchase Lead Time."""
 
-        company = self.env.ref('base.main_company')
-
-        # Update company with Purchase Lead Time
-        company.write({'po_lead': 3.00})
-
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned = fields.Datetime.now() + timedelta(days=10)
         self._create_make_procurement(self.product_1, 15.00, date_planned=date_planned)
@@ -47,9 +42,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         """ To check schedule dates of multiple purchase order line of the same purchase order,
             we create two procurements for the two different product with same vendor
             and different Delivery Lead Time."""
-
-        company = self.env.ref('base.main_company')
-        company.write({'po_lead': 0.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned1 = fields.Datetime.now() + timedelta(days=10)
@@ -140,8 +132,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_merge_po_line_3(self):
         """Change merging po line if same procurement is done depending on custom values."""
-        company = self.env.ref('base.main_company')
-        company.write({'po_lead': 0.00})
 
         # The seller has a specific product name and code which must be kept in the PO line
         self.t_shirt.seller_ids.write({
@@ -206,7 +196,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         company2 = self.env['res.company'].create({
             'name': 'Second Company',
         })
-        company.write({'po_lead': 0.00})
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.startPatcher(self.patcher)
 
@@ -217,7 +206,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'Delhaize'
         })
 
-        self.env.company.days_to_purchase = 2.0
+        company.days_to_purchase = 2.0
 
         # Test if the orderpoint is created when opening the replenishment view
         prod = self.env['product.product'].create({

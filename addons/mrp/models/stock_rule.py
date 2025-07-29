@@ -222,13 +222,6 @@ class StockRule(models.Model):
                     for key, value in extra_delays.items():
                         delays[key] += value
                     delay_description += extra_delay_description
-            # manufacturing security lead time
-            for comp in self.picking_type_id.company_id:
-                security_delay = comp.manufacturing_lead
-                delays['total_delay'] += security_delay
-                delays['security_lead_days'] += security_delay
-            if not bypass_delay_description:
-                delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
         days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:

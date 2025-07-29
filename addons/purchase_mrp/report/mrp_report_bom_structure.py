@@ -17,7 +17,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 # If no vendor found for the right quantity, we still want to display a vendor for the lead times
                 supplier = product._select_seller(quantity=None, uom_id=product.uom_id)
             parent_bom = self.env.context.get('parent_bom')
-            purchase_lead = parent_bom.company_id.days_to_purchase + parent_bom.company_id.po_lead if parent_bom and parent_bom.company_id else 0
+            purchase_lead = parent_bom.company_id.days_to_purchase if parent_bom and parent_bom.company_id else 0
             if supplier:
                 qty_supplier_uom = product.uom_id._compute_quantity(quantity, supplier.product_uom_id)
                 return {
