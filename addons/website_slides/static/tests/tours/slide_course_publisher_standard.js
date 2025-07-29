@@ -20,12 +20,12 @@ registerWebsitePreviewTour(
         [
             {
                 content: "eLearning: click on New (top-menu)",
-                trigger: "div.o_new_content_container a",
+                trigger: "div.o_new_content_container button",
                 run: "click",
             },
             {
                 content: "eLearning: click on New Course",
-                trigger: '.o_new_content_menu_choices a:contains("Course")',
+                trigger: "button.o_new_content_element:contains('Course')",
                 run: "click",
             },
             {
@@ -40,7 +40,7 @@ registerWebsitePreviewTour(
             },
             {
                 content: "eLearning: select Gardening tag",
-                trigger: '.ui-autocomplete a:contains("Gardening")',
+                trigger: '.ui-autocomplete span:contains("Gardening")',
                 run: "click",
             },
             {
@@ -55,7 +55,7 @@ registerWebsitePreviewTour(
             },
             {
                 content: "eLearning: seems cool, create it",
-                trigger: '.modal button:contains("Save")',
+                trigger: ".modal-footer button.o_form_button_save",
                 run: "click",
             },
             {
@@ -116,7 +116,7 @@ registerWebsitePreviewTour(
                 },
                 {
                     content: "eLearning: save article",
-                    trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
+                    trigger: '.o-snippets-top-actions button[data-action="save"]',
                     run: "click",
                 },
                 {
@@ -135,12 +135,5 @@ registerWebsitePreviewTour(
             ],
             slidesTourTools.addImageToSection("Introduction", "Overview", true),
             slidesTourTools.addPdfToSection("Introduction", "Exercise", true)
-            //     [
-            // {
-            //     content: 'eLearning: move new course inside introduction',
-            //     trigger: 'div.o_wslides_slides_list_drag',
-            //     // run: 'drag_and_drop div.o_wslides_slides_list_drag ul.ui-sortable:first',
-            //     run: 'drag_and_drop div.o_wslides_slides_list_drag a.o_wslides_js_slide_section_add',
-            // }]
         )
 );
