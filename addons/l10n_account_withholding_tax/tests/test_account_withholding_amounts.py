@@ -49,7 +49,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1000.0,
             'base_amount': 1000.0,
@@ -85,7 +85,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 869.57,
             'base_amount': 869.57,
@@ -121,7 +121,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1150.0,
             'base_amount': 1150.0,
@@ -157,7 +157,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1000.0,
             'base_amount': 1000.0,
@@ -194,7 +194,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1150.0,
             'base_amount': 1150.0,
@@ -231,7 +231,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1000.0,
             'base_amount': 1000.0,
@@ -268,7 +268,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1130.44,
             'base_amount': 1130.44,
@@ -305,7 +305,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1000.00,
             'base_amount': 1000.00,
@@ -342,7 +342,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1000.01,
             'base_amount': 1000.01,
@@ -379,7 +379,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 869.57,
             'base_amount': 869.57,
@@ -418,7 +418,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1000.00,
             'base_amount': 1000.00,
@@ -455,7 +455,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1150.00,
             'base_amount': 1150.00,
@@ -499,7 +499,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
         invoice.action_post()
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'journal_id': self.bank_journal_for_payment.id})
         self.assertRecordValues(wizard.withholding_line_ids, [{
             'original_base_amount': 1150.00,
             'base_amount': 1150.00,

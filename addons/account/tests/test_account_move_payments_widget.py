@@ -162,8 +162,10 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         # Payment at exchange rate 2:1. 300 GOL -> 150 USD
         payment = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=out_invoice.ids)\
-            .create({'payment_date': '2017-01-01'})\
-            ._create_payments()
+            .create({
+                'payment_date': '2017-01-01',
+                'journal_id': self.bank_journal_for_payment.id,
+            })._create_payments()
 
         expected_amounts = {payment.move_id.id: 300.0}
         # Get the exchange difference move.
@@ -194,8 +196,10 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         # Payment at exchange rate 3:1. 300 GOL -> 100 USD
         payment = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=out_invoice.ids)\
-            .create({'payment_date': '2016-01-01'})\
-            ._create_payments()
+            .create({
+                'payment_date': '2016-01-01',
+                'journal_id': self.bank_journal_for_payment.id,
+            })._create_payments()
 
         expected_amounts = {payment.move_id.id: 300.0}
         # Get the exchange difference move.

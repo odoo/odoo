@@ -44,7 +44,8 @@
             <filter name="checks_voided" position="replace"/>
             <filter name="checks_debited" position="replace">
                 <filter string="On hand" name="checks_on_hand"
-                    domain="[('current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
+                    domain="[('payment_method_code', 'in', ('new_third_party_checks', 'in_third_party_checks')),
+                    ('current_journal_id.type', '=', 'cash')]"/>
             </filter>
             <field name="original_journal_id" position="before">
                 <field name="issuer_vat"/>
@@ -160,7 +161,7 @@
                     <field name="name"/>
                     <field name="original_journal_id"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
-                    <field name="payment_method_line_id" column_invisible="True"/>
+                    <field name="payment_method_id" column_invisible="True"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="amount"  optional="show"/>
                     <field name="currency_id" string="Payment Currency" optional="hide"/>

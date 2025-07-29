@@ -421,5 +421,5 @@ class TestItEdiImport(TestItEdi):
                 'price_unit': 1.0,
                 'debit': 5.0,
             }],
-            'l10n_it_payment_method': 'MP01',
+            'l10n_it_payment_method_code': 'MP01',
         }])

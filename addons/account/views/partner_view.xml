@@ -258,7 +258,7 @@
                 <group name="sale" position="inside">
                     <field string="Payment Terms" name="property_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field string="Payment Method"
-                           name="property_inbound_payment_method_line_id"
+                           name="property_inbound_payment_method_id"
                            options="{'no_open': True, 'no_create': True}"
                            groups="account.group_account_invoice,account.group_account_readonly"
                     />
@@ -266,7 +266,7 @@
                 <group name="purchase" position="inside">
                     <field string="Payment Terms" name="property_supplier_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field string="Payment Method"
-                           name="property_outbound_payment_method_line_id"
+                           name="property_outbound_payment_method_id"
                            options="{'no_open': True, 'no_create': True}"
                            groups="account.group_account_invoice,account.group_account_readonly"
                     />

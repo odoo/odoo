@@ -51,18 +51,18 @@ class L10n_LatamCheck(models.Model):
         store=True
     )
     # fields from payment
-    payment_method_code = fields.Char(related='payment_id.payment_method_code')
+    payment_method_code = fields.Selection(related='payment_id.payment_method_code')
     partner_id = fields.Many2one(related='payment_id.partner_id')
     original_journal_id = fields.Many2one(related='payment_id.journal_id')
     company_id = fields.Many2one(related='payment_id.company_id', store=True)
     currency_id = fields.Many2one(related='payment_id.currency_id')
-    payment_method_line_id = fields.Many2one(
-        related='payment_id.payment_method_line_id',
+    payment_method_id = fields.Many2one(
+        related='payment_id.payment_method_id',
         store=True,
     )
 
     # issue_state is used to know that is an own check and also that is posted
-    _unique = models.UniqueIndex("(name, payment_method_line_id) WHERE outstanding_line_id IS NOT NULL")
+    _unique = models.UniqueIndex("(name, payment_method_id) WHERE outstanding_line_id IS NOT NULL")
 
     @api.onchange('name')
     def _onchange_name(self):
@@ -178,16 +178,16 @@ class L10n_LatamCheck(models.Model):
         if min_amount_error:
             raise ValidationError(_('The amount of the check must be greater than 0'))
 
-    @api.depends('payment_method_line_id.code', 'payment_id.partner_id')
+    @api.depends('payment_method_id.code', 'payment_id.partner_id')
     def _compute_bank_id(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        new_third_party_checks = self.filtered(lambda x: x.payment_method_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
             rec.bank_id = rec.partner_id.bank_ids[:1].bank_id
         (self - new_third_party_checks).bank_id = False
 
-    @api.depends('payment_method_line_id.code', 'payment_id.partner_id')
+    @api.depends('payment_method_id.code', 'payment_id.partner_id')
     def _compute_issuer_vat(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        new_third_party_checks = self.filtered(lambda x: x.payment_method_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
             rec.issuer_vat = rec.payment_id.partner_id.vat
         (self - new_third_party_checks).issuer_vat = False

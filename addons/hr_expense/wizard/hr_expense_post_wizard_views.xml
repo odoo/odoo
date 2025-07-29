@@ -7,7 +7,8 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="employee_journal_id" string="Journal"/>
+                        <field name="employee_paid_expense_journal_id" string="Journal (Employee)" invisible="not is_employee_paid"/>
+                        <field name="company_paid_expense_journal_id" string="Journal (Company)" invisible="not is_company_paid"/>
                         <field name="accounting_date" string="Accounting date"/>
                     </group>
                     <footer>

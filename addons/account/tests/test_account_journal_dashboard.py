@@ -16,6 +16,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             self.skipTest("This test won't work if account_3way_match is installed")
 
         journal = self.company_data['default_journal_sale']
+        journal.outstanding_payment_account_id = self.outstanding_payment_account
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -72,6 +73,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
+            'journal_id': journal.id,
         })
         partial_payment.action_post()
 
@@ -100,6 +102,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'payment_type': 'outbound',
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
+            'journal_id': journal.id,
         })
         payment.action_post()
 
@@ -167,6 +170,8 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         # This test is defined in the account_3way_match module with different values, so we skip it when the module is installed
         if self.env['ir.module.module'].search([('name', '=', 'account_3way_match')]).state == 'installed':
             self.skipTest("This test won't work if account_3way_match is installed")
+        journal = self.company_data['default_journal_sale']
+        journal.outstanding_payment_account_id = self.outstanding_payment_account
 
         currency = self.other_currency
         company_currency = self.company_data['currency']
@@ -190,6 +195,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
             'currency_id': currency.id,
+            'journal_id': journal.id,
         })
         payment.action_post()
 
@@ -261,8 +267,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         when having the default_account_id set as outstanding account on the journal
         """
         bank_journal = self.company_data['default_journal_bank'].copy()
-        bank_journal.outbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
-        bank_journal.inbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
+        bank_journal.outstanding_payment_account_id = bank_journal.default_account_id
         payment = self.env['account.payment'].create({
             'amount': 100,
             'payment_type': 'inbound',

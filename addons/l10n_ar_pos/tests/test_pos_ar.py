@@ -25,7 +25,7 @@ class TestPosAR(AccountTestInvoicingHttpCommon, TestAr):
 
         cls.company = cls.company_data['company']
         cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable'})
-        cls.outstanding_bank = cls.copy_account(cls.outbound_payment_method_line.payment_account_id, {'name': 'Outstanding'})
+        cls.outstanding_bank = cls.copy_account(cls.outstanding_payment_account, {'name': 'Outstanding'})
 
         cls.bank_pm = cls.env['pos.payment.method'].sudo().create({
             'name': 'Bank',

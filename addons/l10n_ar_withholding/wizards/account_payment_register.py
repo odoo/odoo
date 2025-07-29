@@ -18,7 +18,7 @@ class AccountPaymentRegister(models.TransientModel):
     l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True, help="Net amount after withholdings")
     l10n_ar_adjustment_warning = fields.Boolean(compute="_compute_l10n_ar_adjustment_warning")
 
-    @api.depends('l10n_latam_move_check_ids.amount', 'amount', 'l10n_ar_net_amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
+    @api.depends('l10n_latam_move_check_ids.amount', 'amount', 'l10n_ar_net_amount', 'l10n_latam_new_check_ids.amount', 'payment_method_id.code')
     def _compute_l10n_ar_adjustment_warning(self):
         wizard_register = self
         for wizard in self:
@@ -113,6 +113,6 @@ class AccountPaymentRegister(models.TransientModel):
             wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id}) for x in partner_taxes]
 
     def action_create_payments(self):
-        if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
-            raise ValidationError(_("A payment cannot have withholding if the payment method has no outstanding accounts"))
+        if self.l10n_ar_withholding_ids and not self.journal_id.outstanding_payment_account_id:
+            raise ValidationError(_("A payment cannot have withholding if the journal has no outstanding account"))
         return super().action_create_payments()

@@ -37,13 +37,6 @@ class AccountJournal(models.Model):
         self._check_no_active_payments()
         return super().action_archive()
 
-    def _get_journal_inbound_outstanding_payment_accounts(self):
-        res = super()._get_journal_inbound_outstanding_payment_accounts()
-        account_ids = set(res.ids)
-        for payment_method in self.sudo().pos_payment_method_ids:
-            account_ids.add(payment_method.outstanding_account_id.id)
-        return self.env['account.account'].browse(account_ids)
-
     @api.model
     def _ensure_company_account_journal(self):
         journal = self.search([

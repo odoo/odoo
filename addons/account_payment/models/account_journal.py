@@ -8,11 +8,6 @@ from odoo.exceptions import UserError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    def _get_available_payment_method_lines(self, payment_type):
-        lines = super()._get_available_payment_method_lines(payment_type)
-
-        return lines.filtered(lambda l: l.payment_provider_state != 'disabled')
-
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_payment_provider(self):
         linked_providers = self.env['payment.provider'].sudo().search([]).filtered(

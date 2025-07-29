@@ -545,7 +545,7 @@ class TestItEdiExport(TestItEdi):
                     'tax_ids': [Command.set(self.default_tax.ids)],
                 }),
             ],
-            'l10n_it_payment_method': 'MP15',
+            'l10n_it_payment_method_code': 'MP15',
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_lowercase_fields.xml')

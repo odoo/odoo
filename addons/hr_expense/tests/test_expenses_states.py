@@ -170,7 +170,8 @@ class TestExpensesStates(TestExpenseCommon):
         """ Paid -> Reset move or payment to draft (Stay paid) """
         self.expenses_company.action_submit()
         self.expenses_company.action_approve()
-        self.expenses_company.action_post()
+        wizard = self.env['hr.expense.post.wizard'].with_context(active_ids=self.expenses_company.ids).create({})
+        wizard.action_post_entry()
 
         self.expenses_company.account_move_id.button_draft()
         self.assertEqual(self.expenses_company.state, 'paid')

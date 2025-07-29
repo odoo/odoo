@@ -554,6 +554,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
             company_bank_journal = self.company_data['default_journal_bank']
             company_bank_journal.bank_acc_number = 'CH9300762011623852957'
             company_bank_journal.bank_account_id.bank_id = bank_ing
+            company_bank_journal.outstanding_payment_account_id = self.outstanding_payment_account
             self.partner_a.country_id = self.env.ref('base.nl').id
 
             mandate = self.env['sdd.mandate'].create({
@@ -572,12 +573,11 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
                 'delivery_date': "2024-12-31",
             })
             invoice.action_post()
-            sdd_method_line = company_bank_journal.inbound_payment_method_line_ids.filtered(lambda l: l.code == 'sdd')
-            sdd_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id
+            sdd_method = self.get_payment_methods('sdd', self.env.company)
             self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
                 'payment_date': invoice.invoice_date,
                 'journal_id': company_bank_journal.id,
-                'payment_method_line_id': sdd_method_line.id,
+                'payment_method_id': sdd_method.id,
             })._create_payments()
 
             xml_attachment = self.env['ir.attachment'].create({

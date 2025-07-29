@@ -20,7 +20,7 @@ class AccountPayment(models.Model):
         trigger_fields = {
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference',
             'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
-            'ref', 'payment_method_line_id'
+            'ref', 'payment_method_id'
         }
         if self.expense_ids and any(field_name in trigger_fields for field_name in vals):
             raise UserError(_("You cannot do this modification since the payment is linked to an expense."))
