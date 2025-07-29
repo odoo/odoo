@@ -498,10 +498,7 @@ class IrHttp(models.AbstractModel):
             # '/fr/foo/oeuf-1'. While it is nice (for humans) to have a
             # pretty URL, the real reason of this redirection is SEO.
             if request.httprequest.method in ('GET', 'HEAD'):
-                try:
-                    _, path = rule.build(args)
-                except odoo.exceptions.MissingError:
-                    raise werkzeug.exceptions.NotFound()
+                _, path = rule.build(args)
                 assert path is not None
                 generated_path = werkzeug.urls.url_unquote_plus(path)
                 current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
