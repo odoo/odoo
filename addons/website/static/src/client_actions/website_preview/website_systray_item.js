@@ -13,6 +13,7 @@ export class WebsiteSystrayItem extends Component {
         onNewPage: { type: Function },
         onEditPage: { type: Function },
         iframeLoaded: { type: Object },
+        newInstalledModule: { type: String, optional: true}
     };
     static components = {
         MobilePreviewSystrayItem,
