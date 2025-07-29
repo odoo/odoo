@@ -88,7 +88,7 @@ export class ClonePlugin extends Plugin {
 
         // Update the containers if required.
         if (activateClone) {
-            this.dependencies["builderOptions"].updateContainers(cloneEl);
+            this.dependencies.builderOptions.setNextTarget(cloneEl);
         }
 
         // Scroll to the clone if required and if it is not visible.
