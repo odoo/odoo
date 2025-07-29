@@ -328,3 +328,7 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
 .form-range:disabled::-webkit-slider-thumb {
     border-color: $input-disabled-border-color;
 }
+
+.btn-close {
+    filter: #{if(lightness($body-bg) < 50, 'var(--btn-close-white-filter)', 'none')};
+}

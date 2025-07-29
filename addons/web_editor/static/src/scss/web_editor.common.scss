@@ -720,6 +720,10 @@ pre {
                     border-color: $-btn-primary-color;
                 }
             }
+
+            .btn-close {
+                filter: #{if(lightness($-bg-color) < 50, 'var(--btn-close-white-filter)', 'none')};
+            }
         }
     }
 }
