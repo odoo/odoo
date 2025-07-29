@@ -411,21 +411,15 @@ export class LinkPlugin extends Plugin {
         if (this.getResource("link_compatible_selection_predicates").some((p) => p())) {
             return true;
         }
-        const linksInSelection = this.dependencies.selection
-            .getTargetedNodes()
-            .filter((n) => n.tagName === "A");
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const targetedBlocks = targetedNodes.filter(isBlock);
+        const linksInSelection = targetedNodes.filter((n) => n.tagName === "A");
         return (
             linksInSelection.length < 2 &&
             // Prevent a link across sibling blocks:
-            !targetedNodes.some((node) => {
-                const next = node.nextSibling;
-                const previous = node.previousSibling;
-                return (
-                    (next && targetedNodes.includes(next) && isBlock(next)) ||
-                    (previous && targetedNodes.includes(previous) && isBlock(previous))
-                );
-            })
+            targetedBlocks.every((node) =>
+                targetedNodes.every((other) => node.contains(other) || other.contains(node))
+            )
         );
     }
 
