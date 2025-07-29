@@ -13,9 +13,12 @@
             </record>
         </field>
         <field name="line_ids">
+            <!-- Valid until 2025-06-31 -->
             <record id="tax_report_line_1" model="account.report.line">
                 <field name="name">1 - Acts and transactions subject to tax at a rate of 22%</field>
                 <field name="code">l10n_ee_vat_1</field>
+                <field name="sequence" eval="1"/>
+                <field name="hide_if_zero" eval="True"/>
                 <field name="expression_ids">
                     <record id="tax_report_line_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -24,14 +27,43 @@
                     </record>
                 </field>
             </record>
+            <!-- Valid from 2025-07-01 -->
+            <record id="tax_report_line_1_24" model="account.report.line">
+                <field name="name">1 - Acts and transactions subject to tax at a rate of 24%</field>
+                <field name="code">l10n_ee_vat_1_24</field>
+                <field name="sequence" eval="2"/>
+                <field name="hide_if_zero" eval="True"/>
+                <field name="expression_ids">
+                    <record id="tax_report_line_1_24_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_24</field>
+                    </record>
+                </field>
+            </record>
             <record id="tax_report_line_1_1" model="account.report.line">
                 <field name="name">1¹ - Acts and transactions subject to tax at a rate of 20%</field>
                 <field name="code">l10n_ee_vat_1_1</field>
+                <field name="sequence" eval="3"/>
                 <field name="expression_ids">
                     <record id="tax_report_line_1_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_1</field>
+                    </record>
+                </field>
+            </record>
+            <!-- Valid from 2025-07-01 -->
+            <record id="tax_report_line_1_2" model="account.report.line">
+                <field name="name">1² - Acts and transactions subject to tax at a rate of 22%</field>
+                <field name="code">l10n_ee_vat_1_2</field>
+                <field name="sequence" eval="4"/>
+                <field name="hide_if_zero" eval="True"/>
+                <field name="expression_ids">
+                    <record id="tax_report_line_1_2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_2</field>
                     </record>
                 </field>
             </record>
@@ -168,7 +200,7 @@
                     <record id="tax_report_line_4_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ee_vat_1.balance * 0.22 + l10n_ee_vat_1_1.balance * 0.2 + l10n_ee_vat_2.balance * 0.09 + l10n_ee_vat_2_1.balance * 0.05 + l10n_ee_vat_2_2.balance * 0.13</field>
+                        <field name="formula">l10n_ee_vat_1_24.balance * 0.24 + l10n_ee_vat_1.balance * 0.22 + l10n_ee_vat_1_2.balance * 0.22 + l10n_ee_vat_1_1.balance * 0.2 + l10n_ee_vat_2.balance * 0.09 + l10n_ee_vat_2_1.balance * 0.05 + l10n_ee_vat_2_2.balance * 0.13</field>
                     </record>
                 </field>
             </record>
