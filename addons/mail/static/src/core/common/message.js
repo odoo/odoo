@@ -29,7 +29,6 @@ import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -42,6 +41,7 @@ import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import { useLongPress } from "@mail/utils/common/hooks";
+import { DiscussActions } from "./discuss_actions";
 
 /**
  * @typedef {Object} Props
@@ -64,8 +64,8 @@ export class Message extends Component {
         ActionSwiper,
         AttachmentList,
         Composer,
+        DiscussActions,
         Dropdown,
-        DropdownItem,
         ImStatus,
         MessageInReply,
         MessageLinkPreviewList,

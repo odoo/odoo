@@ -13,11 +13,7 @@
                 <Dropdown t-if="(chatHub.showConversations and !chatHub.compact) or position.dragged" state="options" position="'top-end'" menuClass="'d-flex flex-column bg-100 shadow-sm m-0 p-0 mb-1 border-secondary'">
                     <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn bg-100 mt-1 fs-3" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'o-bubblesHover': (bubblesHover.isHover or position.dragged) and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"><i class="oi oi-ellipsis-h"/></button>
                     <t t-set-slot="content">
-                        <t t-if="chatHub.showConversations and !chatHub.compact">
-                            <DropdownItem class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected="() => chatHub.hideAll()"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</DropdownItem>
-                            <DropdownItem class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected="() => chatHub.closeAll()"><i class="oi fa-fw oi-close"></i>Close all conversations</DropdownItem>
-                        </t>
-                        <DropdownItem t-if="position.dragged" class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected.bind="resetPosition"><i class="fa fa-fw fa-undo"></i>Reset initial position</DropdownItem>
+                        <DiscussActions dropdown="true" group="[optionActions]"/>
                     </t>
                 </Dropdown>
                 <t t-if="store.chatHub.compact" t-call="mail.ChatHub.compactButton"/>

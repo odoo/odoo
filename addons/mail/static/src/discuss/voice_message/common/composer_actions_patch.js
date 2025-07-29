@@ -11,7 +11,7 @@ composerActionsRegistry
             !component.props.composer.voiceAttachment,
         icon: "fa fa-microphone",
         name: _t("Voice Message"),
-        onClick: (component) => component.voiceRecorder.onClick(),
+        onSelected: (component) => component.voiceRecorder.onClick(),
         sequence: 10,
     })
     .add("voice-stop", {
@@ -19,7 +19,7 @@ composerActionsRegistry
             component.thread?.model === "discuss.channel" && component.voiceRecorder?.recording,
         icon: "fa fa-circle text-danger o-mail-VoiceRecorder-dot",
         name: _t("Stop Recording"),
-        onClick: (component) => component.voiceRecorder.onClick(),
+        onSelected: (component) => component.voiceRecorder.onClick(),
         sequence: 10,
     })
     .add("voice-recording", {

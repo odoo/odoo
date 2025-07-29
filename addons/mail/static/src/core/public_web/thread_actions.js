@@ -5,11 +5,11 @@ import { useService } from "@web/core/utils/hooks";
 
 threadActionsRegistry.add("leave", {
     condition: (component) => component.thread?.canLeave || component.thread?.canUnpin,
-    icon: "fa fa-fw fa-sign-out text-danger",
-    iconLarge: "fa fa-fw fa-lg fa-sign-out text-danger",
+    danger: true,
+    icon: "fa fa-fw fa-sign-out",
+    iconLarge: "fa fa-fw fa-lg fa-sign-out",
     name: (component) =>
         component.thread.canLeave ? _t("Leave Channel") : _t("Unpin Conversation"),
-    nameClass: "text-danger",
     open: (component) =>
         component.thread.canLeave ? component.thread.leaveChannel() : component.thread.unpin(),
     partition: (component) => component.env.inChatWindow,

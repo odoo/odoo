@@ -6,7 +6,7 @@
                 <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
                     <button class="btn px-3 py-3 d-flex align-items-center rounded-4 btn-group-item gap-3 user-select-none bg-200" t-on-click="() => this.onClickAction(action)">
                         <i class="fa-lg fa-fw fs-2" t-att-class="action.icon"/>
-                        <span class="fs-4" t-esc="action.title"/>
+                        <span class="fs-4" t-esc="action.name"/>
                     </button>
                 </t>
             </div>

@@ -24,8 +24,8 @@ messageActionsRegistry
         }),
         condition: (component) => component.props.message.canAddReaction(component.props.thread),
         icon: "oi oi-smile-add",
-        title: _t("Add a Reaction"),
-        onClick: async (component, action) =>
+        name: _t("Add a Reaction"),
+        onSelected: async (component, action) =>
             component.reactionPicker.open({
                 el: component.root?.el?.querySelector(`[name="${action.id}"]`),
             }),
@@ -48,8 +48,8 @@ messageActionsRegistry
     .add("reply-to", {
         condition: (component) => component.props.message.canReplyTo(component.props.thread),
         icon: "fa fa-reply",
-        title: _t("Reply"),
-        onClick: (component) => {
+        name: _t("Reply"),
+        onSelected: (component) => {
             const message = toRaw(component.props.message);
             const thread = toRaw(component.props.thread);
             if (message.eq(thread.composer.replyToMessage)) {
@@ -68,23 +68,23 @@ messageActionsRegistry
         condition: (component) => component.props.message.canToggleStar,
         icon: (component) =>
             component.props.message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o",
-        title: _t("Mark as Todo"),
-        onClick: (component) => component.props.message.toggleStar(),
+        name: _t("Mark as Todo"),
+        onSelected: (component) => component.props.message.toggleStar(),
         sequence: 30,
         mobileCloseAfterClick: false,
     })
     .add("mark-as-read", {
         condition: (component) => component.props.thread?.eq(component.store.inbox),
         icon: "fa fa-check",
-        title: _t("Mark as Read"),
-        onClick: (component) => component.props.message.setDone(),
+        name: _t("Mark as Read"),
+        onSelected: (component) => component.props.message.setDone(),
         sequence: 40,
     })
     .add("reactions", {
         condition: (component) => component.message.reactions.length,
         icon: "fa fa-smile-o",
-        title: _t("View Reactions"),
-        onClick: (component) => component.openReactionMenu(),
+        name: _t("View Reactions"),
+        onSelected: (component) => component.openReactionMenu(),
         sequence: 50,
         mobileCloseAfterClick: false,
         dropdown: true,
@@ -92,15 +92,15 @@ messageActionsRegistry
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
         icon: "fa fa-user-times",
-        title: _t("Unfollow"),
-        onClick: (component) => component.props.message.unfollow(),
+        name: _t("Unfollow"),
+        onSelected: (component) => component.props.message.unfollow(),
         sequence: 60,
     })
     .add("edit", {
         condition: (component) => component.props.message.editable,
         icon: "fa fa-pencil",
-        title: _t("Edit"),
-        onClick: (component) => {
+        name: _t("Edit"),
+        onSelected: (component) => {
             component.props.message.enterEditMode(component.props.thread);
             component.optionsDropdown?.close();
         },
@@ -108,10 +108,10 @@ messageActionsRegistry
     })
     .add("delete", {
         condition: (component) => component.props.message.editable,
-        btnClass: "text-danger",
         icon: "fa fa-trash",
-        title: _t("Delete"),
-        onClick: async (component) => {
+        name: _t("Delete"),
+        danger: true,
+        onSelected: async (component) => {
             const message = toRaw(component.message);
             const def = new Deferred();
             component.dialog.add(
@@ -139,8 +139,8 @@ messageActionsRegistry
             component.message.attachment_ids.length > 1 &&
             component.store.self.main_user_id?.share === false,
         icon: "fa fa-download",
-        title: _t("Download Files"),
-        onClick: (component) =>
+        name: _t("Download Files"),
+        onSelected: (component) =>
             download({
                 data: {
                     file_ids: component.message.attachment_ids.map((rec) => rec.id),
@@ -154,14 +154,14 @@ messageActionsRegistry
         condition: (component) => component.props.message.isTranslatable(component.props.thread),
         icon: (component) =>
             `fa fa-language ${component.state.showTranslation ? "o-mail-Message-translated" : ""}`,
-        title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
-        onClick: (component) => component.onClickToggleTranslation(),
+        name: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
+        onSelected: (component) => component.onClickToggleTranslation(),
         sequence: 100,
     })
     .add("copy-message", {
         condition: (component) => isMobileOS() && !component.message.isBodyEmpty,
-        onClick: (component) => component.message.copyMessageText(),
-        title: _t("Copy to Clipboard"),
+        onSelected: (component) => component.message.copyMessageText(),
+        name: _t("Copy to Clipboard"),
         icon: "fa fa-copy",
         sequence: 25,
     })
@@ -171,18 +171,13 @@ messageActionsRegistry
             component.message.message_type !== "user_notification" &&
             (!component.props.thread.access_token || component.props.thread.hasReadAccess),
         icon: "fa fa-link",
-        title: _t("Copy Link"),
-        onClick: (component) => component.message.copyLink(),
+        name: _t("Copy Link"),
+        onSelected: (component) => component.message.copyLink(),
         sequence: 110,
     });
 
 function transformAction(component, id, action) {
     return {
-        get btnClass() {
-            return typeof action.btnClass === "function"
-                ? action.btnClass(component)
-                : action.btnClass;
-        },
         component: action.component,
         id,
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,
@@ -190,19 +185,24 @@ function transformAction(component, id, action) {
         get condition() {
             return messageActionsInternal.condition(component, id, action);
         },
+        /** If set, this is considered as a danger (destructive) action. */
+        get danger() {
+            return typeof action.danger === "function" ? action.danger(component) : action.danger;
+        },
         /** Icon for the button this action. */
         get icon() {
             return typeof action.icon === "function" ? action.icon(component) : action.icon;
         },
-        /** title of this action, displayed to the user. */
-        get title() {
-            return typeof action.title === "function" ? action.title(component) : action.title;
+        /** Name of this action, displayed to the user. */
+        get name() {
+            const res = this.isActive && action.nameActive ? action.nameActive : action.name;
+            return typeof res === "function" ? res(component) : res;
         },
         get props() {
             return action.props(component);
         },
-        onClick(ev) {
-            return action.onClick?.(component, this, ev);
+        onSelected(ev) {
+            return action.onSelected?.(component, this, ev);
         },
         /** Determines the order of this action (smaller first). */
         get sequence() {

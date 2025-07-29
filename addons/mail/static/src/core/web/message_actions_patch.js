@@ -31,8 +31,8 @@ messageActionsRegistry
     .add("reply-all", {
         condition: (component) => component.props.message.canReplyAll(component.props.thread),
         icon: "fa fa-reply",
-        title: _t("Reply All"),
-        onClick: async (component) => {
+        name: _t("Reply All"),
+        onSelected: async (component) => {
             const message = component.props.message;
             const thread = component.props.thread;
             const recipients = await rpc("/mail/thread/recipients", {
@@ -67,8 +67,8 @@ messageActionsRegistry
     .add("forward", {
         condition: (component) => component.props.message.canForward(component.props.thread),
         icon: "fa fa-share",
-        title: _t("Forward"),
-        onClick: async (component) => {
+        name: _t("Forward"),
+        onSelected: async (component) => {
             const message = component.props.message;
             const emailFrom = message.author_id?.email || message.email_from;
             const [name, email] = parseEmail(emailFrom);
