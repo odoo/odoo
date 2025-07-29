@@ -2962,6 +2962,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_id': self.loyalty_program.id,
             'points': 100,
         })
+        self.main_pos_config.write({'use_pricelist': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
         self.assertEqual(card.points, 30)
