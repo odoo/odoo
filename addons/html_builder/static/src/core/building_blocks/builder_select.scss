@@ -1,6 +1,7 @@
 :not(.dropstart) > .dropdown-item {
     &.active, &.selected {
         &:not(.dropdown-item_active_noarrow)::before {
+            display: unset;
             top: 50%;
             transform: translate(-1.5em, -50%);
         }
