@@ -229,6 +229,16 @@ export class Settings extends Record {
         );
     }
     /**
+     * @param {Boolean} active
+     */
+    setCameraAutoFocus(active) {
+        if (active) {
+            browser.localStorage.removeItem("mail_user_setting_disable_call_auto_focus");
+            return;
+        }
+        browser.localStorage.setItem("mail_user_setting_disable_call_auto_focus", "true");
+    }
+    /**
      * @param {string} value
      */
     setDelayValue(value) {
@@ -363,6 +373,9 @@ export class Settings extends Record {
         this.backgroundBlurAmount = backgroundBlurAmount ? parseInt(backgroundBlurAmount) : 10;
         const edgeBlurAmount = browser.localStorage.getItem("mail_user_setting_edge_blur_amount");
         this.edgeBlurAmount = edgeBlurAmount ? parseInt(edgeBlurAmount) : 10;
+        this.useCallAutoFocus = !browser.localStorage.getItem(
+            "mail_user_setting_disable_call_auto_focus"
+        );
     }
     /**
      * @private

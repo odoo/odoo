@@ -76,6 +76,7 @@ export class RtcSession extends Record {
             if (this.isTalking && !this.isMute) {
                 this.talkingTime = this.store.nextTalkingTime++;
             }
+            this.channel?.updateCallFocusStack(this);
         },
     });
     isActuallyTalking = fields.Attr(false, {

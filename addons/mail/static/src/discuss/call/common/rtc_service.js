@@ -1255,13 +1255,6 @@ export class Rtc extends Record {
                 if (!session || !this.channel) {
                     return;
                 }
-                if (
-                    this.channel.activeRtcSession === session &&
-                    session.is_screen_sharing_on &&
-                    !info.isScreenSharingOn
-                ) {
-                    this.channel.activeRtcSession = undefined;
-                }
                 // `isRaisingHand` is turned into the Date `raisingHand`
                 this.setRemoteRaiseHand(session, info.isRaisingHand);
                 delete info.isRaisingHand;
@@ -1412,6 +1405,7 @@ export class Rtc extends Record {
                 event.preventDefault();
             })
         );
+        this.channel?.focusAvailableVideo();
     }
 
     newLogs() {

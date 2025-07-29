@@ -84,6 +84,7 @@ const ThreadPatch = {
                 return this.rtc_session_ids.filter((s) => s.hasVideo).length;
             },
         });
+        this.focusStack = fields.Many("discuss.channel.rtc.session");
         /** @type {import("@mail/discuss/call/common/call").CardData[]"} */
         this.visibleCards = fields.Attr([], {
             compute() {
@@ -157,6 +158,45 @@ const ThreadPatch = {
     },
     get showCallView() {
         return !this.store.rtc.state.isFullscreen && this.rtc_session_ids.length > 0;
+    },
+    focusAvailableVideo() {
+        if (this.isDisplayedInDiscussAppDesktop || !this.store.settings.useCallAutoFocus) {
+            return;
+        }
+        const otherStreamingSession = this.rtc_session_ids.find((session) => {
+            session.notEq(this.store.rtc.selfSession) && session.hasVideo;
+        });
+        if (!otherStreamingSession) {
+            return;
+        }
+        this.activeRtcSession = otherStreamingSession;
+        otherStreamingSession.mainVideoStreamType = otherStreamingSession.is_screen_sharing_on
+            ? "screen"
+            : "camera";
+    },
+    /**
+     * @param {import("models").RtcSession} session
+     */
+    updateCallFocusStack(session) {
+        if (
+            this.notEq(this.store.rtc?.channel) ||
+            session.eq(this.store.rtc.selfSession) ||
+            !this.activeRtcSession ||
+            !this.store.settings.useCallAutoFocus ||
+            this.activeRtcSession?.mainVideoStreamType === "screen"
+        ) {
+            return;
+        }
+        this.focusStack.delete(session);
+        if (session.isTalking && !session.isMute) {
+            this.focusStack.push(session);
+        }
+        const activeSession = this.focusStack.at(-1);
+        if (!activeSession) {
+            return;
+        }
+        this.activeRtcSession = activeSession;
+        activeSession.mainVideoStreamType = "camera";
     },
 };
 patch(Thread.prototype, ThreadPatch);
