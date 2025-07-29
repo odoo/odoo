@@ -1357,7 +1357,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             else:
                 _logger.warning(f"[PRINT API] No label_url to print for order {order_number}")
 
-            return label_url, con_id
+            return label_url, con_id, shipment_id
 
         except Exception as e:
             _logger.error(f"[ONETRAKER][FAILURE] {str(e)}")
