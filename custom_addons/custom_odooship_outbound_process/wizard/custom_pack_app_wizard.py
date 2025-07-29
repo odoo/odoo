@@ -244,8 +244,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "product_id": mv.product_id.id,
                         "picking_id": picking.id,
                         "quantity": 0,
-                        "available_quantity": 1,
-                        "weight": mv.product_id.weight or 0.4,
+                        # "available_quantity": 1,
+                        "weight": mv.product_id.weight,
                         "tenant_code_id": picking.tenant_code_id.id,
                         "site_code_id": picking.site_code_id.id,
                         "sale_order_id": picking.sale_id.id,
@@ -292,28 +292,48 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         for line in packed_lines:
             sku = line.get('sku')
-            qty = line.get('qty', 0.0)
+            qty_to_pack = float(line.get('qty', 0.0))  # Make sure it's float for calculations
 
-            # --- Update stock.move ---
+            # --- Update stock.move.packed_qty ---
             move = self.env['stock.move'].search([
                 ('picking_id', '=', picking.id),
                 ('product_id.default_code', '=', sku)
             ], limit=1)
             if move:
-                move.packed_qty += qty
-                _logger.info("Updated stock.move packed_qty += %.2f for SKU [%s] in picking %s", qty, sku, picking_name)
+                move.packed_qty = float(move.packed_qty or 0.0) + qty_to_pack
+                _logger.info("Updated stock.move packed_qty += %.2f for SKU [%s] in picking %s", qty_to_pack, sku,
+                             picking_name)
             else:
                 _logger.warning("Stock.move not found for SKU [%s] in picking %s", sku, picking_name)
 
-            # --- Update sale.order.line ---
+            # --- Update sale.order.line.packed_qty (distribute across lines) ---
             if sale_order:
-                so_line = sale_order.order_line.filtered(lambda l: l.product_id.default_code == sku)
-                if so_line:
-                    so_line[0].packed_qty += qty
-                    _logger.info("Updated sale.order.line packed_qty += %.2f for SKU [%s] in SO %s", qty, sku,
-                                 sale_order.name)
-                else:
-                    _logger.warning("Sale.order.line not found for SKU [%s] in SO %s", sku, sale_order.name)
+                so_lines = sale_order.order_line.filtered(lambda l: l.product_id.default_code == sku)
+                if not so_lines:
+                    _logger.warning("No sale.order.line found for SKU [%s] in SO %s", sku, sale_order.name)
+                    continue
+
+                for so_line in so_lines:
+                    ordered_qty = float(so_line.product_uom_qty or 0.0)
+                    already_packed = float(so_line.packed_qty or 0.0)
+                    available = max(ordered_qty - already_packed, 0.0)
+
+                    if available <= 0:
+                        continue  # This line is fully packed
+
+                    pack_now = min(qty_to_pack, available)
+                    if pack_now > 0:
+                        so_line.packed_qty = already_packed + pack_now
+                        qty_to_pack -= pack_now
+                        _logger.info("Updated SO line [%s]: packed_qty += %.2f (Now: %.2f)", so_line.id, pack_now,
+                                     so_line.packed_qty)
+
+                    if qty_to_pack <= 0:
+                        break  # Done packing this SKU
+
+                if qty_to_pack > 0:
+                    _logger.warning("Unallocated packed quantity %.2f for SKU [%s]. All SO lines are full.",
+                                    qty_to_pack, sku)
 
     def _get_package_box_id(self, tenant_id, site_id, incoterm):
         """
@@ -422,20 +442,26 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         if not line.product_package_number:
             line.product_package_number = self.next_package_number
-
         # ====== BRANCH ON SALES ORDER COUNT ======
+        self.show_message = False
+        self.message_text = False
         so_count = len(set(self.line_ids.mapped('sale_order_id.id')))
         sale = line.picking_id.sale_id
-
-        # --- MESSAGE DISPLAY (Both Single and Multi-Pick) ---
-        if sale and sale.message_code and not self.show_message:
-            msg = self.env['custom.message.configuration'].search([
-                ('message_code', '=', sale.message_code)
-            ], limit=1)
+        fragile_notice = ""
+        if product.product_tmpl_id.is_fragile:
+            fragile_notice = _("This item is fragile and must be packed with bubble wrap for protection.")
+        if sale and sale.message_code:
+            msg = self.env['custom.message.configuration'].search([('message_code', '=', sale.message_code)],
+                                                                  limit=1)
             if msg:
                 self.show_message = True
                 self.message_text = "Sale Order Number: %s\nMessage: %s" % (sale.name, msg.description)
-
+                if fragile_notice:
+                    self.message_text += "\n\n" + fragile_notice
+        elif fragile_notice:
+            self.show_message = True
+            self.message_text = "Sale Order Number: %s\n%s" % (sale.name, fragile_notice)
+        
         if so_count > 1:
             # Multi-pick: legacy logic for Stonehive/SHIPEROOALTONA
             if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
@@ -447,7 +473,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 line.scanned = True
                 line.quantity = 1
                 line.remaining_quantity = 0
-                line.available_quantity = 1
+                # line.available_quantity = 1
                 line.line_added = True
 
                 try:
@@ -555,8 +581,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             "api_payload_success": True,
                             "line_added": True,
                             "quantity": 1,
-                            "available_quantity": 1,
-                            "remaining_quantity": 0,
+                            # "available_quantity": 1,
+                            # "remaining_quantity": 0,
                             "scanned": True,
                             "product_package_number": line.product_package_number or self.next_package_number
                         })
@@ -570,7 +596,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         else:
             # SINGLE PICK LOGIC (all lines are for one SO)
             line.quantity = 1
-            line.available_quantity = 1
+            # line.available_quantity = 1
             line.remaining_quantity = 0
             line.line_added = True
             line.scanned = True
@@ -1919,41 +1945,42 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
             else:
                 line.available_product_ids = [(5,)]
 
-    @api.depends("wizard_id.line_ids")
+    @api.depends("picking_id", "product_id")
     def _compute_available_quantity(self):
-        """Always equal to how many line-records were created for this SKU+pick."""
+        """
+        Set expected_quantity based on picked_qty from stock.move lines.
+        """
         for line in self:
+            line.available_quantity = 0
             if not line.picking_id or not line.product_id:
-                line.available_quantity = 0
                 continue
-            same = line.wizard_id.line_ids.filtered(
-                lambda l: l.picking_id == line.picking_id and l.product_id == line.product_id
+            # Sum picked_qty from move lines for this picking & product
+            moves = line.picking_id.move_ids_without_package.filtered(
+                lambda m: m.product_id.id == line.product_id.id
             )
-            line.available_quantity = len(same)
+            picked_qty_total = sum(m.picked_qty or 0.0 for m in moves)
+            print("\n\n\n picked qty available===", picked_qty_total)
+            line.available_quantity = int(round(picked_qty_total))
 
-    @api.depends("wizard_id.line_ids.scanned")
+    @api.depends("wizard_id.line_ids.scanned", "product_id", "picking_id")
     def _compute_remaining_quantity(self):
+        """
+        Remaining quantity = available_quantity - number of scanned lines
+        """
         for line in self:
-            if not line.picking_id or not line.product_id:
-                line.remaining_quantity = 0
+            line.remaining_quantity = 0
+            if not line.product_id or not line.picking_id:
                 continue
 
-            same_lines = line.wizard_id.line_ids.filtered(
+            # Filter all wizard lines for same product + picking
+            matching_lines = line.wizard_id.line_ids.filtered(
                 lambda l: l.product_id.id == line.product_id.id and l.picking_id.id == line.picking_id.id
             )
 
-            total_units = len(same_lines)
+            total_expected = line.available_quantity
+            scanned_count = sum(1 for l in matching_lines if l.scanned)
 
-            # Count scanned units and fix quantity if scanned but 0
-            scanned_units = 0
-            for l in same_lines:
-                if l.scanned or l.line_added:
-                    scanned_units += 1
-                    if l.quantity == 0:
-                        l.quantity = 1  # Fix quantity to 1 for already scanned line
-
-            line.remaining_quantity = max(total_units - scanned_units, 0)
-
+            line.remaining_quantity = max(total_expected - scanned_count, 0)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

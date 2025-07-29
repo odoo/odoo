@@ -115,6 +115,10 @@ class StockMoveLine(models.Model):
                 # If all moves are packed, update picking state
                 if move.picking_id and all(m.packed for m in move.picking_id.move_ids_without_package):
                     move.picking_id.current_state = 'pack'
+                #  Update quantity if operation type is 'pick'
+                if move.picking_id and move.picking_id.operation_process_type == 'pick':
+                    move.quantity = move.packed_qty
+
         self._ensure_pc_barcode_config()
         if 'picked_qty' in vals:
             self._update_picking_current_state()
