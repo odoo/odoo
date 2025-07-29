@@ -39,18 +39,18 @@
                         </div>
 
                         <div class="pay-button" t-att-class="{'d-flex flex-row bg-view p-2 gap-2 rounded-3':this.ui.isSmall}">
-                            <button class="button btn btn-lg btn-primary py-3 py-lg-5"
+                            <button class="button btn btn-lg btn-primary py-3 py-lg-5 split-order-button"
                                 t-att-class="(this.ui.isSmall ? 'w-50' : 'w-100')"
                                 t-att-disabled="!this.getNumberOfProducts()"
                                 t-on-click="createSplittedOrder">
                                 Split Order
                             </button>
                             <div class="d-flex gap-2 w-100">
-                                <button class="btn btn-lg btn-secondary py-3 py-lg-5 w-100" t-att-class="(this.ui.isSmall ? '' : 'mt-2')"
+                                <button class="btn btn-lg btn-secondary py-3 py-lg-5 w-100 pay-split-order" t-att-class="(this.ui.isSmall ? '' : 'mt-2')"
                                     t-on-click="paySplittedOrder">
                                     Pay
                                 </button>
-                                <button class="btn btn-lg btn-secondary py-3 py-lg-5 w-100" t-att-class="(this.ui.isSmall ? '' : 'mt-2')"
+                                <button class="btn btn-lg btn-secondary py-3 py-lg-5 w-100 transfer-split-order" t-att-class="(this.ui.isSmall ? '' : 'mt-2')"
                                     t-on-click="transferSplittedOrder">
                                     Transfer
                                 </button>
