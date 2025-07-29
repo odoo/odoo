@@ -5,7 +5,6 @@ import {
     checkFilterDefaultValueIsValid,
     globalFieldMatchingRegistry,
 } from "@spreadsheet/global_filters/helpers";
-import { _t } from "@web/core/l10n/translation";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
@@ -20,7 +19,6 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         "getGlobalFilter",
         "getGlobalFilters",
         "getGlobalFilterDefaultValue",
-        "getGlobalFilterLabel",
         "getFieldMatchingForModel",
     ]);
     constructor(config) {
@@ -148,17 +146,6 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
      */
     getGlobalFilter(id) {
         return this.globalFilters.find((filter) => filter.id === id);
-    }
-
-    /**
-     * Get the global filter with the given name
-     *
-     * @param {string} label Label
-     *
-     * @returns {GlobalFilter|undefined}
-     */
-    getGlobalFilterLabel(label) {
-        return this.globalFilters.find((filter) => _t(filter.label) === _t(label));
     }
 
     /**

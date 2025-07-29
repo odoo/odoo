@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { Status } from "./dashboard_loader";
+import { Status } from "./dashboard_loader_service";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { useSetupAction } from "@web/search/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
@@ -71,7 +71,7 @@ export class SpreadsheetDashboardAction extends Component {
             }),
         });
         useSpreadsheetPrint(() => this.loader.getActiveDashboard()?.model);
-        /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */
+        /** @type {{ sidebarExpanded: boolean}} */
         this.state = useState({ sidebarExpanded: true });
     }
 
