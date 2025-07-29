@@ -61,14 +61,6 @@
                             <setting id="mrp_mps" help="Plan manufacturing or purchase orders based on forecasts" documentation="/applications/inventory_and_mrp/manufacturing/management/use_mps.html" title="Using a MPS report to schedule your reordering and manufacturing operations is useful if you have long lead time and if you produce based on sales forecasts.">
                                 <field name="module_mrp_mps" widget="upgrade_boolean"/>
                             </setting>
-                            <setting id="security_lead_time" string="Security Lead Time" company_dependent="1" help="Schedule manufacturing orders earlier to avoid delays" documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html">
-                                <field name="use_manufacturing_lead"/>
-                                <div class="content-group" invisible="not use_manufacturing_lead">
-                                    <div class="mt16" >
-                                        <field name="manufacturing_lead" class="oe_inline" digits="[42, 0]"/> days before
-                                    </div>
-                                </div>
-                            </setting>
                         </block>
                     </app>
                 </xpath>

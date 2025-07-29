@@ -28,18 +28,13 @@ class TestMrpReplenish(TestMrpCommon):
         route = self.warehouse_1.manufacture_pull_id.route_id
         product = self.product_4
         product.route_ids = route
-        self.env.company.manufacturing_lead = 0
-        self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', True)
 
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
-            self.env.company.manufacturing_lead = 3
-            wizard2 = self._create_wizard(product, self.warehouse_1)
-            self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard2.date_planned)
             route.rule_ids[0].delay = 2
             wizard3 = self._create_wizard(product, self.warehouse_1)
-            self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
+            self.assertEqual(fields.Datetime.from_string('2023-01-03 00:00:00'), wizard3.date_planned)
 
     def test_mrp_orderpoint_leadtime(self):
         self.env.company.horizon_days = 0
@@ -100,7 +95,6 @@ class TestMrpReplenish(TestMrpCommon):
         product = self.product_4
         bom = product.bom_ids
         product.route_ids = route
-        self.env.company.manufacturing_lead = 0
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)

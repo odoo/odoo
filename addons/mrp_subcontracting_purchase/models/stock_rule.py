@@ -8,7 +8,7 @@ class StockRule(models.Model):
         """For subcontracting, we need to consider both vendor lead time and
         manufacturing lead time, and DTPMO (Days To Prepare MO).
         Subcontracting delay =
-            max(Vendor lead time, Manufacturing lead time + DTPMO) + Days to Purchase + Purchase security lead time
+            max(Vendor lead time, Manufacturing lead time + DTPMO) + Days to Purchase
         """
         bypass_delay_description = self.env.context.get('bypass_delay_description')
         buy_rule = self.filtered(lambda r: r.action == 'buy')
