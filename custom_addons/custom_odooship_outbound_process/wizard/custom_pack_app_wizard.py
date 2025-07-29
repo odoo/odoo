@@ -1298,10 +1298,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             status_message = generic.get("apiStatusMessage", "").lower()
             status_error_code = generic.get("apiStatusErrorCode", "")
 
-            label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
-                                                                                                    {}).get("url")
+            label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",{}).get("url")
             con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
-
+            shipment_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("shipment_id")
             picking_id = self.picking_ids[0].id if self.picking_ids else False
             sale_order_id = self.picking_ids[0].sale_id.id if self.picking_ids and self.picking_ids[
                 0].sale_id else False
