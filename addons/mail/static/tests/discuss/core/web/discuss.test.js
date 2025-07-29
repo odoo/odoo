@@ -144,7 +144,7 @@ test("mobile chat search should allow to create group chat", async () => {
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Chat" });
+    await click("button", { text: "Chats" });
     await contains("button", { text: "Start a conversation" });
 });
 

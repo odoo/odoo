@@ -322,7 +322,7 @@ test("Show send button in mobile", async () => {
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
+    await click("button", { text: "Channels" });
     await click(".o-mail-NotificationItem", { text: "minecraft-wii-u" });
     await contains(".o-mail-Composer button[title='Send']");
     await contains(".o-mail-Composer button[title='Send'] i.fa-paper-plane-o");
