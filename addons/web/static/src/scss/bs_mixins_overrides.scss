@@ -60,6 +60,9 @@ $o-color-extras-nesting-selector: '&' !default;
         background-color: $color#{if($important, ' !important', '')};
         color: $-yiq-color; // not important so that text utilities still work
 
+        // Forced color/gradient takes over the theme gradient
+        background-image: inherit; 
+
         @if $with-extras and $-yiq-threshold-met {
             #{$nesting-selector} {
                 @extend %o-bg-color-component-color-reset;
