@@ -1,12 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.modules.registry import Registry
 from odoo.tools.misc import consteq
-
-
-def check(db, uid, passwd):
-    res_users = Registry(db)['res.users']
-    return res_users.check(db, uid, passwd)
 
 
 def compute_session_token(session, env):
