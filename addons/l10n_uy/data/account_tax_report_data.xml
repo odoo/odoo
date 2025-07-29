@@ -72,7 +72,7 @@
                     <record id="account_tax_report_base_impb_vnts" model="account.report.line">
                         <field name="name">Taxable Sales Base</field>
                         <field name="code">BASE_IMPONIBLE_VENTAS</field>
-                        <field name="aggregation_formula">UYTAX_010201.balance + UYTAX_020201.balance + UYTAX_030201.balance + UYTAX_040201.balance</field>
+                        <field name="aggregation_formula">UYTAX_010201.balance + UYTAX_020201.balance + UYTAX_030201.balance + UYTAX_040201.balance + UYTAX_050201.balance</field>
                         <field name="children_ids">
                             <record id="account_tax_report_base_impb_vnts_22" model="account.report.line">
                                 <field name="name">Base Sales 22%</field>
@@ -115,6 +115,17 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Taxable Sales Base</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_base_impb_vnts_other" model="account.report.line">
+                                <field name="name">Base Sales VAT Other</field>
+                                <field name="code">UYTAX_050201</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_vnts_other_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Sales VAT Other</field>
                                     </record>
                                 </field>
                             </record>
@@ -182,7 +193,7 @@
                     <record id="account_tax_report_iva_vnts_prcbdo" model="account.report.line">
                         <field name="name">VAT Sales - received</field>
                         <field name="code">IVA_VENTAS__PERCIBIDO</field>
-                        <field name="aggregation_formula">UYTAX_010202.balance + UYTAX_020202.balance + VENTAS_EXENTO_IVA.balance + UYTAX_040202.balance</field>
+                        <field name="aggregation_formula">UYTAX_010202.balance + UYTAX_020202.balance + VENTAS_EXENTO_IVA.balance + UYTAX_030202.balance + UYTAX_040202.balance</field>
                         <field name="children_ids">
                             <record id="account_tax_report_iva_vnts_22" model="account.report.line">
                                 <field name="name">Sales VAT 22%</field>
@@ -215,6 +226,17 @@
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_vnts_iva_other" model="account.report.line">
+                                <field name="name">Sales VAT Other</field>
+                                <field name="code">UYTAX_030202</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_vnts_iva_formula_other" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Sales VAT Other</field>
                                     </record>
                                 </field>
                             </record>
