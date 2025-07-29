@@ -44,7 +44,6 @@ import { PowerButtonsPlugin } from "./main/power_buttons_plugin";
 import { PositionPlugin } from "./main/position_plugin";
 import { PowerboxPlugin } from "./main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "./main/powerbox/search_powerbox_plugin";
-import { SignaturePlugin } from "./main/signature_plugin";
 import { StarPlugin } from "./main/star_plugin";
 import { TableAlignPlugin } from "./main/table/table_align_plugin";
 import { TablePlugin } from "./main/table/table_plugin";
@@ -144,7 +143,6 @@ export const MAIN_PLUGINS = [
     ShortCutPlugin,
     PowerboxPlugin,
     SearchPowerboxPlugin,
-    SignaturePlugin,
     StarPlugin,
     TablePlugin,
     TableAlignPlugin,
