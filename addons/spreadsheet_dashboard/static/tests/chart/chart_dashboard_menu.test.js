@@ -62,3 +62,80 @@ test("Data source of cumulative line chart isn't reloaded after type change", as
     await contains(".o-chart-dashboard-item[data-id='odoo_line']", { visible: false }).click();
     expect(dataSource).toBe(model.getters.getChartDataSource(chartId));
 });
+
+test("can change granularity", async () => {
+    const env = await makeSpreadsheetMockEnv();
+    const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    const chartId = insertChartInSpreadsheet(setupModel, "odoo_line", {
+        metaData: {
+            groupBy: ["date:month"],
+            resModel: "partner",
+            measure: "__count",
+            order: null,
+        },
+    });
+    const { model } = await createDashboardActionWithData(setupModel.exportData());
+
+    expect("select.o-chart-dashboard-item").toHaveValue("month");
+    await contains("select.o-chart-dashboard-item", { visible: false }).select("quarter");
+    expect(model.getters.getChartGranularity(chartId)).toEqual({
+        fieldName: "date",
+        granularity: "quarter",
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:quarter"]);
+});
+
+test("can change type then change granularity and back to original type", async () => {
+    const env = await makeSpreadsheetMockEnv();
+    const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    const chartId = insertChartInSpreadsheet(setupModel, "odoo_line", {
+        metaData: {
+            groupBy: ["date:month"],
+            resModel: "partner",
+            measure: "__count",
+            order: null,
+        },
+    });
+    const { model } = await createDashboardActionWithData(setupModel.exportData());
+    await contains(".o-chart-dashboard-item[data-id='odoo_pie']", { visible: false }).click();
+    expect("select.o-chart-dashboard-item").toHaveValue("month");
+    await contains("select.o-chart-dashboard-item", { visible: false }).select("quarter");
+    expect(model.getters.getChartGranularity(chartId)).toEqual({
+        fieldName: "date",
+        granularity: "quarter",
+    });
+    expect(model.getters.getChartDefinition(chartId).type).toBe("odoo_pie");
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:quarter"]);
+    await contains(".o-chart-dashboard-item[data-id='odoo_line']", { visible: false }).click();
+    expect(model.getters.getChartDefinition(chartId).type).toBe("odoo_line");
+    expect(model.getters.getChartGranularity(chartId)).toEqual({
+        fieldName: "date",
+        granularity: "quarter",
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:quarter"]);
+});
+
+test("can change granularity then change type and back to original type", async () => {
+    const env = await makeSpreadsheetMockEnv();
+    const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    const chartId = insertChartInSpreadsheet(setupModel, "odoo_line", {
+        metaData: {
+            groupBy: ["date:month"],
+            resModel: "partner",
+            measure: "__count",
+            order: null,
+        },
+    });
+    const { model } = await createDashboardActionWithData(setupModel.exportData());
+    await contains(".o-chart-dashboard-item[data-id='odoo_pie']", { visible: false }).click();
+    await contains("select.o-chart-dashboard-item", { visible: false }).select("quarter");
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:quarter"]);
+    expect(model.getters.getChartDefinition(chartId).type).toBe("odoo_pie");
+    await contains(".o-chart-dashboard-item[data-id='odoo_line']", { visible: false }).click();
+    expect(model.getters.getChartDefinition(chartId).type).toBe("odoo_line");
+    expect(model.getters.getChartGranularity(chartId)).toEqual({
+        fieldName: "date",
+        granularity: "quarter",
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:quarter"]);
+});
