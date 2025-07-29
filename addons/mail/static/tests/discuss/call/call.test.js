@@ -322,7 +322,7 @@ test("'Start a meeting' in mobile", async () => {
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Chat" });
+    await click("button", { text: "Chats" });
     await click("button", { text: "Start a meeting" });
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Partner 2" });
     await click("button:not([disabled])", { text: "Invite to Group Chat" });
