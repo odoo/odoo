@@ -22,6 +22,7 @@
                 <h1 id="page_title" class="me-auto mb-0 h4 o_editable" data-oe-model="ir.ui.view" data-oe-id="" data-oe-field="arch" data-oe-xpath="" contenteditable="true">
                     Find a partner<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
                 </h1>
+                <div id="page_top_middle"/><!--Used to add items by inheritage-->
             </section>
         </div>
         <!-- Off canvas filters on mobile-->
@@ -31,49 +32,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
             </div>
             <div class="offcanvas-body p-0">
-                <div class="accordion accordion-flush">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target=".o_wcrm_offcanvas_grade"
-                                aria-expanded="false"
-                                aria-controls="o_wcrm_offcanvas_grade">
-                                Filter by category
-                            </button>
-                        </h2>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target=".o_wcrm_offcanvas_country"
-                                aria-expanded="false"
-                                aria-controls="o_wcrm_offcanvas_country">
-                                Filter by country
-                            </button>
-                        </h2>
-                    </div>
-                    <div class="o_wcrm_offcanvas_country accordion-collapse collapse">
-                        <div class="accordion-body pt-0">
-                            <ul class="list-group list-group-flush">
-                                <t t-foreach="countries" t-as="country">
-                                    <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                        <a t-attf-href="/partners#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
-                                        class="text-reset" aria-label="See countries filters">
-                                            <div class="form-check">
-                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
-                                                <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </t>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <div class="accordion accordion-flush"><!--Used to add accordion items by inheritage--></div>
             </div>
         </div>
         <div class="row mb-4">
@@ -195,7 +154,99 @@
     </div>
 </template>
 
+<template id="add_grades_on_partner" inherit_id="website_partner.index" name="Add Grades On Partners Page">
+    <xpath expr="//h1[@id='page_title']" position="after">
+        <t t-set='all_categories_label'>All Categories</t>
+        <div class="dropdown d-none d-lg-block">
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
+                <t t-foreach="grades" t-as="grade">
+                    <span t-if="grade['active']" t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>
+                </t>
+            </button>
+            <div class="dropdown-menu">
+                <t t-foreach="grades" t-as="grade">
+                    <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', 'industry') }"
+                    class="dropdown-item d-flex justify-content-between">
+                        <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
+                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="grade['grade_id_count']"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </xpath>
 
+    <xpath expr="//div[hasclass('accordion')]" position="inside">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wcrm_offcanvas_grade"
+                    aria-expanded="false"
+                    aria-controls="o_wcrm_offcanvas_grade">
+                    Filter by category
+                </button>
+            </h2>
+            <div class="o_wcrm_offcanvas_grade accordion-collapse collapse">
+                <div class="accordion-body pt-0">
+                    <ul class="list-group list-group-flush">
+                        <t t-foreach="grades" t-as="grade">
+                            <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                                class="text-reset" aria-label="See categories filters">
+                                    <div class="form-check">
+                                        <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-att-checked="bool(grade['active'])"/>
+                                        <label class="form-check-label" t-attf-for="#{grade}" t-out="grade"/>
+                                    </div>
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </xpath>
+
+    <xpath expr="//t[@id='partners_cards']" position="replace">
+        <t t-set="last_grade" t-value="None"/>
+        <t id="partners_cards" t-foreach="partners.sorted(lambda p: p.grade_id.id)" t-as="partner">
+            <t t-if="last_grade != partner.grade_id.id">
+                <h5 class="mt-3 mb-2 col-12">
+                    <span t-field="partner.grade_id"/> Partners
+                    <t t-call="website.publish_management">
+                        <t t-set="object" t-value="partner.grade_id"/>
+                        <t t-set="publish_edit" t-value="True"/>
+                    </t>
+                </h5>
+                <t t-set="last_grade" t-value="partner.grade_id.id"/>
+            </t>
+            <div class="col-md-4 col-xl-3 col-12 mb-4">
+                <div class="card h-100 text-decoration-none">
+                    <a id="partner_link_card" class="text-decoration-none" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" aria-label="Go to reseller">
+                        <div t-field="partner.image_1920"
+                            class="card-img-top border-bottom"
+                            t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
+                            />
+                        <div class="card-body">
+                            <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
+                            <small id="o_wcrm_partners_address"/>
+                            <small class="o_wcrm_short_description text-muted overflow-hidden">
+                                <b t-if="partner.implemented_partner_count">
+                                    <t t-if="partner.implemented_partner_count > 1" t-set='reflabel'>references</t>
+                                    <t t-else="" t-set='reflabel'>reference</t>
+                                    <t t-out="partner.implemented_partner_count"/> <t t-out='reflabel'/> » </b>
+                                <span t-field="partner.website_short_description"/>
+                            </small>
+                            <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
+                                Edit to add a short description
+                            </small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </xpath>
+</template>
 
 <template id="o_wcrm_partner_address" inherit_id="website_partner.index" name="Address">
     <xpath expr="//small[@id='o_wcrm_partners_address']" position="inside">
@@ -210,7 +261,7 @@
 </template>
 
 <template id="search_setting" inherit_id="website_partner.index" name="Search">
-    <xpath expr="//h1[@id='page_title']" position="after">
+    <xpath expr="//div[@id='page_top_middle']" position="after">
         <div class="o_wcrm_search d-flex w-100 w-lg-25">
             <form class="flex-grow-1" action="" method="get">
                 <input t-if="country_all" type="hidden" name="country_all" value="True" />
@@ -232,13 +283,13 @@
 </template>
 
 <template id="companies_only_setting" inherit_id="website_partner.index" name="Companies only">
-    <xpath expr="//t[@id='partners_cards']" position="attributes">
-        <attribute name="t-foreach">partners.filtered(lambda p: p.is_company)</attribute>
+    <xpath expr="//t[@id='partners_cards']" position="before">
+        <t t-set="partners" t-value="partners.filtered(lambda p: p.is_company)"/>
     </xpath>
 </template>
 
 <template id="countries_setting" inherit_id="website_partner.index" name="Countries">
-    <xpath expr="//h1[@id='page_title']" position="after">
+    <xpath expr="//div[@id='page_top_middle']" position="before">
         <div class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
                 <t t-foreach="countries" t-as="country">
@@ -248,11 +299,42 @@
             <div class="dropdown-menu">
                 <t t-foreach="countries" t-as="country" t-if="country['country_id']">
                     <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
-                    <a t-attf-href="/partners#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
+                    <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
                         <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
                         <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
                     </a>
                 </t>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('accordion')]" position="inside">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wcrm_offcanvas_country"
+                    aria-expanded="false"
+                    aria-controls="o_wcrm_offcanvas_country">
+                    Filter by country
+                </button>
+            </h2>
+        </div>
+        <div class="o_wcrm_offcanvas_country accordion-collapse collapse">
+            <div class="accordion-body pt-0">
+                <ul class="list-group list-group-flush">
+                    <t t-foreach="countries" t-as="country">
+                        <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                            class="text-reset" aria-label="See countries filters">
+                                <div class="form-check">
+                                    <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
+                                    <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
+                                </div>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
             </div>
         </div>
     </xpath>
@@ -261,35 +343,6 @@
 <template id="linked_partner_page_setting" inherit_id="website_partner.index" name="Partner page">
     <xpath expr="//a[@id='partner_link_card']" position="attributes">
         <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_country and 'country_id=%s' % current_country.id}</attribute>
-    </xpath>
-</template>
-
-<template id="ref_country" inherit_id="website_partner.search_setting" name="World Map">
-    <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
-        <t t-if="google_maps_api_key">
-            <!-- modal for large map -->
-            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <h4 class="modal-title">World Map</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
-                    </header>
-                    <iframe loading="lazy" t-attf-src="/google_map?height=485&amp;dom=website_partner.partners&amp;current_country=#{ current_country and current_country.id }&amp;partner_url=/partners/&amp;limit=1000"
-                    style="height:485px;"/>
-                </div>
-              </div>
-            </div>
-            <!-- modal end -->
-            <div class="btn-group ms-2">
-                <button class="btn btn-light border-primary active">
-                    <i class="fa fa-th-large"/>
-                </button>
-                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
-                    <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
-                </button>
-            </div>
-        </t>
     </xpath>
 </template>
 </odoo>

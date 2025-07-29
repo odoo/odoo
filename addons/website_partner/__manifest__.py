@@ -11,6 +11,7 @@ This is a base module. It holds website-related stuff for Contact model (res.par
     """,
     'depends': [
         'contacts',
+        'partnership',
         'website',
     ],
     'data': [
@@ -19,7 +20,11 @@ This is a base module. It holds website-related stuff for Contact model (res.par
         'data/website_partner_data.xml',
         'views/snippets.xml',
     ],
-    'demo': ['data/website_partner_demo.xml'],
+    'demo': [
+        'data/website_partner_demo.xml',
+        'data/res_partner_grade_demo.xml',
+        'data/res_partner_demo.xml',
+    ],
     'installable': True,
     'assets': {
         'website.website_builder_assets': [

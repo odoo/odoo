@@ -16,10 +16,12 @@ class WebsitePartnerPage(http.Controller):
             yield {'loc': '/partners'}
 
         slug = env['ir.http']._slug
-        base_partner_domain = [
-            ('is_company', '=', True),
-            ('website_published', '=', True),
-        ]
+        base_partner_domain = [('website_published', '=', True)]
+        grades = env['res.partner'].sudo()._read_group(base_partner_domain, groupby=['grade_id'])
+        for [grade] in grades:
+            loc = '/partners/grade/%s' % slug(grade)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
         country_partner_domain = base_partner_domain + [('country_id', '!=', False)]
         countries = env['res.partner'].sudo()._read_group(country_partner_domain, groupby=['country_id'])
         for [country] in countries:
@@ -27,7 +29,7 @@ class WebsitePartnerPage(http.Controller):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
-    def _get_partners_values(self, country=None, page=0, references_per_page=20, **post):
+    def _get_partners_values(self, country=None, grade=None, page=0, references_per_page=20, **post):
         country_all = post.pop('country_all', False)
         partner_obj = request.env['res.partner']
         country_obj = request.env['res.country']
@@ -49,6 +51,8 @@ class WebsitePartnerPage(http.Controller):
 
         # Group by country
         country_domain = list(base_partner_domain)
+        if grade:
+            country_domain += [('grade_id', '=', grade.id)]
 
         country_groups = partner_obj.sudo()._read_group(
             country_domain + [('country_id', '!=', False)],
@@ -59,6 +63,25 @@ class WebsitePartnerPage(http.Controller):
         fallback_all_countries = country and country.id not in (c.id for c, __ in country_groups)
         if fallback_all_countries:
             country = None
+
+        # Group by grade
+        grade_domain = list(base_partner_domain)
+        if country:
+            grade_domain += [('country_id', '=', country.id)]
+        grade_groups = partner_obj.sudo()._read_group(
+            grade_domain, ["grade_id"], ["__count"], order="grade_id")
+        grades = [{
+            'grade_id_count': sum(count for __, count in grade_groups),
+            'grade_id': (0, ""),
+            'active': grade is None,
+        }]
+        for g_grade, count in grade_groups:
+            if g_grade:
+                grades.append({
+                    'grade_id_count': count,
+                    'grade_id': (g_grade.id, g_grade.display_name),
+                    'active': grade and grade.id == g_grade.id,
+                })
 
         countries = [{
             'country_id_count': sum(count for __, count in country_groups),
@@ -73,6 +96,8 @@ class WebsitePartnerPage(http.Controller):
             })
 
         # current search
+        if grade:
+            base_partner_domain += [('grade_id', '=', grade.id)]
         if country:
             base_partner_domain += [('country_id', '=', country.id)]
         if current_industry:
@@ -80,8 +105,12 @@ class WebsitePartnerPage(http.Controller):
 
         # format pager
         slug = request.env['ir.http']._slug
-        if country:
+        if grade and not country:
+            url = '/partners/grade/' + slug(grade)
+        elif country and not grade:
             url = '/partners/country/' + slug(country)
+        elif country and grade:
+            url = '/partners/grade/' + slug(grade) + '/country/' + slug(country)
         else:
             url = '/partners'
         url_args = {}
@@ -111,6 +140,8 @@ class WebsitePartnerPage(http.Controller):
             'countries': countries,
             'country_all': country_all,
             'current_country': country,
+            'grades': grades,
+            'current_grade': grade,
             'partners': partners,
             'pager': pager,
             'searches': post,
@@ -121,10 +152,23 @@ class WebsitePartnerPage(http.Controller):
         }
         return values
 
-    @http.route(['/partners'], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True)
-    def partners(self, country=None, page=0, **post):
+    @http.route([
+        '/partners',
+        '/partners/page/<int:page>',
+
+        '/partners/grade/<model("res.partner.grade"):grade>',
+        '/partners/grade/<model("res.partner.grade"):grade>/page/<int:page>',
+
+        '/partners/country/<model("res.country"):country>',
+        '/partners/country/<model("res.country"):country>/page/<int:page>',
+
+        '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
+        '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
+        ], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True)
+    def partners(self, country=None, grade=None, sitemap=sitemap_partners, page=0, **post):
         values = self._get_partners_values(
             country=country,
+            grade=grade,
             page=page,
             references_per_page=self._references_per_page,
             **post

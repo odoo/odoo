@@ -2,6 +2,16 @@
 <odoo>
 
 <!-- Page -->
+<template id="inherited_partners_page" inherit_id="website_partner.index" name="Inherited Partners Page">
+    <xpath expr="//h1[@id='page_title']" position="replace">
+        <h1 id="page_title" class="me-auto mb-0 h4 o_editable" data-oe-model="ir.ui.view" data-oe-id="" data-oe-field="arch" data-oe-xpath="" contenteditable="true">
+            Find a reseller<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
+        </h1>
+    </xpath>
+</template>
+
+
+
 <template id="ref_country" inherit_id="website_partner.search_setting" name="World Map">
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
         <t t-if="google_maps_api_key">
