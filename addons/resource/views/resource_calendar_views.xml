@@ -90,11 +90,11 @@
                             <group name="switch_calendar" invisible="flexible_hours">
                                 <label for="switch_calendar_type" string="2 Week's Calendar" class="o_form_label"/>
                                 <button name="switch_calendar_type" invisible="two_weeks_calendar" type="object"
-                                    icon="fa-square-o" class="btn p-0"
+                                    icon="fa-square-o" title="Switch to 2-weeks calendar" class="btn p-0"
                                     confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
                                     confirm-label="Switch"/>
                                 <button name="switch_calendar_type" invisible="not two_weeks_calendar" type="object"
-                                    icon="fa-check-square" class="btn p-0"
+                                    icon="fa-check-square" title="Switch to 1-week calendar" class="btn p-0"
                                     confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
                                     confirm-label="Switch"/>
                             </group>
@@ -120,7 +120,7 @@
                             </group>
                             <field name="attendance_ids" widget="section_one2many"/>
                         </page>
-                        <page string="Week 1 Working Hours" name="working_hours" invisible="not two_weeks_calendar">
+                        <page string="Week 1 Working Hours" name="working_hours" invisible="flexible_hours or not two_weeks_calendar">
                             <field name="two_weeks_explanation"/>
                             <group>
                                 <group>
@@ -140,7 +140,7 @@
                             </group>
                             <field name="attendance_ids_1st_week" widget="section_one2many"/>
                         </page>
-                        <page string="Week 2 Working Hours" name="working_hours" invisible="not two_weeks_calendar">
+                        <page string="Week 2 Working Hours" name="working_hours" invisible="flexible_hours or not two_weeks_calendar">
                             <field name="two_weeks_explanation"/>
                             <group>
                                 <group>
@@ -158,7 +158,7 @@
                                     </div>
                                 </group>
                             </group>
-                            <field name="attendance_ids_1st_week" widget="section_one2many"/>
+                            <field name="attendance_ids_2nd_week" widget="section_one2many"/>
                         </page>
                     </notebook>
                 </sheet>
