@@ -1,5 +1,5 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { arg, toString } = spreadsheet.helpers;
@@ -11,19 +11,27 @@ const { functionRegistry, featurePluginRegistry } = spreadsheet.registries;
  * (specifically, files matching *.osheet.json).
  * This function is then used to translate those terms at runtime.
  */
-export function dynamicSpreadsheetTranslate(term) {
-    return _t(term);
+export function dynamicSpreadsheetTranslate(translationNamespace, term) {
+    return appTranslateFn(term, translationNamespace);
 }
 
 class TranslationNamespace extends OdooUIPlugin {
     static getters = /** @type {const} */ (["dynamicTranslate"]);
+
+    constructor(config) {
+        super(config);
+        this.translationNamespace = config.custom.translationNamespace;
+    }
 
     /**
      * @see dynamicSpreadsheetTranslate
      * @param {string} term
      */
     dynamicTranslate(term) {
-        return dynamicSpreadsheetTranslate(term);
+        if (this.translationNamespace) {
+            return dynamicSpreadsheetTranslate(this.translationNamespace, term);
+        }
+        return term;
     }
 }
 featurePluginRegistry.add("TranslationNamespace", TranslationNamespace);

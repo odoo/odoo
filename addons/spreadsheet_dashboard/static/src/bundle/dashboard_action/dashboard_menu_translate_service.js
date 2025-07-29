@@ -17,7 +17,9 @@ export const dashboardMenuTranslateService = {
                 // Override createLink to translate the label
                 createLink(url, label) {
                     const dashboard = dashboardLoader.getActiveDashboard();
-                    const translatedLabel = dashboard ? dynamicSpreadsheetTranslate(label) : label;
+                    const translatedLabel = dashboard
+                        ? dynamicSpreadsheetTranslate(dashboard.translationNamespace, label)
+                        : label;
                     return linkSpec.createLink(url, translatedLabel);
                 },
             });
