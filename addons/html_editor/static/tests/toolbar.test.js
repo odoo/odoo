@@ -263,6 +263,25 @@ test("toolbar disable link button when selection cross blocks", async () => {
     expect(".btn[name='link']").toHaveClass("disabled");
 });
 
+test("toolbar disable link button when table cells are selected", async () => {
+    await setupEditor(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p>[<br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p>]<br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").toHaveClass("disabled");
+});
+
 test("toolbar enable link button when selection has only link", async () => {
     await setupEditor(`<p>[<a href="test.com">test.com</a>]</p>`);
 
