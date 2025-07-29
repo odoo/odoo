@@ -85,8 +85,6 @@ class ProductReplenish(models.TransientModel):
 
         delay = supplier.delay + self.env.company.days_to_purchase
 
-        if bool(self.env['ir.config_parameter'].sudo().get_param('purchase.use_po_lead')):
-            delay += self.env.company.po_lead
         return fields.Datetime.add(date, days=delay)
 
     def _get_route_domain(self, product_tmpl_id):

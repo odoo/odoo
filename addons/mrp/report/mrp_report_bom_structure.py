@@ -631,13 +631,12 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=warehouse.route_ids)
             wh_manufacture_rules -= rules
             rules_delay += sum(rule.delay for rule in wh_manufacture_rules)
-            manufacturing_lead = bom.company_id.manufacturing_lead if bom and bom.company_id else 0
             return {
                 'route_type': 'manufacture',
                 'route_name': manufacture_rules[0].route_id.display_name,
                 'route_detail': bom.display_name,
-                'lead_time': bom.produce_delay + rules_delay + manufacturing_lead + bom.days_to_prepare_mo,
-                'manufacture_delay': bom.produce_delay + rules_delay + manufacturing_lead,
+                'lead_time': bom.produce_delay + rules_delay + bom.days_to_prepare_mo,
+                'manufacture_delay': bom.produce_delay + rules_delay,
                 'bom': bom,
             }
         return {}
