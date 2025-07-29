@@ -8,11 +8,16 @@ export class WelcomePage extends Component {
     static props = ["proceed?"];
     static template = "mail.WelcomePage";
 
+    /** @type {BlurManager} */
+    blurManager;
+
     setup() {
         super.setup();
         this.isClosed = false;
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.notification = useService("notification");
+        this.rtc = useService("discuss.rtc");
         this.state = useState({
             userName: this.store.self.name || _t("Guest"),
             audioStream: null,
@@ -45,6 +50,8 @@ export class WelcomePage extends Component {
         );
         this.stopTracksOnMediaStream(this.state.audioStream);
         this.stopTracksOnMediaStream(this.state.videoStream);
+        this.blurManager?.close();
+        this.blurManager = undefined;
         this.isClosed = true;
         this.props.proceed?.();
     }
@@ -53,6 +60,10 @@ export class WelcomePage extends Component {
         return Boolean(
             navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaStream
         );
+    }
+
+    get blurButtonTitle() {
+        return this.store.settings.useBlur ? _t("Remove Blur Background") : _t("Blur Background");
     }
 
     async enableMicrophone() {
@@ -82,7 +93,7 @@ export class WelcomePage extends Component {
         }
         try {
             this.state.videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-            this.videoRef.el.srcObject = this.state.videoStream;
+            await this.applyBlurConditionally();
         } catch {
             // TODO: display popup asking the user to re-enable their camera
         }
@@ -91,10 +102,37 @@ export class WelcomePage extends Component {
         }
     }
 
+    async onClickBlur() {
+        this.store.settings.useBlur = !this.store.settings.useBlur;
+        await this.applyBlurConditionally();
+    }
+
+    async applyBlurConditionally() {
+        if (!this.state.videoStream) {
+            return;
+        }
+        if (!this.store.settings.useBlur) {
+            this.videoRef.el.srcObject = this.state.videoStream;
+            return;
+        }
+        this.blurManager?.close();
+        this.blurManager = undefined;
+        try {
+            this.blurManager = await this.rtc.applyBlurEffect(this.state.videoStream);
+            this.videoRef.el.srcObject = this.blurManager.stream;
+        } catch (_e) {
+            this.notification.add(_e.message, { type: "warning" });
+            this.store.settings.useBlur = false;
+            this.videoRef.el.srcObject = this.state.videoStream;
+        }
+    }
+
     disableVideo() {
         this.videoRef.el.srcObject = null;
         this.stopTracksOnMediaStream(this.state.videoStream);
         this.state.videoStream = null;
+        this.blurManager?.close();
+        this.blurManager = undefined;
     }
 
     /**
