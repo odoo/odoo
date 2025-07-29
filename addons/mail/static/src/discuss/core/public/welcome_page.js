@@ -1,5 +1,7 @@
 import { Component, useRef, useState, onMounted } from "@odoo/owl";
 
+import { BlurManager } from "@mail/discuss/call/common/blur_manager";
+
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -26,6 +28,7 @@ export class WelcomePage extends Component {
                 this.enableVideo();
             }
         });
+        this.blurManager = undefined;
     }
 
     onKeydownInput(ev) {
@@ -45,6 +48,8 @@ export class WelcomePage extends Component {
         );
         this.stopTracksOnMediaStream(this.state.audioStream);
         this.stopTracksOnMediaStream(this.state.videoStream);
+        this.blurManager?.close();
+        this.blurManager = undefined;
         this.isClosed = true;
         this.props.proceed?.();
     }
@@ -82,7 +87,7 @@ export class WelcomePage extends Component {
         }
         try {
             this.state.videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-            this.videoRef.el.srcObject = this.state.videoStream;
+            await this.applyBlur();
         } catch {
             // TODO: display popup asking the user to re-enable their camera
         }
@@ -91,10 +96,39 @@ export class WelcomePage extends Component {
         }
     }
 
+    async onClickBlur() {
+        this.store.settings.useBlur = !this.store.settings.useBlur;
+        browser.localStorage.setItem("mail_user_setting_use_blur", this.store.settings.useBlur);
+        await this.applyBlur();
+    }
+
+    async applyBlur() {
+        if (!this.state.videoStream) return;
+        if (!this.store.settings.useBlur) {
+            this.videoRef.el.srcObject = this.state.videoStream;
+            this.blurManager?.close();
+            this.blurManager = undefined;
+            return;
+        }
+        try {
+            this.blurManager = new BlurManager(this.state.videoStream, {
+                backgroundBlur: this.store.settings.backgroundBlurAmount,
+                edgeBlur: this.store.settings.edgeBlurAmount,
+            });
+            this.videoRef.el.srcObject = await this.blurManager.stream;
+        } catch {
+            this.videoRef.el.srcObject = this.state.videoStream;
+            this.blurManager?.close();
+            this.blurManager = undefined;
+        }
+    }
+
     disableVideo() {
         this.videoRef.el.srcObject = null;
         this.stopTracksOnMediaStream(this.state.videoStream);
         this.state.videoStream = null;
+        this.blurManager?.close();
+        this.blurManager = undefined;
     }
 
     /**
