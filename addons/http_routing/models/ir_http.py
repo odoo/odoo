@@ -560,8 +560,12 @@ class IrHttp(models.AbstractModel):
             if request.httprequest.method in ('GET', 'HEAD'):
                 try:
                     _, path = rule.build(args)
-                except odoo.exceptions.MissingError:
-                    raise werkzeug.exceptions.NotFound()
+                except exceptions.MissingError as exc:
+                    raise werkzeug.exceptions.NotFound() from exc
+                except exceptions.AccessError as exc:
+                    if request.env.user.is_public:
+                        raise werkzeug.exceptions.NotFound() from exc
+                    raise
                 assert path is not None
                 generated_path = werkzeug.urls.url_unquote_plus(path)
                 current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
