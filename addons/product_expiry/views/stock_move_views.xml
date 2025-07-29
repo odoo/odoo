@@ -25,7 +25,7 @@
                 <field name="expiration_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
                  decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
-                <field name="removal_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
+                <field name="removal_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="True"
                  decoration-danger="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"
                  decoration-bf="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
