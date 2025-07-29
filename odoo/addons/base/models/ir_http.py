@@ -212,7 +212,7 @@ class IrHttp(models.AbstractModel):
                 if handle_error := rule.endpoint.routing.get('handle_params_access_error'):
                     if response := handle_error(e):
                         werkzeug.exceptions.abort(response)
-                if isinstance(e, odoo.exceptions.MissingError):
+                if request.env.user.is_public or isinstance(e, odoo.exceptions.MissingError):
                     raise werkzeug.exceptions.NotFound() from e
                 raise
 
