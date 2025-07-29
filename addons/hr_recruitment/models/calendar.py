@@ -11,6 +11,11 @@ class CalendarEvent(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if not self.env.context.get('default_applicant_id'):
+            appointment_booker_id = vals_list[0].get('appointment_booker_id')
+            if appointment_booker_id:
+                applicant_id = self.env['hr.applicant'].search([('partner_id', '=', appointment_booker_id)], limit=1)
+                vals_list[0]['applicant_id'] = applicant_id.id
         events = super(CalendarEvent, self).create(vals_list)
         try:
             self.env['hr.applicant'].check_access_rights('read')
