@@ -5,7 +5,7 @@ import { Field } from "@web/views/fields/field";
 import { browser } from "@web/core/browser/browser";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
+import { useDebounced, useThrottleForAnimation } from "@web/core/utils/timing";
 import { ButtonBox } from "@web/views/form/button_box/button_box";
 import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -68,6 +68,7 @@ export class FormRenderer extends Component {
         useSubEnv({ model: record.model });
         this.uiService = useService("ui");
         this.onResize = useDebounced(this.render, 200);
+        this.onScrollThrottled = useThrottleForAnimation(this.onScroll);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
@@ -139,5 +140,10 @@ export class FormRenderer extends Component {
 
     get shouldAutoFocus() {
         return !hasTouch() && !this.props.archInfo.disableAutofocus;
+    }
+
+    onScroll(ev) {
+        this.state.isStatusbarStickyPinned =
+            !this.env.inDialog && !this.env.isSmall && ev.target.scrollTop !== 0;
     }
 }
