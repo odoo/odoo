@@ -40,8 +40,8 @@ test('livechats should be in "livechat" tab in mobile', async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button", { text: "Livechat" });
+    await click("button", { text: "Live Chats" });
     await contains(".o-mail-NotificationItem", { text: "Visitor 11" });
-    await click("button", { text: "Chat" });
+    await click("button", { text: "Chats" });
     await contains(".o-mail-NotificationItem", { count: 0, text: "Visitor 11" });
 });

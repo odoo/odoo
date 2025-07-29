@@ -28,7 +28,7 @@ test("can make DM chat in mobile", async () => {
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Chat" });
+    await click("button", { text: "Chats" });
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Search a conversation']", "Gandalf");
     await click(".o_command_name", { text: "Gandalf" });
@@ -42,7 +42,7 @@ test("can search channel in mobile", async () => {
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
+    await click("button", { text: "Channels" });
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Search a conversation']", "Gryff");
     await click("a", { text: "Gryffindors" });
@@ -54,7 +54,7 @@ test("can make new channel in mobile", async () => {
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
+    await click("button", { text: "Channels" });
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Search a conversation']", "slytherins");
     await click("a", { text: "Create Channel" });

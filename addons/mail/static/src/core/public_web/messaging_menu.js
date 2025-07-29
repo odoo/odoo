@@ -128,7 +128,7 @@ export class MessagingMenu extends Component {
                 counter: this.store.getDiscussSidebarCategoryCounter(this.store.discuss.chats.id),
                 icon: "fa fa-user",
                 id: "chat",
-                label: _t("Chat"),
+                label: _t("Chats"),
             },
             {
                 channelHasUnread: Boolean(this.store.discuss.unreadChannels.length),
@@ -137,7 +137,7 @@ export class MessagingMenu extends Component {
                 ),
                 icon: "fa fa-users",
                 id: "channel",
-                label: _t("Channel"),
+                label: _t("Channels"),
             },
         ];
     }

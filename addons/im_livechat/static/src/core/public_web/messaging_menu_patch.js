@@ -21,7 +21,7 @@ patch(MessagingMenu.prototype, {
                 ),
                 id: "livechat",
                 icon: "fa fa-commenting-o",
-                label: _t("Livechat"),
+                label: _t("Live Chats"),
             });
         }
         return items;
