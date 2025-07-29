@@ -5,7 +5,6 @@ import { useBus } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
 import { MentionPlugin } from "./mention_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
-import { SIGNATURE_CLASS } from "@html_editor/main/signature_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 
 export class HtmlComposerMessageField extends HtmlMailField {
@@ -18,7 +17,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
             });
             useBus(this.env.fullComposerBus, "SAVE_CONTENT", (ev) => {
                 const emailAddSignature = Boolean(
-                    this.editor.editable.querySelector(`.${SIGNATURE_CLASS}`)
+                    this.editor.editable.querySelector(".o-signature-container")
                 );
                 const elContent = this.getNoSignatureElContent();
                 // Temporarily Put the content in the DOM to be able to extract innerText newLines.
@@ -71,7 +70,9 @@ export class HtmlComposerMessageField extends HtmlMailField {
 
     getNoSignatureElContent() {
         const elContent = this.editor.getElContent();
-        this.editor.shared.signature.cleanSignatures({ rootClone: elContent });
+        for (const el of elContent.querySelectorAll(".o-signature-container")) {
+            el.remove();
+        }
         return elContent;
     }
 }

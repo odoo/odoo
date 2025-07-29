@@ -35,14 +35,6 @@ test("should show the hook when hovering the second P", async () => {
     expect(".oe-sidewidget-move").toHaveCount(1);
     expect(".oe-sidewidget-move").toHaveRect({ top: 37, left: 5 });
 });
-test("should show the hook when hovering a signature", async () => {
-    const { el } = await setupEditor(
-        `<p>ab</p><div class="o-signature-container"><h1>Hello[]</h1></div><p>cd</p>`,
-        { styleContent: styles }
-    );
-    await hover(el.querySelector(".o-signature-container"));
-    expect(".oe-sidewidget-move").toHaveCount(1);
-});
 test("should show the hook when hovering a figure element", async () => {
     const { el } = await setupEditor(
         `<figure>

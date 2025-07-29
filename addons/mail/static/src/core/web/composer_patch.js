@@ -1,4 +1,3 @@
-import { SIGNATURE_CLASS } from "@html_editor/main/signature_plugin";
 import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 
@@ -26,7 +25,7 @@ patch(Composer.prototype, {
         if (signature) {
             const signatureEl = renderToElement("html_editor.Signature", {
                 signature,
-                signatureClass: SIGNATURE_CLASS,
+                signatureClass: "o-signature-container",
             });
             fragment.append(signatureEl);
         }
