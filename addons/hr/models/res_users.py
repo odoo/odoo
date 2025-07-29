@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from markupsafe import Markup
 
 from odoo import api, models, fields, _, SUPERUSER_ID
@@ -310,7 +312,7 @@ class ResUsers(models.Model):
         if self.env.user.employee_id:
             action = self.env['ir.actions.act_window']._for_xml_id('hr.res_users_action_my')
             groups = {group_xml_id[0]: True for group_xml_id in self.env.user.all_group_ids._get_external_ids().values()}
-            action_context = safe_eval(action['context']) if action['context'] else {}
+            action_context = ast.literal_eval(action['context']) if action['context'] else {}
             action_context.update(groups)
             action['context'] = str(action_context)
             return action
