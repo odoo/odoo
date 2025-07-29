@@ -14,23 +14,31 @@
                 <button type="button" t-on-click="save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
             </div>
         </div>
-        <div class="o-snippets-tabs position-relative grid px-2 my-2" style="--columns: 3; --gap: 0.25rem">
+        <div class="o-snippets-tabs position-relative">
             <div
-                class="o-snippets-tabs-highlighter position-absolute start-50 h-100 rounded pe-none"
+                class="o-snippets-tabs-highlighter position-absolute start-50 h-100 pe-none"
                 t-att-class="{
                     'o-highlight-blocks': state.activeTab === 'blocks',
                     'o-highlight-theme': state.activeTab === 'theme',
                 }"
             />
-            <button data-name="blocks" data-hotkey="1" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="displayOnlyCustomizeTab">
-                <i class="oi oi-plus me-1" role="img"/>Add
-            </button>
-            <button data-name="customize" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'customize'}" t-on-click="() => this.onTabClick('customize')">
-                <i class="oi oi-settings-adjust me-1" role="img"/>Edit
-            </button>
-            <button data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab">
-                <i class="fa fa-cog me-1" role="img"/>Theme
-            </button>
+            <ul class="nav nav-underline" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button id="blocks-tab" data-name="blocks" data-hotkey="1" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="displayOnlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'blocks' ? 'true' : 'false'">
+                        <i class="fa fa-th-large me-2" role="none"/>Blocks
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button id="customize-tab" data-name="customize" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'customize'}" t-on-click="() => this.onTabClick('customize')" role="tab" t-att-aria-selected="state.activeTab === 'customize' ? 'true' : 'false'">
+                        <i class="fa fa-paint-brush me-2" role="none"/>Style
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button id="theme-tab" data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'theme' ? 'true' : 'false'">
+                        <i class="fa fa-cog me-2" role="none"/>Theme
+                    </button>
+                </li>
+            </ul>
         </div>
         <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
             <t t-if="state.activeTab === 'blocks'">

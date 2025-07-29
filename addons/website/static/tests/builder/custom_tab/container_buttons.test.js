@@ -164,7 +164,7 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     expect(".o_notification_manager .o_notification_content").toHaveCount(1);
 
     // Check that the custom sections appeared.
-    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Add)").click();
+    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Blocks)").click();
     expect(
         ".o-snippets-menu div:contains('Custom Inner Content') div[name='Custom Button']"
     ).toHaveCount(1);

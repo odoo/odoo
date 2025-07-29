@@ -39,11 +39,11 @@ test("navigate between builder tab don't fetch snippet description again", async
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
     expect(queryAllTexts(".o-website-builder_sidebar .o-snippets-tabs button")).toEqual([
-        "Add",
-        "Edit",
+        "Blocks",
+        "Style",
         "Theme",
     ]);
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Add");
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Blocks");
     expect.verifySteps(["render_public_asset"]);
 
     await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Theme)").click();
@@ -52,8 +52,8 @@ test("navigate between builder tab don't fetch snippet description again", async
         "Theme"
     );
 
-    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Add)").click();
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Add");
+    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Blocks)").click();
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Blocks");
     expect.verifySteps([]);
 });
 
@@ -89,38 +89,38 @@ test("undo and redo buttons", async () => {
 
 test("activate customize tab without any selection", async () => {
     await setupWebsiteBuilder("<h1> Homepage </h1>");
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Add");
-    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Edit)").click();
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Blocks");
+    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Style)").click();
     expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
-        "Edit"
+        "Style"
     );
 });
 
-test("Clicking on the 'Add' or 'Theme' tab should deactivate the options", async () => {
+test("Clicking on the 'Blocks' or 'Theme' tab should deactivate the options", async () => {
     await setupWebsiteBuilderWithSnippet("s_banner");
 
     await contains(":iframe .s_banner").click();
     await animationFrame();
     expect(".oe_overlay").toHaveCount(1);
-    expect(".o-snippets-tabs button:contains('Edit')").toHaveClass("active");
+    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(1);
 
-    await contains(".o-snippets-tabs button:contains('Add')").click();
+    await contains(".o-snippets-tabs button:contains('Blocks')").click();
     expect(".oe_overlay").toHaveCount(0);
-    await contains(".o-snippets-tabs button:contains('Edit')").click();
-    expect(".o-snippets-tabs button:contains('Edit')").toHaveClass("active");
+    await contains(".o-snippets-tabs button:contains('Style')").click();
+    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(0);
 
     await contains(":iframe .s_banner").click();
     await waitFor(".o_customize_tab .options-container");
     expect(".oe_overlay").toHaveCount(1);
-    expect(".o-snippets-tabs button:contains('Edit')").toHaveClass("active");
+    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(1);
 
     await contains(".o-snippets-tabs button:contains('Theme')").click();
     expect(".oe_overlay").toHaveCount(0);
-    await contains(".o-snippets-tabs button:contains('Edit')").click();
-    expect(".o-snippets-tabs button:contains('Edit')").toHaveClass("active");
+    await contains(".o-snippets-tabs button:contains('Style')").click();
+    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(0);
 });
 

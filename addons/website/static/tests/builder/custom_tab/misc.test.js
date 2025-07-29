@@ -281,7 +281,7 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
 test("fallback on the 'Blocks' tab if no option match the selected element", async () => {
     await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target > div").click();
-    expect(".o-snippets-tabs button:contains('Add')").toHaveClass("active");
+    expect(".o-snippets-tabs button:contains('Blocks')").toHaveClass("active");
 });
 
 test("display empty message if no option container is visible", async () => {
