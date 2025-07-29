@@ -62,10 +62,8 @@ class ImageGalleryOption extends Plugin {
 
     restoreSelection(imageToSelect, isPreviewing) {
         if (imageToSelect && !isPreviewing) {
-            // We want to update the container to the equivalent cloned image.
-            // This has to be done in the new step so we manually add a step
-            this.dependencies.history.addStep();
-            this.dependencies["builderOptions"].updateContainers(imageToSelect);
+            // Activate the containers of the equivalent cloned image.
+            this.dependencies["builderOptions"].setNextTarget(imageToSelect);
         }
     }
 

@@ -41,11 +41,13 @@ export class FloatingBlocksRoundnessAction extends BuilderAction {
 }
 export class AddFloatingBlockCardAction extends BuilderAction {
     static id = "addFloatingBlockCard";
+    static dependencies = ["builderOptions"];
     apply({ editingElement: el }) {
         const newCardEl = renderToElement("website.s_floating_blocks.new_card");
         const wrapperEl = el.querySelector(".s_floating_blocks_wrapper");
         wrapperEl.appendChild(newCardEl);
         newCardEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        this.dependencies.builderOptions.setNextTarget(newCardEl);
     }
 }
 

@@ -103,7 +103,7 @@ export class VisibilityPlugin extends Plugin {
     onOptionVisibilityUpdate(editingEl, show) {
         const isShown = this.toggleVisibilityStatus({ editingEl, show });
         if (!isShown) {
-            this.dependencies["builderOptions"].deactivateContainers();
+            this.dependencies.builderOptions.setNextTarget(false);
         }
         this.config.updateInvisibleElementsPanel();
         this.dependencies.disableSnippets.disableUndroppableSnippets();

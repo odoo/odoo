@@ -34,7 +34,7 @@ class LayoutColumnOptionPlugin extends Plugin {
 
 export class ChangeColumnCountAction extends BuilderAction {
     static id = "changeColumnCount";
-    static dependencies = ["selection", "clone"];
+    static dependencies = ["selection", "clone", "builderOptions"];
     async apply({ editingElement, value: nbColumns }) {
         if (nbColumns === "custom") {
             return;
@@ -71,9 +71,7 @@ export class ChangeColumnCountAction extends BuilderAction {
         if (itemsDelta > 0) {
             for (let i = 0; i < itemsDelta; i++) {
                 const lastEl = rowEl.lastElementChild;
-                await this.dependencies.clone.cloneElement(lastEl, {
-                    activateClone: false,
-                });
+                await this.dependencies.clone.cloneElement(lastEl, { activateClone: false });
             }
         }
 
@@ -85,6 +83,10 @@ export class ChangeColumnCountAction extends BuilderAction {
             editingElement.append(...columnEl.children);
             rowEl.remove();
             cursors.restore();
+        } else if (prevNbColumns === 0) {
+            // Activate the first column options.
+            const firstColumnEl = editingElement.querySelector(".row > div");
+            this.dependencies.builderOptions.setNextTarget(firstColumnEl);
         }
     }
     isApplied({ editingElement, value }) {
