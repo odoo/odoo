@@ -30,7 +30,9 @@ test("remove parallax changes editing element", async () => {
     const backgroundImageUrl = "url('/web/image/123/transparent.png')";
     await setupWebsiteBuilder(`
         <section>
-            <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
+            <span class="s_parallax_bg_wrap">
+                <span class="s_parallax_bg oe_img_bg o_bg_img_center" style="background-image: ${backgroundImageUrl} !important;">aaa</span>
+            </span>
         </section>`);
     await contains(":iframe section").click();
     await contains("[data-label='Scroll Effect'] button.o-dropdown").click();

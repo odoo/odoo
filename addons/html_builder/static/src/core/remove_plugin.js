@@ -36,7 +36,8 @@ export function isRemovable(el) {
 const layoutElementsSelector = [
     ".o_we_shape",
     ".o_we_bg_filter",
-    ".s_parallax_bg",
+    ".s_parallax_bg", // Kept for compatibility.
+    ".s_parallax_bg_wrap",
     ".o_bg_video_container",
 ].join(",");
 
