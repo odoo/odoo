@@ -516,6 +516,12 @@ export class LinkTools extends Link {
         this._setSelectOption($target, true);
         this._updateOptionsUI();
         this._adaptPreview();
+        // Reactivate the snippet to update the Button snippet editor's visibility
+        // if the element type has changed (e.g., from button to link or vice versa).
+        this.props.wysiwyg.snippetsMenuBus.trigger("ACTIVATE_SNIPPET", {
+            $snippet: $(this.linkEl),
+            onSuccess: () => { },
+        });
     }
     /**
      * Sets the border width on the link.

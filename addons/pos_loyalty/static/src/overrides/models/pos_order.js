@@ -505,7 +505,7 @@ patch(PosOrder.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines();
+        const orderLines = this.get_orderlines().filter((line) => !line.combo_parent_id);
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id;
@@ -547,11 +547,19 @@ patch(PosOrder.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(),
+                    (sum, line) =>
+                        sum +
+                        (line.combo_line_ids.length > 0
+                            ? line.getComboTotalPrice()
+                            : line.get_price_with_tax()),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
+                    (sum, line) =>
+                        sum +
+                        (line.combo_line_ids.length > 0
+                            ? line.getComboTotalPriceWithoutTax()
+                            : line.get_price_without_tax()),
                     0
                 );
                 const amountCheck =
@@ -592,7 +600,10 @@ patch(PosOrder.prototype, {
                             qtyPerProduct[line._reward_product_id?.id || line.get_product().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.get_price_with_tax();
+                        orderedProductPaid +=
+                            line.combo_line_ids.length > 0
+                                ? line.getComboTotalPrice()
+                                : line.get_price_with_tax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }

@@ -93,3 +93,12 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
                 fpos_ref='fiscal_position_in_export_sez_in',
                 partner=self.partner_a.id,
             )
+
+    def test_foreign_partner_without_state_fiscal_position(self):
+        """ Verify foreign partner without state gets export fiscal position """
+        self.env.company = self.default_company
+
+        self._assert_order_fiscal_position(
+            fpos_ref='fiscal_position_in_export_sez_in',
+            partner=self.partner_foreign_no_state.id,
+        )

@@ -37,6 +37,7 @@ export class PosOrder extends Base {
         this.last_order_preparation_change = vals.last_order_preparation_change
             ? JSON.parse(vals.last_order_preparation_change)
             : {
+                  metadata: {},
                   lines: {},
                   generalNote: "",
                   sittingMode: "dine in",
@@ -64,7 +65,6 @@ export class PosOrder extends Base {
                 screen_data: {},
                 selected_orderline_uuid: undefined,
                 selected_paymentline_uuid: undefined,
-                locked: this.state !== "draft",
                 // Pos restaurant specific to most proper way is to override this
                 TipScreen: {
                     inputTipAmount: "",
@@ -365,6 +365,9 @@ export class PosOrder extends Base {
         }
         this.last_order_preparation_change.sittingMode = this.takeaway ? "takeaway" : "dine in";
         this.last_order_preparation_change.generalNote = this.general_note;
+        this.last_order_preparation_change.metadata = {
+            serverDate: serializeDateTime(DateTime.now()),
+        };
     }
 
     hasSkippedChanges() {

@@ -617,6 +617,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         if financial_account_node['cac:FinancialInstitutionBranch']:
             financial_account_node['cac:FinancialInstitutionBranch']['cac:FinancialInstitution'] = None
 
+            if financial_account_node['cac:FinancialInstitutionBranch']['cbc:ID']:
+                financial_account_node['cac:FinancialInstitutionBranch']['cbc:ID']['schemeID'] = None
+
         return financial_account_node
 
     # -------------------------------------------------------------------------
@@ -665,13 +668,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _add_document_line_tax_total_nodes(self, line_node, vals):
         # TaxTotal should not be used in BIS 3.0
         pass
-
-    def _add_document_line_item_nodes(self, line_node, vals):
-        super()._add_document_line_item_nodes(line_node, vals)
-        product = vals['base_line']['product_id']
-        line_node['cac:Item']['cac:SellersItemIdentification'] = {
-            'cbc:ID': {'_text': product.code},
-        }
 
     def _add_document_line_tax_category_nodes(self, line_node, vals):
         base_line = vals['base_line']

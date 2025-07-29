@@ -3977,6 +3977,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"קריאה בלבד: שותפים יכולים לצפות במשימות אך לא לערוך אותן.\n"
+"עריכה עם גישה מוגבלת: שותפים יכולים לצפות ולערוך משימות שהם עוקבים אחריהן בתצוגת קנבן.\n"
+"עריכה: שותפים יכולים לצפות ולערוך את כל המשימות בתצוגת קנבן, וגם לבחור באילו משימות לעקוב."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4233,7 +4236,7 @@ msgstr "חפש בסטטוס"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "חיפוש%(left)s משימות%(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4383,6 +4386,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"חלק מהחשבונות האנליטיים שנבחרו משויכים לפרויקט:\n"
+"%(accountList)s\n"
+"\n"
+"העברת החשבונות האלה לארכיון תבטל את האפשרות לרשום דוחות שעות בפרויקטים המשויכים אליהם..\n"
+"\n"
+"האם אתה בטוח שברצונך להמשיך?"
 
 #. module: project
 #. odoo-python
@@ -4505,7 +4514,7 @@ msgstr "סטטוס"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "עדכון סטטוס - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4701,7 +4710,7 @@ msgstr "שם משימה..."
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
-msgstr ""
+msgstr "משימה מעברת מפרויקט %(source_project)s ל-%(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4901,7 +4910,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
-msgstr ""
+msgstr "החיפוש לא תומך באופרטור%(operator)s או ערך %(value)s."
 
 #. module: project
 #. odoo-python
@@ -4918,6 +4927,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to "
 "'%(visibility)s' in order to make it accessible by the recipient(s)."
 msgstr ""
+"הגדרת הפרטיות של הפרויקט מגבילה את השיתוף, ולכן לא ניתן לשתף את המשימה עם "
+"הנמענים.שנה את הגדרת הפרטיות של הפרויקט ל־: '%(visibility)s' כדי לאפשר לנמען"
+" (ים) גישה ."
 
 #. module: project
 #. odoo-javascript
@@ -5003,6 +5015,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"החשבון ///האנליטי הזה משויך לפרויקטים הבאים:\n"
+"%(projectList)s\n"
+"\n"
+"העברת החשבון לאכיב ימנע את האפשרות לרשום דוחות שעות עבור הפרויקטים הללו.\n"
+"\n"
+"האם אתה בטוח שברצונך להמשיך?"
 
 #. module: project
 #. odoo-javascript
@@ -5033,6 +5051,10 @@ msgid ""
 " stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
+"הפרויקט הזה משויך ל- %(project_company)s, עוד שהשלב שנבחר שייך "
+"ל-%(stage_company)s. יש כמה אפשרויות לטיפול בכך: ניתן להסיר את שיוך החברה "
+"מהפרויקט או מהשלב, או לעדכן את פרטי החברה בשני הרשומות כדי ששתיהן יהיו תחת "
+"אותה חברה."
 
 #. module: project
 #. odoo-python
@@ -5055,6 +5077,9 @@ msgid ""
 " the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
+"-הפרויקט הזה לא משויך לאף חברה, בעוד שהשלב משויך ל %s. Tיש כמה אפשרויות "
+"לשקול: ניתן לשנות את שיוך החברה של הפרויקט כך שיתאים לזה של השלב, או להסיר "
+"את שיוך החברה מהשלב."
 
 #. module: project
 #. odoo-python
@@ -5390,6 +5415,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"השתמש בצ'אט כדי לשלוח<b> מיילים </b>ולתקשר ביעילות עם הלקוחות שלך.הוסף אנשים"
+" חדשים לרשימת העוקבים כדי לגרום להם להיות מודעים לשינויים העיקריים במשימה "
+"זו."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5403,6 +5431,13 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"השתמש במילות המפתח האלה בכותרת כדי ליצור משימות חדשות.:\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags הגדר תווית למשימה\n"
+"        @user הקצה את המשימה למשתמש\n"
+"        ! הגדראת המשימה בעדיפות גבוהה\n"
+"\n"
+"       ודא שאתה משתמש בפורמט ובסדר הנכונים. e.g. שפר את מסך ההגדרות 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -5570,6 +5605,9 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"אינך יכול לשנות את שיוך החברה של שלב זה ל־ %(company_name)s מכיוון שהוא כולל"
+" כעת פרויקטים המשויכים ל־ %(project_company_name)s. אנא ודא שהשלב הזה כולל "
+"אך ורק פרויקטים המשויכים ל־%(company_name)s."
 
 #. module: project
 #. odoo-javascript

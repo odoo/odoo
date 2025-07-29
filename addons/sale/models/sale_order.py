@@ -533,7 +533,7 @@ class SaleOrder(models.Model):
                     currency_id=currency,
                     sign=1,
                     special_type='early_payment',
-                    tax_ids=line.tax_id,
+                    tax_ids=line.tax_id.flatten_taxes_hierarchy().filtered(lambda tax: tax.amount_type != 'fixed'),
                 ))
                 epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
                     record=self,

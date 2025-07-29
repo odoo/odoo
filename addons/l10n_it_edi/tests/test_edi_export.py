@@ -549,6 +549,24 @@ class TestItEdiExport(TestItEdi):
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_lowercase_fields.xml')
 
+    def test_export_XML_product_with_multiline_description_field(self):
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'name': 'High-quality ergonomic office chair.\nBreathable mesh back and cushioned seat.\nAdjustable height and lumbar support.\nSupports up to 120 kg weight capacity.\nIdeal for home and corporate workspaces.',
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'invoice_with_multiple_product_description_fields.xml')
+
     def test_export_invoice_with_rounding_lines_value(self):
         """Test that invoices with rounding lines are correctly exported with exempt tax 'N2.2'."""
         self.env['res.config.settings'].create({

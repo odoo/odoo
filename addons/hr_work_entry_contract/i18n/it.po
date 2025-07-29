@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Marianna Ciofani, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,13 +66,13 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are not "
 "allowed to regenerate validated work entries"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Non è "
-"consentito rigenerare voci di lavoro convalidate"
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Avviso\"/>Non è "
+"consentito rigenerare voci lavorative convalidate"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
-msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Suggerimento\"/>"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -123,7 +124,7 @@ msgstr "Nome visualizzato"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
 msgid "Earliest Available Date Message"
-msgstr "Messaggio della prima data disponibile"
+msgstr "Messaggio di prima data disponibile"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date
@@ -155,12 +156,12 @@ msgstr "Voci lavorative di tutti"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
 msgid "Extra Hours"
-msgstr "Ore extra"
+msgstr "Ore aggiuntive"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
 msgid "From"
-msgstr "Da"
+msgstr "Dal"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_contract_view_form_inherit_work_entry
@@ -175,7 +176,7 @@ msgstr "Gemera voci di lavoro mancanti"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
 msgid "Generated From"
-msgstr "Generato da"
+msgstr "Generati dal"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_to
@@ -185,7 +186,7 @@ msgstr "Generati fino al"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
 msgid "Generic Time Off"
-msgstr "Congedo generico"
+msgstr "Ferie generiche"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
@@ -249,7 +250,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date_message
 msgid "Latest Available Date Message"
-msgstr "Ultimo messaggio di data disponibile"
+msgstr "Messaggio di ultima data disponibile"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date
@@ -259,7 +260,7 @@ msgstr "Ultima data"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
-msgstr "Congedo a lungo termine"
+msgstr "Ferie a lungo termine"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
@@ -299,7 +300,7 @@ msgstr "Malattia"
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
 msgid ""
 "Sorry, generating work entries from cancelled contracts is not allowed."
-msgstr "Non è possibile generare voci di lavoro da contratti eliminati."
+msgstr "Non è consentito generare voci lavorative da contratti annullati."
 
 #. module: hr_work_entry_contract
 #. odoo-python
@@ -328,7 +329,7 @@ msgstr "Ferie"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_to
 msgid "To"
-msgstr "A"
+msgstr "Al"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
@@ -369,4 +370,4 @@ msgstr "Calendario origine voce lavorativa non valido"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
 msgid "Working Schedule"
-msgstr "Programma di lavoro"
+msgstr "Orario lavorativo"

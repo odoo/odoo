@@ -553,6 +553,77 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
         self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
 
+    def test_search_current_attendee_status(self):
+        """ Test searching for events based on the current user's attendance status. """
+        # Create a second user to ensure the filter is specific to the current user
+        user_test = new_test_user(self.env, login='user_test_calendar_filter')
+
+        # Create events with different attendee statuses for both users
+        event_accepted = self.env['calendar.event'].create({
+            'name': 'Event Demo Accepted',
+            'start': datetime(2025, 1, 1, 10, 0),
+            'stop': datetime(2025, 1, 1, 11, 0),
+            'attendee_ids': [
+                Command.create({'partner_id': self.user_demo.partner_id.id, 'state': 'accepted'}),
+                Command.create({'partner_id': user_test.partner_id.id, 'state': 'needsAction'}),
+            ]
+        })
+        event_declined = self.env['calendar.event'].create({
+            'name': 'Event Demo Declined',
+            'start': datetime(2025, 1, 2, 10, 0),
+            'stop': datetime(2025, 1, 2, 11, 0),
+            'attendee_ids': [
+                Command.create({'partner_id': self.user_demo.partner_id.id, 'state': 'declined'}),
+                Command.create({'partner_id': user_test.partner_id.id, 'state': 'accepted'}),
+            ]
+        })
+        event_tentative = self.env['calendar.event'].create({
+            'name': 'Event Demo Tentative',
+            'start': datetime(2025, 1, 3, 10, 0),
+            'stop': datetime(2025, 1, 3, 11, 0),
+            'attendee_ids': [
+                Command.create({'partner_id': self.user_demo.partner_id.id, 'state': 'tentative'}),
+                Command.create({'partner_id': user_test.partner_id.id, 'state': 'declined'}),
+            ]
+        })
+        event_other_user = self.env['calendar.event'].create({
+            'name': 'Event Other User Only',
+            'start': datetime(2025, 1, 4, 10, 0),
+            'stop': datetime(2025, 1, 4, 11, 0),
+            'attendee_ids': [
+                Command.create({'partner_id': user_test.partner_id.id, 'state': 'accepted'}),
+            ]
+        })
+
+        # Perform searches as the demo user and assert the results
+        CalendarEvent_Demo = self.env['calendar.event'].with_user(self.user_demo)
+
+        # Search for 'Yes' (accepted)
+        accepted_events = CalendarEvent_Demo.search([('current_status', '=', 'accepted')])
+        self.assertEqual(accepted_events, event_accepted, "Should find only the event where the demo user has accepted.")
+
+        # Search for 'No' (declined)
+        declined_events = CalendarEvent_Demo.search([('current_status', '=', 'declined')])
+        self.assertEqual(declined_events, event_declined, "Should find only the event where the demo user has declined.")
+
+        # Search for 'Maybe' (tentative)
+        tentative_events = CalendarEvent_Demo.search([('current_status', '=', 'tentative')])
+        self.assertEqual(tentative_events, event_tentative, "Should find only the event where the demo user is tentative.")
+
+        # Search for events where status is not 'No' (declined)
+        not_declined_events = CalendarEvent_Demo.search([('current_status', '!=', 'declined')])
+        self.assertIn(event_accepted, not_declined_events, "Accepted events should be in the result.")
+        self.assertIn(event_tentative, not_declined_events, "Tentative events should be in the result.")
+        self.assertNotIn(event_declined, not_declined_events, "Declined events should NOT be in the result.")
+        self.assertNotIn(event_other_user, not_declined_events, "Events where the user is not an attendee should NOT be in the result.")
+
+        # Search using the 'in' operator
+        in_events = CalendarEvent_Demo.search([('current_status', 'in', ['accepted', 'tentative'])])
+        self.assertEqual(len(in_events), 2, "Should find two events for 'accepted' or 'tentative'.")
+        self.assertIn(event_accepted, in_events, "Should find the accepted event in the 'in' search.")
+        self.assertIn(event_tentative, in_events, "Should find the tentative event in the 'in' search.")
+
+
     def test_event_duplication_allday(self):
         """Test that a calendar event is successfully duplicated with dates."""
         # Create an event

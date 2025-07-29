@@ -35,7 +35,9 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         cls.namespaces = {
             'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
             'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
-            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
+            'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+            'xsi': "http://www.w3.org/2001/XMLSchema-instance",
         }
 
     def import_attachment(self, attachment, journal=None):
@@ -458,3 +460,4 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
             'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"})
         self.assertEqual(scheme_ID.attrib.get("schemeID"), "0190")
+        

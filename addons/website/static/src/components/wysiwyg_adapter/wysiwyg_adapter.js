@@ -384,7 +384,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
-            .not('hr, br, input, textarea')
+            .not('hr, br, input, textarea, owl-component')
             .not('[data-oe-sanitize-prevent-edition]')
             .add('.o_editable');
     }
@@ -575,7 +575,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 // Mark any savable element dirty if any tracked mutation occurs
                 // inside of it.
                 $savable.not('.o_dirty').each(function () {
-                    if (!this.hasAttribute('data-oe-readonly')) {
+                    if (this.tagName !== 'OWL-COMPONENT' && !this.hasAttribute('data-oe-readonly')) {
                         this.classList.add('o_dirty');
                     }
                 });
@@ -642,7 +642,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _getContentEditableAreas() {
         const $savableZones = $(this.websiteService.pageDocument).find(this.savableSelector);
         const $editableSavableZones = $savableZones
-            .not('input, [data-oe-readonly], ' +
+            .not('input, [data-oe-readonly], owl-component, ' +
                  '[data-oe-type="monetary"], [data-oe-many2one-id], [data-oe-field="arch"]:empty')
             .filter((_, el) => {
                 // The whole record cover is considered editable by the editor,

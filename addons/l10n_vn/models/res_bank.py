@@ -53,6 +53,13 @@ class ResPartnerBank(models.Model):
             return self._serialize(8, re.sub(r"[^a-zA-Z0-9 _\\\-.]+", "", comment))
         return super()._get_additional_data_field(comment)
 
+    def _get_qr_code_vals_list(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        res = super()._get_qr_code_vals_list(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
+        if self.country_code == 'VN':
+            merchant_city = (self.partner_id.city and self._remove_accents(self.partner_id.city)[:15]) or (self.partner_id.state_id and self._remove_accents(self.partner_id.state_id.name)[:15]) or ''
+            res[8] = (60, merchant_city)
+        return res
+
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == 'emv_qr' and self.country_code == 'VN':
             if currency.name not in ['VND']:
@@ -65,7 +72,16 @@ class ResPartnerBank(models.Model):
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
-        if qr_method == 'emv_qr' and self.country_code == 'VN' and self.proxy_type not in ['merchant_id', 'payment_service', 'atm_card', 'bank_acc']:
-            return _("The proxy type %s is not supported for Vietnamese partners. It must be either Merchant ID, ATM Card Number or Bank Account", self.proxy_type)
+        if qr_method != 'emv_qr' or self.country_code != 'VN':
+            return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
-        return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
+        if not self._get_merchant_account_info():
+            return _("Missing Merchant Account Information.")
+        if not (self.partner_id.city or self.partner_id.state_id):
+            return _("Missing Merchant City or State.")
+        if not self.proxy_type:
+            return _("Missing Proxy Type.")
+        if not self.proxy_value:
+            return _("Missing Proxy Value.")
+        if self.proxy_type not in ['merchant_id', 'payment_service', 'atm_card', 'bank_acc']:
+            return _("The proxy type %s is not supported for Vietnamese partners. It must be either Merchant ID, ATM Card Number or Bank Account", self.proxy_type)

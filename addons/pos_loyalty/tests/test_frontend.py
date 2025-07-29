@@ -1475,29 +1475,26 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_promo_with_different_taxes(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.tax01 = self.env["account.tax"].create({
+        tax01 = self.env["account.tax"].create({
             "name": "C01 Tax",
             "amount": "10.00",
         })
-        self.product_a = self.env["product.product"].create(
+        self.env["product.product"].create([
             {
                 "name": "Product A",
                 "is_storable": True,
                 "list_price": 100,
                 "available_in_pos": True,
-                "taxes_id": [(6, 0, self.tax01.ids)],
-            }
-        )
-        self.product_b = self.env["product.product"].create(
-            {
+                "taxes_id": [(6, 0, tax01.ids)],
+            }, {
                 "name": "Product B",
                 "is_storable": True,
                 "list_price": 100,
                 "available_in_pos": True,
                 "taxes_id": False,
             }
-        )
-        self.free_product = self.env['loyalty.program'].create({
+        ])
+        self.env['loyalty.program'].create({
             'name': 'Free Product A',
             'program_type': 'loyalty',
             'trigger': 'auto',
@@ -2781,6 +2778,39 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(gift_card_program.coupon_ids[0].code, "test-card-1234", "Gift card code not correct")
         self.assertEqual(gift_card_program.coupon_ids[0].partner_id, partner, "Gift card partner id not correct")
 
+    def test_combo_product_dont_grant_point(self):
+        """
+        Make sure that points granted per unit are only given
+        for the product that are not combo lines
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 1,
+                'reward_point_mode': 'unit',
+                'minimum_amount': 20,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 100,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'required_points': 2,
+            })],
+        })
+        setup_product_combo_items(self)
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_combo_product_dont_grant_point",
+            login="pos_user",
+        )
+
     def test_buy_x_get_y_reward_qty(self):
         self.env['loyalty.program'].search([]).write({'active': False})
         self.loyalty_program = self.env['loyalty.program'].create({
@@ -2835,5 +2865,48 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "test_scan_loyalty_card_select_customer",
+            login="pos_user",
+        )
+
+    def test_max_usage_partner_with_point(self):
+        """This test make sure that when the max usage limit is reached,
+        partners that already have points in the loyalty program cannot claim rewards anymore."""
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'Test Partner 2'})
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 1,
+                'reward_point_mode': 'money',
+                'minimum_qty': 1,
+                'mode': 'auto',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 100,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+            'limit_usage': True,
+            'max_usage': 1,
+        })
+
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': test_partner.id,
+            'points': 100,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_max_usage_partner_with_point",
             login="pos_user",
         )
