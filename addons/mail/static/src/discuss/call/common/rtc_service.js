@@ -1256,7 +1256,7 @@ export class Rtc extends Record {
                 // `isRaisingHand` is turned into the Date `raisingHand`
                 this.setRemoteRaiseHand(session, info.isRaisingHand);
                 delete info.isRaisingHand;
-                assignDefined(session, {
+                session.updateInfo({
                     is_muted: info.isSelfMuted ?? info.is_muted,
                     is_deaf: info.isDeaf ?? info.is_deaf,
                     isTalking: info.isTalking,

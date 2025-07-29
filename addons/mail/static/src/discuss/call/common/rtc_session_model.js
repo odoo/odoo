@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/core/common/record";
 import { Deferred } from "@web/core/utils/concurrency";
+import { assignDefined } from "@mail/utils/common/misc";
 
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
@@ -154,6 +155,38 @@ export class RtcSession extends Record {
     getStream(type) {
         const isActive = type === "camera" ? this.is_camera_on : this.is_screen_sharing_on;
         return isActive && this.videoStreams.get(type);
+    }
+
+    updateInfo(info) {
+        this.updateFocus(info);
+        assignDefined(this, info);
+    }
+
+    updateFocus(info) {
+        if (!this.store.settings.useCallAutoFocus) {
+            return;
+        }
+        if (!this.channel.eq(this.store.rtc?.channel)) {
+            return;
+        }
+        if (!this.channel.activeRtcSession) {
+            return;
+        }
+        if (this.channel.activeRtcSession?.eq(this)) {
+            return;
+        }
+        if (!this.is_screen_sharing_on && info.is_screen_sharing_on) {
+            this.channel.activeRtcSession = this;
+            this.mainVideoStreamType = "screen";
+            return;
+        }
+        if (!this.isTalking && info.isTalking) {
+            if (this.channel.activeRtcSession.mainVideoStreamType === "screen") {
+                return;
+            }
+            this.channel.activeRtcSession = this;
+            this.mainVideoStreamType = "camera";
+        }
     }
 
     /**
