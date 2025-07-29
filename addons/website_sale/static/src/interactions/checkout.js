@@ -29,7 +29,7 @@ export class Checkout extends Interaction {
     }
 
     async willStart() {
-        await this._prepareDeliveryMethods();
+        await this.waitFor(this._prepareDeliveryMethods());
     }
 
     /**
