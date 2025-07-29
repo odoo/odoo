@@ -216,8 +216,15 @@ export class DashboardLoader {
             const result = await this.env.services.http.get(
                 `/spreadsheet/dashboard/data/${dashboardId}`
             );
-            const { snapshot, revisions, default_currency, is_sample } = result;
-            dashboard.model = this._createSpreadsheetModel(snapshot, revisions, default_currency);
+            const { snapshot, revisions, default_currency, is_sample, translation_namespace } =
+                result;
+            dashboard.translationNamespace = translation_namespace;
+            dashboard.model = this._createSpreadsheetModel(
+                snapshot,
+                revisions,
+                default_currency,
+                translation_namespace
+            );
             dashboard.status = Status.Loaded;
             dashboard.isSample = is_sample;
         } catch (error) {
@@ -250,12 +257,12 @@ export class DashboardLoader {
      * @param {object} [defaultCurrency]
      * @returns {Model}
      */
-    _createSpreadsheetModel(snapshot, revisions = [], currency) {
+    _createSpreadsheetModel(snapshot, revisions = [], currency, translationNamespace) {
         const odooDataProvider = new OdooDataProvider(this.env);
         const model = new Model(
             snapshot,
             {
-                custom: { env: this.env, orm: this.orm, odooDataProvider },
+                custom: { env: this.env, orm: this.orm, odooDataProvider, translationNamespace },
                 mode: "dashboard",
                 defaultCurrency: createDefaultCurrency(currency),
                 external: { geoJsonService: this.geoJsonService },
