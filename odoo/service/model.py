@@ -9,12 +9,17 @@ from functools import partial
 from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
 from odoo import api, http
-from odoo.exceptions import AccessError, ConcurrencyError, UserError, ValidationError
+from odoo.exceptions import (
+    AccessDenied,
+    AccessError,
+    ConcurrencyError,
+    UserError,
+    ValidationError,
+)
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
-from . import security
 from .server import thread_local
 
 _logger = logging.getLogger(__name__)
@@ -100,18 +105,28 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
 def dispatch(method, params):
     db, uid, passwd, model, method_, *args = params
     uid = int(uid)
-    security.check(db, uid, passwd)
+    if not passwd:
+        raise AccessDenied
+    # access checked once we open a cursor
 
     threading.current_thread().dbname = db
     threading.current_thread().uid = uid
     registry = Registry(db).check_signaling()
     try:
         if method == 'execute':
-            res = execute(db, uid, model, method_, *args)
+            kw = {}
         elif method == 'execute_kw':
-            res = execute_kw(db, uid, model, method_, *args)
+            # accept: (args, kw=None)
+            if len(args) == 1:
+                args += ({},)
+            args, kw = args
+            if kw is None:
+                kw = {}
         else:
             raise NameError(f"Method not available {method}")  # noqa: TRY301
+        with registry.cursor() as cr:
+            api.Environment(cr, api.SUPERUSER_ID, {})['res.users']._check_uid_passwd(uid, passwd)
+            res = execute_cr(cr, uid, model, method_, args, kw)
         registry.signal_changes()
     except Exception:
         registry.reset_changes()
@@ -119,7 +134,7 @@ def dispatch(method, params):
     return res
 
 
-def execute_cr(cr, uid, obj, method, *args, **kw):
+def execute_cr(cr, uid, obj, method, args, kw):
     # clean cache etc if we retry the same transaction
     cr.reset()
     env = api.Environment(cr, uid, {})
@@ -133,20 +148,9 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     # error afterwards if the lazy isn't already evaluated (and cached)
     for l in _traverse_containers(result, lazy):
         _0 = l._value
+    if result is None:
+        _logger.info('The method %s of the object %s cannot return `None`!', method, obj)
     return result
-
-
-def execute_kw(db, uid, obj, method, args, kw=None):
-    return execute(db, uid, obj, method, *args, **kw or {})
-
-
-def execute(db, uid, obj, method, *args, **kw):
-    # TODO could be conditionnaly readonly as in _call_kw_readonly
-    with Registry(db).cursor() as cr:
-        res = execute_cr(cr, uid, obj, method, *args, **kw)
-        if res is None:
-            _logger.info('The method %s of the object %s can not return `None`!', method, obj)
-        return res
 
 
 def retrying(func, env):
