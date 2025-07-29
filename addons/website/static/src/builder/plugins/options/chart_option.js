@@ -21,6 +21,7 @@ export function getColor(color, win, doc) {
 
 export class ChartOption extends BaseOptionComponent {
     static template = "website.ChartOption";
+    static selector = ".s_chart";
     static props = {
         getColor: Function,
     };
@@ -97,7 +98,7 @@ export class ChartOption extends BaseOptionComponent {
         return { backgroundLabel, borderLabel };
     }
     getColor(color) {
-        return this.props.getColor(color, this.window, this.document);
+        return getColor(color, this.window, this.document);
     }
     /**
      * Retrieve the colors already in use in the chart.

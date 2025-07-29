@@ -7,14 +7,7 @@ class HeaderNavbarOptionPlugin extends Plugin {
     static dependencies = ["customizeWebsite"];
 
     resources = {
-        builder_options: [
-            {
-                OptionComponent: HeaderNavbarOption,
-                props: {
-                    getCurrentActiveViews: this.getCurrentActiveViews.bind(this),
-                },
-            },
-        ],
+        builder_options: [HeaderNavbarOption],
     };
 
     setup() {
@@ -32,15 +25,6 @@ class HeaderNavbarOptionPlugin extends Plugin {
             "website.template_header_sidebar",
         ];
     }
-    async getCurrentActiveViews() {
-        const actionParams = { views: this.keys };
-        await this.dependencies.customizeWebsite.loadConfigKey(actionParams);
-        const currentActiveViews = {};
-        for (const key of this.keys) {
-            const isActive = this.dependencies.customizeWebsite.getConfigKey(key);
-            currentActiveViews[key] = isActive;
-        }
-        return currentActiveViews;
-    }
 }
+
 registry.category("website-plugins").add(HeaderNavbarOptionPlugin.id, HeaderNavbarOptionPlugin);

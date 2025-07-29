@@ -3,9 +3,7 @@ import { onWillStart } from "@odoo/owl";
 
 export class HeaderNavbarOption extends BaseOptionComponent {
     static template = "website.HeaderNavbarOption";
-    static props = {
-        getCurrentActiveViews: Function,
-    };
+    static dependencies = ["customizeWebsite"];
     static selector = "#wrapwrap > header";
     static editableOnly = false;
     static groups = ["website.group_website_designer"];
@@ -26,5 +24,15 @@ export class HeaderNavbarOption extends BaseOptionComponent {
             }
         }
         return false;
+    }
+    async getCurrentActiveViews() {
+        const actionParams = { views: this.keys };
+        await this.dependencies.customizeWebsite.loadConfigKey(actionParams);
+        const currentActiveViews = {};
+        for (const key of this.keys) {
+            const isActive = this.dependencies.customizeWebsite.getConfigKey(key);
+            currentActiveViews[key] = isActive;
+        }
+        return currentActiveViews;
     }
 }

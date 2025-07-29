@@ -9,9 +9,7 @@ import { POSITION_BUS } from "@web/core/position/position_hook";
 class AnimateTextPopover extends BaseOptionComponent {
     static template = "website_builder.AnimateTextPopover";
     static props = {
-        animateOptionProps: AnimateOption.props,
         onReset: Function,
-
         // Popover service
         close: { type: Function, optional: true },
     };

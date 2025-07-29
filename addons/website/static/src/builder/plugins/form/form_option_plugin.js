@@ -62,6 +62,8 @@ export class FormOptionPlugin extends Plugin {
         "replaceField",
         "prepareConditionInputs",
         "setLabelsMark",
+        "fetchModels",
+        "loadFieldOptionData",
     ];
     resources = {
         builder_header_middle_buttons: [
@@ -107,25 +109,7 @@ export class FormOptionPlugin extends Plugin {
                 reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
-        builder_options: [
-            {
-                OptionComponent: FormOption,
-                props: {
-                    fetchModels: this.fetchModels.bind(this),
-                    prepareFormModel: this.prepareFormModel.bind(this),
-                    fetchFieldRecords: this.fetchFieldRecords.bind(this),
-                    applyFormModel: this.applyFormModel.bind(this),
-                },
-            },
-            {
-                OptionComponent: FormFieldOptionRedraw,
-                props: {
-                    fetchModels: this.fetchModels.bind(this),
-                    loadFieldOptionData: this.loadFieldOptionData.bind(this),
-                },
-            },
-            SWebsiteFormSubmitOption,
-        ],
+        builder_options: [FormOption, FormFieldOptionRedraw, SWebsiteFormSubmitOption],
         builder_actions: {
             // Form actions
             // Components that use this action MUST await fetchModels before they start.

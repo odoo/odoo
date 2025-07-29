@@ -6,15 +6,7 @@ class BlogPostTagsOptionPlugin extends Plugin {
     static id = "blogPostTagsOption";
     static dependencies = ["cachedModel"];
     resources = {
-        builder_options: {
-            selector: ".o_wblog_post_page_cover[data-res-model='blog.post']",
-            OptionComponent: BlogPostTagsOption,
-            cleanForSave: () => {
-                // keep track of temporary edited value
-                // clean up temporary edited value
-            },
-            editableOnly: false,
-        },
+        builder_options: [BlogPostTagsOption],
     };
 }
 

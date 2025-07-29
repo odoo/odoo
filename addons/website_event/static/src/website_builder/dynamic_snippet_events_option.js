@@ -4,11 +4,11 @@ import { DynamicSnippetOption } from "@website/builder/plugins/options/dynamic_s
 
 export class DynamicSnippetEventsOption extends BaseOptionComponent {
     static template = "website_event.DynamicSnippetEventsOption";
-    static props = {
-        ...DynamicSnippetOption.props,
-    };
+    static dependencies = ["dynamicSnippetEventsOption"];
+    static selector = ".s_event_upcoming_snippet";
     setup() {
         super.setup();
-        this.dynamicOptionParams = useDynamicSnippetOption(this.props.modelNameFilter);
+        const { getModelNameFilter } = this.dependencies.dynamicSnippetEventsOption;
+        this.dynamicOptionParams = useDynamicSnippetOption(getModelNameFilter());
     }
 }

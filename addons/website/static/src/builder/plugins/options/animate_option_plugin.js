@@ -15,22 +15,8 @@ export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["history", "selection", "split"];
     static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
-    animateOptionProps = {
-        getDirectionsItems: this.getDirectionsItems.bind(this),
-        getEffectsItems: this.getEffectsItems.bind(this),
-        canHaveHoverEffect: async (el) => {
-            const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
-            const allowed = (await Promise.all(proms)).filter((allowed) => allowed != null);
-            return allowed.length && allowed.every(Boolean);
-        },
-    };
     resources = {
-        builder_options: [
-            withSequence(ANIMATE, {
-                OptionComponent: AnimateOption,
-                props: this.animateOptionProps,
-            }),
-        ],
+        builder_options: [withSequence(ANIMATE, AnimateOption)],
         toolbar_items: [
             {
                 id: "animateText",
@@ -42,7 +28,6 @@ export class AnimateOptionPlugin extends Plugin {
                     getAnimatedTextOrCreateDefault: this.getAnimatedTextOrCreateDefault.bind(this),
                     isActive: this.isAnimatedTextActive.bind(this),
                     isDisabled: this.isAnimatedTextDisabled.bind(this),
-                    animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
                 },
                 isAvailable: isHtmlContentSupported,
             },

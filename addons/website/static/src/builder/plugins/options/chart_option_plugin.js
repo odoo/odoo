@@ -7,15 +7,7 @@ class ChartOptionPlugin extends Plugin {
     static id = "chartOptionPlugin";
     static dependencies = ["history"];
     resources = {
-        builder_options: [
-            {
-                OptionComponent: ChartOption,
-                selector: ".s_chart",
-                props: {
-                    getColor: (color) => getColor(color, this.window, this.document),
-                },
-            },
-        ],
+        builder_options: [ChartOption],
         so_content_addition_selector: [".s_chart"],
         builder_actions: {
             SetChartTypeAction,

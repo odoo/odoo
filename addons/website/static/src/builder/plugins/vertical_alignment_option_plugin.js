@@ -7,10 +7,8 @@ import { BaseVerticalAlignmentOption } from "@html_builder/plugins/base_vertical
 export class WebsiteVerticalAlignmentOption extends BaseVerticalAlignmentOption {
     static selector = ".s_attributes_vertical_col";
     static applyTo = ":scope > .row";
-    static defaultProps = {
-        level: 0,
-        justify: false,
-    };
+    level = 0;
+    justify = false;
 }
 
 class VerticalAlignmentOptionPlugin extends Plugin {

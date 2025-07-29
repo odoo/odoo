@@ -3,13 +3,11 @@ import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_me
 
 export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";
+    static dependencies = ["animateOption"];
     static selector = ".o_animable, section .row > div, img, .fa, .btn";
     static exclude =
         "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize";
     static props = {
-        getDirectionsItems: Function,
-        getEffectsItems: Function,
-        canHaveHoverEffect: Function,
         requireAnimation: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
     };
@@ -19,8 +17,10 @@ export class AnimateOption extends BaseOptionComponent {
         super.setup();
         this.state = useDomState(async (editingElement) => {
             const hasAnimateClass = editingElement.classList.contains("o_animate");
+            this.getDirectionsItems = this.dependencies.animateOption.getDirectionsItems;
+            const { getEffectsItems } = this.dependencies.animateOption;
 
-            const canHover = await this.props.canHaveHoverEffect(editingElement);
+            const canHover = await this.canHaveHoverEffect(editingElement);
 
             return {
                 isOptionActive: this.isOptionActive(editingElement),
@@ -30,10 +30,10 @@ export class AnimateOption extends BaseOptionComponent {
                     editingElement.classList.contains(className)
                 ),
                 showIntensity: this.shouldShowIntensity(editingElement, hasAnimateClass),
-                effectItems: this.props.getEffectsItems(this.isActiveItem),
-                directionItems: this.props
-                    .getDirectionsItems(editingElement)
-                    .filter((i) => !i.check || i.check(editingElement)),
+                effectItems: getEffectsItems(this.isActiveItem),
+                directionItems: this.getDirectionsItems(editingElement).filter(
+                    (i) => !i.check || i.check(editingElement)
+                ),
                 isInDropdown: editingElement.closest(".dropdown"),
             };
         });
@@ -66,8 +66,7 @@ export class AnimateOption extends BaseOptionComponent {
             return true;
         }
 
-        const possibleDirections = this.props
-            .getDirectionsItems()
+        const possibleDirections = this.getDirectionsItems()
             .map((i) => i.className)
             .filter(Boolean);
         const hasDirection = possibleDirections.some((direction) =>
@@ -75,5 +74,10 @@ export class AnimateOption extends BaseOptionComponent {
         );
 
         return hasDirection;
+    }
+    async canHaveHoverEffect(el) {
+        const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
+        const allowed = (await Promise.all(proms)).filter((allowed) => allowed != null);
+        return allowed.length && allowed.every(Boolean);
     }
 }

@@ -1,14 +1,20 @@
-import { VerticalAlignmentOption } from "@html_builder/plugins/vertical_alignment_option";
 import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { AddProductOption } from "./add_product_option";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseVerticalAlignmentOption } from "@html_builder/plugins/base_vertical_alignment_option";
 
 export class PriceListCafeDescriptionOption extends BaseOptionComponent {
     static template = "website.PriceListCafeDescriptionOption";
     static selector = ".s_pricelist_cafe";
+}
+
+export class PricelistCafeVerticalAlignmentOption extends BaseVerticalAlignmentOption {
+    static selector = ".s_pricelist_cafe";
+    static applyTo = ".row:has(.s_pricelist_cafe_col)";
+    level = 0;
 }
 
 class PriceListCafePlugin extends Plugin {
@@ -25,12 +31,7 @@ class PriceListCafePlugin extends Plugin {
                     productSelector: ".s_pricelist_cafe_item",
                 },
             }),
-            withSequence(BEGIN, {
-                // todoo: multi-usage-option
-                selector: ".s_pricelist_cafe",
-                OptionComponent: VerticalAlignmentOption,
-                applyTo: ".row:has(.s_pricelist_cafe_col)",
-            }),
+            withSequence(BEGIN, PricelistCafeVerticalAlignmentOption),
             withSequence(BEGIN, {
                 // todoo: multi-usage-option
                 selector: ".s_pricelist_cafe .row > div",

@@ -8,14 +8,7 @@ import { VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "verticalAlignmentOption";
     resources = {
-        builder_options: [
-            withSequence(VERTICAL_ALIGNMENT, {
-                OptionComponent: VerticalAlignmentOption,
-                props: {
-                    level: 1,
-                },
-            }),
-        ],
+        builder_options: [withSequence(VERTICAL_ALIGNMENT, VerticalAlignmentOption)],
         builder_actions: {
             SetVerticalAlignmentAction,
         },

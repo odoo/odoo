@@ -10,20 +10,17 @@ import { DynamicSnippetEventsOption } from "./dynamic_snippet_events_option";
 class DynamicSnippetEventsOptionPlugin extends Plugin {
     static id = "dynamicSnippetEventsOption";
     static dependencies = ["dynamicSnippetOption"];
+    static shared = ["getModelNameFilter"];
     modelNameFilter = "event.event";
-    selector = ".s_event_upcoming_snippet";
     resources = {
-        builder_options: withSequence(DYNAMIC_SNIPPET, {
-            OptionComponent: DynamicSnippetEventsOption,
-            props: {
-                modelNameFilter: this.modelNameFilter,
-            },
-            selector: this.selector,
-        }),
+        builder_options: withSequence(DYNAMIC_SNIPPET, DynamicSnippetEventsOption),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
+    getModelNameFilter() {
+        return this.modelNameFilter;
+    }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(this.selector)) {
+        if (snippetEl.matches(DynamicSnippetEventsOption.selector)) {
             setDatasetIfUndefined(snippetEl, "numberOfRecords", 3);
             await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
                 snippetEl,
