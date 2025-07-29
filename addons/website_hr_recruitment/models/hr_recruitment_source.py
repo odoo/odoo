@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from werkzeug.urls import url_encode
 
 from odoo import api, fields, models
 from odoo.tools import urls
@@ -15,9 +16,9 @@ class HrRecruitmentSource(models.Model):
         for source in self:
             source.url = urls.urljoin(source.job_id.get_base_url(), "%s?%s" % (
                 source.job_id.website_url,
-                urls.url_encode({
+                url_encode({
                     'utm_campaign': self.env.ref('hr_recruitment.utm_campaign_job').name,
                     'utm_medium': source.medium_id.name or self.env['utm.medium']._fetch_or_create_utm_medium('website').name,
                     'utm_source': source.source_id.name or None
-                })
+                }),
             ))
