@@ -220,7 +220,13 @@ $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
         @extend .o_cc;
         @extend .o_cc#{$-related-color};
     } @else {
-        @include o-bg-color(o-color($-related-color), $with-extras: $with-extras, $background: $background, $important: false);
+        $-color: o-color($-related-color);
+        @if $-color {
+            // Remove the background image so manually set backgrounds (color or
+            // gradient) take precedence over a theme preset with a gradient.
+            background-image: none;
+        }
+        @include o-bg-color($-color, $with-extras: $with-extras, $background: $background, $important: false);
     }
 }
 

@@ -745,3 +745,17 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_anchor_on_accordion_item(self):
         self.start_tour("/", "anchor_behaviour_on_accordion_same_tab", login="admin")
         self.start_tour("/#What-services-does-your-company-offer-%3F", "anchor_behaviour_on_accordion_new_tab", login="admin")
+
+    def test_background_color_gradient_precedence(self):
+        # Configure CC1 with a gradient and apply it to the header, then set a
+        # different gradient directly on the header background.
+        self.env['website.assets'].with_context(website_id=1).make_scss_customization(
+            '/website/static/src/scss/options/user_values.scss',
+            {
+                'o-cc1-bg-gradient': 'linear-gradient(rgb(0, 0, 0), rgb(1, 1, 1))',
+                'o-cc1-bg': 'null',
+                'menu': '1',
+                'menu-gradient': 'linear-gradient(rgb(2, 2, 2), rgb(3, 3, 3))',
+            },
+        )
+        self.start_tour('/', 'background_color_gradient_precedence', login='admin')

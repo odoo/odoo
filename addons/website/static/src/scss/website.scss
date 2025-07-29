@@ -232,6 +232,15 @@ body {
     }
 }
 
+// The position of this rule is important: it ensures that manually set
+// background gradients on elements take precedence over the color preset
+// gradients.
+@for $index from 1 through 5 {
+    .o_cc#{$index} {
+        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+    }
+}
+
 #wrapwrap {
     @if o-website-value('body-image') {
         @include body-image-bg-style();
@@ -572,12 +581,6 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright', $background: $-footer-color);
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
-    }
-}
-
-@for $index from 1 through 5 {
-    .o_cc#{$index} {
-        @include o-add-gradient('o-cc#{$index}-bg-gradient')
     }
 }
 
