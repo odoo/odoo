@@ -253,8 +253,6 @@ class TestUiPublisher(HttpCaseGamification):
             return self.make_fetch_proxy_response(content)
         return super().fetch_proxy(url)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
         user_demo.write({
