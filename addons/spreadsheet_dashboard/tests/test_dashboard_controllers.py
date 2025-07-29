@@ -35,6 +35,19 @@ class TestDashboardController(DashboardTestCommon, HttpCase):
             self.env['res.currency'].get_company_currency_for_spreadsheet()
         )
 
+    def test_translation_namespace(self):
+        dashboard = self.create_dashboard()
+        self.env['ir.model.data'].create({
+            'name': 'test_translation_namespace',
+            'module': 'spreadsheet_dashboard',
+            'res_id': dashboard.id,
+            'model': dashboard._name,
+        })
+        self.authenticate(self.user.login, self.user.password)
+        response = self.url_open('/spreadsheet/dashboard/data/%s' % dashboard.id)
+        data = response.json()
+        self.assertEqual(data["translation_namespace"], "spreadsheet_dashboard")
+
     def test_get_sample_dashboard(self):
         self.authenticate(self.user.login, self.user.password)
         sample_dashboard_path = 'spreadsheet_dashboard/tests/data/sample_dashboard.json'
