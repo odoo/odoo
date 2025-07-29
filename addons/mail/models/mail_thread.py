@@ -4792,11 +4792,12 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def _thread_to_store(self, store: Store, fields, *, request_list=None):
+        is_request = request_list is not None
         request_list = request_list or []
         store.add_records_fields(self, fields, as_thread=True)
         for thread in self:
             res = {}
-            if request_list:
+            if is_request:
                 res["hasReadAccess"] = True
                 res["hasWriteAccess"] = False
                 res["canPostOnReadonly"] = self._mail_post_access == "read"
