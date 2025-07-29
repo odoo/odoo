@@ -1073,6 +1073,129 @@ test("See records when clicking on a geo chart country", async () => {
     expect.verifySteps(["do-action"]);
 });
 
+test("See records when clicking on a sunburst chart slice", async () => {
+    let lastActionCalled = undefined;
+    const fakeActionService = {
+        doAction: async (request, options = {}) => (lastActionCalled = request),
+    };
+    mockService("action", fakeActionService);
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { date: "2020-01-01", probability: 10, bar: true },
+        { date: "2020-02-01", probability: 2, bar: true },
+        { date: "2020-01-01", probability: 4, bar: false },
+        { date: "2020-02-01", probability: 5, bar: false },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_sunburst",
+        serverData,
+        definition: {
+            type: "odoo_sunburst",
+            metaData: {
+                groupBy: ["date:month", "bar"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+
+    // Leaf value
+    let mockChart = { data: { datasets: [{ data: [{ groups: ["January 2020", "false"] }] }] } };
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        "&",
+        ["date", ">=", "2020-01-01"],
+        ["date", "<", "2020-02-01"],
+        ["bar", "=", false],
+    ]);
+
+    // Non-leaf value
+    mockChart = { data: { datasets: [{ data: [{ groups: ["February 2020"] }] }] } };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        ["date", ">=", "2020-02-01"],
+        ["date", "<", "2020-03-01"],
+    ]);
+});
+
+test("See records when clicking on a treemap chart item", async () => {
+    let lastActionCalled = undefined;
+    const fakeActionService = {
+        doAction: async (request, options = {}) => (lastActionCalled = request),
+    };
+    mockService("action", fakeActionService);
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { date: "2020-01-01", probability: 10, bar: true },
+        { date: "2020-02-01", probability: 2, bar: true },
+        { date: "2020-01-01", probability: 4, bar: false },
+        { date: "2020-02-01", probability: 5, bar: false },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_treemap",
+        serverData,
+        definition: {
+            type: "odoo_treemap",
+            metaData: {
+                groupBy: ["date:month", "bar"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+
+    function buildMockTreemapChart(groups) {
+        const depth = groups.length - 1;
+        const data = {};
+        for (let i = 0; i <= depth; i++) {
+            data[i] = groups[i];
+        }
+        return { data: { datasets: [{ data: [{ l: depth, _data: data }] }] } };
+    }
+
+    // Leaf value
+    let mockChart = buildMockTreemapChart(["January 2020", "false"]);
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        "&",
+        ["date", ">=", "2020-01-01"],
+        ["date", "<", "2020-02-01"],
+        ["bar", "=", false],
+    ]);
+
+    // Non-leaf value
+    mockChart = buildMockTreemapChart(["February 2020"]);
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        ["date", ">=", "2020-02-01"],
+        ["date", "<", "2020-03-01"],
+    ]);
+});
+
 test("import/export action xml id", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_bar",

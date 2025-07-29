@@ -13,6 +13,8 @@ chartComponentRegistry.add("odoo_bar", ChartJsComponent);
 chartComponentRegistry.add("odoo_line", ChartJsComponent);
 chartComponentRegistry.add("odoo_pie", ChartJsComponent);
 chartComponentRegistry.add("odoo_radar", ChartJsComponent);
+chartComponentRegistry.add("odoo_sunburst", ChartJsComponent);
+chartComponentRegistry.add("odoo_treemap", ChartJsComponent);
 chartComponentRegistry.add("odoo_waterfall", ChartJsComponent);
 chartComponentRegistry.add("odoo_pyramid", ChartJsComponent);
 chartComponentRegistry.add("odoo_scatter", ChartJsComponent);
@@ -179,6 +181,20 @@ chartSubtypeRegistry.add("odoo_funnel", {
     subtypeDefinition: { cumulative: true },
     category: "misc",
     preview: "o-spreadsheet-ChartPreview.FUNNEL_CHART",
+});
+chartSubtypeRegistry.add("odoo_treemap", {
+    displayName: _t("Treemap"),
+    chartType: "odoo_treemap",
+    chartSubtype: "odoo_treemap",
+    category: "hierarchical",
+    preview: "o-spreadsheet-ChartPreview.TREE_MAP_CHART",
+});
+chartSubtypeRegistry.add("odoo_sunburst", {
+    displayName: _t("Sunburst"),
+    chartType: "odoo_sunburst",
+    chartSubtype: "odoo_sunburst",
+    category: "hierarchical",
+    preview: "o-spreadsheet-ChartPreview.SUNBURST_CHART",
 });
 
 chartJsExtensionRegistry.add("chartOdooMenuPlugin", {
