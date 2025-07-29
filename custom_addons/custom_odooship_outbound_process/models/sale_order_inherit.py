@@ -9,6 +9,7 @@ class SaleOrderLine(models.Model):
 
     serial_number = fields.Char(string="Serial Number")
     line_item_id = fields.Char(string="Line Item ID")
+    packed_qty = fields.Float(string='Packed Quantity')
 
 
 class SaleOrder(models.Model):
