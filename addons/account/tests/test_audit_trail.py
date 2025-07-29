@@ -113,10 +113,11 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.line_ids[0].tax_ids = self.env.company.account_purchase_tax_id
+        suspense_account_code = self.env.company.account_journal_suspense_account_id.code
         messages.extend([
             "updated\n ⇨ 15% (Taxes)",
             "created\n ⇨ 131000 Tax Paid (Account)\n0.0 ⇨ 45.0 (Balance)\nFalse ⇨ 15% (Label)",
-            "created\n ⇨ 101402 Bank Suspense Account (Account)\n0.0 ⇨ -45.0 (Balance)\nFalse ⇨ Automatic Balancing Line (Label)",
+            f"created\n ⇨ {suspense_account_code} Bank Suspense Account (Account)\n0.0 ⇨ -45.0 (Balance)\nFalse ⇨ Automatic Balancing Line (Label)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
         self.move.with_context(dynamic_unlink=True).line_ids.unlink()
@@ -125,7 +126,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             "deleted\n400000 Product Sales ⇨  (Account)\n-200.0 ⇨ 0.0 (Balance)",
             "deleted\n400000 Product Sales ⇨  (Account)\n-100.0 ⇨ 0.0 (Balance)",
             "deleted\n131000 Tax Paid ⇨  (Account)\n45.0 ⇨ 0.0 (Balance)\n15% ⇨ False (Label)",
-            "deleted\n101402 Bank Suspense Account ⇨  (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ False (Label)",
+            f"deleted\n{suspense_account_code} Bank Suspense Account ⇨  (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ False (Label)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
 
