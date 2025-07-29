@@ -13,7 +13,7 @@ class TestImLivechatSessionHistory(TestImLivechatCommon):
         self.authenticate(None, None)
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             "channel_id": self.livechat_channel.id,
-            "previous_operator_id": operator.partner_id.id
+            "operator_lookup_params": {"previous_operator_id": operator.partner_id.id},
         })
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         channel.with_user(operator).message_post(body="Hello, how can I help you?")

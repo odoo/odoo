@@ -35,7 +35,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data = self.make_jsonrpc_request(
                 "/im_livechat/get_session",
                 {
-                    "previous_operator_id": operator.partner_id.id,
+                    "operator_lookup_params": {'previous_operator_id': operator.partner_id.id},
                     "channel_id": self.livechat_channel.id,
                 },
             )["store_data"]
@@ -98,7 +98,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         # ensure visitor info are correct with real user
         self.authenticate(test_user.login, self.password)
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
-            'previous_operator_id': operator.partner_id.id,
+            "operator_lookup_params": {'previous_operator_id': operator.partner_id.id},
             'channel_id': self.livechat_channel.id,
         })["store_data"]
         channel_info = data["discuss.channel"][0]
@@ -208,7 +208,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         operator = self.operators[0]
         self.authenticate(operator.login, self.password)
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
-            'previous_operator_id': operator.partner_id.id,
+            "operator_lookup_params": {'previous_operator_id': operator.partner_id.id},
             'channel_id': self.livechat_channel.id,
         })["store_data"]
         channel_info = data["discuss.channel"][0]
@@ -304,7 +304,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             "/im_livechat/get_session",
             {
                 "channel_id": self.livechat_channel.id,
-                "previous_operator_id": operator.partner_id.id,
+                "operator_lookup_params": {'previous_operator_id': operator.partner_id.id},
             },
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])

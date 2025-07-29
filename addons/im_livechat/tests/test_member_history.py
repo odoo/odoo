@@ -46,7 +46,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {
-                "chatbot_script_id": self.chatbot_script.id,
+                "operator_lookup_params": {"chatbot_script_id": self.chatbot_script.id},
                 "channel_id": self.livechat_channel.id,
             },
         )
