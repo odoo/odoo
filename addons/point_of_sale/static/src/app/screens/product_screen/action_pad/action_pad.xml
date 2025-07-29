@@ -23,6 +23,7 @@
                 <button class="pay pay-order-button button btn btn-primary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
                     t-on-click="props.actionToTrigger"
                     t-esc="props.actionName"
+                    t-att-disabled="this.pos.waitBeforePayment"
                 />
             </div>
         </div>
