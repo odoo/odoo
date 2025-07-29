@@ -7,10 +7,6 @@ from odoo import api, fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    manufacturing_lead = fields.Float(
-        'Manufacturing Lead Time', default=0.0, required=True,
-        help="Security days for each manufacturing operation.")
-
     def _create_unbuild_sequence(self):
         unbuild_vals = []
         for company in self:

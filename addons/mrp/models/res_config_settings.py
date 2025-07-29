@@ -7,8 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    manufacturing_lead = fields.Float(related='company_id.manufacturing_lead', string="Manufacturing Lead Time", readonly=False)
-    use_manufacturing_lead = fields.Boolean(string="Default Manufacturing Lead Time", config_parameter='mrp.use_manufacturing_lead')
     group_mrp_byproducts = fields.Boolean("By-Products",
         implied_group='mrp.group_mrp_byproducts')
     module_mrp_mps = fields.Boolean("Master Production Schedule")
@@ -36,11 +34,6 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_mrp_workorder_dependencies:
             # Disabling this option should not interfere with currently planned productions
             self.env['mrp.bom'].sudo().search([('allow_operation_dependencies', '=', True)]).allow_operation_dependencies = False
-
-    @api.onchange('use_manufacturing_lead')
-    def _onchange_use_manufacturing_lead(self):
-        if not self.use_manufacturing_lead:
-            self.manufacturing_lead = 0.0
 
     @api.onchange('group_unlocked_by_default')
     def _onchange_group_unlocked_by_default(self):
