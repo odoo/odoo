@@ -1280,7 +1280,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
     selectNextOrder() {
         const orders = this.models["pos.order"].filter((order) => !order.finalized);
-        if (orders.length > 0) {
+        if (this.selectedOrder.originalSplittedOrder) {
+            this.selectedOrderUuid = this.selectedOrder.uiState.splittedOrderUuid;
+        } else if (orders.length > 0) {
             this.selectedOrderUuid = orders[0].uuid;
         } else {
             return this.addNewOrder();

@@ -855,6 +855,20 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_draft_orders_creation_with_auto_receipt", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            Dialog.discard(),
+            Chrome.ongoingOrdersCount(1),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_delete_line", {
     steps: () =>
         [
