@@ -16,10 +16,7 @@ class WebsitePartnerPage(http.Controller):
             yield {'loc': '/partners'}
 
         slug = env['ir.http']._slug
-        base_partner_domain = [
-            ('is_company', '=', True),
-            ('website_published', '=', True),
-        ]
+        base_partner_domain = [('website_published', '=', True),]
         country_partner_domain = base_partner_domain + [('country_id', '!=', False)]
         countries = env['res.partner'].sudo()._read_group(country_partner_domain, groupby=['country_id'])
         for [country] in countries:
@@ -121,8 +118,13 @@ class WebsitePartnerPage(http.Controller):
         }
         return values
 
-    @http.route(['/partners'], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True)
-    def partners(self, country=None, page=0, **post):
+    @http.route([
+        '/partners',
+        '/partners/page/<int:page>',
+
+        '/partners/country/<model("res.country"):country>',
+        '/partners/country/<model("res.country"):country>/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True)
+    def partners(self, country=None, sitemap=sitemap_partners, page=0, **post):
         values = self._get_partners_values(
             country=country,
             page=page,

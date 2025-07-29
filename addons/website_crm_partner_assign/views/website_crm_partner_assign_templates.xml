@@ -2,6 +2,107 @@
 <odoo>
 
 <!-- Page -->
+<template id="inherited_partners_page" inherit_id="website_partner.index" name="Inherited Partners Page">
+    <xpath expr="//h1[@id='page_title']" position="replace">
+        <h1 id="page_title" class="me-auto mb-0 h4 o_editable" data-oe-model="ir.ui.view" data-oe-id="" data-oe-field="arch" data-oe-xpath="" contenteditable="true">
+            Find a reseller<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
+        </h1>
+    </xpath>
+</template>
+
+<template id="add_grades_on_partner" inherit_id="website_partner.index" name="Add Grades On Partners Page">
+    <xpath expr="//h1[@id='page_title']" position="after">
+        <div class="dropdown d-none d-lg-block">
+            <t t-set="grades" t-value="env['res.partner.grade'].search([])"/>
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
+                <t t-foreach="grades" t-as="grade">
+                    <span t-out="grade"/>
+                </t>
+            </button>
+            <div class="dropdown-menu">
+                <t t-foreach="grades" t-as="grade">
+                    <a t-attf-href="/partners#{ grade and '/grade/%s' % slug(grade) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', 'industry') }"
+                    class="dropdown-item d-flex justify-content-between">
+                        <t t-out="grade" />&amp;nbsp;&amp;nbsp;
+                    </a>
+                </t>
+            </div>
+        </div>
+    </xpath>
+
+    <xpath expr="//div[hasclass('accordion')]" position="inside">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wcrm_offcanvas_grade"
+                    aria-expanded="false"
+                    aria-controls="o_wcrm_offcanvas_grade">
+                    Filter by category
+                </button>
+            </h2>
+            <div class="o_wcrm_offcanvas_grade accordion-collapse collapse">
+                <div class="accordion-body pt-0">
+                    <ul class="list-group list-group-flush">
+                        <t t-foreach="env['res.partner.grade'].search([])" t-as="grade">
+                            <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                <a t-attf-href="/partners#{ grade and '/grade/%s' % slug(grade) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                                class="text-reset" aria-label="See categories filters">
+                                    <div class="form-check">
+                                        <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-att-checked="bool(grade['active'])"/>
+                                        <label class="form-check-label" t-attf-for="#{grade}" t-out="grade"/>
+                                    </div>
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </xpath>
+
+    <xpath expr="//t[@id='partners_cards']" position="replace">
+        <t t-set="last_grade" t-value="None"/>
+        <t id="partners_cards" t-foreach="partners.filtered(lambda p: p.grade_id).sorted(lambda p: p.grade_id)" t-as="partner">
+            <t t-if="last_grade != partner.grade_id.id">
+                <h5 class="mt-3 mb-2 col-12">
+                    <span t-field="partner.grade_id"/> Partners
+                    <t t-call="website.publish_management">
+                        <t t-set="object" t-value="partner.grade_id"/>
+                        <t t-set="publish_edit" t-value="True"/>
+                    </t>
+                </h5>
+                <t t-set="last_grade" t-value="partner.grade_id.id"/>
+            </t>
+            <div class="col-md-4 col-xl-3 col-12 mb-4">
+                <div class="card h-100 text-decoration-none">
+                    <a id="partner_link_card" class="text-decoration-none" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" aria-label="Go to reseller">
+                        <div t-field="partner.image_1920"
+                            class="card-img-top border-bottom"
+                            t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
+                            />
+                        <div class="card-body">
+                            <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
+                            <small id="o_wcrm_partners_address"/>
+                            <small class="o_wcrm_short_description text-muted overflow-hidden">
+                                <b t-if="partner.implemented_partner_count">
+                                    <t t-if="partner.implemented_partner_count > 1" t-set='reflabel'>references</t>
+                                    <t t-else="" t-set='reflabel'>reference</t>
+                                    <t t-out="partner.implemented_partner_count"/> <t t-out='reflabel'/> » </b>
+                                <span t-field="partner.website_short_description"/>
+                            </small>
+                            <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
+                                Edit to add a short description
+                            </small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </xpath>
+</template>
+
 <template id="ref_country" inherit_id="website_partner.search_setting" name="World Map">
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
         <t t-if="google_maps_api_key">
