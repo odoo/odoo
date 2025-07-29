@@ -178,6 +178,11 @@ class PosOrder(models.Model):
         # again after a cancellation (else we get the error '[3000] Registro de facturación duplicado.').
         rejected_before = documents._get_last(document_type).state == 'rejected'
         refunded_order = self.refunded_order_ids  # it is max 1 record (see `create_from_ui`)
+        if refunded_order.account_move:
+            # We invoiced the refunded order
+            refunded_document = refunded_order.account_move.l10n_es_edi_verifactu_document_ids._get_last('submission')
+        else:
+            refunded_document = refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission')
 
         vals.update({
             'rejected_before': rejected_before,
@@ -185,14 +190,14 @@ class PosOrder(models.Model):
             'delivery_date': False,
             'description': None,
             'invoice_date': self.date_order.date(),
-            'is_simplified': True,
+            'is_simplified': not refunded_order or self.l10n_es_edi_verifactu_refund_reason == 'R5',
             # NOTE: invoice with negative amounts possible (when no `refunded_order` specified)
             'verifactu_move_type': 'correction_incremental' if refunded_order else 'invoice',
             'sign': 1,
             'name': self.name,
             'partner': self.partner_id.commercial_partner_id,
             'refund_reason': self.l10n_es_edi_verifactu_refund_reason,
-            'refunded_document': refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission'),
+            'refunded_document': refunded_document,
             'substituted_document': None,
             'substituted_document_reversal_document': None,
             'documents': documents,
@@ -219,8 +224,6 @@ class PosOrder(models.Model):
             grouping_key_generator=tax_details_functions['grouping_key_generator'],
             distribute_total_on_line=distribute_total_on_line,
         )
-
-        vals['errors'] = self.env['l10n_es_edi_verifactu.document']._check_record_values(vals)
 
         return vals
 
@@ -292,17 +295,6 @@ class PosOrder(models.Model):
 
     def _generate_pos_order_invoice(self):
         # Extend 'point_of_sale'
-        # Add the simplified partner in case no partner is set.
-        # We can not do this in `_prepare_invoice_vals` because there is a check in
-        # `_generate_pos_order_invoice` that is called before `_prepare_invoice_vals` is called.
-        if self.config_id.l10n_es_edi_verifactu_required:
-            simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
-            if simplified_partner:
-                for order in self:
-                    if order.partner_id or order.account_move or not order.to_invoice or order.amount_total > 400:
-                        continue
-                    order.partner_id = simplified_partner
-
         res = super()._generate_pos_order_invoice()
         if not self.config_id.l10n_es_edi_verifactu_required:
             return res
@@ -336,9 +328,8 @@ class PosOrder(models.Model):
             return res
 
         res['l10n_es_edi_verifactu_refund_reason'] = self.l10n_es_edi_verifactu_refund_reason
-        # Note: `l10n_es_pos` overwrites `_compute_l10n_es_is_simplified`.
-        #       Since we set the value here it is not triggered.
-        # Note: The logic here should match the javascript logic for the PaymentScreen.
-        res['l10n_es_is_simplified'] = self.amount_total <= 400
+        # There is no reason to create a simplified invoice instead of just creating an order.
+        # (Currently "simplified" basically just removes the partner information.)
+        res['l10n_es_is_simplified'] = False
 
         return res

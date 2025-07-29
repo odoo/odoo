@@ -181,6 +181,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
                 order = self._create_order({
                     # Note: The total is not above the simplified invoice limit
                     'is_invoiced': True,
+                    'customer': self.partner_b,  # Spanish customer
                     'pos_order_lines_ui_args': [
                         (self.product, 1.0),
                     ],
@@ -192,18 +193,14 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
                         'invoice_date': '2024-12-30',
                     }
                 })
-        # Check that we set the simplified partner on both the order and the invoice
-        # (even though we did not specify a customer).
+        # Check that the created invoice is not simplified
         invoice = order.account_move
         self.assertTrue(invoice)
-        simplified_partner = self.env.ref('l10n_es.partner_simplified')
-        self.assertTrue(invoice.partner_id == simplified_partner)
-
-        self.assertRecordValues(order, [{
-            'partner_id': simplified_partner.id,
-            'l10n_es_edi_verifactu_document_ids': [],
-            'l10n_es_edi_verifactu_qr_code': invoice.l10n_es_edi_verifactu_qr_code,
+        self.assertRecordValues(invoice, [{
+            'partner_id': self.partner_b.id,
+            'l10n_es_is_simplified': False,
         }])
+
         # The Veri*Factu document was created for the invoice and not the document
         self.assertRecordValues(invoice.l10n_es_edi_verifactu_document_ids, [{
             'pos_order_id': False,
