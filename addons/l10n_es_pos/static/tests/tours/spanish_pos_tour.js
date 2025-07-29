@@ -90,3 +90,16 @@ registry.category("web_tour.tours").add("test_simplified_invoice_not_override_se
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_simplified_partner_inactive_case", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
