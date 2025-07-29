@@ -79,9 +79,16 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         if (!anchorNode || !focusNode || !anchorNode.isConnected || !focusNode.isConnected) {
             return;
         }
-        const anchorBlock = closestBlock(anchorNode);
+        let anchorBlock = closestBlock(anchorNode);
         if (!anchorBlock) {
             return;
+        }
+
+        // Special case of toggle list we calculate the position based on the
+        // toggle block so the avatar dont hide the toggle button.
+        const toggleList = closestElement(anchorBlock, `[data-embedded="toggleBlock"]`);
+        if (toggleList) {
+            anchorBlock = toggleList;
         }
 
         const containerRect = this.avatarOverlay.getBoundingClientRect();
