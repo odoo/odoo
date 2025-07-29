@@ -1144,3 +1144,25 @@ class TestPurchase(AccountTestInvoicingCommon):
             uom_test.unlink()
 
         self.assertEqual(po.order_line[0].product_uom_id, uom_test)
+
+    def test_locked_purchase_order_cannot_cancel(self):
+        """Test that a locked purchase order cannot be cancelled.
+        A purchase order must be unlocked before it can be cancelled.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        po.button_confirm()
+        self.assertFalse(po.locked)
+        # Lock the purchase order.
+        po.button_lock()
+        self.assertTrue(po.locked, "The purchase order should be locked.")
+
+        # Try to cancel the locked PO, should raise a UserError.
+        with self.assertRaises(UserError):
+            po.button_cancel()
+
+        # Unlock the PO and then cancel it, should succeed.
+        po.button_unlock()
+        po.button_cancel()
+        self.assertEqual(po.state, 'cancel', "The purchase order should be cancelled.")
