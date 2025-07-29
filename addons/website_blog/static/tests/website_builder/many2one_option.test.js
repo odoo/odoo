@@ -7,7 +7,7 @@ import {
 
 defineWebsiteModels();
 
-test.skip("Change contact oe-many2one-id of a blog author changes other instance of same contact and avatar", async () => {
+test("Change contact oe-many2one-id of a blog author changes other instance of same contact and avatar", async () => {
     onRpc(
         "ir.qweb.field.contact",
         "get_record_to_html",
