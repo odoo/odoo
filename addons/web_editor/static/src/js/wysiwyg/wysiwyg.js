@@ -2389,6 +2389,18 @@ export class Wysiwyg extends Component {
             this._updateFaResizeButtons();
         }
         if (isInMedia && !this.options.onDblClickEditableMedia) {
+            const displayTooltip = () => {
+                hideTooltip();
+                this.removeTooltip = this.popover.add(e.target, Tooltip, {
+                    tooltip: _t('Double-click to edit')
+                });
+            };
+            const hideTooltip = () => {
+                if (this.removeTooltip) {
+                    this.removeTooltip();
+                    this.removeTooltip = null;
+                }
+            };
             // Handle the media/link's tooltip.
             this.showTooltip = true;
             this.tooltipTimeouts.push(setTimeout(() => {
@@ -2396,10 +2408,25 @@ export class Wysiwyg extends Component {
                 if (!this.showTooltip || $target.attr('title') !== undefined) {
                     return;
                 }
+                if (this.activeListeners) {
+                    const { element, handlers } = this.activeListeners;
+                    element.removeEventListener('mouseenter', handlers.show);
+                    element.removeEventListener('mouseleave', handlers.hide);
+                    this.activeListeners = null;
+                }
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
-                    const removeTooltip = this.popover.add(e.target, Tooltip, { tooltip: _t('Double-click to edit') });
-                    this.tooltipTimeouts.push(setTimeout(() => removeTooltip(), 800));
+                    // Show tooltip initially on click
+                    displayTooltip();
+                    e.target.addEventListener('mouseenter', displayTooltip);
+                    e.target.addEventListener('mouseleave', hideTooltip);
+                    this.activeListeners = {
+                        element: e.target,
+                        handlers: {
+                            show: displayTooltip,
+                            hide: hideTooltip,
+                        }
+                    };
                 });
             }, 400));
         }
