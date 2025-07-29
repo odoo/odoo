@@ -67,7 +67,10 @@ export function isUnderline(node) {
 export function isStrikeThrough(node) {
     let parent = closestElement(node);
     while (parent) {
-        if (getComputedStyle(parent).textDecorationLine.includes("line-through")) {
+        if (
+            !parent.classList.contains("o_checked") &&
+            getComputedStyle(parent).textDecorationLine.includes("line-through")
+        ) {
             return true;
         }
         parent = parent.parentElement;
