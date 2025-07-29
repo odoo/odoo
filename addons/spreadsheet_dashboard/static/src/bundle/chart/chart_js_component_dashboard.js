@@ -15,7 +15,7 @@ patch(components.ChartJsComponent.prototype, {
         super.updateChartJs(chartData);
     },
     addOdooMenuPluginToChartData(chartData) {
-        chartData.options.plugins.chartOdooMenuPlugin = {
+        chartData.chartJsConfig.options.plugins.chartOdooMenuPlugin = {
             env: this.env,
             menu: this.env.model.getters.getChartOdooMenu(this.props.chartId),
         };
