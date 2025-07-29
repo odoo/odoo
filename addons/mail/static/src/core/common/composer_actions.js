@@ -58,7 +58,7 @@ composerActionsRegistry
             }
             return component.props.type === "note" ? _t("Log") : _t("Send");
         },
-        onClick: (component) => component.sendMessage(),
+        onSelected: (component) => component.sendMessage(),
         setup: () => {
             const component = useComponent();
             component.sendMessageState = useState({ active: false });
@@ -76,7 +76,7 @@ composerActionsRegistry
         isPicker: true,
         pickerName: _t("Emoji"),
         name: _t("Add Emojis"),
-        onClick: (component, action, ev) => {
+        onSelected: (component, action, ev) => {
             pickerOnClick(component, action, ev);
             markEventHandled(ev, "Composer.onClickAddEmoji");
         },
@@ -99,7 +99,7 @@ composerActionsRegistry
         condition: (component) => component.allowUpload,
         icon: "fa fa-paperclip",
         name: _t("Attach Files"),
-        onClick: (component, action, ev) => {
+        onSelected: (component, action, ev) => {
             component.fileUploaderRef.el?.click();
             const composer = toRaw(component.props.composer);
             markEventHandled(ev, "composer.clickOnAddAttachment");
@@ -120,7 +120,7 @@ composerActionsRegistry
         hotkey: "shift+c",
         icon: "fa fa-expand",
         name: _t("Open Full Composer"),
-        onClick: (component) => component.onClickFullComposer(),
+        onSelected: (component) => component.onClickFullComposer(),
         sequence: 30,
     })
     .add("add-canned-response", {
@@ -132,7 +132,7 @@ composerActionsRegistry
                 .find(([delimiter]) => delimiter === "::"),
         icon: "fa fa-file-text-o",
         name: _t("Insert a Canned response"),
-        onClick: (component, action, ev) => component.onClickInsertCannedResponse(ev),
+        onSelected: (component, action, ev) => component.onClickInsertCannedResponse(ev),
         sequence: 5,
     });
 
@@ -164,8 +164,8 @@ function transformAction(component, id, action) {
         get name() {
             return typeof action.name === "function" ? action.name(component) : action.name;
         },
-        onClick(ev) {
-            action.onClick?.(component, this, ev);
+        onSelected(ev) {
+            action.onSelected?.(component, this, ev);
         },
         get pickerName() {
             return typeof action.pickerName === "function"

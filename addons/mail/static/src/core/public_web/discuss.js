@@ -1,6 +1,7 @@
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { Composer } from "@mail/core/common/composer";
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { DiscussActions } from "@mail/core/common/discuss_actions";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
@@ -20,6 +21,7 @@ export class Discuss extends Component {
     static components = {
         AutoresizeInput,
         CountryFlag,
+        DiscussActions,
         DiscussSidebar,
         Thread,
         ThreadIcon,

@@ -20,9 +20,9 @@ messageActionsRegistry.add("set-new-message-separator", {
         );
     },
     icon: "fa fa-eye-slash",
-    title: _t("Mark as Unread"),
+    name: _t("Mark as Unread"),
     /** @param {import("@mail/core/common/message").Message} component */
-    onClick: (component) => {
+    onSelected: (component) => {
         const message = toRaw(component.message);
         const selfMember = message.thread?.selfMember;
         if (selfMember) {
@@ -42,7 +42,7 @@ const editAction = messageActionsRegistry.get("edit");
 
 patch(editAction, {
     /** @param {import("@mail/core/common/message").Message} component */
-    onClick(component) {
+    onSelected(component) {
         const doc = createDocumentFragmentFromContent(component.message.body);
         const mentionedChannelElements = doc.querySelectorAll(".o_channel_redirect");
         component.message.mentionedChannelPromises = Array.from(mentionedChannelElements)
@@ -53,6 +53,6 @@ patch(editAction, {
                     model: el.dataset.oeModel,
                 })
             );
-        return super.onClick(component);
+        return super.onSelected(component);
     },
 });

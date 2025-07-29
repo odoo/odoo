@@ -42,7 +42,7 @@ export class MessageActionMenuMobile extends Component {
     }
 
     async onClickAction(action) {
-        const success = await action.onClick();
+        const success = await action.onSelected();
         if (action.mobileCloseAfterClick && (success || success === undefined)) {
             this.props.close?.();
         }

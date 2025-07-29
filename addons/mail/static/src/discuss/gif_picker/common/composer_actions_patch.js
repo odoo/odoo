@@ -17,7 +17,7 @@ composerActionsRegistry.add("add-gif", {
     pickerName: _t("GIF"),
     icon: "oi oi-gif-picker",
     name: _t("Add GIFs"),
-    onClick: (component, action, ev) => {
+    onSelected: (component, action, ev) => {
         pickerOnClick(component, action, ev);
         markEventHandled(ev, "Composer.onClickAddGif");
     },

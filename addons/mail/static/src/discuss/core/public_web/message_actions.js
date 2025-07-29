@@ -7,14 +7,14 @@ messageActionsRegistry.add("create-or-view-thread", {
         component.message.thread.hasSubChannelFeature &&
         component.store.self.main_user_id?.share === false,
     icon: "fa fa-comments-o",
-    onClick: (component) => {
+    onSelected: (component) => {
         if (component.message.linkedSubChannel) {
             component.message.linkedSubChannel.open({ focus: true });
         } else {
             component.message.thread.createSubChannel({ initialMessage: component.message });
         }
     },
-    title: (component) =>
+    name: (component) =>
         component.message.linkedSubChannel ? _t("View Thread") : _t("Create Thread"),
     sequence: 75,
 });

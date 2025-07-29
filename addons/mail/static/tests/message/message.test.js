@@ -594,7 +594,7 @@ test("Deleting parent message of a reply should adapt reply visual", async () =>
     triggerHotkey("Enter", false);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Delete')");
-    await click("button", { text: "Delete" });
+    await click(".modal button", { text: "Delete" });
     await contains(".o-mail-MessageInReply", { text: "Original message was deleted" });
 });
 
@@ -1555,7 +1555,7 @@ test("delete all attachments of message without content should mark message as d
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Delete')");
-    await click("button", { text: "Delete" });
+    await click(".modal button", { text: "Delete" });
     await contains(".o-mail-Message", { text: "This message has been removed" });
 });
 
@@ -1998,7 +1998,7 @@ test("deleted message should not have translate feature", async () => {
     await contains(".dropdown-menu");
     await contains(".dropdown-item:contains('Translate')");
     await click(".dropdown-item:contains('Delete')");
-    await click("button:contains('Delete')");
+    await click(".modal button:contains('Delete')");
     await contains(".o-mail-Message:contains('This message has been removed')");
     await contains(".o-mail-Message [title='Add a Reaction']");
     await contains(".o-mail-Message [title='Mark as Todo']");

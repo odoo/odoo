@@ -12,7 +12,7 @@ patch(ChatWindow.prototype, {
                 if (this.props.chatWindow.thread === this.store.openInviteThread) {
                     this.threadActions.actions
                         .find((action) => action.id === "invite-people")
-                        ?.onSelect();
+                        ?.onSelected();
                     this.store.openInviteThread = null;
                 }
             },

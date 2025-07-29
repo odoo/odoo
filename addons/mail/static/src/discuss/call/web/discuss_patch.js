@@ -12,7 +12,7 @@ patch(Discuss.prototype, {
                 if (this.thread && this.thread === this.store.openInviteThread) {
                     this.threadActions.actions
                         .find((action) => action.id === "invite-people")
-                        ?.onSelect();
+                        ?.onSelected();
                     this.store.openInviteThread = null;
                 }
             },

@@ -1,0 +1,74 @@
+.o-mail-DiscussActions-group {
+    &.o-inline {
+        gap: 1px;
+    }
+    &:not(.o-inline) {
+        gap: 1px;
+    }
+}
+
+.o-mail-DiscussActions {
+    hr {
+        opacity: 12.5% !important;
+    }
+
+    button {
+        z-index: 1;
+        --btn-disabled-opacity: 0.25;
+
+        &.o-danger {
+            color: var(--mail-DiscussActions-dangerColor, darken($danger, 5%)) !important;
+        }
+
+        &.o-success {
+            color: darken($success, 5%) !important;
+        }
+
+        &:not(.o-odooControlPanelSwitchStyle) {
+            background-color: inherit;
+        }
+
+        &.o-inline {
+            i {
+                opacity: var(--mail-DiscussActions-buttonInlineIconOpacity, 65%);
+            }
+            &.o-mail-ChatWindow-command i {
+                opacity: 35%;
+            }
+        }
+        &:not(.o-inline) i {
+            opacity: 65%;
+        }
+
+        &:not(.o-inline) i {
+            opacity: 65%;
+        }
+
+        .o-mail-DiscussActions-actionLabel {
+            opacity: 65%;
+        }
+
+        &:hover:not(.o-dropdown-item), &.o-isActive, &.o-active, &.focus, &.show {
+            .o-mail-DiscussActions-actionLabel {
+                opacity: 100%;
+            }
+
+            color: var(--mail-DiscussActions-activeItemColor, $body-color);
+            &:not(.o-inline) {
+                background-color: $dropdown-link-hover-bg !important;
+            }
+            &.o-danger {
+                    background-color: var(--mail-DiscussActions-dangerBgColor, rgba($danger, .75)) !important;
+                    color: white !important;
+            }
+            &.o-success {
+                    background-color: var(--mail-DiscussActions-successBgColor, rgba($success, .6)) !important;
+                    color: white !important;
+            }
+            z-index: 2 !important;
+            i {
+                opacity: 100%;
+            }
+        }
+    }
+}

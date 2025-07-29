@@ -55,7 +55,7 @@
                         <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column py-0 bg-100 border border-secondary'">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
-                                <t t-call="mail.Composer.dropdownActions"/>
+                                <DiscussActions dropdown="true" group="[partitionedActions.other]"/>
                             </t>
                         </Dropdown>
                     </div>
@@ -159,7 +159,7 @@
 </t>
 
 <t t-name="mail.Composer.quickActionButton">
-    <button class="btn border-0 rounded-circle" t-if="showQuickAction" t-att-class="{ 'o-large': ui.isSmall and env.inChatWindow, 'o-small': !ui.isSmall or !env.inChatWindow }" t-attf-class="{{ action.btnClass }}" t-att-title="action.name" t-on-click="(ev) => action.onClick?.(ev)" t-att-data-hotkey="action.hotkey" t-att-disabled="action.disabledCondition or areAllActionsDisabled" t-att-name="action.id" t-ref="{{ action.id }}" tabindex="0"><i class="fa-fw fa-lg" t-att-class="action.icon"/></button>
+    <button class="btn border-0 rounded-circle" t-if="showQuickAction" t-att-class="{ 'o-large': ui.isSmall and env.inChatWindow, 'o-small': !ui.isSmall or !env.inChatWindow }" t-attf-class="{{ action.btnClass }}" t-att-title="action.name" t-on-click="(ev) => action.onSelected?.(ev)" t-att-data-hotkey="action.hotkey" t-att-disabled="action.disabledCondition or areAllActionsDisabled" t-att-name="action.id" t-ref="{{ action.id }}" tabindex="0"><i class="fa-fw fa-lg" t-att-class="action.icon"/></button>
 </t>
 
 <t t-name="mail.Composer.moreActions">
@@ -175,15 +175,6 @@
             </t>
         </div>
     </div>
-</t>
-
-<t t-name="mail.Composer.dropdownActions">
-    <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id">
-        <DropdownItem tag="'button'" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0'" onSelected="(ev) => action.onClick?.(ev)" attrs="{ 'name': action.id, 'data-hotkey': action.hotkey, 'disabled': action.disabledCondition or areAllActionsDisabled }">
-            <i class="fa-fw" t-att-class="action.icon"/>
-            <span class="mx-2" t-out="action.name"/>
-        </DropdownItem>
-    </t>
 </t>
 
 <t t-name="mail.Composer.extraActions">

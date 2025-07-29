@@ -3,6 +3,7 @@ import { useSubEnv, useComponent, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { markEventHandled } from "@web/core/utils/misc";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -108,6 +109,10 @@ function transformAction(component, id, action) {
         get condition() {
             return threadActionsInternal.condition(component, id, action);
         },
+        /** If set, this is considered as a danger (destructive) action. */
+        get danger() {
+            return typeof action.danger === "function" ? action.danger(component) : action.danger;
+        },
         /** Condition to disable the button of this action (but still display it). */
         get disabledCondition() {
             return action.disabledCondition?.(component);
@@ -154,12 +159,16 @@ function transformAction(component, id, action) {
         /**
          * Action to execute when this action is selected (on or off).
          *
+         * @param {MouseEvent} [ev]
          * @param {object} [param0]
          * @param {boolean} [param0.keepPrevious] Whether the previous action
          * should be kept so that closing the current action goes back
          * to the previous one.
          * */
-        onSelect({ keepPrevious } = {}) {
+        onSelected(ev, { keepPrevious } = {}) {
+            if (ev) {
+                markEventHandled(ev, "DiscussAction.onSelected");
+            }
             if (this.toggle && this.isActive) {
                 this.close();
             } else {
@@ -236,6 +245,12 @@ function transformAction(component, id, action) {
         sidebarSequenceGroup: action.sidebarSequenceGroup,
         /** Component setup to execute when this action is registered. */
         setup: action.setup,
+        /** If set, this is considered as a success (high-commitment positive) action. */
+        get success() {
+            return typeof action.success === "function"
+                ? action.success(component)
+                : action.success;
+        },
         /** Text for the button of this action */
         text: action.text,
         /** Determines whether this action is a one time effect or can be toggled (on or off). */
