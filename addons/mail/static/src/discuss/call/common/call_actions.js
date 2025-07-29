@@ -84,6 +84,20 @@ callActionsRegistry
         select: (component) => component.rtc.toggleVideo("screen", { env: component.env }),
         sequence: 40,
     })
+    .add("auto-focus", {
+        condition: (component) => component.rtc,
+        name: (component) =>
+            component.store.settings.useCallAutoFocus
+                ? _t("Disable speaker autofocus")
+                : _t("Autofocus speaker"),
+        isActive: (component) => component.store?.settings?.useCallAutoFocus,
+        inactiveIcon: "fa-eye",
+        icon: "fa-eye-slash",
+        select: (component) => {
+            component.store.settings.setCameraAutoFocus(!component.store.settings.useCallAutoFocus);
+        },
+        sequence: 50,
+    })
     .add("blur-background", {
         condition: (component) =>
             !isBrowserSafari() &&
