@@ -21,7 +21,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             order = document.pos_order_id
             if order.l10n_es_edi_verifactu_state == 'cancelled' and order.state != 'cancel':
                 try:
-                    order.l10n_es_edi_verifactu_button_cancel()
+                    order.action_pos_order_cancel()
                 except UserError as error:
                     _logger.error("Error while canceling order %(name)s (id %(record_id)s) after Veri*Factu cancellation:\n%(error)s",
                                   record_id=order.id, name=order.name, error=error)
