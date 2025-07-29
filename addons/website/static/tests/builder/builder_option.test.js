@@ -129,6 +129,41 @@ test("Undo/Redo an action that activates another target restores the old one on 
     expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
 });
 
+test("Undo/Redo an action that deactivates the containers restores the old one on undo and deactivates again on redo", async () => {
+    let editor;
+    addActionOption({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("test");
+                editor.shared.builderOptions.setNextTarget(false);
+            }
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div data-name="Target 1" class="test-options-target target1">
+            Homepage
+        </div>
+    `);
+    editor = getEditor();
+
+    await contains(":iframe .target1").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    await contains("[data-action-id='customAction']").click();
+    expect(".options-container").toHaveCount(0);
+    expect("button[data-name='blocks']").toHaveClass("active");
+    // Undo everything.
+    await contains(".o-snippets-top-actions .fa-undo").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    await contains(".o-snippets-top-actions .fa-repeat").click();
+    expect(".options-container").toHaveCount(0);
+    expect("button[data-name='blocks']").toHaveClass("active");
+});
+
 test("Containers fallback to a valid ancestor if the target disappears and restore it on undo", async () => {
     addActionOption({
         targetAction: class extends BuilderAction {
