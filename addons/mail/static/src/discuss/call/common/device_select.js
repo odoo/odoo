@@ -18,6 +18,7 @@ export class DeviceSelect extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.notification = useService("notification");
         this.state = useState({
             userDevices: [],
         });
