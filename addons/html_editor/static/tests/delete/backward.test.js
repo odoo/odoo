@@ -1874,8 +1874,8 @@ describe("Selection not collapsed", () => {
                 </tbody></table>`
             ),
             contentBeforeEdit: unformat(
-                `[${PLACEHOLDER_BLOCK_CONTAINER("top")}
-                <table class="o_selected_table"><tbody>
+                `${PLACEHOLDER_BLOCK_CONTAINER("top")}
+                [<table class="o_selected_table"><tbody>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                 </tbody></table>

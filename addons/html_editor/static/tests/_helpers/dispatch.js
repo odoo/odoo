@@ -15,6 +15,12 @@ export function cleanHints(editor) {
     }
 }
 
+export function cleanPlaceholderBlocks(editor) {
+    for (const element of editor.editable.querySelectorAll(".o-placeholder-block-container")) {
+        element.remove();
+    }
+}
+
 export function dispatchCleanForSave(editor, payload) {
     dispatchTo(editor, "clean_for_save_handlers", payload);
 }

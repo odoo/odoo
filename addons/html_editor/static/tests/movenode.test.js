@@ -7,6 +7,7 @@ import { getContent } from "./_helpers/selection";
 import { unformat } from "./_helpers/format";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "./_helpers/placeholder_block";
 
 describe.current.tags("desktop");
 
@@ -317,7 +318,8 @@ describe("click", () => {
         await click(".oe-sidewidget-move");
         await animationFrame();
         expect(getContent(el)).toBe(
-            unformat(`
+            PLACEHOLDER_BLOCK_CONTAINER("top") +
+                unformat(`
                 <table class="o_selected_table">
                     <tbody>
                         <tr>

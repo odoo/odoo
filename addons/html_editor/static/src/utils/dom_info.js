@@ -265,6 +265,7 @@ export function hasHeight(node) {
  * @param {Node} node
  * @returns {boolean}
  */
+// TODO: the changes here break the test "should select the table when clicked on a hook"
 export function isVisible(node) {
     return (
         !!node &&

@@ -22,13 +22,15 @@ export class PlaceholderBlockPlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history"];
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        step_added_handlers: this.resetPlaceholderBlockContainers.bind(this),
+        normalize_handlers: this.resetPlaceholderBlockContainers.bind(this),
+        history_step_handlers: this.resetPlaceholderBlockContainers.bind(this),
+        external_history_step_handlers: this.resetPlaceholderBlockContainers.bind(this),
         selectionchange_handlers: this.onSelectionChange.bind(this),
         unremovable_node_predicates: isPartOfPlaceholderBlock,
         unsplittable_node_predicates: isPartOfPlaceholderBlock,
         ignored_mutation_record_predicates: (record) => {
             // Ignore the insertion/removal of placeholder blocks.
-            const node = record.addedNodes?.[0] || record.removedNodes?.[0];
+            const node = record.addedTrees?.[0]?.node || record.removedTrees?.[0]?.node;
             return node && isPartOfPlaceholderBlock(node);
         },
         move_node_blacklist_selectors: PLACEHOLDER_SELECTORS,

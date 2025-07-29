@@ -410,15 +410,17 @@ describe("deleteSelection", () => {
                         <p>gh]i</p>`
                     ),
                     stepFunction: deleteSelection,
-                    contentAfterEdit: unformat(
-                        `<div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                    contentAfterEdit:
+                        PLACEHOLDER_BLOCK_CONTAINER("top") +
+                        unformat(
+                            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false">
                             <div class="row">
                                 <div class="col-6 o-contenteditable-true" contenteditable="true">a[]</div>
                                 <div class="col-6 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div>
                             </div>
                         </div>
                         <p>i</p>`
-                    ),
+                        ),
                     contentAfter: unformat(
                         `<div class="container o_text_columns o-contenteditable-false">
                             <div class="row">
