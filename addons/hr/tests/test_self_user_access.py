@@ -28,37 +28,6 @@ class TestSelfAccessProfile(TestHrCommon):
         fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
         james.read(fields)
 
-    def test_readonly_fields(self):
-        """ Employee related fields should be readonly if self editing is not allowed """
-        self.env['ir.config_parameter'].sudo().set_param('hr.hr_employee_self_edit', False)
-        james = new_test_user(self.env, login='hel', groups='base.group_user', name='Simple employee', email='ric@example.com')
-        james = james.with_user(james)
-        self.env['hr.employee'].create({
-            'name': 'James',
-            'user_id': james.id,
-        })
-
-        view = self.env.ref('hr.res_users_view_form_profile')
-        fields = james._fields
-        view_infos = james.get_view(view.id)
-        employee_related_fields = {
-            el.get('name')
-            for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')
-            if fields[el.get('name')].related and fields[el.get('name')].related.split('.')[0] == 'employee_id'
-        }
-
-        form = Form(james, view=view)
-        for field in employee_related_fields:
-            with self.assertRaises(AssertionError, msg="Field '%s' should be readonly in the employee profile when self editing is not allowed." % field):
-                form[field] = 'some value'
-
-        self.env['ir.config_parameter'].sudo().set_param('hr.hr_employee_self_edit', True)
-        hr_settings_fields = ['employee_type', 'pin', 'barcode']
-        form = Form(james, view=view)
-        for field in hr_settings_fields:
-            with self.assertRaises(AssertionError, msg="HR field '%s' should be readonly when self editing is allowed." % field):
-                form[field] = 'some value'
-
     def test_profile_view_fields(self):
         """ A simple user should see all fields in profile view, even if they are protected by groups """
         view = self.env.ref('hr.res_users_view_form_profile')
@@ -173,50 +142,13 @@ class TestSelfAccessRights(TestHrCommon):
         with self.assertRaises(AccessError):
             self.hubert.with_user(self.richard).read(self.self_protected_fields_user)
 
-    # Write res.users #
-    def testWriteSelfUserEmployeeSettingFalse(self):
-        for f in self.self_protected_fields_user:
-            with self.assertRaises(AccessError):
-                self.richard.with_user(self.richard).write({f: 'dummy'})
-
     def testWriteSelfUserEmployee(self):
-        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', True)
         for f, v in self.self_protected_fields_user.items():
             val = None
             if v.type == 'char' or v.type == 'text':
                 val = '0000' if f in ['pin', 'barcode'] else 'dummy'
             if val is not None:
                 self.richard.with_user(self.richard).write({f: val})
-
-    def testWriteSelfUserPreferencesEmployee(self):
-        # self should always be able to update non hr.employee fields if
-        # they are in SELF_READABLE_FIELDS
-        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
-        # should not raise
-        vals = [
-            {'tz': "Australia/Sydney"},
-            {'email': "new@example.com"},
-            {'phone': "2154545"},
-            {'signature': "<p>I'm Richard!</p>"},
-            {'notification_type': "email"},
-        ]
-        for v in vals:
-            # should not raise
-            self.richard.with_user(self.richard).write(v)
-
-    def testWriteOtherUserPreferencesEmployee(self):
-        # self should always be able to update non hr.employee fields if
-        # they are in SELF_READABLE_FIELDS
-        self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
-        vals = [
-            {'tz': "Australia/Sydney"},
-            {'email': "new@example.com"},
-            {'signature': "<p>I'm Richard!</p>"},
-            {'notification_type': "email"},
-        ]
-        for v in vals:
-            with self.assertRaises(AccessError):
-                self.hubert.with_user(self.richard).write(v)
 
     def testWriteOtherUserEmployee(self):
         for f in self.self_protected_fields_user:

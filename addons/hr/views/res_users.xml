@@ -76,7 +76,7 @@
                     <field name="pin" string="Attendance PIN" readonly="not is_hr_user"/>
                 </xpath>
                 <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
-                    <field name="work_location_id" string="Main Work Location" readonly="not can_edit"/>
+                    <field name="work_location_id" string="Main Work Location"/>
                 </xpath>
                 <xpath expr="//page[@name='calendar']" position="after">
                     <page name="private_information" string="Private">
@@ -85,20 +85,20 @@
                                 <field name="employee_ids" invisible="1"/>
                                 <label for="private_street" string="Private Address"/>
                                 <div class="o_address_format">
-                                    <field name="private_street" placeholder="Street..." class="o_address_street" readonly="not can_edit"/>
-                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street" readonly="not can_edit"/>
-                                    <field name="private_city" placeholder="City" class="o_address_city" readonly="not can_edit"/>
-                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}" readonly="not can_edit"/>
-                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip" readonly="not can_edit"/>
-                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="not can_edit"/>
+                                    <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="private_city" placeholder="City" class="o_address_city"/>
+                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
-                                <field name="private_email" string="Private Email" readonly="not can_edit"/>
-                                <field name="private_phone" string="Private Phone" class="o_force_ltr" readonly="not can_edit"/>
-                                <field name="employee_bank_account_ids" widget="many2many_tags" context="{'display_partner': True}" readonly="not can_edit"/>
+                                <field name="private_email" string="Private Email"/>
+                                <field name="private_phone" string="Private Phone" class="o_force_ltr"/>
+                                <field name="employee_bank_account_ids" widget="many2many_tags" context="{'display_partner': True}" readonly="not is_hr_user"/>
                             </group>
                             <group string="Emergency Contact">
-                                <field name="emergency_contact" string="Contact Name" placeholder="e.g. John Doe" readonly="not can_edit"/>
-                                <field name="emergency_phone" string="Contact Phone" widget="phone" readonly="not can_edit"/>
+                                <field name="emergency_contact" string="Contact Name" placeholder="e.g. John Doe"/>
+                                <field name="emergency_phone" string="Contact Phone" widget="phone"/>
                             </group>
                         </group>
                     </page>
