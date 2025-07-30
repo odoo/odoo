@@ -682,8 +682,6 @@ class Field(typing.Generic[T]):
             ``alias`` is the model's table alias
         """
         assert self.related and not self.store
-        if not (model.env.su or self.compute_sudo or self.inherited):
-            raise ValueError(f'Cannot convert {self} to SQL because it is not a sudoed related or inherited field')
 
         if self.compute_sudo:
             model = model.sudo()
