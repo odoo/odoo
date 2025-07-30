@@ -7,6 +7,7 @@ from odoo.orm.decorators import (
     constrains,
     depends,
     depends_context,
+    deprecated,
     model,
     model_create_multi,
     onchange,
