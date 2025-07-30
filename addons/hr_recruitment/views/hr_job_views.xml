@@ -73,12 +73,12 @@
                     <t t-name="card">
                         <div class="o_hr_recruitment_kanban_card_large_screen">
                             <main>
-                                <div class="d-flex flex-row align-content-center ms-2">
-                                    <div class="col-3 d-flex flex-column align-self-center o_kanban_card_header">
+                                <div class="d-flex flex-row align-content-center ms-2 py-1">
+                                    <div class="col-3 col-xl-4 d-flex flex-column align-self-center o_kanban_card_header">
                                         <div class="d-flex flex-row">
-                                            <div class="d-flex fw-bold fs-3 o_kanban_card_header_title">
+                                            <div class="o_kanban_card_header_title d-flex fw-bold fs-4">
                                                 <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                                <field class="fs-3" name="name"/>
+                                                <field class="fs-4" name="name"/>
                                             </div>
                                             <div t-if="record.alias_email.value" class="d-flex flex-wrap">
                                                 <field name="alias_id"
@@ -94,7 +94,7 @@
                                                 </div>
                                                 <div groups="base.group_multi_company">
                                                     <t t-if="record.company_id.raw_value != 0">
-                                                        <div class="d-flex flex-row align-items-center">
+                                                        <div class="d-flex flex-row">
                                                             <field name="user_id" widget="many2one_avatar_user"
                                                                 options="{'display_avatar_name': False}"/>
                                                             <field class="ms-1" name="company_id"/>
@@ -108,46 +108,46 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center">
-                                        <div class="d-flex justify-content-center">
-                                            <field name="no_of_recruitment" class="number"/>
-                                            <div class="number_description fs-4 lh-1">
-                                                to<br/>recruit
+                                    <div class="col align-content-center px-1">
+                                        <div t-attf-class="d-flex justify-content-center #{record.no_of_recruitment.raw_value == 0  ? 'text-muted opacity-75' : ''}">
+                                            <field name="no_of_recruitment" class="number flex-shrink-0 flex-basis-50 fw-semibold text-end"/>
+                                            <div class="number_description flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
+                                                to<br/><span class="text-nowrap">recruit</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center"
+                                    <div class="col align-content-center px-1"
                                         groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                        <div class="d-flex justify-content-center">
-                                            <field name="new_application_count" class="number"/>
-                                            <div class="number_description text-body-secondary fs-4 lh-1">
-                                                new<br/>applications
+                                        <div t-attf-class="d-flex justify-content-center px-1 #{record.new_application_count.raw_value == 0  ? 'text-muted opacity-75' : ''}">
+                                            <field name="new_application_count" class="number flex-shrink-0 flex-basis-50 fw-semibold text-end"/>
+                                            <div class="number_description flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
+                                                new<br/><span class="text-nowrap">applications</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center"
+                                    <div class="col align-content-center px-1"
                                         groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                        <div class="d-flex justify-content-center">
-                                            <field name="open_application_count" class="number"/>
-                                            <div class=" number_description text-body-secondary fs-4 lh-1">
-                                                in<br/>progress
+                                        <div t-attf-class="d-flex justify-content-center #{record.open_application_count.raw_value == 0  ? 'text-muted opacity-75' : ''}">
+                                            <field name="open_application_count" class="number flex-shrink-0 flex-basis-50 fw-semibold text-end"/>
+                                            <div class=" number_description flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
+                                                in<br/><span class="text-nowrap">progress</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center"
+                                    <div class="col align-content-center px-1"
                                         groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                        <div class="d-flex flex-row justify-content-center mt-1">
+                                        <div class="d-flex justify-content-sm-center justify-content-xl-start mt-1">
                                             <div class="position-relative">
-                                                <button name="action_open_activities" type="object" class="ps-1 pe-1 pt-0 pb-0">
+                                                <button name="action_open_activities" type="object" class="px-2 pt-2 pb-1">
                                                     <i class="fa fa-2x fa-clock-o" role="img" aria-label="Activities"></i>
-                                                    <span class="activity_badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light">
+                                                    <span class="activity_badge position-absolute translate-middle badge rounded-pill bg-danger text-light" t-if="record.activity_count.raw_value > 0">
                                                         <field name="activity_count"/>
                                                     </span> 
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center me-5">
+                                    <div class="align-content-center me-5">
                                         <div class="d-flex justify-content-center">
                                             <div class="me-2">
                                                 <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
@@ -162,11 +162,11 @@
                                 </div>
                             </main>
                         </div>
-                        <div class="o_hr_recruitment_kanban_card_mobile_screen">
+                        <div class="o_hr_recruitment_kanban_card_mobile_screen py-1 px-2 py-md-0 px-md-0">
                             <main>
-                                <div class="d-flex flex-column gap-1 mb-1">
-                                    <div class="mb-2">
-                                        <div class="d-flex fw-bold fs-3">
+                                <div class="o_kanban_card_header d-flex flex-column gap-1 mb-1">
+                                    <div>
+                                        <div class="d-flex fs-4 fw-bold">
                                             <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                             <field name="name"/>
                                         </div>
@@ -175,9 +175,9 @@
                                                 groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row"
-                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                        <div class="col-1 align-content-end me-1">
+                                    <div class="d-flex flex-row">
+                                        <div class="col-1 me-1" style="max-width: 1.5rem;"
+                                            groups="hr_recruitment.group_hr_recruitment_interviewer">
                                             <div class="d-flex flex-row justify-content-center">
                                                 <field name="user_id" widget="many2one_avatar_user"
                                                     options="{'display_avatar_name': False}"/>
@@ -197,11 +197,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row"
-                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                        <div class="col-1 align-content-end me-1">
+                                    <div class="d-flex flex-row">
+                                        <div class="col-1 align-content-end me-1" style="max-width: 1.5rem;"
+                                            groups="hr_recruitment.group_hr_recruitment_interviewer">
                                             <div class="d-flex flex-row justify-content-center">
-                                                <i class="fa fa-user fa-2x" title="new_applications_icon"/>
+                                                <i class="fa fa-user" title="new_applications_icon" aria-hidden="true"/>
                                             </div>
                                         </div>
                                         <div class="col align-content-end">
