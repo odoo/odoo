@@ -1511,6 +1511,7 @@ export class HistoryPlugin extends Plugin {
                 revertOperation();
                 revertOperation = this.makeSavePoint();
                 this.isPreviewing = true;
+                this.stageSelection();
                 operation(...args);
                 // todo: We should not add a step on preview as it would send
                 // unnecessary steps in collaboration and let the other peer see
