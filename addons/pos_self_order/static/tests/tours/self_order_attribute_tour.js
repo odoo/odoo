@@ -92,3 +92,27 @@ registry.category("web_tour.tours").add("self_order_product_info", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_multi_check_attribute_with_extra_price", {
+    steps: () =>
+        [
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Desk Organizer"),
+            ProductPage.setupAttribute(
+                [
+                    { name: "Fabric", value: "Leather" },
+                    { name: "Size", value: "M" },
+                    { name: "Add-ons", value: "Pen Holder" },
+                    { name: "Add-ons", value: "Mini Drawer" },
+                    { name: "Colour", value: "Blue" },
+                ],
+                false
+            ),
+            Utils.clickBtn("Add to Cart"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Desk Organizer", "11.62", "1"),
+            Utils.clickBtn("Order"),
+            Utils.clickBtn("Ok"),
+            Utils.clickBtn("My Order"),
+        ].flat(),
+});
