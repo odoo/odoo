@@ -109,7 +109,7 @@ class DiscussChannelRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        store = Store().add(self, extra=True)
+        store = Store().add(self, extra_fields=self._get_store_extra_fields())
         self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
             {"data": store.get_result(), "channelId": self.channel_id.id},
@@ -173,10 +173,8 @@ class DiscussChannelRtcSession(models.Model):
             ],
         )
 
-    def _to_store(self, store: Store, fields, *, extra=False):
-        if extra:
-            fields += ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
-        store.add_records_fields(self, fields)
+    def _get_store_extra_fields(self):
+        return ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
 
     @api.model
     def _inactive_rtc_session_domain(self):

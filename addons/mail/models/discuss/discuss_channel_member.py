@@ -460,7 +460,12 @@ class DiscussChannelMember(models.Model):
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             Store(bus_channel=member._bus_channel()).add(
                 member.channel_id,
-                {"rtcInvitingSession": Store.One(member.rtc_inviting_session_id, extra=True)},
+                {
+                    "rtcInvitingSession": Store.One(
+                        member.rtc_inviting_session_id,
+                        extra_fields=member.rtc_inviting_session_id._get_store_extra_fields(),
+                    ),
+                },
             ).bus_send()
         if members:
             Store(bus_channel=self.channel_id).add(
