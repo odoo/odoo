@@ -39,7 +39,8 @@
                 </t>
             </ul>
         </td>
-        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)"><a href="#" class="oe_remove text-danger" t-att-title="'Remove &quot;' + props.keyword + '&quot;'"><i class="fa fa-trash"/></a></td>
+        <td class="text-center"><a target="_blank" t-att-href="getGoogleTrendsURL()" t-att-title="getGoogleTrendsTitle()"><i class="fa fa-external-link opacity-75 mt-1"/></a></td>
+        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)"><a href="#" class="oe_remove text-danger" t-att-title="getRemoveKeywordTitle()"><i class="fa fa-trash"/></a></td>
     </tr>
 </t>
 

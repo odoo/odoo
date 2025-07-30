@@ -286,6 +286,18 @@ class Keyword extends Component {
         ).test(string);
     }
 
+    getGoogleTrendsURL() {
+        return `https://trends.google.com/trends/explore?q=${encodeURIComponent(this.props.keyword)}`;
+    }
+
+    getGoogleTrendsTitle() {
+        return _t("See Google Trends about '%(keyword)s'", { keyword: this.props.keyword });
+    }
+
+    getRemoveKeywordTitle() {
+        return _t("Remove '%(keyword)s'", { keyword: this.props.keyword });
+    }
+
     getHeaders(tag) {
         return Array.from(this.website.pageDocument.documentElement.querySelectorAll(`#wrap ${tag}`)).map(header => header.textContent);
     }
