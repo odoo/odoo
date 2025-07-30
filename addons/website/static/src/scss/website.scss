@@ -482,7 +482,8 @@ $-header-nav-link-height: $nav-link-height;
         o-website-value('footer-template') == 'contact' or
         o-website-value('footer-template') == 'mega' or
         o-website-value('footer-template') == 'mega_columns' or
-        o-website-value('footer-template') == 'mega_links'
+        o-website-value('footer-template') == 'mega_links' or
+        o-website-value('footer-template') == 'mega_cards'
     {
         @include o-apply-colors('footer-bright');
         @include o-apply-colors('footer-bright-custom');
@@ -507,7 +508,8 @@ $-header-nav-link-height: $nav-link-height;
             @include o-add-gradient('copyright-dark-gradient');
         } @else if
             o-website-value('footer-template') == 'links' or
-            o-website-value('footer-template') == 'contact'
+            o-website-value('footer-template') == 'contact' or
+            o-website-value('footer-template') == 'mega_cards'
         {
             @include o-apply-colors('copyright-bright');
             @include o-apply-colors('copyright-bright-custom');

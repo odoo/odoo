@@ -70,6 +70,12 @@
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega_links.svg'"/>
             </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Mega Cards"
+                actionParam="{ view: 'website.template_footer_mega_cards', vars: { 'footer-template': 'mega_cards' } }"
+                id="'footer_mega_cards_opt'"
+            >
+                <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega_cards.svg'"/>
+            </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 </t>
@@ -105,7 +111,7 @@
                 nullValue: 'NULL',
             }"/>
         <BuilderColorPicker
-            t-if="isActiveItem('footer_descriptive_opt') || isActiveItem('footer_contact_opt') || isActiveItem('footer_mega_opt') || isActiveItem('footer_mega_columns_opt') || isActiveItem('footer_mega_links_opt')"
+            t-if="isActiveItem('footer_descriptive_opt') || isActiveItem('footer_contact_opt') || isActiveItem('footer_mega_opt') || isActiveItem('footer_mega_columns_opt') || isActiveItem('footer_mega_links_opt') || isActiveItem('footer_mega_cards_opt')"
             enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
             defaultColor="''"
