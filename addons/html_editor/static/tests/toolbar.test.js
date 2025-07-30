@@ -46,6 +46,7 @@ import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
+import { ImageCrop } from "@html_editor/main/media/image_crop";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -1280,6 +1281,18 @@ test("should not close image cropper while loading media", async () => {
     const base64Image =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
 
+    // This promise is needed to ensure that the `show` method has completed
+    // before clicking on `Discard` button as it sets `isCropperActive` true
+    // at the end. In `closeCropper` method `isCropperActive` must be true
+    // to close the cropper.
+    const cropperReadyPromise = new Promise((resolve) => {
+        patchWithCleanup(ImageCrop.prototype, {
+            async show(...args) {
+                await super.show(...args);
+                resolve();
+            },
+        });
+    });
     // Mock backend image RPCs
     onRpc("/html_editor/get_image_info", async () => {
         await delay(50);
@@ -1303,8 +1316,7 @@ test("should not close image cropper while loading media", async () => {
     expect('.btn[title="Discard"]').toHaveCount(1);
 
     // Once the image loaded we should be able to close
-    await waitFor('img[src^="blob:"]', { timeout: 2000 });
-    await advanceTime(200);
+    await cropperReadyPromise;
     await click('.btn[title="Discard"]');
     await waitForNone('.btn[title="Discard"]', { timeout: 1500 });
 });
