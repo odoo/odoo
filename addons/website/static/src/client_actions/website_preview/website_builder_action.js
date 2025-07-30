@@ -278,6 +278,9 @@ export class WebsiteBuilderClientAction extends Component {
                 },
             })
         );
+        localStorage.setItem("website-theme-data-rollback", "[]");
+        localStorage.setItem("website-footer-data-rollback", "[]");
+        localStorage.setItem("website-customization-rollback", "[]");
         this.unblockIframe();
         this.state.isEditing = true;
     }

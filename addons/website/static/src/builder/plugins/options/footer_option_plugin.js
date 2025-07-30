@@ -2,7 +2,11 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
-import { SNIPPET_SPECIFIC_END, SNIPPET_SPECIFIC_NEXT, splitBetween } from "@html_builder/utils/option_sequence";
+import {
+    SNIPPET_SPECIFIC_END,
+    SNIPPET_SPECIFIC_NEXT,
+    splitBetween,
+} from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { FooterTemplateChoice, FooterTemplateOption } from "./footer_template_option";
 import { reactive } from "@odoo/owl";
@@ -30,7 +34,7 @@ export {
     FOOTER_SCROLL_TO,
     FOOTER_COPYRIGHT,
     FOOTER_BORDER,
-}
+};
 
 class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
@@ -171,12 +175,25 @@ export class WebsiteConfigFooterAction extends BuilderAction {
     }
     async apply({ params: { vars, view }, selectableContext }) {
         const possibleValues = new Set();
+        var oldValue = null;
         for (const item of selectableContext.items) {
             for (const a of item.getActions()) {
                 if (a.actionId === "websiteConfigFooter") {
                     possibleValues.add(a.actionParam.view);
+                    if (item.isApplied()) {
+                        oldValue = a.actionParam.view;
+                    }
                 }
             }
+        }
+        if (oldValue && localStorage.getItem("website-footer-data-rollback") === "[]") {
+            localStorage.setItem(
+                "website-footer-data-rollback",
+                JSON.stringify({
+                    template_key: oldValue,
+                    possible_values: [...possibleValues],
+                })
+            );
         }
         await Promise.all([
             this.dependencies.customizeWebsite.makeSCSSCusto(
