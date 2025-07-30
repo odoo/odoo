@@ -24,21 +24,51 @@
 <t t-name="website.Keyword">
     <tr class="o_seo_keyword_row">
         <td><span t-out="props.keyword"></span></td>
-        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInH1" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page first level heading'"/></td>
-        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInH2" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page second level heading'"/></td>
-        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInTitle" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page title'"/></td>
-        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInDescription" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page description'"/></td>
-        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInContent" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page content'"/></td>
+        <td class="text-center o_seo_mentioned_keyword">
+            <div t-if="usedInH1">
+                <span class="visually-hidden" t-out="translatedStrings.usedInH1"/>
+                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="translatedStrings.usedInH1"/>
+            </div>
+        </td>
+        <td class="text-center o_seo_mentioned_keyword">
+            <div t-if="usedInH2">
+                <span class="visually-hidden" t-out="translatedStrings.usedInH2"/>
+                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="translatedStrings.usedInH2"/>
+            </div>
+        </td>
+        <td class="text-center o_seo_mentioned_keyword">
+            <div t-if="usedInTitle">
+                <span class="visually-hidden" t-out="translatedStrings.usedInTitle"/>
+                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="translatedStrings.usedInTitle"/>
+            </div>
+        </td>
+        <td class="text-center o_seo_mentioned_keyword">
+            <div t-if="usedInDescription">
+                <span class="visually-hidden" t-out="translatedStrings.usedInDescription"/>
+                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="translatedStrings.usedInDescription"/>
+            </div>
+        </td>
+        <td class="text-center o_seo_mentioned_keyword">
+            <div t-if="usedInContent">
+                <span class="visually-hidden" t-out="translatedStrings.usedInContent"/>
+                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="translatedStrings.usedInContent"/>
+            </div>
+        </td>
         <td class="o_seo_keyword_suggestion">
             <ul class="list-inline mb0">
                 <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
                     <li class="list-inline-item me-1 mb-1" t-on-click="() => props.addKeyword(suggestion)">
-                        <span class="o_seo_suggestion badge rounded py-1 text-bg-info" t-att-title="'Add &quot;' + suggestion + '&quot;'" t-esc="suggestion"/>
+                        <span class="o_seo_suggestion badge rounded py-1 text-bg-info" t-att-title="translatedStrings.suggestionTag(suggestion)" t-esc="suggestion"/>
                     </li>
                 </t>
             </ul>
         </td>
-        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)"><a href="#" class="oe_remove text-danger" t-att-title="'Remove &quot;' + props.keyword + '&quot;'"><i class="fa fa-trash"/></a></td>
+        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)">
+            <button class="o_btn_reset oe_remove text-danger">
+                <span class="visually-hidden" t-out="translatedStrings.removeBtn"/>
+                <i class="fa fa-trash" aria-hidden="true"/>
+            </button>
+        </td>
     </tr>
 </t>
 
@@ -148,7 +178,9 @@
             </table>
         </div>
         <div role="form" class="input-group w-50">
-            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Add your keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
+            <t t-set="placeholderRemove">Remove a keyword first</t>
+            <t t-set="placeholderAdd">Add your keyword</t>
+            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? placeholderRemove : placeholderAdd" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
             <select t-if="languages.length > 1" title="The language of the keyword and related keywords."
                     t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
                 <t t-foreach="languages" t-as="lang" t-key="lang[0]">
@@ -212,8 +244,7 @@
             <div class="col-lg-6">
                 <div class="mb-3">
                     <label for="website_meta_title">
-                        Title <i class="fa fa-question-circle text-primary" data-tooltip-position="right"
-                            t-att-data-tooltip="'Add your own title or leave empty to use &quot;' + props.defaultTitle + '&quot;. Your page title should contain max 65 characters.'"/>
+                        Title <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="titleTooltip"/>
                     </label>
                     <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" t-att-placeholder="props.defaultTitle" maxlength="70" size="70" t-ref="autofocus"/>
                 </div>
