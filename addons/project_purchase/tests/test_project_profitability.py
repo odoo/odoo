@@ -666,3 +666,70 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             items['data'][0]['to_bill'],
             -(self.product_order.standard_price * cross_distribution / 100)
         )
+
+    def test_profitability_foreign_currency_rate_on_bill_date(self):
+        """Test that project profitability uses the correct currency rate (on bill date) for vendor bills in foreign currency."""
+        CurrencyRate = self.env['res.currency.rate']
+        company = self.env.company
+
+        # Pick a foreign currency different from company currency
+        foreign_currency = self.env['res.currency'].search([('id', '!=', company.currency_id.id)], limit=1)
+        if not foreign_currency:
+            foreign_currency = self.env['res.currency'].create({'name': 'USD', 'symbol': '$', 'rounding': 0.01, 'decimal_places': 2})
+
+        # Set two rates: yesterday and today
+        today = datetime.today().date()
+        yesterday = today - timedelta(days=1)
+        rate_today = 1.9
+        rate_yesterday = 2.0
+        CurrencyRate.create({
+            'currency_id': foreign_currency.id,
+            'rate': rate_yesterday,
+            'name': yesterday,
+            'company_id': company.id,
+        })
+        CurrencyRate.create({
+            'currency_id': foreign_currency.id,
+            'rate': rate_today,
+            'name': today,
+            'company_id': company.id,
+        })
+
+        # Create a vendor bill in foreign currency, dated yesterday, with analytic distribution to the project
+        price_unit = 150
+        bill = self.env['account.move'].create({
+            "name": "Bill Foreign Currency",
+            "move_type": "in_invoice",
+            "state": "draft",
+            "partner_id": self.partner.id,
+            "invoice_date": yesterday,
+            "currency_id": foreign_currency.id,
+            "invoice_line_ids": [Command.create({
+                "analytic_distribution": {self.analytic_account.id: 100},
+                "product_id": self.product_a.id,
+                "quantity": 1,
+                "product_uom_id": self.product_a.uom_id.id,
+                "price_unit": price_unit,
+            })],
+        })
+
+        # Compute expected value: balance is in company currency, so should be price_unit / rate_yesterday (since bill is in foreign currency)
+        expected_cost = -(price_unit / rate_yesterday)
+
+        # Check profitability before posting (should be in 'to_bill')
+        costs = self.project._get_profitability_items(False)['costs']
+        self.assertEqual(len(costs['data']), 1)
+        actual_to_bill = costs['data'][0]['to_bill']
+        self.assertTrue(
+            float_compare(actual_to_bill, expected_cost, precision_digits=2) == 0,
+            f"Expected to_bill {expected_cost}, got {actual_to_bill}"
+        )
+
+        # Post the bill and check 'billed'
+        bill.action_post()
+        costs = self.project._get_profitability_items(False)['costs']
+        actual_billed = costs['data'][0]['billed']
+        self.assertTrue(
+            float_compare(actual_billed, expected_cost, precision_digits=2) == 0,
+            f"Expected billed {expected_cost}, got {actual_billed}"
+        )
