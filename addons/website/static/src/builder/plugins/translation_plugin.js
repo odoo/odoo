@@ -120,6 +120,12 @@ export class TranslationPlugin extends Plugin {
         }
 
         const showNotification = (ev) => {
+            // Prevent duplicate notifications for the same click but allow the
+            // event to bubble (i.e. for carousel sliding)
+            if (ev.__shownNotification) {
+                return;
+            }
+            ev.__shownNotification = true;
             let message = _t("This translation is not editable.");
             if (ev.target.closest(".s_table_of_content_navbar_wrap")) {
                 message = _t("Translate header in the text. Menu is generated automatically.");
