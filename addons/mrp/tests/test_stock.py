@@ -392,13 +392,13 @@ class TestKitPicking(common.TestMrpCommon):
         component_f = create_product('Comp F')
         component_g = create_product('Comp G')
         # Creating all kits
-        kit_1 = create_product('Kit 1')
-        kit_2 = create_product('Kit 2')
-        kit_3 = create_product('kit 3')
+        cls.kit_1 = create_product('Kit 1')
+        cls.kit_2 = create_product('Kit 2')
+        cls.kit_3 = create_product('kit 3')
         cls.kit_parent = create_product('Kit Parent')
         # Linking the kits and the components via some 'phantom' BoMs
         bom_kit_1 = cls.env['mrp.bom'].create({
-            'product_tmpl_id': kit_1.product_tmpl_id.id,
+            'product_tmpl_id': cls.kit_1.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
         BomLine = cls.env['mrp.bom.line']
@@ -415,7 +415,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_qty': 3.0,
             'bom_id': bom_kit_1.id})
         bom_kit_2 = cls.env['mrp.bom'].create({
-            'product_tmpl_id': kit_2.product_tmpl_id.id,
+            'product_tmpl_id': cls.kit_2.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
         BomLine.create({
@@ -423,7 +423,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_qty': 1.0,
             'bom_id': bom_kit_2.id})
         BomLine.create({
-            'product_id': kit_1.id,
+            'product_id': cls.kit_1.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_2.id})
         bom_kit_parent = cls.env['mrp.bom'].create({
@@ -435,11 +435,11 @@ class TestKitPicking(common.TestMrpCommon):
             'product_qty': 1.0,
             'bom_id': bom_kit_parent.id})
         BomLine.create({
-            'product_id': kit_2.id,
+            'product_id': cls.kit_2.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
         bom_kit_3 = cls.env['mrp.bom'].create({
-            'product_tmpl_id': kit_3.product_tmpl_id.id,
+            'product_tmpl_id': cls.kit_3.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
         BomLine.create({
@@ -451,7 +451,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_qty': 2.0,
             'bom_id': bom_kit_3.id})
         BomLine.create({
-            'product_id': kit_3.id,
+            'product_id': cls.kit_3.id,
             'product_qty': 1.0,
             'bom_id': bom_kit_parent.id})
 
@@ -715,3 +715,17 @@ class TestKitPicking(common.TestMrpCommon):
         delivery.move_ids.picked = True
         delivery.button_validate()
         self.assertTrue(delivery.state, 'done')
+
+    def test_search_kit_on_quantity(self):
+        self.env['stock.quant'].create([{
+            'product_id': product.id,
+            'inventory_quantity': qty,
+            'location_id': self.test_supplier.id,
+        } for product, qty in self.expected_quantities.items()]).action_apply_inventory()
+
+        products = self.env['product.product'].search([
+            '&', ('qty_available', '>', 3), ('qty_available', '<', 9),
+        ])
+        self.assertNotIn(self.kit_1, products)  # 12
+        self.assertIn(self.kit_2, products)     # 6
+        self.assertNotIn(self.kit_3, products)  # 3
