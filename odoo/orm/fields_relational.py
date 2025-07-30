@@ -494,7 +494,9 @@ class Many2one(_Relational):
             )
 
         if left_join:
-            comodel, coalias = self.join(model, alias, query)
+            assert bypass_access
+            comodel, coalias = self.join(model.sudo(), alias, query)
+            comodel = comodel.with_env(model.env)
             if not positive:
                 value = (~value).optimize_full(comodel)
             sql = value._to_sql(comodel, coalias, query)
@@ -532,8 +534,19 @@ class Many2one(_Relational):
         and return the joined table's corresponding model and alias.
         """
         comodel = model.env[self.comodel_name]
-        coalias = query.make_alias(alias, self.name)
-        query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+        if self.compute_sudo or self.inherited or model.env.su:
+            coquery = None
+        else:
+            coquery = comodel._search(Domain.TRUE, active_test=False)
+            if not coquery.where_clause:
+                coquery = None
+        if coquery is None:
+            coalias = query.make_alias(alias, self.name)
+            cotable = comodel._table
+        else:
+            coalias = query.make_alias(alias, f'{self.name}__{model.env.uid}')
+            cotable = coquery.subselect(SQL('%s.*', SQL.identifier(comodel._table)))
+        query.add_join('LEFT JOIN', coalias, cotable, SQL(
             "%s = %s",
             model._field_to_sql(alias, self.name, query),
             SQL.identifier(coalias, 'id'),
