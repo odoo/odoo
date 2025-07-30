@@ -634,6 +634,37 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(params.get('message'), f"Users {employees[1].name} creation successful")
         self.assertTrue(employees[1].user_id)
 
+    def test_user_contact_phone_sync(self):
+        partner = self.env['res.partner'].create({'name': 'Partner Test'})
+        first_company = self.env['res.company'].create({'name': 'First Company'})
+        first_employee = self.env['hr.employee'].create({
+            'name': 'First Employee',
+            'work_contact_id': partner.id,
+            'company_id': first_company.id,
+        })
+        first_employee.write({'work_phone': '12345', 'work_email': 'first_employee@test.com'})
+        self.assertEqual(first_employee.work_phone, partner.phone)
+        self.assertEqual(first_employee.work_email, partner.email)
+        partner.write({'phone': '67890', 'email': 'partner@test.com'})
+        self.assertEqual(partner.phone, first_employee.work_phone)
+        self.assertEqual(partner.email, first_employee.work_email)
+
+        second_company = self.env['res.company'].create({'name': 'Second Company'})
+        second_employee = self.env['hr.employee'].create({
+            'name': 'Second Employee',
+            'work_contact_id': partner.id,
+            'company_id': second_company.id,
+        })
+        second_employee.write({'work_phone': '112233', 'work_email': 'second_employee@test.com'})
+        self.assertNotEqual(second_employee.work_phone, partner.phone)
+        self.assertNotEqual(second_employee.work_phone, first_employee.work_phone)
+        self.assertNotEqual(second_employee.work_email, partner.email)
+        self.assertNotEqual(second_employee.work_email, first_employee.work_email)
+        partner.write({'phone': '445566', 'email': 'partner_updated@test.com'})
+        self.assertNotEqual(partner.phone, second_employee.work_phone)
+        self.assertNotEqual(partner.phone, first_employee.work_phone)
+        self.assertNotEqual(partner.email, second_employee.work_email)
+        self.assertNotEqual(partner.email, first_employee.work_email)
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
