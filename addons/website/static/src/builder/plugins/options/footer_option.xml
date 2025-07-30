@@ -64,6 +64,12 @@
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega_columns.svg'"/>
             </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Mega Links"
+                actionParam="{ view: 'website.template_footer_mega_links', vars: { 'footer-template': 'mega_links' } }"
+                id="'footer_mega_links_opt'"
+            >
+                <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega_links.svg'"/>
+            </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 </t>
@@ -99,7 +105,7 @@
                 nullValue: 'NULL',
             }"/>
         <BuilderColorPicker
-            t-if="isActiveItem('footer_descriptive_opt') || isActiveItem('footer_contact_opt') || isActiveItem('footer_mega_opt') || isActiveItem('footer_mega_columns_opt')"
+            t-if="isActiveItem('footer_descriptive_opt') || isActiveItem('footer_contact_opt') || isActiveItem('footer_mega_opt') || isActiveItem('footer_mega_columns_opt') || isActiveItem('footer_mega_links_opt')"
             enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
             defaultColor="''"

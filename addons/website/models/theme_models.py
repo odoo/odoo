@@ -240,6 +240,7 @@ class ThemeUtils(models.AbstractModel):
         'website.template_footer_headline',
         'website.template_footer_mega',
         'website.template_footer_mega_columns',
+        'website.template_footer_mega_links',
         # Default one, keep it last
         'website.footer_custom',
     ]

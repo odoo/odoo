@@ -32,6 +32,7 @@ class FooterCopyrightOptionPlugin extends Plugin {
             "website.template_footer_headline",
             'website.template_footer_mega',
             'website.template_footer_mega_columns',
+            'website.template_footer_mega_links',
         ];
     }
 }
