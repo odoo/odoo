@@ -109,8 +109,8 @@ class HrEmployee(models.Model):
     company_id = fields.Many2one('res.company', required=True, tracking=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_user")
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_user", string='Company Country Code')
-    work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False, tracking=True)
-    mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
+    work_phone = fields.Char('Work Phone', store=True, readonly=False, tracking=True, compute="_compute_work_contact_details", inverse='_inverse_work_contact_details')
+    mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
     # private info
@@ -591,18 +591,12 @@ class HrEmployee(models.Model):
         ])
         return [('id', operator, new_hires.ids)]
 
-    @api.depends('address_id.phone')
-    def _compute_phones(self):
-        for employee in self:
-            if employee.address_id.phone:
-                employee.work_phone = employee.address_id.phone
-
     def _create_work_contacts(self):
         if any(employee.work_contact_id for employee in self):
             raise UserError(_('Some employee already have a work contact'))
         work_contacts = self.env['res.partner'].create([{
             'email': employee.work_email,
-            'phone': employee.mobile_phone,
+            'phone': employee.work_phone,
             'name': employee.name,
             'image_1920': employee.image_1920,
             'company_id': employee.company_id.id
@@ -624,8 +618,9 @@ class HrEmployee(models.Model):
     def _compute_work_contact_details(self):
         for employee in self:
             if employee.work_contact_id:
-                employee.mobile_phone = employee.work_contact_id.phone
-                employee.work_email = employee.work_contact_id.email
+                if len(employee.work_contact_id.employee_ids) == 1:
+                    employee.work_phone = employee.work_contact_id.phone
+                    employee.work_email = employee.work_contact_id.email
 
     def _inverse_work_contact_details(self):
         employees_without_work_contact = self.env['hr.employee']
@@ -633,10 +628,11 @@ class HrEmployee(models.Model):
             if not employee.work_contact_id:
                 employees_without_work_contact += employee
             else:
-                employee.work_contact_id.sudo().write({
-                    'email': employee.work_email,
-                    'phone': employee.mobile_phone,
-                })
+                if len(employee.work_contact_id.employee_ids) == 1:
+                    employee.work_contact_id.sudo().write({
+                        'email': employee.work_email,
+                        'phone': employee.work_phone,
+                    })
         if employees_without_work_contact:
             employees_without_work_contact.sudo()._create_work_contacts()
 
