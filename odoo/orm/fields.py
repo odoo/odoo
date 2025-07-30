@@ -640,14 +640,30 @@ class Field(typing.Generic[T]):
         model.pool.field_setup_dependents.add(field, self)
 
         # determine dependencies, compute, inverse, and search
+        def is_selectable(f):
+            if not f.column_type:
+                # avoids fields not in database (x2m, attachments, etc.)
+                return False
+            if f.store or f.compute_sql:
+                return True
+            if f.related and not f.compute_sudo and self.compute_sudo:
+                # we may traverse it because we reference a non-sudo related from a sudoed one
+                model_name = f.model_name
+                for name in f.related.split('.'):
+                    field = model.pool[model_name]._fields[name]
+                    if not is_selectable(field):
+                        return False
+                    model_name = field.comodel_name
+                return True
+            return False
+
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
         if (
             not self.store
             and (self.compute_sudo or self.inherited)
-            and all(f.type == 'many2one' for f in field_seq[:-1])
-            and all(f.store or f.compute_sql for f in field_seq)
+            and all(map(is_selectable, field_seq))
         ):
             self.compute_sql = self._compute_sql_related
         if not self.store and all(f._description_searchable for f in field_seq):
@@ -1249,6 +1265,9 @@ class Field(typing.Generic[T]):
             assert isinstance(sql_field, SQL), f"{self} invalid return of compute_sql"
             return sql_field
         if not self.store or not self.column_type:
+            if self.related and not self.compute_sudo and model.env.su:
+                # fallback for related field accessed with sudo
+                return self._compute_sql_related(model, alias, query)
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
         sql_field = SQL.identifier(alias, self.name, to_flush=self)
         if self.company_dependent:
