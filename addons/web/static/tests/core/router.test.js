@@ -1927,4 +1927,39 @@ describe("internal links", () => {
         expect(router.current).toEqual({});
         expect(defaultPrevented).toBe(false);
     });
+
+    test("clicking on a internal link to propagate event popstate:changed", async () => {
+        redirect("/");
+        on(window, "popstate:changed", () => expect.step("popstate:change detected"));
+        createRouter();
+
+        router.pushState({ k1: 1 });
+        await tick();
+
+        router.pushState({ k2: 2 });
+        await tick();
+
+        browser.history.back();
+        tick();
+        expect.verifySteps(["popstate:change detected"]);
+
+        browser.history.forward();
+        tick();
+        expect.verifySteps(["popstate:change detected"]);
+
+        const fixture = getFixture();
+        const link = document.createElement("a");
+        link.href = "/odoo/1/action-114/22";
+        fixture.appendChild(link);
+
+        browser.addEventListener("click", (ev) => {
+            expect.step("click");
+            ev.preventDefault();
+        });
+
+        await click("a");
+        tick();
+
+        expect.verifySteps(["click"]);
+    });
 });

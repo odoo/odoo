@@ -279,6 +279,9 @@ browser.addEventListener("popstate", (ev) => {
     // reloading the webclient's state when they manipulate history.
     if (!ev.state?.skipRouteChange && !router.skipLoad) {
         routerBus.trigger("ROUTE_CHANGE");
+        // a custom event to know if the popstate is sucessfully changing the state rather than
+        // replacing it
+        window.dispatchEvent(new CustomEvent("popstate:changed"));
     }
     router.skipLoad = false;
 });

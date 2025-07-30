@@ -34,17 +34,20 @@ function useClickAway(callback) {
         }
     }
 
-    function navigationHandler() {
-        callback();
-    }
-
     function pointerDownHandler(ev) {
         callback(ev.composedPath()[0]);
     }
 
     useEarlyExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
     useEarlyExternalListener(window, "blur", blurHandler, { capture: true });
-    useEarlyExternalListener(window, "popstate", navigationHandler, { capture: true });
+}
+
+function useOnPageNavigation(callback) {
+    function navigationHandler(ev) {
+        // As navigation handler is used in `popstate` event which works on window level, it target is window
+        callback();
+    }
+    useEarlyExternalListener(window, "popstate:changed", navigationHandler, { capture: true });
 }
 
 const POPOVERS = new WeakMap();
@@ -135,6 +138,7 @@ export class Popover extends Component {
 
         if (this.props.target.isConnected) {
             useClickAway(this.onClickAway.bind(this));
+            useOnPageNavigation(this.onPageNavigation.bind(this));
 
             if (this.props.closeOnEscape) {
                 useHotkey("escape", () => this.props.close());
@@ -187,6 +191,10 @@ export class Popover extends Component {
         if (this.props.closeOnClickAway(target) && !this.isInside(target)) {
             this.props.close();
         }
+    }
+
+    onPageNavigation() {
+        this.props.close();
     }
 
     onPositioned({ direction, variant, variantOffset }) {
