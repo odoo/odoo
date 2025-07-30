@@ -200,7 +200,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         return allowance_charge_vals
 
     def _get_order_line_vals(self, order_lines, customer, supplier):
-        filtered_order_lines = order_lines.filtered(lambda l: l.display_type not in ['line_note', 'line_section'])
+        filtered_order_lines = order_lines.filtered(lambda l: l.display_type not in ['line_section', 'line_subsection', 'line_note'])
         order_lines_to_process = []
         for line_id, line in enumerate(filtered_order_lines, 1):
             order_lines_to_process.append({

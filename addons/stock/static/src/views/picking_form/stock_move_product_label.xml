@@ -21,7 +21,6 @@
             t-att-class="{ 'd-none': !(columnIsProductAndLabel.value and (label or !props.readonly and labelVisibility.value)) }"
             t-att-readonly="props.readonly and isProductClickable ? '1' : ''"
             t-att-value="label"
-            t-on-change="(ev) => this.updateLabel(ev.target.value)"
             t-ref="labelNodeRef"
         />
     </t>

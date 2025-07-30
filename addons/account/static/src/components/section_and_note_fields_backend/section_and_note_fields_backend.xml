@@ -7,7 +7,7 @@
     </t>
     <t t-name="account.SectionAndNoteListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
         <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
-            <attribute name="t-if">!isSection(record) or props.list.count gt props.list.limit</attribute>
+            <attribute name="t-if">!isSection(record)</attribute>
         </xpath>
         <xpath expr="//td[hasclass('o_list_record_remove')]" position="after">
             <td t-else="" class="o_list_section_options w-print-0 p-print-0 text-center">
@@ -16,39 +16,49 @@
                         <i class="fa fa-ellipsis-v"/>
                     </button>
                     <t t-set-slot="content">
-                        <DropdownItem onSelected="() => this.addRowInSection(record, false)">
-                            <i class="me-1 fa fa-fw fa-plus"/><span>Add a product</span>
-                        </DropdownItem>
-                        <t t-if="this.isTopSection(record)">
-                            <DropdownItem onSelected="() => this.addRowAfterSection(record, false)">
-                                <i class="me-1 fa fa-fw fa-level-down"/><span>Add a section</span>
+                        <t t-if="this.isSectionInPage(record)">
+                            <DropdownItem onSelected="() => this.addRowInSection(record, false)">
+                                <i class="me-1 fa fa-fw fa-plus"/><span>Add a product</span>
                             </DropdownItem>
-                            <t t-if="this.canAddSubSection()">
-                                <DropdownItem onSelected="() => this.addRowInSection(record, true)">
+                            <t t-if="this.isTopSection(record)">
+                                <DropdownItem onSelected="() => this.addRowAfterSection(record, false)">
+                                    <i class="me-1 fa fa-fw fa-level-down"/><span>Add a section</span>
+                                </DropdownItem>
+                                <t t-if="this.canAddSubSection">
+                                    <DropdownItem onSelected="() => this.addRowInSection(record, true)">
+                                        <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
+                                    </DropdownItem>
+                                </t>
+                            </t>
+                            <t t-elif="this.canAddSubSection">
+                                <DropdownItem onSelected="() => this.addRowAfterSection(record, true)">
                                     <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
                                 </DropdownItem>
                             </t>
-                        </t>
-                        <t t-elif="this.canAddSubSection()">
-                            <DropdownItem onSelected="() => this.addRowAfterSection(record, true)">
-                                <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
+                            <DropdownItem onSelected="() => this.addNoteInSection(record)">
+                                <i class="me-1 fa fa-fw fa-sticky-note-o"/><span>Add a note</span>
                             </DropdownItem>
+                            <DropdownItem t-if="this.hasPreviousSection(record)" onSelected="() => this.moveSectionUp(record)">
+                                <i class="me-1 fa fa-fw fa-arrow-up"/><span>Move Up</span>
+                            </DropdownItem>
+                            <t t-set="nextSectionInPage" t-value="this.isNextSectionInPage(record)"/>
+                            <t t-set="moveDownItemAttrs" t-value="nextSectionInPage ? {} : { 'data-tooltip': this.disabledMoveDownItemTooltip }"/>
+                            <t t-set="moveDownItemDefaultProps" t-value="{ attrs: moveDownItemAttrs, class: { 'text-muted': !nextSectionInPage } }"/>
+                            <DropdownItem t-if="this.hasNextSection(record)" t-props="moveDownItemDefaultProps" onSelected="() => this.moveSectionDown(record)">
+                                <i class="me-1 fa fa-fw fa-arrow-down"/><span>Move Down</span>
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.duplicateSection(record)">
+                                <i class="me-1 fa fa-fw fa-clone"/><span>Duplicate</span>
+                            </DropdownItem>
+                            <t t-if="hasDeleteButton">
+                                <DropdownItem onSelected="() => this.deleteSection(record)" class="'text-danger'">
+                                    <i class="me-1 fa fa-fw fa-trash"/><span>Delete</span>
+                                </DropdownItem>
+                            </t>
                         </t>
-                        <DropdownItem onSelected="() => this.addNoteInSection(record)">
-                            <i class="me-1 fa fa-fw fa-sticky-note-o"/><span>Add a note</span>
-                        </DropdownItem>
-                        <DropdownItem t-if="this.hasPreviousSection(record)" onSelected="() => this.moveSectionUp(record)">
-                            <i class="me-1 fa fa-fw fa-arrow-up"/><span>Move Up</span>
-                        </DropdownItem>
-                        <DropdownItem t-if="this.hasNextSection(record)" onSelected="() => this.moveSectionDown(record)">
-                            <i class="me-1 fa fa-fw fa-arrow-down"/><span>Move Down</span>
-                        </DropdownItem>
-                        <DropdownItem onSelected="() => this.duplicateSection(record)">
-                            <i class="me-1 fa fa-fw fa-clone"/><span>Duplicate</span>
-                        </DropdownItem>
-                        <t t-if="hasDeleteButton">
-                            <DropdownItem class="'text-danger'" onSelected="() => this.deleteSection(record)">
-                                <i class="me-1 fa fa-fw fa-trash"/><span>Delete</span>
+                        <t t-else="">
+                            <DropdownItem onSelected="() => this.expandPager()" attrs="{ 'data-tooltip': this.showAllItemsTooltip }">
+                                <i class="me-1 fa fa-fw fa-expand"/><span>Show all lines</span>
                             </DropdownItem>
                         </t>
                     </t>

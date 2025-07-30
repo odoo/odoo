@@ -10,10 +10,7 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         show_label_warning: { type: Boolean, optional: true, default: false },
     };
 
-    setup() {
-        super.setup();
-        this.descriptionColumn = "name";
-    }
+    static descriptionColumn = "name";
 
     get sectionAndNoteClasses() {
         return {

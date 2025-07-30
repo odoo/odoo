@@ -511,7 +511,7 @@ class AccountBankStatementLine(models.Model):
             state_domain = Domain.OR([state_domain, partnered_drafts_domain])
         return state_domain + [
             # Base domain.
-            ('display_type', 'not in', ('line_section', 'line_note')),
+            ('display_type', 'not in', ('line_section', 'line_subsection', 'line_note')),
             ('company_id', 'in', self.env['res.company'].search([('id', 'child_of', self.company_id.id)]).ids),  # allow to match invoices from same or children companies to be consistant with what's shown in the interface
             # Reconciliation domain.
             ('reconciled', '=', False),

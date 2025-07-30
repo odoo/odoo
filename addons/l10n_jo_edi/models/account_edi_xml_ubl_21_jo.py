@@ -367,7 +367,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
         refund_move = line.move_id
         invoice_move = refund_move.reversed_entry_id
-        invoice_lines = invoice_move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+        invoice_lines = invoice_move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note'))
         n = len(invoice_lines)
 
         line_id = -1

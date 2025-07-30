@@ -364,7 +364,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             if partner.commercial_partner_id.sst_registration_number and len(partner.commercial_partner_id.sst_registration_number.split(';')) > 2:
                 self._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', partner_type, partner.commercial_partner_id.display_name)
 
-        for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section')):
+        for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note')):
             if (not line.product_id or not line.product_id.product_tmpl_id.l10n_my_edi_classification_code) and not line.l10n_my_edi_classification_code:
                 self._l10n_my_edi_make_validation_error(constraints, 'class_code_required', line.id, line.display_name)
             if not line.tax_ids:
