@@ -29,10 +29,10 @@
         </div>
         <div t-if="!state.isRenaming" class="rename-delete-buttons float-end z-1">
             <button class="fa fa-pencil btn o_we_hover_success btn-outline-info border-0"
-                    t-attf-data-tooltip="Rename {{snippet.title}}"
+                    t-att-data-tooltip="renameButtonTooltip"
                     t-on-click.stop="toggleRenamingState"/>
             <button class="fa fa-trash btn o_we_hover_danger btn-outline-danger border-0"
-                    t-attf-data-tooltip="Delete {{snippet.title}}"
+                    t-att-data-tooltip="deleteButtonTooltip"
                     t-on-click="() => this.props.snippetModel.deleteCustomSnippet(snippet)"/>
         </div>
     </div>

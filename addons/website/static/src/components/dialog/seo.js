@@ -263,6 +263,26 @@ class Keyword extends Component {
             suggestions: [],
         });
 
+        this.translatedStrings = {
+            usedInH1: _t('"%(keyword)s" is used in page first level heading', {
+                keyword: this.props.keyword,
+            }),
+            usedInH2: _t('"%(keyword)s" is used in page second level heading', {
+                keyword: this.props.keyword,
+            }),
+            usedInTitle: _t('"%(keyword)s" is used in page title', {
+                keyword: this.props.keyword,
+            }),
+            usedInDescription: _t('"%(keyword)s" is used in page description', {
+                keyword: this.props.keyword,
+            }),
+            usedInContent: _t('"%(keyword)s" is used in page content', {
+                keyword: this.props.keyword,
+            }),
+            suggestionTag: (suggestion) => _t('Add "%(suggestion)s"', { suggestion }),
+            removeBtn: _t('Remove "%(keyword)s"', { keyword: this.props.keyword }),
+        };
+
         onMounted(async () => {
             const suggestions = await rpc('/website/seo_suggest', {
                 lang: jsToPyLocale(this.props.language),
@@ -480,6 +500,11 @@ class TitleDescription extends Component {
 
         this.maxRecommendedDescriptionSize = 160;
         this.minRecommendedDescriptionSize = 50;
+
+        this.titleTooltip = _t(
+            'Add your own title or leave empty to use "%(defaultTitle)s". Your page title should contain max 65 characters.',
+            { defaultTitle: this.props.defaultTitle }
+        );
 
         // Update the title when its input value changes
         useEffect(() => {
