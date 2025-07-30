@@ -2339,6 +2339,79 @@
     </xpath>
 </template>
 
+<template id="template_footer_mega_cards" inherit_id="website.layout" name="Mega Cards" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-name="Container">
+                <div class="container">
+                    <div class="row o_grid_mode" style="gap: 24px;" data-row-count="7">
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc3" style="z-index: 1; grid-area: 1 / 1 / 5 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                            <h5>Company</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#">History</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Jobs</a></li>
+                                <li><a href="#">Press</a></li>
+                                <li><a href="/contactus">Contact Us</a></li>
+                            </ul>
+                        </div>
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc3" style="z-index: 2; grid-area: 1 / 5 / 5 / 9; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                            <h5>Support</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#">Help</a></li>
+                                <li><a href="#">Terms of Service</a></li>
+                                <li><a href="#">Security Policy</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Shipping Information</a></li>
+                                <li><a href="#">Returns &amp; Exchanges</a></li>
+                            </ul>
+                        </div>
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 3; grid-area: 1 / 9 / 5 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 27px;">
+                            <img
+                                src="/web_editor/shape/website/footer_mega_cards_image.svg?c1=o-color-1"
+                                class="img img-fluid d-block mx-auto"
+                                alt=""
+                                />
+                        </div>
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 4; grid-area: 5 / 1 / 8 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                            <h5>About us</h5>
+                            <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products.</p>
+                        </div>
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc4" style="z-index: 5; grid-area: 5 / 5 / 8 / 9; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                            <h5>Contact us</h5>
+                            <p>San Francisco CA 94134</p>
+                            <ul class="list-unstyled">
+                                <li><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></li>
+                                <li><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc3" style="z-index: 6; grid-area: 5 / 9 / 8 / 13; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                                <h5 class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</h5>
+                                <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
+                                    <i class="fa fa-twitter fa-stack rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin fa-stack rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
+                                    <i class="fa fa-instagram fa-stack rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
+                                    <i class="fa fa-facebook fa-stack rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="/website/social/youtube" class="s_social_media_youtube" target="_blank">
+                                    <i class="fa fa-youtube-play fa-stack rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
 <!-- slideout effect -->
 <template id="template_footer_slideout" inherit_id="website.layout" name="Template Footer Slideout" active="False">
     <xpath expr="//footer[@id='bottom']" position="attributes">

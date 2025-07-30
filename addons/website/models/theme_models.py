@@ -241,6 +241,7 @@ class ThemeUtils(models.AbstractModel):
         'website.template_footer_mega',
         'website.template_footer_mega_columns',
         'website.template_footer_mega_links',
+        'website.template_footer_mega_cards',
         # Default one, keep it last
         'website.footer_custom',
     ]
