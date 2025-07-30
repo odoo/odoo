@@ -28,12 +28,8 @@
             'web_unsplash/static/src/unsplash_error/**/*',
             'web_unsplash/static/src/unsplash_service.js',
         ],
-        'web.qunit_suite_tests': [
-            'web_unsplash/static/tests/legacy/**/*',
-        ],
         'web.assets_unit_tests': [
             'web_unsplash/static/tests/**/*',
-            ('remove', 'web_unsplash/static/tests/legacy/**/*'),
         ],
     },
     'author': 'Odoo S.A.',
