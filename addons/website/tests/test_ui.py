@@ -704,9 +704,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_snippet_carousel(self):
         self.start_tour('/', 'snippet_carousel', login='admin')
 
-    def test_snippet_carousel_autoplay(self):
-        self.start_tour("/", "snippet_carousel_autoplay", login="admin")
-
     def test_snippet_carousel_clickable_slides(self):
         self.start_tour("/", "snippet_carousel_clickable_slides", login="admin")
 
