@@ -64,8 +64,9 @@
                 </t>
             </ul>
         </td>
+        <td class="text-center"><a target="_blank" t-att-href="getGoogleTrendsURL()" t-att-title="translatedStrings.googleTrendsTitle"><i class="fa fa-external-link opacity-75 mt-1"/></a></td>
         <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)">
-            <button class="o_btn_reset oe_remove text-danger">
+            <button class="border-0 oe_remove text-danger" t-att-title="translatedStrings.removeBtn">
                 <span class="visually-hidden" t-out="translatedStrings.removeBtn"/>
                 <i class="fa fa-trash" aria-hidden="true"/>
             </button>
