@@ -201,12 +201,25 @@ export class WebsiteConfigFooterAction extends BuilderAction {
     }
     async apply({ params: { vars, view }, selectableContext }) {
         const possibleValues = new Set();
+        let oldValue = null;
         for (const item of selectableContext.items) {
             for (const a of item.getActions()) {
                 if (a.actionId === "websiteConfigFooter") {
                     possibleValues.add(a.actionParam.view);
+                    if (item.isApplied()) {
+                        oldValue = a.actionParam.view;
+                    }
                 }
             }
+        }
+        if (oldValue && localStorage.getItem("website-footer-data-rollback") === "[]") {
+            localStorage.setItem(
+                "website-footer-data-rollback",
+                JSON.stringify({
+                    template_key: oldValue,
+                    possible_values: [...possibleValues],
+                })
+            );
         }
         await Promise.all([
             this.dependencies.customizeWebsite.makeSCSSCusto(

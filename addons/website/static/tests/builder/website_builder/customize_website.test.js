@@ -574,3 +574,65 @@ test("BuilderButton with action “templatePreviewableWebsiteConfig”", async (
     await contains("[data-action-param*='test_template_2']").click();
     expect.verifySteps(["theme_customize_data"]);
 });
+
+test("Customize website actions are properly reverted on discard", async () => {
+    class WebEditorAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            expect.step("make_scss_customization");
+        }
+    }
+    defineModels([WebEditorAssets]);
+
+    onRpc("/website/theme_customize_data", async (request) => {
+        expect.step("theme_customize_data");
+    });
+
+    onRpc("/website/revert_changes", async (request) => {
+        expect.step("revert_changes");
+        const { params } = await request.json();
+        expect(params.theme_data).toEqual({
+            enable: [],
+            disable: ["test"],
+            is_view_data: true,
+        });
+
+        expect(params.scss_data).toEqual([
+            {
+                data: {
+                    layout: "null",
+                },
+                url: "/website/static/src/scss/options/user_values.scss",
+            },
+        ]);
+    });
+
+    onRpc("/website/theme_customize_bundle_reload", async (request) => {
+        expect.step("bundle_reload");
+        return { success: true };
+    });
+
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButton action="'websiteConfig'" actionParam="{views: ['test']}">1</BuilderButton>`,
+    });
+    // Click on the test option to simulate a theme_customize_data
+    // RPC call
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-param*='test']").click();
+    expect.verifySteps(["theme_customize_data"]);
+
+    // Edit a theme value to simulate a make_scss_customization
+    // ORM call
+    await contains("#theme-tab").click();
+    await contains("[data-label='Page Layout'] button").click();
+    await contains("[data-action-value='boxed']").click();
+    expect.verifySteps(["make_scss_customization"]);
+
+    // Check that when pressing discard a revert_changes RPC
+    // call is sent containing the original values
+    await contains(".o-snippets-top-actions [data-action='cancel']").click();
+    expect.verifySteps(["revert_changes", "bundle_reload"]);
+});
