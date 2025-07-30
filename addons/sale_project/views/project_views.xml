@@ -10,7 +10,7 @@
                 <field name="company_id" invisible="1"/>
                 <setting class="col-lg-12" help="Invoice your time and material to customers" invisible="context.get('hide_allow_billable', False)">
                     <field name="allow_billable"/>
-                    <div invisible="not allow_billable">
+                    <div invisible="not allow_billable" class="d-flex flex-column flex-sm-row align-items-baseline">
                         <label for="partner_id"/>
                         <field name="partner_id" class="ms-1" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"
                             options="{'no_create_edit': True, 'no_open': True}" placeholder="Select who to bill..."/>
