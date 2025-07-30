@@ -106,6 +106,13 @@ class AccountEdiProxyClientUser(models.Model):
         '''
         return False
 
+    def _should_fallback_to_private_key_auth(self):
+        '''In some instances of token desynchronization, we would want this token to be resynchronized.
+        To prove the identity of the user, we use the private key to sign the request.
+        '''
+        # TO OVERRIDE
+        return False
+
     def _make_request(self, url, params=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
         '''
@@ -150,7 +157,7 @@ class AccountEdiProxyClientUser(models.Model):
             if error_code == 'invalid_signature':
                 raise AccountEdiProxyError(
                     error_code,
-                    _("Invalid signature for request. This might be due to another connection to odoo Access Point "
+                    _("Failed to connect to Odoo Access Point server. This might be due to another connection to Odoo Access Point "
                       "server. It can occur if you have duplicated your database. \n\n"
                       "If you are not sure how to fix this, please contact our support."),
                 )
