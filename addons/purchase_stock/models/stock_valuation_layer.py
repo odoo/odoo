@@ -9,3 +9,7 @@ class StockValuationLayer(models.Model):
             the function is designed to be overriden to add logic to price unit calculation
         """
         return self.value / self.quantity
+
+    def _get_related_product(self):
+        res = super()._get_related_product()
+        return self.stock_move_id.purchase_line_id.product_id if self.stock_move_id.purchase_line_id else res
