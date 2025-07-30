@@ -46,6 +46,7 @@ class StockMoveLine(models.Model):
             move.remaining_picked_qty = move.product_uom_qty - move.picked_qty
             if move.remaining_picked_qty !=0:
                 move.pick_status = 'partial_pick'
+                move.picked = False
             else:
                 move.pick_status = 'fully_pick'
                 move.picked = True
@@ -102,6 +103,8 @@ class StockMoveLine(models.Model):
             # Update remaining_picked_qty if picked_qty changed
             if 'picked_qty' in vals:
                 move.remaining_picked_qty = move.product_uom_qty - move.picked_qty
+                move.picked = move.remaining_picked_qty == 0
+                move.pick_status = 'fully_pick' if move.picked else 'partial_pick'
                 # If pick_status changed to 'partial_pick', set allow_partial if allowed by tenant
                 if vals.get('pick_status') == 'partial_pick' and move.picking_id:
                     tenant = move.picking_id.tenant_code_id or move.picking_id.sale_id.tenant_code_id
