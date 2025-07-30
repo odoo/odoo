@@ -55,8 +55,9 @@
                 <Dropdown state="this.dropdown" menuClass="'o-hb-select-dropdown mt-1'">
                     <button class="bl-dropdown-toggle o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret w-100 mx-auto"
                         t-att-disabled="!this.availableRecords.length">
+                        <t t-set="noAvailableRecordLabel">You don't have any record to add</t>
                         <span class="w-100"
-                            t-att-title="!this.availableRecords.length ? `You don't have any record to add` : ''"
+                            t-att-title="!this.availableRecords.length ? noAvailableRecordLabel : ''"
                             t-att-style="!this.availableRecords.length ? 'pointer-events: auto; display: inline-block;' : ''">
                             <t t-out="props.addItemTitle" />
                         </span>
