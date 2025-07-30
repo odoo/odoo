@@ -13,7 +13,7 @@
                                nolabel="1"
                                widget="account_merge_wizard_lines_one2many">
                             <list editable="bottom" create="0" delete="0">
-                                <field name="is_selected" nolabel="1" invisible="display_type == 'line_section'"/>
+                                <field name="is_selected" nolabel="1" invisible="display_type == 'line_section' or display_type == 'line_subsection'"/>
                                 <field name="account_id" force_save="1"/>
                                 <field name="company_ids" widget="many2many_tags"/>
                                 <field name="info" decoration-danger="display_type == 'account'"/>

@@ -932,8 +932,8 @@ class SaleOrder(models.Model):
                 # come first.
                 update_commands = [Command.update(
                     order_line.id,
-                    {'sequence': line.sequence + len(selected_combo_items) + line_index - index},
-                ) for line_index, order_line in enumerate(self.order_line) if line_index > index]
+                    {'sequence': order_line.sequence + len(selected_combo_items)},
+                ) for order_line in self.order_line if order_line.sequence > line.sequence]
 
                 # Clear `selected_combo_items` to avoid applying the same changes multiple times.
                 line.selected_combo_items = False
@@ -1437,7 +1437,7 @@ class SaleOrder(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         for line in self.order_line:
-            if line.display_type == 'line_section':
+            if line.display_type in ('line_section', 'line_subsection'):
                 section_line_ids = [line.id]  # Start a new section.
                 continue
             if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):

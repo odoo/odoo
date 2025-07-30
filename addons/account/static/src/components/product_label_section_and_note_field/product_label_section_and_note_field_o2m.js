@@ -1,10 +1,10 @@
 import {
-    SectionAndNoteListRenderer,
+    SectionAndNoteFieldOne2Many,
     sectionAndNoteFieldOne2Many,
+    SectionAndNoteListRenderer,
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { registry } from "@web/core/registry";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { ProductNameAndDescriptionListRendererMixin } from "@product/product_name_and_description/product_name_and_description";
+import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
@@ -47,17 +47,16 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
 
 patch(ProductLabelSectionAndNoteListRender.prototype, ProductNameAndDescriptionListRendererMixin);
 
-export class ProductLabelSectionAndNoteOne2Many extends X2ManyField {
+export class ProductLabelSectionAndNoteOne2Many extends SectionAndNoteFieldOne2Many {
     static components = {
-        ...X2ManyField.components,
+        ...super.components,
         ListRenderer: ProductLabelSectionAndNoteListRender,
     };
 }
 
 export const productLabelSectionAndNoteOne2Many = {
-    ...x2ManyField,
+    ...sectionAndNoteFieldOne2Many,
     component: ProductLabelSectionAndNoteOne2Many,
-    additionalClasses: sectionAndNoteFieldOne2Many.additionalClasses,
 };
 
 registry

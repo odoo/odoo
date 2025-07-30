@@ -234,6 +234,7 @@ class AccountMergeWizardLine(models.TransientModel):
     display_type = fields.Selection(
         selection=[
             ('line_section', "Section"),
+            ('line_subsection', "Subsection"),
             ('account', "Account"),
         ],
         required=True,

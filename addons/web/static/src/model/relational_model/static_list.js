@@ -43,7 +43,8 @@ function copyRecordData(record) {
     for (const [name, value] of Object.entries(record.data)) {
         if (
             !["display_type", "display_name"].includes(name) &&
-            (record._isReadonly(name) || record._isInvisible(name))
+            (record._isReadonly(name) || record._isInvisible(name)) &&
+            !record._isRequired(name)
         ) {
             continue;
         }
@@ -226,11 +227,13 @@ export class StaticList extends DataPoint {
 
     /**
      * @param {RelationalRecord[]} records
+     * @param {Object} [options={}]
+     * @param {number} [options.targetIndex]
      * @returns {Promise<void>}
      */
-    duplicateRecords(records = []) {
+    duplicateRecords(records = [], options = {}) {
         return this.model.mutex.exec(async () => {
-            await this._duplicateRecords(records);
+            await this._duplicateRecords(records, options);
             await this._onUpdate();
         });
     }
@@ -914,18 +917,20 @@ export class StaticList extends DataPoint {
     /**
      * @fixme: this method is naive and ineffective (it triggers a lot of onchange rpcs)
      */
-    async _duplicateRecords(records) {
-        const proms = records.map(async (record, index) => {
-            const newRecord = await this._createNewRecordDatapoint({
+    async _duplicateRecords(records, options) {
+        const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
+        let sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
+        const newRecords = await Promise.all(records.map(async () => {
+            return this._createNewRecordDatapoint({
                 mode: "readonly",
             });
-            await newRecord._update({
+        }));
+        await Promise.all(records.map((record, index) => {
+            return newRecords[index]._update({
                 ...copyRecordData(record),
-                [this.handleField]: records.at(-1).data[this.handleField] + index + 1,
+                [this.handleField]: sequence++,
             });
-            return newRecord;
-        });
-        const newRecords = await Promise.all(proms);
+        }));
 
         const localIncreaseLimit = this.records.length + records.length - this.limit;
         if (localIncreaseLimit > 0) {
@@ -934,21 +939,21 @@ export class StaticList extends DataPoint {
             this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
         }
 
-        const index = this.records.indexOf(records.at(-1)) + 1;
         const commands = [];
-        for (const record of this.records.slice(index)) {
+        // `this.records.slice(targetIndex)` is wrong
+        // we need to iterate on ALL the next records even the ones on the next pages..
+        for (const record of this.records.slice(targetIndex)) {
             commands.push(
                 x2ManyCommands.update(record.resId || record._virtualId, {
-                    [this.handleField]:
-                        record.data[this.handleField] + records.length,
+                    [this.handleField]: sequence++,
                 })
             );
         }
         await this._applyCommands(commands);
 
-        for (const record of newRecords) {
-            await this._addRecord(record, { sort: false });
-        }
+        await Promise.all(newRecords.map((record) => {
+            return this._addRecord(record, { sort: false });
+        }));
 
         await this._sort();
     }

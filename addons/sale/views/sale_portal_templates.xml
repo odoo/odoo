@@ -725,12 +725,11 @@
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
                                 <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
                                 <tr
-                                    t-att-class="'fw-bold o_line_section' if (
-                                        line.display_type == 'line_section'
-                                        or line.product_type == 'combo'
-                                    )
-                                    else 'fst-italic o_line_note' if is_note
-                                    else ''"
+                                    t-att-class="{
+                                        'fw-bolder o_line_section': line.display_type == 'line_section' or line.product_type == 'combo',
+                                        'fw-bold o_line_subsection': line.display_type == 'line_subsection',
+                                        'fst-italic o_line_note': line.display_type == 'line_note',
+                                    }"
                                 >
                                     <t
                                         name="product_line_row"
@@ -768,7 +767,7 @@
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                         </td>
                                     </t>
-                                    <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
+                                    <t t-if="line.display_type in ('line_section', 'line_subsection') or line.product_type == 'combo'">
                                         <td colspan="99">
                                             <span t-field="line.name"/>
                                         </td>
@@ -784,7 +783,7 @@
                                 <tr
                                     t-if="current_section and (
                                         line_last
-                                        or lines_to_report[line_index+1].display_type == 'line_section'
+                                        or lines_to_report[line_index+1].display_type in ('line_section', 'line_subsection')
                                         or lines_to_report[line_index+1].product_type == 'combo'
                                         or (
                                             line.combo_item_id

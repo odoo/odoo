@@ -599,7 +599,7 @@ class AccountEdiFormat(models.Model):
         if not move.company_id.vat:
             res.append(_("VAT number is missing on company %s", move.company_id.display_name))
         total_taxes = self.env['account.tax']
-        for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section')):
+        for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note')):
             taxes = line.tax_ids.flatten_taxes_hierarchy()
             total_taxes |= taxes
             recargo_count = taxes.mapped('l10n_es_type').count('recargo')

@@ -11,7 +11,6 @@
                     t-att-class="sectionAndNoteClasses"
                     t-att-readonly="sectionAndNoteIsReadonly"
                     t-att-value="label"
-                    t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
                     t-key="props.readonly"
                 />
@@ -19,12 +18,11 @@
             <t t-elif="isSection()">
                 <input
                     type="text"
-                    class="o_input text-wrap border-0 fst-italic"
+                    class="o_input text-wrap border-0 fst-italic w-100"
                     placeholder="Enter a description"
                     t-att-class="sectionAndNoteClasses"
                     t-att-readonly="sectionAndNoteIsReadonly"
                     t-att-value="label"
-                    t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
                     t-key="props.readonly"
                 />
@@ -50,7 +48,6 @@
                     t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and (label or !props.readonly and labelVisibility.value)) }"
                     t-att-readonly="props.readonly and isProductClickable ? '1' : ''"
                     t-att-value="label"
-                    t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
                     t-key="props.readonly"
                 />

@@ -680,7 +680,7 @@ class TestAr(AccountTestInvoicingCommon):
             for line in data.get('lines', [{}]):
                 with invoice_form.invoice_line_ids.new() as invoice_line_form:
                     invoice_line_form.display_type = line.get('display_type', 'product')
-                    if line.get('display_type') in ('line_note', 'line_section'):
+                    if line.get('display_type') in ('line_section', 'line_subsection', 'line_note'):
                         invoice_line_form.name = line.get('name', 'not invoice line')
                     else:
                         invoice_line_form.product_id = line.get('product', self.product_iva_21)

@@ -173,7 +173,11 @@
                                     <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
                                     <t t-set="current_total" t-value="current_total + line.price_total"/>
 
-                                    <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                    <tr t-att-class="{
+                                        'fw-bolder': line.display_type == 'line_section',
+                                        'fw-bold': line.display_type == 'line_subsection',
+                                        'fst-italic': line.display_type == 'line_note',
+                                    }" >
                                         <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
                                             <td name="account_invoice_line_name">
                                                 <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
@@ -202,7 +206,7 @@
                                                 <span t-if="o.company_price_include == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
                                             </td>
                                         </t>
-                                        <t t-elif="line.display_type == 'line_section'">
+                                        <t t-elif="line.display_type in ('line_section', 'line_subsection')">
                                             <td colspan="99">
                                                 <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                             </td>
@@ -215,8 +219,7 @@
                                             </td>
                                         </t>
                                     </tr>
-
-                                    <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
+                                    <t t-if="current_section and (line_last or lines[line_index+1].display_type in ('line_section', 'line_subsection'))">
                                         <tr class="is-subtotal text-end">
                                             <td colspan="99">
                                                 <strong class="mr16">Subtotal</strong>

@@ -66,6 +66,7 @@ class SaleOrderLine(models.Model):
     display_type = fields.Selection(
         selection=[
             ('line_section', "Section"),
+            ('line_subsection', "Subsection"),
             ('line_note', "Note"),
         ],
         default=False)
