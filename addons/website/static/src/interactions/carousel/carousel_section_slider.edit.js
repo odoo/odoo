@@ -1,19 +1,41 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { patchDynamicContentEntry } from "@web/public/utils";
 
+const CAROUSEL_CONTROLLERS_SELECTOR = ".carousel-control-prev, .carousel-control-next";
+const CAROUSEL_INDICATORS_SELECTOR = ".carousel-indicators > *";
 export class CarouselSectionSliderEdit extends Interaction {
     static selector = "section > .carousel";
     dynamicContent = {
-        ".carousel-control-prev, .carousel-control-next": {
+        [CAROUSEL_CONTROLLERS_SELECTOR]: {
             "t-att-data-bs-slide": () => undefined,
             "t-on-mousedown": this.onControlClick,
         },
-        ".carousel-indicators > *": {
+        [CAROUSEL_INDICATORS_SELECTOR]: {
             "t-att-data-bs-slide-to": () => undefined,
             "t-on-mousedown": this.onControlClick,
         },
     };
 
+    setup() {
+        // Enable carousel sliding in translation mode to allow access to
+        // all slides for translation.
+        // Otherwise, only the first slide would be translatable.
+        if (this.services.website_edit.isEditingTranslations()) {
+            patchDynamicContentEntry(
+                this.dynamicContent,
+                CAROUSEL_CONTROLLERS_SELECTOR,
+                "t-att-data-bs-slide",
+                undefined
+            );
+            patchDynamicContentEntry(
+                this.dynamicContent,
+                CAROUSEL_INDICATORS_SELECTOR,
+                "t-att-data-bs-slide-to",
+                undefined
+            );
+        }
+    }
     destroy() {
         const editTranslations = this.services.website_edit.isEditingTranslations();
         if (!editTranslations) {
