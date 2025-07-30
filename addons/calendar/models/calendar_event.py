@@ -6,6 +6,7 @@ import math
 import uuid
 from datetime import datetime, timedelta
 from itertools import repeat
+from markupsafe import Markup
 
 import pytz
 from werkzeug.urls import url_parse
@@ -588,6 +589,31 @@ class CalendarEvent(models.Model):
                 'user_id': vals.get('user_id', defaults.get('user_id', self.env.user.id)),
              } for vals in vals_list
         ]
+        if not self.env.context.get('skip_booking_description'):
+            # Add booker info to event description
+            user_data_mapping = {
+                user.id: user
+                for user in self.env['res.users'].browse([vals['user_id'] for vals in vals_list if vals.get('user_id')])
+            }
+            odoobot_id = self.env.ref('base.user_root').id
+            for vals in vals_list:
+                if not vals.get('user_id') or vals['user_id'] == odoobot_id:
+                    continue
+                user = user_data_mapping[vals['user_id']]
+                booker_desc = [user.name]
+                if user.email:
+                    booker_desc.append("<a href='mailto:%(email)s'>%(email)s</a>" % {
+                        'email': user.email,
+                    })
+                if user.phone:
+                    booker_desc.append("<a href='tel:%(phone)s'>%(phone)s</a>" % {
+                        'phone': user.phone,
+                    })
+                vals['description'] = html_sanitize('<div>%s<strong>%s</strong><br/>%s</div>' % (
+                    (vals.get('description') and vals['description'] + '<br/>') or '',
+                    _('Booked by'),
+                    '<br/>'.join(booker_desc),
+                ))
         meeting_activity_types = self.env['mail.activity.type'].search([('category', '=', 'meeting')])
         # get list of models ids and filter out None values directly
         model_ids = list(filter(None, {values['res_model_id'] for values in vals_list}))
@@ -918,7 +944,7 @@ class CalendarEvent(models.Model):
         # We need to make sure that the attendee_ids are recreated with new ids to avoid sharing attendees between events
         # The copy should not have the same attendee status than the original event
         default.update(partner_ids=[Command.set([])], attendee_ids=[Command.set([])])
-        new_events = super().copy(default)
+        new_events = super(CalendarEvent, self.with_context(skip_booking_description=True)).copy(default)
         for old_event, new_event in zip(self, new_events):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
@@ -1607,7 +1633,17 @@ class CalendarEvent(models.Model):
 
     def _get_customer_description(self):
         """:return (html): Sanitized HTML description for customer to include in calendar exports"""
-        return html_sanitize(self.description) if not is_html_empty(self.description) else ''
+        description = html_sanitize(self.description) if not is_html_empty(self.description) else ''
+        if 'For internal follow-up' in description:
+            return description
+        internal_url = f"{self.sudo().get_base_url()}/odoo/calendar/calendar.event/{self.id}"
+        internal_link = Markup("<div>%s <a href=%s>%s</a></div>") % \
+            (_("For internal follow-up:"), internal_url, _("Open form view"))
+        return Markup("").join([
+            description,
+            Markup('<br>') if description else '',
+            internal_link,
+        ])
 
     def _get_customer_summary(self):
         """:return (str): The summary to include in calendar exports"""

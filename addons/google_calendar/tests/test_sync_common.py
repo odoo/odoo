@@ -31,6 +31,27 @@ class TestSyncGoogle(HttpCase):
         self.organizer_user = mail_new_test_user(self.env, login="organizer_user")
         self.attendee_user = mail_new_test_user(self.env, login='attendee_user')
 
+    def _get_event_description(self, event):
+        """ Helper method to retrieve specified event description as string. """
+        description = (event.description and str(event.description)) or ''
+        # Booker info
+        if 'Booked by' not in description and event.user_id and event.user_id != self.env.ref('base.user_root'):
+            booker_desc = [event.user_id.name]
+            if event.user_id.email:
+                booker_desc.append('<a href="mailto:%(email)s">%(email)s</a>' % {'email': event.user_id.email})
+            if event.user_id.phone:
+                booker_desc.append('<a href="tel:%(phone)s">%(phone)s</a>' % {'phone': event.user_id.phone})
+            description += '<span><strong>Booked by</strong><br>%s</span>' % '<br>'.join(booker_desc)
+        # Internal link
+        if 'For internal follow-up' not in description:
+            if description:
+                description += '<br>'
+            description += (
+                '<div>For internal follow-up: <a href=%s>Open form view</a></div>'
+                % f"{event.get_base_url()}/odoo/calendar/calendar.event/{event.id}"
+            )
+        return description
+
     @contextmanager
     def mock_datetime_and_now(self, mock_dt):
         """
