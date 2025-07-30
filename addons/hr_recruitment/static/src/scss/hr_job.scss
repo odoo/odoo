@@ -12,6 +12,8 @@
             --Ribbon-height: 1.9;
 
             &:not(.o_kanban_ghost) {
+                border: none;
+                border-bottom: 1px solid $border-color;
                 justify-content: center;
             }
         }
@@ -23,7 +25,17 @@
         }
 
         .o_kanban_card_header {
+            --o-kanban-card-header-title-favorite-width: 1.4rem;
+
             margin-bottom: 1px;
+
+            .o_favorite {
+                width: var(--o-kanban-card-header-title-favorite-width);
+            }
+
+            & > div:not(:first-child) {
+                margin-left: var(--o-kanban-card-header-title-favorite-width);
+            }
         }
 
         .o_field_many2one_avatar_user .o_avatar{
@@ -42,6 +54,10 @@
             .o_hr_recruitment_kanban_card_large_screen {
                 display: none;    
             }
+
+            .o_kanban_record {
+                margin: 0 0 -1px;
+            }
         }
 
         &.o_kanban_ungrouped {
@@ -55,11 +71,16 @@
                     display: none;
                 }
             }
+            @media only screen and (max-width: 900px) {
+                .o_kanban_record {
+                    min-width: 768px;
+                }
+            }
         }
     }
 }
 
-.o_hr_recruitment_kanban .o_content .o_kanban_renderer .o_kanban_record {
+.o_hr_recruitment_kanban .o_content .o_kanban_record {
     margin: 0px;
 }
 
@@ -69,26 +90,42 @@
 
 .o_hr_recruitment_kanban {
     .o_m2o_avatar {
+        --Avatar-size: 1.5em;
+
+        margin-top: map-get($spacers, 1);
         margin-right: 0px !important;
     }
 
     .number {
-        font-size: 2rem !important;
-        margin-top: 0.1rem;
+        flex: 1 0 50%;
+        font-size: 1.8rem !important;
         margin-bottom: 0rem;
         margin-left: 0rem;
         margin-right: 0.5rem;
-        font-weight: bold;
         align-content: center;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
     }
 }
 
-.activity_badge {
+.oe_kanban_action i[aria-label="Activities"], .o_kanban_card_header i.fa-user {
+    font-size: 1.2rem;
+}
+
+.btn .activity_badge {
     --badge-padding-x: .55em;
+
+    top: 0.25rem;
+    right: -1rem;
+}
+
+.oe_kanban_action[name="open_website_url"] {
+    text-wrap: nowrap;
 }
 
 .number_description {
     display: flex;
+    flex: 1 0 50%;
     flex-direction: column;
     justify-content: center;
 }
