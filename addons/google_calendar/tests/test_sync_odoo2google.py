@@ -10,7 +10,7 @@ from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from .test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
-from odoo.tests import tagged
+from odoo.tests import tagged, new_test_user
 from odoo import tools
 
 
@@ -972,4 +972,43 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertGoogleEventInsertedMultiTime({
             **event_response_data,
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event2.id}},
+        })
+
+    @patch_api
+    def test_sync_odoo2google_multi_company_user_context_mismatch(self):
+        company_a = self.env.user.company_id
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+
+        organizer = new_test_user(self.env, login="organizer", company_id=company_a.id, company_ids=[(6, 0, company_a.ids)])
+
+        self.env.user.write({
+            'company_ids': [(6, 0, [company_a.id, company_b.id])],
+            'company_id': company_a.id,
+        })
+
+        event = self.env['calendar.event'].with_user(organizer).create({
+            'name': "Multi-company test event",
+            'start': datetime(2024, 1, 15, 8, 0),
+            'stop': datetime(2024, 1, 15, 10, 0),
+            'user_id': organizer.id,
+            'need_sync': True,
+        })
+
+        ctx = dict(self.env.context, allowed_company_ids=[company_a.id, company_b.id])
+        event.with_context(ctx)._sync_odoo2google(self.google_service)
+
+        self.assertGoogleEventInsertedMultiTime({
+            'id': False,
+            'start': {'dateTime': '2024-01-15T08:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2024-01-15T10:00:00+00:00', 'date': None},
+            'summary': 'Multi-company test event',
+            'description': '',
+            'location': '',
+            'visibility': 'public',
+            'guestsCanModify': True,
+            'reminders': {'overrides': [], 'useDefault': False},
+            'organizer': {'email': organizer.email, 'self': True},
+            'attendees': [{'email': organizer.email, 'responseStatus': 'accepted'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+            'transparency': 'opaque',
         })
