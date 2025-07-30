@@ -339,7 +339,7 @@ class AccountPayment(models.Model):
         for rec in third_party_checks:
             dest_payment_method_code = 'in_third_party_checks' if rec.payment_type == 'outbound' else 'out_third_party_checks'
             dest_payment_method = rec.destination_journal_id.inbound_payment_method_line_ids.filtered(
-                lambda x: x.code == dest_payment_method_code)
+                lambda x: x.code == dest_payment_method_code)[:1]
             if dest_payment_method:
                 super(AccountPayment, rec.with_context(
                     default_payment_method_line_id=dest_payment_method.id,
