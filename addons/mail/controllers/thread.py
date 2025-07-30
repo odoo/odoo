@@ -70,7 +70,7 @@ class ThreadController(http.Controller):
             messages.set_message_done()
         return {
             **res,
-            "data": Store(messages).get_result(),
+            "data": Store().add(messages).get_result(),
             "messages": messages.ids,
         }
 
@@ -137,7 +137,7 @@ class ThreadController(http.Controller):
         record.check_access("read")
         # find current model subtypes, add them to a dictionary
         subtypes = record._mail_get_message_subtypes()
-        store = Store(subtypes, ["name"]).add(follower, ["subtype_ids"])
+        store = Store().add(subtypes, ["name"]).add(follower, ["subtype_ids"])
         return {
             "store_data": store.get_result(),
             "subtype_ids": subtypes.sorted(
@@ -245,7 +245,7 @@ class ThreadController(http.Controller):
                 if key in thread._get_allowed_message_update_params()
             }
         )
-        return Store(message).get_result()
+        return Store().add(message).get_result()
 
     # side check for access
     # ------------------------------------------------------------
@@ -258,7 +258,7 @@ class ThreadController(http.Controller):
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_unsubscribe(partner_ids)
-        return Store(
+        return Store().add(
             thread, [], as_thread=True, request_list=["followers", "suggestedRecipients"]
         ).get_result()
 
@@ -266,6 +266,6 @@ class ThreadController(http.Controller):
     def mail_thread_subscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_subscribe(partner_ids)
-        return Store(
+        return Store().add(
             thread, [], as_thread=True, request_list=["followers", "suggestedRecipients"]
         ).get_result()

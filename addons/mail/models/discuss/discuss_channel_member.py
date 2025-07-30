@@ -79,10 +79,9 @@ class DiscussChannelMember(models.Model):
         members = self.env["discuss.channel.member"].search(domain)
         members.unpin_dt = fields.Datetime.now()
         for member in members:
-            Store(
+            Store(bus_channel=member._bus_channel()).add(
                 member.channel_id,
                 {"close_chat_window": True, "is_pinned": False},
-                bus_channel=member._bus_channel(),
             ).bus_send()
 
     @api.constrains('partner_id')
@@ -248,22 +247,21 @@ class DiscussChannelMember(models.Model):
             :param is_typing: (boolean) tells whether the members are typing or not
         """
         for member in self:
-            Store(
+            Store(bus_channel=member.channel_id).add(
                 member,
                 extra_fields={"isTyping": is_typing, "is_typing_dt": fields.Datetime.now()},
-                bus_channel=member.channel_id,
             ).bus_send()
 
     def _notify_mute(self):
         for member in self:
-            Store(member, "mute_until_dt", bus_channel=member._bus_channel()).bus_send()
+            Store(bus_channel=member._bus_channel()).add(member, "mute_until_dt").bus_send()
             if member.mute_until_dt and member.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)
 
     def set_custom_notifications(self, custom_notifications):
         self.ensure_one()
         self.custom_notifications = custom_notifications
-        Store(self, "custom_notifications", bus_channel=self._bus_channel()).bus_send()
+        Store(bus_channel=self._bus_channel()).add(self, "custom_notifications").bus_send()
 
     @api.model
     def _cleanup_expired_mutes(self):
@@ -460,13 +458,12 @@ class DiscussChannelMember(models.Model):
         )
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
-            Store(
+            Store(bus_channel=member._bus_channel()).add(
                 member.channel_id,
                 {"rtcInvitingSession": Store.One(member.rtc_inviting_session_id, extra=True)},
-                bus_channel=member._bus_channel(),
             ).bus_send()
         if members:
-            Store(
+            Store(bus_channel=self.channel_id).add(
                 self.channel_id,
                 {
                     "invited_member_ids": Store.Many(
@@ -478,7 +475,6 @@ class DiscussChannelMember(models.Model):
                         mode="ADD",
                     ),
                 },
-                bus_channel=self.channel_id,
             ).bus_send()
             devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
@@ -561,14 +557,13 @@ class DiscussChannelMember(models.Model):
         bus_channel = self._bus_channel()
         if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
             bus_channel = self.channel_id
-        Store(
+        Store(bus_channel=bus_channel).add(
             self,
             [
                 Store.One("channel_id", [], as_thread=True),
                 *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
                 "seen_message_id",
             ],
-            bus_channel=bus_channel,
         ).bus_send()
 
     def _set_new_message_separator(self, message_id):
@@ -582,7 +577,7 @@ class DiscussChannelMember(models.Model):
         self.new_message_separator = message_id
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        Store(
+        Store(bus_channel=self._bus_channel()).add(
             self,
             [
                 Store.One("channel_id", [], as_thread=True),
@@ -591,7 +586,6 @@ class DiscussChannelMember(models.Model):
                 "new_message_separator",
                 *self.env["discuss.channel.member"]._to_store_persona([]),
             ],
-            bus_channel=self._bus_channel(),
         ).bus_send()
 
     def _get_html_link_title(self):

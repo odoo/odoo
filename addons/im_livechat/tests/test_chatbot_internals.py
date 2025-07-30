@@ -170,7 +170,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         def get_forward_op_bus_params():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
             # only data relevant to the test are asserted for simplicity
-            transfer_message_data = Store(messages[1], bus_channel=discuss_channel).get_result()
+            transfer_message_data = Store(bus_channel=discuss_channel).add(messages[1]).get_result()
             transfer_message_data["mail.message"][0].update(
                 {
                     "author_id": self.chatbot_script.operator_partner_id.id,
@@ -181,7 +181,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 }
             )
             transfer_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
-            joined_message_data = Store(messages[0], bus_channel=discuss_channel).get_result()
+            joined_message_data = Store(bus_channel=discuss_channel).add(messages[0]).get_result()
             joined_message_data["mail.message"][0].update(
                 {
                     "author_id": self.chatbot_script.operator_partner_id.id,
@@ -202,10 +202,9 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 lambda m: m.partner_id == self.partner_employee
             )
             # data in-between join and leave
-            channel_data_join = Store(
-                discuss_channel,
-                bus_channel=member_emp._bus_channel(),
-            ).get_result()
+            channel_data_join = (
+                Store(bus_channel=member_emp._bus_channel()).add(discuss_channel).get_result()
+            )
             channel_data_join["discuss.channel"][0]["invited_member_ids"] = [["ADD", []]]
             channel_data_join["discuss.channel"][0]["rtc_session_ids"] = [["ADD", []]]
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
@@ -237,12 +236,12 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     ),
                 },
             )
-            channel_data = Store(discuss_channel).get_result()
+            channel_data = Store().add(discuss_channel).get_result()
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
-            channel_data_emp = Store(discuss_channel.with_user(self.user_employee)).get_result()
+            channel_data_emp = Store().add(discuss_channel.with_user(self.user_employee)).get_result()
             channel_data_emp["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             channel_data_emp["discuss.channel.member"][1]["message_unread_counter_bus_id"] = 0
-            channel_data = Store(discuss_channel).get_result()
+            channel_data = Store().add(discuss_channel).get_result()
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             return (
                 [

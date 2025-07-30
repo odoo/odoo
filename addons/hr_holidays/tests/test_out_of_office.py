@@ -63,7 +63,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'channel_type': 'chat',
             'name': 'test'
         })
-        data = Store(channel).get_result()
+        data = Store().add(channel).get_result()
         partner_info = next(p for p in data["res.partner"] if p["id"] == partner.id)
         partner2_info = next(p for p in data["res.partner"] if p["id"] == partner2.id)
         user_info = next(u for u in data["res.users"] if u["id"] == partner_info["main_user_id"])

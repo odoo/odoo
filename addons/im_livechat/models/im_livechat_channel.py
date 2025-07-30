@@ -228,13 +228,13 @@ class Im_LivechatChannel(models.Model):
             raise AccessError(_("Only Live Chat operators can join Live Chat channels"))
         # sudo: im_livechat.channel - operators can join channels
         self.sudo().user_ids = [Command.link(self.env.user.id)]
-        Store(self, ["are_you_inside", "name"], bus_channel=self.env.user).bus_send()
+        Store(bus_channel=self.env.user).add(self, ["are_you_inside", "name"]).bus_send()
 
     def action_quit(self):
         self.ensure_one()
         # sudo: im_livechat.channel - users can leave channels
         self.sudo().user_ids = [Command.unlink(self.env.user.id)]
-        Store(self.sudo(), ["are_you_inside", "name"], bus_channel=self.env.user).bus_send()
+        Store(bus_channel=self.env.user).add(self.sudo(), ["are_you_inside", "name"]).bus_send()
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the

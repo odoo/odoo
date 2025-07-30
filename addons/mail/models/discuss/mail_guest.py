@@ -91,8 +91,8 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        Store(self, ["avatar_128", "name"], bus_channel=self.channel_ids).bus_send()
-        Store(self, ["avatar_128", "name"], bus_channel=self).bus_send()
+        Store(bus_channel=self.channel_ids).add(self, ["avatar_128", "name"]).bus_send()
+        Store(bus_channel=self).add(self, ["avatar_128", "name"]).bus_send()
 
     def _update_timezone(self, timezone):
         query = """

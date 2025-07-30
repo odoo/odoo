@@ -601,7 +601,7 @@ class MailActivity(models.Model):
 
     @api.readonly
     def activity_format(self):
-        return Store(self).get_result()
+        return Store().add(self).get_result()
 
     def _to_store_defaults(self, target):
         return [

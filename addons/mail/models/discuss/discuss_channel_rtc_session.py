@@ -44,10 +44,9 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            Store(
+            Store(bus_channel=channel).add(
                 channel,
                 {"rtc_session_ids": Store.Many(rtc_sessions, mode="ADD")},
-                bus_channel=channel,
             ).bus_send()
         for channel in rtc_sessions.channel_id.filtered(lambda c: len(c.rtc_session_ids) == 1):
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
@@ -60,7 +59,7 @@ class DiscussChannelRtcSession(models.Model):
                     "start_call_message_id": message.id,
                 },
             )
-            Store(message, [Store.Many("call_history_ids", [])], bus_channel=channel).bus_send()
+            Store(bus_channel=channel).add(message, [Store.Many("call_history_ids", [])]).bus_send()
         return rtc_sessions
 
     def unlink(self):
@@ -79,10 +78,9 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in self:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            Store(
+            Store(bus_channel=channel).add(
                 channel,
                 {"rtc_session_ids": Store.Many(rtc_sessions, [], mode="DELETE")},
-                bus_channel=channel,
             ).bus_send()
         for rtc_session in self:
             rtc_session._bus_send(
@@ -96,7 +94,10 @@ class DiscussChannelRtcSession(models.Model):
             .search([("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)])
         ):
             history.end_dt = fields.Datetime.now()
-            Store(history, ["duration_hour", "end_dt"], bus_channel=history.channel_id).bus_send()
+            Store(bus_channel=history.channel_id).add(
+                history,
+                ["duration_hour", "end_dt"],
+            ).bus_send()
         return super().unlink()
 
     def _bus_channel(self):
@@ -108,7 +109,7 @@ class DiscussChannelRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        store = Store(self, extra=True)
+        store = Store().add(self, extra=True)
         self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
             {"data": store.get_result(), "channelId": self.channel_id.id},

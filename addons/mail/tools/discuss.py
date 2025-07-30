@@ -80,21 +80,10 @@ class Store:
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
 
-    def __init__(
-        self,
-        records=None,
-        fields=None,
-        extra_fields=None,
-        as_thread=False,
-        bus_channel=None,
-        bus_subchannel=None,
-        **kwargs,
-    ):
+    def __init__(self, bus_channel=None, bus_subchannel=None):
         self.data = {}
         self.data_id = None
         self.target = Store.Target(bus_channel, bus_subchannel)
-        if records:
-            self.add(records, fields, extra_fields=extra_fields, as_thread=as_thread, **kwargs)
 
     def add(self, records, fields=None, extra_fields=None, as_thread=False, **kwargs):
         """Add records to the store. Data is coming from _to_store() method of the model if it is

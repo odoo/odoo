@@ -870,7 +870,7 @@ class MailMessage(models.Model):
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
-        return Store(self, {"starred": self.starred}).get_result()
+        return Store().add(self, {"starred": self.starred}).get_result()
 
     @api.model
     def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):

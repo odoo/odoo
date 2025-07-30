@@ -3319,9 +3319,8 @@ class MailThread(models.AbstractModel):
                 ]
             )
             for user in users:
-                Store(
+                Store(bus_channel=user).add(
                     message.with_user(user).with_context(allowed_company_ids=[]),
-                    bus_channel=user,
                     msg_vals=msg_vals,
                     add_followers=True,
                     followers=followers,
@@ -4785,7 +4784,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res.append({"translationValue": False})
-        Store(message, res, bus_channel=message._bus_channel()).bus_send()
+        Store(bus_channel=message._bus_channel()).add(message, res).bus_send()
 
     # ------------------------------------------------------
     # STORE
