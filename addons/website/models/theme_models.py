@@ -238,6 +238,7 @@ class ThemeUtils(models.AbstractModel):
         'website.template_footer_contact',
         'website.template_footer_call_to_action',
         'website.template_footer_headline',
+        'website.template_footer_mega',
         # Default one, keep it last
         'website.footer_custom',
     ]
