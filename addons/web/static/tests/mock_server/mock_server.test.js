@@ -5,7 +5,9 @@ import {
     makeMockServer,
     models,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { localization } from "@web/core/l10n/localization";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -392,6 +394,11 @@ test("performRPC: formatted_read_group, group by boolean", async () => {
 });
 
 test("performRPC: formatted_read_group, group by date", async () => {
+    patchWithCleanup(localization, {
+        dateFormat: "MM/dd/yyyy",
+        dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        weekStart: 1,
+    });
     await makeMockServer();
     let result = await ormRequest({
         model: "bar",
@@ -624,6 +631,11 @@ test("performRPC: formatted_read_group, group by date with number granularity", 
 });
 
 test("performRPC: formatted_read_group, group by datetime", async () => {
+    patchWithCleanup(localization, {
+        dateFormat: "MM/dd/yyyy",
+        dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        weekStart: 1,
+    });
     await makeMockServer();
 
     let result = await ormRequest({
@@ -1365,6 +1377,11 @@ test("performRPC: read_progress_bar grouped by boolean", async () => {
 });
 
 test("performRPC: read_progress_bar grouped by datetime", async () => {
+    patchWithCleanup(localization, {
+        dateFormat: "MM/dd/yyyy",
+        dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        weekStart: 1,
+    });
     await makeMockServer();
 
     await expect(
