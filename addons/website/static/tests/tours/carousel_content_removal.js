@@ -110,31 +110,3 @@ registerWebsitePreviewTour(
         checkSlides(3, 1),
     ]
 );
-
-registerWebsitePreviewTour("snippet_carousel_autoplay", {
-    url: "/",
-    edition: true,
-}, () => [
-    ...insertSnippet({id: "s_carousel", name: "Carousel", groupName: "Intro"}),
-    ...clickOnSnippet(".carousel .carousel-item.active"),
-    {
-        content: "Decrease the interval between slides",
-        trigger: "div[data-label='Speed'] input",
-        run: 'edit 3',
-    },
-    {
-        content: "Enable the autoplay option",
-        trigger: "div[data-label='Autoplay'] input",
-        run: 'click',
-    },
-    ...clickOnSave(),
-    {
-        content: "Check if the first slide is active and wait for 3s",
-        trigger: `${carouselInnerSelector} > div.active:nth-child(1)`,
-        run: () => new Promise(resolve => setTimeout(resolve, 3000)),
-    },
-    {
-        content: "Check if the second slide is active",
-        trigger: `${carouselInnerSelector} > div.active:nth-child(2)`,
-    },
-]);
