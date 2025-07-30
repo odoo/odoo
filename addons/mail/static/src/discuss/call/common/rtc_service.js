@@ -1125,7 +1125,7 @@ export class Rtc extends Record {
                     return;
                 }
                 this._p2pRecoveryCount++;
-                if (this._p2pRecoveryCount > 1) {
+                if (this._p2pRecoveryCount > 1 || !hasTurn(this.iceServers)) {
                     this.upgradeConnectionDebounce();
                 }
             }
