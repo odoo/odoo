@@ -548,6 +548,7 @@ env['res.partner'].create({'name': partner_name})
                                     'sms': 'fa-mobile',
                                     'webhook': 'fa-paper-plane',
                                     'whatsapp': 'fa-whatsapp',
+                                    'ai': 'fa-magic',
                                 }[record.state.raw_value] || 'fa-circle-thin'"
                             />
                             <i class="fa fa-warning text-warning px-2 m-0" invisible="not warning" t-att-title="record.warning.raw_value"/>
