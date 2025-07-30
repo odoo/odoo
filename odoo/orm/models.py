@@ -4667,7 +4667,7 @@ class BaseModel(metaclass=MetaModel):
             return SQL(", ").join(terms)
 
         sql_field = self._field_to_sql(alias, field_name, query)
-        if field.type == 'boolean':
+        if field.type == 'boolean' and field not in self.env.registry.not_null_fields:
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
 
         query._order_groupby.append(sql_field)
