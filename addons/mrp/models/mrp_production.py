@@ -1774,7 +1774,7 @@ class MrpProduction(models.Model):
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):
                     workorder.duration_expected = workorder._get_duration_expected()
-                if workorder.duration == 0.0:
+                if workorder.duration == 0.0 and workorder.state != 'cancel':
                     workorder.duration = workorder.duration_expected
                     workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
             order._cal_price(moves_to_do_by_order[order.id])
