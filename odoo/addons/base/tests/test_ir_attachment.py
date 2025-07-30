@@ -4,6 +4,7 @@ import base64
 import hashlib
 import io
 import os
+from unittest.mock import patch
 
 from PIL import Image
 
@@ -265,6 +266,21 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         a1 = self.Attachment.create({'name': 'a1', 'raw': unique_blob, 'mimetype': 'image/png'})
         self.assertEqual(a1.raw, unique_blob)
         self.assertEqual(a1.mimetype, 'image/png')
+
+    def test_15_read_bin_size_doesnt_read_datas(self):
+        self.env.invalidate_all()
+        IrAttachment = self.registry['ir.attachment']
+        main_partner = self.env.ref('base.main_partner')
+        with patch.object(
+            IrAttachment,
+            '_file_read',
+            side_effect=IrAttachment._file_read,
+            autospec=True,
+        ) as patch_file_read:
+            self.env['res.partner'].with_context(bin_size=True).search_read(
+                [('id', 'in', main_partner.ids)], ['image_128']
+            )
+            self.assertEqual(patch_file_read.call_count, 0)
 
 
 class TestPermissions(TransactionCaseWithUserDemo):
