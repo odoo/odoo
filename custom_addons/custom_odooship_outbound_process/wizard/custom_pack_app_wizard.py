@@ -935,7 +935,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not scanned_lines:
             raise ValidationError(_("No scanned products found to pack."))
 
-        # Validate scanned lines (check weights and quantity)
+        # --- Ensure scanned lines keep their quantity ---
+        for line in scanned_lines:
+            if not line.quantity or line.quantity <= 0.0:
+                # Only set default if not already scanned
+                line.quantity = 1
+
+        # --- Validate scanned lines ---
         for line in scanned_lines:
             if not line.product_id:
                 raise ValidationError(_("All line items must have a product selected."))
@@ -950,12 +956,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     line.product_id.default_code
                 )
 
-        # Add section header for container codes (optional visual in Pack App Line)
-        pack_app_order = self.pack_app_id
+        # --- Add Section Header to Pack App Line ---
         section_name = ', '.join(self.pc_container_code_ids.mapped('name'))
-
         self.env['custom.pack.app.line'].create({
-            'pack_app_line_id': pack_app_order.id,
+            'pack_app_line_id': self.pack_app_id.id,
             'product_id': False,
             'name': section_name,
             'quantity': 0,
@@ -963,17 +967,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             'available_quantity': 0,
             'remaining_quantity': 0,
             'display_type': 'line_section',
-            'picking_id': False,
-            'sale_order_id': False,
-            'tenant_code_id': False,
-            'site_code_id': False,
         })
 
         # --- Create Pack App Lines ---
-        picking_orders = {}
         for line in scanned_lines:
             self.env['custom.pack.app.line'].create({
-                'pack_app_line_id': pack_app_order.id,
+                'pack_app_line_id': self.pack_app_id.id,
                 'product_id': line.product_id.id,
                 'name': line.product_id.name,
                 'sku_code': line.product_id.default_code,
@@ -985,9 +984,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'tenant_code_id': line.tenant_code_id.id,
                 'site_code_id': line.site_code_id.id,
             })
-            picking_orders.setdefault(line.picking_id.id, []).append(line)
 
-        # --- Handle single pick logic ---
+        # --- Handle Single Pick Payload ---
         sale_order_ids = set(self.picking_ids.mapped('sale_id.id'))
         if len(sale_order_ids) == 1:
             if self.single_pick_payload_sent:
@@ -995,13 +993,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 raise UserError(_("Payload already sent for this pick. Please refresh."))
 
             payload = self.process_single_pick()
-
             self.write({'single_pick_payload_sent': True})
             self.env.cr.flush()
             _logger.info(f"[SINGLE PICK] Wizard {self.id} marked as payload sent.")
-            # self.update_remaining_packed_qty()
 
-        # --- Release scanned containers ---
+        # --- Release Containers ---
         self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
