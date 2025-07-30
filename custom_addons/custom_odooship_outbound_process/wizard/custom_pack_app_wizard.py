@@ -899,18 +899,19 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         self.ensure_one()
 
-        if not self.picking_ids or not self.picking_ids.ids:
-            _logger.warning("[PACK_PRODUCTS] picking_ids is empty or not properly set. Value: %s", self.picking_ids)
-            raise ValidationError(_("No pickings are linked to this operation. Please check your container code."))
+        if not self.picking_ids:
+            _logger.warning("[PACK_PRODUCTS] No picking_ids found.")
+            raise ValidationError(_("No pickings are linked to this operation."))
+
         if self.single_pick_payload_sent:
             _logger.info(f"[SINGLE PICK] Payload already sent for wizard {self.id}, skipping re-send.")
             return
-        # Check for unscanned lines
+
+        # --- Warn about unscanned items ---
         unscanned_lines = self.line_ids.filtered(lambda l: not l.scanned)
         if unscanned_lines:
             missing_skus = ", ".join(unscanned_lines.mapped("product_id.default_code"))
 
-            # Show warning only on first click
             if not self.confirm_pack_warning:
                 self.confirm_pack_warning = True
                 return {
@@ -919,32 +920,37 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     'params': {
                         'title': _('Unscanned Items Detected'),
                         'message': _(
-                            'You have not scanned the following SKU(s):\n%s\n\nClick "Pack" again to continue anyway.') % missing_skus,
+                            'You have not scanned the following SKU(s):\n%s\n\nClick "Pack" again to continue anyway.'
+                        ) % missing_skus,
                         'type': 'warning',
                         'sticky': False,
                     }
                 }
-            else:
-                _logger.warning("[PACK_PRODUCTS] User acknowledged unscanned lines. Proceeding anyway.")
 
         # Reset warning flag before proceeding
         self.confirm_pack_warning = False
 
-        # Get scanned lines only
+        # --- Get scanned lines ---
         scanned_lines = self.line_ids.filtered(lambda l: l.scanned)
         if not scanned_lines:
             raise ValidationError(_("No scanned products found to pack."))
 
-        # Validate scanned lines
+        # Validate scanned lines (check weights and quantity)
         for line in scanned_lines:
             if not line.product_id:
                 raise ValidationError(_("All line items must have a product selected."))
             if not line.weight or line.weight <= 0.0:
                 raise ValidationError(
-                    _("Product '%s' (SKU: %s) has missing weight. Please update it before proceeding.")
-                    % (line.product_id.name, line.product_id.default_code or "N/A"))
+                    _("Product '%s' (SKU: %s) has missing weight. Please update it before proceeding.") %
+                    (line.product_id.name, line.product_id.default_code or "N/A")
+                )
+            if not line.quantity or line.quantity <= 0.0:
+                raise ValidationError(
+                    _("Line with SKU '%s' has zero quantity. This may indicate a scanning issue.") %
+                    line.product_id.default_code
+                )
 
-        # Add section header for tote(s)
+        # Add section header for container codes (optional visual in Pack App Line)
         pack_app_order = self.pack_app_id
         section_name = ', '.join(self.pc_container_code_ids.mapped('name'))
 
@@ -963,6 +969,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             'site_code_id': False,
         })
 
+        # --- Create Pack App Lines ---
         picking_orders = {}
         for line in scanned_lines:
             self.env['custom.pack.app.line'].create({
@@ -970,7 +977,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'product_id': line.product_id.id,
                 'name': line.product_id.name,
                 'sku_code': line.product_id.default_code,
-                'quantity': 1.0,
+                'quantity': line.quantity,
                 'available_quantity': line.available_quantity,
                 'remaining_quantity': line.remaining_quantity,
                 'picking_id': line.picking_id.id,
@@ -980,7 +987,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             })
             picking_orders.setdefault(line.picking_id.id, []).append(line)
 
-        # Handle single pick separately
+        # --- Handle single pick logic ---
         sale_order_ids = set(self.picking_ids.mapped('sale_id.id'))
         if len(sale_order_ids) == 1:
             if self.single_pick_payload_sent:
@@ -989,19 +996,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             payload = self.process_single_pick()
 
-            # Only call OneTraker if not using legacy logic
-            # if not (self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE"):
-            #     config = self.get_onetraker_config()
-            #     api_url = config["ONETRAKER_CREATE_ORDER_URL"]
-            #     self.send_payload_to_api(api_url, payload)
-
             self.write({'single_pick_payload_sent': True})
             self.env.cr.flush()
-            _logger.info(f"[PRE-FLAG] Wizard {self.id} marked as payload sent before API call.")
+            _logger.info(f"[SINGLE PICK] Wizard {self.id} marked as payload sent.")
             # self.update_remaining_packed_qty()
 
-        # Release container(s)
-        # self.update_remaining_packed_qty()
+        # --- Release scanned containers ---
         self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
