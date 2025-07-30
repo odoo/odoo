@@ -72,6 +72,24 @@ class ProductPublicCategory(models.Model):
         translate=html_translate,
     )
 
+    show_category_title = fields.Boolean(
+        string="Show Category Title",
+        default=False,
+        help="Display the category title on the shop page. Corresponds to the 'Show Title' editor option."
+    )
+
+    show_category_description = fields.Boolean(
+        string="Show Category Description",
+        default=True,
+        help="Display the category description on the shop page. Corresponds to the 'Show Description' editor option."
+    )
+
+    align_category_content = fields.Boolean(
+        string="Align Category Content",
+        default=False,
+        help="Align the category content on the shop page. Corresponds to the 'Center Content' editor option."
+    )
+
     # === COMPUTE METHODS === #
 
     @api.depends('parent_path')

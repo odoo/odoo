@@ -1776,6 +1776,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if write_vals:
             current_website.write(write_vals)
 
+    @route(['/shop/config/category'], type='jsonrpc', auth='user')
+    def _change_category_config(self, category_id, **options):
+        category = request.env['product.public.category'].browse(int(category_id))
+        if not category.exists():
+            raise NotFound()
+
+        # Restrict options we can write to.
+        targeted_options = {'show_category_title', 'show_category_description', 'align_category_content'}
+        modified_options = {option: value for option, value in options.items() if option in targeted_options}
+        if modified_options:
+            category.write(modified_options)
+
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """
         ret = []
