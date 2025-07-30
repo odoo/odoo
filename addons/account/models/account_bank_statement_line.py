@@ -474,6 +474,8 @@ class AccountBankStatementLine(models.Model):
             company_amount = journal_amount
         elif foreign_currency == company_currency:
             company_amount = transaction_amount
+            foreign_currency = journal_currency
+            transaction_amount = journal_amount
         else:
             company_amount = journal_currency._convert(journal_amount, company_currency,
                                                        self.journal_id.company_id, self.date)

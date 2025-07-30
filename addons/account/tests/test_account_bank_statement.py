@@ -1462,3 +1462,44 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         reversed_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(reversed_move.partner_id, partner)
+    
+    def test_foreign_currency_same_as_company_currency(self):
+        bank_journal_4 = self.bank_journal_3.copy({"currency_id": self.currency_4.id})
+        statement_line = self.env['account.bank.statement.line'].create({
+            'date': '2019-01-01',
+            'journal_id': bank_journal_4.id,
+            'payment_ref': 'KRW Statement with EUR foreign currency',
+            'amount': 1200000.0,
+            'amount_currency': 1000.0,
+            'foreign_currency_id': self.currency_1,
+        })
+        company_amount, company_currency, journal_amount, journal_currency, transaction_amount, foreign_currency = \
+            statement_line._get_amounts_with_currencies()
+        self.assertEqual(foreign_currency, self.currency_4)
+        self.assertEqual(transaction_amount, journal_amount)
+        self.assertEqual(journal_currency, self.currency_4)
+        self.assertEqual(company_currency, self.eur_currency)
+        liquidity_lines, suspense_lines, other_lines = statement_line._seek_for_lines()
+        self.assertEqual(liquidity_lines.currency_id, self.currency_4)
+        self.assertEqual(suspense_lines.currency_id, self.currency_4)
+        self.assertRecordValues(liquidity_lines, [{
+            'currency_id': self.currency_4.id,
+            'amount_currency': 1200000.0,
+            'debit': 1000.0,
+            'credit': 0.0,
+        }])
+        self.assertRecordValues(suspense_lines, [{
+            'currency_id': self.currency_4.id,
+            'amount_currency': -1200000.0,
+            'debit': 0.0,
+            'credit': 1000.0,
+        }])
+        move = statement_line.move_id
+        bank_line = statement_line.move_id.line_ids.filtered(
+            lambda line: line.account_id.account_type == "asset_cash"
+        )
+        counterpart_line = move.line_ids - bank_line
+        self.assertEqual(bank_line.debit, 1000.0,)
+        self.assertEqual(bank_line.amount_currency, 1200000.0)
+        self.assertEqual(counterpart_line.credit, 1000.0)
+        self.assertEqual(counterpart_line.amount_currency, -1200000.0)
