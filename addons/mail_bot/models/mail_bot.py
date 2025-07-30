@@ -90,7 +90,6 @@ class MailBot(models.AbstractModel):
                 self.env["mail.canned.response"].create({
                     "source": source,
                     "substitution": _("Thanks for your feedback. Goodbye!"),
-                    "description": description,
                 })
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "onboarding_canned"
@@ -103,7 +102,6 @@ class MailBot(models.AbstractModel):
                 self.env["mail.canned.response"].search([
                     ("create_uid", "=", self.env.user.id),
                     ("source", "=", source),
-                    ("description", "=", description),
                 ]).unlink()
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "idle"
