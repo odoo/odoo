@@ -101,6 +101,7 @@ class FooterOptionPlugin extends Plugin {
                     { name: "contact", title: _t("Contact") },
                     { name: "call_to_action", title: _t("Call-to-action") },
                     { name: "headline", title: _t("Headline") },
+                    { name: "mega", title: _t("Mega") },
                 ].map((info) => ({
                     key: info.name,
                     Component: FooterTemplateChoice,
