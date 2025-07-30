@@ -205,7 +205,8 @@ class PaymentTransaction(models.Model):
                 # For fully paid orders create a final invoice.
                 fully_paid_orders._force_lines_to_invoice_policy_order()
                 final_invoices = fully_paid_orders.with_context(
-                    raise_if_nothing_to_invoice=False
+                    raise_if_nothing_to_invoice=False,
+                    is_payment_transaction_invoice=True,
                 )._create_invoices(final=True)
                 invoices = downpayment_invoices + final_invoices
 
