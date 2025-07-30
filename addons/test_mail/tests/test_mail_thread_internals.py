@@ -186,7 +186,7 @@ class TestAPI(ThreadRecipients):
             partner_ids=self.partner_1.ids,
         )
         self.assertEqual(message.body, expected)
-        ticket_record._message_update_content(message, "Hello <R&D/>")
+        ticket_record._message_update_content(message, body="Hello <R&D/>")
         self.assertEqual(message.body, Markup('<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited"></span></p>'))
 
     @users('employee')
@@ -929,7 +929,7 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
         # clear the content when having attachments should show edit label
-        ticket_record._message_update_content(message, "",)
+        ticket_record._message_update_content(message, body="")
         self.assertEqual(message.attachment_ids, attachments)
         self.assertEqual(message.body, Markup('<span class="o-mail-Message-edited"></span>'))
         # update the content with new attachments
@@ -937,8 +937,9 @@ class TestAPI(ThreadRecipients):
             self._generate_attachments_data(2, 'mail.compose.message', 0)
         )
         ticket_record._message_update_content(
-            message, Markup("<p>New Body</p>"),
-            attachment_ids=new_attachments.ids
+            message,
+            body=Markup("<p>New Body</p>"),
+            attachment_ids=new_attachments.ids,
         )
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
@@ -947,8 +948,9 @@ class TestAPI(ThreadRecipients):
 
         # void attachments
         ticket_record._message_update_content(
-            message, Markup("<p>Another Body, void attachments</p>"),
-            attachment_ids=[]
+            message,
+            body=Markup("<p>Another Body, void attachments</p>"),
+            attachment_ids=[],
         )
         self.assertFalse(message.attachment_ids)
         self.assertFalse((attachments + new_attachments).exists())
@@ -965,18 +967,16 @@ class TestAPI(ThreadRecipients):
             message_type="comment",
             subtype_id=self.env.ref('mail.mt_comment').id,
         )
-        ticket_record._message_update_content(message, "<p>New Body 1</p>")
+        ticket_record._message_update_content(message, body="<p>New Body 1</p>")
 
         message.sudo().write({'subtype_id': self.env.ref('mail.mt_note')})
-        ticket_record._message_update_content(message, "<p>New Body 2</p>")
+        ticket_record._message_update_content(message, body="<p>New Body 2</p>")
 
         # cannot edit notifications
         for message_type in ['notification', 'user_notification', 'email', 'email_outgoing', 'auto_comment']:
             message.sudo().write({'message_type': message_type})
             with self.assertRaises(exceptions.UserError):
-                ticket_record._message_update_content(
-                    message, "<p>New Body</p>"
-                )
+                ticket_record._message_update_content(message, body="<p>New Body</p>")
 
 
 @tagged('mail_thread')
