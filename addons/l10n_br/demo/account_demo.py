@@ -1,15 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api
+from odoo import models
+from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @api.model
-    def _get_demo_data_move(self, company=False):
+    @template(model='account.move', demo=True)
+    def _get_demo_data_move(self, template_code):
         """ Set the l10n_latam_document_number on demo invoices """
-        move_data = super()._get_demo_data_move(company)
-        if company.account_fiscal_country_id.code == 'BR':
+        move_data = super()._get_demo_data_move(template_code)
+        if template_code == 'br':
             number = 0
             for move in move_data.values():
                 # vendor bills and refund must be manually numbered (l10n_br uses the standard AccountMove._is_manual_document_number())

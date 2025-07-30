@@ -19,7 +19,35 @@ def _get_chart_template_mapping(self, get_all=False):
         'parent': None,
     }}
 
-def test_get_data(self, template_code):
+
+def test_get_data(self, template_code, demo=False):
+    if demo:
+        return {
+            'res.company': {},
+            'account.move': self._get_demo_data_move(template_code),
+            'account.bank.statement': self._get_demo_data_statement(template_code),
+            'ir.attachment': self._get_demo_data_attachment(template_code),
+            'res.users': {
+                'base.' + 'user_demo': {'name': 'Marc Demo', 'login': 'demo'},  # bypass CI check
+            },
+            'res.partner': {
+                'base.res_partner_2': {'name': 'Demo Partner 2'},
+                'base.res_partner_3': {'name': 'Demo Partner 3'},
+                'base.res_partner_4': {'name': 'Demo Partner 4'},
+                'base.res_partner_5': {'name': 'Demo Partner 5'},
+                'base.res_partner_6': {'name': 'Demo Partner 6'},
+                'base.res_partner_12': {'name': 'Demo Partner 12'},
+                'base.partner_demo': {'name': 'Marc Demo'},
+            },
+            'product.product': {
+                'product.product_delivery_01': {'name': 'product_delivery_01', 'type': 'consu'},
+                'product.product_delivery_02': {'name': 'product_delivery_02', 'type': 'consu'},
+                'product.consu_delivery_01': {'name': 'consu_delivery_01', 'type': 'consu'},
+                'product.consu_delivery_02': {'name': 'consu_delivery_02', 'type': 'consu'},
+                'product.consu_delivery_03': {'name': 'consu_delivery_03', 'type': 'consu'},
+                'product.product_order_01': {'name': 'product_order_01', 'type': 'consu'},
+            },
+        }
     return {
         'template_data': {
             'code_digits': 6,
@@ -278,7 +306,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_update_taxes_creation(self):
         """ Tests that adding a new tax and a fiscal position tax creates new records when updating. """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.tax'].update({
                 xmlid: _tax_vals(name, amount, fiscal_pos=position, alt_taxes=alt)
@@ -317,7 +345,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_update_accounts_creation(self):
         """ Tests that adding a new accounts and a fiscal position tax creates new records when updating. """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.account'].update({
                 xmlid: _account_vals(name, code, account_type)
@@ -413,7 +441,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
           - accounts
           - reconcile models
         """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             # Delete the existing tax and create a new one with a different rate
             data = test_get_data(self, template_code)
             del data['account.tax']['test_tax_1_template']
@@ -460,7 +488,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_update_taxes_update(self):
         """ When a tax is close enough from an existing tax we want to update that tax with the new values. """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.account.tag']['account.account_tax_tag_1']['name'] += ' [DUP]'
             return data
@@ -479,7 +507,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         When a tax is close enough to an existing tax but has a minor rounding error,
         we still want to update that tax with the new values.
         """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.account.tag']['account.account_tax_tag_1']['name'] += ' [DUP]'
             # We compare up to the precision of the field, which is 4 decimals
@@ -497,7 +525,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_update_taxes_recreation(self):
         """ When a tax is too different from an existing tax we want to recreate a new tax with new values. """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             # We increment the amount so the template gets slightly different from the
             # corresponding tax and triggers recreation
             data = test_get_data(self, template_code)
@@ -539,12 +567,12 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         self.assertEqual(len(fiscal_position.tax_ids.original_tax_ids), 0)
 
     def test_update_taxes_conflict_name(self):
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.tax']['test_tax_1_template']['amount'] = 40
             return data
 
-        def local_get_data2(self, template_code):
+        def local_get_data2(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.tax']['test_tax_1_template']['amount'] = 15
             return data
@@ -569,7 +597,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_update_taxes_multi_company(self):
         """ In a multi-company environment all companies should be correctly updated."""
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             # triggers recreation of tax 1
             data = test_get_data(self, template_code)
             data['account.tax']['test_tax_1_template']['amount'] += 1
@@ -622,7 +650,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         """ Ensures children_tax_ids are correctly generated when updating taxes with
         amount_type='group'.
         """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             normal_tax_xmlids = ['test_tax_3_template', 'test_tax_4_template']
             data['account.tax'].update({
@@ -660,7 +688,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         """ Ensure tax templates are correctly generated when updating taxes with children taxes,
         even if templates are inactive.
         """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             normal_tax_xmlids = ['test_tax_3_template', 'test_tax_4_template']
             data['account.tax'].update({
@@ -721,7 +749,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         key is not known in the company template data but the context value is not
         set, that key is skipped and no error is raised."""
 
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['res.company'][company.id]['unknown_company_key'] = 'unknown_company_value'
             return data
@@ -793,6 +821,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         shared_account = self.env['account.account'].create([{
             'name': 'Shared Account',
             'company_ids': [Command.set((self.company | branch | other_company).ids)],
+            'account_type': 'asset_current',  # avoid asset_cash because they can't be shared
             'code_mapping_ids': [
                 Command.create({'company_id': self.company.id, 'code': '180001'}),
                 Command.create({'company_id': branch.id, 'code': '180001'}),
@@ -929,7 +958,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             },
         }
 
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             for model, record_info in translation_update_for_test_get_data.items():
                 for xmlid, data_update in record_info.items():
@@ -1021,7 +1050,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         ], tax_rep_lines.mapped(get_rep_line_data))
 
     def test_parsed_csv_submodel_being_updated(self):
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             return {
                 **test_get_data(self, template_code),
                 'account.tax': {
@@ -1046,7 +1075,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_command_int_values(self):
         """ Command int values should just work in place of their Enum alternatives. """
-        def local_get_data(self, template_code):
+        def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.account'].update({
                 "test_account": {

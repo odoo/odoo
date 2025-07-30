@@ -29,5 +29,10 @@ def _l10n_ar_wth_post_init(env):
         ChartTemplate._load_data(data)
         company.l10n_ar_tax_base_account_id = ChartTemplate.ref('base_tax_account')
 
-        if env.ref('base.module_l10n_ar_withholding').demo:
-            env['account.chart.template']._post_load_demo_data(company)
+        if company.chart_template == 'ar_ri' and env.ref('base.module_l10n_ar_withholding').demo:
+            ChartTemplate._load_data({
+                'ir.sequence': ChartTemplate._get_ar_withholding_ir_sequence_demo(),
+                'account.tax': ChartTemplate._get_ar_witholding_account_tax_demo(),
+                'l10n_ar.partner.tax': ChartTemplate._get_ar_withholding_partner_tax_demo(),
+            })
+            ChartTemplate._ar_withholding_copy_tax_demo()

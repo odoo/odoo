@@ -1,36 +1,60 @@
 # -*- coding: utf-8 -*-
 from odoo import models
+from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
-    def _post_load_demo_data(self, company=False):
-        result = super()._post_load_demo_data(company)
-        if company == self.env.ref('base.company_ri', raise_if_not_found=False):
-            profits_wth_tax_119 = self.with_company(company).ref('ex_tax_withholding_profits_regimen_119_insc')
-            arba_wth_applied = self.with_company(company).ref('ex_tax_withholding_iibb_ba_applied')
-            # Create demo sequence for earnings wth
-            seq_profits_wth = self.env['ir.sequence'].create({
+    def _post_load_demo_data(self, template_code):
+        super()._post_load_demo_data(template_code)
+        if template_code == 'ar_ri':
+            # Because in demo we want to skip the config, while in data we want to require them to configure
+            self._ar_withholding_copy_tax_demo()
+
+    def _ar_withholding_copy_tax_demo(self):
+        self.env['account.tax'].search([
+            *self.env['account.tax']._check_company_domain(self.env.company),
+            ('l10n_ar_withholding_payment_type', '!=', False),
+            ('l10n_ar_tax_type', 'in', ('iibb_untaxed', 'iibb_total')),
+        ]).copy(default={'amount_type': 'percent', 'amount': 1})
+
+    @template(template='ar_ri', model='ir.sequence', demo=True)
+    def _get_ar_withholding_ir_sequence_demo(self):
+        return {
+            'earning_wth_sequence': {
                 'name': 'Earnings wth sequence',
                 'padding': 1,
                 'number_increment': 1,
                 'implementation': 'standard',
-                'company_id': self.env.ref('base.company_ri').id
-            })
-            wth_sequence_id = seq_profits_wth.id
+                'company_id': self.env.company.id,
+            },
+        }
 
-            # Add to partner Adhoc: 1) wth tax 119 and it`s sequence, 2) arba wth
-            self.env['l10n_ar.partner.tax'].create({'tax_id': profits_wth_tax_119.id, 'partner_id': self.env.ref('l10n_ar.res_partner_adhoc').id, 'company_id': company.id})
-            profits_wth_tax_119.l10n_ar_withholding_sequence_id = wth_sequence_id
-            self.env['l10n_ar.partner.tax'].create({'tax_id': arba_wth_applied.id, 'partner_id': self.env.ref('l10n_ar.res_partner_adhoc').id, 'company_id': company.id})
+    @template(template='ar_ri', model='account.tax', demo=True)
+    def _get_ar_witholding_account_tax_demo(self):
+        return {
+            'ex_tax_withholding_profits_regimen_119_insc': {'l10n_ar_withholding_sequence_id': 'earning_wth_sequence'},
+            'ex_tax_withholding_profits_regimen_78_insc': {'l10n_ar_withholding_sequence_id': 'earning_wth_sequence'},
+        }
 
-            # Add to partner Belgrano: 1) wth tax 78 and it`s sequence, 2) arba wth
-            earnings_wth_tax_78 = self.with_company(company).ref('ex_tax_withholding_profits_regimen_78_insc')
-            self.env['l10n_ar.partner.tax'].create({'tax_id': earnings_wth_tax_78.id, 'partner_id': self.env.ref('l10n_ar.res_partner_mipyme').id, 'company_id': company.id})
-            earnings_wth_tax_78.l10n_ar_withholding_sequence_id = wth_sequence_id
-            self.env['l10n_ar.partner.tax'].create({'tax_id': arba_wth_applied.id, 'partner_id': self.env.ref('l10n_ar.res_partner_mipyme').id, 'company_id': company.id})
-
-            # Because in demo we want to skip the config, while in data we want to require them to configure
-            self.env['account.tax'].search([('l10n_ar_withholding_payment_type', '!=', False), ('l10n_ar_tax_type', 'in', ('iibb_untaxed', 'iibb_total'))]).copy(default={'amount_type': 'percent', 'amount': 1})
-        return result
+    @template(template='ar_ri', model='l10n_ar.partner.tax', demo=True)
+    def _get_ar_withholding_partner_tax_demo(self):
+        return {
+            'partner_tax_adhoc_119': {
+                'tax_id': 'ex_tax_withholding_profits_regimen_119_insc',
+                'partner_id': 'l10n_ar.res_partner_adhoc',
+            },
+            'partner_tax_adhoc_iibb': {
+                'tax_id': 'ex_tax_withholding_iibb_ba_applied',
+                'partner_id': 'l10n_ar.res_partner_adhoc',
+            },
+            'partner_tax_mipyme_78': {
+                'tax_id': 'ex_tax_withholding_profits_regimen_78_insc',
+                'partner_id': 'l10n_ar.res_partner_mipyme',
+            },
+            'partner_tax_mipyme_iibb': {
+                'tax_id': 'ex_tax_withholding_iibb_ba_applied',
+                'partner_id': 'l10n_ar.res_partner_mipyme',
+            },
+        }
