@@ -44,7 +44,7 @@ class IrQWeb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
 
         current_website = request.website
-        editable = irQweb.env.user.has_group('website.group_website_designer')
+        editable = has_group_designer = irQweb.env.user.has_group('website.group_website_designer')
         has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
         if not editable and has_group_restricted_editor and 'main_object' in values:
             try:
@@ -90,7 +90,7 @@ class IrQWeb(models.AbstractModel):
 
         irQweb = irQweb.with_context(website_id=current_website.id)
         if 'inherit_branding' not in irQweb.env.context and not self.env.context.get('rendering_bundle'):
-            if editable:
+            if has_group_designer and editable:
                 # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
             elif has_group_restricted_editor:
