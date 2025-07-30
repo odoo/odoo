@@ -15,16 +15,19 @@ class MailCannedResponse(models.Model):
     source = fields.Char(
         "Shortcut", required=True, index="trigram",
         help="Canned response that will automatically be substituted with longer content in your messages."
-        " Type ':' followed by the name of your shortcut (e.g. :hello) to use in your messages.",
+        " Type '::' followed by the name of your shortcut (e.g. ::hello) to use in your messages.",
     )
     substitution = fields.Text(
         "Substitution",
         required=True,
         help="Content that will automatically replace the shortcut of your choosing. This content can still be adapted before sending your message.",
     )
-    description = fields.Char("Description")
     last_used = fields.Datetime("Last Used", help="Last time this canned_response was used")
-    group_ids = fields.Many2many("res.groups", string="Authorized Groups")
+    group_ids = fields.Many2many(
+        "res.groups",
+        string="Authorized Groups",
+        domain=lambda self: [("id", "in", self.env.user.all_group_ids.ids)],
+    )
     is_shared = fields.Boolean(
         string="Determines if the canned_response is currently shared with other users",
         compute="_compute_is_shared",
