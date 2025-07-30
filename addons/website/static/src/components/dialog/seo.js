@@ -281,6 +281,9 @@ class Keyword extends Component {
                 keyword: this.props.keyword,
             }),
             suggestionTag: (suggestion) => _t('Add "%(suggestion)s"', { suggestion }),
+            googleTrendsTitle: _t("See Google Trends about '%(keyword)s'", {
+                keyword: this.props.keyword,
+            }),
             removeBtn: _t('Remove "%(keyword)s"', { keyword: this.props.keyword }),
         };
 
@@ -304,6 +307,10 @@ class Keyword extends Component {
             WORD_SEPARATORS_REGEX + escapeRegExp(this.props.keyword) + WORD_SEPARATORS_REGEX,
             "gi"
         ).test(string);
+    }
+
+    getGoogleTrendsURL() {
+        return `https://trends.google.com/trends/explore?q=${encodeURIComponent(this.props.keyword)}`;
     }
 
     getHeaders(tag) {
