@@ -2713,6 +2713,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
+    @api.deprecated("Since 19.0, read_group is deprecated. Please use _read_group in the backend code or formatted_read_group for a complete formatted result")
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """Deprecated - Get the list of records in list view grouped by the given ``groupby`` fields.
 
@@ -2752,10 +2753,6 @@ class BaseModel(metaclass=MetaModel):
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
-        warnings.warn(
-            "Since 19.0, read_group is deprecated. Please use _read_group in the backend code or formatted_read_group for a complete formatted result",
-            DeprecationWarning,
-        )
         groupby = [groupby] if isinstance(groupby, str) else groupby
         lazy_groupby = groupby[:1] if lazy else groupby
 
@@ -3397,6 +3394,10 @@ class BaseModel(metaclass=MetaModel):
         raise AccessError(error_msg)
 
     @api.model
+    @api.deprecated(
+        "Deprecated since 19.0, use `_check_field_access` on models."
+        " To get the list of allowed fields, use `fields_get`.",
+    )
     def check_field_access_rights(self, operation: str, field_names: list[str] | None) -> list[str]:
         """Check the user access rights on the given fields.
 
@@ -3411,11 +3412,6 @@ class BaseModel(metaclass=MetaModel):
         :raise AccessError: if the user is not allowed to access
           the provided fields.
         """
-        warnings.warn(
-            "Deprecated since 19.0, use `_check_field_access` on models."
-            " To get the list of allowed fields, use `fields_get`.",
-            DeprecationWarning,
-        )
         if self.env.su:
             return field_names or list(self._fields)
 
@@ -4126,6 +4122,7 @@ class BaseModel(metaclass=MetaModel):
         return None
 
     @api.model
+    @api.deprecated("check_access_rights() is deprecated since 18.0; use check_access() instead.")
     def check_access_rights(self, operation, raise_exception=True):
         """ Verify that the given operation is allowed for the current user accord to ir.model.access.
 
@@ -4135,14 +4132,11 @@ class BaseModel(metaclass=MetaModel):
         :rtype: bool
         :raise AccessError: if the operation is forbidden and raise_exception is True
         """
-        warnings.warn(
-            "check_access_rights() is deprecated since 18.0; use check_access() instead.",
-            DeprecationWarning, stacklevel=2,
-        )
         if raise_exception:
             return self.browse().check_access(operation)
         return self.browse().has_access(operation)
 
+    @api.deprecated("check_access_rule() is deprecated since 18.0; use check_access() instead.")
     def check_access_rule(self, operation):
         """ Verify that the given operation is allowed for the current user according to ir.rules.
 
@@ -4150,25 +4144,15 @@ class BaseModel(metaclass=MetaModel):
         :return: None if the operation is allowed
         :raise UserError: if current ``ir.rules`` do not permit this operation.
         """
-        warnings.warn(
-            "check_access_rule() is deprecated since 18.0; use check_access() instead.",
-            DeprecationWarning, stacklevel=2,
-        )
         self.check_access(operation)
 
+    @api.deprecated("_filter_access_rules() is deprecated since 18.0; use _filtered_access() instead.")
     def _filter_access_rules(self, operation):
         """ Return the subset of ``self`` for which ``operation`` is allowed. """
-        warnings.warn(
-            "_filter_access_rules() is deprecated since 18.0; use _filtered_access() instead.",
-            DeprecationWarning, stacklevel=2,
-        )
         return self._filtered_access(operation)
 
+    @api.deprecated("_filter_access_rules_python() is deprecated since 18.0; use _filtered_access() instead.")
     def _filter_access_rules_python(self, operation):
-        warnings.warn(
-            "_filter_access_rules_python() is deprecated since 18.0; use _filtered_access() instead.",
-            DeprecationWarning, stacklevel=2,
-        )
         return self._filtered_access(operation)
 
     def unlink(self) -> typing.Literal[True]:
@@ -5669,12 +5653,12 @@ class BaseModel(metaclass=MetaModel):
         ))
         return bool(cr.fetchone())
 
+    @api.deprecated("Deprecated since 18.0, use _has_cycle() instead")
     def _check_recursion(self, parent=None):
-        warnings.warn("Deprecated since 18.0, use _has_cycle() instead", DeprecationWarning, stacklevel=2)
         return not self._has_cycle(parent)
 
+    @api.deprecated("Deprecated since 18.0, use _has_cycle() instead")
     def _check_m2m_recursion(self, field_name):
-        warnings.warn("Deprecated since 18.0, use _has_cycle() instead", DeprecationWarning, stacklevel=2)
         return not self._has_cycle(field_name)
 
     def _get_external_ids(self) -> dict[IdType, list[str]]:
@@ -5771,9 +5755,9 @@ class BaseModel(metaclass=MetaModel):
 
         return records._read_format(fnames=fields, **read_kwargs)
 
+    @api.deprecated("Deprecated since 19.0, use action_archive or action_unarchive")
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."
-        warnings.warn("Deprecated since 19.0, use action_archive or action_unarchive", DeprecationWarning)
         assert self._active_name, f"No 'active' field on model {self._name}"
         active_recs = self.filtered(self._active_name)
         active_recs.action_archive()
@@ -5894,18 +5878,18 @@ class BaseModel(metaclass=MetaModel):
         return list(OriginIds(self._ids))
 
     @property
+    @api.deprecated("Deprecated since 19.0, use self.env.cr directly")
     def _cr(self):
-        warnings.warn("Deprecated since 19.0, use self.env.cr directly", DeprecationWarning)
         return self.env.cr
 
     @property
+    @api.deprecated("Deprecated since 19.0, use self.env.uid directly")
     def _uid(self):
-        warnings.warn("Deprecated since 19.0, use self.env.uid directly", DeprecationWarning)
         return self.env.uid
 
     @property
+    @api.deprecated("Deprecated since 19.0, use self.env.context directly")
     def _context(self):
-        warnings.warn("Deprecated since 19.0, use self.env.context directly", DeprecationWarning)
         return self.env.context
 
     #

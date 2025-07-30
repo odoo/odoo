@@ -300,7 +300,8 @@ def get_sorted_installed_modules(env):
 
 def is_public_method(model, name):
     try:
-        return get_public_method(model, name)
+        method = get_public_method(model, name)
+        return not hasattr(method, '__deprecated__')
     except (AttributeError, AccessError):
         return None
 

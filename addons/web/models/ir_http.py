@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import warnings
-
 import odoo
 from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
@@ -197,6 +195,6 @@ class IrHttp(models.AbstractModel):
             })
         return session_info
 
+    @api.deprecated("Deprecated since 19.0, use get_all_currencies on 'res.currency'")
     def get_currencies(self):
-        warnings.warn("Deprecated since 19.0, use get_all_currencies on 'res.currency'", DeprecationWarning)
         return self.env['res.currency'].get_all_currencies()
