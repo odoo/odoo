@@ -116,10 +116,17 @@ export class FormViewDialog extends Component {
                 res_model: this.props.resModel,
                 res_id: this.currentResId,
                 views: [[false, "form"]],
+<<<<<<< ee337934f9885834d95592946f435c6e1c8ef970
                 context: {
                     ...this.props.context,
                     form_view_ref: this.props.expandedFormRef,
                 },
+||||||| 40a6e32d0769784a2818036cd13ec4e6bdb9c0fd
+=======
+                context: {
+                    ...this.props.context,
+                },
+>>>>>>> d655dc6f4f6a9ae6bd95cdfba18c160987f0de2f
             });
         }
     }

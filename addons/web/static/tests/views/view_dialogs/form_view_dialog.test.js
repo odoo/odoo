@@ -437,7 +437,12 @@ test("existing record has an expand button", async () => {
         expandedFormRef: "test_partner_form_view",
         resModel: "partner",
         resId: 1,
+<<<<<<< ee337934f9885834d95592946f435c6e1c8ef970
         context: { key: "val" },
+||||||| 40a6e32d0769784a2818036cd13ec4e6bdb9c0fd
+=======
+        context: {key: "val"}
+>>>>>>> d655dc6f4f6a9ae6bd95cdfba18c160987f0de2f
     });
     await animationFrame();
     expect(".o_dialog .o_form_view").toHaveCount(1);
@@ -445,6 +450,7 @@ test("existing record has an expand button", async () => {
     await fieldInput("foo").edit("hola");
     await click(".o_dialog .modal-header .o_expand_button");
     await animationFrame();
+<<<<<<< ee337934f9885834d95592946f435c6e1c8ef970
     expect.verifySteps([
         "save",
         [
@@ -458,6 +464,22 @@ test("existing record has an expand button", async () => {
             },
         ],
     ]);
+||||||| 40a6e32d0769784a2818036cd13ec4e6bdb9c0fd
+    expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
+=======
+    expect.verifySteps([
+        "save",
+        [
+            1,
+            "partner",
+            "ir.actions.act_window",
+            [[false, "form"]],
+            {
+                key: "val",
+            },
+        ],
+    ]);
+>>>>>>> d655dc6f4f6a9ae6bd95cdfba18c160987f0de2f
 });
 
 test("expand button with save and new", async () => {
