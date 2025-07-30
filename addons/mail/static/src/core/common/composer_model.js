@@ -1,4 +1,5 @@
 import { fields, OR, Record } from "@mail/core/common/record";
+import { markup } from "@odoo/owl";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
@@ -7,6 +8,7 @@ export class Composer extends Record {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
         this.text = "";
+        this.body = markup("<p><br></p>");
         Object.assign(this.selection, {
             start: 0,
             end: 0,
@@ -15,6 +17,7 @@ export class Composer extends Record {
     }
 
     attachments = fields.Many("ir.attachment");
+    body = markup("<p><br></p>");
     /** @type {boolean} */
     emailAddSignature = true;
     message = fields.One("mail.message");
