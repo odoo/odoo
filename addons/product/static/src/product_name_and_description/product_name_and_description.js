@@ -6,6 +6,7 @@ import { Component, onMounted, onPatched, onWillUnmount, useEffect, useRef, useS
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { useProductAndLabelAutoresize } from "./product_and_label_autoresize";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { useInputField } from "@web/views/fields/input_field_hook";
 
 export const ProductNameAndDescriptionListRendererMixin = {
     getCellTitle(column, record) {
@@ -42,6 +43,8 @@ export class ProductNameAndDescriptionField extends Component {
     static props = { ...Many2OneField.props };
     static template = Many2One.template;
 
+    static descriptionColumn = "";
+
     setup() {
         this.isPrintMode = useState({ value: false });
         this.labelVisibility = useState({ value: false });
@@ -51,6 +54,14 @@ export class ProductNameAndDescriptionField extends Component {
         useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
         this.productNode = useRef("productNodeRef");
         useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
+
+        this.descriptionColumn = this.constructor.descriptionColumn;
+        useInputField({
+            ref: this.labelNode,
+            fieldName: this.descriptionColumn,
+            getValue: () => this.label,
+            parse: (v) => this.parseLabel(v),
+        });
 
         useEffect(
             () => {
@@ -128,10 +139,8 @@ export class ProductNameAndDescriptionField extends Component {
         this.switchToLabel = true;
     }
 
-    updateLabel(value) {
-        this.props.record.update({
-            [this.descriptionColumn]: value || this.productName,
-        });
+    parseLabel(value) {
+        return value || this.productName;
     }
 
     /**

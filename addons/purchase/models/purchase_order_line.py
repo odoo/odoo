@@ -71,6 +71,7 @@ class PurchaseOrderLine(models.Model):
         string='Tax calculation rounding method', readonly=True)
     display_type = fields.Selection([
         ('line_section', "Section"),
+        ('line_subsection', "Subsection"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     is_downpayment = fields.Boolean()
     selected_seller_id = fields.Many2one('product.supplierinfo', compute='_compute_selected_seller_id', help='Technical field to get the vendor pricelist used to generate this line')
@@ -240,7 +241,7 @@ class PurchaseOrderLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_purchase(self):
         for line in self:
-            if line.order_id.state == 'purchase' and line.display_type not in ['line_note', 'line_section']:
+            if line.order_id.state == 'purchase' and line.display_type not in ['line_section', 'line_subsection', 'line_note']:
                 state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
                 raise UserError(_('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
 

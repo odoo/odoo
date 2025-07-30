@@ -333,6 +333,7 @@
                                             </group>
                                         </group>
                                         <label for="name" string="Section Name (eg. Products, Services)" invisible="display_type != 'line_section'"/>
+                                        <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                         <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                         <field name="name" nolabel="1"  invisible="not display_type"/>
                                 </form>
@@ -366,8 +367,12 @@
                                                     Discount: <field name="discount" />%
                                                 </span>
                                             </t>
-                                            <div t-elif="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
-                                                <div t-attf-class="{{record.display_type.raw_value === 'line_section' ? 'fw-bold' : 'fst-italic' }}">
+                                            <div t-elif="['line_section', 'line_subsection', 'line_note'].includes(record.display_type.raw_value)">
+                                                <div t-att-class="{
+                                                    'fw-bolder': record.display_type.raw_value === 'line_section',
+                                                    'fw-bold': record.display_type.raw_value === 'line_subsection',
+                                                    'fst-italic': record.display_type.raw_value === 'line_note',
+                                                }">
                                                     <field name="name" />
                                                 </div>
                                             </div>

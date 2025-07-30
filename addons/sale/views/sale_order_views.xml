@@ -498,7 +498,9 @@
                             name="order_line"
                             widget="sol_o2m"
                             mode="list,kanban"
-                            readonly="state == 'cancel' or locked">
+                            readonly="state == 'cancel' or locked"
+                            aggregated_fields="price_subtotal,price_total"
+                        >
                             <form>
                                 <field name="technical_price_unit" invisible="1"/>
                                 <!--
@@ -570,6 +572,7 @@
                                 </group>
                                 <label for="name" string="Description" invisible="display_type"/>
                                 <label for="name" string="Section Name (eg. Products, Services)" invisible="display_type != 'line_section'"/>
+                                <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                 <field name="name"/>
                                 <div name="invoice_lines" groups="base.group_no_one" invisible="display_type">
@@ -783,9 +786,13 @@
                                                 </t>
                                             </main>
                                         </t>
-                                        <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
-                                            <div t-attf-class="{{record.display_type.raw_value === 'line_section' ? 'fw-bold' : 'fst-italic' }}">
-                                                <field name="name"/>
+                                        <t t-if="['line_section', 'line_subsection', 'line_note'].includes(record.display_type.raw_value)">
+                                            <div t-att-class="{
+                                                'fw-bolder': record.display_type.raw_value === 'line_section',
+                                                'fw-bold': record.display_type.raw_value === 'line_subsection',
+                                                'fst-italic': record.display_type.raw_value === 'line_note',
+                                            }">
+                                                <field name="name" />
                                             </div>
                                         </t>
                                     </t>
@@ -897,7 +904,7 @@
                 <field name="team_id" string="Sales Team"/>
                 <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
                 <field name="activity_user_id" string="Activities of"/>
-                <field name="activity_type_id" string="Activity type"/> 
+                <field name="activity_type_id" string="Activity type"/>
                 <!-- We only allow to search on the following sale order line fields (product, name) because the other fields, such as price, quantity, ...
                     will not be searched as often, and if they need to be searched it's usually in the context of products
                     and then they can be searched from the page listing the sale order lines related to a product (from the product itself).

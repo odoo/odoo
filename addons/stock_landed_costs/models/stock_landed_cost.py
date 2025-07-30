@@ -216,7 +216,7 @@ class StockLandedCost(models.Model):
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
                     all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled\
-                         and not aml.display_type in ('line_section', 'line_note')).reconcile()
+                         and not aml.display_type in ('line_section', 'line_subsection', 'line_note')).reconcile()
 
     def get_valuation_lines(self):
         self.ensure_one()
