@@ -1416,6 +1416,7 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
+    @api.deprecated("Override of a deprecated method")
     def check_field_access_rights(self, operation, field_names):
         result = super().check_field_access_rights(operation, field_names)
         if not field_names:
