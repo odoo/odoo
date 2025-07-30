@@ -36,26 +36,30 @@
 
     <BuilderRow label.translate="Transition">
         <BuilderSelect>
-            <BuilderSelectItem id="'slide_opt'" classAction="'slide'">Slide</BuilderSelectItem>
-            <BuilderSelectItem id="'fade_opt'" classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
-            <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
+            <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
+            <BuilderSelectItem classAction="'carousel-instant slide'">None</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="isActiveItem('slide_opt') || isActiveItem('fade_opt')">
+    <BuilderRow label.translate="Autoplay" level="1">
+        <BuilderSelect dataAttributeAction="'bsRide'">
+            <BuilderSelectItem id="'auto_after_first_hover'" dataAttributeActionValue="'true'">After First Hover</BuilderSelectItem>
+            <BuilderSelectItem id="'auto_always'" dataAttributeActionValue="'carousel'">Always</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'false'">Never</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
         <BuilderRow label.translate="Speed" level="1">
             <BuilderNumberInput dataAttributeAction="'bsInterval'"
                 default="10"
                 unit="'s'"
                 saveUnit="'ms'"
                 step="0.1"
-                min="0"
+                min="1"
                 preview="false"
                 applyWithUnit="false"/>
-        </BuilderRow>
-
-        <BuilderRow label.translate="Autoplay" level="1">
-            <BuilderCheckbox dataAttributeAction="'bsRide'" dataAttributeActionValue="'carousel'"/>
         </BuilderRow>
     </t>
 
