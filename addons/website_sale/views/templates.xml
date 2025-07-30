@@ -502,6 +502,13 @@
             <t t-set="opt_wsale_attributes_top" t-value="is_view_active('website_sale.products_attributes_top')"/>
             <t t-set="opt_wsale_floating_bar" t-value="is_view_active('website_sale.floating_bar')"/>
 
+            <t t-set="opt_wsale_show_shop_title" t-value="is_view_active('website_sale.products_shop_title')"/>
+            <t t-set="opt_wsale_shop_title_align" t-value="is_view_active('website_sale.products_shop_title_align')"/>
+
+            <t t-set="opt_wsale_show_category_title" t-value="category and category.show_category_title"/>
+            <t t-set="opt_wsale_show_category_description" t-value="category and category.show_category_description"/>
+            <t t-set="opt_wsale_category_align" t-value="category and category.align_category_content"/>
+
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
 
@@ -588,7 +595,7 @@
                                 <t t-call="website_sale.sidebar_dropzone_at_bottom"/>
                             </div>
                         </aside>
-                        <div id="products_grid" t-attf-class="col">
+                        <div id="products_grid" class="col">
                             <t
                                 t-set="_header_has_content"
                                 t-value="category or opt_wsale_categories_top or (not opt_wsale_floating_bar and (opt_wsale_attributes_top or is_view_active('website_sale.search') or is_view_active('website_sale.sort') or hasPricelistDropdown))"
@@ -596,8 +603,17 @@
 
                             <header
                                 id="o_wsale_products_header"
-                                t-attf-class="d-flex flex-column gap-2 {{_header_has_content and 'pt-4 pb-3' or (not _header_has_content and not opt_wsale_design_grid and 'py-3')}}"
-                                >
+                                t-att-data-category-id="category.id"
+                                t-att-data-category-name="category.name"
+                                t-attf-class="d-flex flex-column gap-2
+                                    {{_header_has_content and 'pt-4 pb-3' or opt_wsale_design_grid and 'py-3'}}
+                                    {{category and 'o_wsale_products_header_is_category' or 'o_wsale_products_header_is_shop'}}
+                                    {{opt_wsale_show_category_title and 'o_wsale_products_header_show_category_title'}}
+                                    {{opt_wsale_show_category_description and 'o_wsale_products_header_show_category_description'}}
+                                    {{opt_wsale_category_align and 'o_wsale_products_header_category_center_content'}}
+                                    {{opt_wsale_show_shop_title and 'o_wsale_products_header_show_shop_title'}}
+                                    {{opt_wsale_shop_title_align and 'o_wsale_products_header_shop_center_content'}}"
+                            >
                                 <t t-if="category and not search" t-call="website_sale.products_breadcrumb">
                                     <t
                                         t-set="_classes"
@@ -606,7 +622,7 @@
                                 </t>
                                 <h1
                                     t-if="category or search"
-                                    t-attf-class="d-flex gap-1 align-items-center mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and bool(category) and 'mb-2'}}"
+                                    t-attf-class="o_wsale_category_title d-flex gap-1 align-items-center mb-0 lh-lg {{search and bool(category) and 'mb-2'}} {{search and 'o_wsale_category_title_is_search base-fs font-sans-serif' or 'fs-3'}}"
                                 >
                                     <a
                                         t-if="(search and not category) or (not search and category)"
@@ -643,9 +659,14 @@
                                     <span t-elif="search">
                                         <span class="text-muted">Search results for </span>'<strong t-out="search"/>' <small t-if="search_count" class="text-muted"> (<t t-out="search_count"/>)</small>
                                     </span>
-                                    <t t-elif="category" t-out="category.name"/>
+                                    <t t-elif="category">
+                                        <span t-field="category.name"/>
+                                    </t>
                                 </h1>
-                                <h1 class="h4-fs" t-if="not category and not search">
+                                <h1
+                                    class="o_wsale_shop_title h4-fs"
+                                    t-if="not category and not search"
+                                >
                                     All products
                                 </h1>
                                 <t t-if="category">
@@ -655,8 +676,19 @@
                                     </t>
                                     <div
                                         id="category_header"
+                                        class="o_wsale_category_description"
                                         t-att-data-editor-message="editor_msg"
                                         t-field="category.website_description"
+                                    />
+                                </t>
+                                <t t-else="">
+                                    <t t-set="editor_msg">
+                                        Drag building blocks here to customize the header for the shop page.
+                                    </t>
+                                    <div
+                                        id="oe_structure_products_header_shop"
+                                        class="oe_structure oe_empty"
+                                        t-att-data-editor-message="editor_msg"
                                     />
                                 </t>
                                 <t t-if="opt_wsale_categories_top"
@@ -928,6 +960,9 @@
     <template id="website_sale.products_categories" active="False" name="Categories in Left Side "/>
     <template id="website_sale.products_categories_top" active="True" name="Categories in top-nav"/>
     <template id="website_sale.products_attributes_top" active="False" name="Attributes in top-nav"/>
+
+    <template id="website_sale.products_shop_title" active="True" name="Show Shop Title"/>
+    <template id="website_sale.products_shop_title_align" active="False" name="Align Shop Title"/>
 
     <template id="website_sale.filter_color_attributes" name="Color attributes in Filter">
         <t t-foreach="a.value_ids" t-as="v">
@@ -1345,7 +1380,7 @@
             class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch overflow-hidden"
             role="navigation"
         >
-            <div class="o_wsale_filmstrip_wrapper position-relative w-100 overflow-auto z-1">
+            <div class="o_wsale_filmstrip_wrapper position-relative overflow-auto z-1">
                 <ul
                     class="o_wsale_filmstrip d-flex align-items-stretch mb-0 list-unstyled overflow-visible"
                     role="menu"
