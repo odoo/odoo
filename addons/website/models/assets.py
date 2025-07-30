@@ -13,6 +13,16 @@ class Web_EditorAssets(models.AbstractModel):
     _inherit = 'web_editor.assets'
 
     @api.model
+    def make_scss_customizations(self, urlDataList):
+        """
+        Groups multiple make_scss_customization calls for better performance
+        """
+        old_values = []
+        for value in urlDataList:
+            old_values.append(self.make_scss_customization(value['url'], value['data']))
+        return old_values
+
+    @api.model
     def make_scss_customization(self, url, values):
         """
         Makes a scss customization of the given file. That file must
@@ -123,6 +133,7 @@ class Web_EditorAssets(models.AbstractModel):
         custom_url = self._make_custom_asset_url(url, 'web.assets_frontend')
         updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
+        old_values = []
         for name, value in values.items():
             # Protect variable names so they cannot be computed as numbers
             # on SCSS compilation (e.g. var(--700) => var(700)).
@@ -135,11 +146,15 @@ class Web_EditorAssets(models.AbstractModel):
             regex = re.compile(pattern % ".+")
             replacement = pattern % value
             if regex.search(updatedFileContent):
+                old_values.append(re.search(r"'%s': ([^,\n]+)" % name, updatedFileContent).group())
                 updatedFileContent = re.sub(regex, replacement, updatedFileContent)
             else:
+                old_values.append("'%s': NULL" % name)
                 updatedFileContent = re.sub(r'( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent)
 
         self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
+
+        return old_values
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):

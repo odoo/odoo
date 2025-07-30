@@ -55,6 +55,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         save_handlers: this.onSave.bind(this),
+        discard_handlers: this.onDiscard.bind(this),
     };
 
     async onSave() {
@@ -67,6 +68,16 @@ export class CustomizeWebsitePlugin extends Plugin {
             });
         }
     }
+
+    onDiscard() {
+        if (this.original_backend_values.length) {
+            this.services.orm.call("web_editor.assets", "make_scss_customizations", [
+                this.original_backend_values,
+            ]);
+            this.reloadBundles();
+        }
+    }
+
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
@@ -90,6 +101,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     variablesToCustomize = {};
     colorsToCustomize = {};
     resolves = {};
+    original_backend_values = [];
     getPendingThemeRequests() {
         return this.pendingThemeRequests;
     }
@@ -192,7 +204,29 @@ export class CustomizeWebsitePlugin extends Plugin {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        await this.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
+        const old_values = await this.services.orm.call(
+            "web_editor.assets",
+            "make_scss_customization",
+            [url, values]
+        );
+        old_values.forEach((old_value) => {
+            const [key, value] = old_value.replaceAll("'", "").split(": ");
+            if (
+                !this.original_backend_values.some(
+                    (original_backend_value) => url === original_backend_value.url
+                )
+            ) {
+                this.original_backend_values.push({
+                    url: url,
+                    data: {},
+                });
+            }
+            this.original_backend_values.forEach((original_backend_value) => {
+                if (original_backend_value.url === url && !(key in original_backend_value.data)) {
+                    original_backend_value.data[key] = value;
+                }
+            });
+        });
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
     async _reloadBundles() {
