@@ -149,6 +149,20 @@ test("can display client actions in Dialog, then as main destroys Dialog", async
     expect(".modal .test_client_action").toHaveCount(0);
 });
 
+test("dialog no header", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Dialog Test",
+        target: "new",
+        tag: "__test__client__action__",
+        type: "ir.actions.client",
+        context: { header: false },
+    });
+
+    expect(".modal .test_client_action").toHaveCount(1);
+    expect(".modal-title").toHaveCount(0);
+});
+
 test("soft_reload will refresh data", async () => {
     onRpc("web_search_read", () => {
         expect.step("web_search_read");
