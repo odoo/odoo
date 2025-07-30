@@ -44,16 +44,39 @@
                     t-on-click="(ev) => this.onClickToggleAudioCall(ev, { camera: true })">
                     <i class="fa fa-video-camera fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
                 </button>
-                <t t-if="props.thread.eq(rtc.channel)" t-set="callText">Disconnect</t>
-                <t t-else="" t-set="callText">Join Call</t>
-                <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none align-items-center p-0"
-                    t-att-aria-label="callText"
-                    t-att-class="{ 'btn-danger': isOfActiveCall, 'btn-success': !isOfActiveCall }"
-                    t-att-disabled="rtc.state.hasPendingRequest"
-                    t-att-title="callText"
-                    t-on-click="onClickToggleAudioCall">
-                    <i class="fa fa-phone fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
-                </button>
+                <t t-if="!isOfActiveCall and props.thread.lastCallUsedCamera !== undefined">
+                    <t t-set="joinBackAriaLabel" t-value="props.thread.lastCallUsedCamera ? 'Join Video Call' : 'Join Call'"/>
+                    <button
+                        class="btn btn-success smaller d-flex gap-1 m-1 border-0 align-items-center"
+                        t-att-disabled="rtc.state.hasPendingRequest"
+                        t-att-aria-label="joinBackAriaLabel"
+                        t-on-click="(ev) => this.onClickToggleAudioCall(ev, { camera: props.thread.lastCallUsedCamera })"
+                    >
+                        <i class="fa fa-fw" t-att-class="{'fa-video-camera': props.thread.lastCallUsedCamera, 'fa-phone': !props.thread.lastCallUsedCamera}"/>Join
+                    </button>
+                </t>
+                <t t-else="">
+                    <button
+                        t-if="!isOfActiveCall"
+                        class="btn btn-success smaller d-flex m-1 border-0 rounded-circle shadow-none align-items-center p-0"
+                        aria-label="Join Video Call"
+                        title="Join Video Call"
+                        t-att-disabled="rtc.state.hasPendingRequest"
+                        t-on-click="(ev) => this.onClickToggleAudioCall(ev, { camera: true })"
+                    >
+                        <i class="fa fa-fw fa-video-camera m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
+                    </button>
+                    <t t-if="isOfActiveCall" t-set="callText">Disconnect</t>
+                    <t t-else="" t-set="callText">Join Call</t>
+                    <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none align-items-center p-0"
+                        t-att-aria-label="callText"
+                        t-att-class="{ 'btn-danger': isOfActiveCall, 'btn-success': !isOfActiveCall }"
+                        t-att-disabled="rtc.state.hasPendingRequest"
+                        t-att-title="callText"
+                        t-on-click="onClickToggleAudioCall">
+                        <i class="fa fa-phone fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
+                    </button>
+                </t>
             </div>
             <div t-if="isMobileOS and store.settings.use_push_to_talk and isOfActiveCall" class="d-flex align-items-center flex-wrap justify-content-between p-2">
                 <button class="o-discuss-CallActionList-pushToTalk btn btn-primary d-flex w-100 border-0 shadow-none"

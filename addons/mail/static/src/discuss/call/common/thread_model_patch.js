@@ -94,6 +94,7 @@ const ThreadPatch = {
                 return this.rtc_session_ids.filter((s) => s.hasVideo).length;
             },
         });
+        this.lastCallUsedCamera = undefined;
     },
     get showCallView() {
         return !this.store.rtc.state.isFullscreen && this.rtc_session_ids.length > 0;

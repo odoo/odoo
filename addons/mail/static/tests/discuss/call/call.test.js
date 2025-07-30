@@ -25,6 +25,7 @@ import {
     asyncStep,
     Command,
     mockService,
+    onRpc,
     patchWithCleanup,
     serverState,
     waitForSteps,
@@ -655,4 +656,35 @@ test("can join / leave call from discuss sidebar actions", async () => {
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Disconnect')");
     await contains(".o-discuss-Call", { count: 0 });
+});
+
+test("allow to join call with video according to previous call settings", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Alfred" }),
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("button[title='Join Call']");
+    await contains("button[title='Join Video Call']");
+    await click("button[title='Join Call']");
+    await contains(".o-discuss-Call.o-selfInCall");
+    await click("button[title='Disconnect'");
+    await contains(".o-discuss-Call.o-selfInCall", { count: 0 });
+    await click("button[aria-label='Join Call']", { text: "Join", contains: [".fa-phone"] });
+    await contains(".o-discuss-Call.o-selfInCall");
+    await click("button[title='Turn camera on']");
+    await click("button[title='Disconnect'");
+    await contains(".o-discuss-Call.o-selfInCall", { count: 0 });
+    await click("button[aria-label='Join Video Call']", {
+        text: "Join",
+        contains: [".fa-video-camera"],
+    });
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin']");
 });
