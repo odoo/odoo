@@ -226,12 +226,21 @@ class ProductsRibbonOptionPlugin extends Plugin {
         ribbons.forEach((ribbonElement) => {
             ribbonElement.classList.add("d-none");
             ribbonElement.dataset.ribbonId = "";
-            this.productTemplatesRibbons.push({
-                templateId: isProductPage
-                    ? this.productTemplateID
-                    : parseInt(ribbonElement.previousElementSibling.dataset.oeId),
-                ribbonId: false,
-            });
+            let templateId;
+            if (isProductPage) {
+                templateId = this.productTemplateID;
+            } else {
+                // Find the product template ID from the ribbon element's parent form
+                const productForm = ribbonElement.closest('form.oe_product_cart');
+                const templateElement = productForm?.querySelector('[data-oe-model="product.template"]');
+                templateId = templateElement ? parseInt(templateElement.getAttribute('data-oe-id')) : null;
+            }
+            if (templateId && !isNaN(templateId)) {
+                this.productTemplatesRibbons.push({
+                    templateId: templateId,
+                    ribbonId: false,
+                });
+            }
         });
         this._saveRibbons();
     }
