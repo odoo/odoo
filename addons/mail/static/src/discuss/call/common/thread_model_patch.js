@@ -94,9 +94,55 @@ const ThreadPatch = {
                 return this.rtc_session_ids.filter((s) => s.hasVideo).length;
             },
         });
+        this._screenStack = [];
+        this._cameraStack = [];
     },
     get showCallView() {
         return !this.store.rtc.state.isFullscreen && this.rtc_session_ids.length > 0;
+    },
+    /**
+     * @param {number} sessionId
+     * @param {"add"|"remove"} action
+     * @param {"screen"|"camera"} type
+     */
+    updateCallFocusStack(sessionId, action, type) {
+        if (!this.eq(this.store.rtc?.channel)) {
+            return;
+        }
+        const stack = type === "screen" ? this._screenStack : this._cameraStack;
+        const index = stack.indexOf(sessionId);
+        if (index !== -1) {
+            stack.splice(index, 1);
+        }
+        if (action === "add") {
+            stack.push(sessionId);
+        }
+        this._updateActiveSession();
+    },
+
+    _updateActiveSession() {
+        if (!this.store.settings.useCallAutoFocus) {
+            return;
+        }
+        let type = "screen";
+        let activeSessionId = this._screenStack.at(-1);
+        if (!activeSessionId) {
+            type = "camera";
+            activeSessionId = this._cameraStack.at(-1);
+        }
+        if (!activeSessionId) {
+            // Ends the recursion if both stacks are emptied.
+            return;
+        }
+        const activeSession = this.store["discuss.channel.rtc.session"].get(activeSessionId);
+        if (activeSession) {
+            this.activeRtcSession = activeSession;
+            activeSession.mainVideoStreamType = type;
+        } else {
+            this.activeRtcSession = undefined;
+            // Recursively clean and obtain the last existing session.
+            this.updateCallFocusStack(activeSessionId, "remove", type);
+        }
     },
 };
 patch(Thread.prototype, ThreadPatch);

@@ -163,29 +163,32 @@ export class RtcSession extends Record {
     }
 
     updateFocus(info) {
-        if (!this.store.settings.useCallAutoFocus) {
+        if (!this.channel.eq(this.store.rtc?.channel)) {
+            // only makes sense in the current channel
             return;
         }
-        if (!this.channel.eq(this.store.rtc?.channel)) {
+        if (this.eq(this.store.rtc.selfSession)) {
+            // no autofocus on self
             return;
         }
         if (!this.channel.activeRtcSession) {
-            return;
-        }
-        if (this.channel.activeRtcSession?.eq(this)) {
+            // if we are not already in focus mode, do not force focus
             return;
         }
         if (!this.is_screen_sharing_on && info.is_screen_sharing_on) {
-            this.channel.activeRtcSession = this;
-            this.mainVideoStreamType = "screen";
+            this.channel.updateCallFocusStack(this.id, "add", "screen");
+            return;
+        }
+        if (this.is_screen_sharing_on && !info.is_screen_sharing_on) {
+            this.channel.updateCallFocusStack(this.id, "remove", "screen");
             return;
         }
         if (!this.isTalking && info.isTalking) {
-            if (this.channel.activeRtcSession.mainVideoStreamType === "screen") {
-                return;
-            }
-            this.channel.activeRtcSession = this;
-            this.mainVideoStreamType = "camera";
+            this.channel.updateCallFocusStack(this.id, "add", "camera");
+            return;
+        }
+        if (this.isTalking && !info.isTalking) {
+            this.channel.updateCallFocusStack(this.id, "remove", "camera");
         }
     }
 

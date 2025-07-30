@@ -1246,13 +1246,6 @@ export class Rtc extends Record {
                 if (!session || !this.channel) {
                     return;
                 }
-                if (
-                    this.channel.activeRtcSession === session &&
-                    session.is_screen_sharing_on &&
-                    !info.isScreenSharingOn
-                ) {
-                    this.channel.activeRtcSession = undefined;
-                }
                 // `isRaisingHand` is turned into the Date `raisingHand`
                 this.setRemoteRaiseHand(session, info.isRaisingHand);
                 delete info.isRaisingHand;
@@ -1526,6 +1519,8 @@ export class Rtc extends Record {
 
     disconnect(session) {
         const downloadTimeout = this.downloadTimeouts.get(session.id);
+        this.channel?.updateCallFocusStack(session.id, "remove", "screen");
+        this.channel?.updateCallFocusStack(session.id, "remove", "camera");
         if (downloadTimeout) {
             clearTimeout(downloadTimeout);
             this.downloadTimeouts.delete(session.id);
