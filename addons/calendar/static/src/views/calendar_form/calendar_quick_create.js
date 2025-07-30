@@ -70,4 +70,20 @@ export class CalendarQuickCreate extends FormViewDialog {
             }
         });
     }
+
+    async onExpand() {
+        const beforeLeaveCallbacks = this.viewProps.__beforeLeave__.callbacks;
+        const res = await Promise.all(beforeLeaveCallbacks.map((callback) => callback()));
+        if (!res.includes(false)) {
+            this.actionService.doAction({
+                type: "ir.actions.act_window",
+                res_model: this.props.resModel,
+                res_id: this.currentResId,
+                views: [[false, "form"]],
+            },
+            {
+                additionalContext: this.props.context
+            });
+        }
+    }
 }
