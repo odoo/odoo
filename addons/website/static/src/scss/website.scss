@@ -479,7 +479,8 @@ $-header-nav-link-height: $nav-link-height;
 
     @if
         o-website-value('footer-template') == 'descriptive' or
-        o-website-value('footer-template') == 'contact'
+        o-website-value('footer-template') == 'contact' or
+        o-website-value('footer-template') == 'mega'
     {
         @include o-apply-colors('footer-bright');
         @include o-apply-colors('footer-bright-custom');

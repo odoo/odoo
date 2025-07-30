@@ -30,6 +30,7 @@ class FooterCopyrightOptionPlugin extends Plugin {
             "website.template_footer_contact",
             "website.template_footer_call_to_action",
             "website.template_footer_headline",
+            'website.template_footer_mega',
         ];
     }
 }
