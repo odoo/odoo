@@ -10,6 +10,7 @@
 This is a base module. It holds website-related stuff for Contact model (res.partner).
     """,
     'depends': [
+        'base_geolocalize',
         'contacts',
         'partnership',
         'website',
@@ -18,6 +19,13 @@ This is a base module. It holds website-related stuff for Contact model (res.par
         'views/res_partner_views.xml',
         'views/website_partner_templates.xml',
         'data/website_partner_data.xml',
+        'data/res_partner_activation_data.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
+        'views/res_partner_grade_views.xml',
+        'views/res_partner_activation_views.xml',
+        'views/partner_assign_menus.xml',
+        'views/res_partner_views_copy.xml',
         'views/snippets.xml',
     ],
     'demo': [
