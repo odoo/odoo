@@ -49,6 +49,7 @@ class TestAvatarCardTour(MailCommon, HttpCase):
                 "job_id": job.id,
                 "address_id": other_partner.id,
                 "work_email": "test_employee@test.com",
+                "work_phone": "123456789",
             })
         )
         cls.test_employee = test_employee
