@@ -173,7 +173,7 @@ class MailMessage(models.Model):
             return NotImplemented
         return [('model', '=', model)] + res_id_domain
 
-    @api.ondelete(at_uninstall=True)
+    @api.ondelete(at_uninstall=False)
     def _except_audit_log(self):
         if self.env.context.get('bypass_audit') is bypass_token:
             return
