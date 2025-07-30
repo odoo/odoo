@@ -3,6 +3,7 @@ import {
     registerWebsitePreviewTour,
     clickToolbarButton,
 } from '@website/js/tours/tour_utils';
+import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 
 registerWebsitePreviewTour("text_highlights", {
     url: "/",
@@ -48,6 +49,8 @@ registerWebsitePreviewTour("text_highlights", {
             const secondLine = document.createElement("i");
             secondLine.textContent = "Text content line B";
             this.anchor.replaceChildren(firstLine, document.createElement("br"), secondLine);
+            const editor = editorsWeakMap.get(this.anchor.ownerDocument);
+            editor.shared.history.addStep();
             // Select the whole content.
             const range = iframeDOC.createRange();
             const selection = iframeDOC.getSelection();
