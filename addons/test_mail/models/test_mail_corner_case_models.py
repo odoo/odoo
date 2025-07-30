@@ -182,6 +182,36 @@ class MailTestTrackDurationMixin(models.Model):
         return ['customer_id']
 
 
+class MailTestStageField(models.Model):
+    _description = 'Fake model to be a stage to help test rotting implementation'
+    _name = 'mail.test.rotting.stage.mixin'
+
+    name = fields.Char()
+
+    rotting_threshold_days = fields.Integer(default=3)
+    no_rot = fields.Boolean(default=False)
+
+
+class MailTestRottingMixin(models.Model):
+    _description = 'Fake model to test the rotting part of the mixin mail.thread.tracking.duration.mixin'
+    _name = 'mail.test.rotting.resource.mixin'
+    _track_duration_field = 'stage_id'
+    _inherit = ['mail.thread.tracking.duration.mixin']
+    name = fields.Char()
+
+    stage_id = fields.Many2one('mail.test.rotting.stage.mixin', 'Stage')
+    done = fields.Boolean(default=False)
+
+    def _get_rotting_depends_fields(self):
+        return super()._get_rotting_depends_fields() + ['done', 'stage_id.no_rot']
+
+    def _get_rotting_domain(self):
+        return super()._get_rotting_domain() + [
+            ('done', '=', False),
+            ('stage_id.no_rot', '=', False),
+        ]
+
+
 class MailTestTrackGroups(models.Model):
     _description = "Test tracking with groups"
     _name = "mail.test.track.groups"
