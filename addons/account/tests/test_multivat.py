@@ -34,7 +34,7 @@ def data_method_provider(chart_template_name, country_code):
     # this is used to simulated differences between xml_ids
     external_id_prefix = '' if chart_template_name == 'local' else f"{chart_template_name}_"
 
-    def test_data_getter(self, template_code):
+    def test_data_getter(self, template_code, demo=False):
         return {
             'template_data': {
                 'code_digits': 6,
@@ -250,8 +250,8 @@ class TestMultiVAT(AccountTestInvoicingCommon):
 
     def test_multivat_cash_basis(self):
         def wrap_data_getter_for_caba(data_getter):
-            def caba_data_getter(self, template_code):
-                rslt = data_getter(self, template_code)
+            def caba_data_getter(self, template_code, demo=False):
+                rslt = data_getter(self, template_code, demo)
 
                 rslt['account.tax']['es.caba_0_tax'] = _tax_vals("Dudu 0", 0, 'es', cash_basis=True, account_on_repartition=False)
                 rslt['account.tax']['es.caba_42_tax'] = _tax_vals("Dudu 42", 42, 'es', cash_basis=True)

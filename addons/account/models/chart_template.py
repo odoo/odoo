@@ -49,7 +49,7 @@ def preserve_existing_tags_on_taxes(env, module):
         env.cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
 
-def template(template=None, model='template_data'):
+def template(template=None, model='template_data', *, demo=False):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -64,7 +64,7 @@ def template(template=None, model='template_data'):
         module = path_info[0] if path_info else 'account'
 
         wrapper._module = module
-        wrapper._l10n_template = (template, model)
+        wrapper._l10n_template = (template, model, demo)
         return wrapper
     return decorator
 
@@ -77,11 +77,11 @@ class AccountChartTemplate(models.AbstractModel):
     def _template_register(self):
         def is_template(func):
             return callable(func) and hasattr(func, '_l10n_template')
-        template_register = defaultdict(lambda: defaultdict(list))
+        template_register = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))  # {demo: template: {model: [function, ...]}}
         cls = self.env.registry[self._name]
         for _attr, func in getmembers(cls, is_template):
-            template, model = func._l10n_template
-            template_register[template][model].append(func)
+            template, model, demo = func._l10n_template
+            template_register[demo][template][model].append(func)
         cls._template_register = template_register
         return template_register
 
@@ -255,8 +255,13 @@ class AccountChartTemplate(models.AbstractModel):
         if not isinstance(companies, models.BaseModel):
             companies = self.env['res.company'].browse(companies)
         for company in companies:
-            self.sudo().with_context(skip_pdf_attachment_generation=True)._load_data(self._get_demo_data(company))
-            self._post_load_demo_data(company)
+            self_ctx = self.with_context(
+                default_company_id=company.id,
+                allowed_company_ids=[company.id],
+            ).sudo()
+            demo_data = self_ctx._get_chart_template_data(company.chart_template, demo=True)
+            self_ctx.with_context(skip_pdf_attachment_generation=True)._load_data(demo_data)
+            self_ctx._post_load_demo_data(company.chart_template)
 
     def _pre_reload_data(self, company, template_data, data, force_create=True):
         """Pre-process the data in case of reloading the chart of accounts.
@@ -642,6 +647,7 @@ class AccountChartTemplate(models.AbstractModel):
                 for xml_id, vals in data.items():
                     to_be_removed = []
                     for field_name, field_val in vals.items():
+                        field = self.env[model]._fields.get(field_name)
                         if should_delay(created_models, yet_to_be_created_models, model, field_name, field_val):
                             # Default repartition lines will be created when we create account.tax
                             # If we delay the creation of repartition_line_ids, then we must get rid of the defaults
@@ -656,6 +662,22 @@ class AccountChartTemplate(models.AbstractModel):
                                 field_val = [Command.clear()] + field_val
                             to_be_removed.append(field_name)
                             to_delay[xml_id][field_name] = field_val
+                        if field and field.type == 'many2one_reference':
+                            model_field = self.env[model]._fields[field.model_field]
+                            if model_field.related:
+                                model_fname, path = model_field.related.split('.', 1)
+                                model_field = self.env[model]._fields[model_fname]
+                                if isinstance(vals[model_field.name], str):
+                                    model_id = self.ref(vals[model_field.name]).id
+                                else:
+                                    model_id = vals[model_field.name]
+                                res_model = self.env['ir.model'].browse(model_id).mapped(path)[0]
+                            else:
+                                res_model = vals[model_field.name]
+                            if res_model in yet_to_be_created_models:
+                                to_be_removed.extend([model_field.name, field_name])
+                                to_delay[xml_id][field_name] = vals[field_name]
+                                to_delay[xml_id][model_field.name] = vals[model_field.name]
                     for field_name in to_be_removed:
                         del vals[field_name]
                 if any(to_delay.values()):
@@ -786,14 +808,14 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_journal': 'product.category',
         }
 
-    def _get_chart_template_data(self, template_code):
+    def _get_chart_template_data(self, template_code, demo=False):
         template_data = defaultdict(lambda: defaultdict(dict))
         template_data['res.company']  # ensure it's the first property when iterating
         translatable_model_fields = self._get_translatable_template_model_fields()
         untranslatable_model_fields = self._get_untranslatable_fields_to_translate()
         for code in [None] + self._get_parent_template(template_code):
             for model, funcs in sorted(
-                self._template_register[code].items(),
+                self._template_register[demo][code].items(),
                 key=lambda i: TEMPLATE_MODELS.index(i[0]) if i[0] in TEMPLATE_MODELS else 1000
             ):
                 translatable_fields = translatable_model_fields.get(model, [])
@@ -811,8 +833,9 @@ class AccountChartTemplate(models.AbstractModel):
                                 for field in translatable_fields + untranslatable_fields:
                                     if field in record:
                                         record.setdefault('__translation_module__', {})[field] = func._module
-
                                 template_data[model][xmlid].update(record)
+        if 'account.move' in template_data:
+            template_data['account.move'] = template_data.pop('account.move')
         return template_data
 
     def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):

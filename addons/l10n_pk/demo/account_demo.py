@@ -1,31 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, Command
+from odoo import fields, models, Command
+from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
-    @api.model
-    def _get_demo_data_move(self, company=False):
-        moves = super()._get_demo_data_move(company)
-        if company.account_fiscal_country_id.code == "PK":
-            sale_journal = self.env['account.journal'].search(
-                domain=[
-                    *self.env['account.journal']._check_company_domain((company or self.env.company).id),
-                    ('type', '=', 'sale'),
-                ], limit=1)
-            moves.update({
+    @template(template='pk', model='account.move', demo=True)
+    def _l10n_pk_account_move_demo(self):
+        return {
                 'l10n_pk_demo_invoice_1': {
                     'move_type': 'out_invoice',
                     'partner_id': 'l10n_pk.res_partner_punjab',
                     'invoice_user_id': 'base.user_demo',
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': fields.Datetime.today() - relativedelta(days=1),
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_8',
@@ -60,7 +53,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_user_id': 'base.user_demo',
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': fields.Datetime.today() - relativedelta(days=2),
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_9',
@@ -86,7 +79,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_user_id': 'base.user_demo',
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': fields.Datetime.today() - relativedelta(days=3),
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_4',
@@ -223,12 +216,10 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ]
                 },
-            })
-        return moves
+            }
 
-    def _post_load_demo_data(self, company=False):
-        company = company or self.env.company
-        if company.account_fiscal_country_id.code == "PK":
+    def _post_load_demo_data(self, template_code):
+        if template_code == "pk":
             invoices = (
                 self.ref('l10n_pk_demo_invoice_1')
                 + self.ref('l10n_pk_demo_invoice_2')
@@ -241,4 +232,4 @@ class AccountChartTemplate(models.AbstractModel):
             )
             for move in invoices:
                 move.action_post()
-        return super()._post_load_demo_data(company)
+        super()._post_load_demo_data(template_code)
