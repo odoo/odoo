@@ -74,7 +74,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         )
         chatbot_message = discuss_channel.chatbot_message_ids.mail_message_id[:1]
         self.assertEqual(
-            Store(chatbot_message).get_result()["mail.message"],
+            Store().add(chatbot_message).get_result()["mail.message"],
             [
                 {
                     "attachment_ids": [],
@@ -149,7 +149,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             rating_id=record_rating.id,
         )
         self.assertEqual(
-            Store(message).get_result(),
+            Store().add(message).get_result(),
             {
                 "mail.message": self._filter_messages_fields(
                     {

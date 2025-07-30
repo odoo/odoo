@@ -13,7 +13,7 @@ class MailboxController(http.Controller):
         messages = res.pop("messages")
         return {
             **res,
-            "data": Store(messages, add_followers=True).get_result(),
+            "data": Store().add(messages, add_followers=True).get_result(),
             "messages": messages.ids,
         }
 
@@ -24,7 +24,7 @@ class MailboxController(http.Controller):
         messages = res.pop("messages")
         return {
             **res,
-            "data": Store(messages).get_result(),
+            "data": Store().add(messages).get_result(),
             "messages": messages.ids,
         }
 
@@ -35,6 +35,6 @@ class MailboxController(http.Controller):
         messages = res.pop("messages")
         return {
             **res,
-            "data": Store(messages).get_result(),
+            "data": Store().add(messages).get_result(),
             "messages": messages.ids,
         }

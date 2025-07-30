@@ -92,10 +92,9 @@ class WebsiteVisitor(models.Model):
                 )
                 channel._add_members(guests=guest, post_joined_message=False)
         # Open empty channel to allow the operator to start chatting with the visitor
-        Store(
+        Store(bus_channel=self.env.user).add(
             discuss_channels,
             extra_fields={"open_chat_window": True},
-            bus_channel=self.env.user,
         ).bus_send()
 
     def _merge_visitor(self, target):

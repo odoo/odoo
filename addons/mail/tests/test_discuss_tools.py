@@ -63,11 +63,13 @@ class TestDiscussTools(TransactionCase):
     def test_075_store_same_related_field_twice(self):
         """Test adding the same related field twice combines their data"""
         user = mail_new_test_user(self.env, login="test_user", name="Test User")
-        res = Store(
-            user, [Store.One("partner_id", "name"), Store.One("partner_id", "country_id")],
-        ).get_result()
         self.assertEqual(
-            res,
+            Store()
+            .add(
+                user,
+                [Store.One("partner_id", "name"), Store.One("partner_id", "country_id")],
+            )
+            .get_result(),
             {
                 "res.partner": [
                     {

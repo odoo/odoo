@@ -422,7 +422,7 @@ class DiscussChannel(models.Model):
                 member.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
             self.sudo().livechat_end_dt = fields.Datetime.now()
-            Store(self, "livechat_end_dt", bus_channel=self).bus_send()
+            Store(bus_channel=self).add(self, "livechat_end_dt").bus_send()
             # avoid useless notification if the channel is empty
             if not self.message_ids:
                 return
@@ -670,4 +670,4 @@ class DiscussChannel(models.Model):
         ):
             # sudo: discuss.channel - last operator left the conversation, state must be updated.
             channel_sudo.livechat_end_dt = fields.Datetime.now()
-            Store(channel_sudo, "livechat_end_dt", bus_channel=self).bus_send()
+            Store(bus_channel=self).add(channel_sudo, "livechat_end_dt").bus_send()

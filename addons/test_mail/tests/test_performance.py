@@ -1435,7 +1435,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         messages_all = self.messages_all.with_env(self.env)
 
         with self.assertQueryCount(employee=23):  # tm 22
-            res = Store(messages_all).get_result()
+            res = Store().add(messages_all).get_result()
 
         self.assertEqual(len(res["mail.message"]), 2 * 2)
         for message in res["mail.message"]:
@@ -1448,7 +1448,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         message = self.messages_all[0].with_env(self.env)
 
         with self.assertQueryCount(employee=23):  # tm 22
-            res = Store(message).get_result()
+            res = Store().add(message).get_result()
 
         self.assertEqual(len(res["mail.message"]), 1)
         self.assertEqual(len(res["mail.message"][0]["attachment_ids"]), 2)
@@ -1469,14 +1469,14 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         } for record in records])
 
         with self.assertQueryCount(employee=4):
-            res = Store(messages).get_result()
+            res = Store().add(messages).get_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
         with self.assertQueryCount(employee=14):  # tm: 13
-            res = Store(messages).get_result()
+            res = Store().add(messages).get_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
     @warmup
