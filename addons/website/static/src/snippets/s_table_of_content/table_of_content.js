@@ -62,7 +62,6 @@ export class TableOfContent extends Interaction {
         this.scrollHeight = 0;
         this.offset = 0;
 
-        this.stripNavbarStyles();
         this.scrollElement = closestScrollableY(this.el.closest(".s_table_of_content")) || this.el.ownerDocument.scrollingElement;
         this.scrollTarget = isScrollableY(this.scrollElement) ? this.scrollElement : this.scrollElement.ownerDocument.defaultView;
         this.tocElement = this.el.querySelector(".s_table_of_content_navbar");
@@ -80,18 +79,6 @@ export class TableOfContent extends Interaction {
     // Private
     //--------------------------------------------------------------------------
 
-    stripNavbarStyles() {
-        // This is needed for styles added on translations when the master text
-        // has no style.
-        for (let el of this.el.querySelectorAll(".s_table_of_content_navbar .table_of_content_link")) {
-            const translationEl = el.querySelector("span[data-oe-translation-state]");
-            if (translationEl) {
-                el = translationEl;
-            }
-            const text = el.textContent; // Get text from el.
-            el.textContent = text; // Replace all of el's content with that text.
-        }
-    }
     updateTableOfContentNavbarPosition() {
         if (!this.el.querySelector("a.table_of_content_link")) {
             // Do not start the scrollspy if the TOC is empty.
