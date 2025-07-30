@@ -12,6 +12,7 @@ export const textInputBasePassthroughProps = {
     tooltip: { type: String, optional: true },
     classes: { type: String, optional: true },
     inputClasses: { type: String, optional: true },
+    prefix: { type: String, optional: true },
 };
 
 export class BuilderTextInputBase extends Component {
