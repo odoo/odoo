@@ -831,7 +831,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             product_lines.append({
                 "sku_code": line.product_id.default_code or "",
                 "name": line.product_id.name or "",
-                "quantity": line.quantity or 0,
+                "quantity": line.quantity,
                 "remaining_quantity": line.remaining_quantity or 0,
                 "weight": line.weight or 0.0,
                 "picking_id": line.picking_id.name or "",
@@ -1126,7 +1126,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             grouped_items[pkg_num]["products"].append({
                 "product_id": line.product_id.default_code,
                 "name": (line.product_id.name or "")[:40],
-                "weight": line.weight or 0.4,
+                "weight": line.weight,
                 "description": (line.product_id.name or "")[:40],
                 "quantity": line.quantity or 1.0,
                 "hs_code": line.product_id.hs_code or "",
