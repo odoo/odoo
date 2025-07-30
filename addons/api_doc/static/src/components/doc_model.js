@@ -243,8 +243,8 @@ export class DocModel extends Component {
                         value: fieldData.help,
                     },
                     {
-                        type: TABLE_TYPES.Id,
-                        value: fieldData.name,
+                        type: TABLE_TYPES.Code,
+                        value: fieldData.module || "",
                     },
                 ]
             });
