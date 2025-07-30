@@ -109,13 +109,13 @@ class TestMessageValues(MailCommon):
         # message _to_store.
         self.env.flush_all()
         self.env.invalidate_all()
-        res = Store(message.with_user(self.user_employee)).get_result()
+        res = Store().add(message.with_user(self.user_employee)).get_result()
         self.assertEqual(res["mail.message"][0].get("record_name"), "Test1")
 
         record1.write({"name": "Test2"})
         self.env.flush_all()
         self.env.invalidate_all()
-        res = Store(message.with_user(self.user_employee)).get_result()
+        res = Store().add(message.with_user(self.user_employee)).get_result()
         self.assertEqual(res["mail.message"][0].get('record_name'), 'Test2')
 
         # check model not inheriting from mail.thread -> should not crash
@@ -124,7 +124,7 @@ class TestMessageValues(MailCommon):
             'model': record_nothread._name,
             'res_id': record_nothread.id,
         })
-        formatted = Store(message).get_result()["mail.message"][0]
+        formatted = Store().add(message).get_result()["mail.message"][0]
         self.assertEqual(formatted['record_name'], record_nothread.name)
 
     def test_records_by_message(self):

@@ -1374,13 +1374,13 @@ class TestNoThread(MailCommon, TestRecipients):
             'model': test_record._name,
             'res_id': test_record.id,
         })
-        formatted = Store(message).get_result()["mail.message"][0]
+        formatted = Store().add(message).get_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], test_record.name)
         self.assertEqual(formatted['record_name'], test_record.name)
 
         test_record.write({'name': 'Just Test'})
         message.invalidate_recordset(['record_name'])
-        formatted = Store(message).get_result()["mail.message"][0]
+        formatted = Store().add(message).get_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 

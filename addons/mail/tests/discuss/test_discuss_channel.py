@@ -315,7 +315,7 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_info_get(self):
         # `channel_get` should return a new channel the first time a partner is given
         channel = self.env["discuss.channel"]._get_or_create_chat(partners_to=self.test_partner.ids)
-        init_data = Store(channel).get_result()
+        init_data = Store().add(channel).get_result()
         initial_channel_info = init_data["discuss.channel"][0]
         self.assertEqual(
             {persona["id"] for persona in init_data["res.partner"]},
@@ -324,20 +324,20 @@ class TestChannelInternals(MailCommon, HttpCase):
 
         # `channel_get` should return the existing channel every time the same partner is given
         same_channel = self.env['discuss.channel']._get_or_create_chat(partners_to=self.test_partner.ids)
-        same_channel_info = Store(same_channel).get_result()["discuss.channel"][0]
+        same_channel_info = Store().add(same_channel).get_result()["discuss.channel"][0]
         self.assertEqual(same_channel_info['id'], initial_channel_info['id'])
 
         # `channel_get` should return the existing channel when the current partner is given together with the other partner
         together_pids = (self.partner_employee_nomail + self.test_partner).ids
         together_channel = self.env['discuss.channel']._get_or_create_chat(partners_to=together_pids)
-        together_channel_info = Store(together_channel).get_result()["discuss.channel"][0]
+        together_channel_info = Store().add(together_channel).get_result()["discuss.channel"][0]
         self.assertEqual(together_channel_info['id'], initial_channel_info['id'])
 
         # `channel_get` should return a new channel the first time just the current partner is given,
         # even if a channel containing the current partner together with other partners already exists
         solo_pids = self.partner_employee_nomail.ids
         solo_channel = self.env['discuss.channel']._get_or_create_chat(partners_to=solo_pids)
-        solo_channel_data = Store(solo_channel).get_result()
+        solo_channel_data = Store().add(solo_channel).get_result()
         solo_channel_info = solo_channel_data["discuss.channel"][0]
         self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
         self.assertEqual(
@@ -348,7 +348,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         # `channel_get` should return the existing channel every time the current partner is given
         same_solo_pids = self.partner_employee_nomail.ids
         same_solo_channel = self.env['discuss.channel']._get_or_create_chat(partners_to=same_solo_pids)
-        same_solo_channel_info = Store(same_solo_channel).get_result()["discuss.channel"][0]
+        same_solo_channel_info = Store().add(same_solo_channel).get_result()["discuss.channel"][0]
         self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
 
     # `channel_get` will pin the channel by default and thus last interest will be updated.
@@ -380,7 +380,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         msg_2 = self._add_messages(chat, 'Body2', author=self.user_employee.partner_id)
         self_member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
         self_member._mark_as_read(msg_2.id)
-        init_data = Store(chat).get_result()
+        init_data = Store().add(chat).get_result()
         self_member_info = next(
             filter(lambda d: d["id"] == self_member.id, init_data["discuss.channel.member"])
         )
@@ -390,7 +390,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             "Last message id should have been updated",
         )
         self_member._mark_as_read(msg_1.id)
-        final_data = Store(chat).get_result()
+        final_data = Store().add(chat).get_result()
         self_member_info = next(
             filter(lambda d: d["id"] == self_member.id, final_data["discuss.channel.member"])
         )

@@ -279,7 +279,7 @@ class ResPartner(models.Model):
         """
         domain = self._get_mention_suggestions_domain(search)
         partners = self._search_mention_suggestions(domain, limit)
-        store = Store(partners)
+        store = Store().add(partners)
         try:
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
             store.add(roles, "name")
