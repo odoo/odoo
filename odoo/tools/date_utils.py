@@ -123,8 +123,9 @@ def parse_date(value: str, env: Environment) -> date | datetime:
       - "=6m" sets June and resets to midnight
       - "=3H" sets time to 3:00:00
     - weekdays are handled similarly
-      - "=tuesday" sets to Tuesday of the current week (starting Monday) at midnight
+      - "=tuesday" sets to Tuesday of the current week at midnight
       - "+monday" goes to next Monday (no change if we are on Monday)
+      - "=week_start" sets to the first day of the current week, according to the locale
 
     The DSL for relative dates is as follows:
     ```
@@ -132,7 +133,7 @@ def parse_date(value: str, env: Environment) -> date | datetime:
     offset := date_rel | time_rel | weekday
     date_rel := (regex) [=+-]\d+[dwmy]
     time_rel := (regex) [=+-]\d+[HMS]
-    weekday := [=+-] ('monday' | ... | 'sunday')
+    weekday := [=+-] ('monday' | ... | 'sunday' | 'week_start')
     ```
 
     An equivalent function is JavaScript is `parseSmartDateInput`.
@@ -151,6 +152,7 @@ def parse_date(value: str, env: Environment) -> date | datetime:
     from odoo.orm.fields_temporal import Date, Datetime  # noqa: PLC0415
 
     dt: datetime | date = Datetime.now()
+    week_start = int(env["res.lang"]._get_data(code=env.user.lang).week_start) - 1
     term = terms.pop(0) if terms[0] in ('today', 'now') else 'now'
     if term == 'today':
         dt = Date.context_today(env['base'], dt)
@@ -163,9 +165,14 @@ def parse_date(value: str, env: Environment) -> date | datetime:
             raise ValueError(f"Invalid term {term!r} in expression date: {value!r}")
 
         # Weekday
-        if (weekday := WEEKDAY_NUMBER.get(term[1:])) is not None:
+        if term[1:] == "week_start":
+            weekday = week_start
+        else:
+            weekday = WEEKDAY_NUMBER.get(term[1:])
+
+        if weekday is not None:
             # current week starting on Monday
-            weekday_offset = weekday - dt.weekday()
+            weekday_offset = ((weekday - week_start) % 7) - ((dt.weekday() - week_start) % 7)
             if operator in ('+', '-'):
                 if operator == '+' and weekday_offset < 0:
                     weekday_offset += 7

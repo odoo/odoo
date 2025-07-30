@@ -22,6 +22,10 @@ from odoo.tools.date_utils import (
 
 
 class TestDateUtils(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["res.lang"]._lang_get(cls.env.user.lang).week_start = "1"
 
     @freeze_time('2024-05-01 14:00:00')
     def test_localized_timezone(self):
@@ -203,6 +207,23 @@ class TestDateUtils(TransactionCase):
         # next Sunday, previous Sunday
         self.assertEqual(parse('+sunday'), datetime(2024, 1, 7, 13, 5))
         self.assertEqual(parse('-sunday'), datetime(2023, 12, 31, 13, 5))
+
+        # week_start = 1 (Monday)
+        self.assertEqual(parse('=week_start'), datetime(2024, 1, 1))
+        self.assertEqual(parse('+week_start'), datetime(2024, 1, 8, 13, 5))
+        self.assertEqual(parse('-week_start'), datetime(2024, 1, 1, 13, 5))
+
+        # week_start = 6 (Saturday)
+        self.env["res.lang"]._lang_get(self.env.user.lang).week_start = "6"
+        self.assertEqual(parse('=week_start'), datetime(2023, 12, 30))
+        self.assertEqual(parse('+week_start'), datetime(2024, 1, 6, 13, 5))
+        self.assertEqual(parse('-week_start'), datetime(2023, 12, 30, 13, 5))
+
+        # week_start = 5 (Friday)
+        self.env["res.lang"]._lang_get(self.env.user.lang).week_start = "5"
+        self.assertEqual(parse('=week_start'), datetime(2024, 1, 5))
+        self.assertEqual(parse('+week_start'), datetime(2024, 1, 5, 13, 5))
+        self.assertEqual(parse('-week_start'), datetime(2024, 1, 5, 13, 5))
 
     @freeze_time('2024-01-05 13:05:00')
     def test_parse_date_relative_tz(self):
