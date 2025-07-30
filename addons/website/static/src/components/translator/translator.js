@@ -275,7 +275,11 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         };
         for (const translationEl of $editable) {
             if (translationEl.closest('.o_not_editable')) {
-                translationEl.addEventListener('click', showNotification);
+                translationEl.addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    showNotification(ev);
+                });
             }
             if (translationEl.closest('.s_table_of_content_navbar_wrap')) {
                 // Make sure the same translation ids are used.
