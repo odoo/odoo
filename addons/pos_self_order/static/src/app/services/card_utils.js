@@ -188,7 +188,9 @@ export function getOrderLineValues(
         const price = values.product_id.getPrice(
             currentOrder.pricelist_id,
             values.qty,
-            values.price_extra
+            values.price_extra,
+            false,
+            values.product_id
         );
 
         values.price_unit = price;

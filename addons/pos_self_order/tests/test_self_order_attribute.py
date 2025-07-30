@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo import Command
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
@@ -142,3 +143,48 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
 
         self.start_tour(self_route, "self_order_product_info")
+
+    def test_self_order_multi_check_attribute_with_extra_price(self):
+        self.pos_config.write({
+            'self_ordering_default_user_id': self.pos_admin.id,
+            'self_ordering_mode': "mobile",
+            'self_ordering_pay_after': "each",
+            'self_ordering_service_mode': "counter",
+            'available_preset_ids': [Command.clear()],
+        })
+        attributes = self.env['product.attribute'].create([
+            {
+                'name': "Colour",
+                'display_type': "radio",
+                'create_variant': "always",
+                'value_ids': [
+                    Command.create({'name': "No Colour", 'default_extra_price': 0}),
+                    Command.create({'name': "Blue", 'default_extra_price': 2}),
+                ],
+            },
+            {
+                'name': "Add-ons",
+                'display_type': "multi",
+                'create_variant': "no_variant",
+                'value_ids': [
+                    Command.create({'name': "Pen Holder", 'default_extra_price': 1.0}),
+                    Command.create({'name': "Mini Drawer", 'default_extra_price': 2.0}),
+                ],
+            },
+        ])
+
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': self.desk_organizer.product_tmpl_id.id,
+                'attribute_id': attr.id,
+                'value_ids': [Command.link(val.id) for val in attr.value_ids],
+            }
+            for attr in attributes
+        ])
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_self_order_multi_check_attribute_with_extra_price")
+
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.amount_total, 11.62)  # 5.10 (price) + 2.0 + 1.0 + 2.0 + 1.52 (tax)
