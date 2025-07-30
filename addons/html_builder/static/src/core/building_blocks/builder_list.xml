@@ -16,7 +16,7 @@
                                     </button>
                                 </td>
                                 <t t-foreach="Object.entries(props.itemShape).filter(([key,_]) => !props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
-                                    <td>
+                                    <td t-att-class="{'w-25': entry[1] === 'number' and Object.keys(this.props.itemShape).length > 1}">
                                         <t t-if="entry[1].endsWith('boolean')">
                                             <div class="o-hb-checkbox o-checkbox form-check o_field_boolean o_boolean_toggle form-switch">
                                                 <input type="checkbox" class="form-check-input"
@@ -79,10 +79,12 @@
                 </Dropdown>
             </div>
             <t t-else="">
-                <button type="button" class="builder_list_add_item o-hb-btn btn btn-success d-block mt-1 mx-auto w-100"
-                        t-on-click="addItem">
-                    <t t-out="props.addItemTitle"/>
-                </button>
+                <div class="text-end mt-1">
+                    <button type="button" class="builder_list_add_item o-hb-btn btn btn-success px-3"
+                            t-on-click="addItem">
+                        <t t-out="props.addItemTitle"/>
+                    </button>
+                </div>
             </t>
         </div>
     </BuilderComponent>

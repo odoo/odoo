@@ -8,7 +8,13 @@
                 commit="commit"
                 preview="preview"
                 value="state.value"
-        />
+                classes="'o-hb-input-field-text'"
+                inputClasses="'o-hb-input-text'"
+        >
+        <t t-if="props.prefix">
+            <span class="o-hb-input-field-prefix" t-out="props.prefix"/>
+        </t>
+        </BuilderTextInputBase>
     </BuilderComponent>
 </t>
 

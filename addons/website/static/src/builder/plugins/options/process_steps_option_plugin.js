@@ -5,16 +5,18 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { connectorOptionParams, ProcessStepsOption } from "./process_steps_option";
 import { WebsiteBackgroundOption } from "./background_option";
+import { withSequence } from "@html_editor/utils/resource";
+import { PROCESS_STEPS } from "@website/builder/option_sequence";
 
 class ProcessStepsOptionPlugin extends Plugin {
     static id = "processStepsOption";
     selector = ".s_process_steps";
     resources = {
         builder_options: [
-            {
+            withSequence(PROCESS_STEPS, {
                 OptionComponent: ProcessStepsOption,
                 selector: this.selector,
-            },
+            }),
             {
                 OptionComponent: WebsiteBackgroundOption,
                 selector: ".s_process_step .s_process_step_number",
