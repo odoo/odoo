@@ -30,7 +30,6 @@ class Manager(Thread):
         self.hostname = helpers.get_hostname()
         self.identifier = helpers.get_identifier()
         self.domain = self._get_domain()
-        self.token = helpers.get_token()
         self.version = helpers.get_version(detailed_version=True)
         self.previous_iot_devices = {}
         self.previous_unsupported_devices = {}
@@ -82,7 +81,7 @@ class Manager(Thread):
             'name': self.hostname,
             'identifier': self.identifier,
             'ip': self.domain,
-            'token': self.token,
+            'token': helpers.get_token(),
             'version': self.version,
         }
         devices_list = {}
