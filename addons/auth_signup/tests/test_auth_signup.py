@@ -59,7 +59,7 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             # Call the controller
             url_free_signup = self._get_free_signup_url()
             response = self.url_open(url_free_signup, data=payload)
-            self.assertIn('/web/login?redirect=%2Fweb%2Flogin_successful%3Faccount_created%3DTrue', response.url)
+            self.assertIn('/web/login_successful?account_created=True', response.url)
             # Check if an email is sent to the new userw
             new_user = self.env['res.users'].search([('name', '=', name)])
             self.assertTrue(new_user)

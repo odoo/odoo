@@ -63,19 +63,29 @@ class MemorySessionStore(SessionStore):
     def delete(self, session):
         self.store.pop(session.sid, None)
 
-    def delete_from_identifiers(self, identifiers):
+    def delete_from_identifiers(self, identifiers, exclude=[]):
         sid_to_remove = []
         for sid in self.store:
             if any(sid.startswith(identifier) for identifier in identifiers):
-                sid_to_remove.append(sid)
+                if sid not in exclude:
+                    sid_to_remove.append(sid)
         for sid in sid_to_remove:
             self.store.pop(sid)
 
     def get_missing_session_identifiers(self, identifiers):
         return set(identifiers).difference(self.store)
 
-    def rotate(self, session, env):
-        FilesystemSessionStore.rotate(self, session, env)
+    def delete_old_sessions(self, session):
+        return
+
+    def rotate(self, session, env, soft=None):
+        FilesystemSessionStore.rotate(self, session, env, soft)
+
+    def generate_key(self, salt=None):
+        return FilesystemSessionStore.generate_key(self, salt)
+
+    def is_valid_key(self, key):
+        return FilesystemSessionStore.is_valid_key(self, key)
 
     def vacuum(self):
         return

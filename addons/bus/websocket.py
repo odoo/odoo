@@ -735,6 +735,9 @@ class Websocket:
         session = root.session_store.get(self._session.sid)
         if not session:
             raise SessionExpiredException()
+        if 'next_sid' in session:
+            self._session = root.session_store.get(session['next_sid'])
+            return self._dispatch_bus_notifications()
          # Mark the notification request as processed.
         self._waiting_for_dispatch = False
         with acquire_cursor(session.db) as cr:
@@ -920,6 +923,9 @@ class WebsocketRequest:
 
     def _get_session(self):
         session = root.session_store.get(self.ws._session.sid)
+        if 'next_sid' in session:
+            self.ws._session = root.session_store.get(session['next_sid'])
+            return self._get_session()
         if not session:
             raise SessionExpiredException()
         return session
