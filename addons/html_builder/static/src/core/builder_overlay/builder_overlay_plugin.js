@@ -15,7 +15,7 @@ function isResizable(el) {
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["localOverlay", "history", "operation"];
-    static shared = ["showOverlayPreview", "hideOverlayPreview"];
+    static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
     resources = {
         step_added_handlers: this.refreshOverlays.bind(this),
         change_current_options_containers_listeners: this.openBuilderOverlays.bind(this),
