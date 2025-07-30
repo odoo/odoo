@@ -239,6 +239,7 @@ class ThemeUtils(models.AbstractModel):
         'website.template_footer_call_to_action',
         'website.template_footer_headline',
         'website.template_footer_mega',
+        'website.template_footer_mega_columns',
         # Default one, keep it last
         'website.footer_custom',
     ]
