@@ -725,7 +725,7 @@ export class FormOptionPlugin extends Plugin {
             }
             valueList = reactive({
                 title: _t("%s List", optionText),
-                addItemTitle: _t("Add New %s", optionText),
+                addItemTitle: _t("Add"),
                 checkType,
                 defaultItemName: _t("Item"),
                 hasDefault: ["one2many", "many2many"].includes(type) ? "multiple" : "unique",

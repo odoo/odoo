@@ -1,8 +1,11 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
+import { after } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
+import { CONTAINER_WIDTH } from "@website/builder/option_sequence";
 import { connectorOptionParams, ProcessStepsOption } from "./process_steps_option";
 import { WebsiteBackgroundOption } from "./background_option";
 
@@ -11,10 +14,10 @@ class ProcessStepsOptionPlugin extends Plugin {
     selector = ".s_process_steps";
     resources = {
         builder_options: [
-            {
+            withSequence(after(CONTAINER_WIDTH), {
                 OptionComponent: ProcessStepsOption,
                 selector: this.selector,
-            },
+            }),
             {
                 OptionComponent: WebsiteBackgroundOption,
                 selector: ".s_process_step .s_process_step_number",

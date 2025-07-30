@@ -2,11 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="website.InstagramOption">
-    <div class="alert alert-primary p-2 m-2">
-        Your instagram page must be public to be integrated into an Odoo website.
-    </div>
-    <BuilderRow label.translate="Instagram Page">
-        <BuilderTextInput action="'instagramPage'" placeholder="'odoo.official'" preview="false"/>
+    <BuilderRow label.translate="Instagram Page" tooltip.translate="Your Instagram page must be public to be integrated into an Odoo website.">
+        <BuilderTextInput action="'instagramPage'" placeholder.translate="Your Instagram account" preview="false" prefix="'@'"/>
     </BuilderRow>
 </t>
 
