@@ -33,6 +33,7 @@ class ResConfigSettings(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
     account_peppol_verification_code = fields.Char(related='account_peppol_edi_user.peppol_verification_code', readonly=False)
+    account_peppol_token_out_of_sync = fields.Boolean(related='account_peppol_edi_user.peppol_token_out_of_sync', readonly=False)
     is_account_peppol_participant = fields.Boolean(
         string='Use PEPPOL',
         related='company_id.is_account_peppol_participant', readonly=False,
@@ -200,6 +201,25 @@ class ResConfigSettings(models.TransientModel):
         # once we sent the migration key over, we don't need it
         # but we need the field for future in case the user decided to migrate away from Odoo
         self.account_peppol_migration_key = False
+
+    def button_reconnect_this_database(self):
+        """
+        Marks the connection as out of sync, so that the client can re-sync
+        with the IAP server.
+        This is useful when the token is desynchronized, for example, after a
+        migration or a change in the IAP server.
+        """
+        self.ensure_one()
+        self.account_peppol_edi_user._peppol_out_of_sync_reconnect_this_database()
+
+    def button_disconnect_this_database(self):
+        """
+        Removes the Peppol connection from the company.
+        This is useful when the user wants to remove the Peppol connection
+        without deregistering the participant.
+        """
+        self.ensure_one()
+        self.account_peppol_edi_user._peppol_out_of_sync_disconnect_this_database()
 
     @handle_demo
     def button_update_peppol_user_data(self):
