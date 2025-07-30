@@ -618,6 +618,33 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /** @param {number} id */
+    _delete_sub_channel(id) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        const [sub_channel] = this.browse(id);
+
+        if (sub_channel.author_id === this.env.user.partner_id) {
+            const [partner] = ResPartner.read(this.env.user.partner_id);
+            this.message_post(
+                sub_channel.parent_channel_id,
+                makeKwArgs({
+                    body: `${partner.display_name} deleted a thread: <a href='#' class='o_channel_redirect' data-oe-id='${id}' data-oe-model='discuss.channel'>${sub_channel.name}</a>.`,
+                    message_type: "notification",
+                    subtype_xmlid: "mail.mt_comment",
+                })
+            );
+            BusBus._sendone(partner, "discuss.channel/delete", {
+                id: id,
+            });
+            DiscussChannel.unlink([id]);
+        }
+    }
+
+    /** @param {number} id */
     execute_command_help(ids) {
         const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;

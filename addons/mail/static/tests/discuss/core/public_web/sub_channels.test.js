@@ -317,3 +317,20 @@ test("show notification when clicking on deleted thread", async () => {
         text: "This thread is no longer available.",
     });
 });
+
+test("should allow thread deletion only if the current user is the author", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const subChannelID = pyEnv["discuss.channel"].create({
+        name: "test thead",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(subChannelID);
+    await contains(".o-mail-Discuss-threadName[title='test thead']");
+    await click("[title='Delete Thread']");
+    await click("button:contains('Delete Thread')");
+    await contains(".o-mail-Discuss-threadName[title='Inbox']");
+});
