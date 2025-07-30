@@ -121,10 +121,11 @@ export class Homepage extends Component {
                 </div>
                 <div t-if="!state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
                     <p class="m-0 fw-bold">
-                        No subscription linked to your IoT Box.
+                        This IoT Box doesn't have a valid certificate.
                     </p>
                     <small>
-                        Please contact your account manager to take advantage of your IoT Box's full potential.
+                        The IoT Box should get a certificate automatically when paired with a database. If it doesn't, 
+                        try to restart it.
                     </small>
                 </div>
                 <div t-if="store.advanced and state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-info" role="alert">
