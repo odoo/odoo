@@ -51,6 +51,12 @@ class Binary(Field):
 
     _description_attachment = property(attrgetter('attachment'))
 
+    def _description_groupable(self, env):
+        return False
+
+    def _description_sortable(self, env):
+        return False
+
     def convert_to_column(self, value, record, values=None, validate=True):
         # Binary values may be byte strings (python 2.6 byte array), but
         # the legacy OpenERP convention is to transfer and store binaries
