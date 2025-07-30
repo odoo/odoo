@@ -1143,7 +1143,7 @@ class StockQuant(models.Model):
         }
         for product, location, lot, package, owner, reserved_quantity, quants in reserved_quants:
             ml_reserved_qty = reserved_move_lines.get((product, location, lot, package, owner), 0)
-            if location.should_bypass_reservation():
+            if location.should_bypass_reservation() or (product.tracking in ('lot', 'serial') and not lot):
                 quants._update_reserved_quantity(product, location, -reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
             elif float_compare(reserved_quantity, ml_reserved_qty, precision_rounding=product.uom_id.rounding) != 0:
                 quants._update_reserved_quantity(product, location, ml_reserved_qty - reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
@@ -1151,7 +1151,7 @@ class StockQuant(models.Model):
                 del reserved_move_lines[(product, location, lot, package, owner)]
 
         for (product, location, lot, package, owner), reserved_quantity in reserved_move_lines.items():
-            if location.should_bypass_reservation():
+            if location.should_bypass_reservation() or (product.tracking in ('lot', 'serial') and not lot):
                 continue
             else:
                 self.env['stock.quant']._update_reserved_quantity(product, location, reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
