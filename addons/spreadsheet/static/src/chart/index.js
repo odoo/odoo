@@ -1,7 +1,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { OdooChartCorePlugin } from "./plugins/odoo_chart_core_plugin";
 import { ChartOdooMenuPlugin } from "./plugins/chart_odoo_menu_plugin";
-import { OdooChartUIPlugin } from "./plugins/odoo_chart_ui_plugin";
+import { OdooChartCoreViewPlugin } from "./plugins/odoo_chart_core_view_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { chartOdooMenuPlugin } from "./odoo_menu/odoo_menu_chartjs_plugin";
 
@@ -13,6 +13,8 @@ chartComponentRegistry.add("odoo_bar", ChartJsComponent);
 chartComponentRegistry.add("odoo_line", ChartJsComponent);
 chartComponentRegistry.add("odoo_pie", ChartJsComponent);
 chartComponentRegistry.add("odoo_radar", ChartJsComponent);
+chartComponentRegistry.add("odoo_sunburst", ChartJsComponent);
+chartComponentRegistry.add("odoo_treemap", ChartJsComponent);
 chartComponentRegistry.add("odoo_waterfall", ChartJsComponent);
 chartComponentRegistry.add("odoo_pyramid", ChartJsComponent);
 chartComponentRegistry.add("odoo_scatter", ChartJsComponent);
@@ -180,10 +182,24 @@ chartSubtypeRegistry.add("odoo_funnel", {
     category: "misc",
     preview: "o-spreadsheet-ChartPreview.FUNNEL_CHART",
 });
+chartSubtypeRegistry.add("odoo_treemap", {
+    displayName: _t("Treemap"),
+    chartType: "odoo_treemap",
+    chartSubtype: "odoo_treemap",
+    category: "hierarchical",
+    preview: "o-spreadsheet-ChartPreview.TREE_MAP_CHART",
+});
+chartSubtypeRegistry.add("odoo_sunburst", {
+    displayName: _t("Sunburst"),
+    chartType: "odoo_sunburst",
+    chartSubtype: "odoo_sunburst",
+    category: "hierarchical",
+    preview: "o-spreadsheet-ChartPreview.SUNBURST_CHART",
+});
 
 chartJsExtensionRegistry.add("chartOdooMenuPlugin", {
     register: (Chart) => Chart.register(chartOdooMenuPlugin),
     unregister: (Chart) => Chart.unregister(chartOdooMenuPlugin),
 });
 
-export { OdooChartCorePlugin, ChartOdooMenuPlugin, OdooChartUIPlugin };
+export { OdooChartCorePlugin, ChartOdooMenuPlugin, OdooChartCoreViewPlugin };

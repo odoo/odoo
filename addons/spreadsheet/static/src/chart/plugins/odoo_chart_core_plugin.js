@@ -24,6 +24,7 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
         "getChartFieldMatch",
         "getOdooChartDisplayName",
         "getOdooChartFieldMatching",
+        "getChartGranularity",
     ]);
 
     constructor(config) {
@@ -104,6 +105,16 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
         const { title, type } = this.getters.getChart(chartId);
         const name = title.text || CHART_PLACEHOLDER_DISPLAY_NAME[type];
         return `(#${this.getOdooChartIds().indexOf(chartId) + 1}) ${name}`;
+    }
+
+    getChartGranularity(chartId) {
+        const definition = this.getters.getChartDefinition(chartId);
+        if (definition.type.startsWith("odoo_") && definition.metaData.groupBy.length) {
+            const horizontalAxis = definition.metaData.groupBy[0];
+            const [fieldName, granularity] = horizontalAxis.split(":");
+            return { fieldName, granularity };
+        }
+        return null;
     }
 
     /**

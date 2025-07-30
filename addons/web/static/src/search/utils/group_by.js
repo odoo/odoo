@@ -1,4 +1,4 @@
-import { DEFAULT_INTERVAL, INTERVAL_OPTIONS } from "./dates";
+import { DEFAULT_INTERVAL, BACKEND_INTERVAL_OPTIONS } from "./dates";
 
 /**
  * @param {string} descr
@@ -28,7 +28,7 @@ export function getGroupBy(descr, fields) {
         if (["date", "datetime"].includes(fieldType)) {
             if (!interval) {
                 interval = DEFAULT_INTERVAL;
-            } else if (!Object.keys(INTERVAL_OPTIONS).includes(interval)) {
+            } else if (!Object.keys(BACKEND_INTERVAL_OPTIONS).includes(interval)) {
                 throw Error(errorMsg(descr));
             }
             spec = `${fieldName}:${interval}`;
@@ -40,7 +40,7 @@ export function getGroupBy(descr, fields) {
         }
     } else {
         if (interval) {
-            if (!Object.keys(INTERVAL_OPTIONS).includes(interval)) {
+            if (!Object.keys(BACKEND_INTERVAL_OPTIONS).includes(interval)) {
                 throw Error(errorMsg(descr));
             }
             spec = `${fieldName}:${interval}`;

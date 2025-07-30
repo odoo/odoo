@@ -34,12 +34,13 @@ import { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin } from "@spreadsheet/l
 import {
     ChartOdooMenuPlugin,
     OdooChartCorePlugin,
-    OdooChartUIPlugin,
+    OdooChartCoreViewPlugin,
 } from "@spreadsheet/chart/index"; // Odoochart depends on filter for its getters
 import { PivotCoreGlobalFilterPlugin } from "./pivot/plugins/pivot_core_global_filter_plugin";
 import { PivotOdooUIPlugin } from "./pivot/plugins/pivot_odoo_ui_plugin";
 import { ListCoreGlobalFilterPlugin } from "./list/plugins/list_core_global_filter_plugin";
 import { globalFieldMatchingRegistry } from "./global_filters/helpers";
+import { OdooChartFeaturePlugin } from "./chart/plugins/odoo_chart_feature_plugin";
 
 globalFieldMatchingRegistry.add("pivot", {
     getIds: (getters) =>
@@ -114,9 +115,10 @@ coreViewsPluginRegistry.add(
     PivotCoreViewGlobalFilterPlugin
 );
 coreViewsPluginRegistry.add("OdooListCoreViewPlugin", ListCoreViewPlugin);
-coreViewsPluginRegistry.add("odooChartUIPlugin", OdooChartUIPlugin);
+coreViewsPluginRegistry.add("OdooChartCoreViewPlugin", OdooChartCoreViewPlugin);
 
 featurePluginRegistry.add("OdooPivotGlobalFilterUIPlugin", PivotUIGlobalFilterPlugin);
 featurePluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 featurePluginRegistry.add("odooPivotUIPlugin", PivotOdooUIPlugin);
 featurePluginRegistry.add("odooListUIPlugin", ListUIPlugin);
+featurePluginRegistry.add("OdooChartFeaturePlugin", OdooChartFeaturePlugin);
