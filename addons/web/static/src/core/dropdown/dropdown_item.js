@@ -42,7 +42,7 @@ export class DropdownItem extends Component {
     }
 
     onClick(ev) {
-        if (this.props.attrs && this.props.attrs.href && !this.props.attrs.download) {
+        if (this.props.attrs && this.props.attrs.href) {
             ev.preventDefault();
         }
         this.props.onSelected?.(ev);
