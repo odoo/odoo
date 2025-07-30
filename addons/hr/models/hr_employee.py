@@ -787,8 +787,6 @@ class HrEmployee(models.Model):
         # cache, and interpreted as an access error
         self._check_private_fields(field_names)
         self.flush_model(field_names)
-        # HACK: suppress warning if domain is optimized for another model
-        domain = list(domain) if isinstance(domain, Domain) else domain
         public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
         employees = self.browse(public._ids)
         employees._copy_cache_from(public, field_names)
@@ -885,8 +883,6 @@ class HrEmployee(models.Model):
         if self.browse().has_access('read') or bypass_access:
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
         try:
-            # HACK: suppress warning if domain is optimized for another model
-            domain = list(domain) if isinstance(domain, Domain) else domain
             ids = self.env['hr.employee.public']._search(domain, offset, limit, order, **kwargs)
         except ValueError:
             raise AccessError(_('You do not have access to this document.'))
