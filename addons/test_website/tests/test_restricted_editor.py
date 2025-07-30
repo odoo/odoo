@@ -34,3 +34,12 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
     def test_02_restricted_editor_test_admin(self):
         self.user_website_user.group_ids += self.env.ref("test_website.group_test_website_admin")
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_test_admin', login="website_user")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_03_restricted_editor_tester(self):
+        """
+        Tests that restricted users cannot edit ir.ui.view records despite being
+        on a page of a record (main_object) they can edit.
+        """
+        self.user_website_user.group_ids += self.env.ref("test_website.group_test_website_tester")
+        self.start_tour(self.env['website'].get_client_action_url('/test_model/1'), 'test_restricted_editor_tester', login='website_user')
