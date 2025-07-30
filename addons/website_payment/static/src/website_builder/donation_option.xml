@@ -16,9 +16,10 @@
         <t t-set="translatedDefaultDescription">Add a description here</t>
         <BuilderList
                 action="'setPrefilledOptions'"
-                addItemTitle.translate="Add new pre-filled option"
+                addItemTitle.translate="Add"
                 itemShape="{ value: 'number', description: 'text' }"
                 default="{ value: '50', description: translatedDefaultDescription }"
+                columnWidth="{ value: 'w-25' }"
                 hiddenProperties="isActiveItem('pre_filled_descriptions_opt') ? [] : ['description']"
         />
         <BuilderRow label.translate="Descriptions" level="1" preview="false">
