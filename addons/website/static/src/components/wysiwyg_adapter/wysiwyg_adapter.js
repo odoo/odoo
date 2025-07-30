@@ -227,6 +227,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 $(el).empty();
             }
         }
+        // The jquery instance inside the iframe needs to be aware of the wysiwyg.
+        this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this);
         await super.startEdition();
 
         // Overriding the `filterMutationRecords` function so it can be used to
@@ -312,8 +314,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (this.props.beforeEditorActive) {
             await this.props.beforeEditorActive(this.$editable);
         }
-        // The jquery instance inside the iframe needs to be aware of the wysiwyg.
-        this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this);
         // grep: RESTART_WIDGETS_EDIT_MODE
         await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
             editableMode: true,
