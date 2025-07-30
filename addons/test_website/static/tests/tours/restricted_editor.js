@@ -64,6 +64,13 @@ registerWebsitePreviewTour('test_restricted_editor_only', {
     {
         content: "Check icons cannot be dragged",
         trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
+        run: function () {
+            if (document.querySelector("button.o_snippet_thumbnail_area")) {
+                    console.error(
+                        "The button to open the add snippet dialog should not be display for restricted editor."
+                    );
+            }
+        },
     },
     ...clickOnSave(),
     ...switchTo('fr'),
@@ -80,6 +87,13 @@ registerWebsitePreviewTour('test_restricted_editor_only', {
     {
         content: "Check icons cannot be dragged",
         trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
+        run: function () {
+            if (document.querySelector("button.o_snippet_thumbnail_area")) {
+                    console.error(
+                        "The button to open the add snippet dialog should not be display for restricted editor."
+                    );
+            }
+        },
     },
     ...clickOnSave(),
     ...switchTo('fr'),
