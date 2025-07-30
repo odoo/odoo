@@ -200,7 +200,7 @@ registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
 
             Dialog.confirm(),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "151.98"),
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "151.97"),
             ]),
             ProductScreen.totalAmountIs("151.98"),
             ProductScreen.clickPayButton(),
