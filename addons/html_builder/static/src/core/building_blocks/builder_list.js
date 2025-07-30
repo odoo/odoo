@@ -35,6 +35,7 @@ export class BuilderList extends Component {
         hiddenProperties: { type: Array, optional: true },
         records: { type: String, optional: true },
         defaultNewValue: { type: Object, optional: true },
+        columnWidth: { optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -44,6 +45,7 @@ export class BuilderList extends Component {
         hiddenProperties: [],
         mode: "button",
         defaultNewValue: {},
+        columnWidth: {},
     };
     static components = { BuilderComponent, Dropdown };
 

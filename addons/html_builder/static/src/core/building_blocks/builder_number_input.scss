@@ -1,18 +1,12 @@
 .o-hb-input-field-number {
+    @extend %o-hb-input-base;
+
+    flex: 0 1 calc(50% - calc(var(--hb-row-content-gap) * 0.5));
+    font-family: $o-we-font-monospace;
+
     .popover & {
         --o-hb-field-input-bg: var(--o-hb-field-input-bg-popover, #{$o-we-fg-lighter});
         --o-hb-field-color: var(--o-hb-field-color-popover, #{$o-we-bg-lightest});
-    }
-    font-family: $o-we-font-monospace;
-    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
-    border-radius: $o-we-sidebar-content-field-border-radius;
-    background-color: var(--o-hb-field-input-bg, #{$o-we-sidebar-content-field-input-bg});
-    padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing;
-    flex: 0 1 calc(50% - calc(var(--hb-row-content-gap) * 0.5));
-
-    &:focus, &:focus-within {
-        border-color: var(--o-hb-input-active-border, #{$o-we-sidebar-content-field-input-border-color});
-        color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
     }
 
     .o-hb-input-number {
