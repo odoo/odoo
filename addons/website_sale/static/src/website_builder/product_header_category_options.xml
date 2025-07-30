@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.ProductHeaderCategoryOption">
+        <BuilderContext applyTo="'#o_wsale_products_header'">
+            <BuilderRow label.translate="Show Title">
+                <BuilderCheckbox
+                    action="'previewableWebsiteConfig'"
+                    actionParam="{views: ['website_sale.products_category_title'], previewClass: 'o_wsale_products_header_show_category_title'}"
+                />
+            </BuilderRow>
+            <BuilderRow label.translate="Show Description">
+                <BuilderCheckbox
+                    action="'previewableWebsiteConfig'"
+                    actionParam="{views: ['website_sale.products_category_description'], previewClass: 'o_wsale_products_header_show_category_description'}"
+                />
+            </BuilderRow>
+            <BuilderRow label.translate="Center Content">
+                <BuilderCheckbox
+                    action="'previewableWebsiteConfig'"
+                    actionParam="{views: ['website_sale.products_category_align'], previewClass: 'o_wsale_products_header_center_content'}"
+                />
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+</templates>

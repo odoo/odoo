@@ -61,6 +61,13 @@ class ProductPublicCategory(models.Model):
         translate=html_translate,
     )
 
+    website_header = fields.Html(
+        string="Category Header",
+        sanitize_attributes=False,
+        sanitize_form=False,
+        translate=html_translate,
+    )
+
     website_footer = fields.Html(
         string="Category Footer",
         sanitize_attributes=False,
