@@ -1,5 +1,6 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { useAutofocus, useLazyExternalListener, useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
 /**
@@ -34,6 +35,7 @@ export class FileViewer extends Component {
         this.imageRef = useRef("image");
         this.zoomerRef = useRef("zoomer");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
+        this.hasTouch = hasTouch();
 
         this.isDragging = false;
         this.dragStartX = 0;
@@ -68,6 +70,11 @@ export class FileViewer extends Component {
             },
             () => [this.iframeViewerPdfRef.el]
         );
+        if (this.hasTouch) {
+            useLazyExternalListener(() => this.imageRef.el, "touchstart", this.onDragStartImage);
+            useLazyExternalListener(() => this.imageRef.el, "touchmove", this.onDragMoveImage);
+            useLazyExternalListener(() => this.imageRef.el, "touchend", this.onDragEndImage);
+        }
     }
 
     onImageLoaded() {
@@ -127,7 +134,7 @@ export class FileViewer extends Component {
     }
 
     /**
-     * @param {Event} ev
+     * @param {WheelEvent} ev
      */
     onWheelImage(ev) {
         if (ev.deltaY > 0) {
@@ -138,21 +145,23 @@ export class FileViewer extends Component {
     }
 
     /**
-     * @param {DragEvent} ev
+     * @param {DragEvent | TouchEvent} ev
      */
-    onMousedownImage(ev) {
+    onDragStartImage(ev) {
         if (this.isDragging) {
             return;
         }
-        if (ev.button !== 0) {
+        if (ev instanceof MouseEvent && ev.button !== 0) {
             return;
         }
         this.isDragging = true;
-        this.dragStartX = ev.clientX;
-        this.dragStartY = ev.clientY;
+        const { clientX, clientY } = ev instanceof MouseEvent ? ev : ev.touches[0];
+        this.dragStartX = clientX;
+        this.dragStartY = clientY;
+        ev.preventDefault();
     }
 
-    onMouseupImage() {
+    onDragEndImage() {
         if (!this.isDragging) {
             return;
         }
@@ -165,15 +174,17 @@ export class FileViewer extends Component {
     }
 
     /**
-     * @param {DragEvent}
+     * @param {DragEvent | TouchEvent} ev
      */
-    onMousemoveView(ev) {
+    onDragMoveImage(ev) {
         if (!this.isDragging) {
             return;
         }
-        this.translate.dx = ev.clientX - this.dragStartX;
-        this.translate.dy = ev.clientY - this.dragStartY;
+        const { clientX, clientY } = ev instanceof MouseEvent ? ev : ev.touches[0];
+        this.translate.dx = clientX - this.dragStartX;
+        this.translate.dy = clientY - this.dragStartY;
         this.updateZoomerStyle();
+        ev.preventDefault();
     }
 
     resetZoom() {
@@ -183,6 +194,7 @@ export class FileViewer extends Component {
 
     rotate() {
         this.state.angle += 90;
+        this.updateZoomerStyle();
     }
 
     /**
@@ -207,14 +219,16 @@ export class FileViewer extends Component {
     }
 
     updateZoomerStyle() {
+        const isImageRotated = this.state.angle % 180 !== 0;
+        const imageEl = this.imageRef.el;
+        const imageWidth =
+            (isImageRotated ? imageEl.offsetHeight : imageEl.offsetWidth) * this.state.scale;
+        const imageHeight =
+            (isImageRotated ? imageEl.offsetWidth : imageEl.offsetHeight) * this.state.scale;
         const tx =
-            this.imageRef.el.offsetWidth * this.state.scale > this.zoomerRef.el.offsetWidth
-                ? this.translate.x + this.translate.dx
-                : 0;
+            imageWidth > this.zoomerRef.el.offsetWidth ? this.translate.x + this.translate.dx : 0;
         const ty =
-            this.imageRef.el.offsetHeight * this.state.scale > this.zoomerRef.el.offsetHeight
-                ? this.translate.y + this.translate.dy
-                : 0;
+            imageHeight > this.zoomerRef.el.offsetHeight ? this.translate.y + this.translate.dy : 0;
         if (tx === 0) {
             this.translate.x = 0;
         }

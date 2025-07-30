@@ -1,10 +1,8 @@
 import {
     Component,
     onMounted,
-    onPatched,
     onWillUnmount,
     toRaw,
-    useComponent,
     useEffect,
     useRef,
     useState,
@@ -16,37 +14,7 @@ import { browser } from "@web/core/browser/browser";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { useService } from "@web/core/utils/hooks";
-
-export function useLazyExternalListener(target, eventName, handler, eventParams) {
-    const boundHandler = handler.bind(useComponent());
-    let t;
-    onMounted(() => {
-        t = target();
-        if (!t) {
-            return;
-        }
-        t.addEventListener(eventName, boundHandler, eventParams);
-    });
-    onPatched(() => {
-        const t2 = target();
-        if (t !== t2) {
-            if (t) {
-                t.removeEventListener(eventName, boundHandler, eventParams);
-            }
-            if (t2) {
-                t2.addEventListener(eventName, boundHandler, eventParams);
-            }
-            t = t2;
-        }
-    });
-    onWillUnmount(() => {
-        if (!t) {
-            return;
-        }
-        t.removeEventListener(eventName, boundHandler, eventParams);
-    });
-}
+import { useLazyExternalListener, useService } from "@web/core/utils/hooks";
 
 export function onExternalClick(refName, cb) {
     let downTarget, upTarget;
