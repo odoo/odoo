@@ -1106,7 +1106,7 @@ class AccountJournal(models.Model):
         nb_lines, balance, amount_currency = self.env['account.move.line']._read_group(
             domain=([
                 ('account_id', 'in', tuple(self.default_account_id.ids)),
-                ('display_type', 'not in', ('line_section', 'line_note')),
+                ('display_type', 'not in', ('line_section', 'line_subsection', 'line_note')),
                 ('parent_state', '!=', 'cancel'),
             ] + (domain or [])),
             aggregates=('__count', 'balance:sum', 'amount_currency:sum'),

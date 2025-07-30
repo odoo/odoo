@@ -93,7 +93,11 @@ export function useInputField(params) {
     }
     function onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        if (["enter", "tab", "shift+tab"].includes(hotkey)) {
+        const keys = ["tab", "shift+tab"];
+        if (ev.target.tagName.toLowerCase() !== "textarea") {
+            keys.push("enter");
+        }
+        if (keys.includes(hotkey)) {
             commitChanges(false);
         }
         if (params.preventLineBreaks && ["enter", "shift+enter"].includes(hotkey)) {

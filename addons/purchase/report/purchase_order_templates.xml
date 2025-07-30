@@ -69,7 +69,11 @@
                     <t t-foreach="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
-                        <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                        <tr t-att-class="{
+                            'fw-bolder': line.display_type == 'line_section',
+                            'fw-bold': line.display_type == 'line_subsection',
+                            'fst-italic': line.display_type == 'line_note',
+                        }" >
                             <t t-if="not line.display_type">
                                 <td id="product" class="text-start">
                                     <span t-field="line.name"/>
@@ -96,7 +100,7 @@
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
                             </t>
-                            <t t-if="line.display_type == 'line_section'">
+                            <t t-if="line.display_type in ('line_section', 'line_subsection')">
                                 <td colspan="99" id="section">
                                     <span t-field="line.name"/>
                                 </td>
@@ -109,7 +113,7 @@
                                 </td>
                             </t>
                         </tr>
-                        <t t-if="current_section and (line_last or o.order_line[line_index+1].display_type == 'line_section')">
+                        <t t-if="current_section and (line_last or o.order_line[line_index+1].display_type in ('line_section', 'line_subsection'))">
                             <tr class="is-subtotal text-end">
                                 <td colspan="99" id="subtotal">
                                     <strong class="mr16">Subtotal</strong>
