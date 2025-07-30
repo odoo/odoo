@@ -1093,7 +1093,13 @@ class DiscussChannel(models.Model):
             "member_count",
             "name",
             Store.One("parent_channel_id", predicate=is_channel_or_group),
-            Store.Many("rtc_session_ids", mode="ADD", extra=True, sudo=True),
+            # sudo: discuss.channel: reading sessions of accessible channel is acceptable
+            Store.Many(
+                "rtc_session_ids",
+                mode="ADD",
+                extra_fields=self.sudo().rtc_session_ids._get_store_extra_fields(),
+                sudo=True,
+            ),
             "uuid",
         ]
         if target.is_current_user(self.env):
