@@ -508,11 +508,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     _logger.error(f"[LEGACY] Payload failed: {str(e)}")
                     raise UserError(_("Legacy label failed:\n%s") % str(e))
 
-            print("\n\n\n\ multi pick before auspost====", line.picking_id.sale_id.carrier,
-                  line.picking_id.sale_id.items, line.picking_id.sale_id.shipmentid)
             if (line.picking_id.sale_id.carrier or '').upper() == 'AUSPOST':
                 _logger.info("[LEGACY] Triggering legacy multi-pick payload...")
-                if any(l.api_payload_success for l in self.line_ids):
+                if line.api_payload_success:
                     _logger.info("[LEGACY] Payload already sent — skipping.")
                     return
 
@@ -533,22 +531,26 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     # Only success if BOTH HTTP and payload code are 200
                     if response.status_code == 200 and str(response_json.get("code")) == "200":
                         # Success! Update all fields and persist scanned state for all involved lines
-                        for l in self.line_ids:
-                            l.scanned = True
-                            l.quantity = 1
-                            l.remaining_quantity = 0
-                            # l.available_quantity = 1
-                            l.line_added = True
-                            l.api_payload_success = True
+                        # for l in self.line_ids:
+                        line.scanned = True
+                        line.quantity = 1
+                        line.remaining_quantity = 0
+                        # l.available_quantity = 1
+                        line.line_added = True
+                        line.api_payload_success = True
                         packed_data = [
                             {'sku': l.product_id.default_code, 'qty': l.quantity or 1.0}
                             for l in self.line_ids if l.scanned
                         ]
                         self.update_packed_qty_after_success(line.picking_id.name, packed_data)
+                        self.scanned_sku = False
+                        self.last_scanned_line_id = line
+
+                        # self.scanned_sku = '__cleared__'
                         return {
                             'warning': {
                                 'title': _("Success"),
-                                'message': _("Legacy label printed successfully."),
+                                'message': _("Auspost label printed successfully."),
                                 'type': 'notification'
                             }
                         }
@@ -817,7 +819,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         product_lines = []
 
-        scanned_lines = self.line_ids.filtered(lambda l: l.scanned)
+        scanned_lines = self.line_ids.filtered(lambda l: l.scanned and not l.api_payload_success)
         if not scanned_lines:
             raise UserError(
                 _("No scanned lines found to build legacy multi-pick payload. Please scan at least one SKU.")
