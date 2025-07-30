@@ -12,7 +12,7 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     },
     {
         content: "Wait for page to load",
-        trigger: ":iframe h1:contains('Test Category')",
+        trigger: ":iframe h1:contains('Test Category'):not(:visible)",
     },
     ...clickOnEditAndWaitEditMode(),
     {
