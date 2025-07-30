@@ -18,6 +18,7 @@ import {
     mockService,
     makeServerError,
     fields,
+    onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -30,6 +31,7 @@ import {
     Partner,
 } from "@spreadsheet/../tests/helpers/data";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import { setGlobalFilterValue } from "../../helpers/commands";
 
 const { toZone } = spreadsheet.helpers;
 
@@ -1073,6 +1075,129 @@ test("See records when clicking on a geo chart country", async () => {
     expect.verifySteps(["do-action"]);
 });
 
+test("See records when clicking on a sunburst chart slice", async () => {
+    let lastActionCalled = undefined;
+    const fakeActionService = {
+        doAction: async (request, options = {}) => (lastActionCalled = request),
+    };
+    mockService("action", fakeActionService);
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { date: "2020-01-01", probability: 10, bar: true },
+        { date: "2020-02-01", probability: 2, bar: true },
+        { date: "2020-01-01", probability: 4, bar: false },
+        { date: "2020-02-01", probability: 5, bar: false },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_sunburst",
+        serverData,
+        definition: {
+            type: "odoo_sunburst",
+            metaData: {
+                groupBy: ["date:month", "bar"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+
+    // Leaf value
+    let mockChart = { data: { datasets: [{ data: [{ groups: ["January 2020", "false"] }] }] } };
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        "&",
+        ["date", ">=", "2020-01-01"],
+        ["date", "<", "2020-02-01"],
+        ["bar", "=", false],
+    ]);
+
+    // Non-leaf value
+    mockChart = { data: { datasets: [{ data: [{ groups: ["February 2020"] }] }] } };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        ["date", ">=", "2020-02-01"],
+        ["date", "<", "2020-03-01"],
+    ]);
+});
+
+test("See records when clicking on a treemap chart item", async () => {
+    let lastActionCalled = undefined;
+    const fakeActionService = {
+        doAction: async (request, options = {}) => (lastActionCalled = request),
+    };
+    mockService("action", fakeActionService);
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { date: "2020-01-01", probability: 10, bar: true },
+        { date: "2020-02-01", probability: 2, bar: true },
+        { date: "2020-01-01", probability: 4, bar: false },
+        { date: "2020-02-01", probability: 5, bar: false },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_treemap",
+        serverData,
+        definition: {
+            type: "odoo_treemap",
+            metaData: {
+                groupBy: ["date:month", "bar"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+
+    function buildMockTreemapChart(groups) {
+        const depth = groups.length - 1;
+        const data = {};
+        for (let i = 0; i <= depth; i++) {
+            data[i] = groups[i];
+        }
+        return { data: { datasets: [{ data: [{ l: depth, _data: data }] }] } };
+    }
+
+    // Leaf value
+    let mockChart = buildMockTreemapChart(["January 2020", "false"]);
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        "&",
+        ["date", ">=", "2020-01-01"],
+        ["date", "<", "2020-02-01"],
+        ["bar", "=", false],
+    ]);
+
+    // Non-leaf value
+    mockChart = buildMockTreemapChart(["February 2020"]);
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }], mockChart);
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        ["date", ">=", "2020-02-01"],
+        ["date", "<", "2020-03-01"],
+    ]);
+});
+
 test("import/export action xml id", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_bar",
@@ -1268,4 +1393,358 @@ test("Long labels are only truncated in the axis callback, not in the data given
     const scaleCallback = config.options.scales.x.ticks.callback.bind(fakeChart);
     expect(scaleCallback("Guy")).toBe("Guy");
     expect(scaleCallback("Guy with a very very very long name")).toBe("Guy with a very very…");
+});
+
+test("can change chart granularity", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["date:month"],
+                measure: "probability",
+                resModel: "partner",
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    model.dispatch("UPDATE_CHART_GRANULARITY", {
+        chartId,
+        granularity: "year",
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:year"]);
+});
+
+test("changing chart granularity reloads data source once with global filter", async () => {
+    onRpc("partner", "formatted_read_group", ({ kwargs }) => {
+        expect.step(kwargs.groupby[0]);
+        expect(kwargs.domain.length).toBe(3, { message: "Global filter domain is applied" });
+    });
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["date:month"],
+                measure: "probability",
+                resModel: "partner",
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await addGlobalFilter(
+        model,
+        { id: "42", type: "date", label: "Date", defaultValue: "last_90_days" },
+        {
+            chart: { [chartId]: { chain: "date", type: "date" } },
+        }
+    );
+    model.getters.getChartRuntime(chartId); // load the data
+    await animationFrame();
+    expect.verifySteps(["date:month"]);
+    model.dispatch("UPDATE_CHART_GRANULARITY", {
+        chartId,
+        granularity: "year",
+    });
+    model.getters.getChartRuntime(chartId); // load the data
+    await animationFrame();
+    expect.verifySteps(["date:year"]);
+});
+
+test("available granularities without filter", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["date:month"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+
+    expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "week",
+        "month",
+        "quarter",
+        "year",
+    ]);
+});
+
+test("no available granularities when not grouped by a date", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["name"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    expect(model.getters.getAvailableChartGranularities(chartId)).toEqual([]);
+});
+
+test("available granularities with a date filter", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["date:month"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const filterId = "42";
+    await addGlobalFilter(
+        model,
+        { id: filterId, type: "date", label: "Date" },
+        {
+            chart: { [chartId]: { chain: "date", type: "date" } },
+        }
+    );
+    model.updateMode("dashboard");
+    expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "week",
+        "month",
+        "quarter",
+        "year",
+    ]);
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: { type: "relative", period: "last_90_days" },
+    });
+    expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
+        "week",
+        "month",
+        "quarter",
+    ]);
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: { type: "relative", period: "today" },
+    });
+    expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
+    ]);
+});
+
+test("hour is an available granularity with a filtered datetime field", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["create_date:month"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const filterId = "42";
+    await addGlobalFilter(
+        model,
+        { id: filterId, type: "date", label: "Date" },
+        {
+            chart: { [chartId]: { chain: "create_date", type: "datetime" } },
+        }
+    );
+    model.updateMode("dashboard");
+    expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "week",
+        "month",
+        "quarter",
+        "year",
+    ]);
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: { type: "relative", period: "today" },
+    });
+    expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "hour",
+        "day",
+    ]);
+});
+
+test("filtering a chart axis changes its granularity", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["create_date:year"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const filterId = "42";
+    await addGlobalFilter(
+        model,
+        { id: filterId, type: "date", label: "Date" },
+        {
+            chart: { [chartId]: { chain: "create_date", type: "datetime" } },
+        }
+    );
+    model.updateMode("dashboard");
+
+    const cases = [
+        [{ type: "year", year: 2024 }, ["create_date:month"]],
+        [{ type: "quarter", year: 2024, quarter: 1 }, ["create_date:month"]],
+        [{ type: "month", year: 2024, month: 1 }, ["create_date:day"]],
+        [{ type: "relative", period: "last_12_months" }, ["create_date:month"]],
+        [{ type: "relative", period: "last_90_days" }, ["create_date:day"]],
+        [{ type: "relative", period: "last_30_days" }, ["create_date:day"]],
+        [{ type: "relative", period: "last_7_days" }, ["create_date:day"]],
+        [{ type: "relative", period: "today" }, ["create_date:hour"]],
+    ];
+
+    for (const [value, expectedGroupBy] of cases) {
+        await setGlobalFilterValue(model, {
+            id: filterId,
+            value,
+        });
+        expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(
+            expectedGroupBy,
+            {
+                message: `Expected groupBy to be ${expectedGroupBy} for value ${JSON.stringify(
+                    value
+                )}`,
+            }
+        );
+    }
+});
+
+test("filtering doesn't change its granularity if not the horizontal axis", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["create_date:year"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const filterId = "42";
+    await addGlobalFilter(
+        model,
+        { id: filterId, type: "date", label: "Date" },
+        {
+            chart: { [chartId]: { chain: "date", type: "date" } }, // the horizontal axis is create_date, not date
+        }
+    );
+    model.updateMode("dashboard");
+
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: { type: "relative", period: "last_7_days" },
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual([
+        "create_date:year",
+    ]);
+});
+
+test("filtering preserves manually changed granularity", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["create_date:year"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const filterId = "42";
+    await addGlobalFilter(
+        model,
+        { id: filterId, type: "date", label: "Date" },
+        {
+            chart: { [chartId]: { chain: "create_date", type: "datetime" } },
+        }
+    );
+    model.updateMode("dashboard");
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: { type: "relative", period: "last_90_days" },
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["create_date:day"]);
+    model.dispatch("UPDATE_CHART_GRANULARITY", {
+        chartId,
+        granularity: "week", // Manually change granularity to from day to week
+    });
+
+    // filtering on an equivalent range should not change the granularity
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: {
+            type: "range",
+            from: "2025-01-24",
+            to: "2025-04-23",
+        },
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual([
+        "create_date:week",
+    ]);
+
+    // changing to a non-compatible range should change the granularity
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: { type: "relative", period: "today" },
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual([
+        "create_date:hour",
+    ]);
+});
+
+test("filtering on 'day' doesn't change to hour if not datetime", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            metaData: {
+                groupBy: ["date:year"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const filterId = "42";
+    await addGlobalFilter(
+        model,
+        { id: filterId, type: "date", label: "Date" },
+        {
+            chart: { [chartId]: { chain: "date", type: "date" } },
+        }
+    );
+    model.updateMode("dashboard");
+
+    await setGlobalFilterValue(model, {
+        id: filterId,
+        value: { type: "relative", period: "today" },
+    });
+    expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:day"]);
 });
