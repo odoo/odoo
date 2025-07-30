@@ -47,7 +47,9 @@ class Driver(Thread):
         :param dict data: the action method name and the parameters to be passed to it
         :return: the result of the action method
         """
+        self.data['owner'] = data.get('session_id')
         action = data.get('action', '')
+
         try:
             response = {'status': 'success', 'result': self._actions[action](data), 'action_args': {**data}}
         except Exception as e:
