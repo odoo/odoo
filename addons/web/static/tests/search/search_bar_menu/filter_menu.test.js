@@ -1060,7 +1060,7 @@ test(`"in range" facets`, async () => {
         ["birthday", ">=", "2019-03-11"],
         ["birthday", "<=", "2019-03-11"],
         "&",
-        ["birthday", ">=", "2019-03-11"],
-        ["birthday", "<", "2019-03-12"],
+        ["birthday", ">=", "today"],
+        ["birthday", "<", "today +1d"],
     ]);
 });
