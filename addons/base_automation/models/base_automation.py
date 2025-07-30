@@ -4,7 +4,6 @@ import datetime
 import logging
 import re
 import traceback
-import warnings
 from collections import defaultdict
 from uuid import uuid4
 
@@ -1056,9 +1055,8 @@ class BaseAutomation(models.Model):
     def _get_calendar(self, automation, record):
         return automation.trg_date_calendar_id
 
-    @api.model
+    @api.deprecated("Since 19.0, use _cron_process_time_based_automations")
     def _check(self, automatic=False, use_new_cursor=False):
-        warnings.warn("Since 19.0, use _cron_process_time_based_automations", DeprecationWarning)
         if not automatic:
             raise RuntimeError("can run time-based automations only in automatic mode")
         self._cron_process_time_based_actions()
