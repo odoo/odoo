@@ -40,6 +40,35 @@ class WebsitePage(models.Model):
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
     arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
+    is_orphan = fields.Boolean(string="Is Orphan", help="A orphan page is bad for SEO, no one will be able to find it.")
+
+    def compute_orphan_status(self):
+        pages = self.search([])
+        orphan_pages = self.browse()
+        referenced_pages = self.browse()
+
+        for page in pages:
+            page_url = page.url
+            referenced = False
+
+            if page.is_in_menu:
+                referenced = True
+            else:
+                for other in pages.filtered(lambda p: p.id != page.id):
+                    if page_url in (other.view_id.arch_db or ""):
+                        referenced = True
+                        break
+
+            if referenced:
+                referenced_pages |= page
+            else:
+                orphan_pages |= page
+
+        if orphan_pages:
+            orphan_pages.write({"is_orphan": True})
+        if referenced_pages:
+            referenced_pages.write({"is_orphan": False})
+
     def _compute_is_homepage(self):
         website = self.env['website'].get_current_website()
         for page in self:
@@ -269,6 +298,37 @@ class WebsitePage(models.Model):
             'view_id': self.env.ref('website.view_view_form_extend').id,
         }
 
+    def action_open_website_with_seo_dialog(self):
+        self.ensure_one()
+
+        url = self.website_url or "/"
+        if '?' in url:
+            url += '&seo_optimize=1'
+        else:
+            url += '?seo_optimize=1'
+
+        website = self.env['website'].get_current_website()
+        final_url = website.get_client_action_url(url, mode_edit=False)
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': final_url,
+            'target': 'self',
+        }
+
+    def action_show_list_view(self):
+        self.compute_orphan_status()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "website.page",
+            "name": "Website Pages",
+            "view_mode": "list,kanban",
+            "views": [
+                (self.env.ref("website.website_pages_tree_view").id, "list"),
+                (self.env.ref("website.website_pages_kanban_view").id, "kanban"),
+            ],
+            "target": "current",
+        }
 
 # this is just a dummy function to be used as ormcache key
 def _cached_response():
