@@ -6,6 +6,12 @@ const ChartEdit = I => class extends I {
         super.setup();
         this.noAnimation = true;
     }
+
+    start() {
+        super.start();
+        this.websiteEditService = this.services.website_edit;
+        this.websiteEditService.callShared("builderOverlay", "refreshOverlays");
+    }
 };
 
 registry
