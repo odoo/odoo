@@ -1140,7 +1140,17 @@ class SaleOrder(models.Model):
         context.pop('default_user_id', None)
 
         self.with_context(context)._action_confirm()
+<<<<<<< 16d5e42baab17a83e0bf71edc59913a7e4b0f3ef
         self.filtered(lambda so: so._should_be_locked()).action_lock()
+||||||| 192b1006253b815c116e4e66078b3a0482e8693b
+        user = self[:1].create_uid
+        if user and user.sudo().has_group('sale.group_auto_done_setting'):
+            # Public user can confirm SO, so we check the group on any record creator.
+            self.action_lock()
+=======
+
+        self.filtered(lambda so: so._should_be_locked()).action_lock()
+>>>>>>> 98b242186cd0878d9857b0b49d178816f110ed48
 
         if self.env.context.get('send_email'):
             self._send_order_confirmation_mail()
