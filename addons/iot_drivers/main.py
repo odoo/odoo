@@ -32,6 +32,7 @@ class Manager(Thread):
         self.token = helpers.get_token()
         self.version = helpers.get_version(detailed_version=True)
         self.previous_iot_devices = {}
+        self.previous_unsupported_devices = {}
 
     def _get_domain(self):
         """
@@ -51,8 +52,10 @@ class Manager(Thread):
         changed = False
 
         current_devices = set(iot_devices.keys()) | set(unsupported_devices.keys())
-        if current_devices != set(self.previous_iot_devices.keys()):
+        previous_devices = set(self.previous_iot_devices.keys()) | set(self.previous_unsupported_devices.keys())
+        if current_devices != previous_devices:
             self.previous_iot_devices = iot_devices.copy()
+            self.previous_unsupported_devices = unsupported_devices.copy()
             changed = True
 
         # IP address change
@@ -90,7 +93,7 @@ class Manager(Thread):
                 'connection': device.device_connection,
                 'subtype': device.device_subtype if device.device_type == 'printer' else '',
             }
-        devices_list.update(unsupported_devices)
+        devices_list.update(self.previous_unsupported_devices)
         devices_list_to_send = {
             key: value for key, value in devices_list.items() if key != 'distant_display'
         }  # Don't send distant_display to the db
