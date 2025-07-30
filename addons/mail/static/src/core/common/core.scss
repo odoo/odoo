@@ -1,16 +1,48 @@
 $o-discuss-talkingColor: lighten($success, 10%);
 
-.o-mail-discussSidebarBgColor {
-    background-color: $white !important;
+
+.o-mail-DiscussMenu-bgColor {
+    background-color: mail-DiscussMenu-bgColor() !important;
+    backdrop-filter: blur(8px);
+}
+
+.o-mail-DiscussPanel-bgColor {
+    background-color: mail-DiscussPanel-bgColor() !important;
+    backdrop-filter: blur(4px);
+    --border-opacity: .25;
 }
 
 .o-mail-brighter {
     filter: brightness(1.2);
 }
 
+.o-shadow-softer {
+    box-shadow: o-shadow-softer();
+}
+
+.o-shadow-soft {
+    box-shadow: o-shadow-soft();
+}
+
+.o-shadow-1 {
+    box-shadow: o-shadow-1();
+}
+
+.o-shadow-2 {
+    box-shadow: o-shadow-2();
+}
+
+.o-text-shadow-soft {
+    text-shadow: o-shadow-soft();
+}
+
 .o-mail-emoji {
     font-size: 121%;
     line-height: $display-line-height;
+}
+
+.o-bg-125 {
+    background-color: mix($gray-100, $gray-200, 75%) !important;
 }
 
 .o-bg-black {
@@ -21,14 +53,11 @@ $o-discuss-talkingColor: lighten($success, 10%);
     background-color: $body-bg !important;
 }
 
-.o-border-opacity-50 {
-    --border-opacity: 0.5;
-}
-
-.o-discuss-badge {
+@mixin o-discuss-badgeMixin() {
     &, & .o-innerBadge {
-        --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
+        --o-discuss-badge-bg: #{o-discuss-badgeBgColor()}; // sync with --o-navbar-badge-bg
         color: white !important;
+        text-shadow: o-discuss-badge-innerBadgeTextShadow();
         background-color: var(--o-discuss-badge-bg) !important;
         align-items: center;
         justify-content: center;
@@ -42,6 +71,18 @@ $o-discuss-talkingColor: lighten($success, 10%);
     & .o-innerBadge {
         min-width: 2.7ch; // same as .badge, without using .badge to keep semantics of a single .badge
     }
+}
+
+.o-discuss-badge {
+    @include o-discuss-badgeMixin();
+}
+
+.o-discuss-dropdownStyle {
+    --border-opacity: .5;
+    padding-top: map-get($spacers, 1) / 2;
+    padding-bottom: map-get($spacers, 1) / 2;
+    background-color: mail-DiscussMenu-bgColor();
+    border: 1px solid rgba($border-color, var(--border-opacity));
 }
 
 .o-discuss-mobileContextMenu {
@@ -59,10 +100,6 @@ $o-discuss-talkingColor: lighten($success, 10%);
         font-size: .78572 * $font-size-base !important; // roughly 11px, small but readable
         user-select: none;
     }
-}
-
-.o-min-height-0 {
-    min-height: 0;
 }
 
 .o-min-width-0 {
@@ -85,77 +122,140 @@ $o-discuss-talkingColor: lighten($success, 10%);
     gap: map-get($spacers, 1) / 2;
 }
 
-.o-mx-0_5 {
-    margin-left: map-get($spacers, 1) / 2;
-    margin-right: map-get($spacers, 1) / 2;
-}
+$o-mail-spacers-sizes: () !default;
+$o-mail-spacers-sizes: map-merge(
+    $o-mail-spacers-sizes,
+    (
+        "0_5": map-get($spacers, 1) / 2,
+        "1_5": (map-get($spacers, 1) + map-get($spacers, 2)) / 2,
+        "2_5": (map-get($spacers, 2) + map-get($spacers, 3)) / 2,
+        "3_5": (map-get($spacers, 3) + map-get($spacers, 4)) / 2,
+        "4_5": (map-get($spacers, 4) + map-get($spacers, 5)) / 2,
+    )
+);
 
-.o-my-0_5 {
-    margin-top: map-get($spacers, 1) / 2;
-    margin-bottom: map-get($spacers, 1) / 2;
-}
+$o-mail-rounded-sizes: () !default;
+$o-mail-rounded-sizes: map-merge(
+    $o-mail-rounded-sizes,
+    (
+        "bubble": calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4),
+        4: $border-radius-xl,
+    )
+);
 
-.o-mt-0_5 {
-    margin-top: map-get($spacers, 1) / 2;
-}
+$o-mail-utilities: () !default;
+$o-mail-utilities: map-merge(
+    $o-mail-utilities,
+    (
+        "o-gap": (
+            property: gap,
+            class: o-gap,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-m": (
+            property: margin,
+            class: o-m,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-mx": (
+            property: margin-left margin-right,
+            class: o-mx,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-my": (
+            property: margin-top margin-bottom,
+            class: o-my,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-mt": (
+            property: margin-top,
+            class: o-mt,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-me": (
+            property: margin-right,
+            class: o-me,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-mb": (
+            property: margin-bottom,
+            class: o-mb,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-ms": (
+            property: margin-left,
+            class: o-ms,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-p": (
+            property: padding,
+            class: o-p,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-px": (
+            property: padding-left padding-right,
+            class: o-px,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-py": (
+            property: padding-top padding-bottom,
+            class: o-py,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-pt": (
+            property: padding-top,
+            class: o-pt,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-pe": (
+            property: padding-right,
+            class: o-pe,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-pb": (
+            property: padding-bottom,
+            class: o-pb,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-ps": (
+            property: padding-left,
+            class: o-ps,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-rounded": (
+            property: border-radius,
+            class: o-rounded,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-top": (
+            property: border-top-left-radius border-top-right-radius,
+            class: o-rounded-top,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-end": (
+            property: border-top-right-radius border-bottom-right-radius,
+            class: o-rounded-end,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-bottom": (
+            property: border-bottom-right-radius border-bottom-left-radius,
+            class: o-rounded-bottom,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-start": (
+            property: border-bottom-left-radius border-top-left-radius,
+            class: o-rounded-start,
+            values: $o-mail-rounded-sizes,
+        ),
+    ),
+);
 
-.o-px-0_5 {
-    padding-left: map-get($spacers, 1) / 2;
-    padding-right: map-get($spacers, 1) / 2;
-}
-
-.o-py-0_5 {
-    padding-top: map-get($spacers, 1) / 2;
-    padding-bottom: map-get($spacers, 1) / 2;
-}
-
-.o-ps-1_5 {
-    padding-left: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
-}
-
-.o-py-1_5 {
-    padding-top: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
-    padding-bottom: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
-}
-
-.o-p-1_5 {
-    padding: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
-}
-
-.o-pt-0_5 {
-    padding-top: map-get($spacers, 1) / 2;
-}
-
-.o-p-1_5 {
-    padding: (map-get($spacers, 1) + map-get($spacers, 2)) / 2 !important;
+@each $key, $utility in $o-mail-utilities {
+    @include generate-utility($utility)
 }
 
 .o-hover-text-underline:hover {
     text-decoration: underline;
-}
-
-.o-rounded-bubble {
-    border-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-}
-
-.o-rounded-top-bubble {
-    border-top-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-    border-top-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-}
-
-.o-rounded-end-bubble {
-    border-top-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-    border-bottom-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-}
-
-.o-rounded-bottom-bubble {
-    border-bottom-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-    border-bottom-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-}
-
-.o-rounded-start-bubble {
-    border-bottom-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
-    border-top-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4) !important;
 }
 
 .o-scrollbar-thin {
@@ -165,6 +265,14 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-text-white {
     color: #FFF !important;
+}
+
+.o-fs-small {
+    font-size: $o-font-size-base-small !important;
+}
+
+.o-fw-600 {
+    font-weight: 600 !important; // in-between .fw-bold (500) and .fw-bolder (700)
 }
 
 .o-xsmaller {
@@ -260,12 +368,13 @@ a.o-discuss-mention {
 }
 
 .o-mail-DiscussSystray-class {
-    margin-top: - $o-navbar-padding-v; // cancel navbar padding
-    margin-bottom: - $o-navbar-padding-v; // cancel navbar padding
+    margin-top: - map-get($spacers, 1);
+    margin-bottom: - map-get($spacers, 1);
     display: flex;
     align-items: center;
+    border-radius: $border-radius-lg;
 
-    &:hover, &.show {
+    &:hover, &:has(.show) {
         background-color: rgba(0, 0, 0, 0.075);
     }
 }
@@ -302,3 +411,4 @@ a.o-discuss-mention {
     width: Min(95vw, 400px);
     max-height: Min(50vh, 530px);
 }
+

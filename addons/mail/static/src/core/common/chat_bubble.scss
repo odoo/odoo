@@ -26,6 +26,14 @@
         animation-iteration-count: 16;
     }
 
+    &:not(:hover):not(.o-active):not(:has(.badge)) {
+        opacity: .5;
+
+        // .o-mail-ChatBubble-part {
+            // filter: opacity(0.5);
+        // }
+    }
+
 }
 
 .o-mail-ChatBubble-avatar {
@@ -70,24 +78,78 @@
     outline: 1px solid $gray-300;
 }
 
+@mixin o-mail-ChatBubble-previewMixin() {
+    &.o-blue {
+        background-color: mail-Message-blueBubbleBgColor-transparent() !important;
+        border-color: mail-Message-blueBubbleBorderColor() !important;
+        & + .popover-arrow {
+            &::before {
+                border-left-color: mail-Message-blueBubbleBorderColor() !important;
+            }
+
+            &::after {
+                border-left-color: mail-Message-blueBubbleBgColor() !important;
+            }
+        }
+    }
+    &.o-green {
+        // background-color: mail-Message-greenBubbleBgColor() !important;
+        background-color: mail-Message-greenBubbleBgColor-transparent() !important;
+        border-color: mail-Message-greenBubbleBorderColor() !important;
+        & + .popover-arrow {
+            &::before {
+                border-left-color: mail-Message-greenBubbleBorderColor() !important;
+            }
+
+            &::after {
+                border-left-color: mail-Message-greenBubbleBgColor() !important;
+            }
+        }
+    }
+    &.o-orange {
+        background-color: mail-Message-orangeBubbleBgColor() !important;
+        border-color: mail-Message-orangeBubbleBorderColor() !important;
+        & + .popover-arrow {
+            &::before {
+                border-left-color: mail-Message-orangeBubbleBorderColor() !important;
+            }
+
+            &::after {
+                border-left-color: mail-Message-orangeBubbleBgColor() !important;
+            }
+        }
+    }
+}
+
 .o-mail-ChatBubble-preview {
     max-width: 225px;
     right: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-ChatBubble-zindex - 1;
     border-color: $o-gray-300 !important;
-    
+    @include o-mail-ChatBubble-previewMixin;
+
     & + .popover-arrow {
         // puts arrow above preview border
         z-index: 1 !important;
         &::before {
-            border-left-color: $o-gray-300 !important;
             right: 1px !important;
+            border-left-color: $gray-300 !important;
         }
         &::after {
-            border-left-color: $gray-100 !important;
             right: 2px !important;
+            border-left-color: $gray-100 !important;
         }
     }
+}
+
+@mixin o-mail-ChatBubble-previewPopoverMixin() {
+    filter: drop-shadow(o-shadow-soft());
+    @include mail-Discuss-floatingBgStyleMixin(.25);
+    backdrop-filter: blur(8px);
+}
+
+.o-mail-ChatBubble-previewPopover {
+    @include o-mail-ChatBubble-previewPopoverMixin;
 }
 
 .o-mail-ChatBubble-status {

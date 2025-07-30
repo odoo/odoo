@@ -2,7 +2,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/core/common/record";
-import { useVisible } from "@mail/utils/common/hooks";
+import { usePaddingCompensation, useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -88,6 +88,7 @@ export class Thread extends Component {
         });
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
+        this.ui = useService("ui");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageScrolling>|null} */
         this.messageHighlight = this.env.messageHighlight
             ? useState(this.env.messageHighlight)
@@ -104,6 +105,7 @@ export class Thread extends Component {
         );
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
+        this.bannersRef = useRef("banners");
         this.root = useRef("messages");
         this.visibleState = useVisible("messages", () => {
             this.updateShowJumpPresent();
@@ -254,6 +256,9 @@ export class Thread extends Component {
                 toRaw(nextProps.thread).fetchNewMessages();
             }
         });
+        this.paddingCompensation = usePaddingCompensation().asContributee;
+        this.paddingCompensation.setup(this.root);
+        this.paddingCompensation.useLocalContributor("top", this.bannersRef);
     }
 
     computeJumpPresentPosition() {
@@ -272,7 +277,7 @@ export class Thread extends Component {
         }px, ${
             this.env.inChatter && !this.env.inChatter.aside
                 ? -22
-                : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
+                : height - pt - pb - (this.env.inChatter?.aside ? 75 : 22)
         }px)`;
     }
 

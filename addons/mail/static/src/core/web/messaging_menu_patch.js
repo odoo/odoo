@@ -1,6 +1,6 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { useEffect } from "@odoo/owl";
+import { useEffect, useRef } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -18,6 +18,7 @@ patch(MessagingMenu.prototype, {
         Object.assign(this.state, {
             searchOpen: false,
         });
+        this.headerRef = useRef("header");
 
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
         useEffect(

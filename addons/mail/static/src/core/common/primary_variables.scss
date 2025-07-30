@@ -25,6 +25,39 @@ $o-mail-CallMenu-bgColor-darker: #111827FF !default;
 $o-mail-CallMenu-bgColor: #1F2937FF !default;
 $o-mail-CallMenu-bgColor-lighter: #374151FF !default;
 
+@function o-discuss-badge-innerBadgeTextShadow() {
+    @return 0px 0px 1px rgba(0, 0, 0, 1);
+}
+
+@function o-discuss-badgeBgColor() {
+    @return $o-success;
+}
+
+@function o-shadow-softer() {
+    @return 0 .1em .2rem rgba($black, .05);
+}
+
+@function o-shadow-soft() {
+    // same as .shadow-sm
+    // $box-shadow:                  0 .5rem 1rem rgba($black, .15) !default;
+    // $box-shadow-sm:               0 .125rem .25rem rgba($black, .075) !default;
+    // @return 0 .15rem .3rem rgba($black, .1125); // slightly more than shadow-sm
+    @return 0 .125rem .25rem rgba($black, .075);
+}
+
+@function o-shadow-1() {
+    // same as .shadow-sm / o-shadow-soft
+    @return 0 .125rem .25rem rgba($black, .075);
+}
+
+@function o-shadow-2() {
+    @return 0 .15rem .3rem rgba($black, .1125); // in-between .shadow-sm and .shadow
+}
+
+@function o-shadow-3() {
+    @return 0 .5rem 1rem rgba($black, .15); // in-between .shadow-sm and .shadow
+}
+
 @mixin o-FileViewer-arrow {
     background-color: rgba(black, 0.4);
     color: rgba(map-get($theme-colors, 'light'), 0.7);
@@ -37,5 +70,165 @@ $o-mail-CallMenu-bgColor-lighter: #374151FF !default;
     &.disabled {
         color: map-get($grays, '600');
         background: none;
+    }
+}
+
+@mixin mail-Discuss-floatingBgStyleMixin($bg-opacity: 1) {
+    background-color: rgba($body-bg, $bg-opacity) !important;    
+}
+
+@function mail-DiscussMenu-bgColor($opacity: 1) {
+    @return rgba(lighten($o-view-background-color, 0%), $opacity);
+}
+
+@function o-mail-DiscussMenu-activeItemBgColor() {
+    @return rgba(mix($gray-200, $gray-300, 75%), .95);
+}
+
+@function o-mail-DiscussMenu-activeItemOutlineColor() {
+    @return rgba(mix($gray-200, $gray-300, 25%), .95);
+}
+
+@function mail-DiscussPanel-bgColor($opacity: 1) {
+    @return rgba(lighten($o-view-background-color, 0%), $opacity);
+}
+
+@function mail-DiscussSidebar-activeItemBgColor() {
+    @return $list-group-active-bg;
+}
+
+@function mail-DiscussSidebar-activeHoveredItemBgColor() {
+    @return mix($o-view-background-color, lighten($info, 5%), 82.5%);
+}
+
+@function mail-DiscussSidebar-activeHoveredItemOutlineColor() {
+    @return rgba(darken(mix($o-view-background-color, $info, 87.5%), 10%), .75);
+}
+
+@function mail-DiscussSidebar-activeItemOutlineColor() {
+    @return rgba(darken(mix($o-view-background-color, $o-action, 87.5%), 7.5%), 1);
+}
+
+@function mail-DiscussSidebar-hoveredItemBgColor() {
+    @return mix($gray-100, $gray-200);
+}
+
+@function mail-Message-blueBubbleBgColor() {
+    @return mix($o-view-background-color, lighten($info, 15%), 87.5%);
+}
+
+@function mail-Message-blueBubbleBgColor-transparent() {
+    // same resulting color as mail-DiscussSidebar-blueBubbleBgColor() inside a o-mail-DiscussPanel-bgColor but with 50% transparency
+    // great for mica / liquid glass look
+    @return rgba(saturate(mix($o-view-background-color, lighten($info, 15%), 87.5%), 100%), .85);
+}
+
+@function mail-Message-blueBubbleBgColor-muted() {
+    @return mix($white, mix($o-view-background-color, lighten($info, 5%), 90.5%));
+}
+
+@function mail-Message-blueBubbleBorderColor() {
+    @return rgba(darken(mix($o-view-background-color, $info, 87.5%), 10%), .75);
+}
+
+@function mail-Message-blueBubbleBorderColor-highContrast() {
+    @return rgba(darken(mix($o-view-background-color, $info, 87.5%), 7.5%), .75);
+}
+
+@function mail-Message-greenBubbleBgColor() {
+    @return mix($o-view-background-color, lighten($success, 15%), 85.5%);
+}
+
+@function mail-Message-greenBubbleBgColor-transparent() {
+    // same resulting color as mail-DiscussSidebar-blueBubbleBgColor() inside a o-mail-DiscussPanel-bgColor but with 50% transparency
+    // great for mica / liquid glass look
+    @return rgba(saturate(mix($o-view-background-color, lighten($success, 15%), 85.5%), 100%), .85);
+}
+
+@function mail-Message-greenBubbleBgColor-transparent() {
+    // same resulting color as mail-DiscussSidebar-blueBubbleBgColor() inside a o-mail-DiscussPanel-bgColor but with 50% transparency
+    // great for mica / liquid glass look
+    @return saturate(darken(rgba(mix($o-view-background-color, lighten($success, 15%), 85.5%), .85), 3.5%), 10);
+}
+
+@function mail-Message-greenBubbleBgColor-muted() {
+    @return mix($white, mix($o-view-background-color, lighten($success, 5%), 90.5%));
+}
+
+@function mail-Message-greenBubbleBorderColor() {
+    @return rgba(darken(mix($o-view-background-color, $success, 87.5%), 10%), .75);
+}
+
+@function mail-Message-greenBubbleBorderColor-highContrast() {
+    @return mix(darken(mix($o-view-background-color, lighten($success, 2.5%), 85.5%), 35%), white, 92.5%);
+}
+
+@function mail-Message-orangeBubbleBgColor() {
+    @return mix($o-view-background-color, lighten($warning, 12.5%), 75%);
+}
+
+@function mail-Message-orangeBubbleBgColor-muted() {
+    @return mix($white, mix($o-view-background-color, $warning, 75%), 85%);
+}
+
+@function mail-Message-orangeBubbleBorderColor() {
+    @return rgba(darken(mix($o-view-background-color, $warning, 75%), 7.5%), .75);
+}
+
+@function mail-Message-orangeBubbleBorderColor-highContrast() {
+    @return mix(darken(mix($o-view-background-color, lighten($warning, 2.5%), 75%), 35%), white, 87.5%);
+}
+
+@mixin o-mail-Message-bubbleMixin() {
+    &.o-blue {
+        background-color: mail-Message-blueBubbleBgColor() !important;
+        border-color: mail-Message-blueBubbleBorderColor() !important;
+
+        &.o-muted {
+            background-color: mail-Message-blueBubbleBgColor-muted() !important;
+        }
+    }
+    &.o-green {
+        background-color: mail-Message-greenBubbleBgColor() !important;
+        border-color: mail-Message-greenBubbleBorderColor() !important;
+
+        &.o-muted {
+            background-color: mail-Message-greenBubbleBgColor-muted() !important;
+        }
+    }
+    &.o-orange {
+        background-color: mail-Message-orangeBubbleBgColor() !important;
+        border-color: mail-Message-orangeBubbleBorderColor() !important;
+
+        &.o-muted {
+            background-color: mail-Message-orangeBubbleBgColor-muted() !important;
+        }
+    }
+}
+
+@mixin o-mail-Message-bubbleTailMixin() {
+    &.o-blue {
+        .o-mail-Message-bubbleTailBg {
+            color: mail-Message-blueBubbleBgColor() !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mail-Message-blueBubbleBorderColor() !important;
+        }
+    }
+    &.o-green {
+        .o-mail-Message-bubbleTailBg {
+            color: mail-Message-greenBubbleBgColor() !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mail-Message-greenBubbleBorderColor() !important;
+        }
+    }
+    &.o-orange {
+        .o-mail-Message-bubbleTailBg {
+            color: mail-Message-orangeBubbleBgColor() !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mail-Message-orangeBubbleBorderColor() !important;
+        }
     }
 }

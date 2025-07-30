@@ -6,12 +6,23 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr auto;
 
+    &.o-floating {
+        --border-opacity: 0;
+        z-index: $o-mail-NavigableList-zIndex - 1;
+    }
+
     &.o-hasSelfAvatar {
         grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
+        --border-opacity: .5;
     }
 
     .o-mail-Composer-sidebarMain {
-        padding-top: 0.3125rem; // avatar centered with composer text input: 32px (avatar) + 2*5px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
+        &.o-extended {
+            padding-top: 0.3125rem; // avatar centered with composer text input: 32px (avatar) + 2*5px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
+        }
+        &:not(.o-extended) {
+            padding-top: 0.125rem; // avatar centered with composer text input: 32px (avatar) + 2*2px (this value) = 20px + 2 * { 7px (padding) + 1px (border) }
+        }
         width: $o-mail-Message-sidebarWidth;
     }
 
@@ -31,12 +42,12 @@
         grid-area: core-footer;
     }
 
-    .o-mail-Composer-mainActions {
+    &.o-extended .o-mail-Composer-mainActions {
         margin-top: map-get($spacers, 1);
     }
 
-    &.o-chatWindow .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) / 4;
+    &:not(.o-extended) .o-mail-Composer-mainActions {
+        margin-top: map-get($spacers, 1) / 2;
     }
 
     &:not(.o-focused) {
@@ -80,8 +91,9 @@
             aspect-ratio: 1;
         }
         &.o-sendMessageActive {
-            background-color: rgba($o-action, .75);
+            background-color: saturate(rgba($o-action, .65), 100);
             opacity: 100% !important;
+            outline: 1px solid saturate(rgba($o-action, .75), 100);
             &:focus-visible {
                 outline: darken($o-action, 15%) solid 1px;
             }
@@ -118,16 +130,12 @@
     }
 }
 
-.o-mail-Composer-bg {
-    background-color: var(--mail-Composer-bg, $o-view-background-color);
-    --border-opacity: .5;
-}
-
 .o-mail-Composer-inputStyle {
     padding-top: 10px; // carefully crafted to have the text in the middle in chat window
     padding-bottom: 10px;
     padding-left: map-get($spacers, 1);
     padding-right: map-get($spacers, 1);
+    background-color: transparent !important;
 
     line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
 
@@ -141,7 +149,7 @@
         padding-right: map-get($spacers, 2);
     }
 
-    .o-mail-Composer.o-chatWindow & {
+    .o-mail-Composer:not(.o-extended) & {
         padding-top: 7px;
         padding-bottom: 7px;
         padding-left: map-get($spacers, 1) / 2;
@@ -183,7 +191,7 @@
         opacity: 40%;
 
         .o-mail-Composer.o-focused & {
-            opacity: 50%;
+            opacity: 75%;
         }
         @include text-truncate();
     }
@@ -200,16 +208,32 @@
     visibility: hidden;
 }
 
-.o-mail-Composer-inputContainer {
+@function o-mail-Composer-inputContainerBackdropFilterUnfocused() {
+    @return blur(3.5px) contrast(1.15);
+}
+
+@mixin o-mail-Composer-inputContainerMixin() {
+    --border-opacity: .65;
+    backdrop-filter: o-mail-Composer-inputContainerBackdropFilterUnfocused() !important;
+    background-color: mail-DiscussPanel-bgColor(.75);
+
+    &.o-focused {
+        backdrop-filter: blur(4px)!important;
+    }
 
     &.o-iosPwa:not(:focus-within) {
         margin-bottom: map-get($spacers, 3) !important;
     }
 
     &:has(textarea:focus) {
-        --border-opacity: .25;
+        --border-opacity: .35;
         border-color: rgba($o-action, var(--border-opacity)) !important;
     }
+}
+
+.o-mail-Composer-inputContainer {
+    border-radius: 17.5px !important;
+    @include o-mail-Composer-inputContainerMixin;
 }
 
 .o-mail-Composer-pickerContainer.o-active {

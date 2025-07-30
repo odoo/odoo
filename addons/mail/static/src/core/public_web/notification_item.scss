@@ -1,25 +1,36 @@
-.o-mail-NotificationItem {
+@function mail-NotificationItem-importantBgColor() {
+    @return mail-DiscussSidebar-activeItemBgColor();
+}
+
+@function mail-NotificationItem-importantHoveredBgColor() {
+    @return darken(mail-DiscussSidebar-activeItemBgColor(), 5%);
+}
+
+@mixin mail-NotificationItem-mixin {
     outline: 1px solid transparent;
     outline-offset: -1px;
     background-color: var(--mail-NotificationItem-bg, mix($gray-100, $o-view-background-color, 95%));
 
     &.o-important {
-        background-color: mix($o-view-background-color, lighten($info, 5%), 87.5%);
-        border-color: darken(mix($o-view-background-color, $info, 87.5%), 7.5%) !important;
+        background-color: mail-NotificationItem-importantBgColor() !important;
     }
     &:not(.o-important) {
-        --border-opacity: .35;
+        --border-opacity: .5;
     }
     &.o-active {
         outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
     }
     &:hover, &.o-active {
-        background-color: mix($o-gray-100, $o-gray-200) !important;
+        background-color: mail-DiscussSidebar-hoveredItemBgColor() !important;
 
         &.o-important {
-            background-color: mix($o-gray-100, $o-info, 87.5%) !important;
+            background-color: mail-NotificationItem-importantHoveredBgColor() !important;
         }
     }
+}
+
+.o-mail-NotificationItem {
+    @include mail-NotificationItem-mixin;
 }
 
 .o-mail-NotificationItem-avatarContainer {

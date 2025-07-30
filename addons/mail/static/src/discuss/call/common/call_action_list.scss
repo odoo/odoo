@@ -4,7 +4,9 @@
 }
 
 .o-discuss-CallActionList-bar button {
-    aspect-ratio: 1;
+    &:not(.o-discuss-CallActionList-dropdownItem) {
+        aspect-ratio: 1;
+    }
     border-color: rgba(0, 0, 0, .5) !important;
 
     &:active {

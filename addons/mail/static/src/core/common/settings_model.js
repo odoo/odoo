@@ -100,7 +100,7 @@ export class Settings extends Record {
             },
             {
                 label: "mentions",
-                name: _t("Mentions Only"),
+                name: _t("Only @mentions"),
             },
             {
                 label: "no_notif",
