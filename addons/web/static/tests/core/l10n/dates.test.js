@@ -228,6 +228,11 @@ test("parseDateTime with escaped characters (eg. Basque locale)", async () => {
 });
 
 test("parse smart date input", async () => {
+    patchWithCleanup(localization, {
+        dateFormat: "MM/dd/yyyy",
+        dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        weekStart: 1, // Monday
+    });
     mockDate("2020-01-01 00:00:00", 0);
 
     const format = "yyyy-MM-dd HH:mm";
@@ -270,13 +275,30 @@ test("parse smart date input", async () => {
     expect(parseDateTime("today").toFormat(format)).toBe("2020-01-01 00:00");
     expect(parseDateTime("today +1w").toFormat(format)).toBe("2020-01-08 00:00");
 
-    expect(parseDateTime("=monday").toFormat(format)).toBe("2019-12-29 00:00");
-    expect(parseDateTime("=sunday").toFormat(format)).toBe("2020-01-04 00:00");
-    expect(parseDateTime("+monday").toFormat(format)).toBe("2020-01-05 00:01");
+    expect(parseDateTime("=monday").toFormat(format)).toBe("2019-12-30 00:00");
+    expect(parseDateTime("=sunday").toFormat(format)).toBe("2020-01-05 00:00");
+    expect(parseDateTime("+monday").toFormat(format)).toBe("2020-01-06 00:01");
 
     // reset after setting the day
     expect(parseDateTime("=3H =11d").toFormat(format)).toBe("2020-01-11 00:00");
-    expect(parseDateTime("=3H =sunday").toFormat(format)).toBe("2020-01-04 00:00");
+    expect(parseDateTime("=3H =sunday").toFormat(format)).toBe("2020-01-05 00:00");
+
+    expect(parseDateTime("=week_start").toFormat(format)).toBe("2019-12-30 00:00");
+    expect(parseDateTime("-week_start").toFormat(format)).toBe("2019-12-30 00:01");
+    expect(parseDateTime("+week_start").toFormat(format)).toBe("2020-01-06 00:01");
+
+    patchWithCleanup(localization, { weekStart: 7 }); // Sunday
+    expect(parseDateTime("=week_start").toFormat(format)).toBe("2019-12-29 00:00");
+    expect(parseDateTime("-week_start").toFormat(format)).toBe("2019-12-29 00:01");
+    expect(parseDateTime("+week_start").toFormat(format)).toBe("2020-01-05 00:01");
+    expect(parseDateTime("=sunday").toFormat(format)).toBe("2019-12-29 00:00");
+
+    patchWithCleanup(localization, { weekStart: 3 }); // Wednesday
+    expect(parseDateTime("=week_start").toFormat(format)).toBe("2020-01-01 00:00");
+    expect(parseDateTime("-week_start").toFormat(format)).toBe("2020-01-01 00:01");
+    expect(parseDateTime("+week_start").toFormat(format)).toBe("2020-01-01 00:01");
+    expect(parseDateTime("=tuesday").toFormat(format)).toBe("2020-01-07 00:00");
+    expect(parseDateTime("=wednesday").toFormat(format)).toBe("2020-01-01 00:00");
 });
 
 test("parseDateTime ISO8601 Format", async () => {

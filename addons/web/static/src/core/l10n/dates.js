@@ -87,13 +87,13 @@ const smartDateUnits = {
     S: "seconds",
 };
 const smartWeekdays = {
-    monday: 0,
-    tuesday: 1,
-    wednesday: 2,
-    thursday: 3,
-    friday: 4,
-    saturday: 5,
-    sunday: 6,
+    monday: 1,
+    tuesday: 2,
+    wednesday: 3,
+    thursday: 4,
+    friday: 5,
+    saturday: 6,
+    sunday: 7,
 };
 
 /** @type {WeakMap<DateTime, string>} */
@@ -269,6 +269,7 @@ function isValidDate(date) {
  *   "+3M" will return now + 3 minutes
  *   "+3S" will return now + 3 seconds
  *   "today -1d" will return yesterday at midnight
+ *   "=week_start" will return the first day of the current week at midnight, according to the locale
  *
  * Difference with python version: a simple "+1" means "+1d" for the first term,
  * the unit is optional and defaults to "d".
@@ -300,9 +301,13 @@ function parseSmartDateInput(value) {
         }
 
         // Weekday
-        const weekdayNumber = smartWeekdays[term.slice(1)];
-        if (weekdayNumber != undefined) {
-            let weekdayOffset = weekdayNumber - now.weekday;
+        const dayname = term.slice(1);
+        if (Object.hasOwn(smartWeekdays, dayname) || dayname === "week_start") {
+            const { weekStart } = localization;
+            const weekdayNumber =
+                dayname === "week_start" ? weekStart : smartWeekdays[dayname];
+            let weekdayOffset =
+                ((weekdayNumber - weekStart + 7) % 7) - ((now.weekday - weekStart + 7) % 7);
             if (operator == "+" || operator == "-") {
                 if (weekdayOffset > 0 && operator == "-") {
                     weekdayOffset -= 7;
