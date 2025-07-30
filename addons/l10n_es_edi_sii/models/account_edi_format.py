@@ -200,29 +200,7 @@ class AccountEdiFormat(models.Model):
         }
 
     def _l10n_es_edi_get_partner_info(self, partner):
-        eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
-
-        partner_info = {}
-        IDOtro_ID = partner.vat or 'NO_DISPONIBLE'
-
-        if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
-            # ES partner with VAT.
-            partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
-            if self.env.context.get('error_1117'):
-                partner_info['IDOtro'] = {'IDType': '07', 'ID': IDOtro_ID}
-
-        elif partner.country_id.code in eu_country_codes and partner.vat:
-            # European partner.
-            partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
-        else:
-            partner_info['IDOtro'] = {'ID': IDOtro_ID}
-            if partner.vat:
-                partner_info['IDOtro']['IDType'] = '04'
-            else:
-                partner_info['IDOtro']['IDType'] = '06'
-            if partner.country_id:
-                partner_info['IDOtro']['CodigoPais'] = partner.country_id.code
-        return partner_info
+        return partner._l10n_es_edi_get_partner_info()
 
     def _l10n_es_edi_get_invoices_info(self, invoices):
         eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
