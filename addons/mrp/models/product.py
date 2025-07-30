@@ -406,6 +406,8 @@ class ProductProduct(models.Model):
         for product in kit_products:
             if op(product.qty_available, value):
                 product_ids.append(product.id)
+            elif product.id in product_ids:
+                product_ids.pop(product_ids.index(product.id))
         return list(set(product_ids))
 
     def action_archive(self):
