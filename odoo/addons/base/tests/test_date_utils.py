@@ -206,7 +206,7 @@ class TestDateUtils(TransactionCase):
 
     @freeze_time('2024-01-05 13:05:00')
     def test_parse_date_relative_tz(self):
-        env = self.env(context={'tz': 'CET'})  # +01:00
+        env = self.env(context={'tz': 'Etc/GMT-1'})
         parse = partial(parse_date, env=env)
 
         self.assertEqual(parse('now'), datetime(2024, 1, 5, 13, 5))
