@@ -14,6 +14,8 @@ export const setupPosEnv = async () => {
         db: "pos",
         isEnterprise: true,
     };
+    //TODO-manv: can we put var here to know we're in hoot tests?
+    odoo.hoot_test = true;
 
     await makeMockEnv();
     const store = getService("pos");
