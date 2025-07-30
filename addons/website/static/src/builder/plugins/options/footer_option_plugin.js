@@ -103,6 +103,7 @@ class FooterOptionPlugin extends Plugin {
                     { name: "headline", title: _t("Headline") },
                     { name: "mega", title: _t("Mega") },
                     { name: "mega_columns", title: _t("Mega Columns") },
+                    { name: "mega_links", title: _t("Mega Links") },
                 ].map((info) => ({
                     key: info.name,
                     Component: FooterTemplateChoice,
