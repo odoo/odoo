@@ -222,7 +222,7 @@ class TestReflection(common.TransactionCase):
                             self.assertFalse(field_description['sortable'])
                             self.assertIsInstance(field_description['domain'], (list, str))
                         elif field.store and field.column_type:
-                            self.assertTrue(field_description['sortable'])
+                            self.assertEqual(field_description['sortable'], field.type != 'binary')
 
 
 class TestSchema(common.TransactionCase):
