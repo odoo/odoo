@@ -52,12 +52,7 @@ class ResourceResource(models.Model):
             else:
                 resource.avatar_128 = avatar_per_employee_id[employee[0].id]
 
-    def _get_calendars_validity_within_period(self, start, end, default_company=None):
-        assert start.tzinfo and end.tzinfo
-        if not self:
-            return super()._get_calendars_validity_within_period(start, end, default_company=default_company)
-        calendars_within_period_per_resource = defaultdict(lambda: defaultdict(Intervals))  # keys are [resource id:integer][calendar:self.env['resource.calendar']]
-        # Employees that have ever had an active contract
+    def _get_resource_without_contract(self):
         employee_ids_with_active_contracts = {
             employee.id for [employee] in
             self.env['hr.version']._read_group(
@@ -68,11 +63,34 @@ class ResourceResource(models.Model):
                 groupby=['employee_id'],
             )
         }
-        resource_without_contract = self.filtered(
+        return self.filtered(
             lambda r: not r.employee_id
                    or not r.employee_id.id in employee_ids_with_active_contracts
                    or r.employee_id.employee_type not in ['employee', 'student']
         )
+
+    def _get_contracts_valid_periods(self, resource_with_contract, start, end):
+        res = defaultdict(lambda: defaultdict(Intervals))
+        timezones = {resource.tz for resource in resource_with_contract}
+        date_start = min(start.astimezone(timezone(tz)).date() for tz in timezones)
+        date_end = max(end.astimezone(timezone(tz)).date() for tz in timezones)
+        contracts = resource_with_contract.employee_id._get_versions_with_contract_overlap_with_period(date_start, date_end)
+        for contract in contracts:
+            tz = timezone(contract.employee_id.tz)
+            res[contract.employee_id.resource_id.id][contract.resource_calendar_id] |= Intervals([(
+                tz.localize(datetime.combine(contract.contract_date_start, datetime.min.time())) if contract.contract_date_start > start.astimezone(tz).date() else start,
+                tz.localize(datetime.combine(contract.contract_date_end, datetime.max.time())) if contract.contract_date_end and contract.contract_date_end < end.astimezone(tz).date() else end,
+                self.env['resource.calendar.attendance']
+            )])
+        return res
+
+    def _get_calendars_validity_within_period(self, start, end, default_company=None):
+        assert start.tzinfo and end.tzinfo
+        if not self:
+            return super()._get_calendars_validity_within_period(start, end, default_company=default_company)
+        calendars_within_period_per_resource = defaultdict(lambda: defaultdict(Intervals))  # keys are [resource id:integer][calendar:self.env['resource.calendar']]
+        # Employees that have ever had an active contract
+        resource_without_contract = self._get_resource_without_contract()
         if resource_without_contract:
             calendars_within_period_per_resource.update(
                 super(ResourceResource, resource_without_contract)._get_calendars_validity_within_period(start, end, default_company=default_company)
@@ -80,15 +98,8 @@ class ResourceResource(models.Model):
         resource_with_contract = self - resource_without_contract
         if not resource_with_contract:
             return calendars_within_period_per_resource
-        timezones = {resource.tz for resource in resource_with_contract}
-        date_start = min(start.astimezone(timezone(tz)).date() for tz in timezones)
-        date_end = max(end.astimezone(timezone(tz)).date() for tz in timezones)
-        contracts = resource_with_contract.employee_id._get_versions_with_contract_overlap_with_period(date_start, date_end)
-        for contract in contracts:
-            tz = timezone(contract.employee_id.tz)
-            calendars_within_period_per_resource[contract.employee_id.resource_id.id][contract.resource_calendar_id] |= Intervals([(
-                tz.localize(datetime.combine(contract.contract_date_start, datetime.min.time())) if contract.contract_date_start > start.astimezone(tz).date() else start,
-                tz.localize(datetime.combine(contract.contract_date_end, datetime.max.time())) if contract.contract_date_end and contract.contract_date_end < end.astimezone(tz).date() else end,
-                self.env['resource.calendar.attendance']
-            )])
-        return calendars_within_period_per_resource
+
+        return {
+            **calendars_within_period_per_resource,
+            **self._get_contracts_valid_periods(resource_with_contract, start, end)
+        }

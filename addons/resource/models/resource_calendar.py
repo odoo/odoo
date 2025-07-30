@@ -521,7 +521,6 @@ class ResourceCalendar(models.Model):
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
-        self.ensure_one()
 
         if not resources:
             resources = self.env['resource.resource']
@@ -531,6 +530,7 @@ class ResourceCalendar(models.Model):
         if domain is None:
             domain = [('time_type', '=', 'leave')]
         if not any_calendar:
+            self.ensure_one()
             domain = domain + [('calendar_id', 'in', [False, self.id])]
         # for the computation, express all datetimes in UTC
         # Public leave don't have a resource_id
