@@ -53,19 +53,21 @@
                         </div>
                     </td>
                     <td style="'min-width: 2.5em'">
-                        <button
-                            class="btn btn-danger"
-                            title="Remove image"
-                            t-on-click="() => this.removeImage(item.position)">
-                            <i class="fa fa-fw fa-trash-o"/>
-                        </button>
+                        <BuilderButton
+                            type="'danger'"
+                            className="'fa fa-fw fa-trash-o'"
+                            title.translate="Remove image"
+                            action="'removeReferencesCarouselImage'"
+                            applyTo="`li.item:nth-of-type(${item.position})`"
+                            preview="false"
+                        />
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="p-1 px-2 ps-3">
-        <button class="btn btn-primary" t-on-click="() => this.addImage()">Add New Image</button>
+        <BuilderButton action="'addReferencesCarouselImage'" preview="false">Add New Image</BuilderButton>
     </div>
 </t>
 

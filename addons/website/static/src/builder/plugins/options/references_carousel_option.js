@@ -104,60 +104,7 @@ export class ReferencesCarouselImagesOption extends BaseOptionComponent {
         return items;
     }
 
-    addImage() {
-        this.callOperation(async () => {
-            const editingElement = this.env.getEditingElement();
-            const slider = editingElement.querySelector('.slider');
-            const list = slider.querySelector('.list');
-            const items = list.querySelectorAll('.item');
-            const newPosition = items.length + 1;
-            
-            // Create new item
-            const newItem = document.createElement('li');
-            newItem.className = 'item';
-            newItem.style.setProperty('--position', newPosition);
-            
-            const img = document.createElement('img');
-            img.src = '/web/image/website.s_reference_demo_image_1';
-            img.className = 'img img-fluid';
-            img.alt = '';
-            
-            newItem.appendChild(img);
-            list.appendChild(newItem);
-            
-            // Update quantity after adding the item
-            const updatedItems = list.querySelectorAll('.item');
-            slider.style.setProperty('--quantity', updatedItems.length);
-        });
-    }
 
-    removeImage(position) {
-        this.callOperation(async () => {
-            const editingElement = this.env.getEditingElement();
-            const slider = editingElement.querySelector('.slider');
-            const list = slider.querySelector('.list');
-            const items = list.querySelectorAll('.item');
-            
-            if (items.length <= 1) {
-                // Don't remove if it's the last image
-                return;
-            }
-            
-            // Remove the item at the specified position
-            const itemToRemove = list.querySelector(`li.item:nth-of-type(${position})`);
-            if (itemToRemove) {
-                itemToRemove.remove();
-                
-                // Update positions and quantity after removal
-                const remainingItems = list.querySelectorAll('.item');
-                remainingItems.forEach((item, index) => {
-                    item.style.setProperty('--position', index + 1);
-                });
-                
-                slider.style.setProperty('--quantity', remainingItems.length);
-            }
-        });
-    }
 
     reorderImage(element, elementAfter) {
         this.callOperation(async () => {
