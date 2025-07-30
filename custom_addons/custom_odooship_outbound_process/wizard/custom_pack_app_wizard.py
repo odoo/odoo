@@ -537,7 +537,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             l.scanned = True
                             l.quantity = 1
                             l.remaining_quantity = 0
-                            l.available_quantity = 1
+                            # l.available_quantity = 1
                             l.line_added = True
                             l.api_payload_success = True
                         packed_data = [

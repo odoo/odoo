@@ -29,12 +29,14 @@ class ShippingIntegrationLog(models.Model):
     retry_count = fields.Integer('Retry Count', default=0)
     is_synced = fields.Boolean('Is Synced With Order', default=False)
     origin = fields.Char(string='Origin')
+    items = fields.Char(string='Items')
+    shipmentid = fields.Char(string='Shipment ID')
 
     @api.model
     def cron_process_shipping_logs(self):
         logs = self.search([
-            # ('status', '=', 'success'),
             ('is_synced', '=', False),
+            ('status', '=', 'success'),  # ✅ Only process logs with successful status
         ])
         for log in logs:
             picking = log.picking_id
@@ -49,8 +51,8 @@ class ShippingIntegrationLog(models.Model):
                         'pick_status': "packed",
                         'status': log.label_url,
                         'is_released': 'released'
-                        # 'delivery_status': "partial", # Uncomment if field exists
                     })
+
                 # --- Validate ALL pickings for the sale order ---
                 if sale_order:
                     all_pickings = self.env['stock.picking'].search([
@@ -62,18 +64,22 @@ class ShippingIntegrationLog(models.Model):
                                   and getattr(p.picking_type_id, 'picking_process_type', 'pick') == 'pick'
                     )
                     for pick in pickings:
+                        pick.write({'current_state': 'pack'})
                         pick.button_validate()
+
                 # --- Send tracking update if required ---
-                sale_order and sale_order.env['custom.pack.app.wizard'].send_tracking_update_to_ot_orders(
+                sale_order and self.env['custom.pack.app.wizard'].send_tracking_update_to_ot_orders(
                     so_number=sale_order.name,
                     con_id=log.consignment_number,
                     carrier=log.carrier,
                     origin=sale_order.origin or "N/A",
                     tenant_code=sale_order.tenant_code_id.name if sale_order.tenant_code_id else "N/A"
                 )
+
                 log.is_synced = True
+
             except Exception as e:
                 log.error_message = str(e)
                 log.retry_count += 1
-                # log.status = 'failed'
+
 
