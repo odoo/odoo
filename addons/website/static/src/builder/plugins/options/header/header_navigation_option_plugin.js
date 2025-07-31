@@ -1,23 +1,23 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { HeaderNavbarOption } from "./header_navbar_option";
+import { HeaderNavigationOption } from "./header_navigation_option";
+import { HEADER_NAVIGATION, basicHeaderOptionSettings } from "./header_option_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
-class HeaderNavbarOptionPlugin extends Plugin {
-    static id = "HeaderNavbarOptionPlugin";
+class HeaderNavigationOptionPlugin extends Plugin {
+    static id = "HeaderNavigationOptionPlugin";
     static dependencies = ["customizeWebsite"];
 
     resources = {
         builder_options: [
-            {
+            withSequence(HEADER_NAVIGATION, {
+                ...basicHeaderOptionSettings,
+                OptionComponent: HeaderNavigationOption,
                 props: {
                     getCurrentActiveViews: this.getCurrentActiveViews.bind(this),
                 },
-                OptionComponent: HeaderNavbarOption,
-                editableOnly: false,
-                selector: "#wrapwrap > header",
-                groups: ["website.group_website_designer"],
                 reloadTarget: true,
-            },
+            }),
         ],
     };
 
@@ -36,6 +36,7 @@ class HeaderNavbarOptionPlugin extends Plugin {
             "website.template_header_sidebar",
         ];
     }
+
     async getCurrentActiveViews() {
         const actionParams = { views: this.keys };
         await this.dependencies.customizeWebsite.loadConfigKey(actionParams);
@@ -47,4 +48,7 @@ class HeaderNavbarOptionPlugin extends Plugin {
         return currentActiveViews;
     }
 }
-registry.category("website-plugins").add(HeaderNavbarOptionPlugin.id, HeaderNavbarOptionPlugin);
+
+registry
+    .category("website-plugins")
+    .add(HeaderNavigationOptionPlugin.id, HeaderNavigationOptionPlugin);
