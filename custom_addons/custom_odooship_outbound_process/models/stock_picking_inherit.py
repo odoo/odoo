@@ -38,6 +38,22 @@ class StockPicking(models.Model):
         store=True
     )
 
+    def button_validate(self):
+        for picking in self:
+            move_lines = picking.move_ids_without_package
+            if move_lines and not all(move.packed for move in move_lines):
+                un_packed_products = move_lines.filtered(lambda m: not m.packed).mapped('product_id.display_name')
+                _logger.warning(
+                    f"Skipping validation for picking {picking.name}. "
+                    f"Unpacked products: {', '.join(un_packed_products)}"
+                )
+                # Skip this picking
+                continue
+
+            # Validate only if all lines are packed
+            super(StockPicking, picking).button_validate()
+        return True
+
     @api.depends('partner_id.country_id.code')
     def _compute_is_international(self):
         for picking in self:
