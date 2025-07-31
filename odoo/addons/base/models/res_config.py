@@ -148,6 +148,14 @@ class ResConfigSettings(models.TransientModel):
     _name = 'res.config.settings'
     _description = 'Config Settings'
 
+    def _register_hook(self):
+        super()._register_hook()
+        try:
+            # validate the classified fields
+            self._get_classified_fields()
+        except Exception as e:  # noqa: BLE001
+            _logger.critical("%s", str(e))
+
     def _valid_field_parameter(self, field, name):
         return (
             name in ('default_model', 'config_parameter')
