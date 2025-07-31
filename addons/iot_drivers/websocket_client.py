@@ -70,6 +70,14 @@ class WebsocketClient(Thread):
                         if device_identifier in main.iot_devices:
                             _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
                             main.iot_devices[device_identifier].action(payload)
+                        else:
+                            # Notify the controller that the device is not connected
+                            send_to_controller({
+                                'session_id': payload.get('session_id', '0'),
+                                'iot_box_identifier': helpers.get_identifier(),
+                                'device_identifier': device_identifier,
+                                'status': 'disconnected',
+                            })
                 case 'server_clear':
                     helpers.disconnect_from_server()
                     close_server_log_sender_handler()
