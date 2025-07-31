@@ -46,7 +46,7 @@ $-seen-urls: ();
     // 3) The values in the $colors map are also printed by Bootstrap. However,
     // we have color variables which can contain a reference to a color
     // combination and that is the info we want in that case.
-    @each $key in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright') {
+    @each $key in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'footer-bright', 'footer-light', 'copyright', 'copyright-dark', 'copyright-bright') {
         $-value: map-get($o-color-palette, $key);
         @if type-of($-value) == 'number' {
             @include print-variable($key, $-value);
@@ -476,15 +476,45 @@ $-header-nav-link-height: $nav-link-height;
 }
 
 .o_footer {
-    @include o-apply-colors('footer');
-    @include o-apply-colors('footer-custom');
-    @include o-add-gradient('footer-gradient');
+
+    @if
+        o-website-value('footer-template') == 'descriptive' or
+        o-website-value('footer-template') == 'contact'
+    {
+        @include o-apply-colors('footer-bright');
+        @include o-apply-colors('footer-bright-custom');
+        @include o-add-gradient('footer-bright-gradient');
+    } @else if o-website-value('footer-template') == 'minimalist' {
+        @include o-apply-colors('footer-light');
+        @include o-apply-colors('footer-light-custom');
+        @include o-add-gradient('footer-light-gradient');
+    } @else {
+        @include o-apply-colors('footer');
+        @include o-apply-colors('footer-custom');
+        @include o-add-gradient('footer-gradient');
+    }
 
     .o_footer_copyright {
-        $-footer-color: o-color('footer-custom') or o-color('footer');
-        @include o-apply-colors('copyright', $background: $-footer-color);
-        @include o-apply-colors('copyright-custom', $background: $-footer-color);
-        @include o-add-gradient('copyright-gradient');
+        @if
+            o-website-value('footer-template') == 'descriptive' or
+            o-website-value('footer-template') == 'minimalist'
+        {
+            @include o-apply-colors('copyright-dark');
+            @include o-apply-colors('copyright-dark-custom');
+            @include o-add-gradient('copyright-dark-gradient');
+        } @else if
+            o-website-value('footer-template') == 'links' or
+            o-website-value('footer-template') == 'contact'
+        {
+            @include o-apply-colors('copyright-bright');
+            @include o-apply-colors('copyright-bright-custom');
+            @include o-add-gradient('copyright-bright-gradient');
+        } @else {
+            $-footer-color: o-color('footer-custom') or o-color('footer');
+            @include o-apply-colors('copyright', $background: $-footer-color);
+            @include o-apply-colors('copyright-custom', $background: $-footer-color);
+            @include o-add-gradient('copyright-gradient');
+        }
     }
 }
 

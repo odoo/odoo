@@ -10,7 +10,7 @@ export class HeaderNavbarOption extends BaseOptionComponent {
         super.setup();
         this.currentActiveViews = {};
         onWillStart(async () => {
-            this.currentActiveViews = await this.props.getCurrentActiveViews();
+            this.currentActiveViews = await this.props.getCurrentActiveViews(this.keys);
         });
     }
 

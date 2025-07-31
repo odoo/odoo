@@ -5,12 +5,13 @@ import { HeaderNavbarOption } from "./header_navbar_option";
 class HeaderNavbarOptionPlugin extends Plugin {
     static id = "HeaderNavbarOptionPlugin";
     static dependencies = ["customizeWebsite"];
+    static shared = ["getCurrentActiveViews"];
 
     resources = {
         builder_options: [
             {
                 props: {
-                    getCurrentActiveViews: this.getCurrentActiveViews.bind(this),
+                    getCurrentActiveViews: () => this.getCurrentActiveViews.bind(this.keys),
                 },
                 OptionComponent: HeaderNavbarOption,
                 editableOnly: false,
@@ -36,11 +37,11 @@ class HeaderNavbarOptionPlugin extends Plugin {
             "website.template_header_sidebar",
         ];
     }
-    async getCurrentActiveViews() {
-        const actionParams = { views: this.keys };
+    async getCurrentActiveViews(keys) {
+        const actionParams = { views: keys };
         await this.dependencies.customizeWebsite.loadConfigKey(actionParams);
         const currentActiveViews = {};
-        for (const key of this.keys) {
+        for (const key of keys) {
             const isActive = this.dependencies.customizeWebsite.getConfigKey(key);
             currentActiveViews[key] = isActive;
         }
