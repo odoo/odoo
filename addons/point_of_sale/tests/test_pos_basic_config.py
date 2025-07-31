@@ -1406,3 +1406,46 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(len(product_data['_archived_combinations']), 1, "There should be one archived combination for the product")
         self.assertEqual(len(product_data['_archived_combinations'][0]), 2, "Archived combination should have two values")
         self.assertTrue(all(value in product_data['_archived_combinations'][0] for value in first_variant.product_template_attribute_value_ids.ids), "Archived combination should match the first variant's attribute values")
+
+    def test_refunded_order_id(self):
+        """
+        An order containing refunded lines from two different orders is no longer allowed,
+        but some legacy records of this kind may still exist.
+        This test ensures that the refunded_order_id is correctly computed in such cases.
+        """
+        current_session = self.open_new_session()
+        orders = list(self._create_orders([
+            {'pos_order_lines_ui_args': [(self.product1, 1)]},
+            {'pos_order_lines_ui_args': [(self.product2, 1)]}
+        ]).values())
+
+        refund_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'lines': [
+                (0, 0, {
+                    'product_id': self.product1.id,
+                    'price_unit': -10,
+                    'qty': 1,
+                    'tax_ids': [[6, False, []]],
+                    'price_subtotal': -10,
+                    'price_subtotal_incl': -10,
+                    'refunded_orderline_id': orders[0].lines[0].id
+                }),
+                (0, 0, {
+                    'product_id': self.product2.id,
+                    'price_unit': -10,
+                    'qty': 1,
+                    'tax_ids': [[6, False, []]],
+                    'price_subtotal': -10,
+                    'price_subtotal_incl': -10,
+                    'refunded_orderline_id': orders[1].lines[0].id
+                })
+            ],
+            'amount_paid': -10,
+            'amount_total': -10,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+        })
+
+        self.assertEqual(refund_order.refunded_order_id, orders[0])
