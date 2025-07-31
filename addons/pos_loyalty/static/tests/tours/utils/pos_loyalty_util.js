@@ -128,6 +128,14 @@ export function pointsAwardedAre(points_str) {
         },
     ];
 }
+export function pointsTotalIs(points_str) {
+    return [
+        {
+            content: "loyalty points awarded " + points_str,
+            trigger: '.loyalty-points-totaltext-end:contains("' + points_str + '")',
+        },
+    ];
+}
 export function finalizeOrder(paymentMethod, amount) {
     return [
         ...ProductScreen.clickPayButton(),
