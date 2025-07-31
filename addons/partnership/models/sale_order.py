@@ -33,7 +33,4 @@ class SaleOrder(models.Model):
         for so in self:
             if not so.assigned_grade_id:
                 continue
-            partner_id = so.partner_id.commercial_partner_id
-            partner_id.grade_id = so.assigned_grade_id
-            if pricelist := so.assigned_grade_id.default_pricelist_id:
-                partner_id.specific_property_product_pricelist = pricelist
+            so.partner_id.commercial_partner_id.grade_id = so.assigned_grade_id
