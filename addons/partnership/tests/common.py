@@ -25,4 +25,3 @@ class PartnershipCommon(ProductCommon):
             'partner_id': cls.partner.id,
             'order_line': [Command.create({'product_id': cls.partnership_product.id})],
         })
-        cls.partner.child_ids = [Command.create({'name': 'Child 1'})]
