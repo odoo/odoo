@@ -7,6 +7,7 @@ import { IconSelector } from "./icon_selector";
 import { VideoSelector } from "./video_selector";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
+import { iconClasses } from "@html_editor/utils/dom_info";
 
 export const TABS = {
     IMAGES: {
@@ -147,15 +148,19 @@ export class MediaDialog extends Component {
                 TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)
             ) {
                 const classes = this.props.media.className.split(/\s+/);
-                const mediaFont = fonts.find((font) => classes.includes(font.base));
-                if (mediaFont) {
-                    const selectedIcon = mediaFont.icons.find((icon) =>
+                const predefinedMediaFont = fonts.find((font) => classes.includes(font.base));
+                if (predefinedMediaFont) {
+                    const selectedIcon = predefinedMediaFont.icons.find((icon) =>
                         icon.names.some((name) => classes.includes(name))
                     );
                     if (selectedIcon) {
                         this.initialIconClasses.push(...selectedIcon.names);
                         this.selectMedia(selectedIcon, TABS.ICONS.id);
                     }
+                } else {
+                    const iconRegex = new RegExp(`\\b(?:${iconClasses.join("|")})(?:-\\S+)?\\b`);
+                    const fallbackIconClasses = classes.filter((cls) => iconRegex.test(cls));
+                    this.initialIconClasses.push(...fallbackIconClasses);
                 }
             }
         }
