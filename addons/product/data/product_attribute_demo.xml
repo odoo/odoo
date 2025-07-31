@@ -535,39 +535,6 @@
         <field name="sequence">4</field>
     </record>
 
-    <!-- Sides -->
-    <record id="pa_sides" model="product.attribute">
-        <field name="name">Sides</field>
-        <field name="create_variant">no_variant</field>
-        <field name="display_type">pills</field>
-        <field name="sequence">100</field>
-    </record>
-
-    <record id="pav_sides_fries" model="product.attribute.value">
-        <field name="name">Belgian fresh homemade fries</field>
-        <field name="attribute_id" ref="pa_sides"/>
-    </record>
-
-    <record id="pav_sides_sweet_potato" model="product.attribute.value">
-        <field name="name">Sweet potato fries</field>
-        <field name="attribute_id" ref="pa_sides"/>
-    </record>
-
-    <record id="pav_sides_smashed_sweet_potato" model="product.attribute.value">
-        <field name="name">Smashed sweet potatoes</field>
-        <field name="attribute_id" ref="pa_sides"/>
-    </record>
-
-    <record id="pav_sides_potato_thyme" model="product.attribute.value">
-        <field name="name">Potatoes with thyme</field>
-        <field name="attribute_id" ref="pa_sides"/>
-    </record>
-
-    <record id="pav_sides_grilled_vegetables" model="product.attribute.value">
-        <field name="name">Grilled vegetables</field>
-        <field name="attribute_id" ref="pa_sides"/>
-    </record>
-
     <!-- Options -->
     <record id="pa_options" model="product.attribute">
         <field name="name">Options</field>
