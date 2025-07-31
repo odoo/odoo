@@ -182,9 +182,7 @@ test("should display invitations", async () => {
             .add(pyEnv["discuss.channel.member"].browse(memberId), {
                 partner_id: { id: partnerId },
                 channel_id: { id: channelId, model: "discuss.channel" },
-            })
-            .add(pyEnv["discuss.channel"].browse(channelId), {
-                rtcInvitingSession: { id: sessionId },
+                rtc_inviting_session_id: { id: sessionId },
             })
             .get_result()
     );
@@ -195,8 +193,8 @@ test("should display invitations", async () => {
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store(pyEnv["discuss.channel"].browse(channelId), {
-            rtcInvitingSession: false,
+        new mailDataHelpers.Store(pyEnv["discuss.channel.member"].browse(memberId), {
+            rtc_inviting_session_id: false,
         }).get_result()
     );
     await contains(".o-discuss-CallInvitation", { count: 0 });

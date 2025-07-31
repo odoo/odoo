@@ -6,6 +6,7 @@ declare module "models" {
     export interface RtcSession extends RtcSessionClass {}
 
     export interface ChannelMember {
+        rtc_inviting_session_id: RtcSession;
         rtcSession: RtcSession;
     }
     export interface Persona {
@@ -29,7 +30,6 @@ declare module "models" {
         lastSessionIds: Set<number>;
         promoteFullscreen: typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN];
         rtc_session_ids: RtcSession[];
-        rtcInvitingSession: RtcSession;
         videoCount: number;
         videoCountNotSelf: number;
     }

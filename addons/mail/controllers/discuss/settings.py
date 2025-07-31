@@ -34,13 +34,16 @@ class DiscussSettingsController(Controller):
         :param custom_notifications: (false|all|mentions|no_notif) custom notifications to set
         :param channel_id: (integer) id of the discuss.channel record, if not set, set for res.users.settings
         """
-        if not channel_id:
-            record = request.env['res.users.settings']._find_or_create_for_user(request.env.user)
-        else:
-            channel = request.env["discuss.channel"].browse(channel_id)
+        if channel_id:
+            channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
             if not channel:
                 raise request.not_found()
-            record = channel._find_or_create_member_for_self()
-        if not record:
-            raise request.not_found()
-        record.set_custom_notifications(custom_notifications)
+            member = channel._find_or_create_member_for_self()
+            if not member:
+                raise request.not_found()
+            member.custom_notifications = custom_notifications
+        else:
+            user_settings = request.env["res.users.settings"]._find_or_create_for_user(request.env.user)
+            if not user_settings:
+                raise request.not_found()
+            user_settings.set_res_users_settings({"channel_notifications": custom_notifications})
