@@ -302,21 +302,59 @@ class TestMrpAccount(TestMrpCommon):
     def test_labor_cost_posting_is_not_rounded_incorrectly(self):
         """ Test to ensure that labor costs are posted accurately without rounding errors."""
 
-        account_1, account_2 = self.env['account.account'].search([], limit=2)
-        self.mrp_workcenter.write({'costs_hour': 0.01, "expense_account_id": account_1.id})
-        self.mrp_workcenter_1.write({'costs_hour': 0.01, "expense_account_id": account_2.id})
-        self.categ_real.property_valuation = 'real_time'
+        wc1_account, wc2_account, input_account, output_account, stock_valuation_account = self.env['account.account'].create([{
+            'name': 'Workcenter 1 account',
+            'code': 'WC1',
+            'account_type': 'expense',
+        }, {
+            'name': 'Workcenter 2 account',
+            'code': 'WC2',
+            'account_type': 'expense',
+        }, {
+            'name': 'Input Account',
+            'code': 'InputAccount',
+            'account_type': 'expense',
+        }, {
+            'name': 'Output Account',
+            'code': 'OutputAccount',
+            'account_type': 'income',
+        }, {
+            'name': 'Stock Valuation Account',
+            'code': 'StockValuationAccount',
+            'account_type': 'asset_current',
+        }])
+
+        self.mrp_workcenter.write({'costs_hour': 0.01, "expense_account_id": wc1_account.id})
+        self.mrp_workcenter_1.write({'costs_hour': 0.01, "expense_account_id": wc2_account.id})
+
+        self.categ_real.write({
+            'property_stock_account_input_categ_id': input_account.id,
+            'property_stock_account_output_categ_id': output_account.id,
+            'property_stock_valuation_account_id': stock_valuation_account.id,
+            'property_stock_journal': self.env['account.journal'].create({
+                'name': 'Stock Journal',
+                'code': 'STK',
+                'type': 'general',
+                'company_id': self.env.company.id,
+            }).id,
+            'property_valuation': 'real_time',
+        })
         final_product = self.env['product.product'].create({
             'is_storable': True,
             'name': 'final product',
             'categ_id': self.categ_real.id,
         })
         self.bom_1.write({
-            "product_id": final_product.id,
+            'product_id': final_product.id,
             'operation_ids': [
                 Command.create({'name': 'work', 'workcenter_id': self.mrp_workcenter.id,   'time_cycle': 30.2}),
                 Command.create({'name': 'work', 'workcenter_id': self.mrp_workcenter_1.id, 'time_cycle': 30.2}),
             ],
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 1.0,
+                })],
         })
 
         # Build
@@ -329,6 +367,9 @@ class TestMrpAccount(TestMrpCommon):
         workorder = production.workorder_ids
         workorder.duration = 30.2
         workorder.time_ids.write({'duration': 30.2})  # Ensure that the duration is correct
+        production.all_move_raw_ids.filtered(lambda m: m.product_id == self.product_2)[0].write({
+            'quantity': 1.0,
+        })
 
         mo_form = Form(production)
         mo_form.qty_producing = 1

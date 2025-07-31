@@ -898,6 +898,15 @@ export class ListPlugin extends Plugin {
 
         if (isChecklistItem && this.isPointerInsideCheckbox(node, offsetX, offsetY)) {
             toggleClass(node, "o_checked");
+            const { documentSelectionIsInEditable } =
+                this.dependencies.selection.getSelectionData();
+            // When the editable is not focused, clicking on checkbox
+            // wont make it focused So changes will be lost
+            // as no blur event will occur when clicking outside.
+            if (!documentSelectionIsInEditable) {
+                this.editable.focus();
+                this.dependencies.selection.setSelection({ anchorNode: node, anchorOffset: 0 });
+            }
             ev.preventDefault();
             this.dependencies.history.addStep();
         }
