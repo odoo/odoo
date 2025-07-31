@@ -1,6 +1,6 @@
-import { ResCountry as WebResCountry } from "@web/../tests/_framework/mock_server/mock_models/res_country";
+import { webModels } from "@web/../tests/web_test_helpers";
 
-export class ResCountry extends WebResCountry {
+export class ResCountry extends webModels.ResCountry {
     _name = "res.country";
 
     _load_pos_data_fields() {
@@ -8,7 +8,7 @@ export class ResCountry extends WebResCountry {
     }
 
     _records = [
-        ...WebResCountry.prototype.constructor._records,
+        ...webModels.ResCountry._records,
         {
             id: 233,
             name: "United States",

@@ -52,7 +52,9 @@ test("No duplicated chat bubbles", async () => {
     await contains(".o_command_name", { count: 3 });
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
-    await contains(".o-mail-ChatWindow", { text: "This is the start of your direct chat with John" }); // wait fully loaded
+    await contains(".o-mail-ChatWindow", {
+        text: "This is the start of your direct chat with John",
+    }); // wait fully loaded
     await click("button[title='Fold']");
     await contains(".o-mail-ChatBubble[name='John']");
     // Make bubble of "John" chat again
