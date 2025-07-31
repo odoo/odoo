@@ -429,7 +429,7 @@ export function applyNeededCss(
 const builderStylesheet = new CSSStyleSheet();
 export function setBuilderCSSVariables(htmlStyle) {
     const styles = [];
-    for (const style of EDITOR_COLOR_CSS_VARIABLES) {
+    for (const style of [...EDITOR_COLOR_CSS_VARIABLES, "white", "black"]) {
         let value = getCSSVariableValue(style, htmlStyle);
         if (value.startsWith("'") && value.endsWith("'")) {
             // Gradient values are recovered within a string.

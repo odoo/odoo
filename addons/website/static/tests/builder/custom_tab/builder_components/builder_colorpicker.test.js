@@ -1,15 +1,16 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
-import { expect, test } from "@odoo/hoot";
+import { after, before, expect, test } from "@odoo/hoot";
 import { animationFrame, click, Deferred, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { cookie } from "@web/core/browser/cookie";
+import { contains, preloadBundle } from "@web/../tests/web_test_helpers";
 import {
     addActionOption,
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -232,4 +233,25 @@ test("should apply transparent color if no color is defined", async () => {
     expect(".o-overlay-item .o_hex_input").not.toHaveValue("#FFFFFF00");
     expect(":iframe .test-options-target").toHaveAttribute("data-color");
     expect.verifySteps(["getValue"]);
+});
+
+test("dark mode doesn't impact BuilderColorPicker", async () => {
+    preloadBundle("web.assets_web_dark");
+    before(() => {
+        cookie.set("color_scheme", "dark");
+    });
+    after(() => {
+        cookie.delete("color_scheme");
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker enabledTabs="['custom']" styleAction="'background-color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, { loadIframeBundles: true });
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".o-overlay-item button[data-color='black']").toHaveStyle({ "background-color": "rgb(0, 0, 0)" });
+    await contains(".o-overlay-item button[data-color='black']").click();
+    expect(":iframe .test-options-target").toHaveClass("bg-black");
+    expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgb(0, 0, 0)" });
 });

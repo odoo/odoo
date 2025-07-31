@@ -96,14 +96,14 @@
                     <button class="o_color_button btn p-0 selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
                 </div>
                 <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
-                    <button data-color="black" class="btn p-0 o_color_button bg-black"></button>
-                    <button data-color="900" class="o_color_button btn p-0" style="background-color: var(--900)"></button>
-                    <button data-color="800" class="o_color_button btn p-0" style="background-color: var(--800)"></button>
-                    <button data-color="600" class="o_color_button btn p-0" style="background-color: var(--600)"></button>
-                    <button data-color="400" class="o_color_button btn p-0" style="background-color: var(--400)"></button>
-                    <button data-color="200" class="o_color_button btn p-0" style="background-color: var(--200)"></button>
-                    <button data-color="100" class="o_color_button btn p-0" style="background-color: var(--100)"></button>
-                    <button data-color="white" class="o_color_button btn p-0 bg-white"></button>
+                    <button data-color="black" class="btn p-0 o_color_button bg-black" t-attf-style="--background-color: var(--{{props.themeColorPrefix}}black)"></button>
+                    <button data-color="900" class="o_color_button btn p-0" t-attf-style="background-color: var(--{{props.themeColorPrefix}}900)"></button>
+                    <button data-color="800" class="o_color_button btn p-0" t-attf-style="background-color: var(--{{props.themeColorPrefix}}800)"></button>
+                    <button data-color="600" class="o_color_button btn p-0" t-attf-style="background-color: var(--{{props.themeColorPrefix}}600)"></button>
+                    <button data-color="400" class="o_color_button btn p-0" t-attf-style="background-color: var(--{{props.themeColorPrefix}}400)"></button>
+                    <button data-color="200" class="o_color_button btn p-0" t-attf-style="background-color: var(--{{props.themeColorPrefix}}200)"></button>
+                    <button data-color="100" class="o_color_button btn p-0" t-attf-style="background-color: var(--{{props.themeColorPrefix}}100)"></button>
+                    <button data-color="white" class="o_color_button btn p-0 bg-white" t-attf-style="--background-color: var(--{{props.themeColorPrefix}}white)"></button>
                 </div>
                 <CustomColorPicker
                     selectedColor = "this.state.currentCustomColor"
