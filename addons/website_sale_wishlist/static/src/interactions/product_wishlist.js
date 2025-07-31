@@ -8,7 +8,7 @@ export class ProductWishlist extends Interaction {
     static selector = '.wishlist-section';
     dynamicContent = {
         '.o_wish_rm': { 't-on-click': this.removeProduct },
-        '.o_wish_add': { 't-on-click': this.addToCart },
+        ".o_wish_add": { "t-on-click": this.locked(this.addToCart, true) },
     };
 
     /**

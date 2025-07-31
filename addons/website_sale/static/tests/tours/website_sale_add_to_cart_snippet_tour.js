@@ -24,6 +24,13 @@ function checkQuanityInCart(quantity) {
     };
 }
 
+function checkButtonIsDisabled() {
+    return {
+        content: "Check if the button is disabled",
+        trigger: ":iframe .s_add_to_cart_btn.pe-none",
+    };
+}
+
 registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         url: '/',
         edition: true,
@@ -36,6 +43,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant", true),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
+        checkButtonIsDisabled(),
         checkQuanityInCart("1"),
 
         // Product with 2 variants with visitor choice (will open modal)
@@ -43,6 +51,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 1", true),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
+        checkButtonIsDisabled(),
         clickOnElement("add to cart", ":iframe .modal button:contains(Add to Cart)"),
         checkQuanityInCart("2"),
 
@@ -56,6 +65,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Variant", "Product Yes Variant 2 (Pink)"),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
+        checkButtonIsDisabled(),
         // Since 18.2, even if a specific variant is selected, the product configuration modal is displayed
         // The variant set on the modal used the default variants attributes (so will not correspond to the selected variant)
         // TODO: fix this misbahvior by setting the variant attributes based on the chosen variant 
@@ -87,6 +97,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
         clickOnElement('"Buy Now" button', ':iframe .s_add_to_cart_btn'),
+        checkButtonIsDisabled(),
         checkQuanityInCart("4"),
         {
             // wait for the page to load, as the next check was sometimes too fast
