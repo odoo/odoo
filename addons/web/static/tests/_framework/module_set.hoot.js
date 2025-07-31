@@ -493,6 +493,7 @@ const ALLOWED_GLOBAL_KEYS = [
     "Chart", // Chart.js
     "DOMPurify", // DOMPurify
     "FullCalendar", // Full Calendar
+    "hljs", // HighlightJS
     "L", // Leaflet
     "lamejs", // LameJS
     "luxon", // Luxon

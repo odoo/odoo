@@ -10,7 +10,6 @@ import {
     R_WHITE_SPACE,
     toSelector,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { DiffMatchPatch } from "./lib/diff_match_patch";
 import { getRunner } from "./main_runner";
 
 /**
@@ -132,6 +131,24 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+function getDiffMatchPatch() {
+    if (!dmpInstance) {
+        let module = loader.modules.get(DIFF_MATCH_PATCH_MODULE_PATH);
+        if (!module) {
+            if (!loader.factories.has(DIFF_MATCH_PATCH_MODULE_PATH)) {
+                return null;
+            }
+            module = loader.startModule(DIFF_MATCH_PATCH_MODULE_PATH);
+            if (!module) {
+                return null;
+            }
+        }
+        const { diff, DiffMatchPatch } = module;
+        dmpInstance = Object.assign(new DiffMatchPatch(), diff);
+    }
+    return dmpInstance;
+}
 
 /**
  * @param {(...args: any[]) => any} fn
@@ -522,6 +539,8 @@ class QueryPartialString extends QueryString {
     compareFn = getFuzzyScore;
 }
 
+const DIFF_MATCH_PATCH_MODULE_PATH = "@web/../lib/diff_match_patch/diff_match_patch";
+
 /** @type {Map<Function, (value: unknown) => string>} */
 const GENERIC_SERIALIZERS = new Map([
     [BigInt, (v) => v.valueOf()],
@@ -552,9 +571,6 @@ const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
-const dmp = new DiffMatchPatch();
-const { DIFF_INSERT, DIFF_DELETE } = DiffMatchPatch;
-
 const labelObjects = new WeakSet();
 const objectConstructors = new Map();
 /** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
@@ -563,6 +579,9 @@ const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
 };
+
+const loader = odoo.loader;
+let dmpInstance;
 
 /**
  * Global object used in {@link getFuzzyScore} when performing a lookup, to avoid
@@ -1800,17 +1819,21 @@ export class Markup {
             // Cannot diff
             return null;
         }
-        let hasDiff;
+        const dmp = getDiffMatchPatch();
+        if (!dmp) {
+            return null;
+        }
+        let hasDiff = false;
         const diff = dmp
             .diff_main(formatTechnical(expected), formatTechnical(actual))
             .map((diff) => {
                 let className = "no-underline";
                 let tagName = "t";
-                if (diff[0] === DIFF_INSERT) {
+                if (diff[0] === dmp.DIFF_INSERT) {
                     className += " text-emerald bg-emerald-900";
                     tagName = "ins";
                     hasDiff = true;
-                } else if (diff[0] === DIFF_DELETE) {
+                } else if (diff[0] === dmp.DIFF_DELETE) {
                     className += " text-rose bg-rose-900";
                     tagName = "del";
                     hasDiff = true;

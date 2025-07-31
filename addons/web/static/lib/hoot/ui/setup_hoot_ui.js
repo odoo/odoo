@@ -4,7 +4,12 @@ import { mount, reactive } from "@odoo/owl";
 import { waitForDocument } from "../hoot_utils";
 import { getRunner } from "../main_runner";
 import { patchWindow } from "../mock/window";
-import { generateStyleSheets, setColorRoot } from "./hoot_colors";
+import {
+    generateStyleSheets,
+    getColorScheme,
+    onColorSchemeChange,
+    setColorRoot,
+} from "./hoot_colors";
 import { HootMain } from "./hoot_main";
 
 /**
@@ -20,6 +25,7 @@ import { HootMain } from "./hoot_main";
 const {
     customElements,
     document,
+    fetch,
     HTMLElement,
     Object: { entries: $entries },
 } = globalThis;
@@ -27,6 +33,42 @@ const {
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+function getHighlightSheetHref() {
+    return `/web/static/lib/highlight/styles/atom-one-${getColorScheme()}.css`;
+}
+
+function loadAsset(tagName, attributes) {
+    return new Promise((resolve, reject) => {
+        const el = document.createElement(tagName);
+        Object.assign(el, attributes);
+        el.addEventListener("load", resolve);
+        el.addEventListener("error", reject);
+        document.head.appendChild(el);
+    });
+}
+
+async function loadBundle(bundle) {
+    const bundleResponse = await fetch(`/web/bundle/${bundle}`);
+    const result = await bundleResponse.json();
+    const promises = [];
+    for (const { src, type } of result) {
+        if (src && type === "link") {
+            loadAsset("link", {
+                rel: "stylesheet",
+                href: src,
+            });
+        } else if (src && type === "script") {
+            promises.push(
+                loadAsset("script", {
+                    src,
+                    type: "text/javascript",
+                })
+            );
+        }
+    }
+    await Promise.all(promises);
+}
 
 class HootContainer extends HTMLElement {
     constructor() {
@@ -42,13 +84,6 @@ class HootContainer extends HTMLElement {
         }
         colorStyleElement.innerText = colorStyleContent;
         this.shadowRoot.appendChild(colorStyleElement);
-
-        for (const href of STYLE_SHEETS) {
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = href;
-            this.shadowRoot.appendChild(link);
-        }
     }
 
     connectedCallback() {
@@ -58,12 +93,18 @@ class HootContainer extends HTMLElement {
     disconnectedCallback() {
         setColorRoot(null);
     }
-}
 
-const STYLE_SHEETS = [
-    "/web/static/src/libs/fontawesome/css/font-awesome.css",
-    "/web/static/lib/hoot/ui/hoot_style.css",
-];
+    /**
+     * @param  {string} href
+     */
+    loadStyleSheet(href) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = href;
+        this.shadowRoot.appendChild(link);
+        return link;
+    }
+}
 
 customElements.define("hoot-container", HootContainer);
 
@@ -95,6 +136,8 @@ export async function setupHootUI() {
     // - Patch window before code from other modules is executed
     patchWindow();
 
+    const runner = getRunner();
+
     const container = document.createElement("hoot-container");
     container.style.display = "contents";
 
@@ -102,12 +145,31 @@ export async function setupHootUI() {
 
     document.body.appendChild(container);
 
-    // - Mount the main UI component
-    await mount(HootMain, container.shadowRoot, {
-        env: {
-            runner: getRunner(),
-            ui: makeUiState(),
-        },
-        name: "HOOT",
-    });
+    const promises = [
+        // Mount main container
+        mount(HootMain, container.shadowRoot, {
+            env: {
+                runner,
+                ui: makeUiState(),
+            },
+            name: "HOOT",
+        }),
+    ];
+
+    if (!runner.headless) {
+        // In non-headless: also wait for lazy-loaded libs (Highlight & DiffMatchPatch)
+        promises.push(loadBundle("web.assets_unit_tests_ui"));
+
+        // Load additional stylesheets
+        container.loadStyleSheet("/web/static/src/libs/fontawesome/css/font-awesome.css");
+        const highlightLink = container.loadStyleSheet(getHighlightSheetHref());
+        onColorSchemeChange(() => {
+            highlightLink.href = getHighlightSheetHref();
+        });
+    }
+
+    // Hoot-specific style is loaded last to take priority over other stylesheets
+    container.loadStyleSheet("/web/static/lib/hoot/ui/hoot_style.css");
+
+    await Promise.all(promises);
 }
