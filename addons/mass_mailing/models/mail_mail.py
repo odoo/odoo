@@ -14,6 +14,10 @@ class MailMail(models.Model):
     mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     mailing_trace_ids = fields.One2many('mailing.trace', 'mail_mail_id', string='Statistics')
 
+    @api.constrains('mail_message_id', 'mail_server_id', 'mailing_id')
+    def _check_mail_server_id(self):
+        super()._check_mail_server_id()
+
     def _get_tracking_url(self):
         token = self._generate_mail_recipient_token(self.id)
         return tools.urls.urljoin(
@@ -24,6 +28,18 @@ class MailMail(models.Model):
     @api.model
     def _generate_mail_recipient_token(self, mail_id):
         return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', mail_id)
+
+    def _filter_mail_mail_servers(self, mail_servers):
+        """Allow personal servers for emails where the mailing is created by the owner."""
+        message_create_uid_servers = super()._filter_mail_mail_servers(mail_servers)
+        if (
+            len(self.mailing_id.create_uid) > 1 or  # multiple create_uids -> subset that's allowed for all
+            self.env['ir.config_parameter'].sudo().get_param('mail.disable_personal_mail_servers', False)
+        ):
+            mailing_create_uid_servers = mail_servers.filtered(lambda server: not server.owner_user_id)
+        else:
+            mailing_create_uid_servers = mail_servers.filtered(lambda server: server.owner_user_id in [self.env['res.users'], self.mailing_id.create_uid])
+        return message_create_uid_servers | mailing_create_uid_servers
 
     def _prepare_outgoing_body(self):
         """ Override to add the tracking URL to the body and to add trace ID in
