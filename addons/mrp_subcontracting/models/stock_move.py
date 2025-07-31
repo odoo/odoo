@@ -241,6 +241,7 @@ class StockMove(models.Model):
                         'mo_id': mo.id,
                         'product_qty': move.quantity or move.product_uom_qty,
                     }]).change_prod_qty()
+                    mo.action_assign()
             else:
                 productions = move._get_subcontract_production()
                 if not productions:
