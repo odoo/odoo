@@ -14,11 +14,13 @@ import {
 import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
 
-import { getMockEnv, makeMockEnv, mockService } from "@web/../tests/_framework/env_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     contains,
     defineParams,
+    getMockEnv,
+    makeMockEnv,
+    mockService,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";

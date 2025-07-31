@@ -1,22 +1,21 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-dom";
+import { contains, defineModels, models, onRpc, webModels } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "../website_helpers";
-import { patch } from "@web/core/utils/patch";
-import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
-import { registry } from "@web/core/registry";
-import { animationFrame } from "@odoo/hoot-dom";
 
 class HrJob extends models.Model {
     _name = "hr.job";
 }
 defineModels([HrJob]);
 
-patch(IrModel.prototype, {
+patch(webModels.IrModel.prototype, {
     get_compatible_form_models() {
         return [
             {

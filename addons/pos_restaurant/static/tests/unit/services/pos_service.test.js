@@ -1,11 +1,11 @@
-import { describe, test, expect } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import {
     getFilledOrder,
     setupPosEnv,
     waitUntilOrdersSynced,
 } from "@point_of_sale/../tests/unit/utils";
-import { MockServer } from "@web/../tests/_framework/mock_server/mock_server";
+import { MockServer } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 

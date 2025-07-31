@@ -1,8 +1,13 @@
 import { animationFrame } from "@odoo/hoot-mock";
 import { Model } from "@odoo/o-spreadsheet";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { defineActions, defineMenus, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    defineActions,
+    defineMenus,
+    getMockEnv,
+    makeMockEnv,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { setCellContent } from "./commands";
 import { addRecordsFromServerData, addViewsFromServerData } from "./data";
 

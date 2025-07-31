@@ -1,6 +1,6 @@
-import { ResCurrency as WebResCurrency } from "@web/../tests/_framework/mock_server/mock_models/res_currency";
+import { webModels } from "@web/../tests/web_test_helpers";
 
-export class ResCurrency extends WebResCurrency {
+export class ResCurrency extends webModels.ResCurrency {
     _name = "res.currency";
 
     _load_pos_data_fields() {
@@ -17,12 +17,6 @@ export class ResCurrency extends WebResCurrency {
     }
 
     _records = [
-        ...WebResCurrency.prototype.constructor._records.reduce((acc, record) => {
-            if (record.id !== 1) {
-                acc.push(record);
-            }
-            return acc;
-        }, []),
         {
             id: 1,
             name: "USD",
@@ -33,5 +27,6 @@ export class ResCurrency extends WebResCurrency {
             decimal_places: 2,
             iso_numeric: 840,
         },
+        ...webModels.ResCurrency._records.filter((record) => record.id !== 1),
     ];
 }

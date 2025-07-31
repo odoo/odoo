@@ -1,5 +1,5 @@
-import { ServerModel } from "@web/../tests/_framework/mock_server/mock_model";
+import { models } from "@web/../tests/web_test_helpers";
 
-export class LivechatChannelRule extends ServerModel {
+export class LivechatChannelRule extends models.ServerModel {
     _name = "im_livechat.channel.rule";
 }
