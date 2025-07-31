@@ -42,6 +42,12 @@ class StockWarehouseOrderpoint(models.Model):
         """ Extend to add more depends values """
         super()._compute_deadline_date()
 
+    def _get_lead_days_values(self):
+        values = super()._get_lead_days_values()
+        if self.bom_id:
+            values['bom'] = self.bom_id
+        return values
+
     @api.depends('bom_id', 'bom_id.product_uom_id', 'product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
     def _compute_qty_to_order_computed(self):
         """ Extend to add more depends values """
@@ -77,7 +83,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_with_bom = self.filtered(lambda orderpoint: orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
         for orderpoint in orderpoints_with_bom:
             if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                boms = (orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
+                boms = orderpoint.bom_id or orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids
                 orderpoint.days_to_order = boms and boms[0].days_to_prepare_mo or 0
         return res
 

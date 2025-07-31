@@ -149,9 +149,9 @@ class ProductSupplierinfo(models.Model):
 
     def _compute_show_set_supplier_button(self):
         self.show_set_supplier_button = True
-        orderpoint_id = self.env.context.get('default_orderpoint_id')
-        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
+        orderpoint_id = self.env.context.get('orderpoint_id', self.env.context.get('default_orderpoint_id'))
         if orderpoint_id:
+            orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
             self.filtered(
                 lambda s: s.id == orderpoint.supplier_id.id
             ).show_set_supplier_button = False
@@ -169,11 +169,18 @@ class ProductSupplierinfo(models.Model):
     def action_set_supplier(self):
         self.ensure_one()
         orderpoint_id = self.env.context.get('orderpoint_id')
-        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
-        if not orderpoint:
+        if not orderpoint_id:
             return
+        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
         if 'buy' not in orderpoint.route_id.rule_ids.mapped('action'):
-            orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
+            domain = Domain.AND([
+                [('action', '=', 'buy')],
+                Domain.OR([
+                    [('company_id', '=', orderpoint.company_id.id)],
+                    [('company_id', '=', False)],
+                ]),
+            ])
+            orderpoint.route_id = self.env['stock.rule'].search(domain, limit=1).route_id.id
         orderpoint.supplier_id = self
         supplier_min_qty = self.product_uom_id._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
         if orderpoint.qty_to_order < supplier_min_qty:
@@ -189,3 +196,4 @@ class ProductSupplierinfo(models.Model):
                 'target': 'new',
                 'view_mode': 'form',
             }
+        return orderpoint.action_stock_replenishment_info()

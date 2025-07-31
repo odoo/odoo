@@ -7,6 +7,9 @@
             <form>
                 <field name="orderpoint_id" invisible="1"/>
                 <field name="qty_to_order" invisible="1"/>
+                <div class="alert alert-info" role="alert">
+                    <span>When the stock level at the forecasted date is below the minimum (<field name="product_min_qty"/> <field name="product_uom_name"/>), a replenishment must be done to reach the maximum level of stock (<field name="product_max_qty"/> <field name="product_uom_name"/>).</span>
+                </div>
                 <group>
                     <group>
                         <field nolabel="1" name="json_lead_days" colspan="2" widget="lead_days_widget"/>
