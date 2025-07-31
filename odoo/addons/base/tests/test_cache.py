@@ -128,3 +128,20 @@ class TestRecordCache(TransactionCaseWithUserDemo):
             mem_usage, MAX_MEMORY * 1024 * 1024,
             "Caching %s records must take less than %sMB of memory" % (NB_RECORDS, MAX_MEMORY),
         )
+
+    def test_multilang_persistence(self):
+        """ Check that the cache persists across multiple language reads and writes. """
+        self.env['res.lang']._activate_lang('en_US')
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        model = self.env['ir.actions.actions']
+
+        # Ensure the value in env lang persists after reading the second lang value
+        record = model.new({'name': 'Test Action'})
+        _ = record.with_context(lang='fr_FR').name
+        self.assertTrue(record.name)
+
+        # Ensure the value in second lang persists after reading the env lang value
+        record = model.with_context(lang='fr_FR').new({'name': 'action de test'})
+        _ = record.with_context(lang='en_US').name
+        self.assertTrue(record.name)

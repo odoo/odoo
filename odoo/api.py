@@ -1036,6 +1036,9 @@ class Cache(object):
             lang = record.env.lang or 'en_US'
             cache_value = field_cache.get(record._ids[0]) or {}
             cache_value[lang] = value
+            if not record._origin:
+                for code, _ in record.env['res.lang'].get_installed():
+                    cache_value.setdefault(code, None)
             value = cache_value
         field_cache[record._ids[0]] = value
 
