@@ -366,14 +366,16 @@ class HrLeave(models.Model):
 
     def _get_overlapping_contracts(self):
         self.ensure_one()
-        domain = [
-            ('employee_id', '=', self.employee_id.id),
-            ('contract_date_start', '<=', self.date_to),
-            '|',
-                ('contract_date_end', '>=', self.date_from),
-                ('contract_date_end', '=', False),
-        ]
-        return self.env['hr.version'].sudo().search(domain)
+        domain = Domain.AND([
+            Domain('employee_id', '=', self.employee_id.id),
+            Domain('contract_date_start', '<=', self.date_to),
+            Domain.OR([
+                Domain('contract_date_end', '>=', self.date_from),
+                Domain('contract_date_end', '=', False),
+            ])
+        ])
+        versions = self.env['hr.version'].sudo().search(domain)
+        return versions.filtered(lambda v: v._is_overlapping_period(self.date_from.date(), self.date_to.date()))
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
@@ -384,25 +386,25 @@ class HrLeave(models.Model):
             contracts are later modifed/created in the middle of the leave.
         """
         for holiday in self.filtered('employee_id'):
-            contracts = holiday._get_overlapping_contracts()
-            if len(contracts.resource_calendar_id) > 1:
+            versions = holiday._get_overlapping_contracts()
+            if len(versions.resource_calendar_id) > 1:
                 raise ValidationError(
-                    _("""A leave cannot be set across multiple contracts with different working schedules.
+                    self.env._("""A leave cannot be set across multiple versions with different working schedules.
 
-Please create one time off for each contract.
+Please create one time off for each version period.
 
 Time off:
 %(time_off)s
 
-Contracts:
-%(contracts)s""",
+Versions:
+%(versions)s""",
                       time_off=holiday.display_name,
-                      contracts='\n'.join(_(
-                          "Contract %(contract)s from %(start_date)s to %(end_date)s",
-                          contract=contract.name or contract.employee_id.name,
-                          start_date=format_date(self.env, contract.date_start),
-                          end_date=format_date(self.env, contract.date_end) if contract.date_end else _("undefined"),
-                      ) for contract in contracts)))
+                      versions='\n'.join(_(
+                          "- '%(version)s' from %(start_date)s to %(end_date)s",
+                          version=version.name or version.employee_id.name,
+                          start_date=format_date(self.env, version.date_start),
+                          end_date=format_date(self.env, version.date_end) if version.date_end else self.env._("undefined"),
+                      ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                  'request_unit_half', 'request_unit_hours', 'employee_id')
