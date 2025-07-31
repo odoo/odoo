@@ -49,7 +49,8 @@ class MailMessageSubtype(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
+        if any(self._ids):
+            self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
         return super().write(vals)
 
     def unlink(self):

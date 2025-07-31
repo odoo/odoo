@@ -496,7 +496,8 @@ class BaseAutomation(models.Model):
         if set(vals).intersection(self.CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
-            if clear_templates or self._has_trigger_onchange():
+            clear_templates |= self._has_trigger_onchange()
+            if clear_templates and any(self._ids):
                 # Invalidate templates cache to update on_change attributes if needed
                 self.env.registry.clear_cache('templates')
         elif set(vals).intersection(self.RANGE_FIELDS):

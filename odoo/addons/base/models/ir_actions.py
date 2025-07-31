@@ -116,7 +116,8 @@ class IrActionsActions(models.Model):
     def write(self, vals):
         res = super().write(vals)
         # self.get_bindings() depends on action records
-        self.env.registry.clear_cache()
+        if any(self._ids):
+            self.env.registry.clear_cache()
         return res
 
     def unlink(self):
@@ -362,8 +363,10 @@ class IrActionsAct_Window(models.Model):
         return super().create(vals_list)
 
     def unlink(self):
-        self.env.registry.clear_cache()
-        return super().unlink()
+        res = super().unlink()
+        if self:
+            self.env.registry.clear_cache()
+        return res
 
     def exists(self):
         ids = self._existing()

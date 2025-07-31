@@ -66,18 +66,18 @@ class ResCurrency(models.Model):
     def unlink(self):
         res = super().unlink()
         self._toggle_group_multi_currency()
-        # invalidate cache for get_all_currencies
-        self.env.registry.clear_cache()
+        if self:
+            # invalidate cache for get_all_currencies
+            self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
         res = super().write(vals)
-        if vals.keys() & {'active', 'digits', 'name', 'position', 'symbol'}:
+        if any(f in vals for f in ('active', 'digits', 'name', 'position', 'symbol')) and any(self._ids):
             # invalidate cache for get_all_currencies
             self.env.registry.clear_cache()
-        if 'active' not in vals:
-            return res
-        self._toggle_group_multi_currency()
+        if 'active' in vals:
+            self._toggle_group_multi_currency()
         return res
 
     @api.model

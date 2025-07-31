@@ -111,7 +111,6 @@ class WebsitePagePropertiesBase(models.TransientModel):
                     # Unpublish
                     target.visibility = 'restricted_group'
                     target.group_ids += self._get_ir_ui_view_unpublish_group()
-                self.env.registry.clear_cache('templates')
         elif 'is_published' in target._fields:
             target.is_published = self.is_published
 
@@ -126,6 +125,11 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _is_ir_ui_view_published(self, view):
         view.ensure_one()
         return not view.visibility
+
+    def write(self, vals):
+        if 'is_published' in vals and any(self._ids):
+            self.env.registry.clear_cache('templates')
+        return super().write(vals)
 
 
 class WebsitePageProperties(models.TransientModel):

@@ -114,7 +114,8 @@ class WebsiteMenu(models.Model):
         return menus
 
     def write(self, vals):
-        self.env.registry.clear_cache('templates')
+        if any(self._ids):
+            self.env.registry.clear_cache('templates')
         res = super().write(vals)
         if 'group_ids' in vals and not self.env.context.get("adding_designer_group_to_menu"):
             self.filtered("group_ids").with_context(

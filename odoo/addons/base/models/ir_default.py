@@ -45,6 +45,7 @@ class IrDefault(models.Model):
         if self:
             # invalidate all company dependent fields since their fallback value in cache may be changed
             self.env.invalidate_all()
+        if any(self._ids):
             self.env.registry.clear_cache()
         new_default = super().write(vals)
         self.check_access('write')
@@ -54,6 +55,7 @@ class IrDefault(models.Model):
         if self:
             # invalidate all company dependent fields since their fallback value in cache may be changed
             self.env.invalidate_all()
+        if any(self._ids):
             self.env.registry.clear_cache()
         return super().unlink()
 

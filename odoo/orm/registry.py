@@ -927,22 +927,20 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 
-    def clear_cache(self, *cache_names: str) -> None:
+    def clear_cache(self, cache_name: str = 'default') -> None:
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache``if cache is in `cache_name` subset. """
-        cache_names = cache_names or ('default',)
-        assert not any('.' in cache_name for cache_name in cache_names)
-        for cache_name in cache_names:
-            for cache in _CACHES_BY_KEY[cache_name]:
-                self.__caches[cache].clear()
-            self.cache_invalidated.add(cache_name)
+        assert '.' not in cache_name
+        for cache in _CACHES_BY_KEY[cache_name]:
+            self.__caches[cache].clear()
+        self.cache_invalidated.add(cache_name)
 
         # log information about invalidation_cause
         if _logger.isEnabledFor(logging.DEBUG):
             # could be interresting to log in info but this will need to minimize invalidation first,
             # mainly in some setupclass and crons
             caller_info = format_frame(inspect.currentframe().f_back)  # type: ignore
-            _logger.debug('Invalidating %s model caches from %s', ','.join(cache_names), caller_info)
+            _logger.debug('Invalidating %s model cache from %s', cache_name, caller_info)
 
     def clear_all_caches(self) -> None:
         """ Clear the caches associated to methods decorated with
