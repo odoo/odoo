@@ -1120,7 +1120,7 @@ export class SetLabelTextAction extends BuilderAction {
                     const fieldData = await this.dependencies.websiteFormOption.loadFieldOptionData(
                         fieldWithConditionEl
                     );
-                    const names = fieldData.conditionInputs.map((entry) => CSS.escape(entry.name));
+                    const names = fieldData.conditionInputs.map((entry) => entry.name);
                     if (!names.includes(conditionFieldName)) {
                         deleteConditionalVisibility(fieldWithConditionEl);
                     }
