@@ -5,9 +5,8 @@ import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
-import { animationFrame, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, waitForNone, queryOne, waitFor, advanceTime } from "@odoo/hoot-dom";
 import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
     defineModels,
@@ -18,6 +17,8 @@ import {
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { loadBundle } from "@web/core/assets";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
 export function patchWithCleanupImg() {
     const defaultImg =
@@ -50,9 +51,17 @@ function getSnippetView(snippets) {
     </snippets>`;
 }
 
-function getSnippetStructure({ name, content, keywords = [], groupName, imagePreview = "" }) {
+export function getSnippetStructure({
+    name,
+    content,
+    keywords = [],
+    groupName,
+    imagePreview = "",
+    moduleId = "",
+    moduleDisplayName = "",
+}) {
     keywords = keywords.join(", ");
-    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}">${content}</div>`;
+    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}" data-module-id="${moduleId}" data-module-display-name="${moduleDisplayName}">${content}</div>`;
 }
 
 class BuilderContainer extends Component {
@@ -124,10 +133,9 @@ class IrUiView extends models.Model {
 
 export async function setupHTMLBuilder(
     content = "",
-    { snippetContent, dropzoneSelectors, styleContent } = {}
+    { snippetContent, dropzoneSelectors, snippets, styleContent } = {}
 ) {
-    defineMailModels(); // fuck this shit
-
+    defineMailModels();
     defineModels([IrUiView]);
 
     patchWithCleanupImg();
@@ -135,25 +143,28 @@ export async function setupHTMLBuilder(
     // const snippetsDescription = { name: "Test", groupName: "a", content: snippetContentStr };
     // [{ name: "Test", groupName: "a", content: snippetContentStr }];
 
-    const snippets = {
-        snippet_groups: [
-            '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-        ],
-        snippet_structure: [
-            getSnippetStructure({
-                name: "Test",
-                groupName: "a",
-                content: `<section class="s_test" data-snippet="s_test" data-name="Test">
+    if (!snippets) {
+        snippets = {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: [
+                getSnippetStructure({
+                    name: "Test",
+                    groupName: "a",
+                    content: `<section class="s_test" data-snippet="s_test" data-name="Test">
             <div class="test_a"></div>
             </section>`,
-            }),
-        ],
-        snippet_content: snippetContent || [
-            `<section class="s_test" data-snippet="s_test" data-name="Test">
+                }),
+            ],
+            // TODO: maybe we should use the same structure as in the snippets?
+            snippet_content: snippetContent || [
+                `<section class="s_test" data-snippet="s_test" data-name="Test">
             <div class="test_a"></div>
             </section>`,
-        ],
-    };
+            ],
+        };
+    }
 
     patchWithCleanup(IrUiView.prototype, {
         render_public_asset: () => getSnippetView(snippets),
@@ -202,7 +213,7 @@ export async function setupHTMLBuilder(
     return {
         contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
         builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
-        snippetContent: snippets.snippet_content.join(""),
+        // snippetContent: (snippets.snippet_content || []).join(""),
     };
 }
 
@@ -255,4 +266,81 @@ export function addBuilderAction(actions = {}) {
         };
     }
     addBuilderPlugin(P);
+}
+
+/**
+ * Returns the dragged helper when drag and dropping snippets.
+ */
+export function getDragHelper() {
+    return document.body.querySelector(".o_draggable_dragging .o_snippet_thumbnail");
+}
+
+/**
+ * Returns the dragged helper when drag and dropping elements from the page.
+ */
+export function getDragMoveHelper() {
+    return document.body.querySelector(".o_drag_move_helper");
+}
+
+/**
+ * Waits for the loading element added by the mutex to be removed, indicating
+ * that the operation is over.
+ */
+export async function waitForEndOfOperation() {
+    advanceTime(500);
+    advanceTime(50);
+    await waitForNone(":iframe .o_loading_screen");
+    await animationFrame();
+}
+
+export function addDropZoneSelector(selector) {
+    const pluginId = uniqueId("test-dropzone-selector");
+
+    class P extends Plugin {
+        static id = pluginId;
+        resources = {
+            dropzone_selector: [selector],
+        };
+    }
+
+    registry.category("website-plugins").add(pluginId, P);
+    after(() => {
+        registry.category("website-plugins").remove(P);
+    });
+}
+
+export async function waitForSnippetDialog() {
+    await animationFrame();
+    await loadBundle("web.assets_frontend", {
+        targetDoc: queryOne("iframe.o_add_snippet_iframe").contentDocument,
+        js: false,
+    });
+    await loadBundle("html_builder.iframe_add_dialog", {
+        targetDoc: queryOne("iframe.o_add_snippet_iframe").contentDocument,
+        js: false,
+    });
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
+}
+
+export async function setupHTMLBuilderWithDummySnippet(content) {
+    const getSnippetEl = () => {
+        const className = "s_test";
+        return `<section class="${className}" data-snippet="s_test" data-name="Test">
+            <div class="test_a"></div>
+        </section>`;
+    };
+    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: getSnippetEl() }];
+    const snippetsStructure = {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    };
+    const { contentEl } = await setupHTMLBuilder(content || "", snippetsStructure);
+
+    return { contentEl };
 }

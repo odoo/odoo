@@ -1,28 +1,20 @@
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     addDropZoneSelector,
-    defineWebsiteModels,
     getDragHelper,
     getSnippetStructure,
-    setupWebsiteBuilder,
-    setupWebsiteBuilderWithDummySnippet,
+    setupHTMLBuilder,
+    setupHTMLBuilderWithDummySnippet,
     waitForEndOfOperation,
     waitForSnippetDialog,
-} from "../website_helpers";
+} from "../helpers";
+import { Builder } from "@html_builder/builder";
 
-defineWebsiteModels();
-
-function getBasicSection(
-    content,
-    { name, snippet = "s_test", withColoredLevelClass = false, additionalClassOnRoot = "" } = {}
-) {
+function getBasicSection(content, { name, snippet = "s_test", additionalClassOnRoot = "" } = {}) {
     let classes = snippet;
-    if (withColoredLevelClass) {
-        classes += " o_colored_level";
-    }
     if (additionalClassOnRoot) {
         classes += ` ${additionalClassOnRoot}`;
     }
@@ -49,7 +41,7 @@ beforeEach(() => {
 });
 
 test("display group snippet", async () => {
-    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets,
     });
     const snippetGroupsSelector = ".o-snippets-menu #snippet_groups .o_snippet";
@@ -62,12 +54,17 @@ test("display group snippet", async () => {
 });
 
 test("install an app from snippet group", async () => {
-    onRpc("ir.module.module", "button_immediate_install", ({ args }) => {
-        expect(args[0]).toEqual([111]);
-        expect.step(`button_immediate_install`);
-        return true;
+    patchWithCleanup(Builder.prototype, {
+        setup() {
+            this.props.installSnippetModule = ({ moduleId }) => {
+                expect(moduleId).toEqual("111");
+                expect.step(`button_immediate_install`);
+            };
+            super.setup(...arguments);
+        },
     });
-    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-module-id="111" data-module-display-name="module_A" data-oe-thumbnail="a.svg"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
@@ -76,18 +73,27 @@ test("install an app from snippet group", async () => {
     });
     await click(`.o-snippets-menu #snippet_groups .o_snippet .btn.o_install_btn`);
     await animationFrame();
+
     expect(".modal").toHaveCount(1);
-    expect(".modal-body").toHaveText("Do you want to install module_A App?\nMore info about this app.");
+    expect(".modal-body").toHaveText(
+        "Do you want to install module_A App?\nMore info about this app."
+    );
 
     await contains(".modal .btn-primary:contains('Save and Install')").click();
     expect.verifySteps([`button_immediate_install`]);
 });
+
 test("install an app from snippet structure", async () => {
-    onRpc("ir.module.module", "button_immediate_install", ({ args }) => {
-        expect(args[0]).toEqual([111]);
-        expect.step(`button_immediate_install`);
-        return true;
+    patchWithCleanup(Builder.prototype, {
+        setup() {
+            this.props.installSnippetModule = ({ moduleId }) => {
+                expect(moduleId).toEqual("111");
+                expect.step(`button_immediate_install`);
+            };
+            super.setup(...arguments);
+        },
     });
+
     const snippetsDescription = () => [
         {
             name: "Test 1",
@@ -104,7 +110,7 @@ test("install an app from snippet structure", async () => {
         },
     ];
 
-    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -133,7 +139,6 @@ test("install an app from snippet structure", async () => {
     expect(".o_dialog:not(:has(.o_inactive_modal)) .modal-body").toHaveText(
         "Do you want to install Test 1 module App?\nMore info about this app."
     );
-
     await contains(
         ".o_dialog:not(:has(.o_inactive_modal)) .btn-primary:contains('Save and Install')"
     ).click();
@@ -162,7 +167,7 @@ test("open add snippet dialog + switch snippet category", async () => {
         ];
     };
 
-    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -236,7 +241,7 @@ test("search snippet in add snippet dialog", async () => {
         ];
     };
 
-    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -326,7 +331,7 @@ test("search snippet by class", async () => {
     ];
     const snippetsDescriptionProcessed = snippetsDescription(true);
 
-    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -379,7 +384,7 @@ test("add snippet dialog with imagePreview", async () => {
         ];
     };
 
-    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -405,7 +410,7 @@ test("add snippet dialog with imagePreview", async () => {
 });
 
 test("insert snippet structure", async () => {
-    const snippetsDescription = ({ withName, withColoredLevelClass = false }) => {
+    const snippetsDescription = ({ withName }) => {
         const name = "Test";
         return [
             {
@@ -413,26 +418,22 @@ test("insert snippet structure", async () => {
                 groupName: "a",
                 content: getBasicSection("Yop", {
                     name: withName ? name : "",
-                    withColoredLevelClass: withColoredLevelClass,
                 }),
             },
         ];
     };
 
-    const { getEditableContent } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
+    const { contentEl } = await setupHTMLBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription({ withName: false }).map((snippetDesc) =>
-                getSnippetStructure(snippetDesc)
-            ),
+            snippet_structure: snippetsDescription({
+                withName: false,
+            }).map((snippetDesc) => getSnippetStructure(snippetDesc)),
         },
     });
-    const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(
-        `<section class="o_colored_level"><p>Text</p></section>`
-    );
+    expect(contentEl).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
     await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
@@ -444,15 +445,13 @@ test("insert snippet structure", async () => {
     expect(".o_add_snippet_dialog").toHaveCount(0);
     await waitForEndOfOperation();
 
-    expect(editableContent).toHaveInnerHTML(
-        `<section class="o_colored_level"><p>Text</p></section>${
-            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
-        }`
+    expect(contentEl).toHaveInnerHTML(
+        `<section><p>Text</p></section>${snippetsDescription({ withName: true })[0].content}`
     );
 });
 
 test("Drag & drop snippet structure", async () => {
-    const snippetsDescription = ({ withName, withColoredLevelClass = false }) => {
+    const snippetsDescription = ({ withName }) => {
         const name = "Test";
         return [
             {
@@ -460,13 +459,12 @@ test("Drag & drop snippet structure", async () => {
                 groupName: "a",
                 content: getBasicSection("Yop", {
                     name: withName ? name : "",
-                    withColoredLevelClass: withColoredLevelClass,
                 }),
             },
         ];
     };
 
-    const { getEditableContent } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
+    const { contentEl } = await setupHTMLBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -476,10 +474,7 @@ test("Drag & drop snippet structure", async () => {
             ),
         },
     });
-    const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(
-        `<section class="o_colored_level"><p>Text</p></section>`
-    );
+    expect(contentEl).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
     const { moveTo, drop } = await contains(
         ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
@@ -502,16 +497,13 @@ test("Drag & drop snippet structure", async () => {
     expect(".o_add_snippet_dialog").toHaveCount(0);
     await waitForEndOfOperation();
 
-    expect(editableContent).toHaveInnerHTML(
-        `${
-            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
-        }<section class="o_colored_level"><p>Text</p></section>`
+    expect(contentEl).toHaveInnerHTML(
+        `${snippetsDescription({ withName: true })[0].content}<section><p>Text</p></section>`
     );
 });
 
 test("Cancel snippet drag & drop over sidebar", async () => {
-    const { getEditableContent } = await setupWebsiteBuilderWithDummySnippet();
-    const editableContent = getEditableContent();
+    const { contentEl } = await setupHTMLBuilderWithDummySnippet();
 
     const { moveTo, drop } = await contains(
         ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
@@ -527,5 +519,5 @@ test("Cancel snippet drag & drop over sidebar", async () => {
     expect(".o_add_snippet_dialog").toHaveCount(0);
     await waitForEndOfOperation();
 
-    expect(editableContent).toHaveInnerHTML("");
+    expect(contentEl).toHaveInnerHTML("");
 });
