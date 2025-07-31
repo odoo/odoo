@@ -13,7 +13,7 @@
                 <filter string="Blocked" name="blocked" domain="[('state','=','blocked')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
-                <filter string="Late" name="late" domain="[('date_start','&lt;=',time.strftime('%Y-%m-%d'))]"/>
+                <filter string="Late" name="late" domain="[('date_start', '&lt;=', 'today')]"/>
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
                 <group>
