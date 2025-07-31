@@ -301,3 +301,13 @@ class TestMrpReplenish(TestMrpCommon):
         self.product_4.bom_ids.active = False
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertTrue(orderpoint.show_supply_warning)
+
+    def test_set_bom_on_orderpoint(self):
+        """ Test that action_set_bom_on_orderpoint correctly sets a bom on selected orderpoint. """
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_4.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        self.product_4.bom_ids.with_context(orderpoint_id=orderpoint.id).action_set_bom_on_orderpoint()
+        self.assertEqual(orderpoint.bom_id.id, self.product_4.bom_ids.id)

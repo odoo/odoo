@@ -9,3 +9,4 @@ from . import product_replenish
 from . import mrp_production_split
 from . import stock_label_type
 from . import mrp_production_serial_numbers
+from . import stock_replenishment_info
