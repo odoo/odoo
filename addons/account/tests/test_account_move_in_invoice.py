@@ -1193,7 +1193,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': False,
+                'name': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
                 'amount_currency': 1128.0,
                 'debit': 1128.0,
                 'credit': 0.0,
@@ -1323,7 +1323,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': False,
+                'name': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
                 'amount_currency': 1128.0,
                 'currency_id': self.other_currency.id,
                 'debit': 564.0,
@@ -2636,6 +2636,15 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.save()
         self.assertEqual(invoice.currency_id, chf,
                          "Changing to a journal with a set currency should change invoice currency")
+
+    def test_onchange_ref(self):
+        """
+        Ensure that updating the ref field updates the payment term line name when payment reference is empty.
+        """
+        payment_term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        with Form(self.invoice) as move_form:
+            move_form.ref = 'temp'
+        self.assertEqual(payment_term_line.name, 'temp')
 
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """
