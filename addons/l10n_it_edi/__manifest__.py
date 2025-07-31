@@ -17,10 +17,10 @@ E-invoice implementation
     'website': 'http://www.odoo.com/',
     'data': [
         'security/ir.model.access.csv',
-        'data/invoice_it_template.xml',
+        'data/account_withholding_report_data.xml',
         'data/invoice_it_simplified_template.xml',
+        'data/invoice_it_template.xml',
         'data/ir_cron.xml',
-        'data/account.account.tag.csv',
         'data/l10n_it.document.type.csv',
         'views/res_config_settings_views.xml',
         'views/l10n_it_view.xml',
