@@ -29,7 +29,6 @@ _logger = logging.getLogger('odoo.api')
 #  - method._constrains: set by @constrains, specifies constraint dependencies
 #  - method._depends: set by @depends, specifies compute dependencies
 #  - method._onchange: set by @onchange, specifies onchange fields
-#  - method.clear_cache: set by @ormcache, used to clear the cache
 #  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
 #
 # On wrapping method only:
