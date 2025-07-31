@@ -862,6 +862,7 @@ table.table_desc tr td {
     width: var(--o-timeline-dot-size, 24px);
     height: var(--o-timeline-dot-size, 24px);
     left: var(--o-dot-left);
+    color: $primary;
 
     &:before, &:after {
         position: absolute;
@@ -877,6 +878,12 @@ table.table_desc tr td {
 
     &:after {
         inset: 8px;
+    }
+}
+
+@for $index from 1 through 5 {
+    .o_cc#{$index} .o_dot {
+        color: var(--o-cc#{$index}-btn-primary);
     }
 }
 
