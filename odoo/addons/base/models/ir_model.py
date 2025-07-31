@@ -2136,7 +2136,8 @@ class IrModelAccess(models.Model):
     @api.model
     def call_cache_clearing_methods(self):
         self.env.invalidate_all()
-        self.env.registry.clear_cache('stable')  # mainly _get_allowed_models
+        # for this model caches and implies _get_allowed_models (default) too
+        self.env.registry.clear_cache('stable')
 
     #
     # Check rights on actions
@@ -2154,12 +2155,15 @@ class IrModelAccess(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        self.call_cache_clearing_methods()
+        if any(self._ids):
+            self.call_cache_clearing_methods()
         return super().write(vals)
 
     def unlink(self):
-        self.call_cache_clearing_methods()
-        return super().unlink()
+        res = super().unlink()
+        if self:
+            self.call_cache_clearing_methods()
+        return res
 
 
 class IrModelData(models.Model):
@@ -2274,16 +2278,18 @@ class IrModelData(models.Model):
     def write(self, vals):
         self.env.registry.clear_cache()  # _xmlid_lookup
         res = super().write(vals)
-        if vals.get('model') == 'res.groups':
+        if vals.get('model') == 'res.groups' and any(self._ids):
             self.env.registry.clear_cache('groups')
         return res
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
+        clear_groups = self and any(data.model == 'res.groups' for data in self.exists())
+        res = super().unlink()
         self.env.registry.clear_cache()  # _xmlid_lookup
-        if self and any(data.model == 'res.groups' for data in self.exists()):
+        if clear_groups:
             self.env.registry.clear_cache('groups')
-        return super().unlink()
+        return res
 
     def _lookup_xmlids(self, xml_ids, model):
         """ Look up the given XML ids of the given model. """

@@ -635,7 +635,8 @@ class ResUsers(models.Model):
 
         if 'group_ids' in vals and any(self._ids):
             # clear caches linked to the users
-            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env.invalidate_all()
+            self.env.registry.clear_cache()
 
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling

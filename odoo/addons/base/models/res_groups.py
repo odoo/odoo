@@ -225,7 +225,13 @@ class ResGroups(models.Model):
         if any(self._ids):
             self.env['ir.model.access'].call_cache_clearing_methods()
 
-        return super().write(vals)
+        res = super().write(vals)
+
+        # invalidate caches after the write (if not su) because we check access
+        # when writing
+        if any(self._ids) and not self.env.su:
+            self.env['ir.model.access'].call_cache_clearing_methods()
+        return res
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""
