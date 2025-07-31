@@ -26,6 +26,7 @@ export class SearchPowerboxPlugin extends Plugin {
         }
         this.categories = this.getResource("powerbox_categories");
         this.shouldUpdate = false;
+        this.searchTerm = null;
     }
     onBeforeInput(ev) {
         if (ev.data === "/") {
@@ -40,6 +41,7 @@ export class SearchPowerboxPlugin extends Plugin {
         }
     }
     update() {
+        this.searchTerm = null;
         if (!this.shouldUpdate) {
             return;
         }
@@ -64,6 +66,7 @@ export class SearchPowerboxPlugin extends Plugin {
             this.shouldUpdate = true;
             return;
         }
+        this.searchTerm = searchTerm;
         this.dependencies.powerbox.updatePowerbox(commands);
     }
     /**
@@ -92,10 +95,14 @@ export class SearchPowerboxPlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         this.offset = selection.startOffset - 1;
         this.enabledCommands = this.dependencies.powerbox.getAvailablePowerboxCommands();
+        this.searchTerm = null;
         this.dependencies.powerbox.openPowerbox({
             commands: this.enabledCommands,
             categories: this.categories,
-            onApplyCommand: this.historySavePointRestore,
+            onApplyCommand: (command, context) => {
+                context.searchTerm = this.searchTerm;
+                this.historySavePointRestore?.();
+            },
             onClose: () => {
                 this.shouldUpdate = false;
             },
