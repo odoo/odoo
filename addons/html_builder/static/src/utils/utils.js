@@ -168,7 +168,8 @@ export function isEditable(node) {
             if (currentNode.className.includes("o_not_editable")) {
                 return false;
             }
-            if (currentNode.className.includes("o_editable")) {
+            // To check
+            if (currentNode.className.includes("o_savable")) {
                 return true;
             }
         }

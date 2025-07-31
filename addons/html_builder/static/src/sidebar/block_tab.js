@@ -207,7 +207,7 @@ export class BlockTab extends Component {
             this.shared.dropzone.getDropRootElement() ||
             this.editable.querySelector(".o_notebook") ||
             getScrollingElement(this.document) ||
-            this.editable.querySelector(".o_editable");
+            this.editable.querySelector(".o_savable");
 
         const dragAndDropOptions = {
             ref: { el: this.blockTabRef.el },

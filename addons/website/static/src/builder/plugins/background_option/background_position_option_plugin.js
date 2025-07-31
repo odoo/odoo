@@ -75,7 +75,7 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
             imgEl.src = getBgImageURLFromEl(editingElement);
         });
         const copyEl = editingElement.cloneNode(false);
-        copyEl.classList.remove("o_editable");
+        copyEl.classList.remove("o_savable");
         // Hide the builder overlay buttons when the user changes
         // the background position.
         return new Promise((resolve) => {

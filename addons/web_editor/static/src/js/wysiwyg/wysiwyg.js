@@ -1713,7 +1713,7 @@ export class Wysiwyg extends Component {
         // selection when the modal is closed.
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
-        const editable = OdooEditorLib.closestElement(params.node || range.startContainer, '.o_editable') || this.odooEditor.editable;
+        const editable = OdooEditorLib.closestElement(params.node || range.startContainer, '.o_savable') || this.odooEditor.editable;
         const { resModel, resId, field, type } = this._getRecordInfo(editable);
 
         this.env.services.dialog.add(params.MediaDialog || MediaDialog, {
@@ -1912,7 +1912,7 @@ export class Wysiwyg extends Component {
         return {
             ...this.options,
             wysiwyg: this,
-            selectorEditableArea: '.o_editable',
+            selectorEditableArea: '.o_savable',
             mutex: this.mutex,
         };
     }
@@ -2784,7 +2784,7 @@ export class Wysiwyg extends Component {
             .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
-            .add('.o_editable');
+            .add('.o_savable');
     }
 
     /**
@@ -2815,8 +2815,8 @@ export class Wysiwyg extends Component {
         const $delay_translation = $('.o_delay_translation');
         $delay_translation.removeClass('o_delay_translation');
 
-        $('.o_editable')
-            .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
+        $('.o_savable')
+            .removeClass('o_savable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
 
         const saveElementFuncName = this.options.enableTranslation
             ? '_saveTranslationElement'
@@ -2870,8 +2870,8 @@ export class Wysiwyg extends Component {
                         // the DOM regeneration. Add markings instead, and returns a
                         // new rejection with all relevant info
                         var id = uniqueId("carlos_danger_");
-                        $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
-                        $('.o_editable.' + id)
+                        $els.addClass('o_dirty o_savable oe_carlos_danger ' + id);
+                        $('.o_savable.' + id)
                             .removeClass(id)
                             .popover({
                                 trigger: 'hover',
@@ -3564,7 +3564,7 @@ export class Wysiwyg extends Component {
         return true;
     }
     /**
-     * Set `contenteditable` according to `.o_not_editable` and `.o_editable`.
+     * Set `contenteditable` according to `.o_not_editable`.
      *
      * @param {Node} node
      */

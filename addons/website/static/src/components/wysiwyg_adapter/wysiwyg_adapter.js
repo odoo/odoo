@@ -121,7 +121,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             // TODO ideally this should be done as close as the restart as
             // as possible to avoid long flickering when entering edit mode. At
             // moment some RPC are awaited before the restart so it is not
-            // ideal. But this has to be done before adding o_editable classes
+            // ideal. But this has to be done before adding o_savable classes
             // in the DOM. To review once everything is OWLified.
             this._websiteRootEvent("widgets_stop_request");
 
@@ -130,7 +130,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 const optionName = pageOptionEl.name;
                 this.pageOptions[optionName] = new PageOption(pageOptionEl, this.websiteService.pageDocument, optionName);
             }
-            this.editableElements(this.$editable).addClass('o_editable');
+            this.editableElements(this.$editable).addClass('o_savable');
 
             let switchableRelatedViews = [];
             const viewKey = this.websiteService.pageDocument.documentElement.dataset.viewXmlid;
@@ -375,8 +375,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
-                var $parent = $(this).closest('.o_editable, .o_not_editable');
-                return !$parent.length || $parent.hasClass('o_editable');
+                var $parent = $(this).closest('.o_savable, .o_not_editable');
+                return !$parent.length || $parent.hasClass('o_savable');
             })
             .not('link, script')
             .not('[data-oe-readonly]')
@@ -384,7 +384,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             .not('.oe_snippet_editor')
             .not('hr, br, input, textarea')
             .not('[data-oe-sanitize-prevent-edition]')
-            .add('.o_editable');
+            .add('.o_savable');
     }
     /**
      * Return the editable parent element. This includes content inside it which isn't editable.
@@ -614,7 +614,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _addEditorMessages() {
         const $wrap = this.$editable
             .find('.oe_structure.oe_empty, [data-oe-type="html"]')
-            .filter(':o_editable');
+            .filter(':o_savable');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
                 .attr('data-editor-message-default', true)
                 .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));

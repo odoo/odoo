@@ -13,7 +13,7 @@ export class BuilderContentEditablePlugin extends Plugin {
             "section > .o_container_small",
             "section > .container",
             "section > .container-fluid",
-            ".o_editable",
+            ".o_savable",
         ],
         filter_contenteditable_handlers: this.filterContentEditable.bind(this),
         contenteditable_to_remove_selector: "[contenteditable]",
@@ -25,7 +25,7 @@ export class BuilderContentEditablePlugin extends Plugin {
 
     filterContentEditable(contentEditableEls) {
         return contentEditableEls.filter(
-            (el) => !el.matches("input, [data-oe-readonly]") && el.closest(".o_editable")
+            (el) => !el.matches("input, [data-oe-readonly]") && el.closest(".o_savable")
         );
     }
 }

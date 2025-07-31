@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     { // necessary to wait for the cursor to be placed in the first p
       // and to avoid leaving the page before the selection is added
         content: "Wait for template selection event to be over.",
-        trigger: ':iframe .o_editable.theme_selection_done',
+        trigger: ':iframe .o_savable.theme_selection_done',
         run: "click",
     },
     {

@@ -322,7 +322,7 @@ test("The overlay buttons should only appear for elements in editable areas, unl
         `<div class="content">
             <div class="test-not-editable">NOT IN EDITABLE</div>
         </div>
-        <div class="content o_editable">
+        <div class="content o_savable">
             <div class="test-editable">IN EDITABLE</div>
         </div>`
     );

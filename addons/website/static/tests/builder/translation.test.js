@@ -140,7 +140,7 @@ test("translate attribute", async () => {
     onRpc("ir.ui.view", "save", ({ args }) => true);
     await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto rounded o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto rounded" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
         `,
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
@@ -155,7 +155,7 @@ test("translate attribute", async () => {
 test("translate attribute history", async () => {
     const { getEditableContent } = await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
         `,
     });
     const editable = getEditableContent();
@@ -164,7 +164,7 @@ test("translate attribute history", async () => {
     await contains(".modal .modal-body input").edit("titre");
     await contains(".modal .btn:contains(Ok)").click();
     const getImg = ({ titleName, translated }) =>
-        `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable o_translatable_attribute${
+        `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_savable o_translatable_attribute${
             translated ? " oe_translated" : ""
         }" loading="lazy" title="${titleName}" style="" data-oe-translation-state="to_translate"></img>`;
     expect(editable).toHaveInnerHTML(getImg({ titleName: "titre", translated: true }));
@@ -179,12 +179,12 @@ test("translate select", async () => {
         websiteContent: `
             <div class="row s_col_no_resize s_col_no_bgcolor">
                 <label class="col-form-label col-sm-auto s_website_form_label">
-                    <span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha" class="o_editable">
+                    <span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">
                         <span class="s_website_form_label_content">Custom Text</span>
                     </span>
                     </label>
                 <div class="col-sm">
-                    <span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha" class="o_editable">
+                    <span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">
                         <select class="form-select s_website_form_input" name="Custom Text" id="oojm1tjo6m19">
                             <option id="optionId1" value="Option 1">Option 1</option>
                             <option id="optionId2" value="Option 2">Option 2</option>
@@ -271,7 +271,7 @@ function getTranslateEditable({ inWrap, oeId = "526", sourceSha = "sourceSha" })
     return `
         <div class="container s_allow_columns">
             <p>
-                <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="o_editable">${inWrap}</span>
+                <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}">${inWrap}</span>
             </p>
         </div>`;
 }

@@ -297,7 +297,7 @@ export function isBackgroundImageAttribute(attribute) {
  *
  * TODO: the name of this function is voluntarily bad to reflect the fact that
  * this system should be improved. The combination of o_not_editable,
- * o_editable, getContentEditableAreas, getReadOnlyAreas and other concepts
+ * o_savable, getContentEditableAreas, getReadOnlyAreas and other concepts
  * related to what should be editable or not should be reviewed.
  *
  * @returns {boolean}
@@ -310,7 +310,7 @@ export function shouldEditableMediaBeEditable(mediaEl) {
     // This case is complex and the solution to support it is not
     // perfect: we mark those media with a class and check that they
     // are descendant of a savable.
-    return mediaEl.closest(".o_editable");
+    return mediaEl.closest(".o_savable");
 }
 /**
  * Returns the label of a link element.

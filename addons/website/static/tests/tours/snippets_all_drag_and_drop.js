@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", { steps: (
     ...insertSnippet({ id: "s_text_image", name: "Text - Image", groupName: "Content" }),
     {
         content: "Click on s_text_image snippet",
-        trigger: ":iframe #wrap.o_editable [data-snippet='s_text_image']",
+        trigger: ":iframe #wrap.o_savable [data-snippet='s_text_image']",
         run: "click",
     },
     {

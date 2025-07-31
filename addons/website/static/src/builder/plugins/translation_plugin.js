@@ -36,7 +36,7 @@ function findOEditable(containerEl) {
                 if (node.className.includes("o_not_editable")) {
                     return false;
                 }
-                if (node.className.includes("o_editable")) {
+                if (node.className.includes("o_savable")) {
                     return true;
                 }
             }
@@ -61,7 +61,7 @@ export class TranslationPlugin extends Plugin {
             );
             for (const translationSavableEl of translationSavableEls) {
                 if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
-                    translationSavableEl.classList.add("o_editable");
+                    translationSavableEl.classList.add("o_savable");
                 }
             }
             this.setupServicesIfNotSet();
@@ -98,7 +98,7 @@ export class TranslationPlugin extends Plugin {
         const menuEls = this.websiteService.pageDocument.querySelectorAll(".dropdown-menu");
         for (const menuEl of menuEls) {
             this.addDomListener(menuEl, "click", (ev) => {
-                const editableEl = ev.target.closest(".o_editable");
+                const editableEl = ev.target.closest(".o_savable");
                 if (editableEl && menuEl.contains(editableEl)) {
                     ev.stopPropagation();
                     ev.preventDefault();

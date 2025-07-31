@@ -38,7 +38,7 @@ class IrUiView(models.Model):
         attributes = {k: v for k, v in attributes if k not in EDITING_ATTRIBUTES}
         if 'class' in attributes:
             classes = attributes['class'].split()
-            attributes['class'] = ' '.join([c for c in classes if c != 'o_editable'])
+            attributes['class'] = ' '.join([c for c in classes if c != 'o_savable'])
         if attributes.get('contenteditable') == 'true':
             del attributes['contenteditable']
         return attributes

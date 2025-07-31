@@ -418,8 +418,8 @@ function getClosestElements(element, selector) {
  * @returns {Boolean}
  */
 export function checkElement(el, { editableOnly = true, exclude = "" }) {
-    // Unless specified otherwise, the element should be in an editable.
-    if (editableOnly && !el.closest(".o_editable")) {
+    // Unless specified otherwise, the element should be in a savable element
+    if (editableOnly && !el.closest(".o_savable")) {
         return false;
     }
     // Check that the element is not to be excluded.

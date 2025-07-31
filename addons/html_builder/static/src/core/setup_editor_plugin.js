@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 
 export class SetupEditorPlugin extends Plugin {
@@ -18,7 +19,7 @@ export class SetupEditorPlugin extends Plugin {
         if (this.delegateTo("after_setup_editor_handlers")) {
             return;
         }
-        // Add the `o_editable` class on the savable elements
+        // Add the `o_savable` class on the savable elements
         const savableSelectors = this.getResource("savable_selectors").join(",");
         const editableEls = [...this.editable.querySelectorAll(savableSelectors)]
             .filter((el) => !el.matches("link, script"))
@@ -32,7 +33,7 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.classList.contains("oe_snippet_editor"))
             .filter((el) => !el.matches("hr, br, input, textarea"))
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
-        editableEls.forEach((el) => el.classList.add("o_editable"));
+        editableEls.forEach((el) => el.classList.add("o_savable"));
     }
 
     normalize(rootEl) {
@@ -50,10 +51,9 @@ export class SetupEditorPlugin extends Plugin {
     }
 
     cleanForSave({ root }) {
-        root.classList.remove("o_editable");
-        root.querySelectorAll(".o_editable").forEach((el) => {
-            el.classList.remove("o_editable");
-        });
+        for (const savableEl of selectElements(root, ".o_savable")) {
+            savableEl.classList.remove("o_savable");
+        }
 
         [root, ...root.querySelectorAll("[data-editor-message]")].forEach((el) => {
             el.removeAttribute("data-editor-message");
@@ -70,8 +70,8 @@ export class SetupEditorPlugin extends Plugin {
      */
     getEditableAreas(rootEl) {
         const editableEl = rootEl || this.editable;
-        const editablesAreaEls = [...editableEl.querySelectorAll(".o_editable")];
-        if (editableEl.matches(".o_editable")) {
+        const editablesAreaEls = [...editableEl.querySelectorAll(".o_savable")];
+        if (editableEl.matches(".o_savable")) {
             editablesAreaEls.unshift(editableEl);
         }
         return editablesAreaEls;

@@ -40,7 +40,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 }, () => [
 {
     content: "Edit s_test_snip",
-    trigger: ':iframe #wrap.o_editable .s_test_snip',
+    trigger: ':iframe #wrap.o_savable .s_test_snip',
     run: "click",
 },
 {
@@ -49,7 +49,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     content: "Edit text_image",
-    trigger: ':iframe #wrap.o_editable .s_text_image',
+    trigger: ':iframe #wrap.o_savable .s_text_image',
     run: "click",
 },
 {
@@ -58,7 +58,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     content: "Edit s_share",
-    trigger: ':iframe #wrap.o_editable .s_share',
+    trigger: ':iframe #wrap.o_savable .s_share',
     run: "click",
 },
 {
