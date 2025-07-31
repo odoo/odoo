@@ -835,7 +835,7 @@ class Website(models.Model):
         # through module overrides of `configurator_get_footer_links`.
         footer_links = website.configurator_get_footer_links()
         footer_ids = [
-            'website.template_footer_contact', 'website.template_footer_headline',
+            'website.template_footer_contact',
             'website.footer_custom', 'website.template_footer_links',
             'website.template_footer_minimalist',
         ]
