@@ -95,3 +95,13 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
             "im_livechat.looking_for_help_kanban_real_time_update_tour",
             login="bob_looking_for_help",
         )
+
+    def test_partner_display_name(self):
+        user = new_test_user(self.env, login="agent", name="john")
+        company = self.env["res.partner"].create({"name": "TestCompany", "is_company": True})
+        user.partner_id.parent_id = company.id
+        self.assertEqual(
+            user.with_context(im_livechat_hide_partner_company=True).partner_id.display_name,
+            "john",
+        )
+        self.assertEqual(user.partner_id.display_name, "TestCompany, john")
