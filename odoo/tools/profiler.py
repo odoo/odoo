@@ -266,6 +266,7 @@ class memoryCollector(PeriodicCollector):
     store = 'others'
 
     def __init__(self):  # check duration. dynamic?
+        self.running = False
         super().__init__(interval=1)
 
     def start(self):
@@ -273,28 +274,40 @@ class memoryCollector(PeriodicCollector):
         if interval:
             self.frame_interval = min(max(float(interval), 0.01), 5)
         tracemalloc.start()
+        self.running = True
         super().start()
 
     def add(self, entry=None, frame=None):
+        if not self.running:
+            return
         """ Add an entry (dict) to this collector. """
         entry = tracemalloc.take_snapshot()
 
         super().add(entry={'memory': entry}, frame=frame)
 
+    def stop(self):
+        self.running = False
+        tracemalloc.stop()
+        super().stop()
+
     def post_process(self):
+        import time
+        start = time.time()
         for i, entry in enumerate(self._entries):
             if entry.get("memory", False):
-                memory_entry = entry["memory"].filter_traces((
-                            tracemalloc.Filter(False, "<frozen importlib._bootstrap>"),
-                            tracemalloc.Filter(False, "<unknown>"),
-                            tracemalloc.Filter(False, "*/.*"),
-                            tracemalloc.Filter(False, "*/profiler.py*"),
-                        ))
-                entry_statistics = memory_entry.statistics('lineno')
-                modified_entry_statistics = [{'file': list(statistic.traceback._frames[0]),
-                                              'size': statistic.size} for statistic in entry_statistics]
-                self._entries[i] = modified_entry_statistics
+                memory_entry = entry["memory"]
+                if True:
+                    entry_statistics = memory_entry.statistics('lineno')
+                    modified_entry_statistics = [{'file': list(statistic.traceback._frames[0]),
+                                                'size': statistic.size} for statistic in entry_statistics]
+                    self._entries[i] = modified_entry_statistics
+                else:
+                    for t in memory_entry.traces:
+                        t.traceback[0].filename
 
+                    data = [[x.size] for x in memory_entry.traces]
+                    self._entries[i] = data
+        print('Processing time for memory collector: %s' % (time.time() - start))
 
 class SyncCollector(Collector):
     """

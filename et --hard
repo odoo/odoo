@@ -1,0 +1,34 @@
+[1mdiff --git a/odoo/addons/base/tests/test_http_case.py b/odoo/addons/base/tests/test_http_case.py[m
+[1mindex 2d6ea38b3821..ac61292fc992 100644[m
+[1m--- a/odoo/addons/base/tests/test_http_case.py[m
+[1m+++ b/odoo/addons/base/tests/test_http_case.py[m
+[36m@@ -92,6 +92,16 @@[m [mclass TestChromeBrowser(HttpCase):[m
+         self.browser._wait_code_ok(code, 10)[m
+         self.browser.screencaster.save()[m
+ [m
+[32m+[m[32m    def test_online(self):[m
+[32m+[m[32m        self.browser.screencaster.start()[m
+[32m+[m[32m        self.browser.navigate_to('about:blank')[m
+[32m+[m[32m        self.browser._wait_ready()[m
+[32m+[m[32m        code = "console.log(window.navigator.onLine);console.log('test successful');"[m
+[32m+[m[32m        self.browser._wait_code_ok(code, 10)[m
+[32m+[m[32m        self.browser.screencaster.save()[m
+[32m+[m
+[32m+[m
+[32m+[m
+ [m
+ @tagged('-at_install', 'post_install')[m
+ class TestChromeBrowserOddDimensions(TestChromeBrowser):[m
+[1mdiff --git a/odoo/tools/speedscope.py b/odoo/tools/speedscope.py[m
+[1mindex 9dea7534c3a4..43c0a224996e 100644[m
+[1m--- a/odoo/tools/speedscope.py[m
+[1m+++ b/odoo/tools/speedscope.py[m
+[36m@@ -122,7 +122,7 @@[m [mclass Speedscope:[m
+                 "frames": [{[m
+                     "name": frame[0],[m
+                     "file": frame[1],[m
+[31m-                    "line": frame[2][m
+[32m+[m[32m                    "line": frame[2],[m
+                 } for frame in self.frames_indexes][m
+             },[m
+             "profiles": self.profiles,[m

@@ -6,7 +6,7 @@ import time
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError
-from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user
+from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user, HttpCase
 from odoo.tools import profiler
 from odoo.tools.profiler import Profiler, ExecutionContext
 from odoo.tools.speedscope import Speedscope
@@ -704,3 +704,39 @@ class TestSyncRecorder(BaseCase):
         stacks_lines = [[frame[1] for frame in stack] for stack in stacks]
         self.assertEqual(stacks_lines[1][0] + 1, stacks_lines[3][0],
                          "Call of b() in a() should be one line before call of c()")
+
+@tagged('-standard', 'profiling_memory')
+class TestMemoryProfiler(HttpCase):
+    def test_memory_profiler(self):
+        import time
+        start = time.time()
+        with Profiler(collectors=['memory'], db=None) as p:
+            self.env['base.module.update'].create({}).update_module()
+        entries = p.collectors[0].entries
+        print(len(entries))
+
+    def test_memory_profiler_concurrency(self):
+        import threading
+        import tracemalloc
+        def check(use_memory=False):
+            result = []
+            def run():
+                tracemalloc.start()
+                if use_memory:
+                    x = [0] * 1000000
+                for i in range(10):
+                    time.sleep(0.1)
+                    def snap():
+                        result.append(tracemalloc.take_snapshot())
+                    pt = threading.Thread(target=snap)
+                    pt.start()
+                    pt.join()
+                tracemalloc.stop()
+            t = threading.Thread(target = run)
+            t.start()
+            return t, result
+
+        t, result1 = check()
+        t2, result2 = check(use_memory=True)
+        t.join()
+        t2.join()
