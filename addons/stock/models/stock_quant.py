@@ -218,7 +218,7 @@ class StockQuant(models.Model):
     @api.depends('lot_id')
     def _compute_sn_duplicated(self):
         self.sn_duplicated = False
-        domain = [('tracking', '=', 'serial'), ('lot_id', 'in', self.lot_id.ids), ('location_id.usage', 'in', ['internal', 'transit'])]
+        domain = [('tracking', '=', 'serial'), ('lot_id', 'in', self.lot_id.ids), ('quantity', '>', 0), ('location_id.usage', 'in', ['internal', 'transit'])]
         results = self._read_group(domain, ['lot_id'], having=[('__count', '>', 1)])
         duplicated_sn_ids = [lot.id for [lot] in results]
         quants_with_duplicated_sn = self.env['stock.quant'].search([('lot_id', 'in', duplicated_sn_ids)])

@@ -904,6 +904,12 @@ class TestStockQuant(TestStockCommon):
         with self.assertRaises(UserError):
             quant_2.with_context(inventory_mode=True).write({'location_id': self.shelf_2})
 
+        self.env['stock.quant']._update_available_quantity(product, self.shelf_2, -1.0, lot_id=sn1)
+        self.assertRecordValues(product.stock_quant_ids.sorted('id'), [
+            {'location_id': self.shelf_2.id, 'quantity': 0.0, 'sn_duplicated': False},
+            {'location_id': self.shelf_1.id, 'quantity': 1.0, 'sn_duplicated': False},
+        ])
+
     def test_update_quant_with_forbidden_field_02(self):
         """
         Test that updating the package from the quant raise an error
