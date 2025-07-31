@@ -18,6 +18,7 @@ import { ResGroupsPrivilege } from "./_framework/mock_server/mock_models/res_gro
 import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
+import { ResUsersSettings } from "./_framework/mock_server/mock_models/res_users_settings";
 import { defineModels } from "./_framework/mock_server/mock_server";
 import { globalCachedFetch } from "./_framework/module_set.hoot";
 
@@ -196,4 +197,5 @@ export const webModels = {
     ResGroups,
     ResPartner,
     ResUsers,
+    ResUsersSettings,
 };

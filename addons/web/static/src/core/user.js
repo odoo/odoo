@@ -198,6 +198,9 @@ export function _makeUser(session) {
             });
             Object.assign(settings, changedSettings);
         },
+        updateUserSettings(key, value) {
+            settings[key] = value;
+        },
         defaultCompany, // default company of the user, used if no cookie set
         allowedCompanies, // list of authorized companies for the user
         allowedCompaniesWithAncestors,
