@@ -59,9 +59,9 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
-        callbackRecorder: Object,
-        onSquareSelection: Function,
-        cleanSquareSelection: Function,
+        callbackRecorder: { type: Object, optional: true },
+        onSquareSelection: { type: Function, optional: true },
+        cleanSquareSelection: { type: Function, optional: true },
     };
 
     setup() {
@@ -85,7 +85,9 @@ export class CalendarCommonRenderer extends Component {
             },
             () => [this.fc.el]
         );
-        useSquareSelection();
+        if (this.props.model.hasMultiCreate) {
+            useSquareSelection();
+        }
     }
 
     get options() {
