@@ -41,7 +41,7 @@
         </div>
         <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
             <t t-if="this.state.activeTab === 'blocks'">
-                <BlockTab snippetsName="this.props.snippetsName" />
+                <BlockTab snippetsName="this.props.snippetsName" newInstalledModule="this.props.newInstalledModule"/>
             </t>
             <t t-if="this.state.activeTab === 'customize'">
                 <CustomizeTab currentOptionsContainers="this.state.currentOptionsContainers"/>
