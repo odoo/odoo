@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo.http import request, route
+from odoo.tools import groupby
 
 from odoo.addons.website_sale.controllers import reorder
 
@@ -26,32 +29,41 @@ class CustomerPortal(reorder.CustomerPortal):
         cart_sudo = request.cart or request.website._create_cart()
         unavailable_products, partially_available_products = [], []
 
-        for line in order_sudo.order_line:
-            if line.with_user(request.env.user).sudo()._is_reorder_allowed():
-                lines_to_consider = line.linked_line_ids if line.product_id.type == 'combo' else line
+        SaleOrderLine = order_sudo.env['sale.order.line']
+        requested_quantities = defaultdict(int)
+        for product, lines in groupby(
+            order_sudo.order_line.with_user(request.env.user).sudo(),
+            lambda sol: sol.product_id,
+        ):
 
-                if all((
-                    not line_to_consider.product_id.is_storable
-                    or line_to_consider.product_id.product_tmpl_id.allow_out_of_stock_order
-                ) for line_to_consider in lines_to_consider):
-                    continue
+            lines_to_reorder = SaleOrderLine.concat(
+                *[line for line in lines if line._is_reorder_allowed()]
+            )
+            if product.type == 'combo':
+                for linked_line in lines_to_reorder.linked_line_ids:
+                    combo_product = linked_line.product_id
+                    if(
+                        combo_product.is_storable
+                        and not combo_product.allow_out_of_stock_order
+                    ):
+                        requested_quantities[combo_product] += linked_line.product_uom_qty
+            elif(
+                product.is_storable
+                and not product.allow_out_of_stock_order
+            ):
+                for sol in lines_to_reorder:
+                    requested_quantities[product] += sol.product_uom_qty
 
-                available_qty = min(
-                    request.website._get_product_available_qty(line_to_consider.product_id)
-                    - float(cart_sudo._get_cart_qty(line_to_consider.product_id.id))
-                for line_to_consider in lines_to_consider)
+        for product, requested_quantity in requested_quantities.items():
+            available_qty = (
+                request.website._get_product_available_qty(product)
+                - float(cart_sudo._get_cart_qty(product.id))
+            )
 
-                required_qty = line.product_uom_qty
-
-                # FIXME NIPL if I add:
-                # 1 custom tshirt with text 'A'
-                # 1 custom tshirt with text 'B'
-                # and there is one tshirt in stock, you consider the quantity of each line, not
-                # the order quantity.
-                if available_qty == 0:
-                    unavailable_products.append((required_qty, line.product_id.name))
-                elif available_qty < required_qty:
-                    partially_available_products.append((available_qty, line.product_id.name))
+            if available_qty == 0:
+                unavailable_products.append((requested_quantity, product.name))
+            elif available_qty < requested_quantity:
+                partially_available_products.append((available_qty, product.name))
 
         messages = []
 

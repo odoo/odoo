@@ -332,7 +332,7 @@ class SaleOrder(models.Model):
             **kwargs,
         )
 
-        order_line = self._create_new_cart_line(product_id, quantity, uom_id, **kwargs)
+        order_line = self._create_new_cart_line(product_id, quantity, uom_id, warning=warning, **kwargs)
 
         # NOTE: the provided product_id should not be given after `_create_new_cart_line` call as it
         # could be different from the line's product_id (see variant generation logic in
@@ -500,6 +500,10 @@ class SaleOrder(models.Model):
         # item lines.
         if line.product_type != 'combo':
             line._check_validity()
+
+        if line and self.shop_warning == line.shop_warning:
+            # Remove warning from order since it was moved to the line instead.
+            self.shop_warning = ''
         return line
 
     def _prepare_order_line_values(
@@ -512,6 +516,7 @@ class SaleOrder(models.Model):
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,
         combo_item_id=None,
+        warning='',
         **kwargs
     ):
         self.ensure_one()
@@ -540,6 +545,9 @@ class SaleOrder(models.Model):
             'linked_line_id': linked_line_id,
             'combo_item_id': combo_item_id,
         }
+
+        if warning:
+            values['shop_warning'] = warning
 
         # add no_variant attributes that were not received
         no_variant_attribute_values |= combination.filtered(
