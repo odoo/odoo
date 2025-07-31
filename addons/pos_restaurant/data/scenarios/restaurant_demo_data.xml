@@ -5,6 +5,39 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
         </record>
 
+        <!-- Sides product attribute -->
+        <record id="pa_sides" model="product.attribute">
+            <field name="name">Sides</field>
+            <field name="create_variant">no_variant</field>
+            <field name="display_type">pills</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <record id="pav_sides_fries" model="product.attribute.value">
+            <field name="name">Belgian fresh homemade fries</field>
+            <field name="attribute_id" ref="pa_sides"/>
+        </record>
+
+        <record id="pav_sides_sweet_potato" model="product.attribute.value">
+            <field name="name">Sweet potato fries</field>
+            <field name="attribute_id" ref="pa_sides"/>
+        </record>
+
+        <record id="pav_sides_smashed_sweet_potato" model="product.attribute.value">
+            <field name="name">Smashed sweet potatoes</field>
+            <field name="attribute_id" ref="pa_sides"/>
+        </record>
+
+        <record id="pav_sides_potato_thyme" model="product.attribute.value">
+            <field name="name">Potatoes with thyme</field>
+            <field name="attribute_id" ref="pa_sides"/>
+        </record>
+
+        <record id="pav_sides_grilled_vegetables" model="product.attribute.value">
+            <field name="name">Grilled vegetables</field>
+            <field name="attribute_id" ref="pa_sides"/>
+        </record>
+
         <!-- Food products -->
         <record model="product.product" id="pos_food_bacon">
             <field name="name">Bacon Burger</field>
@@ -30,15 +63,15 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_bacon_sides">
             <field name="product_tmpl_id" ref="pos_restaurant.product_bacon_burger_template"/>
-            <field name="attribute_id" ref="product.pa_sides"/>
+            <field name="attribute_id" ref="pa_sides"/>
             <field
                 name="value_ids"
                 eval="[Command.set([
-                    ref('product.pav_sides_fries'),
-                    ref('product.pav_sides_sweet_potato'),
-                    ref('product.pav_sides_smashed_sweet_potato'),
-                    ref('product.pav_sides_potato_thyme'),
-                    ref('product.pav_sides_grilled_vegetables'),
+                    ref('pos_restaurant.pav_sides_fries'),
+                    ref('pos_restaurant.pav_sides_sweet_potato'),
+                    ref('pos_restaurant.pav_sides_smashed_sweet_potato'),
+                    ref('pos_restaurant.pav_sides_potato_thyme'),
+                    ref('pos_restaurant.pav_sides_grilled_vegetables'),
             ])]" />
         </record>
 
@@ -66,15 +99,15 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_cheese_side">
             <field name="product_tmpl_id" ref="pos_restaurant.product_cheese_burger_template"/>
-            <field name="attribute_id" ref="product.pa_sides"/>
+            <field name="attribute_id" ref="pa_sides"/>
             <field
                 name="value_ids"
                 eval="[Command.set([
-                    ref('product.pav_sides_fries'),
-                    ref('product.pav_sides_sweet_potato'),
-                    ref('product.pav_sides_smashed_sweet_potato'),
-                    ref('product.pav_sides_potato_thyme'),
-                    ref('product.pav_sides_grilled_vegetables'),
+                    ref('pos_restaurant.pav_sides_fries'),
+                    ref('pos_restaurant.pav_sides_sweet_potato'),
+                    ref('pos_restaurant.pav_sides_smashed_sweet_potato'),
+                    ref('pos_restaurant.pav_sides_potato_thyme'),
+                    ref('pos_restaurant.pav_sides_grilled_vegetables'),
             ])]" />
         </record>
 
