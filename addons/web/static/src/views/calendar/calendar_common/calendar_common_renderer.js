@@ -103,7 +103,7 @@ export class CalendarCommonRenderer extends Component {
             initialView: SCALE_TO_FC_VIEW[this.props.model.scale],
             direction: localization.direction,
             droppable: true,
-            editable: this.props.model.hasMultiCreate || this.props.model.canEdit,
+            editable: this.props.model.canEdit,
             eventClick: this.onEventClick,
             eventDragStart: this.onEventDragStart,
             eventDrop: this.onEventDrop,
@@ -134,7 +134,7 @@ export class CalendarCommonRenderer extends Component {
             selectAllow: this.isSelectionAllowed,
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,
-            selectable: this.props.model.hasMultiCreate && this.props.model.canCreate,
+            selectable: !this.props.model.hasMultiCreate && this.props.model.canCreate,
             showNonCurrentDates: this.props.model.monthOverflow,
             slotLabelFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             snapDuration: { minutes: 15 },
