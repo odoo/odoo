@@ -493,7 +493,8 @@ def is_html_empty(html_content: str | markupsafe.Markup | Literal[False] | None)
         return True
     icon_re = r'<\s*(i|span)\b(\s+[A-Za-z_-][A-Za-z0-9-_]*(\s*=\s*[\'"][^"\']*[\'"])?)*\s*\bclass\s*=\s*["\'][^"\']*\b(fa|fab|fad|far|oi)\b'
     tag_re = r'<\s*\/?(?:p|div|section|span|br|b|i|font)\b(?:(\s+[A-Za-z_-][A-Za-z0-9-_]*(\s*=\s*[\'"][^"\']*[\'"]))*)(?:\s*>|\s*\/\s*>)'
-    return not bool(re.sub(tag_re, '', html_content).strip()) and not re.search(icon_re, html_content)
+    text_content = htmllib.unescape(re.sub(tag_re, '', html_content))
+    return not bool(text_content.strip()) and not re.search(icon_re, html_content)
 
 
 def html_keep_url(text):
