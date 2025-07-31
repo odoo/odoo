@@ -4448,6 +4448,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertFalse(line_d.matching_number)
 
     def test_matching_loop(self):
+        # REVIEW THIS SCENARIO
         currency = self.env.company.currency_id
         wrong_credit = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
         debit_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
