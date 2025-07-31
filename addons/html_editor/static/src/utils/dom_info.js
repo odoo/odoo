@@ -297,7 +297,7 @@ export const isNotEditableNode = (node) =>
 
 const iconTags = ["I", "SPAN"];
 // @todo @phoenix: move the specific part in a proper plugin.
-const iconClasses = ["fa", "fab", "fad", "far", "oi"];
+export const iconClasses = ["fa", "fab", "fad", "far", "oi"];
 
 export const ICON_SELECTOR = iconTags
     .map((tag) => iconClasses.map((cls) => `${tag}.${cls}`).join(", "))
