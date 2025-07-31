@@ -184,7 +184,6 @@ class CertificateKey(models.Model):
             - 'encodebytes' returns a base64-encoded block of 76 characters lines
             - 'base64' returns the raw base64-encoded data
             - other returns non-encoded data
-        :param str | bytes | None password: The password used to encrypt the key, if not stored in the password field
         :return: A tuple containing formatted public number bytes of the public key
         :rtype: tuple(bytes,bytes)
         '''
