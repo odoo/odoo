@@ -680,10 +680,10 @@
                         <aside
                             t-if="hasLeftColumn"
                             id="products_grid_before"
-                            class="d-none d-lg-block position-sticky align-self-start col clearfix"
+                            class="d-none d-lg-block position-sticky align-self-start col clearfix pt-2"
                         >
                             <t t-call="website_sale.sidebar_dropzone_at_top"/>
-                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 pt-2 px-lg-2 ps-2 overflow-y-scroll">
+                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 px-lg-2 ps-2 overflow-y-scroll">
                                 <t
                                     t-set="is_sidebar_collapsible"
                                     t-value="is_view_active('website_sale.products_categories_list_collapsible')"
@@ -715,7 +715,7 @@
                                     </a>
                                 </div>
                                 <div
-                                    t-attf-class="products_attributes_filters d-empty-none {{opt_wsale_categories and 'border-top'}}"
+                                    t-attf-class="products_attributes_filters d-empty-none {{opt_wsale_categories and 'border-top'}} {{'pt-3' if not is_sidebar_collapsible else ''}}"
                                 />
                                 <t
                                     t-if="show_price_filter"
@@ -726,8 +726,8 @@
                                         t-valuef="{{is_sidebar_collapsible and 'accordion accordion-flush'}} {{is_sidebar_collapsible and (opt_wsale_categories or len(attributes) > 0) and 'border-top'}}"
                                     />
                                 </t>
+                                <t t-call="website_sale.sidebar_dropzone_at_bottom"/>
                             </div>
-                            <t t-call="website_sale.sidebar_dropzone_at_bottom"/>
                         </aside>
                         <div id="products_grid" t-attf-class="col">
                             <t

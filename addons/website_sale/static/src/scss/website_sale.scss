@@ -578,6 +578,16 @@ $input-border-color: $gray-400;
             height: 32px;
             width: 32px;
         }
+
+        & #oe_structure_website_sale_sidebar_top {
+            &:where(:not(:has(div.oe_dropzone))) .s_text_block p:only-child {
+                margin-bottom: 0;
+            }
+
+            &:where(:has(.s_text_block p:not(:only-child))) {
+                padding-top: map-get($spacers, 3);
+            }
+        }
     }
 }
 
