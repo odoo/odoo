@@ -18,6 +18,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
         food_category = cls.env['pos.category'].create({'name': 'Food', 'sequence': 1})
         drinks_category = cls.env['pos.category'].create({'name': 'Drinks', 'sequence': 2})
+        breads_category = cls.env['pos.category'].create({'name': 'Breads', 'sequence': 3})
 
         printer = cls.env['pos.printer'].create({
             'name': 'Preparation Printer',
@@ -145,6 +146,22 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'taxes_id': [(6, 0, [])],
         })
 
+        cls.bruschetta = cls.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 8.50,
+            'name': 'Bruschetta',
+            'pos_categ_ids': [(4, food_category.id)],
+            'taxes_id': [(6, 0, [])],
+        })
+
+        cls.wholemeal_loaf = cls.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.99,
+            'name': 'Wholemeal loaf',
+            'pos_categ_ids': [(4, breads_category.id)],
+            'taxes_id': [(6, 0, [])],
+        })
+
         # multiple categories product
         cls.env['product.product'].create({
             'available_in_pos': True,
@@ -206,6 +223,16 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
         cls.pos_config.write({'pricelist_id': pricelist.id})
+
+        cls.starter_course = cls.env['pos.course'].create({
+            'name': 'Test - Starter',
+            'category_ids': [(4, drinks_category.id)],
+        })
+
+        cls.main_course = cls.env['pos.course'].create({
+            'name': 'Test - Main',
+            'category_ids': [(4, food_category.id)],
+        })
 
 
 class TestFrontend(TestFrontendCommon):
@@ -338,6 +365,17 @@ class TestFrontend(TestFrontendCommon):
     def test_pos_restaurant_course(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_pos_restaurant_course')
+
+    def test_pos_restaurant_default_course(self):
+        drinks_category = self.env['pos.category'].search([('name', '=', 'Drinks')], limit=1)
+        food_category = self.env['pos.category'].search([('name', '=', 'Food')], limit=1)
+        breads_category = self.env['pos.category'].search([('name', '=', 'Breads')], limit=1)
+        self.pos_config.write({
+            'use_course_allocation': True,
+            "iface_available_categ_ids": [(6, 0, [drinks_category.id, food_category.id, breads_category.id])],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_pos_restaurant_default_course')
 
     def test_preparation_printer_content(self):
         self.preset_eat_in = self.env['pos.preset'].create({

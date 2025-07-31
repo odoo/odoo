@@ -10,3 +10,5 @@ from . import pos_session
 from . import res_config_settings
 from . import pos_preset
 from . import restaurant_order_course
+from . import pos_category
+from . import pos_course

@@ -6,7 +6,16 @@ export class RestaurantOrderCourse extends models.ServerModel {
     _name = "restaurant.order.course";
 
     _load_pos_data_fields() {
-        return ["uuid", "fired", "order_id", "line_ids", "index", "write_date"];
+        return [
+            "name",
+            "course_id",
+            "uuid",
+            "fired",
+            "order_id",
+            "line_ids",
+            "index",
+            "write_date",
+        ];
     }
 }
 

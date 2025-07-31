@@ -394,8 +394,10 @@ export class ProductScreen extends Component {
                 options["presetVariant"] = searchedProduct[0];
             }
         }
-        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
+        const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
         this.showOptionalProductPopupIfNeeded(product);
+
+        return line;
     }
     showOptionalProductPopupIfNeeded(product) {
         if (product.pos_optional_product_ids?.length) {

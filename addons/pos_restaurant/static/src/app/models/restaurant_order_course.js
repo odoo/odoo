@@ -1,13 +1,9 @@
 import { registry } from "@web/core/registry";
 import { Base } from "@point_of_sale/app/models/related_models";
-import { _t } from "@web/core/l10n/translation";
 
 export class RestaurantOrderCourse extends Base {
     static pythonModel = "restaurant.order.course";
 
-    get name() {
-        return _t("Course") + " " + this.index;
-    }
     isSelected() {
         return this.order_id?.uiState.selected_course_uuid === this.uuid;
     }

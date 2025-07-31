@@ -38,7 +38,7 @@ export async function generateFireCourseReceipts() {
         new: [],
         cancelled: [],
         noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
-        noteUpdateTitle: _t("Course %s fired", "" + course.index),
+        noteUpdateTitle: `${course.name} ${_t("fired")}`,
         printNoteUpdateData: false,
     };
     return await generateReceiptsToPrint(order, orderChange);

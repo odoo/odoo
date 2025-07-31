@@ -9,6 +9,8 @@ class RestaurantOrderCourse(models.Model):
     _description = 'POS Restaurant Order Course'
     _inherit = ['pos.load.mixin']
 
+    name = fields.Char(string="Course Name", readonly=True)
+    course_id = fields.Many2one('pos.course', string="Course", readonly=True)
     fired = fields.Boolean(string="Fired", default=False)
     fired_date = fields.Datetime(string="Fired Date")
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
@@ -27,4 +29,4 @@ class RestaurantOrderCourse(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['uuid', 'fired', 'order_id', 'line_ids', 'index', 'write_date']
+        return ['name', 'course_id', 'uuid', 'fired', 'order_id', 'line_ids', 'index', 'write_date']
