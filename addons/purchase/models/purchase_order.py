@@ -87,7 +87,7 @@ class PurchaseOrder(models.Model):
              "delivery order sent by your vendor.")
     date_order = fields.Datetime('Order Deadline', required=True, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date within which the Quotation should be confirmed and converted into a purchase order.")
-    date_approve = fields.Datetime('Confirmation Date', readonly=True, index=True, copy=False)
+    date_approve = fields.Datetime('Order Date', readonly=True, index=True, copy=False)
     partner_id = fields.Many2one(
         'res.partner', string='Vendor', required=True, change_default=True,
         tracking=True, check_company=True, index=True,
@@ -131,7 +131,7 @@ class PurchaseOrder(models.Model):
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
     date_planned = fields.Datetime(
         string='Expected Arrival', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
-        help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
+        help="Date on which goods should be delivered by the vendor based on latest information")
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
