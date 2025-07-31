@@ -31,6 +31,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
+        Cart_controller = Cart()
         for line in sale_order.order_line:
             if not line.with_user(request.env.user).sudo()._is_reorder_allowed():
                 continue  # Skip section headers, deliveries
@@ -56,7 +57,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
                         'parent_product_template_id': line.product_id.product_tmpl_id.id,
                     })
 
-            Cart().add_to_cart(
+            Cart_controller.add_to_cart(
                 product_id=line.product_id.id,
                 product_template_id=line.product_id.product_tmpl_id.id,
                 quantity=line.product_uom_qty,

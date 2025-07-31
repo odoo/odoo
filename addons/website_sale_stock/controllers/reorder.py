@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.website_sale.controllers import reorder
 from odoo.http import request, route
+
+from odoo.addons.website_sale.controllers import reorder
 
 
 class CustomerPortal(reorder.CustomerPortal):
@@ -22,7 +23,7 @@ class CustomerPortal(reorder.CustomerPortal):
 
     def _get_reorder_shop_warning(self, order_id):
         order_sudo = request.env['sale.order'].sudo().browse(order_id)
-        cart = request.cart or request.website._create_cart()
+        cart_sudo = request.cart or request.website._create_cart()
         unavailable_products, partially_available_products = [], []
 
         for line in order_sudo.order_line:
@@ -37,11 +38,16 @@ class CustomerPortal(reorder.CustomerPortal):
 
                 available_qty = min(
                     request.website._get_product_available_qty(line_to_consider.product_id)
-                    - float(cart._get_cart_qty(line_to_consider.product_id.id))
+                    - float(cart_sudo._get_cart_qty(line_to_consider.product_id.id))
                 for line_to_consider in lines_to_consider)
 
                 required_qty = line.product_uom_qty
 
+                # FIXME NIPL if I add:
+                # 1 custom tshirt with text 'A'
+                # 1 custom tshirt with text 'B'
+                # and there is one tshirt in stock, you consider the quantity of each line, not
+                # the order quantity.
                 if available_qty == 0:
                     unavailable_products.append((required_qty, line.product_id.name))
                 elif available_qty < required_qty:
