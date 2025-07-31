@@ -888,10 +888,12 @@ test("Embed video by pasting video URL", async () => {
             txt: "<p><br></p>",
         },
     ];
+    const videoId = "qxb74CMR748";
+    const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
 
     onRpc("/html_editor/video_url/data", async () => ({
         platform: "youtube",
-        embed_url: "//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
+        video_id: videoId,
     }));
 
     await mountView({
@@ -900,16 +902,16 @@ test("Embed video by pasting video URL", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{ 'allowVideo': True, 'embedded_components': False }"/>
+                <field name="txt" widget="html"/>
             </form>`,
     });
 
     const anchorNode = setSelectionInHtmlField();
 
     // Paste a video URL.
-    pasteText(htmlEditor, "https://www.youtube.com/watch?v=qxb74CMR748");
+    pasteText(htmlEditor, videoURL);
     await animationFrame();
-    expect(anchorNode.outerHTML).toBe("<p>https://www.youtube.com/watch?v=qxb74CMR748</p>");
+    expect(anchorNode.outerHTML).toBe(`<p>${videoURL}</p>`);
     await expectElementCount(".o-we-powerbox", 1);
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Embed Youtube Video", "Paste as URL"]);
 
@@ -921,7 +923,7 @@ test("Embed video by pasting video URL", async () => {
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p>`
     );
     expect(
-        'div.media_iframe_video iframe[src="//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0"]'
+        `div.media_iframe_video iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
     ).toHaveCount(1);
 });
 
