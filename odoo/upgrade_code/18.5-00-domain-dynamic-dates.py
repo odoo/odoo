@@ -38,7 +38,7 @@ class UpgradeDomainTransformer(ast.NodeTransformer):
 
     def transform(self, domain):
         self.log = None
-        node = ast.parse(domain, mode='eval')
+        node = ast.parse(domain.strip(), mode='eval')
         node = self._invert_transformer.visit(node)
         result = self.visit(node)
         if self.log:
@@ -155,7 +155,11 @@ class UpgradeDomainTransformer(ast.NodeTransformer):
             case ast.Attribute(value=value_node, attr='to_utc'), [], []:
                 value = self.visit(value_node)
             case ast.Attribute(value=value, attr='strftime'), [ast.Constant(value=format)], _:
-                value = self.visit(value)
+                if isinstance(value, ast.Name) and value.id == 'time':
+                    # time.strftime is sometimes called directly
+                    value = "now"
+                else:
+                    value = self.visit(value)
                 if isinstance(value, str):
                     if len(format) <= 10:
                         value = value.replace('now', 'today')
@@ -213,14 +217,15 @@ def upgrade(file_manager: FileManager):
         replacements = {}
         all_domains = [el.attrib['domain'] for el in tree.findall('.//filter[@domain]')]
         all_domains.extend(el.text for el in tree.findall(".//field[@name='domain_force']"))
+        all_domains.extend(el.text for el in tree.findall(".//field[@name='domain']"))
         for domain in all_domains:
             if not domain:
                 continue
             try:
                 new_domain = upgrade_domain.transform(domain)
                 replacements[no_whitespace(domain)] = new_domain
-            except NoChange:
-                pass
+            except NoChange as e:
+                _logger.debug("No change %s", e)
             except Exception:  # noqa: BLE001
                 # check if contains dynamic part
                 level = logging.INFO if re.search(r"%\([a-z0-9\.]+\)[sd]", domain) else logging.WARNING
@@ -243,10 +248,10 @@ def upgrade(file_manager: FileManager):
             if not domain:
                 return match[0]
             domain = domain.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-            return f"{match[1]}{domain!r}{match[3]}"
+            return f"{match[1]}{domain}{match[3]}"
 
         content = re.sub(r'(domain=")(.+?)(")', replacement_attr, content, flags=re.MULTILINE | re.DOTALL)
-        content = re.sub(r'(name="domain_force"[^>]*>)(.+?)(<)"', replacement_tag, content, flags=re.MULTILINE | re.DOTALL)
+        content = re.sub(r'(name="(?:domain|domain_force)"[^>]*>)(.+?)(<)', replacement_tag, content, flags=re.MULTILINE | re.DOTALL)
         file.content = content
 
 
