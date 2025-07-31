@@ -4,11 +4,12 @@
         // reset a few things to un-break it with Firefox
         appearance: none;
         --form-select-bg-img: none;
+        border: none;
+        box-shadow: none;
     }
 
     select, ::picker(select) {
         appearance: base-select;
-        background: white;
     }
 
     select:hover, select:open {
@@ -17,6 +18,7 @@
     }
 
     ::picker(select) {
+        right: anchor(100%);
         border: 1px solid #d8dadd;
         border-radius: $border-radius;
     }
@@ -26,7 +28,7 @@
     }
 
     option:hover {
-        background-color: $dropdown-link-hover-bg
+        background-color: $dropdown-link-hover-bg;
     }
 
     option::checkmark {
@@ -41,6 +43,11 @@
 
     select::picker-icon {
         content: $o-caret-down;
+        opacity: 0.6;
         transform: translateY(-12%);
+    }
+
+    select:open::picker-icon {
+        transform: rotate(180deg);
     }
 }

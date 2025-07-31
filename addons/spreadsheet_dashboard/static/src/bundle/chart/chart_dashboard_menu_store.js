@@ -1,4 +1,5 @@
 import { stores, registries } from "@odoo/o-spreadsheet";
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 const { chartSubtypeRegistry } = registries;
@@ -27,11 +28,12 @@ patch(stores.ChartDashboardMenuStore.prototype, {
                 const item = chartSubtypeRegistry.get(type);
                 return {
                     id: item.chartType,
-                    label: item.displayName,
+                    label: _t("Show as %(chart_type)s chart", {
+                        chart_type: item.displayName.toLowerCase(),
+                    }),
                     onClick: () => this.updateType(item.chartType),
-                    isSelected:
-                        item.chartType === this.getters.getChartDefinition(this.chartId).type,
-                    iconClass: this.getIconClasses(item.chartType),
+                    class: item.chartType === definition.type ? "active" : "",
+                    preview: item.preview,
                 };
             });
         }
