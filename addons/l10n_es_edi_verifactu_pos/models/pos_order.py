@@ -231,8 +231,9 @@ class PosOrder(models.Model):
     def _process_saved_order(self, draft):
         self.ensure_one()
         if self.l10n_es_edi_verifactu_required:
-            if not self.to_invoice and self.amount_total > 400:
-                raise UserError(_("The order needs to be invoiced since its total amount is above 400€."))
+            if not self.to_invoice and self.amount_total > self.company_id.l10n_es_simplified_invoice_limit:
+                raise UserError(_("The order needs to be invoiced since its total amount is above %s€.",
+                                  self.company_id.l10n_es_simplified_invoice_limit))
             refunded_order = self.refunded_order_id
             if refunded_order:
                 if not self.l10n_es_edi_verifactu_refund_reason:
