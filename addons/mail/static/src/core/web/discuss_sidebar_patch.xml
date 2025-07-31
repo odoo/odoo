@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='top']" position="inside">
-            <Dropdown t-if="store.discuss.isSidebarCompact" state="meetingFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-0 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
+            <Dropdown t-if="store.discuss.isSidebarCompact" state="meetingFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary px-2 mx-2 my-0 min-w-0'" manual="true">
                 <t t-call="mail.DiscussSidebar.startMeetingButton"/>
                 <t t-set-slot="content">
                     <div t-ref="meeting-floating">

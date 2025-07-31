@@ -18,7 +18,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-0 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary p-1 mx-2 my-0 min-w-0'" manual="true">
             <t t-call="mail.DiscussSidebarCategory.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden d-flex flex-column" t-ref="floating">
@@ -71,7 +71,7 @@
     <t t-name="mail.DiscussSidebarChannel">
         <div class="o-mail-DiscussSidebarChannel-container d-flex flex-column mx-2 bg-inherit" t-att-class="attClassContainer">
             <t name="root">
-                <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-3 bg-100 border border-secondary p-0 mx-2 my-0 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
+                <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-3 o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0'" manual="true">
                     <t t-call="mail.DiscussSidebarChannel.main"/>
                     <t t-set-slot="content">
                         <UseHoverOverlay hover="hover">
@@ -93,7 +93,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarSubchannel">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-3 bg-100 border border-secondary p-0 mx-2 my-0 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-3 o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0'" manual="true">
             <t t-call="mail.DiscussSidebarSubchannel.main"/>
             <t t-set-slot="content">
                 <UseHoverOverlay hover="hover">
@@ -179,7 +179,7 @@
             'mx-1': thread.importantCounter === 0,
             'ms-1': thread.importantCounter > 0,
         }">
-            <Dropdown state="showingActions" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary my-0 min-w-0 p-0 o-rounded-bubble mx-1'">
+            <Dropdown state="showingActions" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary my-0 min-w-0 mx-1'">
                 <button class="btn me-1 btn-light rounded-circle d-flex o-px-0_5 py-1 align-items-center justify-content-center o-mail-discussSidebarBgColor border-dark" t-att-class="{ 'o-showingActions shadow-sm': showingActions.isOpen }" t-att-title="actionsTitle">
                     <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
                 </button>
