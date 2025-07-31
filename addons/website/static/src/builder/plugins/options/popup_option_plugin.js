@@ -1,7 +1,6 @@
 import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { getElementsWithOption } from "@html_builder/utils/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -56,17 +55,11 @@ class PopupOptionPlugin extends Plugin {
             this.assignUniqueID(snippetEl);
             this.dependencies.history.addCustomMutation({
                 apply: () => {
-                    this.dependencies.popupVisibilityPlugin.onTargetShow(snippetEl);
+                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
                 },
-                revert: () => {
-                    this.dependencies.popupVisibilityPlugin.onTargetHide(snippetEl);
-                },
+                revert: () => {},
             });
         }
-        const droppedEls = getElementsWithOption(snippetEl, ".s_popup");
-        droppedEls.forEach((droppedEl) =>
-            this.dependencies.visibility.toggleTargetVisibility(droppedEl, true, true)
-        );
     }
 
     assignUniqueID(editingElement) {
