@@ -1014,7 +1014,7 @@ class ProjectTask(models.Model):
         return vals
 
     @api.model
-    @tools.ormcache()
+    @tools.ormcache(cache='stable')
     def _portal_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
         """Readable and writable fields by portal users."""
         readable = frozenset(self.TASK_PORTAL_READABLE_FIELDS)

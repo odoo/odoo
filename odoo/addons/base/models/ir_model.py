@@ -316,7 +316,7 @@ class IrModel(models.Model):
         model_id = self._get_id(name) if name else False
         return self.sudo().browse(model_id)
 
-    @tools.ormcache('name')
+    @tools.ormcache('name', cache='stable')
     def _get_id(self, name):
         self.env.cr.execute("SELECT id FROM ir_model WHERE model=%s", (name,))
         result = self.env.cr.fetchone()
@@ -824,7 +824,7 @@ class IrModelFields(models.Model):
         field_id = model_name and name and self._get_ids(model_name).get(name)
         return self.sudo().browse(field_id)
 
-    @tools.ormcache('model_name')
+    @tools.ormcache('model_name', cache='stable')
     def _get_ids(self, model_name):
         cr = self.env.cr
         cr.execute("SELECT name, id FROM ir_model_fields WHERE model=%s", [model_name])
@@ -1004,9 +1004,9 @@ class IrModelFields(models.Model):
                 vals['model'] = IrModel.browse(vals['model_id']).model
 
         # for self._get_ids() in _update_selection()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
 
-        res = super(IrModelFields, self).create(vals_list)
+        res = super().create(vals_list)
         models = OrderedSet(res.mapped('model'))
 
         for vals in vals_list:
@@ -1231,7 +1231,7 @@ class IrModelFields(models.Model):
                 data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
 
-    @tools.ormcache()
+    @tools.ormcache(cache='stable')
     def _all_manual_field_data(self):
         cr = self.env.cr
         # we cannot use self._fields to determine translated fields, as it has not been set up yet
@@ -1362,7 +1362,7 @@ class IrModelFields(models.Model):
         return self._get_fields_cached(model_name).get(field_name, {}).get('selection', [])
 
     @api.model
-    @tools.ormcache('model_name', 'self.env.lang')
+    @tools.ormcache('model_name', 'self.env.lang', cache='stable')
     def _get_fields_cached(self, model_name):
         """ Return the translated information of all model field's in the context's language.
         Note that the result contains the available translations only.
@@ -2049,7 +2049,7 @@ class IrModelAccess(models.Model):
         return [('%s/%s' % x) if x[0] else x[1] for x in self.env.cr.fetchall()]
 
     @api.model
-    @tools.ormcache('model_name', 'access_mode')
+    @tools.ormcache('model_name', 'access_mode', cache='stable')
     def _get_access_groups(self, model_name, access_mode='read'):
         """ Return the group expression object that represents the users who
         have ``access_mode`` to the model ``model_name``.
@@ -2131,7 +2131,7 @@ class IrModelAccess(models.Model):
     @api.model
     def call_cache_clearing_methods(self):
         self.env.invalidate_all()
-        self.env.registry.clear_cache()  # mainly _get_allowed_models
+        self.env.registry.clear_cache('stable')  # mainly _get_allowed_models
 
     #
     # Check rights on actions

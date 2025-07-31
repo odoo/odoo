@@ -69,7 +69,7 @@ class IrConfig_Parameter(models.Model):
         return self._get_param(key) or default
 
     @api.model
-    @ormcache('key')
+    @ormcache('key', cache='stable')
     def _get_param(self, key):
         # we bypass the ORM because get_param() is used in some field's depends,
         # and must therefore work even when the ORM is not ready to work
@@ -104,7 +104,7 @@ class IrConfig_Parameter(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return super().create(vals_list)
 
     def write(self, vals):
@@ -112,11 +112,11 @@ class IrConfig_Parameter(models.Model):
             illegal = _default_parameters.keys() & self.mapped('key')
             if illegal:
                 raise ValidationError(self.env._("You cannot rename config parameters with keys %s", ', '.join(illegal)))
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return super().write(vals)
 
     def unlink(self):
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return super().unlink()
 
     @api.ondelete(at_uninstall=False)

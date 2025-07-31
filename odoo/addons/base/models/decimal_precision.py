@@ -19,7 +19,7 @@ class DecimalPrecision(models.Model):
     )
 
     @api.model
-    @tools.ormcache('application')
+    @tools.ormcache('application', cache='stable')
     def precision_get(self, application):
         self.flush_model(['name', 'digits'])
         self.env.cr.execute('select digits from decimal_precision where name=%s', (application,))
@@ -29,17 +29,17 @@ class DecimalPrecision(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     def write(self, vals):
         res = super().write(vals)
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     def unlink(self):
         res = super().unlink()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     @api.onchange('digits')

@@ -42,7 +42,7 @@ class IrModuleModule(models.Model):
     ], default='official')
 
     @api.model
-    @ormcache()
+    @ormcache(cache='stable')
     def _get_imported_module_names(self):
         return OrderedSet(self.sudo().search_fetch([('imported', '=', True), ('state', '=', 'installed')], ['name']).mapped('name'))
 
@@ -605,7 +605,7 @@ class IrModuleModule(models.Model):
         return super().search_panel_select_range(field_name, **kwargs)
 
     @api.model
-    @ormcache('module', 'lang')
+    @ormcache('module', 'lang', cache='stable')
     def _get_imported_module_translations_for_webclient(self, module, lang):
         if not lang:
             lang = self.env.context.get("lang") or 'en_US'
