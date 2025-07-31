@@ -115,7 +115,7 @@ export class MediaWebsitePlugin extends Plugin {
     async replaceMedia(mediaEl) {
         const sel = this.dependencies.selection.getEditableSelection();
         const editableEl =
-            closestElement(mediaEl || sel.startContainer, ".o_editable") || this.editable;
+            closestElement(mediaEl || sel.startContainer, ".o_savable") || this.editable;
         await this.dependencies.media.openMediaDialog({ node: mediaEl }, editableEl);
     }
 

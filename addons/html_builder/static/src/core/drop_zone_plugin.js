@@ -46,7 +46,7 @@ export class DropZonePlugin extends Plugin {
             return openModalEl;
         }
         const openDropdownEl = this.editable.querySelector(
-            ".o_editable.dropdown-menu.show, .dropdown-menu.show .o_editable.dropdown-menu"
+            ".o_savable.dropdown-menu.show, .dropdown-menu.show .o_savable.dropdown-menu"
         );
         if (openDropdownEl) {
             return openDropdownEl;

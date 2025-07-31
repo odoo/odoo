@@ -110,7 +110,7 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     moveBlock: function (previewMode, widgetValue, params) {
         const selector = widgetValue === 'allPages' ?
-            '#o_shared_blocks' : 'main .oe_structure:o_editable';
+            '#o_shared_blocks' : 'main .oe_structure:o_savable';
         const whereEl = $(this.$target[0].ownerDocument).find(selector)[0];
         const popupEl = this.$target[0].closest('.s_popup');
         whereEl.prepend(popupEl);

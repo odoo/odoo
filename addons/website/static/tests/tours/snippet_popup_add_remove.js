@@ -15,7 +15,7 @@ registerWebsitePreviewTour('snippet_popup_add_remove', {
         groupName: "Content",
 }), {
     content: 'Edit s_popup snippet',
-    trigger: ':iframe #wrap.o_editable [data-snippet="s_popup"] .row > div', // Click deep in the snippet structure
+    trigger: ':iframe #wrap.o_savable [data-snippet="s_popup"] .row > div', // Click deep in the snippet structure
     run: "click",
 }, {
     content: 'Check s_popup setting are loaded, wait panel is visible',
@@ -29,7 +29,7 @@ registerWebsitePreviewTour('snippet_popup_add_remove', {
     run: "click",
 }, {
     content: 'Edit s_popup snippet(2)',
-    trigger: ':iframe #wrap.o_editable [data-snippet="s_popup"] h2',
+    trigger: ':iframe #wrap.o_savable [data-snippet="s_popup"] h2',
     run: function() {
         // Simulating pressing enter.
         const anchor = this.anchor;
@@ -47,7 +47,7 @@ registerWebsitePreviewTour('snippet_popup_add_remove', {
     run: "click",
 }, {
     content: 'Check the s_popup was removed',
-    trigger: ":iframe #wrap.o_editable:not(:has([data-snippet='s_popup']))",
+    trigger: ":iframe #wrap.o_savable:not(:has([data-snippet='s_popup']))",
 },
 // Test that undoing dropping the snippet removes the invisible elements panel.
 ...insertSnippet({
@@ -63,7 +63,7 @@ registerWebsitePreviewTour('snippet_popup_add_remove', {
     run: "click",
 }, {
     content: "Check that the s_popup was removed.",
-    trigger: ':iframe #wrap.o_editable:not(:has([data-snippet="s_popup"]))',
+    trigger: ':iframe #wrap.o_savable:not(:has([data-snippet="s_popup"]))',
 }, {
     content: "The invisible elements panel should also be removed.",
     trigger: ".o-snippets-menu:not(:has(.o_we_invisible_el_panel)",

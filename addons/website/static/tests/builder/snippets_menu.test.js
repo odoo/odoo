@@ -67,23 +67,23 @@ test("undo and redo buttons", async () => {
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openBuilderSidebar();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").toHaveClass("o_editable");
+    expect(":iframe #wrap").toHaveClass("o_savable");
     const editor = getEditor();
     const editableContent = getEditableContent();
     setContent(editableContent, "<p> Text[] </p>");
     await insertText(editor, "a");
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" class="oe_structure oe_empty o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true"> <p> Texta </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true"> <p> Texta </p> </div>'
     );
     await animationFrame();
     await click(".o-snippets-menu button.fa-undo");
     await animationFrame();
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" class="oe_structure oe_empty o_editable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true"> <p> Text </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_savable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true"> <p> Text </p> </div>'
     );
     await click(".o-snippets-menu button.fa-repeat");
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" class="oe_structure oe_empty o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true"> <p> Texta </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true"> <p> Texta </p> </div>'
     );
 });
 

@@ -328,7 +328,7 @@ export class MassMailingHtmlField extends HtmlField {
         // named so they are handled properly by the snippets menu.
         this.wysiwyg.$iframeBody.find('.o_layout').addBack().data('name', 'Mailing');
         // We don't want to drop snippets directly within the wysiwyg.
-        this.wysiwyg.$iframeBody.find('.odoo-editor-editable').removeClass('o_editable');
+        this.wysiwyg.$iframeBody.find('.odoo-editor-editable').removeClass('o_savable');
 
         initializeDesignTabCss(this.wysiwyg.getEditable());
         this.wysiwyg.getEditable().find('img').attr('loading', '');
@@ -472,7 +472,7 @@ export class MassMailingHtmlField extends HtmlField {
             const isSnippetsFolded = uiUtils.isSmall() || themeName === 'basic';
             this.wysiwyg.setSnippetsMenuFolded(isSnippetsFolded);
 
-            const $editable = this.wysiwyg.$editable.find('.o_editable');
+            const $editable = this.wysiwyg.$editable.find('.o_savable');
             this.$editorMessageElements = $editable
                 .not('[data-editor-message]')
                 .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
@@ -706,7 +706,7 @@ export class MassMailingHtmlField extends HtmlField {
                 class: 'container o_mail_wrapper o_mail_regular oe_unremovable',
             });
             $newWrapperContent = $('<div/>', {
-                class: 'col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable'
+                class: 'col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_savable'
             });
             $newWrapper.append($('<div class="row"/>').append($newWrapperContent));
         }

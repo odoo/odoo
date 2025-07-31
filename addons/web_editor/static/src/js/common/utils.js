@@ -454,7 +454,7 @@ function _isBackgroundImageAttribute(attribute) {
  *
  * TODO: the name of this function is voluntarily bad to reflect the fact that
  * this system should be improved. The combination of o_not_editable,
- * o_editable, getContentEditableAreas, getReadOnlyAreas and other concepts
+ * o_savable, getContentEditableAreas, getReadOnlyAreas and other concepts
  * related to what should be editable or not should be reviewed.
  *
  * @returns {boolean}

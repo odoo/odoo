@@ -8,7 +8,7 @@ describe("monetary field", () => {
         await testEditor({
             contentBefore: unformat(`
                 <p>
-                    <span data-oe-model="product.template" data-oe-id="27" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable">
+                    <span data-oe-model="product.template" data-oe-id="27" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_savable">
                         $&nbsp;
                         <span class="oe_currency_value">[]</span>
                     </span>
@@ -17,7 +17,7 @@ describe("monetary field", () => {
             stepFunction: deleteBackward,
             contentAfter: unformat(`
                 <p>
-                    <span data-oe-model="product.template" data-oe-id="27" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable">
+                    <span data-oe-model="product.template" data-oe-id="27" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_savable">
                         $&nbsp;
                         <span class="oe_currency_value">[]</span>
                     </span>

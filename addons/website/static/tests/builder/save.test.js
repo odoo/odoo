@@ -32,7 +32,7 @@ test("basic save", async () => {
         '<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">H1ello</h1></div>'
     );
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('H1ello')").toHaveCount(1);
 });
 
@@ -45,7 +45,7 @@ test("nothing to save", async () => {
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(0);
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 
@@ -82,7 +82,7 @@ test("discard modified elements", async () => {
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".modal-content button.btn-primary").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 
@@ -95,7 +95,7 @@ test("discard without any modifications", async () => {
     await setupWebsiteBuilder(exampleWebsiteContent);
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 

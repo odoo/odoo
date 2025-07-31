@@ -121,13 +121,13 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _onDropZoneOver() {
-        this.$editable.find('.o_editable').css('background-color', '');
+        this.$editable.find('.o_savable').css('background-color', '');
     }
     /**
      * @override
      */
     _onDropZoneOut() {
-        const $oEditable = this.$editable.find('.o_editable');
+        const $oEditable = this.$editable.find('.o_savable');
         if ($oEditable.find('.oe_drop_zone.oe_insert:not(.oe_vertical):only-child').length) {
             $oEditable[0].style.setProperty('background-color', 'transparent', 'important');
         }
@@ -136,7 +136,7 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _onDropZoneStart() {
-        const $oEditable = this.$editable.find('.o_editable');
+        const $oEditable = this.$editable.find('.o_savable');
         if ($oEditable.find('.oe_drop_zone.oe_insert:not(.oe_vertical):only-child').length) {
             $oEditable[0].style.setProperty('background-color', 'transparent', 'important');
         }
@@ -145,7 +145,7 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _onDropZoneStop() {
-        const $oEditable = this.$editable.find('.o_editable');
+        const $oEditable = this.$editable.find('.o_savable');
         $oEditable.css('background-color', '');
         if (!$oEditable.find('.oe_drop_zone.oe_insert:not(.oe_vertical):only-child').length) {
             $oEditable.attr('contenteditable', true);
@@ -158,7 +158,7 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      */
     _onSnippetRemoved() {
         super._onSnippetRemoved(...arguments);
-        const $oEditable = this.$editable.find('.o_editable');
+        const $oEditable = this.$editable.find('.o_savable');
         if (!$oEditable.children().length) {
             $oEditable.empty(); // remove any superfluous whitespace
             $oEditable.attr('contenteditable', false);

@@ -515,7 +515,7 @@ test("An option should only appear if its target is inside an editable area, unl
         `<div class="content">
             <div class="test-target test-not-editable">NOT IN EDITABLE</div>
         </div>
-        <div class="content o_editable">
+        <div class="content o_savable">
             <div class="test-target test-editable">IN EDITABLE</div>
         </div>`
     );

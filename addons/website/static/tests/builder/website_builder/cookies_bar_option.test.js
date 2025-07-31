@@ -8,7 +8,7 @@ import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 defineWebsiteModels();
 
 const cookiesBarTemplate = `
-    <div id="website_cookies_bar" class="s_popup o_snippet_invisible o_no_save o_editable o_dirty" data-name="Cookies Bar" data-vcss="001" data-oe-id="1328" data-oe-xpath="/data/xpath/div" data-oe-model="ir.ui.view" data-oe-field="arch" contenteditable="true" data-invisible="1">
+    <div id="website_cookies_bar" class="s_popup o_snippet_invisible o_no_save o_dirty" data-name="Cookies Bar" data-vcss="001" data-oe-id="1328" data-oe-xpath="/data/xpath/div" data-oe-model="ir.ui.view" data-oe-field="arch" contenteditable="true" data-invisible="1">
         <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete modal_shown show" data-show-after="500" data-display="afterDelay" data-consents-duration="999" data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
             <div class="modal-dialog d-flex s_popup_size_full">
                 <div class="modal-content oe_structure">

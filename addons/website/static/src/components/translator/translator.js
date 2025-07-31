@@ -143,7 +143,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
     }
 
     getEditableArea() {
-        return this.$wysiwygEditable.find(':o_editable').add(this.$editables);
+        return this.$wysiwygEditable.find(':o_savable').add(this.$editables);
     }
 
     _editableElements() {
@@ -176,7 +176,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 var translation = $node.data('translation') || {};
                 var trans = $node.attr(attr);
                 var match = trans.match(translationRegex);
-                var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_attribute').appendTo(self.websiteService.pageDocument.body);
+                var $trans = $(trans).addClass('d-none o_savable o_editable_translatable_attribute').appendTo(self.websiteService.pageDocument.body);
                 $trans.data('$node', $node).data('attribute', attr);
 
                 translation[attr] = $trans[0];
@@ -199,7 +199,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             var translation = $node.data('translation') || {};
             var trans = $node.text();
             var match = trans.match(translationRegex);
-            var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_text').appendTo(self.websiteService.pageDocument.body);
+            var $trans = $(trans).addClass('d-none o_savable o_editable_translatable_text').appendTo(self.websiteService.pageDocument.body);
             $trans.data('$node', $node);
 
             translation['textContent'] = $trans[0];
@@ -237,7 +237,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
 
         // We don't want the BS dropdown to close
         // when clicking in a element to translate
-        $(this.websiteService.pageDocument).find('.dropdown-menu').on('click', '.o_editable', function (ev) {
+        $(this.websiteService.pageDocument).find('.dropdown-menu').on('click', '.o_savable', function (ev) {
             ev.stopPropagation();
             ev.preventDefault();
         });

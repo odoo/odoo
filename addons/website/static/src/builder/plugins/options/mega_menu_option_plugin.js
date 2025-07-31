@@ -36,7 +36,7 @@ export class MegaMenuOptionPlugin extends Plugin {
             // menu itself.
             const classes = [...megaMenuEl.classList].filter(
                 (megaMenuClass) =>
-                    !["dropdown-menu", "o_mega_menu", "o_editable"].includes(megaMenuClass)
+                    !["dropdown-menu", "o_mega_menu", "o_savable"].includes(megaMenuClass)
             );
 
             await this.services.orm.write("website.menu", [parseInt(megaMenuEl.dataset.oeId)], {

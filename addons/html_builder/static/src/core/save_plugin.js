@@ -177,7 +177,7 @@ export class SavePlugin extends Plugin {
             if (!targetEl) {
                 continue;
             }
-            const savableEl = targetEl.closest(".o_editable");
+            const savableEl = targetEl.closest(".o_savable");
             if (
                 !savableEl ||
                 savableEl.classList.contains("o_dirty") ||
