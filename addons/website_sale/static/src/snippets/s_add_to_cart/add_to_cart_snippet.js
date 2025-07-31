@@ -2,6 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
+import { addLoadingEffect } from "@web/core/utils/ui";
 
 export class AddToCartSnippet extends Interaction {
     static selector = '.s_add_to_cart_btn';
@@ -10,7 +11,9 @@ export class AddToCartSnippet extends Interaction {
     };
 
     async onClickAddToCartButton(ev) {
-        const dataset = ev.currentTarget.dataset;
+        const buttonEl = ev.currentTarget;
+        this.restoreBtnLoading = addLoadingEffect(buttonEl);
+        const dataset = buttonEl.dataset;
 
         const productTemplateId = parseInt(dataset.productTemplateId);
         const productId = parseInt(dataset.productVariantId);
@@ -31,7 +34,7 @@ export class AddToCartSnippet extends Interaction {
             }
         }
 
-        this.services['cart'].add({
+        await this.services["cart"].add({
             productTemplateId: productTemplateId,
             productId: productId,
             isCombo: isCombo,
@@ -39,6 +42,7 @@ export class AddToCartSnippet extends Interaction {
             isBuyNow: action === 'buy_now',
             showQuantity: showQuantity,
         });
+        this.restoreBtnLoading();
     }
 }
 
