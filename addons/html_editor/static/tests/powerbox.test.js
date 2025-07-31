@@ -27,6 +27,7 @@ import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox
 import { withSequence } from "@html_editor/utils/resource";
 import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { VideoPlugin } from "@html_editor/main/media/video_plugin";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -430,6 +431,28 @@ describe("search", () => {
             await animationFrame();
             await expectElementCount(".o-we-powerbox", 0);
             expect(getContent(el)).toBe(`<p>/h[]</p>`);
+        });
+    });
+    describe("media dialog tabs", () => {
+        test("/icon + enter should open the media dialog directly on the Icons tab", async () => {
+            const { el, editor } = await setupEditor("<p>[]<br></p>");
+            await insertText(editor, "/icon");
+            await waitFor(".o-we-powerbox");
+            expect(commandNames(el)[0]).toBe("Media");
+            await press("Enter");
+            await waitFor(".o_select_media_dialog");
+            expect(".o_select_media_dialog .nav-link:contains('Icons')").toHaveClass("active");
+        });
+        test("/video + enter should open the media dialog directly on the Videos tab", async () => {
+            const { el, editor } = await setupEditor("<p>[]<br></p>", {
+                config: { Plugins: [...MAIN_PLUGINS, VideoPlugin] },
+            });
+            await insertText(editor, "/video");
+            await waitFor(".o-we-powerbox");
+            expect(commandNames(el)[0]).toBe("Media");
+            await press("Enter");
+            await waitFor(".o_select_media_dialog");
+            expect(".o_select_media_dialog .nav-link:contains('Videos')").toHaveClass("active");
         });
     });
 });

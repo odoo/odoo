@@ -165,7 +165,7 @@ export class PowerboxPlugin extends Plugin {
                 ...pick(command, "title", "description", "icon"),
                 ...omit(item, "commandId", "commandParams"),
                 categoryName: categoryDict[item.categoryId].name,
-                run: () => command.run(item.commandParams),
+                run: (context) => command.run(item.commandParams, context),
                 isAvailable: (selection) =>
                     [command.isAvailable, item.isAvailable]
                         .filter(Boolean)
@@ -256,8 +256,9 @@ export class PowerboxPlugin extends Plugin {
     }
 
     applyCommand(command) {
-        this.onApplyCommand(command);
-        command.run();
+        const context = {};
+        this.onApplyCommand(command, context);
+        command.run(context);
         this.closePowerbox();
     }
 }

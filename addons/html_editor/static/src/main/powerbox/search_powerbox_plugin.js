@@ -33,6 +33,7 @@ export class SearchPowerboxPlugin extends Plugin {
         }
     }
     onInput(ev) {
+        this.searchTerm = undefined;
         if (ev.data === "/") {
             this.openPowerbox();
         } else {
@@ -64,6 +65,7 @@ export class SearchPowerboxPlugin extends Plugin {
             this.shouldUpdate = true;
             return;
         }
+        this.searchTerm = searchTerm;
         this.dependencies.powerbox.updatePowerbox(commands);
     }
     /**
@@ -95,7 +97,10 @@ export class SearchPowerboxPlugin extends Plugin {
         this.dependencies.powerbox.openPowerbox({
             commands: this.enabledCommands,
             categories: this.categories,
-            onApplyCommand: this.historySavePointRestore,
+            onApplyCommand: (command, context) => {
+                context.searchTerm = this.searchTerm;
+                this.historySavePointRestore?.();
+            },
             onClose: () => {
                 this.shouldUpdate = false;
             },

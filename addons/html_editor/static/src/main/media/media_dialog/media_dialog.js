@@ -38,6 +38,7 @@ export class MediaDialog extends Component {
     static props = {
         extraTabs: { type: Array, optional: true, element: Object },
         visibleTabs: { type: Array, optional: true, element: String },
+        activeTab: { type: String, optional: true },
         "*": true,
     };
 
