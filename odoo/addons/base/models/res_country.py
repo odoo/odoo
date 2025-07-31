@@ -119,7 +119,7 @@ class ResCountry(models.Model):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
         res = super().write(vals)
-        if ('code' in vals or 'phone_code' in vals):
+        if ('code' in vals or 'phone_code' in vals) and any(self._ids):
             # Intentionally simplified by not clearing the cache in create and unlink.
             self.env.registry.clear_cache('stable')
         if 'address_view_id' in vals:
