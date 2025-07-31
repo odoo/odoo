@@ -31,9 +31,6 @@ class ResUsersSettings(models.Model):
             res['volumes'] = [('ADD', volume_settings)]
         return res
 
-    def set_custom_notifications(self, custom_notifications):
-        self.set_res_users_settings({"channel_notifications": custom_notifications})
-
     def set_res_users_settings(self, new_settings):
         formatted = super().set_res_users_settings(new_settings)
         self._bus_send("res.users.settings", formatted)
