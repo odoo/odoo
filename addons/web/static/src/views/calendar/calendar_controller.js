@@ -222,6 +222,7 @@ export class CalendarController extends Component {
     prepareSelectionFeature() {
         this.selectedCells = null;
         this.multiSelectionButtonsReactive = useMultiSelectionButtons({
+            context: this.props.context,
             onCancel: this.cleanSquareSelection.bind(this),
             onAdd: (multiCreateData) => {
                 this.onMultiCreate(multiCreateData, this.selectedCells);
