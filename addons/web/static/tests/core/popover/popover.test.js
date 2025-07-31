@@ -372,6 +372,10 @@ test("popover closes when navigating", async () => {
     await mountWithCleanup(Popover, {
         props: {
             close: () => expect.step("close"),
+            closeOnClickAway: (target) => {
+                expect.step(target.tagName);
+                return true;
+            },
             target: getFixture(),
             component: Content,
         },
@@ -382,7 +386,7 @@ test("popover closes when navigating", async () => {
     history.back(); // Head back
     await animationFrame();
 
-    expect.verifySteps(["close"]);
+    expect.verifySteps(["HTML", "close"]);
 });
 
 test("arrow follows target and can get sucked", async () => {
