@@ -29,6 +29,16 @@ class SaleOrder(models.Model):
     docs = fields.Char(string='Docs URL')
     items = fields.Char(string='Items')
     shipmentid = fields.Char(string='Shipment ID')
+    is_international = fields.Boolean(
+        string='International Order',
+        compute='_compute_is_international',
+        store=True
+    )
+
+    @api.depends('partner_shipping_id.country_id.code')
+    def _compute_is_international(self):
+        for order in self:
+            order.is_international = order.partner_shipping_id.country_id.code != 'AU'
 
     @api.depends('automation_manual_order', 'order_line.product_uom_qty', 'order_line', 'discrete_pick')
     def _compute_slsu(self):

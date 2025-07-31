@@ -32,6 +32,16 @@ class StockPicking(models.Model):
     slsu = fields.Boolean(string="Manual SLSU")
     operation_process_type = fields.Selection(related='picking_type_id.picking_process_type')
     allow_partial = fields.Boolean(string='Allow partial', store='True', default=False)
+    is_international = fields.Boolean(
+        string='International Shipment',
+        compute='_compute_is_international',
+        store=True
+    )
+
+    @api.depends('partner_id.country_id.code')
+    def _compute_is_international(self):
+        for picking in self:
+            picking.is_international = picking.partner_id.country_id.code != 'AU'
 
     def action_confirm_geek_pick(self):
         """
