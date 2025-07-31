@@ -167,7 +167,6 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['getTargetedBlocks'] } getTargetedBlocks
  * @property { SelectionPlugin['getTargetedNodes'] } getTargetedNodes
  * @property { SelectionPlugin['modifySelection'] } modifySelection
- * @property { SelectionPlugin['preserveFocus'] } preserveFocus
  * @property { SelectionPlugin['preserveSelection'] } preserveSelection
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
  * @property { SelectionPlugin['areNodeContentsFullySelected'] } areNodeContentsFullySelected
@@ -189,7 +188,6 @@ export class SelectionPlugin extends Plugin {
         "setCursorStart",
         "setCursorEnd",
         "extractContent",
-        "preserveFocus",
         "preserveSelection",
         "resetSelection",
         "getTargetedNodes",
@@ -655,25 +653,6 @@ export class SelectionPlugin extends Plugin {
             }
             for (const { textarea, start, end, direction } of selections) {
                 textarea.setSelectionRange(start, end, direction);
-            }
-        };
-    }
-
-    /**
-     * Take the current active element and return a function that restores the
-     * focus in it if its content is editable.
-     *
-     * @returns {() => void}
-     */
-    preserveFocus() {
-        const activeElement = this.document.activeElement;
-        return () => {
-            if (
-                activeElement &&
-                activeElement !== this.document.activeElement &&
-                this.isNodeEditable(activeElement)
-            ) {
-                activeElement.focus();
             }
         };
     }

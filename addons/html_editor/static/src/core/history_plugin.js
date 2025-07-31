@@ -1046,9 +1046,7 @@ export class HistoryPlugin extends Plugin {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
-        const restoreFocus = this.dependencies.selection.preserveFocus();
         this.dispatchTo("normalize_handlers", stepCommonAncestor, type);
-        restoreFocus();
         this.handleObserverRecords(false);
         if (currentMutationsCount === currentStep.mutations.length) {
             // If there was no registered mutation during the normalization step,

@@ -351,8 +351,9 @@ test("can't use the toolbar in a caption", async () => {
             // inserting text.
             editor.document.execCommand("insertText", false, "a");
             expect(input.value).toBe("a");
-            await click("h1");
-            await animationFrame(); // Wait for the selection to change.
+            await click("h1"); // Blur the input.
+            await animationFrame(); // Wait for the focus event to trigger a step.
+            editor.shared.selection.setCursorStart(queryOne("h1"));
         },
         contentAfter: unformat(
             `<p><br></p>
@@ -800,13 +801,14 @@ test("add a link then a caption to an image surrounded by text", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,
-        stepFunction: async () => {
+        stepFunction: async (editor) => {
             await addLinkToImage("odoo.com");
             await animationFrame();
             await toggleCaption("Hello");
             // Blur the input to commit the caption.
-            await click("p");
-            await animationFrame(); // Wait for the selection to change.
+            await click("p"); // Blur the input.
+            await animationFrame(); // Wait for the focus event to trigger a step.
+            editor.shared.selection.setCursorStart(editor.document.querySelectorAll("p")[1]);
         },
         contentAfter: unformat(
             `<p>ab</p>
