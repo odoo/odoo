@@ -1,7 +1,9 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { waitFor } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
 
@@ -33,21 +35,57 @@ const cookiesBarTemplate = `
     </div>`;
 
 describe("Cookies bar popup options", () => {
-    beforeEach(async () => {
+    test("Position option is not visible for discrete layout", async () => {
         await setupWebsiteBuilder(cookiesBarTemplate, {
             loadIframeBundles: true,
             loadAssetsFrontendJS: true,
         });
-    });
-    test("Position option is not visible for discrete layout", async () => {
         await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
         await waitFor(".options-container");
         expect("[data-label='Position']").not.toHaveCount();
     });
     test("Position option is not visible for popup layout", async () => {
+        await setupWebsiteBuilder(cookiesBarTemplate, {
+            loadIframeBundles: true,
+            loadAssetsFrontendJS: true,
+        });
         await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
         await contains(".dropdown-toggle:contains('Discrete')").click();
         await contains("[data-class-action=o_cookies_popup]").click();
         expect("[data-label='Position']").toBeVisible();
+    });
+    test("Switch between cookies layout should keep the cookie content", async () => {
+        const { getEditor } = await setupWebsiteBuilder(cookiesBarTemplate, {
+            loadIframeBundles: true,
+            loadAssetsFrontendJS: true,
+        });
+        const editor = getEditor();
+        const editedCookieContent = `Respecting your privacy is our priority.
+
+Allow the use of cookies from this website on this browser?
+
+We use cookies to provide improved experience on this website. You can learn more about our cookies and how we use them in our Test:Cookie Policy .
+
+Allow all cookies
+Only allow essential cookies`;
+        await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
+        await contains("[data-label='Layout'] .dropdown-toggle").click();
+        await contains("[data-class-action=o_cookies_classic]").click();
+        expect(":iframe .o_cookies_bar_text_policy").toHaveText("Cookie Policy");
+
+        setSelection({
+            anchorNode: queryOne(":iframe .o_cookies_bar_text_policy"),
+            anchorOffset: 0,
+        });
+        await insertText(editor, "Test:");
+        expect(":iframe .o_cookies_bar_text_policy").toHaveText("Test:Cookie Policy");
+        expect(":iframe #website_cookies_bar").toHaveText(editedCookieContent);
+
+        await contains("[data-label='Layout'] .dropdown-toggle").click();
+        await contains("[data-class-action=o_cookies_popup]").click();
+        await contains("[data-label='Layout'] .dropdown-toggle").click();
+        await contains("[data-class-action=o_cookies_classic]").click();
+        expect(":iframe .o_cookies_bar_text_policy").toHaveText("Test:Cookie Policy");
+        expect(":iframe #website_cookies_bar").toHaveText(editedCookieContent);
     });
 });
