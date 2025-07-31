@@ -17,17 +17,19 @@ E-invoice implementation
     'website': 'http://www.odoo.com/',
     'data': [
         'security/ir.model.access.csv',
-        'data/invoice_it_template.xml',
-        'data/invoice_it_simplified_template.xml',
-        'data/ir_cron.xml',
         'data/account.account.tag.csv',
+        'data/account_withholding_report_data.xml',
+        'data/invoice_it_simplified_template.xml',
+        'data/invoice_it_template.xml',
+        'data/ir_cron.xml',
         'data/l10n_it.document.type.csv',
-        'views/res_config_settings_views.xml',
+        'views/account_payment_method.xml',
+        'views/account_tax_view.xml',
+        'views/l10n_it_document_type.xml',
         'views/l10n_it_view.xml',
         'views/portal_address_templates.xml',
         'views/report_invoice.xml',
-        'views/account_payment_method.xml',
-        'views/l10n_it_document_type.xml',
+        'views/res_config_settings_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [
@@ -42,5 +44,5 @@ E-invoice implementation
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'post_init_hook': '_l10n_it_edi_create_param',
+    'post_init_hook': '_l10n_it_edi_post_init',
 }
