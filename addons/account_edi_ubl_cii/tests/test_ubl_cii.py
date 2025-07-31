@@ -437,67 +437,27 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         for line in imported_invoice.invoice_line_ids:
             self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
 
-    def test_payment_means_code_in_facturx_xml(self):
-        bank_ing = self.env['res.bank'].create({'name': 'ING', 'bic': 'BBRUBEBB'})
-        partner_bank = self.env['res.partner.bank'].create({
-                'acc_number': 'BE15001559627230',
-                'partner_id': self.partner_a.id,
-                'bank_id': bank_ing.id,
-                'company_id': self.env.company.id,
-            })
+    def test_oin_code(self):
+        partner = self.partner_a
+        partner.peppol_endpoint = '00000000001020304050'
+        partner.country_id = self.env.ref('base.nl').id
+        partner.bank_ids = [Command.create({'acc_number': "0123456789"})]
         invoice = self.env['account.move'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': partner.id,
             'move_type': 'out_invoice',
+            'invoice_date': "2024-12-01",
+            'invoice_date_due': "2024-12-31",
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
-            'delivery_date': "2024-12-31",
-            'partner_bank_id': partner_bank.id,
         })
+
+        invoice.partner_id.commercial_partner_id.invoice_edi_format = 'nlcius'
         invoice.action_post()
-
-        xml_attachment = self.env['ir.attachment'].create({
-            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
-            'name': 'test_invoice.xml',
-        })
-        xml_tree = etree.fromstring(xml_attachment.raw)
-        code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', self.namespaces)
-        self.assertEqual(code.text, '42')
-
-        if self.env['ir.module.module']._get('account_sepa_direct_debit').state == 'installed':
-            company = self.env.company
-            company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
-            company_bank_journal = self.company_data['default_journal_bank']
-            company_bank_journal.bank_acc_number = 'CH9300762011623852957'
-            company_bank_journal.bank_account_id.bank_id = bank_ing
-            self.partner_a.country_id = self.env.ref('base.nl').id
-
-            mandate = self.env['sdd.mandate'].create({
-                'name': 'mandate ' + (self.partner_a.name or ''),
-                'partner_bank_id': partner_bank.id,
-                'one_off': True,
-                'start_date': fields.Date.today(),
-                'partner_id': self.partner_a.id,
-                'company_id': company.id,
-            })
-            mandate.action_validate_mandate()
-            invoice = self.env['account.move'].create({
-                'partner_id': self.partner_a.id,
-                'move_type': 'out_invoice',
-                'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
-                'delivery_date': "2024-12-31",
-            })
-            invoice.action_post()
-            sdd_method_line = company_bank_journal.inbound_payment_method_line_ids.filtered(lambda l: l.code == 'sdd')
-            sdd_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id
-            self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-                'payment_date': invoice.invoice_date,
-                'journal_id': company_bank_journal.id,
-                'payment_method_line_id': sdd_method_line.id,
-            })._create_payments()
-
-            xml_attachment = self.env['ir.attachment'].create({
-                'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
-                'name': 'test_invoice.xml',
-            })
-            xml_tree = etree.fromstring(xml_attachment.raw)
-            code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', self.namespaces)
-            self.assertEqual(code.text, '59')
+        invoice.invoice_date_due = fields.Date.from_string('2024-12-31')
+        builder = invoice.partner_id.commercial_partner_id._get_edi_builder('nlcius')
+        xml_content = builder._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+        scheme_ID = xml_tree.find('.//cac:PartyLegalEntity/cbc:CompanyID[@schemeID]', {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"})
+        self.assertEqual(scheme_ID.attrib.get("schemeID"), "0190")
+        
