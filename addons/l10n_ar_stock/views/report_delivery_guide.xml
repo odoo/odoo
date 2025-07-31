@@ -12,7 +12,7 @@
         <template id="report_delivery_document" inherit_id="stock.report_delivery_document" primary="True">
             <xpath expr="//t[@t-set='address']" position="after">
                 <t t-set="pre_printed_report" t-value="False"/>
-                <t t-set="header_address" t-value="o.partner_id"/>
+                <t t-set="header_address" t-value="o.company_id"/>
                 <t t-set="report_date" t-value="o.scheduled_date"/>
                 <t t-if="o.l10n_ar_cai_data">
                     <t t-set="stock_doc_type" t-value="o.env['l10n_latam.document.type'].browse(o.l10n_ar_cai_data['document_type_id'])"/>
@@ -21,6 +21,27 @@
                     <t t-set="report_name" t-value="stock_doc_type.report_name"/>
                 </t>
                 <t t-set="custom_header" t-value="'l10n_ar_stock.custom_header'"/>
+                <div id="informations">
+                    <t><strong>Customer: </strong></t>
+                    <span t-field="o.partner_id.commercial_partner_id.name"/>
+                    <br/>
+                    <span t-field="o.partner_id"
+                          t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true, 'no_tag_br': True}"/>
+                    <strong>VAT Cond: </strong>
+                    <span t-field="o.partner_id.l10n_ar_afip_responsibility_type_id"/>
+                    <t t-if="o.partner_id.vat and
+                             o.partner_id.l10n_latam_identification_type_id and
+                             o.partner_id.l10n_latam_identification_type_id.l10n_ar_afip_code != '99'">
+                        <br/>
+                        <strong>
+                            <t t-out="o.partner_id.l10n_latam_identification_type_id.name or
+                                      o.company_id.account_fiscal_country_id.vat_label"
+                               id="inv_tax_id_label"/>:
+                        </strong>
+                        <span t-if="o.partner_id.l10n_ar_vat" t-out="o.partner_id.l10n_ar_formatted_vat"/>
+                        <span t-else="" t-out="o.partner_id.vat"/>
+                    </t>
+                </div>
                 <t t-set="custom_footer">
                     <div class="row">
                         <div name="footer_left_column" class="col-6 text-start">
