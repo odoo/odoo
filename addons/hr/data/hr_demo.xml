@@ -71,22 +71,7 @@
             <field name="color" eval="3"/>
         </record>
 
-        <!-- Contract Types -->
-        <record id="contract_type_permanent" model="hr.contract.type">
-            <field name="name">Permanent</field>
-            <field name="sequence">1</field>
-        </record>
-
-        <record id="contract_type_temporary" model="hr.contract.type">
-            <field name="name">Temporary</field>
-            <field name="sequence">2</field>
-        </record>
-
-        <record id="contract_type_interim" model="hr.contract.type">
-            <field name="name">Interim</field>
-            <field name="sequence">3</field>
-        </record>
-
+        <!-- Jobs -->
         <record id="job_cto" model="hr.job">
             <field name="name">Chief Technical Officer</field>
             <field name="department_id" ref="dep_rd"/>
