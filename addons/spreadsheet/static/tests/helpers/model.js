@@ -1,15 +1,20 @@
 import { animationFrame } from "@odoo/hoot-mock";
 import { Model } from "@odoo/o-spreadsheet";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { defineActions, defineMenus, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    defineActions,
+    defineMenus,
+    getMockEnv,
+    makeMockEnv,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { setCellContent } from "./commands";
 import { addRecordsFromServerData, addViewsFromServerData } from "./data";
 
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
  * @typedef {import("@spreadsheet/helpers/model").OdooSpreadsheetModel} OdooSpreadsheetModel
- * @typedef {import("@web/../tests/_framework/mock_server/mock_server").MockServerEnvironment} MockServerEnvironment
+ * @typedef {import("@web/../tests/web_test_helpers").MockServerEnvironment} MockServerEnvironment
  */
 
 export function setupDataSourceEvaluation(model) {
