@@ -660,3 +660,18 @@ registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer"
             ProductScreen.customerIsSelected("AAA Test Partner"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AA Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.claimReward("Free Product"),
+            PosLoyalty.pointsTotalIs("90"),
+            PosLoyalty.orderTotalIs("0.0"),
+            PosLoyalty.finalizeOrder("Cash", "0.0"),
+        ].flat(),
+});
