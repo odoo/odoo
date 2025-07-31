@@ -20,8 +20,7 @@ export class PopupVisibilityPlugin extends Plugin {
             if (ev.target.matches(".s_popup .js_close_popup:not(a, .btn)")) {
                 ev.stopPropagation();
                 const popupEl = ev.target.closest(".s_popup");
-                this.onTargetHide(popupEl);
-                this.dependencies.visibility.onOptionVisibilityUpdate(popupEl, false);
+                this.dependencies.visibility.hideElement(popupEl);
             }
         });
         const history = this.dependencies.history;
@@ -45,23 +44,27 @@ export class PopupVisibilityPlugin extends Plugin {
         this.unpatchModal();
     }
 
-    onTargetShow(target) {
+    onTargetShow(targetEl) {
         // Check if the popup is within the editable, because it is cloned on
         // save (see save plugin) and Bootstrap moves it if it is not within the
         // document (see Bootstrap Modal's _showElement).
-        if (target.matches(".s_popup") && this.editable.contains(target)) {
-            this.window.Modal.getOrCreateInstance(target.querySelector(".modal")).show();
+        if (targetEl.matches(".s_popup") && this.editable.contains(targetEl)) {
+            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).show();
         }
     }
 
-    onTargetHide(target) {
-        if (target.matches(".s_popup")) {
-            this.window.Modal.getOrCreateInstance(target.querySelector(".modal")).hide();
+    onTargetHide(targetEl, isCleaning) {
+        // Do not use Bootstrap to close the popup, as we are cleaning a
+        // clone of it. Instead, hide it manually (see `cleanForSave`).
+        if (targetEl.matches(".s_popup") && !isCleaning) {
+            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).hide();
         }
     }
 
-    cleanForSave({ root }) {
-        for (const modalEl of root.querySelectorAll(".s_popup .modal.show")) {
+    cleanForSave({ root: rootEl }) {
+        // Hide the popups manually, as we cannot rely on the `onTargetHide`
+        // flow since the cleaned popup is a clone and is not in the DOM.
+        for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show")) {
             modalEl.parentElement.dataset.invisible = "1";
             // Do not call .hide() directly, because it is queued whereas
             // .dispose() is not.

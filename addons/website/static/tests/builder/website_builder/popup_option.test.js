@@ -93,8 +93,10 @@ describe("Popup options: popup in page before edit", () => {
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         // Sometimes bootstrap.js takes a bit of time to display the popup
         await waitFor(":iframe .s_popup div.js_close_popup", { timeout: 500, visible: true });
+        expect(":iframe .s_popup .modal").toBeVisible();
         await contains(":iframe .s_popup div.js_close_popup").click();
-        expect(":iframe .s_popup").not.toBeVisible();
+        expect(":iframe .s_popup .modal").not.toBeVisible();
+        await animationFrame();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
         // Ensure that no mutations were registered in the history.
         // `addStep` return the created step, or false if there was no mutations

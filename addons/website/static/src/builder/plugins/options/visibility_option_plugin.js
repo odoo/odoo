@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { pyToJsLocale } from "@web/core/l10n/utils";
-import { getElementsWithOption } from "@html_builder/utils/utils";
 import { VisibilityOption } from "./visibility_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { CONDITIONAL_VISIBILITY, DEVICE_VISIBILITY } from "@website/builder/option_sequence";
@@ -23,20 +22,17 @@ class VisibilityOptionPlugin extends Plugin {
                     websiteSession: this.dependencies.websiteSession.getSession(),
                 },
                 selector: VISIBILITY_OPTION_SELECTOR,
-                cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             }),
             withSequence(DEVICE_VISIBILITY, {
                 template: "website.DeviceVisibilityOption",
                 selector: DEVICE_VISIBILITY_OPTION_SELECTOR,
                 exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
-                cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             }),
         ],
         builder_actions: {
             ForceVisibleAction,
             ToggleDeviceVisibilityAction,
         },
-        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         normalize_handlers: this.normalizeCSSSelectors.bind(this),
         visibility_selector_parameters: [
             {
@@ -106,14 +102,6 @@ class VisibilityOptionPlugin extends Plugin {
             return true;
         }
         return false;
-    }
-
-    onSnippetDropped({ snippetEl }) {
-        const selector = [VISIBILITY_OPTION_SELECTOR, DEVICE_VISIBILITY_OPTION_SELECTOR].join(", ");
-        const droppedEls = getElementsWithOption(snippetEl, selector);
-        droppedEls.forEach((droppedEl) =>
-            this.dependencies.visibility.toggleTargetVisibility(droppedEl, true, true)
-        );
     }
 
     normalizeCSSSelectors(rootEl) {
