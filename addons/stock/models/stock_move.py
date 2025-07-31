@@ -576,7 +576,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         self = self.with_context(date_deadline_propagate_ids=already_propagate_ids)
         for move in self:
             moves_to_update = (move.move_dest_ids | move.move_orig_ids)
-            if move.date_deadline:
+            if move.date_deadline and new_deadline:
                 delta = move.date_deadline - fields.Datetime.to_datetime(new_deadline)
             else:
                 delta = 0

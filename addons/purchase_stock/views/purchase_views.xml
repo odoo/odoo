@@ -39,14 +39,14 @@
                     </button>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='date_planned']" position="after">
+                <field name="date_promised" optional="hide" column_invisible="parent.state not in ('purchase', 'cancel')"/>
+            </xpath>
             <xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
                 <attribute name="invisible">effective_date</attribute>
             </xpath>
             <xpath expr="//div[@name='reminder']" position="attributes">
                 <attribute name="invisible">effective_date</attribute>
-            </xpath>
-            <xpath expr="//div[@name='reminder']" position="after">
-                <field name="effective_date" invisible="not effective_date"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
                 <field name="move_ids"/>
@@ -69,9 +69,25 @@
                 <field name="incoterm_id" readonly="locked"/>
                 <field name="incoterm_location"  readonly="locked"/>
             </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']/group/group[@name='billing_info']/field[@name='date_approve']" position="after">
+                <field name="date_promised" invisible="state not in ('purchase', 'cancel')"/>
+            </xpath>
             <xpath expr="//div[@name='reminder']" position="after">
                 <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
                 <field name="dest_address_id" invisible="default_location_dest_id_usage != 'customer'" readonly="locked" required="default_location_dest_id_usage == 'customer'"/>
+                <label for="receipt_status" invisible="state !='purchase'"/>
+                <div class="d-flex align-items-center"  invisible="state !='purchase'">
+                    <div class="me-3">
+                        <field name="receipt_status" widget="badge" invisible="state != 'purchase'"
+                               decoration-success="receipt_status == 'full'"
+                               decoration-info="receipt_status == 'partial'"
+                               decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"
+                               decoration-muted="receipt_status == 'pending' and date_planned and date_planned &gt;= context_today().strftime('%Y-%m-%d')"/>
+                    </div>
+                    <span class="text-muted" invisible="not effective_date">
+                        On <field name="effective_date" nolabel="1" class="text-muted oe_inline"/>
+                    </span>
+                </div>
             </xpath>
         </field>
     </record>
@@ -97,8 +113,9 @@
                 <field name="effective_date" column_invisible="True"/>
                 <field name="receipt_status" optional="hide" widget="badge"
                 decoration-success="receipt_status=='full'"
-                decoration-danger="date_planned and (date_planned &lt; effective_date or date_planned &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and receipt_status!='full' and effective_date &lt;= date_planned)"
-                decoration-warning="date_planned and date_planned &gt;= datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and date_planned &lt;= datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and receipt_status!='full'"/>
+                decoration-info="receipt_status == 'partial'"
+                decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"
+                decoration-muted="receipt_status == 'pending' and date_planned and date_planned &gt;= context_today().strftime('%Y-%m-%d')"/>
             </field>
             <xpath expr="//field[@name='date_planned']" position="attributes">
                 <attribute name="decoration-danger">date_planned and (date_planned &lt; effective_date or date_planned &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and receipt_status!='full' and effective_date &lt;= date_planned)</attribute>

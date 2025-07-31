@@ -868,7 +868,7 @@
                             <group colspan="4" class="order-1 order-lg-0">
                                 <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                             </group>
-                            <group class="oe_subtotal_footer d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
+                            <group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
                                 <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
                             </group>
                         </group>
@@ -919,10 +919,10 @@
                                 <field name="invoice_status" invisible="1" groups="!base.group_no_one"/>
                             </group>
                             <group name="sale_shipping" string="Shipping">
-                                <label for="commitment_date" string="Delivery Date"/>
+                                <label for="commitment_date" string="Delivery Date" invisible="state != 'draft'"/>
+                                <label for="commitment_date" string="Promised Delivery" invisible="state =='draft'"/>
                                 <div name="commitment_date_div" class="o_row">
                                     <field name="commitment_date" readonly="state == 'cancel' or locked"/>
-                                    <span name="expected_date_span" invisible="not expected_date" class="text-muted">Expected: <field name="expected_date" class="oe_inline"/></span>
                                 </div>
                             </group>
                             <group name="sale_reporting" string="Tracking">
