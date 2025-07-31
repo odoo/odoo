@@ -4,11 +4,11 @@
         <div class="o-mail-DiscussSidebar-resizablePanelContainer h-100 d-flex">
             <ResizablePanel handleSide="'end'" initialWidth="store.discuss.isSidebarCompact ? store.discuss.COMPACT_SIDEBAR_WIDTH : store.discuss.INSPECTOR_WIDTH" minWidth="60" onResize.bind="onResize">
                 <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto o-scrollbar-thin flex-shrink-0 h-100 border-end border-secondary z-1 o-mail-discussSidebarBgColor o-gap-0_5" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }">
-                    <div class="o-mail-DiscussSidebar-top position-sticky top-0 z-2 o-mail-discussSidebarBgColor d-flex align-items-center gap-1" t-att-class="{ 'py-2': !store.inPublicPage, 'pt-2 o-px-2_5': store.inPublicPage, 'flex-column': store.discuss.isSidebarCompact, 'o-ps-2_5 o-pe-1_5': !store.discuss.isSidebarCompact }" t-ref="top">
-                        <Dropdown t-if="store.discuss.isSidebarCompact" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary mx-2 my-0 min-w-0 p-0 shadow-sm o-rounded-bubble'" manual="true">
+                    <div class="o-mail-DiscussSidebar-top position-sticky top-0 z-2 o-mail-discussSidebarBgColor d-flex align-items-center gap-1" t-att-class="{ 'py-2': !store.inPublicPage, 'pt-2 o-px-2_5': store.inPublicPage, 'flex-column': store.discuss.isSidebarCompact, 'o-ps-2_5 o-pe-1_5 mt-1': !store.discuss.isSidebarCompact }" t-ref="top">
+                        <Dropdown t-if="store.discuss.isSidebarCompact" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0'" manual="true">
                             <button class="o-mail-DiscussSidebar-searchBtn btn btn-light d-flex align-items-center justify-content-center border-0 px-1 mx-2 opacity-75 bg-transparent" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-fw fa-search"/></button>
                             <t t-set-slot="content">
-                                <div class="p-2" t-ref="search-floating">
+                                <div class="px-2" t-ref="search-floating">
                                     <span class="text-muted user-select-none">Search conversations</span>
                                 </div>
                             </t>
