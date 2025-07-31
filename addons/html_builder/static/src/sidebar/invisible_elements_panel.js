@@ -80,9 +80,9 @@ export class InvisibleElementsPanel extends Component {
         this.state.invisibleEntries = createInvisibleEntries(rootInvisibleSnippetEls);
     }
 
-    toggleElementVisibility(invisibleEntry) {
-        const toggleVisibility = (snippetEl) => {
-            const show = this.shared.visibility.toggleTargetVisibility(snippetEl);
+    async toggleElementVisibility(invisibleEntry) {
+        const toggleVisibility = async (snippetEl) => {
+            const show = await this.shared.visibility.toggleTargetVisibility(snippetEl);
             invisibleEntry.isVisible = show;
 
             this.shared.disableSnippets.disableUndroppableSnippets();
@@ -96,16 +96,16 @@ export class InvisibleElementsPanel extends Component {
         // When toggling the visibility of an element to "Hide", also toggle all
         // its descendants.
         if (invisibleEntry.isVisible) {
-            invisibleEntry.children.forEach((child) => {
+            for (const child of invisibleEntry.children) {
                 if (child.isVisible) {
-                    this.toggleElementVisibility(child);
+                    await this.toggleElementVisibility(child);
                 }
-            });
+            }
         } else if (invisibleEntry.parentEl && !invisibleEntry.parentEl.isVisible) {
             // When toggling the visibility of an element to "Show", also toggle
             // all its parents.
-            this.toggleElementVisibility(invisibleEntry.parentEl);
+            await this.toggleElementVisibility(invisibleEntry.parentEl);
         }
-        toggleVisibility(invisibleEntry.snippetEl);
+        await toggleVisibility(invisibleEntry.snippetEl);
     }
 }
