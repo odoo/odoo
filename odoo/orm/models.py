@@ -2184,8 +2184,7 @@ class BaseModel(metaclass=MetaModel):
                     sat     6  |  5  |  6  |  0
                     sun     0  |  6  |  0  |  1
                 """
-                timezone = self.env.context.get('tz')
-                first_week_day = int(get_lang(self.env, timezone).week_start)
+                first_week_day = int(get_lang(self.env).week_start)
                 sql_expr = SQL("mod(7 - %s + %s::int, 7)", first_week_day, groupby_terms[term])
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
             else:
