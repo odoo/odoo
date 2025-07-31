@@ -157,7 +157,8 @@ class IrUiMenu(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        self.env.registry.clear_cache()
+        if any(self._ids):
+            self.env.registry.clear_cache()
         if 'web_icon' in vals:
             vals['web_icon_data'] = self._compute_web_icon_data(vals.get('web_icon'))
         return super().write(vals)
