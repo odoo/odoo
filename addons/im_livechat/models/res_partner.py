@@ -89,12 +89,14 @@ class ResPartner(models.Model):
             )
         self._bus_send_transient_message(channel, message_body)
 
-    @api.depends_context("im_livechat.hide_partner_company")
+    @api.depends_context("im_livechat_hide_partner_company")
     def _compute_display_name(self):
-        if not self.env.context.get("im_livechat.hide_partner_company"):
+        if not self.env.context.get("im_livechat_hide_partner_company"):
             super()._compute_display_name()
             return
-        for partner in self:
+        portal_partners = self.filtered("partner_share")
+        super(ResPartner, portal_partners)._compute_display_name()
+        for partner in self - portal_partners:
             partner.display_name = partner.name
 
     def action_view_livechat_sessions(self):
