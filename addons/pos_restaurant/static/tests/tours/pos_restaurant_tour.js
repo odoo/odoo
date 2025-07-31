@@ -18,11 +18,7 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { checkPreparationTicketData } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
-import {
-    negate,
-    negateStep,
-    assertCurrentOrderDirty,
-} from "@point_of_sale/../tests/generic_helpers/utils";
+import { negateStep, assertCurrentOrderDirty } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -247,9 +243,7 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             // Check only 2 courses are there and empty course gets removed on clicking Order button
-            {
-                trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
-            },
+            negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),
             ProductScreen.fireCourseButtonHighlighted("Course 2"),
             ProductScreen.payButtonNotHighlighted(),
             ProductScreen.clickCourseButton(),
@@ -257,18 +251,44 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             FloorScreen.isShown(),
             FloorScreen.clickTable("5"),
             // Check only 2 courses are there and empty course gets removed on clicking Plan button
-            {
-                trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
-            },
+            negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),
             // Check empty course gets remove after fire course.
             ProductScreen.clickCourseButton(),
             ProductScreen.selectCourseLine("Course 2"),
             ProductScreen.fireCourseButton(),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
-            {
-                trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
-            },
+            negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_restaurant_default_course", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.checkCourseAtIndex(0, "Test - Starter"),
+            // if both categories are selected, the default course should be first one
+            ProductScreen.clickDisplayedProduct("Test Multi Category Product"),
+            negateStep(ProductScreen.checkCourseAtIndex(1, "Test - Main")),
+            ProductScreen.clickDisplayedProduct("Bruschetta"),
+            ProductScreen.checkCourseAtIndex(1, "Test - Main"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickDisplayedProduct("Wholemeal loaf"),
+            ProductScreen.checkCourseAtIndex(2, "Course 3"),
+            ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.checkCourseAtIndex(0, "Test - Starter"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickDisplayedProduct("Wholemeal loaf"),
+            ProductScreen.checkCourseAtIndex(1, "Course 2"),
+            ProductScreen.clickDisplayedProduct("Bruschetta"),
+            ProductScreen.checkCourseAtIndex(2, "Test - Main"),
         ].flat(),
 });
 

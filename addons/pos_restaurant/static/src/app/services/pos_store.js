@@ -310,6 +310,7 @@ patch(PosStore.prototype, {
                         index: courseDetails.index,
                         fired: courseDetails.fired,
                         fired_date: courseDetails.fired_date,
+                        name: _t("Course ") + courseDetails.index,
                     });
                     courseDetails.lines?.forEach((lineUuid) => {
                         courseByLines[lineUuid] = course;
@@ -860,12 +861,14 @@ patch(PosStore.prototype, {
         order?.ensureCourseSelection();
         super.setOrder(order);
     },
-    addCourse() {
+    addCourse({ backendCourse } = {}) {
         const order = this.getOrder();
-
+        const nextIdx = order.getNextCourseIndex();
         const course = this.data.models["restaurant.order.course"].create({
             order_id: order,
-            index: order.getNextCourseIndex(),
+            index: nextIdx,
+            course_id: backendCourse ? backendCourse : false,
+            name: backendCourse ? backendCourse.name : _t("Course ") + nextIdx,
         });
         let selectedCourse = course;
         if (order.course_ids.length === 1 && order.lines.length > 0) {
@@ -875,6 +878,7 @@ patch(PosStore.prototype, {
             selectedCourse = this.data.models["restaurant.order.course"].create({
                 order_id: order,
                 index: order.getNextCourseIndex(),
+                name: _t("Course ") + order.getNextCourseIndex(),
             });
         }
         order.recomputeOrderData(); // To ensure that courses are stored locally
@@ -899,7 +903,7 @@ patch(PosStore.prototype, {
                 new: [],
                 cancelled: [],
                 noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
-                noteUpdateTitle: _t("Course %s fired", "" + course.index),
+                noteUpdateTitle: `${course.name} ${_t("fired")}`,
                 printNoteUpdateData: false,
             };
             this.getOrder().uiState.lastPrints.push(changes);

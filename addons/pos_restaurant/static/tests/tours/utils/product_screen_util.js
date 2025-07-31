@@ -106,3 +106,10 @@ export function releaseTable() {
         },
     ];
 }
+
+export function checkCourseAtIndex(index, courseName) {
+    return {
+        content: `Verify that course "${courseName}" exists at index ${index}`,
+        trigger: `.order-course-name:eq(${index}) > span:contains("${courseName}")`,
+    };
+}

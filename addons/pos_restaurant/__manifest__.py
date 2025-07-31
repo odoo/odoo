@@ -21,6 +21,8 @@ This module adds several features to the Point of Sale that are specific to rest
     'data': [
         'security/ir.model.access.csv',
         'data/scenarios/restaurant_preset.xml',
+        'views/pos_category_view.xml',
+        'views/pos_course_views.xml',
         'views/pos_order_views.xml',
         'views/pos_restaurant_views.xml',
         'views/pos_preset_views.xml',

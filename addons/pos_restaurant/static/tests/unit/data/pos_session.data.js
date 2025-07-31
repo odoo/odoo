@@ -8,6 +8,7 @@ patch(PosSession.prototype, {
             "restaurant.floor",
             "restaurant.table",
             "restaurant.order.course",
+            "pos.course",
         ];
     },
 });
