@@ -245,8 +245,8 @@ export class Message extends Component {
 
     get authorAvatarAttClass() {
         return {
-            "object-fit-contain": this.props.message.author_id?.is_company,
-            "object-fit-cover": !this.props.message.author_id?.is_company,
+            "object-fit-contain": this.props.message.author_id?.parent_id,
+            "object-fit-cover": !this.props.message.author_id?.parent_id,
         };
     }
 

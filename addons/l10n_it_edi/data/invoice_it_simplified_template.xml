@@ -36,7 +36,7 @@
                             <IdCodice t-out="seller_info['vat']"/>
                         </IdFiscaleIVA>
                         <CodiceFiscale t-if="seller_info['codice_fiscale']" t-out="seller_info['codice_fiscale']"/>
-                        <t t-if="seller_info['is_company']">
+                        <t t-if="seller_info['vat']">
                             <Denominazione t-out="format_alphanumeric(seller.display_name, 80)"/>
                         </t>
                         <t t-else="">
@@ -53,7 +53,7 @@
                                 <IdCodice t-out="representative_info['vat']"/>
                             </IdFiscaleIVA>
                             <Anagrafica>
-                                <t t-if="representative_info['is_company']">
+                                <t t-if="representative_info['vat']">
                                     <Denominazione t-out="format_alphanumeric(representative.display_name, 80)"/>
                                 </t>
                                 <t t-else="">

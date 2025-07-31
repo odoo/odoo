@@ -36,7 +36,7 @@ class GoogleMap(http.Controller):
             for partner_id in post['partner_ids'].split(","):
                 with contextlib.suppress(ValueError):
                     clean_ids.append(int(partner_id))
-            domain += [("id", "in", clean_ids), ('is_company', '=', True)]
+            domain += [("id", "in", clean_ids), ('vat', '!=', False)]
         elif post.get('dom'):
             domain = self._get_gmap_domains(**post)
 

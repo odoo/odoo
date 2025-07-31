@@ -192,8 +192,8 @@
                     <input
                         id="o_company_name"
                         type="text"
-                        name="company_name"
-                        t-att-value="current_partner.commercial_company_name"
+                        name="parent_name"
+                        t-att-value="current_partner.parent_name"
                         t-att-readonly="'1' if not is_main_address else None"
                         class="form-control"
                     />
@@ -213,7 +213,7 @@
                     <!-- Even on new addresses, first tell the customer if their VAT cannot be changed,
                         then tell them to update it elsewhere if it can be. -->
                     <div
-                        t-if="not is_commercial_address and commercial_partner.is_company and is_main_address"
+                        t-if="not is_commercial_address and commercial_partner.vat and is_main_address"
                         class="col-12 d-none d-lg-block mb-1"
                     >
                         <small class="form-text text-muted">

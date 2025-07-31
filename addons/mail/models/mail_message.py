@@ -981,7 +981,7 @@ class MailMessage(models.Model):
             # sudo: mail.message: access to author_id is allowed
             Store.One(
                 "author_id",
-                ["avatar_128", "is_company", Store.One("main_user_id", "share")],
+                ["avatar_128", Store.One("main_user_id", "share")],
                 dynamic_fields=lambda m: m._get_store_partner_name_fields(),
                 sudo=True,
             ),

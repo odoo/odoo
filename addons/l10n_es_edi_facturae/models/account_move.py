@@ -349,7 +349,7 @@ class AccountMove(models.Model):
         """
         def extract_party_name(party):
             name = {'firstname': 'UNKNOWN', 'surname': 'UNKNOWN', 'surname2': ''}
-            if not party.is_company:
+            if not party._l10n_es_is_legal_entity():
                 name_split = [part for part in party.name.replace(', ', ' ').split(' ') if part]
                 if len(name_split) > 2:
                     name['firstname'] = ' '.join(name_split[:-2])

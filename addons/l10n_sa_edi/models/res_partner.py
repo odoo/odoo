@@ -19,7 +19,7 @@ class ResPartner(models.Model):
         ('IQA', 'Iqama Number'),
         ('PAS', 'Passport ID'),
         ('OTH', 'Other ID')
-    ], default="OTH", string="Identification Scheme", help="Additional Identification scheme for Seller/Buyer")
+    ], default="PAS", string="Identification Scheme", help="Additional Identification scheme for Seller/Buyer")
 
     l10n_sa_edi_additional_identification_number = fields.Char("Identification Number (SA)", help="Additional Identification Number for Seller/Buyer")
 

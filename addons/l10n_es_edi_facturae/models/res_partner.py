@@ -77,7 +77,7 @@ class ResPartner(models.Model):
 
     def _l10n_es_edi_facturae_export_check(self):
         errors = {}
-        if invalid_records := self.filtered(lambda partner: not (partner.is_company or partner.vat)):
+        if invalid_records := self.filtered(lambda partner: not (partner._l10n_es_is_legal_entity() or partner.vat)):
             errors["l10n_es_edi_facturae_partner_check"] = {
                 'level': 'danger',
                 'message': _("Partner must be a company or have a VAT number"),

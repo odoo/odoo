@@ -195,7 +195,7 @@ class WebsiteProfile(http.Controller):
             'group_by': group_by or 'all',
         }
         if search_term:
-            dom = Domain.AND([['|', ('name', 'ilike', search_term), ('partner_id.commercial_company_name', 'ilike', search_term)], dom])
+            dom = Domain.AND([['|', ('name', 'ilike', search_term), ('partner_id.parent_name', 'ilike', search_term)], dom])
 
         user_count = User.sudo().search_count(dom)
         my_user = request.env.user

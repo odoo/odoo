@@ -45,7 +45,6 @@ class Crawler(HttpCaseWithUserDemo):
             })
             self.env['res.partner'].create({
                 'name': 'A Company for /partners',
-                'is_company': True,
                 'grade_id': grade.id,
                 'website_published': True,
             })

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import api, fields, models
 
 
@@ -12,6 +14,18 @@ class ResPartner(models.Model):
         help="If this company belongs to a VAT group, indicate the group's VAT number here.",
         index=True,
     )
+    l10n_hu_is_company = fields.Boolean(
+        string="Is Company(HU)",
+        compute="_compute_l10n_hu_is_company",
+        store=True
+    )
+
+    @api.depends('vat')
+    def _compute_l10n_hu_is_company(self):
+        for partner in self:
+            vat = (partner.vat or '').replace(' ', '').upper()
+            partner.l10n_hu_is_company = (vat.startswith('HU') and len(vat) == 10) \
+                or bool(re.fullmatch(r'\d{8}-[245]-\d{2}', vat))
 
     @api.model
     def _commercial_fields(self):

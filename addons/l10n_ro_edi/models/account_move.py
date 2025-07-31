@@ -118,7 +118,7 @@ class AccountMove(models.Model):
             company=self.company_id,
             xml_data=xml_data,
             move_type=self.move_type,
-            is_b2b=self.partner_id.commercial_partner_id.is_company,
+            is_b2b=self.partner_id.commercial_partner_id.vat,
         )
         if 'error' in result:
             self.message_post(body=_(

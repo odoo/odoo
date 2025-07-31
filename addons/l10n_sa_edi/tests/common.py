@@ -51,7 +51,6 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env['res.country.state'].search([('name', '=', 'California')]).id,
             'email': 'azure.Interior24@example.com',
             'phone': '+1 870-931-0505',
-            'company_type': 'company',
             'lang': 'en_US',
         })
 
@@ -70,7 +69,6 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env['res.country.state'].search([('name', '=', 'California')]).id,
             'email': 'azure.Interior24@example.com',
             'phone': '(870)-931-0505',
-            'company_type': 'company',
             'lang': 'en_US',
         })
 
@@ -78,10 +76,9 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'name': 'Mohammed Ali',
             'ref': 'Mohammed Ali',
             'country_id': cls.env.ref('base.sa').id,
-            'l10n_sa_edi_additional_identification_scheme': 'MOM',
+            'l10n_sa_edi_additional_identification_scheme': 'PAS',
             'l10n_sa_edi_additional_identification_number': '3123123213131',
             'state_id': cls.company.state_id.id,
-            'company_type': 'person',
             'lang': 'en_US',
         })
 
