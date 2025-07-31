@@ -860,6 +860,10 @@ class IrMail_Server(models.Model):
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 
+    def _find_mail_server_allowed_domain(self):
+        """Overridable domain getter for all mail servers that may be used as default."""
+        return []
+
     def _find_mail_server(self, email_from, mail_servers=None):
         """Find the appropriate mail server for the given email address.
 
@@ -876,7 +880,7 @@ class IrMail_Server(models.Model):
         notifications_domain = email_domain_extract(notifications_email)
 
         if mail_servers is None:
-            mail_servers = self.sudo().search([], order='sequence')
+            mail_servers = self.sudo().search(self._find_mail_server_allowed_domain(), order='sequence')
         # 0. Archived mail server should never be used
         mail_servers = mail_servers.filtered('active')
 

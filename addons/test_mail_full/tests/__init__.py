@@ -4,6 +4,7 @@ from . import test_controller_attachment
 from . import test_controller_reaction
 from . import test_controller_update
 from . import test_controller_thread
+from . import test_ir_mail_server
 from . import test_mail_bot
 from . import test_mail_performance
 from . import test_mail_thread_internals
