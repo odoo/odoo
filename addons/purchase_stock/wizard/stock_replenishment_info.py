@@ -9,14 +9,22 @@ class StockReplenishmentInfo(models.TransientModel):
     _description = 'Stock supplier replenishment information'
 
     supplierinfo_id = fields.Many2one(related='orderpoint_id.supplier_id')
-    supplierinfo_ids = fields.Many2many(
-        'product.supplierinfo', compute='_compute_supplierinfo_ids',
-        store=True)
+    supplierinfo_ids = fields.Many2many('product.supplierinfo', compute='_compute_supplierinfo_ids', store=True)
+    show_vendor_tab = fields.Boolean(compute='_compute_show_vendor_tab')
 
     @api.depends('orderpoint_id')
     def _compute_supplierinfo_ids(self):
         for replenishment_info in self:
             replenishment_info.supplierinfo_ids = replenishment_info.product_id.seller_ids
+
+    @api.depends('orderpoint_id')
+    def _compute_show_vendor_tab(self):
+        for replenishment_info in self:
+            orderpoint = replenishment_info.orderpoint_id
+            replenishment_info.show_vendor_tab = not orderpoint.route_id or (
+                    orderpoint.route_id
+                    and 'buy' in orderpoint.rule_ids.mapped('action')
+            )
 
 
 class StockReplenishmentOption(models.TransientModel):

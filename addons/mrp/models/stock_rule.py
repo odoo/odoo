@@ -211,6 +211,7 @@ class StockRule(models.Model):
         delays['total_delay'] += manufacture_delay
         delays['manufacture_delay'] += manufacture_delay
         if not bypass_delay_description:
+            delay_description.append((_('Production End Date'), manufacture_delay))
             delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
         if bom.type == 'normal':
             # pre-production rules
@@ -225,6 +226,7 @@ class StockRule(models.Model):
         days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:
+            delay_description.append((_('Production Start Date'), days_to_order))
             delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
         return delays, delay_description
 
