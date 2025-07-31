@@ -13,6 +13,8 @@ export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
     "info",
     "warning",
     "danger",
+    "black",
+    "white",
 ];
 
 /**
