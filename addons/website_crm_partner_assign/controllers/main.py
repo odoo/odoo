@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
 
 from werkzeug.exceptions import NotFound
 
@@ -9,8 +8,6 @@ from odoo import fields
 from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.addons.website_google_map.controllers.main import GoogleMap
-from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
 from odoo.tools.translate import _
 
