@@ -138,8 +138,9 @@ class WebsitePage(models.Model):
         self = self - views_to_delete.page_ids
         views_to_delete.unlink()
 
-        # Make sure website._get_menu_ids() will be recomputed
-        self.env.registry.clear_cache()
+        # Make sure website.is_menu_cache_disabled() will be recomputed
+        if self:
+            self.env.registry.clear_cache('templates')
         return super().unlink()
 
     def write(self, vals):
