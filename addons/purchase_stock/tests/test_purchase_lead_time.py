@@ -79,13 +79,12 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         picking_schedule_date = min(date_planned1, date_planned2)
         self.assertEqual(purchase2.picking_ids.scheduled_date, picking_schedule_date,
                          'Schedule date of In type shipment should be same as schedule date of purchase order.')
-
-        # Check deadline of pickings
+        # Check Scheduled date of pickings
         self.assertEqual(fields.Date.to_date(purchase2.picking_ids.date_deadline), fields.Date.to_date(purchase1.date_planned), "Deadline of pickings should be equals to the receipt date of purchase")
         purchase_form = Form(purchase2)
         purchase_form.date_planned = purchase2.date_planned + timedelta(days=2)
         purchase_form.save()
-        self.assertEqual(purchase2.picking_ids.date_deadline, purchase2.date_planned, "Deadline of pickings should be propagate")
+        self.assertEqual(purchase2.picking_ids.scheduled_date, purchase2.date_planned, "Scheduled Date of pickings should be propagated")
 
     def test_02_product_level_delay(self):
         """ To check schedule dates of multiple purchase order line of the same purchase order,
