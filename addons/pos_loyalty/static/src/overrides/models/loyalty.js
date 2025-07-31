@@ -623,6 +623,9 @@ patch(Order.prototype, {
      */
     _getPointsCorrection(program) {
         const rewardLines = this.orderlines.filter((line) => line.is_reward_line);
+        if (!this._canGenerateRewards(program, this.get_total_with_tax(), this.get_total_without_tax())) {
+            return 0;
+        }
         let res = 0;
         for (const rule of program.rules) {
             for (const line of rewardLines) {
