@@ -447,8 +447,8 @@
                     <separator/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
                     <filter string="Next Payment Date" name="payment_date" date="payment_date"/>
-                    <filter string="Overdue" name="late" domain="[('date_maturity', '&lt;', time.strftime('%Y-%m-%d'))]" help="Overdue payments, due date passed"/>
-                    <filter string="Early Discount" name="early_discount" domain="[('discount_date', '!=', False), ('discount_date', '&gt;', time.strftime('%Y-%m-%d'))]"/>
+                    <filter string="Overdue" name="late" domain="[('date_maturity', '&lt;', 'today')]" help="Overdue payments, due date passed"/>
+                    <filter string="Early Discount" name="early_discount" domain="[('discount_date', '!=', False), ('discount_date', '&gt;', 'today')]"/>
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
@@ -1673,7 +1673,7 @@
                     <filter name="in_payment" string="In payment" domain="[('state', '=', 'posted'), ('payment_state', '=', 'in_payment')]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
-                        ('invoice_date_due', '&lt;', time.strftime('%Y-%m-%d')),
+                        ('invoice_date_due', '&lt;', 'today'),
                         ('state', '=', 'posted'),
                         ('payment_state', 'in', ('not_paid', 'partial'))
                     ]" help="Overdue invoices, maturity date passed"/>

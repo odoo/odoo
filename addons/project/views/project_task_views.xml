@@ -1222,7 +1222,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">list,form,calendar,graph,kanban</field>
-            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('has_template_ancestor', '=', False)]</field>
+            <field name="domain">[('is_closed', '=', False), ('date_deadline', '&lt;', 'today'), ('project_id', '!=', False), ('has_template_ancestor', '=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
