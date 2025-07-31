@@ -508,15 +508,6 @@ class ProjectProject(models.Model):
         new_projects = super(ProjectProject, self.with_context(copy_context)).copy(default=default)
         if 'milestone_mapping' not in self.env.context:
             self = self.with_context(milestone_mapping={})
-        actions_per_project = dict(self.env['ir.embedded.actions']._read_group(
-            domain=[
-                ('parent_res_id', 'in', self.ids),
-                ('parent_res_model', '=', 'project.project'),
-                ('user_id', '=', False),
-            ],
-            groupby=['parent_res_id'],
-            aggregates=['id:recordset'],
-        ))
         for old_project, new_project in zip(self, new_projects):
             for follower in old_project.message_follower_ids:
                 new_project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
@@ -526,13 +517,70 @@ class ProjectProject(models.Model):
                 old_project.map_tasks(new_project.id)
             if not old_project.active:
                 new_project.with_context(active_test=False).tasks.active = True
-            # Copy the shared embedded actions in the new project
-            shared_embedded_actions = actions_per_project.get(old_project.id)
+        # Copy the shared embedded actions and config in the new projects
+        shared_embedded_actions_mapping = self._copy_shared_embedded_actions(new_projects)
+        self._copy_embedded_actions_config(new_projects, shared_embedded_actions_mapping)
+        return new_projects
+
+    def _copy_shared_embedded_actions(self, new_projects):
+        shared_embedded_actions_per_record = dict(self.env['ir.embedded.actions'].sudo()._read_group(
+            domain=[
+                ('parent_res_id', 'in', self.ids),
+                ('parent_res_model', '=', self._name),
+                ('user_id', '=', False),
+            ],
+            groupby=['parent_res_id'],
+            aggregates=['id:recordset'],
+        ))
+        shared_embedded_actions_mapping = dict()
+        for project, new_project in zip(self, new_projects):
+            # Copy the shared embedded actions in the new record
+            shared_embedded_actions = shared_embedded_actions_per_record.get(project.id)
             if shared_embedded_actions:
                 copy_shared_embedded_actions = shared_embedded_actions.copy({'parent_res_id': new_project.id})
                 for original_action, copied_action in zip(shared_embedded_actions, copy_shared_embedded_actions):
+                    shared_embedded_actions_mapping[original_action.id] = copied_action.id
                     copied_action.filter_ids = original_action.filter_ids.copy({'embedded_parent_res_id': new_project.id})
-        return new_projects
+        return shared_embedded_actions_mapping
+
+    def _copy_embedded_actions_config(self, new_projects, shared_embedded_actions_mapping=None):
+        shared_embedded_actions_mapping = shared_embedded_actions_mapping or {}
+        embedded_action_configs_per_project = dict(
+            self.env['res.users.settings.embedded.action'].sudo()._read_group(
+                [('res_id', 'in', self.ids), ('res_model', '=', self._name)],
+                ['res_id'],
+                ['id:recordset'],
+            )
+        )
+        valid_embedded_action_ids = self.env['ir.embedded.actions'].sudo().search(
+            domain=[
+                ('parent_res_model', '=', self._name),
+                ('user_id', '=', False),
+            ],
+        ).ids + [False]
+        new_embedded_actions_config_vals_list = []
+        for project, new_project in zip(self, new_projects):
+            configs = embedded_action_configs_per_project.get(project.id, self.env['res.users.settings.embedded.action'])
+            config_vals_list = configs.copy_data({'res_id': new_project.id})
+            for config_vals in config_vals_list:
+                # Apply the mapping of shared embedded actions and filter the visibility and order by excluding the user-specific actions
+                if config_vals['embedded_actions_visibility']:
+                    embedded_actions_visibility = [
+                        shared_embedded_actions_mapping.get(action_id, action_id)
+                        for action_id in [False if x == 'false' else int(x) for x in config_vals['embedded_actions_visibility'].split(',')]
+                        if action_id in valid_embedded_action_ids
+                    ]
+                    config_vals['embedded_actions_visibility'] = ','.join('false' if action_id is False else str(action_id) for action_id in embedded_actions_visibility)
+                if config_vals['embedded_actions_order']:
+                    embedded_actions_order = [
+                        shared_embedded_actions_mapping.get(action_id, action_id)
+                        for action_id in [False if x == 'false' else int(x) for x in config_vals['embedded_actions_order'].split(',')]
+                        if action_id in valid_embedded_action_ids
+                    ]
+                    config_vals['embedded_actions_order'] = ','.join('false' if action_id is False else str(action_id) for action_id in embedded_actions_order)
+                new_embedded_actions_config_vals_list.append(config_vals)
+        # sudo is needed to update the user settings for all users using the projects to duplicate
+        self.env['res.users.settings.embedded.action'].sudo().create(new_embedded_actions_config_vals_list)
 
     @api.model
     def name_create(self, name):
@@ -651,6 +699,10 @@ class ProjectProject(models.Model):
         return res
 
     def unlink(self):
+        # Delete the embedded action configs related to the deleted projects
+        self.env['res.users.settings.embedded.action'].sudo().search(
+            domain=[('res_id', 'in', self.ids), ('res_model', '=', self._name)],
+        ).unlink()
         # Delete the empty related analytic account
         analytic_accounts_to_delete = self.env['account.analytic.account']
         for project in self:

@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, beforeEach } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import {
     contains,
@@ -12,6 +12,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
     webModels,
+    getKwArgs,
 } from "@web/../tests/web_test_helpers";
 
 import { mockTouch, runAllTimers } from "@odoo/hoot-mock";
@@ -22,7 +23,7 @@ import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResPartner, ResUsers, ResUsersSettings: WebResUsersSettings } = webModels;
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -102,7 +103,97 @@ class Pony extends models.Model {
     };
 }
 
-defineModels([Partner, Pony, ResCompany, ResPartner, ResUsers]);
+class ResUsersSettings extends WebResUsersSettings {
+    /** @param {number[]} id */
+    get_embedded_actions_settings(id) {
+        /** @type {import("mock_models").ResUsersSettingsEmbeddedAction} */
+        const ResUsersSettingsEmbeddedAction = this.env["res.users.settings.embedded.action"];
+        return ResUsersSettingsEmbeddedAction.embedded_action_settings_format(id);
+    }
+
+    /**
+     * @param {number} action_id
+     * @param {number} res_id
+     * @param {number} vals
+     */
+    set_embedded_actions_setting(id, action_id, res_id, vals) {
+        const kwargs = getKwArgs(arguments, "id", "action_id", "res_id", "vals");
+        id = kwargs.id;
+        action_id = kwargs.action_id;
+        res_id = kwargs.res_id;
+        vals = kwargs.vals;
+
+        /** @type {import("mock_models").ResUsersSettingsEmbeddedAction} */
+        const ResUsersSettingsEmbeddedAction = this.env["res.users.settings.embedded.action"];
+
+        let [embeddedSettings] = ResUsersSettingsEmbeddedAction.search_read([
+            ["user_setting_id", "=", id],
+            ["action_id", "=", action_id],
+            ["res_id", "=", res_id],
+        ]);
+        for (const [field, value] of Object.entries(vals)) {
+            if (["embedded_actions_order", "embedded_actions_visibility"].includes(field)) {
+                vals[field] = value
+                    .map((action_id) => (action_id === false ? "false" : String(action_id)))
+                    .join(",");
+            }
+        }
+        if (!embeddedSettings) {
+            embeddedSettings = ResUsersSettingsEmbeddedAction.create({
+                action_id,
+                res_id,
+                ...vals,
+            });
+        } else {
+            ResUsersSettingsEmbeddedAction.write(embeddedSettings.id, vals);
+        }
+        return embeddedSettings;
+    }
+}
+
+class ResUsersSettingsEmbeddedAction extends models.ServerModel {
+    _name = "res.users.settings.embedded.action";
+
+    /** @param {number[]} ids */
+    embedded_action_settings_format(ids) {
+        const embeddedSettings = {};
+        for (const embeddedSettingsRecord of this.browse(ids)) {
+            embeddedSettings[
+                `${embeddedSettingsRecord.action_id}+${embeddedSettingsRecord.resId || ""}`
+            ] = {
+                embedded_actions_order: embeddedSettingsRecord.embedded_actions_order
+                    ? embeddedSettingsRecord.embedded_actions_order
+                          .split(",")
+                          .map((action_id) => (action_id === "false" ? false : parseInt(action_id)))
+                    : [],
+                embedded_actions_visibility: embeddedSettingsRecord.embedded_actions_visibility
+                    ? embeddedSettingsRecord.embedded_actions_visibility
+                          .split(",")
+                          .map((action_id) => (action_id === "false" ? false : parseInt(action_id)))
+                    : [],
+                embedded_visibility: embeddedSettingsRecord.embedded_visibility,
+            };
+        }
+        return embeddedSettings;
+    }
+}
+
+class IrActionsAct_Window extends models.ServerModel {
+    _name = "ir.actions.act_window";
+
+    _records = [{ id: 1 }, { id: 4 }];
+}
+
+defineModels([
+    Partner,
+    Pony,
+    ResCompany,
+    ResPartner,
+    ResUsers,
+    ResUsersSettings,
+    ResUsersSettingsEmbeddedAction,
+    IrActionsAct_Window,
+]);
 
 defineActions([
     {
@@ -175,6 +266,10 @@ defineActions([
     },
 ]);
 
+beforeEach(() => {
+    user.updateUserSettings("id", 1); // workaround to populate the user settings
+});
+
 test("can display embedded actions linked to the current action", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
@@ -188,6 +283,14 @@ test("can display embedded actions linked to the current action", async () => {
     expect(".o_embedded_actions > button > span").toHaveText("Partners Action 1", {
         message:
             "The first embedded action should be the parent one and should be shown by default",
+    });
+    expect(user.settings.embedded_actions_config_ids).toEqual({
+        "1+": {
+            embedded_actions_order: [],
+            embedded_actions_visibility: [false],
+            embedded_visibility: true,
+            res_model: "partner",
+        },
     });
 });
 
@@ -447,12 +550,16 @@ test("User can unselect the main (first) embedded action", async () => {
     });
 });
 
-test("User should be redirected to the first embedded action set in localStorage", async () => {
+test("User should be redirected to the first embedded action set in user settings", async () => {
+    // set embedded action 2 in first
+    user.updateUserSettings("embedded_actions_config_ids", {
+        "1+": {
+            embedded_actions_visibility: [102],
+            embedded_visibility: false,
+            embedded_actions_order: [102, false, 103],
+        },
+    });
     await mountWithCleanup(WebClient);
-    browser.localStorage.setItem(
-        `orderEmbedded1++${user.userId}`,
-        JSON.stringify([102, false, 103])
-    ); // set embedded action 2 in first
     await getService("action").doActionButton({
         name: 1,
         type: "action",
@@ -501,8 +608,15 @@ test("execute a regular action from an embedded action", async () => {
 });
 
 test("custom embedded action loaded first", async () => {
+    // set embedded action 4 in first
+    user.updateUserSettings("embedded_actions_config_ids", {
+        "4+": {
+            embedded_actions_visibility: [104],
+            embedded_visibility: false,
+            embedded_actions_order: [104, false],
+        },
+    });
     await mountWithCleanup(WebClient);
-    browser.localStorage.setItem(`orderEmbedded4++${user.userId}`, JSON.stringify([104, false])); // set embedded action 4 in first
     await getService("action").doActionButton({
         name: 4,
         type: "action",

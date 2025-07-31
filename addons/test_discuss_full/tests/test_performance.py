@@ -30,12 +30,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search res_users_settings (_find_or_create_for_user)
     #       - fetch res_users_settings (_format_settings)
     #       - search res_users_settings_volumes (_format_settings)
+    #       - search res_users_settings_embedded_action (_format_settings)
     #       - search res_lang_res_users_settings_rel (_format_settings)
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search mail_canned_response
-    _query_count_init_store = 18
+    _query_count_init_store = 19
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -450,6 +451,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "user_id": {"id": self.users[0].id},
                     "voice_active_duration": 200,
                     "volumes": [("ADD", [])],
+                    "embedded_actions_config_ids": {},
                 },
             },
         }
