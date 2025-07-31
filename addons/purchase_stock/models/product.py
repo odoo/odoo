@@ -154,7 +154,7 @@ class ProductSupplierinfo(models.Model):
 
     def _compute_show_set_supplier_button(self):
         self.show_set_supplier_button = True
-        orderpoint_id = self.env.context.get('default_orderpoint_id')
+        orderpoint_id = self.env.context.get('orderpoint_id', self.env.context.get('default_orderpoint_id'))
         orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
         if orderpoint_id:
             self.filtered(
@@ -194,3 +194,4 @@ class ProductSupplierinfo(models.Model):
                 'target': 'new',
                 'view_mode': 'form',
             }
+        return orderpoint.action_stock_replenishment_info()

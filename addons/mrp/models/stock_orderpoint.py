@@ -37,6 +37,12 @@ class StockWarehouseOrderpoint(models.Model):
             }
         return super()._get_replenishment_order_notification()
 
+    def _get_lead_days_values(self):
+        values = super()._get_lead_days_values()
+        if self.bom_id:
+            values['bom'] = self.bom_id
+        return values
+
     def _compute_allowed_replenishment_uom_ids(self):
         super()._compute_allowed_replenishment_uom_ids()
         for orderpoint in self:
@@ -65,7 +71,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_with_bom = self.filtered(lambda orderpoint: orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
         for orderpoint in orderpoints_with_bom:
             if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                boms = (orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
+                boms = orderpoint.bom_id or orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids
                 orderpoint.days_to_order = boms and boms[0].days_to_prepare_mo or 0
         return res
 
