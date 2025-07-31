@@ -418,6 +418,86 @@ class HrEmployee(models.Model):
     def _is_in_contract(self, date):
         return self._get_version(date)._is_in_contract(date)
 
+    def _get_contracts(self, date_start=None, date_end=None, use_latest_version=True, domain=None):
+        """
+        Retrieve the contracts for employees within a specified date range and based
+        on specified criteria, such as domain filtering and version selection.
+
+        This method is used to collect and organize employee contracts based on their
+        versions, date ranges, and other specified options. The resulting contracts are
+        grouped by employee, and their selection logic depends on whether the latest
+        version should be used or not. It supports flexibility in contract retrieval by
+        allowing optional filters for date range and domain.
+
+        Args:
+            date_start (Optional[datetime.date]): The start date to filter the contracts
+                by. If provided, only contract versions <= this date are considered
+                based on the selection logic.
+            date_end (Optional[datetime.date]): The end date to filter the contracts by.
+                Only contract versions within the range will be retrieved. Defaults to
+                None if not specified.
+            domain (Optional[dict]): A dictionary representing additional filters or
+                constraints to apply to the contract versions retrieved. Defaults to
+                None.
+            use_latest_version (bool): Indicates whether to retrieve the version
+            effective at the end of the contract (or before the date_end) for each employee (True) or
+            at the start of the contract (before the date_start) (False). Defaults to True.
+
+        Returns:
+            collections.defaultdict: A dictionary mapping each employee's identifier
+            (employee.id) to a set of their corresponding contracts. Each set contains
+            version records retrieved and filtered based on the specified criteria.
+        """
+        contract_versions_by_employee = self._get_contract_versions(date_start, date_end, domain)
+        contracts_by_employee = defaultdict(lambda: self.env["hr.version"])
+        for employee_id in contract_versions_by_employee:
+            for contract_versions in contract_versions_by_employee[employee_id].values():
+                effective_date = date_end if use_latest_version else date_start
+                if use_latest_version:
+                    if effective_date:
+                        correct_versions = contract_versions.filtered(lambda v: v.date_version <= effective_date)
+                        contracts_by_employee[employee_id] |= correct_versions[-1] if correct_versions else contract_versions[0]
+                    else:
+                        contracts_by_employee[employee_id] |= contract_versions[-1] if use_latest_version else contract_versions[0]
+        return contracts_by_employee
+
+    def _get_contract_versions(self, date_start=None, date_end=None, domain=None):
+        """
+        Retrieves contract versions for employees within the specified date range and
+        domain. The function constructs a dynamic domain to filter contracts based on
+        the provided arguments and retrieves grouped results. The grouping ensures
+        organization by employee and date, and the results are stored in a structured
+        format for ease of use.
+
+        Args:
+            date_start (datetime.date | None): The start date for filtering contracts.
+            date_end (datetime.date | None): The end date for filtering contracts.
+            domain (list | None): Additional domain constraints for filtering.
+
+        Returns:
+            dict: A dictionary where keys are employee IDs and values are lists of
+                  contract version records organized by contract date start and date
+                  range.
+        """
+        version_domain = Domain('contract_date_start', '!=', False)
+        if self.ids:
+            version_domain &= Domain('employee_id', 'in', self.ids)
+        if date_start:
+            version_domain &= Domain('contract_date_end', '=', False) | Domain('contract_date_end', '>', date_start)
+        if date_end:
+            version_domain &= Domain('contract_date_start', '<', date_end)
+        if domain:
+            version_domain &= domain
+        all_versions = self.env['hr.version']._read_group(
+            domain=version_domain,
+            groupby=['employee_id', 'date_version:day'],
+            aggregates=['id:recordset'],
+        )
+        contract_versions_by_employee = defaultdict(lambda: defaultdict(lambda: self.env["hr.version"]))
+        for employee, _date_version, version in all_versions:
+            contract_versions_by_employee[employee.id][version.contract_date_start] |= version
+        return contract_versions_by_employee
+
     def _get_all_contract_dates(self):
         """
         Return a list of intervals (date_from, date_to) where the employee is in contract.
