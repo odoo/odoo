@@ -70,7 +70,7 @@ registry
             },
             {
                 content: "Verify the order's total price",
-                trigger: 'div.oe_subtotal_footer:contains(93.00)',
+                trigger: 'span[name="Untaxed Amount"]:contains("93")',
             },
             // Assert that the combo configurator is opened with the previous selection when the
             // combo is edited.
@@ -99,7 +99,7 @@ registry
             },
             {
                 content: "Verify the order's total price",
-                trigger: 'div.oe_subtotal_footer:contains(50.00)',
+                trigger: 'span[name="Untaxed Amount"]:contains("50")',
             },
             // Don't end the tour with a form in edition mode.
             ...stepUtils.saveForm(),

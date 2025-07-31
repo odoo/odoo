@@ -204,6 +204,11 @@ class SaleOrder(models.Model):
             })
             order.show_json_popover = bool(late_stock_picking)
 
+    def action_confirm(self):
+        if len(self) == 1 and self.expected_date and not self.commitment_date:
+            self.commitment_date = self.expected_date
+        return super().action_confirm()
+
     def _action_confirm(self):
         self.order_line._action_launch_stock_rule()
         return super(SaleOrder, self)._action_confirm()

@@ -88,6 +88,8 @@ class PurchaseOrder(models.Model):
     date_order = fields.Datetime('Order Deadline', required=True, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date within which the Quotation should be confirmed and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=True, index=True, copy=False)
+    date_promised = fields.Datetime('Promised Date', index=True, copy=False, compute="_compute_date_promised", store=True, readonly=False,
+        help="Delivery Date promised by the vendor. If the vendor delivers products after this date, their On-Time rate will be negatively impacted.")
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, change_default=True, tracking=True, check_company=True, help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
     dest_address_id = fields.Many2one('res.partner', check_company=True, string='Dropship Address',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
@@ -123,7 +125,7 @@ class PurchaseOrder(models.Model):
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
     date_planned = fields.Datetime(
         string='Expected Arrival', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
-        help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
+        help="Date on which goods should be delivered by the vendor based on latest information")
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
@@ -224,6 +226,15 @@ class PurchaseOrder(models.Model):
                 order.date_planned = min(dates_list)
             else:
                 order.date_planned = False
+
+    @api.depends('order_line.date_promised', 'state')
+    def _compute_date_promised(self):
+        for order in self:
+            dates_list = order.order_line.filtered(lambda x: not x.display_type and x.date_promised).mapped('date_promised')
+            if dates_list and order.state == 'purchase':
+                order.date_promised = min(dates_list)
+            else:
+                order.date_promised = False
 
     @api.depends('name', 'partner_ref', 'amount_total', 'currency_id')
     @api.depends_context('show_total_amount')
@@ -350,6 +361,11 @@ class PurchaseOrder(models.Model):
         if self.date_planned:
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
+    @api.onchange('date_promised')
+    def onchange_date_promised(self):
+        if self.date_promised:
+            self.order_line.filtered(lambda line: not line.display_type).date_promised = self.date_promised
+
     def _search_is_late(self, operator, value):
         if operator != 'in':
             return NotImplemented
@@ -408,6 +424,8 @@ class PurchaseOrder(models.Model):
             for line in result['value'].get('order_line', []):
                 if line[0] == Command.UPDATE and 'date_planned' in line[2]:
                     del line[2]['date_planned']
+                if line[0] == Command.UPDATE and 'date_promised' in line[2]:
+                    del line[2]['date_promised']
         return result
 
     def _get_report_base_filename(self):
