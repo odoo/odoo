@@ -1,5 +1,6 @@
 import { nodeToTree } from "@html_editor/core/history_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { memoize } from "@web/core/utils/functions";
 
 /**
@@ -11,7 +12,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     static dependencies = ["history", "protectedNode"];
     resources = {
         /** Handlers */
-        normalize_handlers: this.normalize.bind(this),
+        normalize_handlers: withSequence(0, this.normalize.bind(this)), // ProtectedNodePlugin does this with sequence 0.
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         attribute_change_handlers: this.onChangeAttribute.bind(this),
         restore_savepoint_handlers: () => this.handleComponents(this.editable),
