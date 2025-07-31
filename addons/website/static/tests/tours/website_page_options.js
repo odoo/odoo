@@ -25,7 +25,7 @@ registerWebsitePreviewTour('website_page_options', {
     ...clickOnSnippet({id: 'o_header_standard', name: 'Header'}),
     {
         content: "Open the color picker to change the backaground color of the header",
-        trigger:"div[data-container-title='Header'] .hb-row-sublevel-1[data-label='Background'] button",
+        trigger:"div[data-container-title='Header'] .hb-row-sublevel-2[data-label='Background'] button",
         run: "click",
     },
     {
@@ -42,7 +42,7 @@ registerWebsitePreviewTour('website_page_options', {
     ...clickOnSnippet({id: 'o_header_standard', name: 'Header'}),
     {
         content: "Open the color picker to change the text color of the header",
-        trigger: "div[data-container-title='Header'] .hb-row-sublevel-1[data-label='Text Color'] button",
+        trigger: "div[data-container-title='Header'] .hb-row-sublevel-2[data-label='Text Color'] button",
         run: "click",
     },
     {

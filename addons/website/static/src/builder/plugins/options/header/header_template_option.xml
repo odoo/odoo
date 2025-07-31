@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.HeaderTemplateOption">
+        <BuilderRow label.translate="Template">
+            <BuilderSelect action="'reloadComposite'">
+                <BuilderSelectItem
+                    id="'header_default_opt'"
+                    title.translate="Default"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_default'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'default' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_default.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_hamburger_opt'"
+                    title.translate="Hamburger Menu"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_hamburger', 'website.no_autohide_menu'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'hamburger' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_hamburger.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_boxed_opt'"
+                    title.translate="Rounded Box Menu"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.header_navbar_pills_style','website.template_header_boxed'],
+                                vars: { 'header-links-style': 'pills', 'header-template': 'boxed' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style:' width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_boxed.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_stretch_opt'"
+                    title.translate="Stretch Menu"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_stretch'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'stretch' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_stretch.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_vertical_opt'"
+                    title.translate="Vertical"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_vertical'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'vertical' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_vertical.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_search_opt'"
+                    title.translate="Menu with Search Bar"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_search'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'search' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_search.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_sales_one_opt'"
+                    title.translate="Menu - Sales 1"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_sales_one'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'sales_one' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_one.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_sales_two_opt'"
+                    title.translate="Menu - Sales 2"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_sales_two'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'sales_two' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_two.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_sales_three_opt'"
+                    title.translate="Menu - Sales 3"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_sales_three'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'sales_three' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_three.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_sales_four_opt'"
+                    title.translate="Menu - Sales 4"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_sales_four'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'sales_four' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_four.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_sidebar_opt'"
+                    title.translate="Sidebar"
+                    actionParam="[
+                        {
+                            action: 'websiteConfig',
+                            actionParam: {
+                                views: ['website.template_header_sidebar', 'website.no_autohide_menu'],
+                                vars: { 'header-links-style': 'default', 'header-template': 'sidebar' },
+                                checkVars: false,
+                            }
+                        }
+                    ]">
+                    <Img attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sidebar.svg'"/>
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Background" level="1">
+            <BuilderColorPicker
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'menu-custom',
+                    gradientColor: 'menu-gradient',
+                    combinationColor: 'menu',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="isActiveItem('header_sales_one_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_one-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_one',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="isActiveItem('header_sales_two_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_two-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_two',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="isActiveItem('header_sales_three_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_three-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_three',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="isActiveItem('header_sales_four_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_four-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_four',
+                    nullValue: 'NULL',
+                }"/>
+        </BuilderRow>
+
+        <BuilderRow t-if="!isActiveItem('header_sidebar_opt')" label.translate="Content Width"  level="1">
+            <BuilderButtonGroup action="'previewableWebsiteConfig'" applyTo="'#o_main_nav'">
+                <BuilderButton 
+                    title.translate="Small"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
+                    actionParam="{ views: ['website.header_width_small'], previewClass: `o_container_small`}"/>
+                <BuilderButton 
+                    title.translate="Regular"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+                    actionParam="{ views: [], previewClass: `container`}"/>
+                <BuilderButton 
+                    title.translate="Full"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+                    actionParam="{ views: ['website.header_width_full'], previewClass: `container-fluid`}"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+
+        <BuilderRow t-if="isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
+            <BuilderNumberInput
+                action="'customizeWebsiteVariable'"
+                actionParam="'sidebar-width'"
+                default="null"
+                unit="'px'"
+                saveUnit="'rem'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Scroll Effect" t-if="!this.isActiveItem('header_sidebar_opt')" level="1">
+            <BuilderSelect action="'websiteConfig'" className="'o_scroll_effects_selector'">
+                <BuilderSelectItem
+                    id="'header_visibility_standard_opt'"
+                    label.translate="Standard"
+                    actionParam="{ views: ['website.header_visibility_standard'], vars: { 'header-scroll-effect': '' } }"
+                    classAction="'o_header_standard'"
+                    className="'o_we_img_animate'"
+                >
+                    <Img src="'/website/static/src/img/snippets_options/header_effect_standard.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_standard.gif';`}"/>
+                    <span>Standard</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_scroll_opt'"
+                    label.translate="Scroll"
+                    actionParam="{ views: [], vars: { 'header-scroll-effect': 'scroll' } }"
+                    classAction="''"
+                    className="'o_we_img_animate'"
+                >
+                    <Img src="'/website/static/src/img/snippets_options/header_effect_scroll.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_scroll.gif';`}"/>
+                    <span>Scroll</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_fixed_opt'"
+                    label.translate="Fixed"
+                    actionParam="{ views: ['website.header_visibility_fixed'], vars: { 'header-scroll-effect': 'fixed' } }"
+                    classAction="'o_header_fixed'"
+                    className="'o_we_img_animate'"
+                >
+                    <Img src="'/website/static/src/img/snippets_options/header_effect_fixed.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_fixed.gif';`}"/>
+                    <span>Fixed</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_disappears_opt'"
+                    label.translate="Disappears"
+                    actionParam="{ views: ['website.header_visibility_disappears'], vars: { 'header-scroll-effect': 'disappears' } }"
+                    classAction="'o_header_disappears'"
+                    className="'o_we_img_animate'"
+                >
+                    <Img src="'/website/static/src/img/snippets_options/header_effect_disappears.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_disappears.gif';`}"/>
+                    <span>Disappears</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_fade_out_opt'"
+                    label.translate="Fade Out"
+                    actionParam="{ views: ['website.header_visibility_fade_out'], vars: { 'header-scroll-effect': 'fade-out' } }"
+                    classAction="'o_header_fade_out'"
+                    className="'o_we_img_animate'"
+                >
+                    <Img src="'/website/static/src/img/snippets_options/header_effect_fade_out.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_fade_out.gif';`}"/>
+                    <span>Fade Out</span>
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+</templates>

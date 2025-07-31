@@ -2,8 +2,8 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
-export class HeaderBorderOption extends BaseOptionComponent {
-    static template = "website.HeaderBorderOption";
+export class HeaderBoxOption extends BaseOptionComponent {
+    static template = "website.HeaderBoxOption";
     static props = {};
     static components = { BorderConfigurator, ShadowOption };
 

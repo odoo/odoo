@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class HeaderElementOption extends BaseOptionComponent {
-    static template = "website.headerElementOption";
+export class HeaderElementsOption extends BaseOptionComponent {
+    static template = "website.HeaderElementsOption";
 
     setup() {
         super.setup();

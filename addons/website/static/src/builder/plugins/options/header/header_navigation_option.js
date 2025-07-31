@@ -1,8 +1,8 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { onWillStart } from "@odoo/owl";
 
-export class HeaderNavbarOption extends BaseOptionComponent {
-    static template = "website.HeaderNavbarOption";
+export class HeaderNavigationOption extends BaseOptionComponent {
+    static template = "website.HeaderNavigationOption";
     static props = {
         getCurrentActiveViews: Function,
     };

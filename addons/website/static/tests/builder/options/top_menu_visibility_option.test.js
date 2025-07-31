@@ -91,7 +91,7 @@ test("undo and comeback to a custom overTheContent color", async () => {
     await contains(":iframe #wrapwrap > header").click();
     await contains("[data-label='Header Position'] .dropdown").click();
     await contains(".o-overlay-container [data-action-value='overTheContent']").click();
-    await contains("[data-label='Background'].hb-row-sublevel-1 .o_we_color_preview").click();
+    await contains("[data-label='Background'].hb-row-sublevel-2 .o_we_color_preview").click();
     await contains("[data-color='600']").click();
     const precedentWrapwrap = queryOne(":iframe #wrapwrap").outerHTML;
     await contains("[data-label='Header Position'] .dropdown").click();
