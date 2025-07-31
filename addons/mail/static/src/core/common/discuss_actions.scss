@@ -38,14 +38,16 @@
         }
         &:not(.o-inline) i {
             opacity: 65%;
-        }
-
-        &:not(.o-inline) i {
-            opacity: 65%;
+            .o_bottom_sheet_sheet:has(&) {
+                opacity: 100%;
+            }
         }
 
         .o-mail-DiscussActions-actionLabel {
             opacity: 65%;
+            .o_bottom_sheet_sheet:has(&) {
+                opacity: 100%;
+            }
         }
 
         &:hover:not(.o-dropdown-item), &.o-isActive, &.o-active, &.focus, &.show {

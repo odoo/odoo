@@ -43,7 +43,7 @@
 
 <t t-name="mail.DiscussActions.action">
     <t t-if="action.dropdown">
-        <Dropdown menuClass="action.dropdown.menuClass">
+        <Dropdown menuClass="(action.dropdown.menuClass || ' ') + ' o-discuss-dropdownMenu'">
             <t t-call="mail.DiscussActions.actionMain"/>
             <t t-set-slot="content">
                 <t t-call="{{ action.dropdown.template }}">
@@ -66,15 +66,17 @@
         'o-inline': props.inline,
         'p-0': props.inline and !props.odooControlPanelSwitchStyle and !(ui.isSmall and props.inline),
         'border-0': props.inline and !props.odooControlPanelSwitchStyle,
+        'px-3 py-2': props.dropdown and ui.isSmall,
+        'py-1': props.dropdown and !ui.isSmall,
         'o-p-1_5': props.inline and ui.isSmall,
-        'text-start px-2 o-fs-small': !props.inline and !ui.isSmall,
+        'text-start px-2': !props.inline and !ui.isSmall,
         'active': action.isActive,
         'o-mail-ChatWindow-command': env.inChatWindow,
         'o-danger': action.danger,
         'o-success': action.success,
     }).filter(([_, val]) => val).map(([key, _]) => key).join(' ')"/>
     <t t-set="attrs" t-value="{ 'disabled': action.disabledCondition, 'title': action.name, 'name': action.id }"/>
-    <DropdownItem t-if="props.dropdown" class="btnClass" tag="'button'" onSelected="(ev) => action.onSelected(ev)">        
+    <DropdownItem t-if="props.dropdown" class="btnClass + ' d-flex align-items-center gap-1'" tag="'button'" onSelected="(ev) => action.onSelected(ev)">        
         <t t-call="mail.DiscussActions.actionContent"/>
     </DropdownItem>
     <button t-else="" t-att-class="btnClass" t-att="attrs" t-on-click="(ev) => action.onSelected(ev)">
@@ -86,7 +88,7 @@
     <t t-if="action.icon?.template" t-call="{{ action.icon.template }}">
         <t t-set="templateParams" t-value="action.icon.params"/>
     </t>
-    <i t-elif="props.inline and action.iconLarge" t-attf-class="{{ action.iconLarge }}" class="fa-fw"/><i t-elif="action.icon" t-attf-class="{{ action.icon }}" class="fa-fw"/> <span t-if="action.text" t-esc="action.text"/>
+    <i t-elif="props.inline and action.iconLarge" t-attf-class="{{ action.iconLarge }}" class="fa-fw"/><i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'o-fs-small': props.dropdown }" class="fa-fw"/> <span t-if="action.text" t-esc="action.text"/>
     <span t-if="!props.inline" class="o-mail-DiscussActions-actionLabel fw-bold mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
 </t>
 

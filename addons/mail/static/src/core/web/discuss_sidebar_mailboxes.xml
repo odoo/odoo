@@ -10,7 +10,7 @@
     </t>
 
     <t t-name="mail.Mailbox">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-2 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border border-secondary px-2 mx-2 my-2 min-w-0'" manual="true">
             <t t-call="mail.Mailbox.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden" t-ref="floating">

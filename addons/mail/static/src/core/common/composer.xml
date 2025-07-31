@@ -52,7 +52,7 @@
                     t-ref="input-container"
                 >
                     <div t-if="!extended" t-attf-class="{{ actionsContainerClass }}">
-                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column py-0 bg-100 border border-secondary'">
+                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column o-discuss-dropdownMenu border-secondary'">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
                                 <DiscussActions dropdown="true" group="[partitionedActions.other]"/>
