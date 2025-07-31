@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import email_normalize
 
 
@@ -72,6 +73,12 @@ class IrMail_Server(models.Model):
     @api.model
     def _filter_mail_servers_fallback(self, servers):
         return servers.filtered(lambda s: not s.owner_user_id)
+
+    def _find_mail_server_allowed_domain(self):
+        """Restrict search to 'public' servers."""
+        domain = super()._find_mail_server_allowed_domain()
+        domain &= Domain('owner_user_id', '=', False)
+        return domain
 
     def _check_forced_mail_server(self, mail_server, allow_archived, smtp_from):
         super()._check_forced_mail_server(mail_server, allow_archived, smtp_from)
