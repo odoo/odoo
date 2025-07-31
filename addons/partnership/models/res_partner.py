@@ -12,7 +12,6 @@ class ResPartner(models.Model):
     def write(self, values):
         if values.get('grade_id'):
             grade = self.env['res.partner.grade'].browse(values['grade_id'])
-            self.child_ids.grade_id = grade
             if grade.default_pricelist_id:
                 pricelist = values.get('specific_property_product_pricelist') or values.get('property_product_pricelist')
                 if pricelist and pricelist != grade.default_pricelist_id.id:
