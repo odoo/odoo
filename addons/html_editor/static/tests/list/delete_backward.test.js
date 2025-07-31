@@ -1519,7 +1519,7 @@ describe("Selection collapsed", () => {
     });
     describe("Mixed", () => {
         describe("Ordered to unordered", () => {
-            test("should merge an ordered list into an unordered list", async () => {
+            test("should merge an ordered list into an unordered list (1)", async () => {
                 await testEditor({
                     contentBefore: "<ul><li>a</li></ul><ol><li>[]b</li></ol>",
                     stepFunction: async (editor) => {
@@ -1529,6 +1529,8 @@ describe("Selection collapsed", () => {
                     },
                     contentAfter: "<ul><li>a[]b</li></ul>",
                 });
+            });
+            test("should merge an ordered list into an unordered list (2)", async () => {
                 await testEditor({
                     contentBefore: "<ul><li>a</li></ul><ol><li><p>[]b</p></li></ol>",
                     stepFunction: async (editor) => {
@@ -1538,6 +1540,8 @@ describe("Selection collapsed", () => {
                     },
                     contentAfter: "<ul><li>a[]b</li></ul>",
                 });
+            });
+            test("should merge an ordered list into an unordered list (3)", async () => {
                 await testEditor({
                     contentBefore: "<ul><li><p>a</p></li></ul><ol><li>[]b</li></ol>",
                     stepFunction: async (editor) => {
@@ -1547,6 +1551,8 @@ describe("Selection collapsed", () => {
                     },
                     contentAfter: "<ul><li><p>a[]b</p></li></ul>",
                 });
+            });
+            test("should merge an ordered list into an unordered list (4)", async () => {
                 await testEditor({
                     contentBefore: "<ul><li><p>a</p></li></ul><ol><li><p>[]b</p></li></ol>",
                     stepFunction: async (editor) => {
