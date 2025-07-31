@@ -52,6 +52,12 @@ class StockMove(models.Model):
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.sudo().product_no_variant_attribute_value_ids)
                 move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + move.description_picking).strip()
 
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('date') and vals.get('state') != "done":
+            self._set_date_planned(vals.get('date'))
+        return res
+
     def _get_description(self):
         return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
 
@@ -142,6 +148,14 @@ class StockMove(models.Model):
                 [move for move in current_move.move_orig_ids if move not in moves_to_check and move not in seen_moves]
             )
         return None, None
+
+    def _set_date_planned(self, date_planned):
+        already_set_ids = self.env.context.get('date_planned_set_ids', set())
+        for move in self:
+            if move.picking_id.picking_type_code != 'incoming' or move.picking_id.state in ('done', 'cancel') or move.purchase_line_id.id in already_set_ids:
+                continue
+            already_set_ids.update(move.purchase_line_id.ids)
+            move.with_context(date_planned_set_ids=already_set_ids).purchase_line_id.date_planned = date_planned
 
     # --------------------------------------------------------
     # Valuation

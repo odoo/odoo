@@ -1156,7 +1156,7 @@ class SaleOrder(models.Model):
         self.write({'state': 'sent'})
 
     def action_confirm(self):
-        """ Confirm the given quotation(s) and set their confirmation date.
+        """ Confirm the given quotation(s) and set their confirmation and commitment dates.
 
         If the corresponding setting is enabled, also locks the Sale Order.
 
@@ -1165,6 +1165,8 @@ class SaleOrder(models.Model):
         :raise: UserError if trying to confirm cancelled SO's
         """
         for order in self:
+            if order.expected_date and not order.commitment_date:
+                order.commitment_date = order.expected_date
             error_msg = order._confirmation_error_message()
             if error_msg:
                 raise UserError(error_msg)

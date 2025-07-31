@@ -33,6 +33,7 @@ class PurchaseOrderLine(models.Model):
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     is_storable = fields.Boolean(related='product_id.is_storable')
     location_final_id = fields.Many2one('stock.location', 'Location from procurement')
+    date_promised = fields.Datetime('Promised Date', help="Delivery Date promised by the vendor. If the vendor delivers products after this date, their On-Time rate will be negatively impacted.")
 
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
@@ -47,6 +48,10 @@ class PurchaseOrderLine(models.Model):
             accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= accrual_date)
         return moves
+
+    def _set_date_promised(self):
+        for line in self:
+            line.date_promised = line.date_planned
 
     @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
     def _compute_qty_received(self):
@@ -94,14 +99,18 @@ class PurchaseOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
-        lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+        confirmed_lines = lines.filtered(lambda l: l.order_id.state == 'purchase' and not l.display_type)
+        confirmed_lines._create_or_update_picking()
+        confirmed_lines._set_date_promised()
         return lines
 
     def write(self, vals):
         values = vals
-        if values.get('date_planned'):
-            new_date = fields.Datetime.to_datetime(values['date_planned'])
-            self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
+        if values.get('date_planned') or values.get('date_promised'):
+            new_date_planned = values.get('date_planned')
+            new_date_promised = values.get('date_promised')
+            self.filtered(lambda line: not line.display_type)._update_move_dates(new_date_planned, new_date_promised)
+
         lines = self.filtered(lambda l: l.order_id.state == 'purchase'
                                         and not l.display_type)
 
@@ -157,13 +166,21 @@ class PurchaseOrderLine(models.Model):
     # Business methods
     # --------------------------------------------------
 
-    def _update_move_date_deadline(self, new_date):
-        """ Updates corresponding move picking line deadline dates that are not yet completed. """
+    def _update_move_dates(self, date_planned=False, date_promised=False):
+        """ Updates corresponding move picking line deadline dates or dates scheduled that are not yet completed. """
+        if not date_planned and not date_promised:
+            return False
         moves_to_update = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
         if not moves_to_update:
             moves_to_update = self.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
         for move in moves_to_update:
-            move.date_deadline = new_date
+            if date_planned:
+                if move.picking_id.picking_type_code == "incoming":
+                    move.date = date_planned
+                else:
+                    move.date_deadline = date_planned
+            if date_promised and move.picking_id.picking_type_code == "incoming":
+                move.date_deadline = date_promised
 
     def _create_or_update_picking(self):
         for line in self:
@@ -414,7 +431,7 @@ class PurchaseOrderLine(models.Model):
         if not self.move_ids or move_to_update:  # Only change the date if there is no move done or none
             super()._update_date_planned(updated_date)
         if move_to_update:
-            self._update_move_date_deadline(updated_date)
+            self._update_move_dates(date_planned=updated_date)
 
     @api.model
     def _update_qty_received_method(self):

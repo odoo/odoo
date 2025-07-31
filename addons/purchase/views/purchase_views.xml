@@ -217,10 +217,6 @@
                         </group>
                         <group>
                             <field name="date_order" invisible="state  == 'purchase'" readonly="state in ['cancel', 'purchase']"/>
-                            <label for="date_approve" invisible="state != 'purchase'"/>
-                            <div name="date_approve" invisible="state != 'purchase'" class="o_row">
-                                <field name="date_approve"/>
-                            </div>
                             <label for="date_planned"/>
                             <div name="date_planned_div" class="o_row">
                                 <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')"/>
@@ -230,7 +226,7 @@
                                 <field name="receipt_reminder_email"/>
                                 <span>Ask confirmation</span>
                                 <div class="o_row oe_inline" invisible="not receipt_reminder_email">
-                                    <field name="reminder_date_before_receipt" class="oe_inline" style="max-width: 30px;"/>
+                                    <field name="reminder_date_before_receipt" style="max-width: 30px;"/>
                                     day(s) before
                                     <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." invisible="not id"/>
                                 </div>
@@ -388,7 +384,7 @@
                                 <group>
                                     <field colspan="2" name="note" nolabel="1" placeholder="Define your terms and conditions ..."/>
                                 </group>
-                                <group class="oe_subtotal_footer">
+                                <group class="oe_subtotal_footer border-top-0">
                                     <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
                                 </group>
                             </group>
@@ -401,6 +397,7 @@
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
                                 </group>
                                 <group name="billing_info" string="billing">
+                                    <field name="date_approve"/>
                                     <field name="invoice_status" invisible="state in ('draft', 'sent', 'to approve', 'cancel')"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or locked"/>
                                 </group>
@@ -659,7 +656,7 @@
                     <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
-                    <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
+                    <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show" readonly="1"/>
                 </list>
             </field>
         </record>

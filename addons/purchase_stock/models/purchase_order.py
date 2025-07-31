@@ -30,16 +30,15 @@ class PurchaseOrder(models.Model):
         'reference_id', string='References', copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
     effective_date = fields.Datetime("Arrival", compute='_compute_effective_date', store=True, copy=False,
-        help="Completion date of the first receipt order.")
+        help="Completion date of the last receipt order.")
     on_time_rate = fields.Float(related='partner_id.on_time_rate', compute_sudo=False)
     receipt_status = fields.Selection([
         ('pending', 'Not Received'),
         ('partial', 'Partially Received'),
         ('full', 'Fully Received'),
-    ], string='Receipt Status', compute='_compute_receipt_status', store=True,
-       help="Red: Late\n\
-            Orange: To process today\n\
-            Green: On time")
+    ], string='Receipt Status', compute='_compute_receipt_status', store=True)
+    date_promised = fields.Datetime('Promised Date', index=True, copy=False, compute="_compute_date_promised", store=True, readonly=False,
+        help="Date promised by the vendor for at least 1 or more products to be delivered by.")
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):
@@ -55,7 +54,7 @@ class PurchaseOrder(models.Model):
     def _compute_effective_date(self):
         for order in self:
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage != 'supplier' and x.date_done)
-            order.effective_date = min(pickings.mapped('date_done'), default=False)
+            order.effective_date = max(pickings.mapped('date_done'), default=False)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_is_shipped(self):
@@ -81,11 +80,37 @@ class PurchaseOrder(models.Model):
     def _compute_dest_address_id(self):
         self.filtered(lambda po: po.picking_type_id.default_location_dest_id.usage != 'customer').dest_address_id = False
 
+    @api.depends('order_line.date_promised', 'state')
+    def _compute_date_promised(self):
+        for order in self:
+            if order.state not in ('purchase', 'cancel'):
+                order.date_promised = False
+                continue
+            dates_list = order.order_line.filtered(lambda line: not line.display_type and line.date_promised).mapped('date_promised')
+            order.date_promised = min(dates_list) if dates_list else False
+
+    @api.onchange('date_promised')
+    def _onchange_date_promised(self):
+        if self.date_promised:
+            self.order_line.filtered(lambda line: not line.display_type).date_promised = self.date_promised
+
     @api.onchange('company_id')
     def _onchange_company_id(self):
         p_type = self.picking_type_id
         if not(p_type and p_type.code == 'incoming' and (p_type.warehouse_id.company_id == self.company_id or not p_type.warehouse_id)):
             self.picking_type_id = self._get_picking_type(self.company_id.id)
+
+    def onchange(self, values, field_names, fields_spec):
+        """
+        Override onchange to NOT update all date_promised on PO lines when
+        date_promised on PO is updated by the change of date_promised on PO lines.
+        """
+        result = super().onchange(values, field_names, fields_spec)
+        if 'order_line' in field_names and 'value' in result:
+            for line in result['value'].get('order_line', []):
+                if line[0] == Command.UPDATE and 'date_promised' in line[2]:
+                    del line[2]['date_promised']
+        return result
 
     # --------------------------------------------------
     # CRUD
@@ -169,6 +194,7 @@ class PurchaseOrder(models.Model):
         self.order_line = po_lines_commands
 
     def button_approve(self, force=False):
+        self.order_line._set_date_promised()
         result = super(PurchaseOrder, self).button_approve(force=force)
         self._create_picking()
         return result
@@ -241,8 +267,8 @@ class PurchaseOrder(models.Model):
         three_months_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(months=3))
 
         purchases = self.env['purchase.order'].search_fetch(
-            [('state', '=', 'purchase'), ('date_planned', '>=', three_months_ago)],
-            ['date_planned', 'effective_date', 'user_id'])
+            [('state', '=', 'purchase'), ('date_promised', '>=', three_months_ago)],
+            ['date_promised', 'effective_date', 'user_id'])
 
         otd_purchase_count = 0
         my_purchase_count = 0
@@ -250,7 +276,7 @@ class PurchaseOrder(models.Model):
         for po in purchases:
             if po.user_id == self.env.user:
                 my_purchase_count += 1
-            if not po.effective_date or po.effective_date > po.date_planned:
+            if not po.effective_date or po.effective_date > po.date_promised:
                 continue
             otd_purchase_count += 1
             if po.user_id == self.env.user:

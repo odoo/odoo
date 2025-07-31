@@ -261,7 +261,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay)
         self.assertEqual(date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time(supplier and pull rules).')
 
-        # Check the picking crated or not
+        # Check if the picking is created
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
 
         # Check scheduled date of Internal Type shipment
@@ -277,9 +277,10 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         self.assertEqual(incoming_shipment2.date_deadline, incoming_shipment2_date)
         old_deadline2 = incoming_shipment2.date_deadline
 
-        # Modify the date_planned of the purchase -> propagate the deadline
+        # Modify the date_planned of the purchase -> propagate the scheduled date in a receipt, so the deadline remains unchanged
         purchase_form = Form(purchase)
         purchase_form.date_planned = purchase.date_planned + timedelta(days=1)
         purchase_form.save()
-        self.assertEqual(incoming_shipment2.date_deadline, old_deadline2 + timedelta(days=1), 'Deadline should be propagate')
-        self.assertEqual(incoming_shipment1.date_deadline, old_deadline1 + timedelta(days=1), 'Deadline should be propagate')
+        self.assertEqual(incoming_shipment2.date_deadline, old_deadline2, 'Deadline should remain unchanged')
+        self.assertEqual(incoming_shipment1.date_deadline, old_deadline1, 'Deadline should remain unchanged')
+        self.assertEqual(purchase.order_line.move_ids.picking_id.scheduled_date, purchase.date_planned, 'Scheduled Date should propagate')

@@ -28,18 +28,15 @@
                 <field name="incoterm_location"/>
                 <field name="picking_policy" required="True" readonly="state not in ['draft', 'sent']"/>
             </label>
-            <span name="expected_date_span" position="attributes">
-                <attribute name="invisible">effective_date and commitment_date</attribute>
-            </span>
             <div name="commitment_date_div" position="replace">
                 <div class="o_row">
-                    <field name="commitment_date"/>
-                    <span class="text-muted" invisible="not expected_date or (effective_date and commitment_date)">Expected: <field name="expected_date" class="oe_inline"/></span>
+                    <field name="expected_date" invisible="1"/>  <!-- Needed for the placeholder widget -->
+                    <field name="commitment_date" options="{'placeholder_field': 'expected_date'}"/>
                 </div>
                 <field name="effective_date" invisible="not effective_date"/>
                 <field name="delivery_status" invisible="state != 'sale'"/>
             </div>
-            <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
+            <xpath expr="//page[@name='other_information']//field[@name='commitment_date']" position="after">
                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" invisible="not show_json_popover"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//form//field[@name='analytic_distribution']" position="before">
