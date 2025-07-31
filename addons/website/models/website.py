@@ -565,6 +565,32 @@ class Website(models.Model):
         )
 
     @api.model
+    def get_configurator_shop_page_styles(self):
+        """Format and return the ids and images of each shop page style for website onboarding.
+
+        :return: The shop page style information.
+        :rtype: list[dict]
+        """
+        from odoo.addons.website_sale.const import SHOP_PAGE_STYLE_MAPPING  # noqa: I001 PLC0415
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in SHOP_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
+    def get_configurator_product_page_styles(self):
+        """Format and return ids and images of each product page style for website onboarding.
+
+        :return: The product page style information.
+        :rtype: list[dict]
+        """
+        from odoo.addons.website_sale.const import PRODUCT_PAGE_STYLE_MAPPING  # noqa: I001 PLC0415
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in PRODUCT_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
     def configurator_apply(self, **kwargs):
         website = self.get_current_website()
         theme_name = kwargs['theme_name']
@@ -1094,6 +1120,8 @@ class Website(models.Model):
         except Exception:
             pass
 
+        website.post_configurator_apply(**kwargs)
+
         return {'url': redirect_url, 'website_id': website.id}
 
     # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
@@ -1101,6 +1129,12 @@ class Website(models.Model):
     # customize the website.
     def configurator_addons_apply(self, industry_name=None, **kwargs):
         pass
+
+    # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
+    # additional setup steps on the generated website, after the main configurator has been applied,
+    # and the modules have been installed.
+    def post_configurator_apply(self, **kwargs):
+        self.ensure_one()
 
     # ----------------------------------------------------------
     # Page Management

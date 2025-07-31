@@ -25,13 +25,11 @@ import {
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { ProductPageSelectionScreen } from "./online_store/productPageSelectionScreen";
+import { ShopPageSelectionScreen } from "./online_store/shopPageSelectionScreen";
+import { ROUTES, useStore } from "./utils";
 
-export const ROUTES = {
-    descriptionScreen: 2,
-    paletteSelectionScreen: 3,
-    featuresSelectionScreen: 4,
-    themeSelectionScreen: 5,
-};
+export { ROUTES, useStore } from "./utils";
 
 export const WEBSITE_TYPES = {
     1: {id: 1, label: _t("a business website"), name: 'business'},
@@ -470,12 +468,16 @@ export class FeaturesSelectionScreen extends Component {
     }
 
     /**
-     * Return the theme selection screen as the next step, unless overridden.
+     * Return the shop page selection screen when setting up an online store,
+     * otherwise the theme selection screen.
      *
+     * @param {Array<Object>} selectedFeatures - The selected features.
      * @return {int} Next step route.
      */
-    static nextStep() {
-        return ROUTES.themeSelectionScreen;
+    static nextStep(selectedFeatures) {
+        return selectedFeatures.find((f) => f.website_config_preselection.includes("online_store"))
+            ? ROUTES.shopPageSelectionScreen
+            : ROUTES.themeSelectionScreen;
     }
 
     async buildWebsite() {
@@ -484,7 +486,8 @@ export class FeaturesSelectionScreen extends Component {
             return this.props.navigate(ROUTES.descriptionScreen);
         }
 
-        this.props.navigate(FeaturesSelectionScreen.nextStep());
+        const selectedFeatures = Object.values(this.state.features).filter((f) => f.selected);
+        this.props.navigate(FeaturesSelectionScreen.nextStep(selectedFeatures));
     }
 }
 
@@ -723,11 +726,6 @@ export class Store {
     }
 }
 
-export function useStore() {
-    const env = useEnv();
-    return useState(env.store);
-}
-
 export class Configurator extends Component {
     static components = {
         WelcomeScreen,
@@ -797,16 +795,22 @@ export class Configurator extends Component {
     }
 
     get currentComponent() {
-        if (this.state.currentStep === ROUTES.descriptionScreen) {
-            return DescriptionScreen;
-        } else if (this.state.currentStep === ROUTES.paletteSelectionScreen) {
-            return PaletteSelectionScreen;
-        } else if (this.state.currentStep === ROUTES.featuresSelectionScreen) {
-            return FeaturesSelectionScreen;
-        } else if (this.state.currentStep === ROUTES.themeSelectionScreen) {
-            return ThemeSelectionScreen;
+        switch (this.state.currentStep) {
+            case ROUTES.descriptionScreen:
+                return DescriptionScreen;
+            case ROUTES.paletteSelectionScreen:
+                return PaletteSelectionScreen;
+            case ROUTES.featuresSelectionScreen:
+                return FeaturesSelectionScreen;
+            case ROUTES.themeSelectionScreen:
+                return ThemeSelectionScreen;
+            case ROUTES.shopPageSelectionScreen:
+                return ShopPageSelectionScreen;
+            case ROUTES.productPageSelectionScreen:
+                return ProductPageSelectionScreen;
+            default:
+                return WelcomeScreen;
         }
-        return WelcomeScreen;
     }
 
     get componentProps() {
@@ -897,6 +901,8 @@ export class Configurator extends Component {
             selectedIndustry: undefined,
             selectedPalette: undefined,
             recommendedPalette: undefined,
+            selectedShopPageStyleOption: undefined,
+            selectedProductPageStyleOption: undefined,
             defaultColors: defaultColors,
             palettes: palettes,
             features: features,
@@ -913,6 +919,8 @@ export class Configurator extends Component {
             logoAttachmentId: state.logoAttachmentId,
             selectedIndustry: state.selectedIndustry,
             selectedPalette: state.selectedPalette,
+            selectedShopPageStyleOption: state.selectedShopPageStyleOption,
+            selectedProductPageStyleOption: state.selectedProductPageStyleOption,
             selectedPurpose: state.selectedPurpose,
             formerSelectedPurpose: state.formerSelectedPurpose,
             selectedType: state.selectedType,

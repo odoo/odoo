@@ -223,48 +223,24 @@ class Website(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    @api.model
-    def get_configurator_shop_page_styles(self):
-        """Format and return the ids and images of each shop page style for website onboarding.
-
-        :return: The shop page style information.
-        :rtype: list[dict]
-        """
-        return [
-            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
-            for option, config in const.SHOP_PAGE_STYLE_MAPPING.items()
-        ]
-
-    @api.model
-    def get_configurator_product_page_styles(self):
-        """Format and return ids and images of each product page style for website onboarding.
-
-        :return: The product page style information.
-        :rtype: list[dict]
-        """
-        return [
-            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
-            for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
-        ]
-
-    @api.model
-    def configurator_apply(
+    def post_configurator_apply(
         self, *, shop_page_style_option=None, product_page_style_option=None, **kwargs
     ):
         """Override of `website` to apply eCommerce page style configurations.
+
+        Note: self.ensure_one()
 
         :param str shop_page_style_option: The key of the selected shop page style option. See
                                            `const.SHOP_PAGE_STYLE_MAPPING`.
         :param str product_page_style_option: The key of the selected product page style option. See
                                               `const.PRODUCT_PAGE_STYLE_MAPPING`.
         """
-        res = super().configurator_apply(**kwargs)
+        super().post_configurator_apply(**kwargs)
 
-        website = self.get_current_website()
         website_settings = {}
         views_to_disable = []
         views_to_enable = []
-        ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
+        ThemeUtils = self.env['theme.utils'].with_context(website_id=self.id)
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_['website_fields'])
@@ -283,7 +259,7 @@ class Website(models.Model):
 
         # Apply eCommerce page style configurations.
         if website_settings:
-            website.write(website_settings)
+            self.write(website_settings)
         for xml_id in views_to_disable:
             if (
                 xml_id == 'website_sale_comparison.product_add_to_compare'
@@ -293,8 +269,6 @@ class Website(models.Model):
             ThemeUtils.disable_view(xml_id)
         for xml_id in views_to_enable:
             ThemeUtils.enable_view(xml_id)
-
-        return res
 
     def configurator_addons_apply(self, industry_name=None, **kwargs):
         """Override of `website` to generate eCommerce categories for a given industry using AI."""

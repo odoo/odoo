@@ -314,7 +314,7 @@
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/text_processing.js',
             'website/static/src/js/highlight_utils.js',
-            'website/static/src/client_actions/*/*',
+            'website/static/src/client_actions/**/*',
             ('remove', 'website/static/src/client_actions/website_preview/website_builder_action_test_mode.js'),
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
@@ -493,7 +493,7 @@
             'website/static/src/services/website_custom_menus.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/systray_items/*',
-            'website/static/src/client_actions/*/*.xml',
+            'website/static/src/client_actions/**/*.xml',
             'website/static/src/components/website_loader/*.xml',
             'website/static/src/js/backend/**/*',
 

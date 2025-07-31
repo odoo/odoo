@@ -1,7 +1,7 @@
 import { Component, onWillStart } from '@odoo/owl';
 import { useService } from '@web/core/utils/hooks';
 
-import { ROUTES, useStore } from '@website/client_actions/configurator/configurator';
+import { ROUTES, useStore } from '@website/client_actions/configurator/utils';
 
 export class ProductPageSelectionScreen extends Component {
     static template = 'website_sale.Configurator.ProductPageSelectionScreen';
