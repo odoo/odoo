@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CustomizeTranslationTab">
+    <div class="o_customize_tab h-100">
+        <div t-ref="content" class="d-flex flex-column h-100">
+            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <OptionsContainer
+                    snippetModel="optionsContainer.snippetModel"
+                    editingElement="optionsContainer.element"
+                    options="optionsContainer.options"
+                    isRemovable="optionsContainer.isRemovable"
+                    isClonable="optionsContainer.isClonable"
+                    containerTopButtons="optionsContainer.containerTopButtons"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

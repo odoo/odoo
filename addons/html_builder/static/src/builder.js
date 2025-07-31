@@ -40,6 +40,7 @@ export class Builder extends Component {
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
+        getCustomizeTranslationTab: { type: Function, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
@@ -48,6 +49,7 @@ export class Builder extends Component {
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
+        this.CustomizeTranslationTab = this.props.getCustomizeTranslationTab?.();
         // const actionService = useService("action");
         this.builder_sidebarRef = useRef("builder_sidebar");
         this.state = useState({
@@ -106,7 +108,7 @@ export class Builder extends Component {
                     }),
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
-                        if (!currentOptionsContainers.length) {
+                        if (!currentOptionsContainers.length && !this.displayOnlyCustomizeTab) {
                             // If there is no option, fallback on the current
                             // fallback tab.
                             this.setTab(this.noSelectionTab);
