@@ -230,6 +230,23 @@
             </field>
         </record>
 
+        <record id="view_task_form2_inherit_sale_timesheet" model="ir.ui.view">
+            <field name="name">view.task.form2.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
+                    <attribute name="context">{
+                        'create': False, 'edit': False, 'delete': False,
+                        'with_price_unit': True,
+                        'with_remaining_hours': True,
+                        'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
+                        'default_partner_id': partner_id,
+                        'company_id': company_id,
+                    }</attribute>
+                </xpath>
+            </field>
+        </record>
         <record id="project_task_view_search_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">project.task.view.search.inherit</field>
             <field name="model">project.task</field>
