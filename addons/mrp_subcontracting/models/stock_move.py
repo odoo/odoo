@@ -249,7 +249,7 @@ class StockMove(models.Model):
                 open_mo = productions.filtered(lambda p: not p.lot_producing_id and not p._has_been_recorded())
                 if open_mo and qty_by_lot:
                     # No MOs created yet for the lots, split them from the default 'open' MO
-                    productions = open_mo.sudo().with_context(allow_more=True)._split_productions({open_mo: list(qty_by_lot.values())}, cancel_remaining_qty=True)
+                    productions = open_mo.sudo().with_context(allow_more=True)._split_productions({open_mo: list(qty_by_lot.values())}, cancel_remaining_qty=True, skip_procurement=False)
                     for production, lot_id in zip(productions, qty_by_lot.keys()):
                         production.lot_producing_id = lot_id
                         production.subcontracting_has_been_recorded = True
