@@ -44,6 +44,24 @@ $o-discuss-talkingColor: lighten($success, 10%);
     }
 }
 
+@function o-rounded-bubble() {
+    @return calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+}
+
+.o-discuss-dropdownMenu {
+    background-color: $gray-100;
+    --Dropdown_menu-margin-y: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-radius: o-rounded-bubble();
+    box-shadow: $box-shadow-sm;
+
+    .o_bottom_sheet_sheet:has(&) {
+        background-color: $gray-100;
+        box-shadow: unset !important;
+    }
+}
+
 .o-discuss-mobileContextMenu {
     top: auto !important;
 }
@@ -105,7 +123,8 @@ $o-mail-rounded-sizes: () !default;
 $o-mail-rounded-sizes: map-merge(
     $o-mail-rounded-sizes,
     (
-        "bubble": calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4),
+        "2_5": calc((#{$border-radius} + #{$border-radius-lg}) / 2),
+        "bubble": o-rounded-bubble(),
     )
 );
 

@@ -25,7 +25,7 @@ export class Mailbox extends Component {
             },
             onAway: () => {
                 if (this.store.discuss.isSidebarCompact) {
-                    this.floating.isOpen = false;
+                    // this.floating.isOpen = false;
                 }
             },
         });

@@ -37,7 +37,6 @@ import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
-import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import { useLongPress } from "@mail/utils/common/hooks";
@@ -106,7 +105,6 @@ export class Message extends Component {
             expandOptions: false,
             emailHeaderOpen: false,
             showTranslation: false,
-            actionMenuMobileOpen: false,
         });
         /** @type {ShadowRoot} */
         this.shadowRoot;
@@ -238,7 +236,7 @@ export class Message extends Component {
                 !this.props.asCard,
             "px-1": this.props.isInChatWindow,
             "opacity-50": this.props.thread?.composer.replyToMessage?.notEq(this.props.message),
-            "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
+            "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
         };
     }
@@ -452,21 +450,7 @@ export class Message extends Component {
             return;
         }
         ev?.stopPropagation();
-        this.state.actionMenuMobileOpen = true;
-        this.dialog.add(
-            MessageActionMenuMobile,
-            {
-                message: this.props.message,
-                thread: this.props.thread,
-                isFirstMessage: this.props.isFirstMessage,
-                openReactionMenu: () => this.openReactionMenu(),
-                state: this.state,
-            },
-            {
-                context: this,
-                onClose: () => (this.state.actionMenuMobileOpen = false),
-            }
-        );
+        this.optionsDropdown.open();
     }
 
     openReactionMenu(reaction) {
