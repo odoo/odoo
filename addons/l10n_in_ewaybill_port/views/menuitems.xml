@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Actions -->
+    <record id="action_l10n_in_port_address" model="ir.actions.act_window">
+        <field name="name">Port Address</field>
+        <field name="res_model">l10n_in.port.code</field>
+        <field name='view_mode'>tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="menu_l10n_in_port_root"
+        name="Port Address"
+        parent="contacts.menu_localisation"
+        action="action_l10n_in_port_address"
+        sequence="10"/>
+
+</odoo>
