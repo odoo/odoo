@@ -4,8 +4,8 @@
         <field name="name">hr.version.list</field>
         <field name="model">hr.version</field>
         <field name="arch" type="xml">
-            <list string="Versions" multi_edit="1" default_order='date_version DESC' create="0" action="action_open_version" type="object">
-                <field name="date_version" readonly="False" string="Version"/>
+            <list string="Records" multi_edit="1" default_order='date_version DESC' create="0" action="action_open_version" type="object" class="o_hr_version_list_view">
+                <field name="date_version" readonly="False" string="Effective Date"/>
                 <field name="contract_date_start" string="Start"/>
                 <field name="contract_date_end" string="End"/>
                 <field name="employee_id" optional="show"/>
@@ -31,7 +31,7 @@
         <field name="name">hr.version.graph</field>
         <field name="model">hr.version</field>
         <field name="arch" type="xml">
-            <graph string="Versions" type="bar" sample="1">
+            <graph string="Employee Records" type="bar" sample="1">
                 <field name="date_version" type="row"/>
                 <field name="wage" widget="monetary" type="measure"/>
             </graph>
@@ -42,7 +42,7 @@
         <field name="name">hr.version.pivot</field>
         <field name="model">hr.version</field>
         <field name="arch" type="xml">
-            <pivot string="Versions" sample="1">
+            <pivot string="Employee Records" sample="1">
                 <field name="date_version" type="row"/>
                 <field name="wage" widget="monetary"/>
             </pivot>
@@ -97,7 +97,7 @@
     </record>
 
     <record id="action_hr_version" model="ir.actions.act_window">
-        <field name="name">Versions</field>
+        <field name="name">Employee Records</field>
         <field name="path">versions</field>
         <field name="res_model">hr.version</field>
         <field name="view_mode">list,graph,pivot</field>
