@@ -385,8 +385,8 @@ class AccountEdiFormat(models.Model):
                 total = abs(line.balance) * -refund_sign * (-1 if line_price_total < 0 else 1)
             invoice_lines.append({
                 'line': line,
-                'discount': discount * refund_sign,
-                'unit_price': (line.balance + discount) / line.quantity * refund_sign if line.quantity > 0 else 0,
+                'discount': -discount,
+                'unit_price': -(line.balance + discount) / line.quantity if line.quantity > 0 else 0,
                 'total': total,
                 'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name or '')[:250]
             })

@@ -220,3 +220,24 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
         xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
         xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_CANCEL)
         self.assertXmlTreeEqual(xml_doc, xml_expected)
+
+    def test_xml_tree_credit_note_post(self):
+        """Test of Customer Credit Note XML"""
+        self.out_invoice.action_post()
+        move_reversal = self.env['account.move.reversal'].with_context(
+            active_model="account.move",
+            active_ids=self.out_invoice.ids
+        ).create({
+            'date': str(self.out_invoice.invoice_date),
+            'reason': 'no reason',
+            'l10n_es_tbai_refund_reason': 'R1',
+            'journal_id': self.out_invoice.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+
+        with freeze_time(self.frozen_today):
+            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(reverse_move, cancel=False)[reverse_move]['xml_file']
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            xml_expected = etree.fromstring(super().L10N_ES_TBAI_CREDIT_NOTE_XML_POST)
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
