@@ -20,7 +20,9 @@ import { defineModels } from "./_framework/mock_server/mock_server";
 import { globalCachedFetch } from "./_framework/module_set.hoot";
 
 /**
+ * @typedef {import("./_framework/dom_test_helpers").DragAndDropOptions} DragAndDropOptions
  * @typedef {import("./_framework/mock_server/mock_fields").FieldType} FieldType
+ * @typedef {import("./_framework/mock_server/mock_server").MockServerEnvironment} MockServerEnvironment
  * @typedef {import("./_framework/mock_server/mock_model").ModelRecord} ModelRecord
  */
 
@@ -40,12 +42,7 @@ export {
     getDropdownMenu,
     mountWithCleanup,
 } from "./_framework/component_test_helpers";
-export {
-    contains,
-    defineStyle,
-    editAce,
-    sortableDrag,
-} from "./_framework/dom_test_helpers";
+export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
     getMockEnv,
@@ -77,7 +74,7 @@ export {
     validateKanbanColumn,
     validateKanbanRecord,
 } from "./_framework/kanban_test_helpers";
-export { Command } from "./_framework/mock_server/mock_model";
+export { Command, registerInlineViewArchs } from "./_framework/mock_server/mock_model";
 export {
     authenticate,
     defineActions,

@@ -1,16 +1,16 @@
 import { expect, test } from "@odoo/hoot";
 import { runAllTimers } from "@odoo/hoot-mock";
-import * as fields from "@web/../tests/_framework/mock_server/mock_fields";
-import { Model, ServerModel } from "@web/../tests/_framework/mock_server/mock_model";
 import {
     contains,
     defineModels,
+    fields,
+    models,
     mountView,
     onRpc,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-class ResCountryState extends ServerModel {
+class ResCountryState extends models.ServerModel {
     _name = "res.country.state";
 
     _records = [
@@ -39,7 +39,7 @@ class ResPartner extends webModels.ResPartner {
     state_id = fields.Many2one({ relation: "res.country.state" });
 }
 
-class OtherModel extends Model {
+class OtherModel extends models.Model {
     _name = "other.model";
     city = fields.Char();
     some_char = fields.Char();

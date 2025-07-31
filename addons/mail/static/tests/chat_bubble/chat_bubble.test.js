@@ -1,6 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { leave, runAllTimers } from "@odoo/hoot-dom";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+
+import { rpc } from "@web/core/network/rpc";
 import {
     assertChatHub,
     click,
@@ -16,8 +18,6 @@ import {
     triggerEvents,
     triggerHotkey,
 } from "../mail_test_helpers";
-
-import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

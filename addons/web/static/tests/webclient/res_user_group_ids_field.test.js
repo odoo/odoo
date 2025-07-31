@@ -6,11 +6,10 @@ import {
     mountView,
     onRpc,
     serverState,
+    webModels,
 } from "@web/../tests/web_test_helpers";
-import { ResGroups } from "../_framework/mock_server/mock_models/res_groups";
-import { ResUsers } from "../_framework/mock_server/mock_models/res_users";
-import { ResCompany } from "../_framework/mock_server/mock_models/res_company";
-import { ResPartner } from "../_framework/mock_server/mock_models/res_partner";
+
+const { ResCompany, ResGroups, ResPartner, ResUsers } = webModels;
 
 defineModels([ResCompany, ResGroups, ResPartner, ResUsers]);
 

@@ -1,10 +1,10 @@
 import { expect, test } from "@odoo/hoot";
-import { setupEditor, testEditor } from "../_helpers/editor";
-import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { click, waitFor } from "@odoo/hoot-dom";
-import { getContent } from "../_helpers/selection";
+import { contains } from "@web/../tests/web_test_helpers";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
-import { contains } from "@web/../tests/_framework/dom_test_helpers";
+import { getContent } from "../_helpers/selection";
+import { deleteBackward, insertText } from "../_helpers/user_actions";
 
 test("should parse correctly a span inside a Link", async () => {
     await testEditor({
