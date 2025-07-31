@@ -465,20 +465,19 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
             with self.assertQueryCount(default=39):
                 self._test_url_open('/event')
 
-    # @warmup
-    # def test_register_public(self):
-    #     with freeze_time(self.reference_now + timedelta(hours=3)):  # be sure sales has started
-    #         self.assertTrue(self.test_event.event_registrations_started)
-    #         self.authenticate(None, None)
-    #         with self.assertQueryCount(default=99999):  # tef only: 1110
-    #             self.browser_js(
-    #                 '/event/%i/register' % self.test_event.id,
-    #                 'odoo.__DEBUG__.services["web_tour.tour"].run("wevent_performance_register")',
-    #                 'odoo.__DEBUG__.services["web_tour.tour"].tours.wevent_performance_register.ready',
-    #                 login=None,
-    #                 timeout=200,
-    #             )
+    @warmup
+    def test_register_public(self):
+        with freeze_time(self.reference_now + timedelta(hours=3)):  # be sure sales has started
+            self.assertTrue(self.test_event.event_registrations_started)
+            self.authenticate(None, None)
+            with self.assertQueryCount(default=1197):  # tef: 1197
+                self.start_tour(
+                    '/event/%i/register' % self.test_event.id,
+                    'wevent_performance_register',
+                    login=None,
+                    timeout=200,
+                )
 
-    #     # minimal checkup, to be improved in future tests independently from performance
-    #     self.assertEqual(len(self.test_event.registration_ids), 3)
-    #     self.assertEqual(len(self.test_event.registration_ids.visitor_id), 1)
+        # minimal checkup, to be improved in future tests independently from performance
+        self.assertEqual(len(self.test_event.registration_ids), 3)
+        self.assertEqual(len(self.test_event.registration_ids.visitor_id), 1)

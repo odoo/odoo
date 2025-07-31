@@ -175,15 +175,11 @@ export function pay({ expectUnloadPage = false, waitFinalizeYourPayment = false 
 
 export function payWithDemo() {
     return [{
-        content: 'eCommerce: select Test payment provider',
-        trigger: 'input[name="o_payment_radio"][data-payment-method-code="demo"]',
-        run: "click",
-    }, {
         content: 'eCommerce: add card number',
         trigger: 'input[name="customer_input"]',
         run: "edit 4242424242424242",
     },
-    ...pay(),
+    ...pay({expectUnloadPage: true}),
     {
         content: 'eCommerce: check that the payment is successful',
         trigger: '[name="order_confirmation"]:contains("Your payment has been processed.")',
