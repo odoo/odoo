@@ -1,6 +1,6 @@
-import { ResCompany as WebResCompany } from "@web/../tests/_framework/mock_server/mock_models/res_company";
+import { webModels } from "@web/../tests/web_test_helpers";
 
-export class ResCompany extends WebResCompany {
+export class ResCompany extends webModels.ResCompany {
     _name = "res.company";
 
     _load_pos_data_fields() {
@@ -29,7 +29,7 @@ export class ResCompany extends WebResCompany {
     }
 
     _records = [
-        ...WebResCompany.prototype.constructor._records,
+        ...webModels.ResCompany._records,
         {
             id: 250,
             currency_id: 1,
