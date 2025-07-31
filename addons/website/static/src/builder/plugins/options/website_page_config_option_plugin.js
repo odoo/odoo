@@ -4,11 +4,11 @@ import { registry } from "@web/core/registry";
 import { rgbaToHex } from "@web/core/utils/colors";
 import { withSequence } from "@html_editor/utils/resource";
 import { FOOTER_COPYRIGHT } from "./footer_option_plugin";
-import { HEADER_SCROLL_EFFECT } from "./header_option_plugin";
+import { HEADER_TEMPLATE } from "./header/header_option_plugin";
 import { TopMenuVisibilityOption } from "./website_page_config_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-export const TOP_MENU_VISIBILITY = after(HEADER_SCROLL_EFFECT);
+export const TOP_MENU_VISIBILITY = after(HEADER_TEMPLATE);
 export const HIDE_FOOTER = after(FOOTER_COPYRIGHT);
 
 class WebsitePageConfigOptionPlugin extends Plugin {

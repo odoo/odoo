@@ -2,9 +2,9 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { after } from "@html_builder/utils/option_sequence";
-import { HEADER_BORDER } from "./header_option_plugin";
+import { HEADER_BOX } from "./header/header_option_plugin";
 
-const LANGUAGE_SELECTOR = after(HEADER_BORDER);
+const LANGUAGE_SELECTOR = after(HEADER_BOX);
 class LanguageSelectorOptionPlugin extends Plugin {
     static id = "languageSelectorOption";
     static dependencies = ["builderActions"];
