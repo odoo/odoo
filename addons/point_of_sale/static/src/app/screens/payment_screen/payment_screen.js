@@ -372,7 +372,7 @@ export class PaymentScreen extends Component {
                 : true;
 
             if (invoiced_finalized) {
-                this.pos.printReceipt(this.currentOrder);
+                this.pos.printReceipt({ order: this.currentOrder });
 
                 if (this.pos.config.iface_print_skip_screen) {
                     this.currentOrder.set_screen_data({ name: "" });
