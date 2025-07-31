@@ -5,6 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 class CookiesBarOptionPlugin extends Plugin {
     static id = "CookiesBarOptionPlugin";
+    static shared = ["getSavedSelectors"];
     resources = {
         builder_options: [
             {
@@ -17,11 +18,21 @@ class CookiesBarOptionPlugin extends Plugin {
             SelectLayoutAction,
         },
     };
+
+    setup() {
+        this.savedSelectors = {};
+    }
+
+    getSavedSelectors() {
+        return this.savedSelectors;
+    }
 }
 
 export class SelectLayoutAction extends BuilderAction {
     static id = "selectLayout";
+    static dependencies = ["CookiesBarOptionPlugin"];
     apply({ editingElement, value: layout }) {
+        const savedSelectors = this.dependencies.CookiesBarOptionPlugin.getSavedSelectors();
         const templateEl = renderToElement(`website.cookies_bar.${layout}`, {
             websiteId: this.services.website.currentWebsite.id,
         });
@@ -44,23 +55,19 @@ export class SelectLayoutAction extends BuilderAction {
             ".o_cookies_bar_text_policy",
         ];
 
-        if (this.savedSelectors === undefined) {
-            this.savedSelectors = [];
-        }
-
         for (const selector of selectorsToKeep) {
-            const currentLayoutEls = contentEl.querySelectorAll(`${selector} > *`);
+            const currentLayoutEls = contentEl.querySelector(selector)?.childNodes;
             const newLayoutEl = templateEl.querySelector(selector);
-            if (currentLayoutEls.length) {
+            if (currentLayoutEls && currentLayoutEls.length) {
                 // Save value before change, eg 'title' is not
                 // inside the 'discrete' template but we want to
                 // preserve it in case we select another layout
                 // later
-                this.savedSelectors[selector] = currentLayoutEls;
+                savedSelectors[selector] = [...currentLayoutEls];
             }
-            const savedSelector = this.savedSelectors[selector];
+            const savedSelector = savedSelectors[selector];
             if (newLayoutEl && savedSelector?.length) {
-                newLayoutEl.replaceChildren(savedSelector);
+                newLayoutEl.replaceChildren(...savedSelector);
             }
         }
 
