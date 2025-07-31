@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { ColorSelector } from "../font/color_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -142,7 +143,7 @@ export class IconPlugin extends Plugin {
 
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        return targetedNodes.find((node) => node.classList?.contains?.("fa"));
+        return targetedNodes.find((node) => isElement(node) && node.matches(ICON_SELECTOR));
     }
 
     resizeIcon({ size }) {
