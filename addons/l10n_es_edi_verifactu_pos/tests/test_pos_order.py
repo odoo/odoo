@@ -110,7 +110,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
     def test_error_above_simplified_limit(self):
         with self.with_pos_session():
-            with self.assertRaisesRegex(UserError, "The order needs to be invoiced since its total amount is above 400€."), \
+            with self.assertRaisesRegex(UserError, "The order needs to be invoiced since its total amount is above 400.0€."), \
                  mute_logger('odoo.addons.point_of_sale.models.pos_order'):
                 self._create_order({
                     'pos_order_lines_ui_args': [
