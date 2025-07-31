@@ -331,7 +331,7 @@ class IrModuleModule(models.Model):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
 
     def unlink(self):
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return super().unlink()
 
     def _get_modules_to_load_domain(self):
@@ -883,14 +883,14 @@ class IrModuleModule(models.Model):
         model_id = self._get_id(name) if name else False
         return self.browse(model_id).sudo()
 
-    @tools.ormcache('name')
+    @tools.ormcache('name', cache='stable')
     def _get_id(self, name):
         self.flush_model(['name'])
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
         return self.env.cr.fetchone()
 
     @api.model
-    @tools.ormcache()
+    @tools.ormcache(cache='stable')
     def _installed(self):
         """ Return the set of installed modules as a dictionary {name: id} """
         return {
