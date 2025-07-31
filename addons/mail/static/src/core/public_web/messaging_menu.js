@@ -1,7 +1,7 @@
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
-import { useDiscussSystray } from "@mail/utils/common/hooks";
+import { useDiscussSystray, usePaddingCompensation } from "@mail/utils/common/hooks";
 
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 
@@ -31,8 +31,13 @@ export class MessagingMenu extends Component {
         });
         this.dropdown = useDropdownState();
         this.notificationList = useRef("notification-list");
+        this.navbarRef = useRef("navbar");
 
         useExternalListener(window, "keydown", this.onKeydown, true);
+        this.paddingCompensation = usePaddingCompensation();
+        this.paddingCompensationContributee = this.paddingCompensation.asContributee;
+        this.paddingCompensationContributee.setup(this.notificationList);
+        this.paddingCompensation.asBottomContributor.setup(this.navbarRef);
     }
 
     onClickThread(isMarkAsRead, thread) {

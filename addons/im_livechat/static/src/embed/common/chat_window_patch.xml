@@ -7,9 +7,6 @@
             <t>$0</t>
            </t>
         </xpath>
-        <xpath expr="//*[@t-ref='needactionCounter']" position="replace">
-            <t t-if="!thread?.chatbot">$0</t>
-        </xpath>
         <xpath expr="//*[hasclass('o-mail-ChatWindow-header')]" position="attributes">
             <attribute name="t-attf-style" add="color: {{ livechatService.options.title_color }}; background-color: {{ livechatService.options.header_background_color }} !important;" separator=" "/>
         </xpath>
@@ -18,6 +15,11 @@
         </xpath>
         <xpath expr="//*[@t-ref='composerDisabledContainer']" position="attributes">
             <attribute name="t-attf-class" add="{{ showGiveFeedbackBtn ? 'px-2' : '' }}" separator=" "/>
+        </xpath>
+    </t>
+    <t t-inherit="mail.ChatWindow.headerContent" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='needactionCounter']" position="replace">
+            <t t-if="!thread?.chatbot">$0</t>
         </xpath>
     </t>
 </templates>

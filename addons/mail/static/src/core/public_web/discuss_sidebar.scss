@@ -1,7 +1,6 @@
 .o-mail-DiscussSidebar {
-    box-shadow: 1px 0px 6px -3px rgba(50, 50, 50, 0.15);
     width: 60px;
-    --border-opacity: 0.25;
+    z-index: $o-mail-NavigableList-zIndex;
 
     &:not(.o-compact) {
         width: $o-mail-Discuss-inspector;
@@ -17,6 +16,15 @@
     }
 }
 
+.o-mail-DiscussSidebar-mailboxesBtn {
+    --border-opacity: 0.5;
+    padding: map-get($spacers, 1) / 2;
+
+    &:not(.o-compact) {
+        left: map-get($spacers, 2) + map-get($spacers, 1);
+    }
+}
+
 .o-mail-DiscussSidebar-badge {
     padding: 3px 4px;
 
@@ -25,9 +33,34 @@
     }
 }
 
+@mixin mail-DiscussSidebar-itemMixin {
+    &:hover, &.o-showingActions {
+        // background-color: var(--mail-DiscussSidebar-hoverBgColor, mix($gray-100, $gray-200)) !important;
+        // outline-color: var(--mail-DiscussSidebar-hoverOutlineColor, mix($gray-100, $gray-200)) !important;
+        background-color: mail-DiscussSidebar-hoveredItemBgColor() !important;
+        outline-color: var(--mail-DiscussSidebar-hoverOutlineColor, mix($gray-100, $gray-200)) !important;
+    }
+    &.o-active {
+        background-color: mail-DiscussSidebar-activeItemBgColor() !important;
+        outline-color: mail-DiscussSidebar-activeItemOutlineColor() !important;
+
+        &.o-compact {
+            outline-color: mail-DiscussSidebar-activeItemOutlineColor-compact() !important;
+        }
+    }
+    &:hover.o-active {
+        background-color: mail-DiscussSidebar-activeHoveredItemBgColor() !important;
+        outline-color: mail-DiscussSidebar-activeHoveredItemOutlineColor() !important;
+        box-shadow: o-shadow-2() !important;
+    }
+}
+
 .o-mail-DiscussSidebar-item {
     outline: 1px solid transparent !important;
     outline-offset: -1px;
+    .o-mail-DiscussSidebarChannel-container.o-bordered &.o-active {
+        outline-offset: 0px;
+    }
     padding-top: map-get($spacers, 1) / 2;
     padding-bottom: map-get($spacers, 1) / 2;
 
@@ -39,15 +72,7 @@
         }
     }
 
-    &:hover {
-        background-color: mix($gray-100, $gray-200) !important;
-        outline-color: mix($gray-100, $gray-200) !important;
-    }
-
-    &.o-active {
-        background-color: var(--mail-DiscussSidebar-itemActiveBgColor, mix($o-view-background-color, $o-action, 90%)) !important;
-        outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, rgba($o-action, .05)) !important;
-    }
+    @include mail-DiscussSidebar-itemMixin;
 
     &.o-active, &:hover {
         .o-mail-DiscussSidebarChannel-itemName {

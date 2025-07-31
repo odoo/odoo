@@ -55,7 +55,7 @@ threadActionsRegistry
             };
         },
         name: (component) => component.thread.livechatStatusLabel,
-        nameClass: "fst-italic small mx-2",
+        nameClass: "fst-italic small",
         partition: (component) => !component.env.inDiscussApp,
         sequence: 5,
         sequenceGroup: 7,

@@ -1,0 +1,120 @@
+@function o-mail-DiscussActions-groupOutline() {
+    @return 1px solid rgba(mix($gray-200, $gray-300), .5);
+}
+
+@mixin o-mail-DiscussActions-groupMixin() {
+    &.o-inline {
+        background-color: mail-DiscussPanel-bgColor();
+        outline: o-mail-DiscussActions-groupOutline();
+        backdrop-filter: blur(2px);
+    }
+    &:not(.o-inline) {
+        gap: 1px;
+    }
+}
+
+.o-mail-DiscussActions-group {
+    @include o-mail-DiscussActions-groupMixin;
+}
+
+@function o-mail-DiscussActions-dangerBgColor() {
+    @return rgba(darken(saturate($danger, 50%), 5%), .5);
+}
+
+@function o-mail-DiscussActions-dangerOutlineColor() {
+    @return rgba(saturate($danger, 20%), .05);
+}
+
+@function o-mail-DiscussActions-successBgColor() {
+    @return rgba(darken(saturate($success, 50%), 5%), .5);
+}
+
+@function o-mail-DiscussActions-successOutlineColor() {
+    @return rgba(saturate($success, 20%), .05);
+}
+
+@mixin mail-DiscussActions-buttonMixin {
+    z-index: 1;
+    --btn-disabled-opacity: 0.25;
+    --mail-DiscussSidebarChannelActions-activeBorderColor: #{mix($gray-200, $gray-300)};
+
+    &.o-danger {
+        color: darken($danger, 5%);
+    }
+
+    &.o-success {
+        color: darken($success, 5%);
+    }
+    
+    &.o-inline {
+        i {
+            opacity: 65%;
+        }
+        &.o-mail-ChatWindow-command i {
+            opacity: 35%;
+        }
+        &.o-mobile {
+            padding: (map-get($spacers, 1) + map-get($spacers, 2)) / 2 !important;
+        }
+    }
+
+    &.o-inlineSmall {
+        padding: 1px;
+    }
+
+    &:not(.o-inline) i {
+        opacity: 75%;
+    }
+
+    .o-mail-DiscussActions-actionLabel {
+        opacity: 75%;
+    }
+
+    &:hover:not(.o-dropdown-item), &.o-isActive, &.o-active, &.focus, &.show {
+        .o-mail-DiscussActions-actionLabel {
+            opacity: 100%;
+        }
+
+        color: o-mail-DiscussMenu-activeItemColor();
+        background-color: o-mail-DiscussMenu-activeItemBgColor() !important;
+        outline: 1px solid o-mail-DiscussMenu-activeItemOutlineColor() !important;
+        outline-offset: -1px;
+        box-shadow: $box-shadow-sm;
+        &.o-danger {
+            background-color: o-mail-DiscussActions-dangerBgColor() !important;
+            outline: 1px solid o-mail-DiscussActions-dangerOutlineColor() !important;
+            color: white;
+            text-shadow: o-shadow-2();
+        }
+        &.o-success {
+            background-color: o-mail-DiscussActions-successBgColor() !important;
+            outline: 1px solid o-mail-DiscussActions-successOutlineColor() !important;
+            color: white;
+            text-shadow: o-shadow-2();
+        }
+        &.o-active {
+            background-color: rgba($o-action, .15) !important;
+            outline: 1px solid rgba($o-action, .1) !important;
+            text-shadow: o-shadow-2();
+        }
+        z-index: 2 !important;
+        i {
+            opacity: 100%;
+        }
+    }
+}
+
+.o-mail-DiscussActions {
+    hr {
+        opacity: 12.5% !important;
+    }
+
+    button {
+        @include mail-DiscussActions-buttonMixin;
+    }
+}
+
+// Useful for discuss actions that are not defined with `mail.DiscussActions` template but wants to share style
+.o-mail-DiscussActions-actionStyle {
+    @include mail-DiscussActions-buttonMixin;
+}

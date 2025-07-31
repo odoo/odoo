@@ -16,7 +16,8 @@ export class CallMenu extends Component {
 
     get icon() {
         return (
-            callActionsRegistry.get(this.rtc.lastSelfCallAction, undefined)?.icon ?? "fa-microphone"
+            callActionsRegistry.get(this.rtc.lastSelfCallAction, undefined)?.icon ??
+            "fa fa-microphone"
         );
     }
 }

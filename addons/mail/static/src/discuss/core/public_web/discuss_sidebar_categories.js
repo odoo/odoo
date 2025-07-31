@@ -5,7 +5,7 @@ import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sideb
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_sidebar_channel_actions";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 
-import { Component, useSubEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -100,20 +100,19 @@ export class DiscussSidebarChannel extends Component {
 
     get attClass() {
         return {
-            "bg-inherit": this.thread.notEq(this.store.discuss.thread),
-            "o-active": this.thread.eq(this.store.discuss.thread),
+            "o-active shadow-sm": this.thread.eq(this.store.discuss.thread),
             "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
-            "border-bottom-0 rounded-bottom-0": this.bordered,
             "opacity-50": this.thread.isMuted,
             "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
             "px-0": !this.store.discuss.isSidebarCompact,
+            "o-showingActions": this.showingActions.isOpen,
         };
     }
 
     get attClassContainer() {
         return {
-            "border border-dark o-rounded-bubble o-bordered": this.bordered,
+            "border border-dark o-rounded-bubble o-bordered shadow-sm": this.bordered,
             "o-compact": this.store.discuss.isSidebarCompact,
         };
     }
@@ -131,7 +130,7 @@ export class DiscussSidebarChannel extends Component {
 
     get itemNameAttClass() {
         return {
-            "o-unread fw-bolder":
+            "o-unread o-fw-600":
                 this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
             "text-muted":
                 this.thread.selfMember?.message_unread_counter === 0 || this.thread.isMuted,
@@ -243,31 +242,6 @@ export class DiscussSidebarCategories extends Component {
         this.discusscorePublicWebService = useService("discuss.core.public.web");
         this.orm = useService("orm");
         this.ui = useService("ui");
-        this.command = useService("command");
-        this.searchHover = useHover(["search-btn", "search-floating"], {
-            onHover: () => {
-                if (this.store.discuss.isSidebarCompact) {
-                    this.searchFloating.isOpen = true;
-                }
-            },
-            onAway: () => {
-                if (this.store.discuss.isSidebarCompact) {
-                    this.searchFloating.isOpen = false;
-                }
-            },
-        });
-        this.searchFloating = useDropdownState();
-        useSubEnv({
-            filteredThreads: (threads) => this.filteredThreads(threads),
-        });
-    }
-
-    filteredThreads(threads) {
-        return threads.filter((thread) => thread.displayInSidebar);
-    }
-
-    onClickFindOrStartConversation() {
-        this.command.openMainPalette({ searchValue: "@" });
     }
 }
 

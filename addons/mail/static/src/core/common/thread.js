@@ -53,6 +53,7 @@ export class Thread extends Component {
         "showEmptyMessage?",
         "showJumpPresent?",
         "messageActions?",
+        "paddingCompensation?",
     ];
     static defaultProps = {
         isInChatWindow: false,
@@ -104,6 +105,7 @@ export class Thread extends Component {
         );
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
+        this.bannersRef = useRef("banners");
         this.root = useRef("messages");
         this.visibleState = useVisible("messages", () => {
             this.updateShowJumpPresent();
@@ -254,6 +256,8 @@ export class Thread extends Component {
                 toRaw(nextProps.thread).fetchNewMessages();
             }
         });
+        this.props.paddingCompensation?.setup(this.root);
+        this.props.paddingCompensation?.useLocalContributor("top", this.bannersRef);
     }
 
     computeJumpPresentPosition() {

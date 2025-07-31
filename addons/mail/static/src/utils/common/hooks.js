@@ -2,6 +2,7 @@ import {
     Component,
     onMounted,
     onPatched,
+    onRendered,
     onWillUnmount,
     toRaw,
     useComponent,
@@ -635,4 +636,111 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
     );
     useLazyExternalListener(() => ref.el, "touchend", reset);
     useLazyExternalListener(() => ref.el, "touchcancel", reset);
+}
+
+export function usePaddingCompensation() {
+    const localSym = Symbol("local");
+    const state = useState({
+        compensation: { top: 0, bottom: 0, start: 0, end: 0 },
+        localCompensation: { top: 0, bottom: 0, start: 0, end: 0 },
+        get asContributee() {
+            return {
+                asContributee: true,
+                get top() {
+                    return state.compensation.top + state.localCompensation.top;
+                },
+                get bottom() {
+                    return state.compensation.bottom + state.localCompensation.bottom;
+                },
+                get left() {
+                    return state.compensation.left + state.localCompensation.left;
+                },
+                get right() {
+                    return state.compensation.right + state.localCompensation.right;
+                },
+                setup: (ref, { local } = {}) => {
+                    onRendered(() => {
+                        if (!ref.el) {
+                            return;
+                        }
+                        ["bottom", "top"].forEach((orientation) => {
+                            ref.el.style[
+                                local === localSym
+                                    ? `margin-${orientation}`
+                                    : `padding-${orientation}`
+                            ] = `${
+                                state.compensation[orientation] +
+                                (local === localSym ? 0 : state.localCompensation[orientation])
+                            }px`;
+                        });
+                    });
+                },
+                useLocalContributor: (orientation, ref) => {
+                    state.asContributor(orientation, { local: localSym }).setup(ref);
+                    state.asContributee.setup(ref, { local: localSym });
+                },
+            };
+        },
+        asContributor(orientation, { local } = {}) {
+            if (!["top", "bottom", "left", "right"].includes(orientation)) {
+                console.warn(
+                    `Error in usePaddingCompensation.asContributor: Unsupported contributor orientation "${orientation}"`
+                );
+                return;
+            }
+            let contribution = 0;
+            const compensationType = local === localSym ? "localCompensation" : "compensation";
+            const resizeObserverSym = Symbol("paddingCompensation_resizeObserver");
+            const contributor = {
+                asContributor: true,
+                contribute: (amount) => {
+                    const prevContribution = contribution;
+                    contribution = amount;
+                    state[compensationType][orientation] += amount - prevContribution;
+                },
+                withhold: () => {
+                    const prevContribution = contribution;
+                    contribution = 0;
+                    state[compensationType][orientation] -= prevContribution;
+                },
+                setup: (ref) => {
+                    const component = useComponent();
+                    const withhold = () => {
+                        component[resizeObserverSym]?.disconnect();
+                        delete component[resizeObserverSym];
+                        contributor.withhold();
+                    };
+                    const setupResizeObserver = () => {
+                        if (!component[resizeObserverSym] && ref.el) {
+                            component[resizeObserverSym] = new ResizeObserver(() => {
+                                contributor.contribute(ref.el?.clientHeight ?? 0);
+                            });
+                            component[resizeObserverSym].observe(ref.el);
+                        }
+                        if (!ref.el) {
+                            withhold();
+                        }
+                    };
+                    onMounted(() => {
+                        setupResizeObserver();
+                    });
+                    onPatched(() => {
+                        setupResizeObserver();
+                        contributor.contribute(ref.el?.clientHeight ?? 0);
+                    });
+                    onWillUnmount(() => {
+                        withhold();
+                    });
+                },
+            };
+            return contributor;
+        },
+        get asTopContributor() {
+            return state.asContributor("top");
+        },
+        get asBottomContributor() {
+            return state.asContributor("bottom");
+        },
+    });
+    return state;
 }

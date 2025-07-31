@@ -2,6 +2,10 @@
     --mail-DiscussSidebarChannel-commandsHover: #{rgba($gray-400, .5)};
 }
 
+.o-mail-DiscussSidebar-unreadIndicator {
+    @include o-mail-DiscussSidebar-unreadIndicatorBorderedMixin; // refresh with dark colors
+}
+
 .o-mail-DiscussSidebarChannel-container {
     --mail-DiscussSidebarChannel-borderOpacity: .125;
     ---mail-DiscussSidebarChannel-borderedBgColor: #{mix($gray-100, $gray-200, 75%)};
@@ -13,8 +17,4 @@
 
 .o-mail-DiscussSidebarSubchannel {
     --mail-DiscussSidebarSubchannel-svgColor: #{mix($gray-300, $gray-400)};
-}
-
-.o-mail-DiscussSidebarCategories-search {
-    --border-opacity: 0;
 }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.DiscussActions">
+    <div class="o-mail-DiscussActions flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': inline,'flex-column p-1': !inline }">
+        <span t-if="quick?.length" class="o-mail-DiscussActions-group btn-group" t-att-class="{ 'flex-column w-100 rounded-4': !inline, 'o-shadow-soft o-inline rounded-pill o-p-0_5': inline }">
+            <t t-set="groupBefore" t-value="true"/>
+            <t t-foreach="quick" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+                <t t-set="action" t-value="action"/>
+                <t t-set="groupSize" t-value="quick.length"/>
+            </t>
+        </span>
+        <t t-else="" t-set="groupBefore" t-value="false"/>
+        <t t-if="groupBefore" t-call="mail.DiscussActions.groupSeparator"/>
+        <span t-if="other?.length" class="o-mail-DiscussActions-group btn-group" t-att-class="{ 'flex-column w-10 rounded-40': !inline, 'o-shadow-soft o-inline rounded-pill o-p-0_5': inline }">
+            <t t-set="groupBefore" t-value="true"/>
+            <t t-foreach="other" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+                <t t-set="action" t-value="action"/>
+                <t t-set="groupSize" t-value="other.length"/>
+            </t>
+        </span>
+        <t t-else="" t-set="groupBefore" t-value="false"/>
+        <t t-if="groupBefore" t-call="mail.DiscussActions.groupSeparator"/>
+        <t t-if="inline" t-set="group" t-value="(group ?? []).slice().reverse()"/>
+        <t t-else="" t-set="group" t-value="(group ?? [])"/>
+        <t t-foreach="group" t-as="group" t-key="group_index">
+            <span t-if="group.length" class="o-mail-DiscussActions-group btn-group" t-att-class="{ 'flex-column w-100 rounded-4': !inline, 'o-shadow-soft o-inline rounded-pill o-p-0_5': inline }">
+                <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+                    <t t-set="action" t-value="action"/>
+                    <t t-set="groupSize" t-value="group.length"/>
+                </t>
+            </span>
+            <t t-if="!group_last" t-call="mail.DiscussActions.groupSeparator"/>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.DiscussActions.groupSeparator">
+    <span t-if="inline" class="text-muted align-self-stretch" t-att-class="{ 'ms-2 me-1': env.inDiscussApp }"/>
+    <hr t-else="" class="mx-2 my-1 rounded-4"/>
+</t>
+
+<t t-name="mail.DiscussActions.action">
+    <t t-if="action.dropdown">
+        <Dropdown menuClass="action.dropdown.menuClass">
+            <t t-call="mail.DiscussActions.actionMain"/>
+            <t t-set-slot="content">
+                <t t-call="{{ action.dropdown.template }}"/>
+            </t>
+        </Dropdown>
+    </t>
+    <t t-else="" t-call="mail.DiscussActions.actionMain"/>
+</t>
+
+<t t-name="mail.DiscussActions.actionMain">
+
+    <t t-set="btnClass" t-value="Object.entries({
+        'btn btn-secondary bg-inherit m-0 border border-transparent btn-group-item rounded-4': true,
+        'o-first': action_first,
+        'o-last': action_last,
+        'o-inline': inline,
+        'o-mobile': env.isSmall,
+        'p-1': inline and !inlineSmall,
+        'o-inlineSmall': inline and inlineSmall,
+        'text-start px-2 o-py-0_5 rounded-4 o-fs-small': !inline,
+        'o-isActive': action.isActive,
+        'o-mail-ChatWindow-command': env.inChatWindow,
+        'o-danger': action.danger,
+        'o-success': action.success,
+    }).filter(([_, val]) => val).map(([key, _]) => key).join(' ')"/>
+    <t t-set="attrs" t-value="{
+        'disabled': action.disabledCondition,
+        'title': action.name,
+        'name': action.id,
+    }"/>
+    <DropdownItem t-if="dropdown" class="btnClass" tag="'button'" onSelected="(ev) => action.onSelected(ev)">        
+        <t t-call="mail.DiscussActions.actionContent"/>
+    </DropdownItem>
+    <button t-else="" t-att-class="btnClass" t-attf-class="{{ env.inCallActionList ? 'o-discuss-CallActionList-dropdownItem' : '' }}" t-att="attrs" t-on-click="(ev) => action.onSelected(ev)">
+        <t t-call="mail.DiscussActions.actionContent"/>
+    </button>
+</t>
+
+<t t-name="mail.DiscussActions.actionContent">
+    <t t-if="action.icon?.template" t-call="{{ action.icon.template }}">
+        <t t-set="templateParams" t-value="action.icon.params"/>
+    </t>
+    <i t-elif="inline and action.iconLarge" t-attf-class="{{ action.iconLarge }}" t-att-class="{ 'fs-4': inlineSmall }" class="fa-fw"/><i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'fs-4': inlineSmall }" class="fa-fw"/> <span t-if="action.text" t-esc="action.text"/>
+    <span t-if="!inline" class="o-mail-DiscussActions-actionLabel fw-bold mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
+</t>
+
+</templates>

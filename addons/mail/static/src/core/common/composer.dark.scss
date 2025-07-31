@@ -1,11 +1,11 @@
-.o-mail-Composer {
-    --mail-Composer-bg: #{mix($gray-100, $o-view-background-color)};
-}
-
-.o-mail-Composer-bg {
-    --border-opacity: 0.25;
-}
-
 .o-mail-Composer-actions {
     --mail-Composer-actionHoverColor: white;
+}
+
+@function o-mail-Composer-inputContainerBackdropFilterUnfocused() {
+    @return blur(1.5px) contrast(.9);
+}
+
+.o-mail-Composer-inputContainer {
+    @include o-mail-Composer-inputContainerMixin;
 }
