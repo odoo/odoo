@@ -1033,22 +1033,6 @@ test("html field with a placeholder", async () => {
     );
 });
 
-test("'Video' command is available", async () => {
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="txt" widget="html"/>
-            </form>`,
-    });
-    setSelectionInHtmlField();
-    await insertText(htmlEditor, "/video");
-    await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Media"]);
-});
-
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     await mountView({
         type: "form",
@@ -2308,7 +2292,7 @@ describe("codeview enabled", () => {
         expect(queryAllTexts(".o-we-command-name")).toInclude("Code");
     });
 
-    test("Video command should be available when codeview enabled", async () => {
+    test("Video tab in media dialog should be available when codeview enabled", async () => {
         await mountView({
             type: "form",
             resId: 1,
@@ -2322,6 +2306,8 @@ describe("codeview enabled", () => {
         setSelection({ anchorNode, anchorOffset: 0 });
         await insertText(htmlEditor, "/video");
         await waitFor(".o-we-powerbox");
-        expect(queryAllTexts(".o-we-command-name")).toInclude("Video");
+        await click(".o-we-powerbox .o-we-command-name:contains('Media')");
+        await waitFor(".o_select_media_dialog");
+        expect(".o_select_media_dialog .nav-link:contains('Videos')").toHaveCount(1);
     });
 });
