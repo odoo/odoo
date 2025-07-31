@@ -57,7 +57,10 @@ export class MultiCreatePopover extends Component {
                 });
                 return;
             }
-            if (start > end) {
+            if (
+                luxon.DateTime.fromObject(start.toObject()) >
+                luxon.DateTime.fromObject(end.toObject())
+            ) {
                 this.notification.add(_t("Start time should be before end time"), {
                     title: "User Error",
                     type: "warning",
