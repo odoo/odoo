@@ -68,9 +68,14 @@ class ormcache:
     """
     key: Callable[..., tuple]
 
-    def __init__(self, *args: str, cache: str = 'default', skiparg: int | None = None, **kwargs):
+    def __init__(self, *args: str, cache: str = '', skiparg: int | None = None, **kwargs):
         self.args = args
         self.skiparg = skiparg
+        if not cache:
+            if 'self.env.uid' in args:
+                cache = 'default.short'
+            else:
+                cache = 'default'
         self.cache_name = cache
         if skiparg is not None:
             warnings.warn("Deprecated since 19.0, ormcache(skiparg) will be removed", DeprecationWarning)
