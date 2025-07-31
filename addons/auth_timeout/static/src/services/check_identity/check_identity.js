@@ -1,9 +1,8 @@
 import { Component, EventBus, onWillDestroy, onWillStart, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { patch } from "@web/core/utils/patch";
 import { redirect } from "@web/core/utils/urls";
 import { session } from "@web/session";
 
@@ -187,12 +186,6 @@ export const checkIdentityService = {
      *
      * @returns {Promise<void>} Resolves when the user completes the check.
      */
-    run() {
-        this.eventBus.trigger("run");
-        return new Promise((resolve) => {
-            checkIdentityService.eventBus.addEventListener("identityChecked", resolve, { once: true });
-        });
-    },
     start(env, { bus_service, dialog, presence }) {
         const channel = new BroadcastChannel("check_identity");
         const bus = this.eventBus;
@@ -208,15 +201,23 @@ export const checkIdentityService = {
             channel.postMessage("identityChecked");
         };
 
-        const getInitData = async () => {
-            return await rpc("/auth-timeout/session/check-identity");
-        };
-
-        bus.addEventListener("run", () => {
+        const run = async () => {
             if (!started) {
                 dialog.add(CheckIdentityDialog);
             }
-        });
+            // Empty the current view, to not let any confidential data displayed
+            // not even inspecting the dom or through the console using Javascript.
+            env.services.action && env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+            await new Promise((resolve) => {
+                checkIdentityService.eventBus.addEventListener("identityChecked", resolve, { once: true });
+            });
+            // Reload the view to display back the data that was displayed before.
+            env.services.action && env.services.action.doAction("soft_reload");
+        };
+
+        const getInitData = async () => {
+            return await rpc("/auth-timeout/session/check-identity");
+        };
 
         bus.addEventListener("start", () => {
             started = true;
@@ -245,15 +246,10 @@ export const checkIdentityService = {
                 inactivityTimer = setTimeout(
                     async () => {
                         if (presence.getInactivityPeriod() >= session.lock_timeout_inactivity * 1000) {
-                            // Empty the current view, to not let any confidential data displayed
-                            // not even inspecting the dom or through the console using Javascript.
-                            env.services.action && env.bus.trigger("ACTION_MANAGER:UPDATE", {});
                             // Send the fact the user is away to the server.
                             updatePresence();
                             // Display the check identity dialog
-                            await this.run();
-                            // Reload the view to display back the data that was displayed before.
-                            env.services.action && env.services.action.doAction("soft_reload");
+                            await run();
                         }
                         startInactivityTimer();
                     },
@@ -275,51 +271,20 @@ export const checkIdentityService = {
             bus,
             check,
             getInitData,
+            run,
         };
     },
 };
 
-/**
- * @override
- * Override the core RPC method to catch CheckIdentityException.
- *
- * If such an exception is caught, the identity check dialog is triggered,
- * and the original request is retried after successful re-authentication.
- *
- * @function
- * @param {string} url The RPC endpoint
- * @param {Object} params The RPC parameters
- * @param {Object} settings Additional request settings
- * @returns {Promise<any>} A promise resolving to the RPC result
- */
-patch(rpc, {
-    _rpc(url, params, settings) {
-        // `rpc._rpc` returns a promise with an additional attribute `.abort`
-        // It needs to be forwarded to the new promise as some feature requires it.
-        // e.g.
-        // `record_autocomplete.js`
-        // ```js
-        // if (this.lastProm) {
-        //     this.lastProm.abort(false);
-        // }
-        // this.lastProm = this.search(name, SEARCH_LIMIT + 1);
-        // ```
-        // --test-tags /account_reports.test_tour_account_report_analytic_filters
-        // --test-tags /web_studio.test_rename
-        const originPromise = super._rpc(url, params, settings);
-        const promise = originPromise.catch(async (error) => {
-            if (error.data && error.data.name === "odoo.addons.auth_timeout.models.ir_http.CheckIdentityException") {
-                await checkIdentityService.run();
-                const newPromise = rpc._rpc(url, params, settings);
-                promise.abort = newPromise.abort;
-                return newPromise;
-            }
-            throw error;
-        });
-        promise.abort = originPromise.abort;
-        return promise;
-    },
-});
+const checkIdentityErrorHandler = (env, error, originalError) => {
+    if (originalError instanceof RPCError) {
+        if (originalError.data.name === "odoo.addons.auth_timeout.models.ir_http.CheckIdentityException") {
+            useService("check_identity").run();
+            return true;
+        }
+    }
+};
 
 registry.category("public_components").add("auth_timeout.check_identity_form", CheckIdentityForm);
 registry.category("services").add("check_identity", checkIdentityService);
+registry.category("error_handlers").add("checkIdentityErrorHandler", checkIdentityErrorHandler);
