@@ -8,21 +8,21 @@
             <div class="position-relative d-flex justify-content-center position-absolute h-100 w-100 rounded-3">
                 <video class="shadow rounded h-100 w-100 object-fit-cover rounded-3" autoplay="" t-ref="video"/>
             </div>
-            <div t-if="props.thread.rtcInvitingSession" class="o-discuss-CallInvitation-correspondent d-flex justify-content-around align-items-center text-nowrap px-3 mb-2 z-1" t-att-class="{
+            <div t-if="props.thread.selfMember?.rtc_inviting_session_id" class="o-discuss-CallInvitation-correspondent d-flex justify-content-around align-items-center text-nowrap px-3 mb-2 z-1" t-att-class="{
                 'align-self-start mt-3': state.videoStream,
                 'flex-column mt-4': !state.videoStream,
             }">
                 <img class="o-discuss-CallInvitation-avatar mb-2 rounded-circle cursor-pointer object-fit-cover"
-                    t-att-src="props.thread.rtcInvitingSession.channel_member_id.avatarUrl"
+                    t-att-src="props.thread.selfMember?.rtc_inviting_session_id?.channel_member_id.avatarUrl"
                     t-on-click="onClickAvatar"
                     alt="Avatar"/>
                 <div class="d-flex pb-2 flex-column" t-att-class="{
                     'justify-content-start ps-2': state.videoStream,
                     'justify-content-center': !state.videoStream,
                 }">
-                    <span class="w-100 fw-bolder text-truncate overflow-hidden" t-att-class="{ 'text-center': !state.videoStream }" t-esc="props.thread.rtcInvitingSession.channel_member_id.name"/>
+                    <span class="w-100 fw-bolder text-truncate overflow-hidden" t-att-class="{ 'text-center': !state.videoStream }" t-esc="props.thread.selfMember?.rtc_inviting_session_id.channel_member_id.name"/>
                     <span class="opacity-75 smaller">
-                        <t t-if="props.thread.rtcInvitingSession.is_camera_on">Incoming Video Call...</t>
+                        <t t-if="props.thread.selfMember?.rtc_inviting_session_id?.is_camera_on">Incoming Video Call...</t>
                         <t t-else="">Incoming Call...</t>
                     </span>
                 </div>
@@ -34,7 +34,7 @@
                     t-on-click="onClickRefuse">
                     <i class="fa-lg fa-fw m-2 oi oi-close"/>
                 </button>
-                <button t-if="props.thread.rtcInvitingSession.is_camera_on" class="btn user-select-none p-1 rounded-circle border-0 btn-success"
+                <button t-if="props.thread.selfMember?.rtc_inviting_session_id?.is_camera_on" class="btn user-select-none p-1 rounded-circle border-0 btn-success"
                     aria-label="Accept with camera"
                     title="Accept with camera"
                     t-on-click="(ev) => this.onClickAccept(ev, { camera: true })">

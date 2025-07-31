@@ -13,6 +13,42 @@ export class DiscussChannelMember extends models.ServerModel {
     message_unread_counter = fields.Generic({ default: 0 });
     last_interest_dt = fields.Datetime({ default: () => serializeDateTime(today()) });
 
+    write(ids, vals) {
+        const membersToUpdate = this.browse(ids);
+        const syncFields = this._sync_field_names();
+        const oldValsByMember = new Map();
+        for (const member of membersToUpdate) {
+            const oldVals = {};
+            for (const fieldName of syncFields) {
+                oldVals[fieldName] = member[fieldName];
+            }
+            oldValsByMember.set(member.id, oldVals);
+        }
+        const result = super.write(ids, vals);
+        for (const member of membersToUpdate) {
+            const oldVals = oldValsByMember.get(member.id);
+            const diff = [];
+            for (const fieldName of syncFields) {
+                if (member[fieldName] !== oldVals[fieldName]) {
+                    diff.push(fieldName);
+                }
+            }
+            if (diff.length > 0) {
+                const store = new mailDataHelpers.Store();
+                diff.push("channel", "persona");
+                this.browse(member.id)._to_store(store, diff);
+                const [partner, guest] = this.env["res.partner"]._get_current_persona();
+                const busChannel = guest ?? partner;
+                this.env["bus.bus"]._sendone(busChannel, "mail.record/insert", store.get_result());
+            }
+        }
+        return result;
+    }
+
+    _sync_field_names() {
+        return ["last_interest_dt", "message_unread_counter", "new_message_separator", "unpin_dt"];
+    }
+
     /**
      * @param {number[]} ids
      * @param {boolean} is_typing
@@ -251,25 +287,6 @@ export class DiscussChannelMember extends models.ServerModel {
         });
         const message_unread_counter = this._compute_message_unread_counter([member.id]);
         this.env["discuss.channel.member"].write([member.id], { message_unread_counter });
-        const [partner, guest] = this.env["res.partner"]._get_current_persona();
-        this.env["bus.bus"]._sendone(
-            guest ?? partner,
-            "mail.record/insert",
-            new mailDataHelpers.Store(
-                DiscussChannelMember.browse(member.id),
-                [
-                    mailDataHelpers.Store.one(
-                        "channel_id",
-                        makeKwArgs({ as_thread: true, only_id: true })
-                    ),
-
-                    "message_unread_counter",
-                    "new_message_separator",
-                ].concat(this._to_store_persona())
-            )
-                .add("discuss.channel.member", { id: member.id })
-                .get_result()
-        );
     }
 
     set_custom_notifications(ids, custom_notifications) {

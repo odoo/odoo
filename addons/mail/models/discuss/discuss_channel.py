@@ -641,10 +641,6 @@ class DiscussChannel(models.Model):
             channel_member_domain &= Domain('id', 'in', member_ids)
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         members.rtc_inviting_session_id = False
-        for member in members:
-            Store(
-                bus_channel=member._bus_channel(),
-            ).add(self, {"rtcInvitingSession": False}).bus_send()
         if members:
             Store(bus_channel=self).add(
                 self,
@@ -1109,12 +1105,6 @@ class DiscussChannel(models.Model):
                 forward_member_field("is_pinned"),
                 "message_needaction_counter",
                 {"message_needaction_counter_bus_id": bus_last_id},
-                # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-                Store.One(
-                    "rtcInvitingSession",
-                    value=lambda c: c.self_member_id.rtc_inviting_session_id.sudo(),
-                    predicate=lambda c: c.self_member_id.rtc_inviting_session_id,
-                ),
                 Store.One(
                     "self_member_id",
                     extra_fields=[
@@ -1125,6 +1115,8 @@ class DiscussChannel(models.Model):
                         {"message_unread_counter_bus_id": bus_last_id},
                         "mute_until_dt",
                         "new_message_separator",
+                        # sudo: discuss.channel.rtc.session - each member can see who is inviting them
+                        Store.One("rtc_inviting_session_id", sudo=True),
                     ],
                     only_data=True,
                 ),

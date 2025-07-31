@@ -617,7 +617,9 @@ export class Rtc extends Record {
      */
     endCall(channel = this.state.channel) {
         this._endHost();
-        channel.rtcInvitingSession = undefined;
+        if (channel.selfMember) {
+            channel.selfMember.rtc_inviting_session_id = undefined;
+        }
         channel.activeRtcSession = undefined;
         if (channel.eq(this.state.channel)) {
             this.state.logs.end = new Date().toISOString();
@@ -1380,7 +1382,9 @@ export class Rtc extends Record {
             3000,
             { leading: true, trailing: true }
         );
-        this.state.channel.rtcInvitingSession = undefined;
+        if (this.state.channel.selfMember) {
+            this.state.channel.selfMember.rtc_inviting_session_id = undefined;
+        }
         if (camera) {
             await this.toggleVideo("camera");
         }

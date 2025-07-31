@@ -419,15 +419,14 @@ export class DiscussChannel extends models.ServerModel {
                         message_unread_counter,
                     });
                     res.is_pinned = memberOfCurrentUser.is_pinned;
-                    if (memberOfCurrentUser.rtc_inviting_session_id) {
-                        res.rtcInvitingSession = mailDataHelpers.Store.one(
-                            DiscussChannelMember.browse(memberOfCurrentUser.rtc_inviting_session_id)
-                        );
-                    }
                     store.add(
                         DiscussChannelMember.browse(memberOfCurrentUser.id),
                         makeKwArgs({
-                            extra_fields: ["custom_channel_name", "message_unread_counter"],
+                            extra_fields: [
+                                "custom_channel_name",
+                                "message_unread_counter",
+                                mailDataHelpers.Store.one("rtc_inviting_session_id"),
+                            ],
                         })
                     );
                 }

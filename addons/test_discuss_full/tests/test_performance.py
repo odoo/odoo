@@ -730,8 +730,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "group restricted channel 1",
                 "parent_channel_id": False,
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
-                "rtcInvitingSession": member_2.sudo().rtc_session_ids.id,
-                # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "rtc_session_ids": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
                 "uuid": channel.uuid,
             }
@@ -949,6 +947,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -966,6 +965,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": last_message.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -983,6 +983,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": last_message.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1000,6 +1001,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message_of_partner_0.id + 1,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": member_0.rtc_inviting_session_id.id,
                 "seen_message_id": last_message_of_partner_0.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1023,6 +1025,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": last_message.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1040,6 +1043,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1067,6 +1071,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1094,6 +1099,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1121,6 +1127,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1148,6 +1155,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1176,6 +1184,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1205,6 +1214,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
                 "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
