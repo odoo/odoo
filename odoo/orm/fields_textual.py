@@ -224,7 +224,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         if not self.translate or env.context.get('prefetch_langs'):
             return cache
         lang = self.translation_lang(env)
-        return LangProxyDict(cache, lang)
+        return LangProxyDict(self, cache, lang)
 
     def _cache_missing_ids(self, records):
         if self.translate and records.env.context.get('prefetch_langs'):
@@ -302,7 +302,11 @@ class BaseString(Field[str | typing.Literal[False]]):
 
         # not dirty fields
         if not dirty:
-            self._update_cache(records.with_context(prefetch_langs=True), {lang: cache_value}, dirty=False)
+            if self.compute and self.inverse:
+                # invalidate the values in other languages to force their recomputation
+                self._update_cache(records.with_context(prefetch_langs=True), {lang: cache_value}, dirty=False)
+            else:
+                self._update_cache(records, cache_value, dirty=False)
             return
 
         # model translation
@@ -698,10 +702,11 @@ class Html(BaseString):
 class LangProxyDict(collections.abc.MutableMapping):
     """A view on a dict[id, dict[lang, value]] that maps id to value given a
     fixed language."""
-    __slots__ = ('_cache', '_lang')
+    __slots__ = ('_cache', '_field', '_lang')
 
-    def __init__(self, cache: dict, lang: str):
+    def __init__(self, field: BaseString, cache: dict, lang: str):
         super().__init__()
+        self._field = field
         self._cache = cache
         self._lang = lang
 
@@ -712,12 +717,22 @@ class LangProxyDict(collections.abc.MutableMapping):
             return default
         if vals is None:
             return None
+        if not (self._field.compute or (self._field.store and (key or key.origin))):
+            # the field's value is neither computed, nor in database
+            # (non-stored field or new record without origin), so fallback on
+            # its 'en_US' value in cache
+            return vals.get(self._lang, vals.get('en_US', default))
         return vals.get(self._lang, default)
 
     def __getitem__(self, key):
         vals = self._cache[key]
         if vals is None:
             return None
+        if not (self._field.compute or (self._field.store and (key or key.origin))):
+            # the field's value is neither computed, nor in database
+            # (non-stored field or new record without origin), so fallback on
+            # its 'en_US' value in cache
+            return vals.get(self._lang, vals.get('en_US'))
         return vals[self._lang]
 
     def __setitem__(self, key, value):
@@ -727,9 +742,14 @@ class LangProxyDict(collections.abc.MutableMapping):
         vals = self._cache.get(key)
         if vals is None:
             # key is not in cache, or {key: None} is in cache
-            self._cache[key] = {self._lang: value}
+            self._cache[key] = vals = {self._lang: value}
         else:
             vals[self._lang] = value
+        if not (self._field.compute or (self._field.store and (key or key.origin))):
+            # the field's value is neither computed, nor in database
+            # (non-stored field or new record without origin), so the cache
+            # must contain the fallback 'en_US' value for other languages
+            vals.setdefault('en_US', value)
 
     def __delitem__(self, key):
         vals = self._cache.get(key)
