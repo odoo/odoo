@@ -924,3 +924,16 @@ class ProductTemplate(models.Model):
                 'currency_name': currency.name,
             })
         return data
+
+    def _get_access_action(self, access_uid=None, force_website=False):
+        """ Instead of the classic form view, redirect to website if it is published. """
+        self.ensure_one()
+        if force_website or self.website_published:
+            return {
+                "type": "ir.actions.act_url",
+                "url": "%s" % self.website_url,
+                "target": "self",
+                "target_type": "public",
+                "res_id": self.id,
+            }
+        return super()._get_access_action(access_uid=access_uid, force_website=force_website)

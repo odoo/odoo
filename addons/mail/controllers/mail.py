@@ -245,10 +245,8 @@ class MailController(http.Controller):
                 store = Store({'isChannelTokenSecret': True})
                 store.add(thread, {'highlightMessage': Store.one(message, only_id=True)})
                 return PublicPageController()._response_discuss_channel_invitation(store, thread)
-            elif hasattr(thread, '_get_share_url'):
-                return request.redirect(thread._get_share_url(share_token=False))
             else:
-                raise Unauthorized()
+                return self._redirect_to_record(message.model, message.res_id, None, highlight_message_id=message_id)
 
         if message.model == 'discuss.channel':
             url = f'/odoo/action-mail.action_discuss?active_id={message.res_id}&highlight_message_id={message_id}'
