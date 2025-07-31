@@ -35,7 +35,7 @@ function useClickAway(callback) {
     }
 
     function navigationHandler() {
-        callback();
+        callback(document.documentElement);
     }
 
     function pointerDownHandler(ev) {
