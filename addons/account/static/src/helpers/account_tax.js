@@ -66,26 +66,51 @@ export const accountTaxHelpers = {
         // Group them per batch.
         let batch = [];
         let is_base_affected = false;
+        let include_base_amount = false;
+        let is_first_batch = true;
         for (const tax of results.sorted_taxes.toReversed()) {
-            if (batch.length > 0) {
-                const same_batch =
+            let same_batch = false;
+            if (batch.length) {
+                same_batch =
                     tax.amount_type === batch[0].amount_type &&
-                    (special_mode || tax.price_include === batch[0].price_include) &&
-                    tax.include_base_amount === batch[0].include_base_amount &&
-                    ((tax.include_base_amount && !is_base_affected) || !tax.include_base_amount);
+                    (special_mode || tax.price_include === batch[0].price_include);
+                if (same_batch) {
+                    same_batch = false;
+                    if (is_first_batch && tax.include_base_amount !== include_base_amount) {
+                        include_base_amount = tax.include_base_amount;
+                    }
+                    if (!include_base_amount && !tax.include_base_amount) {
+                        // No tax affecting another one.
+                        same_batch = true;
+                    } else if (
+                        include_base_amount &&
+                        tax.include_base_amount &&
+                        !is_base_affected &&
+                        tax.is_base_affected
+                    ) {
+                        // Tax affecting the following taxes but in batch using 'is_base_affected'.
+                        is_base_affected = tax.is_base_affected;
+                        same_batch = true;
+                    }
+                }
+
                 if (!same_batch) {
-                    for (const batch_tax of batch) {
+                    for (let batch_tax of batch) {
                         results.batch_per_tax[batch_tax.id] = batch;
                     }
                     batch = [];
+                    is_first_batch = false;
                 }
             }
 
-            is_base_affected = tax.is_base_affected;
+            if (!same_batch) {
+                is_base_affected = tax.is_base_affected;
+                include_base_amount = tax.include_base_amount;
+            }
             batch.push(tax);
         }
 
-        if (batch.length !== 0) {
+        if (batch.length) {
             for (const batch_tax of batch) {
                 results.batch_per_tax[batch_tax.id] = batch;
             }
