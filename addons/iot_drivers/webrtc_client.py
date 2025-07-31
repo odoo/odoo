@@ -3,6 +3,7 @@ import json
 import logging
 import pprint
 from threading import Thread
+import time
 from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
 
 from odoo.addons.iot_drivers import main
@@ -62,6 +63,14 @@ class WebRtcClient(Thread):
                     if device_identifier in main.iot_devices:
                         _logger.info("device '%s' action started with: %s", device_identifier, pprint.pformat(data))
                         main.iot_devices[device_identifier].action(data)
+                    else:
+                        # Notify that the device is not connected
+                        self.send({
+                            'owner': message['session_id'],
+                            'device_identifier': device_identifier,
+                            'time': time.time(),
+                            'status': 'disconnected',
+                        })
 
             @channel.on("close")
             def on_close():
