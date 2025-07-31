@@ -13,23 +13,23 @@
         <field name="state_ids" eval="[(6, 0, [ref('base.state_ar_x')])]"/>
     </record>
 
-    <record id="fiscal_position_cordoba_and_proffits_perception" model="account.fiscal.position.l10n_ar_tax">
+    <!-- <record id="fiscal_position_cordoba_and_proffits_perception" model="account.fiscal.position.l10n_ar_tax">
         <field name="fiscal_position_id" ref="fiscal_position_cordoba_and_proffits"/>
         <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ri_tax_percepcion_iibb_co_aplicada'))"/>
         <field name="tax_type">perception</field>
-        <field name="data_source">data_source_cordoba</field>
+        <field name="l10n_ar_data_source">l10n_ar_data_source_cordoba</field>
     </record>
     <record id="fiscal_position_cordoba_and_proffits_withholding" model="account.fiscal.position.l10n_ar_tax">
         <field name="fiscal_position_id" ref="fiscal_position_cordoba_and_proffits"/>
         <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_iibb_cba_applied'))"/>
         <field name="tax_type">withholding</field>
-        <field name="data_source">data_source_cordoba</field>
+        <field name="l10n_ar_data_source">l10n_ar_data_source_cordoba</field>
     </record>
     <record id="fiscal_position_cordoba_and_proffits_prof_withholding" model="account.fiscal.position.l10n_ar_tax">
         <field name="fiscal_position_id" ref="fiscal_position_cordoba_and_proffits"/>
         <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_profits_regimen_21_insc'))"/>
         <field name="tax_type">withholding</field>
-    </record>
+    </record> -->
 
     <!-- Córdoba -->
     <record id="fiscal_position_cordoba" model="account.fiscal.position">
@@ -41,18 +41,18 @@
         <field name="state_ids" eval="[(6, 0, [ref('base.state_ar_x')])]"/>
     </record>
 
-    <record id="fiscal_position_cordoba_perception" model="account.fiscal.position.l10n_ar_tax">
+    <!-- <record id="fiscal_position_cordoba_perception" model="account.fiscal.position.l10n_ar_tax">
         <field name="fiscal_position_id" ref="fiscal_position_cordoba"/>
         <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ri_tax_percepcion_iibb_co_aplicada'))"/>
         <field name="tax_type">perception</field>
-        <field name="data_source">data_source_cordoba</field>
+        <field name="l10n_ar_data_source">l10n_ar_data_source_cordoba</field>
     </record>
     <record id="fiscal_position_cordoba_withholding" model="account.fiscal.position.l10n_ar_tax">
         <field name="fiscal_position_id" ref="fiscal_position_cordoba"/>
         <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_iibb_cba_applied'))"/>
         <field name="tax_type">withholding</field>
-        <field name="data_source">data_source_cordoba</field>
-    </record>
+        <field name="l10n_ar_data_source">l10n_ar_data_source_cordoba</field>
+    </record> -->
 
     <!-- Profits -->
     <record id="fiscal_position_proffits" model="account.fiscal.position">
@@ -62,10 +62,10 @@
         <field name="company_id" ref="base.company_ri"/>
     </record>
 
-    <record id="fiscal_position_proffits_prof_withholding" model="account.fiscal.position.l10n_ar_tax">
+    <!-- <record id="fiscal_position_proffits_prof_withholding" model="account.fiscal.position.l10n_ar_tax">
         <field name="fiscal_position_id" ref="fiscal_position_proffits"/>
         <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_profits_regimen_21_insc'))"/>
         <field name="tax_type">withholding</field>
-    </record>
+    </record> -->
 
 </odoo>

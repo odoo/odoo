@@ -6,17 +6,14 @@
         <field name="model">account.fiscal.position</field>
         <field name="inherit_id" ref="account.view_account_position_form"/>
         <field name="arch" type="xml">
-            <notebook>
-                <page string="Perceptions and Withholdings" invisible="'AR' not in fiscal_country_codes">
-                    <field name="l10n_ar_tax_ids">
-                        <list editable="bottom">
-                            <field name="tax_type"/>
-                            <field name="default_tax_id" domain="tax_template_domain" options="{'no_create': True}"/>
-                            <field name="data_source"/>
-                        </list>
-                    </field>
-                </page>
-            </notebook>
+            <field name="name" position="after">
+                <field name="l10n_ar_perception_ids"
+                        widget="many2many_tags"
+                        invisible="'AR' not in fiscal_country_codes"/>
+                <field name="l10n_ar_withholding_ids"
+                        widget="many2many_tags"
+                        invisible="'AR' not in fiscal_country_codes"/>
+            </field>
         </field>
     </record>
 

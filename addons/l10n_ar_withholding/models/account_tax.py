@@ -82,14 +82,3 @@ class AccountTax(models.Model):
                     tax.l10n_ar_withholding_payment_type = False
                     tax.l10n_ar_tax_type = False
                 tax.type_tax_use = 'none'
-
-    @api.ondelete(at_uninstall=False)
-    def _check_tax_used_on_company_tax_ws(self):
-        """
-        This method checks if any of the taxes being deleted are set as
-        the default tax in the `account.fiscal.position.l10n_ar_tax` model.
-        If such a tax is found, a `UserError` is raised to prevent deletion.
-        """
-        ws = self.env['account.fiscal.position.l10n_ar_tax'].search([('default_tax_id', 'in', self.ids)])
-        if ws:
-            raise UserError(_('You cannot delete these taxes because they are set as default perception/withholding taxes in the fiscal positions of the following companies: %(company_names)s', company_names=', '.join(ws.mapped('company_id.name'))))

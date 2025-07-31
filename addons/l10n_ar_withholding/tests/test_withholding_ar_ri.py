@@ -73,13 +73,13 @@ class TestL10nArWithholdingArRi(TestAr):
             'fiscal_position_id': cls.fiscal_position_cordoba_and_proffits.id,
             'default_tax_id': cls.env.ref('account.%s_%s' % (cls.env.company.id, 'ri_tax_percepcion_iibb_co_aplicada')).id,
             'tax_type': 'perception',
-            'data_source': 'data_source_cordoba',
+            'l10n_ar_data_source': 'l10n_ar_data_source_cordoba',
         })
         cls.fiscal_position_cordoba_and_proffits_withholding = cls.env['account.fiscal.position.l10n_ar_tax'].create({
             'fiscal_position_id': cls.fiscal_position_cordoba_and_proffits.id,
             'default_tax_id': cls.env.ref('account.%s_%s' % (cls.env.company.id, 'ex_tax_withholding_iibb_cba_applied')).id,
             'tax_type': 'withholding',
-            'data_source': 'data_source_cordoba',
+            'l10n_ar_data_source': 'l10n_ar_data_source_cordoba',
         })
         cls.fiscal_position_cordoba_and_proffits_prof_withholding = cls.env['account.fiscal.position.l10n_ar_tax'].create({
             'fiscal_position_id': cls.fiscal_position_cordoba_and_proffits.id,
@@ -405,7 +405,7 @@ class TestL10nArWithholdingArRi(TestAr):
             mock_response.json.side_effect = lambda: json.loads(mock_response.content)
         return mock_response
 
-    def _mock_get_data_source_jurisdiction(self, invoice=None, wizard=None, jurisdiction='cordoba', expected_xml_file='cordoba_response'):
+    def _mock_get_l10n_ar_data_source_jurisdiction(self, invoice=None, wizard=None, jurisdiction='cordoba', expected_xml_file='cordoba_response'):
         """
         This method mocks the response from a jurisdiction-specific API and applies the mocked
         data to either an invoice or a wizard, depending on the provided arguments.
@@ -446,7 +446,7 @@ class TestL10nArWithholdingArRi(TestAr):
         self.assertEqual(cordoba_tax, self.env['account.tax'])
 
         # Create an invoice line. This will trigger the Cordoba tax creation.
-        taxes = self._mock_get_data_source_jurisdiction(invoice=invoice, jurisdiction='cordoba', expected_xml_file='cordoba_response')
+        taxes = self._mock_get_l10n_ar_data_source_jurisdiction(invoice=invoice, jurisdiction='cordoba', expected_xml_file='cordoba_response')
 
         # Post invoice
         invoice.action_post()
@@ -537,7 +537,7 @@ class TestL10nArWithholdingArRi(TestAr):
             wizard = self.env['account.payment.register'].with_context(
                 active_model='account.move', active_ids=invoice.ids
             ).create({'payment_date': payment_date})
-            taxes = self._mock_get_data_source_jurisdiction(
+            taxes = self._mock_get_l10n_ar_data_source_jurisdiction(
                 wizard=wizard, jurisdiction=jurisdiction, expected_xml_file=expected_xml_file
             )
             wizard.l10n_ar_withholding_ids = [Command.clear()] + [
