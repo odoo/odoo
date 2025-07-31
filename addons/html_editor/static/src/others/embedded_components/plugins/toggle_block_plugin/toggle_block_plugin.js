@@ -529,6 +529,7 @@ export class ToggleBlockPlugin extends Plugin {
 
     normalize(element) {
         const cursors = this.dependencies.selection.preserveSelection();
+        let shouldRestoreCursor = false;
         for (const titleChild of selectElements(
             element,
             `${toggleSelector} ${titleSelector} > *:first-child`
@@ -539,12 +540,16 @@ export class ToggleBlockPlugin extends Plugin {
                 const nodes = children(titleChild.parentElement);
                 title.replaceChildren(nodes.shift());
                 toggle.after(...nodes);
+                shouldRestoreCursor = true;
             }
             if (!isParagraphRelatedElement(titleChild)) {
                 toggle.after(titleChild);
+                shouldRestoreCursor = true;
             }
         }
-        cursors.restore();
+        if (shouldRestoreCursor) {
+            cursors.restore();
+        }
         for (const emptyToggleNode of selectElements(
             element,
             `${toggleSelector} [data-embedded-editable]:empty`
