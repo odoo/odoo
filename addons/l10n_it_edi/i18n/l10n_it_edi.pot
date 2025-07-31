@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3+e\n"
+"Project-Id-Version: Odoo Server 18.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-19 15:25+0000\n"
-"PO-Revision-Date: 2025-06-19 15:25+0000\n"
+"POT-Creation-Date: 2025-08-01 13:51+0000\n"
+"PO-Revision-Date: 2025-08-01 13:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -69,6 +69,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
 msgstr ""
@@ -81,6 +86,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__agreement
 msgid "Agreement"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
+msgid "All Taxes Included"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -105,11 +115,6 @@ msgid "Attached file is empty"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_ir_attachment
-msgid "Attachment"
-msgstr ""
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Attachment from XML"
@@ -124,6 +129,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__being_sent
 msgid "Being Sent To SdI"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc16
+msgid "CASAGIT Additional pension fund for journalists"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -294,11 +304,12 @@ msgid "Destination Code (SDI) must have between 6 and 7 characters."
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__display_name
@@ -332,6 +343,61 @@ msgid "EDI operating mode"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc07
+msgid "ENASARCO pension fund for sales agents"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc19
+msgid "ENPAB national pension fund for biologists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc08
+msgid "ENPACL pension fund for labor consultants"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc10
+msgid "ENPAF pension fund for chemists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc12
+msgid "ENPAIA pension fund for people working in agriculture"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc09
+msgid "ENPAM pension fund for doctors"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc21
+msgid "ENPAP national pension fund for psychologists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc20
+msgid "ENPAPI national pension fund for nurses"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc11
+msgid "ENPAV pension fund for veterinaries"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc18
+msgid "EPAP pension fund"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc17
+msgid "EPPI pension fund for industrial experts"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
 msgid "Economic and Administrative Index"
 msgstr ""
@@ -340,6 +406,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
 msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Enasarco tax not found for line with description '%s'"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -367,8 +439,8 @@ msgid "FatturaPA"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_attachment_id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_attachment_name
 msgid "FatturaPA Attachment"
 msgstr ""
 
@@ -384,17 +456,28 @@ msgid "Fiscal code of your company"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__id
 msgid "ID"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc14
+msgid "INPGI pension fund for journalists"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc22
+msgid "INPS national pension fund"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -719,6 +802,21 @@ msgid "Name"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc04
+msgid "National pension fund for associated engineers and architects"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc01
+msgid "National pension fund for lawyers and solicitors"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc05
+msgid "National pension fund for notaries"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__no
 msgid "Not a limited liability company"
 msgstr ""
@@ -731,6 +829,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__name
 msgid "Numero DDT"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc15
+msgid "ONAOSI fund for sanitary orphans"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -816,6 +919,49 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Payment due date invalid in XML file: %s"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_pension_fund_signed
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_pension_fund_signed
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
+msgid "Pension Fund"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,help:l10n_it_edi.field_account_tax__l10n_it_pension_fund_type
+msgid "Pension Fund Type. Only for Italian accounting EDI."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Pension Fund tax not found"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc02
+msgid "Pension fund for accountants with a degree"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc06
+msgid "Pension fund for accountants without a degree and commercial experts"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc13
+msgid "Pension fund for employees in delivery and marine agencies"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_pension_fund_type__tc03
+msgid "Pension fund for surveyors"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_pension_fund_type
+msgid "Pension fund type (Italy)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -996,6 +1142,41 @@ msgstr ""
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
 msgid "TP02 pagamento completo"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_tax.py:0
+msgid ""
+"Tax '%s' cannot be both a Withholding tax and a Pension fund tax. Please "
+"create two separate ones."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_tax.py:0
+msgid ""
+"Tax '%s' has a withholding reason, so the withholding type must also be "
+"specified"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_tax.py:0
+msgid "Tax '%s' has a withholding type so the amount must be negative."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_tax.py:0
+msgid ""
+"Tax '%s' has a withholding type, so the withholding reason must also be "
+"specified"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1220,6 +1401,12 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "This invoice was retrieved from the SdI."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "This move is not waiting for updates from the SdI."
 msgstr ""
 
@@ -1227,6 +1414,17 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_state
 #: model:ir.model.fields,help:l10n_it_edi.field_account_move__l10n_it_edi_state
 msgid "This state is updated by default, but you can force the value. "
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
+msgid "Total"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_before_withholding_signed
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_before_withholding_signed
+msgid "Total Before Withholding"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1287,6 +1485,13 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_vat_signed
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_vat_signed
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
+msgid "VAT"
+msgstr ""
+
+#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "View Company/ies"
@@ -1316,6 +1521,39 @@ msgstr ""
 msgid ""
 "We are simulating the sending of the e-invoice file %s, as we are in demo "
 "mode."
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_withholding_signed
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_withholding_signed
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
+msgid "Withholding"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Withholding tax not found"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_withholding_reason
+msgid "Withholding tax reason (Italy)"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,help:l10n_it_edi.field_account_tax__l10n_it_withholding_reason
+msgid "Withholding tax reason. Only for Italian accounting EDI."
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_withholding_type
+msgid "Withholding tax type (Italy)"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,help:l10n_it_edi.field_account_tax__l10n_it_withholding_type
+msgid "Withholding tax type. Only for Italian accounting EDI."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1362,6 +1600,128 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "Your tax representative partner must have a tax number."
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__a
+msgid "[A] Autonomous work in the fields of art or profession"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__b
+msgid ""
+"[B] Income from the use of intellectual properties or patents or processes, "
+"formulas and informations in the fields of science, commerce or science"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__c
+msgid ""
+"[C] Income from work as part of association groups or other cooperation "
+"determined by contracts"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__d
+msgid "[D] Income as partner or founder of a corporation"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__e
+msgid "[E] Income from client-related bill protests made by town secretaries"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__g
+msgid "[G] Compensation for the end of a professional sport career"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__h
+msgid ""
+"[H] Compensation for the end of a societary career (excluded those earned "
+"before 31.12.2003) and already taxed"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__i
+msgid "[I] Compensation for the end of a notary career"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__k
+msgid "[K] Civil service checks, ref art. 16 D.lgs. n.40 6/03/2017"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__l1
+msgid ""
+"[L1] Income from the use of intellectual properties or patents or processes,"
+" formulas and informations in the fields of science, commerce or science, "
+"from someone who actively bought the use rights"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__l
+msgid ""
+"[L] Income from the use of intellectual properties or patents or processes, "
+"formulas and informations in the fields of science, commerce or science, but"
+" not made by the author/inventor"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__m1
+msgid "[M1] Incomes due for an obligation to act, not to act, or to allow"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__m2
+msgid ""
+"[M2] Autonomous work which isn't part of usual professional/artistic duties,"
+" or incomes due for an obligation to act, not to act, or to allow - that "
+"require being registered to the \"Gestione separata\""
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__m
+msgid ""
+"[M] Autonomous work which isn't part of usual professional/artistic duties, "
+"or incomes due for an obligation to act, not to act, or to allow"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__n
+msgid ""
+"[N] Compensation for travel, expenses, prizes, or other compensations for "
+"amateur sport activities"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__o1
+msgid ""
+"[O1] Incomes due for an obligation to act, not to act, or to allow - that do"
+" not require being registered to the \"Gestione Separata\""
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__o
+msgid ""
+"[O] Autonomous work which isn't part of usual professional/artistic duties, "
+"or incomes due for an obligation to act, not to act, or to allow - that do "
+"not require being registered to the \"Gestione separata\""
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__p
+msgid ""
+"[P] Compensation for people residing abroad for continuous use or concession"
+" of industrial machinery, commercial or scientific tools that are on the "
+"Italian soil"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__q
+msgid "[Q] Provisions for exclusive agents or sales representatives' work"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1462,6 +1822,107 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf19
 msgid "[RF19] Regime forfettario (art.1, c.54-89, L. 190/2014)"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_type__rt01
+msgid "[RT01] Withholding for persons"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_type__rt02
+msgid "[RT02] Withholding for personal businesses"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_type__rt03
+msgid "[RT03] INPS Pension fund contribution"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_type__rt04
+msgid "[RT04] ENASARCO pension fund contribution"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_type__rt05
+msgid "[RT05] ENPAM pension fund contribution"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_type__rt06
+msgid "[RT06] Other pension fund contribution"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__r
+msgid "[R] Provisions for non-exclusive agents or sales representatives' work"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__s
+msgid "[S] Provisions for commissioner work"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__t
+msgid "[T] Provisions for mediator work"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__u
+msgid "[U] Provisions for procurer work"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__v1
+msgid ""
+"[V1] Income from unusual commercial activities (such as provisions for "
+"occasional work or sales representative, mediator, procurer)"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__v2
+msgid ""
+"[V2] Income from unusual work activities from door-to-door sales "
+"representatives"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__v
+msgid ""
+"[V] Provisions for door-to-door sales persons and newspaper selling in "
+"kiosks"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__w
+msgid ""
+"[W] Income from 2015 tinders subject to law art. 25-ter D.P.R. 600/1973"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__x
+msgid ""
+"[X] Income from 2014 for foreign companies or institutions subject to law "
+"art. 26-quater, c. 1, lett. a) and b) D.P.R. 600/1973"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__y
+msgid ""
+"[Y] Income from 1.01.2005 to 26.07.2005 from companies or institutions not "
+"included in the description above"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__zo
+msgid "[ZO] Other reason"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__z
+msgid "[Z] Deprecated"
 msgstr ""
 
 #. module: l10n_it_edi

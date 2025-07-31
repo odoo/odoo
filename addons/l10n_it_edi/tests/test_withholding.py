@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import datetime
-from collections import namedtuple
 
 from odoo import fields
 from odoo.tests import tagged
@@ -75,7 +71,12 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             'tax_ids': [(6, 0, [cls.inps_tax.id, cls.zero_tax.id])]
         }
 
-        invoice_data = cls.get_real_client_invoice_data()
+        cls.invoice_lines = [
+            ('Ordinary accounting service for the year', 350.0),
+            ('Balance deposit for the past year', 300.0),
+            ('Ordinary accounting service for the trimester', 50.0),
+            ('Electronic invoices management', 50.0),
+        ]
 
         cls.withholding_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
@@ -88,7 +89,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                     **cls.withholding_sale_line,
                     'name': name,
                     'price_unit': price,
-                }) for (name, price) in invoice_data.lines
+                }) for (name, price) in cls.invoice_lines
             ],
         })
 
@@ -103,7 +104,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                     **cls.pension_fund_sale_line,
                     'name': name,
                     'price_unit': price,
-                }) for (name, price) in invoice_data.lines
+                }) for (name, price) in cls.invoice_lines
             ]
         })
 
@@ -118,7 +119,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                     **cls.enasarco_sale_line,
                     'name': name,
                     'price_unit': price,
-                }) for (name, price) in invoice_data.lines
+                }) for (name, price) in cls.invoice_lines
             ]
         })
 
@@ -133,7 +134,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                     **cls.inps_sale_line,
                     'name': name,
                     'price_unit': price,
-                }) for (name, price) in invoice_data.lines
+                }) for (name, price) in cls.invoice_lines
             ]
         })
 
@@ -141,29 +142,6 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
         cls.pension_fund_tax_invoice._post()
         cls.enasarco_tax_invoice._post()
         cls.inps_tax_invoice._post()
-
-        cls.module = 'l10n_it_edi_withholding'
-
-    @classmethod
-    def get_real_client_invoice_data(cls):
-        data = {
-            'lines': [
-                ('Ordinary accounting service for the year', 350.0),
-                ('Balance deposit for the past year', 300.0),
-                ('Ordinary accounting service for the trimester', 50.0),
-                ('Electronic invoices management', 50.0),
-            ],
-            'base': 750.0,
-            'tax_amount': 165.0,
-            'with_tax': 915.0,
-            'withholding_amount': 150.0,
-            'with_withholding': 765.0,
-            'pension_fund_amount': 30.0,
-            'with_pension_fund': 951.6,
-            'tax_amount_with_pension_fund': 171.6,
-            'payment_amount': 801.6,
-        }
-        return namedtuple('ClientInvoice', data.keys())(**data)
 
     def test_withholding_tax_constraints(self):
         with self.assertRaises(ValidationError):
@@ -205,11 +183,10 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             'invoice_line_ids': [{
                 'name': name,
                 'price_unit': price_unit,
-            } for name, price_unit in self.get_real_client_invoice_data().lines]
+            } for name, price_unit in self.invoice_lines]
         }])
 
-        invoice_data = self.get_real_client_invoice_data()
-        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in invoice_data.lines]):
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
             withholding_taxes = line.tax_ids.filtered(lambda x: x.l10n_it_withholding_type)
             pension_fund_taxes = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type)
             vat_taxes = line.tax_ids - withholding_taxes - pension_fund_taxes
@@ -246,7 +223,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             'invoice_line_ids': [{
                 'name': name,
                 'price_unit': price_unit,
-            } for name, price_unit in self.get_real_client_invoice_data().lines]
+            } for name, price_unit in self.invoice_lines]
         }])
         for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
             self.assertEqual(line.tax_ids, (
@@ -256,14 +233,13 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             ))
 
     def test_pension_fund_taxes_import(self):
-        invoice_data = self.get_real_client_invoice_data()
         invoice = self._assert_import_invoice('IT00470550013_pfun2.xml', [{
             'invoice_date': datetime.date(2022, 3, 24),
             'invoice_date_due': datetime.date(2022, 3, 24),
             'invoice_line_ids': [{
                 'name': name,
                 'price_unit': price,
-            } for name, price in invoice_data.lines]
+            } for name, price in self.invoice_lines]
         }])
         for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
             self.assertEqual(line.tax_ids, (
@@ -303,11 +279,10 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             'invoice_line_ids': [{
                 'name': name,
                 'price_unit': price_unit,
-            } for name, price_unit in self.get_real_client_invoice_data().lines]
+            } for name, price_unit in self.invoice_lines]
         }])
 
-        invoice_data = self.get_real_client_invoice_data()
-        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in invoice_data.lines]):
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
             enasarco_imported_tax = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type == 'TC07')
             self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
             self.assertEqual(-8.5, enasarco_imported_tax.amount)
@@ -348,11 +323,10 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             'invoice_line_ids': [{
                 'name': name,
                 'price_unit': price_unit,
-            } for name, price_unit in self.get_real_client_invoice_data().lines]
+            } for name, price_unit in self.invoice_lines]
         }], applied_xml)
 
-        invoice_data = self.get_real_client_invoice_data()
-        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in invoice_data.lines]):
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
             enasarco_imported_tax = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type == 'TC07')
             self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
             self.assertEqual(-8.5, enasarco_imported_tax.amount)

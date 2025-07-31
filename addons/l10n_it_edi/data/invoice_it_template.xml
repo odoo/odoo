@@ -139,10 +139,33 @@
                 <Divisa t-out="currency.name"/>
                 <Data t-out="format_date(record.date if is_self_invoice else record.invoice_date)"/>
                 <Numero t-out="format_alphanumeric(record.name, -20)"/>
+                <t t-foreach="withholding_values" t-as="withholding">
+                    <DatiRitenuta>
+                        <TipoRitenuta t-out="format_alphanumeric(withholding['tipo_ritenuta'])"/>
+                        <ImportoRitenuta t-out="format_float(withholding['importo_ritenuta'], 2)"/>
+                        <AliquotaRitenuta t-out="format_float(withholding['aliquota_ritenuta'], 2)"/>
+                        <CausalePagamento t-out="format_alphanumeric(withholding['causale_pagamento'])"/>
+                    </DatiRitenuta>
+                </t>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
                     <BolloVirtuale t-translation="off">SI</BolloVirtuale>
                     <ImportoBollo t-out="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
+                <t t-foreach="pension_fund_values" t-as="pension_fund">
+                    <DatiCassaPrevidenziale>
+                        <TipoCassa t-out="format_alphanumeric(pension_fund['tipo_cassa'])"/>
+                        <AlCassa t-out="format_float(pension_fund['al_cassa'], 2)"/>
+                        <ImportoContributoCassa t-out="format_float(pension_fund['importo_contributo_cassa'], 2)"/>
+                        <ImponibileCassa t-out="format_float(pension_fund['imponibile_cassa'], 2)"/>
+                        <AliquotaIVA t-out="format_float(pension_fund['aliquota_iva'], 2)"/>
+                        <Ritenuta t-if="pension_fund['ritenuta']"
+                                  t-out="pension_fund['ritenuta']"/>
+                        <Natura t-if="pension_fund['natura']"
+                                t-out="format_alphanumeric(pension_fund['natura'])"/>
+                        <RiferimentoAmministrazione t-if="pension_fund['riferimento_amministrazione']"
+                                                    t-out="format_alphanumeric(pension_fund['riferimento_amministrazione'])"/>
+                    </DatiCassaPrevidenziale>
+                </t>
                 <ImportoTotaleDocumento t-out="format_monetary(importo_totale_documento, currency)"/>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto t-if="origin_document_type == 'purchase_order'">
@@ -224,10 +247,10 @@
 </template>
 
 <template id="account_invoice_FatturaPA_origin_document">
-                <IdDocumento t-if="origin_document_name" t-esc="format_alphanumeric(origin_document_name, 20)"/>
-                <Data t-if="origin_document_date" t-esc="format_date(origin_document_date)"/>
-                <CodiceCUP t-if="cup" t-esc="format_alphanumeric(cup, 15)"/>
-                <CodiceCIG t-if="cig" t-esc="format_alphanumeric(cig, 15)"/>
+                <IdDocumento t-if="origin_document_name" t-out="format_alphanumeric(origin_document_name, 20)"/>
+                <Data t-if="origin_document_date" t-out="format_date(origin_document_date)"/>
+                <CodiceCUP t-if="cup" t-out="format_alphanumeric(cup, 15)"/>
+                <CodiceCIG t-if="cig" t-out="format_alphanumeric(cig, 15)"/>
 </template>
 
     </data>
