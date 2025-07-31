@@ -1,9 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryOne, queryAll, select, waitFor, waitForNone, edit } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryOne, select, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
-import { contains } from "../../../../web/static/tests/_framework/dom_test_helpers";
 import { getContent, simulateDoubleClickSelect } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
 
