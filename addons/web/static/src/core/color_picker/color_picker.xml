@@ -101,7 +101,7 @@
                 <t t-foreach="Object.values(this.grayscales)" t-as="grayscaleColors" t-key="grayscaleColors">
                     <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
                         <t t-foreach="grayscaleColors" t-as="color" t-key="color">
-                            <button t-att-data-color="color" class="o_color_button btn p-0" t-att-class="{'selected': color === defaultColorSet}" t-attf-style="background-color: var(--{{color}})" />
+                            <button t-att-data-color="color" class="o_color_button btn p-0" t-att-class="{'selected': color === defaultColorSet}" t-attf-style="background-color: var(--{{props.themeColorPrefix}}{{color}})" />
                         </t>
                     </div>
                 </t>
