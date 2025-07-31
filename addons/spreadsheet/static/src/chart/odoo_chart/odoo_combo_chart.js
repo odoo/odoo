@@ -22,6 +22,7 @@ export class OdooComboChart extends OdooChart {
         super(definition, sheetId, getters);
         this.axesDesign = definition.axesDesign;
         this.hideDataMarkers = definition.hideDataMarkers;
+        this.zoomable = definition.zoomable;
     }
 
     getDefinition() {
@@ -29,6 +30,7 @@ export class OdooComboChart extends OdooChart {
             ...super.getDefinition(),
             axesDesign: this.axesDesign,
             hideDataMarkers: this.hideDataMarkers,
+            zoomable: this.zoomable,
         };
     }
 
