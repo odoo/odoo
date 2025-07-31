@@ -5,7 +5,7 @@ import wSaleUtils from '@website_sale/js/website_sale_utils';
 export class AddToCart extends Interaction {
     static selector = '#add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit';
     dynamicContent = {
-        _root: { 't-on-click.prevent': this.addToCart },
+        _root: { "t-on-click.prevent": this.locked(this.addToCart, true) },
     };
 
     /**

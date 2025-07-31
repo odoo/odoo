@@ -5,7 +5,7 @@ import { rpc } from '@web/core/network/rpc';
 export class CarouselProductCard extends Interaction {
     static selector = '.o_carousel_product_card';
     dynamicContent = {
-        '.js_add_cart': { 't-on-click': this.onClickAddToCart },
+        ".js_add_cart": { "t-on-click": this.locked(this.onClickAddToCart, true) },
         '.js_remove': { 't-on-click': this.onRemoveFromRecentlyViewed },
     };
 
@@ -26,7 +26,7 @@ export class CarouselProductCard extends Interaction {
         const isCombo = dataset.productType === 'combo';
         const showQuantity = Boolean(dataset.showQuantity);
 
-        await this.waitFor(this.services['cart'].add({
+        await this.waitFor(this.services["cart"].add({
             productTemplateId: productTemplateId,
             productId: productId,
             isCombo: isCombo,

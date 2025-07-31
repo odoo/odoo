@@ -4,15 +4,17 @@ import { registry } from '@web/core/registry';
 export class CartSuggestion extends Interaction {
     static selector = '[name="suggested_product"]';
     dynamicContent = {
-        'button.js_add_suggested_products': { 't-on-click': this.addSuggestedProduct },
+        "button.js_add_suggested_products": {
+            "t-on-click": this.locked(this.addSuggestedProduct, true),
+        },
     };
 
     /**
      * @param {Event} ev
      */
-    addSuggestedProduct(ev) {
+    async addSuggestedProduct(ev) {
         const dataset = ev.currentTarget.dataset;
-        this.services['cart'].add({
+        await this.services["cart"].add({
             productTemplateId: parseInt(dataset.productTemplateId),
             productId: parseInt(dataset.productId),
             isCombo: dataset.productType === 'combo',

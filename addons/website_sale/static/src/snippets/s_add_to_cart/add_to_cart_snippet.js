@@ -6,7 +6,7 @@ import { rpc } from '@web/core/network/rpc';
 export class AddToCartSnippet extends Interaction {
     static selector = '.s_add_to_cart_btn';
     dynamicContent = {
-        _root: { 't-on-click': this.onClickAddToCartButton },
+        _root: { "t-on-click": this.locked(this.onClickAddToCartButton, true) },
     };
 
     async onClickAddToCartButton(ev) {
@@ -31,7 +31,7 @@ export class AddToCartSnippet extends Interaction {
             }
         }
 
-        this.services['cart'].add({
+        await this.services["cart"].add({
             productTemplateId: productTemplateId,
             productId: productId,
             isCombo: isCombo,

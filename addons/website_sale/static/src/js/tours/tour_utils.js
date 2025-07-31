@@ -22,6 +22,10 @@ export function addToCart({
         trigger: "#add_to_cart",
         run: "click",
     });
+    steps.push({
+        content: "Check if the button is disabled",
+        trigger: "#add_to_cart.pe-none",
+    });
     if (productHasVariants) {
         steps.push(clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'));
     }

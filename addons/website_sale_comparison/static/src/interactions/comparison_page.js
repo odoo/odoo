@@ -16,7 +16,9 @@ export class ComparisonPage extends Interaction {
     };
 
     dynamicContent = {
-        'button[name="comparison_add_to_cart"]': { 't-on-click': this.addToCart },
+        "button[name='comparison_add_to_cart']": {
+            "t-on-click": this.locked(this.addToCart, true),
+        },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
         _backButton: { 't-on-click': () => redirect('/shop') },
         _clearAllButton: { 't-on-click': this.clearAllProducts },
@@ -131,13 +133,13 @@ export class ComparisonPage extends Interaction {
      *
      * @param {Event} ev
      */
-    addToCart(ev) {
+    async addToCart(ev) {
         const button = ev.currentTarget;
         const productId = parseInt(button.dataset.productProductId);
         const productTemplateId = parseInt(button.dataset.productTemplateId);
         const showQuantity = Boolean(button.dataset.showQuantity);
 
-        this.services['cart'].add({
+        await this.services["cart"].add({
             productTemplateId: productTemplateId,
             productId: productId,
         }, {
