@@ -363,7 +363,6 @@ export class PosOrderline extends Base {
             discount: discount,
             tax_ids: this.tax_ids,
             product_id: product,
-            rate: 1.0,
             ...customValues,
         };
         if (order.fiscal_position_id) {
