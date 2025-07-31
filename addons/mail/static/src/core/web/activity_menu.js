@@ -55,8 +55,6 @@ export class ActivityMenu extends Component {
             return;
         }
 
-        // include archived records, as activities are more important than archived
-        context['active_test'] = false;
         if (filter === "all") {
             context["search_default_activities_overdue"] = 1;
             context["search_default_activities_today"] = 1;
@@ -68,7 +66,8 @@ export class ActivityMenu extends Component {
             context["search_default_activities_upcoming_all"] = 1;
         }
 
-        let domain = [];
+        // include archived records, as activities are more important than archived
+        let domain = [["active", "in", [true, false]]];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
         }

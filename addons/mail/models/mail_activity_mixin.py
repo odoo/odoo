@@ -248,6 +248,7 @@ class MailActivityMixin(models.AbstractModel):
         if Domain.is_negative_operator(operator):
             return NotImplemented
         return [('activity_ids', 'any', [
+            ('active', '=', True),  # never overdue if "done"
             ('date_deadline', operator, operand),
             ('res_model', '=', self._name),
             ('user_id', '=', self.env.user.id)
