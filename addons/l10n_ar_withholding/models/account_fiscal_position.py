@@ -1,10 +1,29 @@
-from odoo import models, fields
+from odoo import api, fields, models
 
 
 class AccountFiscalPosition(models.Model):
     _inherit = "account.fiscal.position"
 
-    l10n_ar_tax_ids = fields.One2many('account.fiscal.position.l10n_ar_tax', 'fiscal_position_id')
+    l10n_ar_withholding_ids = fields.Many2many(
+        'account.tax.group',
+        relation='account_fp_withholding_rel',
+        column1='fiscal_position_id',
+        column2='tax_group_id',
+        check_company=True,
+        string='AR Withholdings',
+        domain=[('l10n_ar_tribute_afip_code', '=', False), ('l10n_ar_vat_afip_code', '=', False)],
+        help='Tax groups for Argentine withholding taxes that will be applied on supplier payments  ',
+    )
+    l10n_ar_perception_ids = fields.Many2many(
+        'account.tax.group',
+        relation='account_fp_perception_rel',
+        column1='fiscal_position_id',
+        column2='tax_group_id',
+        check_company=True,
+        string='AR Perceptions',
+        domain=[('l10n_ar_tribute_afip_code', 'in', ['06', '07', '08', '09'])],
+        help='Tax groups for Argentine perception taxes that will be applied on sale invoices',
+    )
 
     def _l10n_ar_add_taxes(self, partner, company, date, tax_type):
         """
@@ -21,12 +40,18 @@ class AccountFiscalPosition(models.Model):
         Returns:
             account.tax: A recordset of applicable taxes.
         """
-        # TODO we should try to unify this method with _get_tax_domain, _compute_withholdings and _check_tax_group_overlap
         self.ensure_one()
         taxes = self.env['account.tax']
-        for fp_tax in self.l10n_ar_tax_ids.filtered(lambda x: x.tax_type == tax_type):
+        
+        # Filter tax groups by tax type
+        if tax_type == 'perception':
+            tax_groups = self.l10n_ar_perception_ids
+        else:
+            tax_groups = self.l10n_ar_withholding_ids
+        
+        for tax_group in tax_groups:
             domain = self.env['l10n_ar.partner.tax']._check_company_domain(company)
-            domain += [('tax_id.tax_group_id', '=', fp_tax.default_tax_id.tax_group_id.id)]
+            domain += [('tax_id.tax_group_id', '=', tax_group.id)]
             domain += [
                 '|', ('from_date', '<=', date), ('from_date', '=', False),
                 '|', ('to_date', '>=', date), ('to_date', '=', False),
@@ -35,9 +60,12 @@ class AccountFiscalPosition(models.Model):
                 partner_tax = partner.l10n_ar_partner_perception_ids.filtered_domain(domain).mapped('tax_id')
             elif tax_type == 'withholding':
                 partner_tax = partner.l10n_ar_partner_tax_ids.filtered_domain(domain).mapped('tax_id')
+            
             # Add taxes for tax groups that were not set on the partner
             if not partner_tax:
-                partner_tax = fp_tax._get_missing_taxes(partner, date)
+                partner_tax = tax_group._get_missing_taxes(partner, date, company)
+            
+            import pdb; pdb.set_trace()  # Debugging line to inspect partner_tax
             if partner_tax.l10n_ar_tax_type not in ["earnings", "earnings_scale"] and partner_tax.amount == 0:
                 # if the tax is non earnings and the amount is 0, then we skip it
                 continue
@@ -55,7 +83,7 @@ class AccountFiscalPosition(models.Model):
 
         When the context includes 'l10n_ar_withholding' and the company's country is
         Argentina, the method adds a ranking function that prioritizes fiscal positions
-        containing taxes of type 'withholding' (`l10n_ar_tax_ids`).
+        containing tax groups of type 'withholding' (`l10n_ar_withholding_ids`).
 
         Args:
             partner (res.partner): The partner for whom the fiscal position ranking
@@ -63,14 +91,14 @@ class AccountFiscalPosition(models.Model):
         """
         if not self._context.get('l10n_ar_withholding') or self.env.company.country_id.code != "AR":
             return super()._get_fpos_ranking_functions(partner)
-        return [('l10n_ar_tax_ids', lambda fpos: (any(tax.tax_type == 'withholding' for tax in fpos.l10n_ar_tax_ids)))] + super()._get_fpos_ranking_functions(partner)
+        return [('l10n_ar_withholding_ids', lambda fpos: fpos.l10n_ar_withholding_ids)] + super()._get_fpos_ranking_functions(partner)
 
     def map_tax(self, taxes):
-        """ For argentinean fiscal positions without tax mapping we add domestic taxes becasue taxes are always requried
+        """ For argentinean fiscal positions without tax mapping we add domestic taxes because taxes are always required
         on argentinean invoices so there is no use case for not having them.
         The other alternative would be to add the new fiscal positions on every VAT tax but that would be a lot of work
         for the user.
         """
-        if not self.tax_ids and self.l10n_ar_tax_ids:
+        if not self.tax_ids and self.l10n_ar_perception_ids:
             return self.company_id.domestic_fiscal_position_id.map_tax(taxes)
         return super().map_tax(taxes)

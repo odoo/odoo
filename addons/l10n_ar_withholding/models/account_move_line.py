@@ -22,7 +22,7 @@ class AccountMoveLine(models.Model):
         taxes = super()._get_computed_taxes()
         # We inherit this method and not map_tax from fiscal positions because the map_tax method only receives taxes
         # and does not know the partner or date, and this data is necessary to correctly compute the tax alicuot.
-        if self.move_id.is_sale_document(include_receipts=True) and self.move_id.fiscal_position_id.l10n_ar_tax_ids:
+        if self.move_id.is_sale_document(include_receipts=True) and self.move_id.fiscal_position_id.l10n_ar_perception_ids:
             date = self.move_id.date
             taxes += self.move_id.fiscal_position_id._l10n_ar_add_taxes(self.partner_id, self.company_id, date, 'perception')
         return taxes
