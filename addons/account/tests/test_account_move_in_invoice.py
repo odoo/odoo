@@ -2537,6 +2537,15 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             move_form.payment_reference = False
         self.assertEqual(payment_term_line.name, False, 'Payment term line was not changed')
 
+    def test_onchange_ref(self):
+        """
+        Ensure that updating the ref field updates the payment term line name when payment reference is empty.
+        """
+        payment_term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        with Form(self.invoice) as move_form:
+            move_form.ref = 'temp'
+        self.assertEqual(payment_term_line.name, 'temp')
+
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """
         Ensure that taxes are recomputed correctly when product uom and
