@@ -14,6 +14,7 @@ import {
     triggerEvents,
     triggerHotkey,
     waitStoreFetch,
+    scroll,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -1391,4 +1392,56 @@ test("failure is removed from messaging menu when message is deleted", async () 
     });
     pyEnv["mail.message"].unlink([messageId]);
     await contains(".o-mail-NotificationItem", { count: 0 });
+});
+
+test("Inbox tab should be visible when notification_preference is 'inbox'", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-MessagingMenu-headerFilter", { text: "Inbox" });
+    patchUiSize({ size: SIZES.SM });
+    await contains(".o-mail-MessagingMenu-tab", { text: "Inbox" });
+});
+
+test("Inbox tab should not be visible when notification_preference is not 'inbox'", async () => {
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-MessagingMenu-headerFilter", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu-headerFilter", { text: "Inbox", count: 0 });
+    patchUiSize({ size: SIZES.SM });
+    await contains(".o-mail-MessagingMenu-tab", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu-tab", { text: "Inbox", count: 0 });
+});
+
+test("Load More functionality in 'Inbox' tab", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const authorId = pyEnv["res.partner"].create({ name: "Test Author" });
+    for (let i = 0; i < 40; i++) {
+        const channelId = pyEnv["discuss.channel"].create({ name: `Channel ${i}` });
+        const messageId = pyEnv["mail.message"].create({
+            body: "Test Message",
+            model: "discuss.channel",
+            needaction: i < 20,
+            res_id: channelId,
+            author_id: authorId,
+        });
+        if (i < 20) {
+            pyEnv["mail.notification"].create({
+                mail_message_id: messageId,
+                res_partner_id: serverState.partnerId,
+            });
+        }
+    }
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-MessagingMenu-headerFilter", { text: "Inbox" });
+    await contains(".o-mail-MessagingMenu-headerFilter.o-active", { text: "Inbox" });
+    await contains(".o-mail-NotificationItem.o-important", { count: 20 });
+    await contains(".o-mail-NotificationItem .o-mail-NotificationItem-badge", { count: 20 });
+    await scroll(".o-mail-MessagingMenu-list", "bottom");
+    await contains(".o-mail-NotificationItem .o-mail-NotificationItem-badge", { count: 20 });
+    await contains(".o-mail-NotificationItem.o-important", { count: 40 });
+    await contains(".o-mail-MessagingMenu-loadMore.d-none");
 });
