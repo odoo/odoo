@@ -68,7 +68,6 @@ export class ControlPanel extends Component {
 
         this.root = useRef("root");
         this.newActionNameRef = useRef("newActionNameRef");
-        this.isEmbeddedActionsOrderModifiable = false;
         this.defaultEmbeddedActions = this.env.config.embeddedActions;
         if (this.env.config.embeddedActions?.length > 0 && !this.env.config.parentActionId) {
             const { parent_res_model, parent_action_id } = this.env.config.embeddedActions[0];
@@ -87,45 +86,23 @@ export class ControlPanel extends Component {
             this.env.config.setEmbeddedActions(this.defaultEmbeddedActions);
         }
 
-        /**
-         * The visible embedded actions are unique to each user and to each res_id. The visible actions chosen by the
-         * user are stored in the local storage in a key corresponding to a combination of the actionId, the activeId
-         * and the currrent userId. Each key contains a dict. The keys of the latter are the id of the visible embedded
-         * actions.
-         */
-        const parentActionId =
+        this.parentActionId =
             this.env.config.parentActionId ||
             this.env.config.embeddedActions?.[0]?.parent_action_id[0] ||
             this.env.config.embeddedActions?.[0]?.parent_action_id ||
             "";
-        this.embeddedActionsVisibilityKey = `visibleEmbeddedActions${parentActionId}+${
-            this.env.searchModel?.globalContext.active_id || ""
-        }+${user.userId}`;
-
-        this.embeddedVisibilityKey = `visibleEmbedded${parentActionId}+${
-            this.env.searchModel?.globalContext.active_id || ""
-        }+${user.userId}`;
-
-        this.embeddedOrderKey = `orderEmbedded${parentActionId}+${
-            this.env.searchModel?.globalContext.active_id || ""
-        }+${user.userId}`;
+        this.currentActiveId = this.env.searchModel?.globalContext.active_id || false;
+        this.embeddedActionsKey = `${this.parentActionId}+${this.currentActiveId || ""}`;
+        this.embeddedActionsConfig = user.settings.embedded_actions_config_ids || {};
 
         this.state = useState({
             embeddedInfos: {
-                showEmbedded:
-                    this.env.config.embeddedActions?.length > 0 &&
-                    ((!!this.env.config.parentActionId &&
-                        !!JSON.parse(browser.localStorage.getItem("showEmbeddedActions"))) ||
-                        !!JSON.parse(browser.localStorage.getItem(this.embeddedVisibilityKey))),
+                showEmbedded: !!this._getEmbeddedActionsConfig("embedded_visibility"),
                 embeddedActions: this.defaultEmbeddedActions || [],
                 newActionIsShared: false,
                 newActionName: this.newActionNameGetter,
                 visibleEmbeddedActions:
-                    (this.env.config.embeddedActions?.length > 0 &&
-                        JSON.parse(
-                            browser.localStorage.getItem(this.embeddedActionsVisibilityKey)
-                        )) ||
-                    {},
+                    this._getEmbeddedActionsConfig("embedded_actions_visibility") || [],
                 currentEmbeddedAction: this.currentEmbeddedAction,
             },
         });
@@ -173,21 +150,10 @@ export class ControlPanel extends Component {
 
         onMounted(async () => {
             if (this.state.embeddedInfos.embeddedActions?.length > 0) {
-                // If there is no visible embedded actions, the current action (if it exists) is put by default
-                const embeddedActionKey =
-                    this.state.embeddedInfos.currentEmbeddedAction?.id || false;
-                if (
-                    !Object.keys(this.state.embeddedInfos.visibleEmbeddedActions).includes(
-                        embeddedActionKey.toString()
-                    )
-                ) {
-                    this._setVisibility(embeddedActionKey);
-                }
-                const embeddedOrderLocalStorageKey = browser.localStorage.getItem(
-                    this.embeddedOrderKey
-                );
+                const embeddedOrderLocalStorageKey =
+                    this._getEmbeddedActionsConfig("embedded_actions_order");
                 if (embeddedOrderLocalStorageKey) {
-                    this._sortEmbeddedActions(JSON.parse(embeddedOrderLocalStorageKey));
+                    this._sortEmbeddedActions(embeddedOrderLocalStorageKey);
                 }
             }
             if (
@@ -266,14 +232,62 @@ export class ControlPanel extends Component {
         };
     }
 
-    onClickShowEmbedded() {
+    async onClickShowEmbedded() {
         if (this.state.embeddedInfos.showEmbedded) {
-            browser.localStorage.removeItem(this.embeddedVisibilityKey);
+            this._setEmbeddedActionsConfig({ embedded_visibility: false });
         } else {
-            browser.localStorage.setItem(this.embeddedVisibilityKey, true);
+            if (!(this.embeddedActionsKey in this.embeddedActionsConfig)) {
+                // If there are embedded actions and no config has been found in the settings, we will fetch it from DB
+                // We need to fetch because it's possible that the config from DB was changed while it wasn't in the browser user settings
+                // We then need to keep the browser user settings up to date with the DB
+                const embeddedSettings = await this.orm.call(
+                    "res.users.settings",
+                    "get_embedded_actions_settings",
+                    [user.settings.id]
+                );
+                if (this.embeddedActionsKey in embeddedSettings) {
+                    this.embeddedActionsConfig = embeddedSettings;
+                    user.updateUserSettings(
+                        "embedded_actions_config_ids",
+                        this.embeddedActionsConfig
+                    );
+                    this.state.embeddedInfos.visibleEmbeddedActions =
+                        this._getEmbeddedActionsConfig("embedded_actions_visibility") || [];
+                    const embeddedOrderLocalStorageKey =
+                        this._getEmbeddedActionsConfig("embedded_actions_order");
+                    if (embeddedOrderLocalStorageKey) {
+                        this._sortEmbeddedActions(embeddedOrderLocalStorageKey);
+                    }
+                    this._setEmbeddedActionsConfig({ embedded_visibility: true });
+                } else {
+                    // Store the embedded actions config if not already done
+                    const config = {
+                        res_model: this.state.embeddedInfos.currentEmbeddedAction.parent_res_model,
+                        embedded_actions_visibility: [],
+                        embedded_visibility: true,
+                        embedded_actions_order: [],
+                    };
+                    // If there is no visible embedded actions, the current action (if it exists) is put by default
+                    if (this.state.embeddedInfos.embeddedActions?.length > 0) {
+                        const embeddedActionKey =
+                            this.state.embeddedInfos.currentEmbeddedAction?.id || false;
+                        if (
+                            !this.state.embeddedInfos.visibleEmbeddedActions.includes(
+                                embeddedActionKey
+                            )
+                        ) {
+                            this.state.embeddedInfos.visibleEmbeddedActions.push(embeddedActionKey);
+                            config.embedded_actions_visibility =
+                                this.state.embeddedInfos.visibleEmbeddedActions;
+                        }
+                    }
+                    this._setEmbeddedActionsConfig(config);
+                }
+            } else {
+                this._setEmbeddedActionsConfig({ embedded_visibility: true });
+            }
         }
         this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
-        browser.localStorage.setItem("showEmbeddedActions", this.state.embeddedInfos.showEmbedded);
     }
 
     /**
@@ -351,8 +365,7 @@ export class ControlPanel extends Component {
      * @param {EmbeddedAction} action
      */
     _checkValueLocalStorage(action) {
-        const actionIdStr = action.id.toString();
-        return this.state.embeddedInfos.visibleEmbeddedActions[actionIdStr];
+        return this.state.embeddedInfos.visibleEmbeddedActions.includes(action.id);
     }
 
     /**
@@ -362,16 +375,18 @@ export class ControlPanel extends Component {
      * @param {EmbeddedAction} action
      */
     _setVisibility(actionId) {
-        const actionIdStr = actionId.toString();
-        if (this.state.embeddedInfos.visibleEmbeddedActions[actionIdStr]) {
-            delete this.state.embeddedInfos.visibleEmbeddedActions[actionIdStr];
+        if (this.state.embeddedInfos.visibleEmbeddedActions.includes(actionId)) {
+            const embeddedActionIndex =
+                this.state.embeddedInfos.visibleEmbeddedActions.indexOf(actionId);
+            if (embeddedActionIndex !== -1) {
+                this.state.embeddedInfos.visibleEmbeddedActions.splice(embeddedActionIndex, 1);
+            }
         } else {
-            this.state.embeddedInfos.visibleEmbeddedActions[actionIdStr] = true;
+            this.state.embeddedInfos.visibleEmbeddedActions.push(actionId);
         }
-        browser.localStorage.setItem(
-            this.embeddedActionsVisibilityKey,
-            JSON.stringify(this.state.embeddedInfos.visibleEmbeddedActions)
-        );
+        this._setEmbeddedActionsConfig({
+            embedded_actions_visibility: this.state.embeddedInfos.visibleEmbeddedActions,
+        });
     }
 
     _onShareCheckboxChange() {
@@ -451,14 +466,13 @@ export class ControlPanel extends Component {
             id: embeddedActionId[0],
         };
         this.state.embeddedInfos.embeddedActions.push(enrichedNewEmbeddedAction);
-        const embeddedActionIdStr = embeddedActionId[0].toString();
-        visibleEmbeddedActions[embeddedActionIdStr] = true;
+        const embeddedActionResId = embeddedActionId[0];
+        visibleEmbeddedActions.push(embeddedActionResId);
         const order = this.state.embeddedInfos.embeddedActions.map((el) => el.id);
-        browser.localStorage.setItem(
-            this.embeddedActionsVisibilityKey,
-            JSON.stringify(visibleEmbeddedActions)
-        );
-        browser.localStorage.setItem(this.embeddedOrderKey, JSON.stringify(order));
+        this._setEmbeddedActionsConfig({
+            embedded_actions_visibility: visibleEmbeddedActions,
+            embedded_actions_order: order,
+        });
         this.env.config.setCurrentEmbeddedAction(embeddedActionId);
         this.state.embeddedInfos.currentEmbeddedAction = enrichedNewEmbeddedAction;
         this.state.embeddedInfos.newActionName = `${newActionName} Custom`;
@@ -486,17 +500,18 @@ export class ControlPanel extends Component {
     async _deleteEmbeddedAction(action) {
         const { visibleEmbeddedActions, embeddedActions, currentEmbeddedAction } =
             this.state.embeddedInfos;
-        const actionIdStr = action.id.toString();
-        if (visibleEmbeddedActions[actionIdStr]) {
-            delete visibleEmbeddedActions[actionIdStr];
+        const embeddedActionIndex = visibleEmbeddedActions.indexOf(action.id);
+        if (embeddedActionIndex !== -1) {
+            visibleEmbeddedActions.splice(embeddedActionIndex, 1);
         }
-        browser.localStorage.setItem(
-            this.embeddedActionsVisibilityKey,
-            JSON.stringify(visibleEmbeddedActions)
-        );
         this.state.embeddedInfos.embeddedActions = embeddedActions.filter(
             ({ id }) => id !== action.id
         );
+        const order = this.state.embeddedInfos.embeddedActions.map((el) => el.id);
+        this._setEmbeddedActionsConfig({
+            embedded_actions_visibility: visibleEmbeddedActions,
+            embedded_actions_order: order,
+        });
         await this.orm.unlink("ir.embedded.actions", [action.id]);
         if (action.id === currentEmbeddedAction?.id) {
             const { active_id, active_model } = this.env.searchModel.globalContext;
@@ -586,7 +601,7 @@ export class ControlPanel extends Component {
             order.splice(0, 0, elementId);
         }
         this._sortEmbeddedActions(order);
-        browser.localStorage.setItem(this.embeddedOrderKey, JSON.stringify(order));
+        this._setEmbeddedActionsConfig({ embedded_actions_order: order });
     }
 
     dropdownifyButtons() {
@@ -613,5 +628,26 @@ export class ControlPanel extends Component {
             }
         }
         return boxed;
+    }
+
+    _setEmbeddedActionsConfig(config) {
+        if (this.embeddedActionsKey in this.embeddedActionsConfig) {
+            for (const [key, value] of Object.entries(config)) {
+                this.embeddedActionsConfig[this.embeddedActionsKey][key] = value;
+            }
+        } else {
+            this.embeddedActionsConfig[this.embeddedActionsKey] = config;
+        }
+        user.updateUserSettings("embedded_actions_config_ids", this.embeddedActionsConfig);
+        this.orm.call("res.users.settings", "set_embedded_actions_setting", [
+            user.settings.id,
+            this.parentActionId,
+            this.currentActiveId,
+            config,
+        ]);
+    }
+
+    _getEmbeddedActionsConfig(key) {
+        return this.embeddedActionsConfig?.[this.embeddedActionsKey]?.[key];
     }
 }

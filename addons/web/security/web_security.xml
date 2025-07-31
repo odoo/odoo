@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="res_users_settings_embedded_action_rule_user" model="ir.rule">
+        <field name="name">res.users.settings.embedded.action: access their own entries</field>
+        <field name="model_id" ref="model_res_users_settings_embedded_action"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="domain_force">[('user_setting_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="res_users_settings_embedded_action_rule_admin" model="ir.rule">
+        <field name="name">Administrators can access all User Settings embedded actions</field>
+        <field name="model_id" ref="model_res_users_settings_embedded_action"/>
+        <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

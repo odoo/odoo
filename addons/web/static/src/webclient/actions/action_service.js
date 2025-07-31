@@ -1509,11 +1509,10 @@ export function makeActionManager(env, router = _router) {
             throw new InvalidButtonParamsError("Missing type for doActionButton request");
         }
         if (!isEmbeddedAction && action.embedded_action_ids?.length) {
-            const embeddedActionsOrder = JSON.parse(
-                browser.localStorage.getItem(
-                    `orderEmbedded${action.id}+${params.resId || ""}+${user.userId}`
-                )
-            );
+            const embeddedActionsKey = `${action.id}+${params.resId || ""}`;
+            const embeddedActionsOrder =
+                user.settings.embedded_actions_config_ids?.[embeddedActionsKey]
+                    ?.embedded_actions_order;
             const embeddedActionId = embeddedActionsOrder?.[0];
             const embeddedAction = action.embedded_action_ids?.find(
                 (embeddedAction) => embeddedAction.id === embeddedActionId
