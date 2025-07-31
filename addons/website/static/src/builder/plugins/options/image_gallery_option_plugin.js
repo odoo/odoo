@@ -7,6 +7,7 @@ import { updateCarouselIndicators } from "../carousel_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { uniqueId } from "@web/core/utils/functions";
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -46,12 +47,28 @@ class ImageGalleryOption extends Plugin {
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
             this.addCarouselListener(carousels);
+            this.addUniqueIds(carousels);
+        },
+        on_cloned_handlers: ({ cloneEl }) => {
+            const carousels = cloneEl.querySelectorAll(".s_image_gallery .carousel");
+            this.addUniqueIds(carousels);
         },
     };
 
     setup() {
         const slideshowCarousels = this.document.querySelectorAll(".s_image_gallery .carousel");
         this.addCarouselListener(slideshowCarousels);
+    }
+
+    addUniqueIds(carousels) {
+        for (const carousel of carousels) {
+            const id = uniqueId("slideshow_");
+            carousel.id = id;
+            const controllerButtons = carousel.querySelectorAll(".o_carousel_controllers button");
+            for (const button of controllerButtons) {
+                button.setAttribute("data-bs-target", `#${id}`);
+            }
+        }
     }
 
     addCarouselListener(slideshowCarousels) {
