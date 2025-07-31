@@ -25,6 +25,7 @@ export class OdooBarChart extends OdooChart {
         this.stacked = definition.stacked;
         this.axesDesign = definition.axesDesign;
         this.horizontal = definition.horizontal;
+        this.zoomable = definition.zoomable;
     }
 
     getDefinition() {
@@ -35,6 +36,7 @@ export class OdooBarChart extends OdooChart {
             axesDesign: this.axesDesign,
             trend: this.trend,
             horizontal: this.horizontal,
+            zoomable: this.zoomable,
         };
     }
 }
