@@ -336,16 +336,10 @@ class TestActivityMixin(TestActivityCommon):
         Activity 3 & User UTC
             1/1/2020 - 23h UTC       -> The state is today
         """
-        today_utc = datetime(2020, 1, 1, 16, 0, 0)
-
-        class MockedDatetime(datetime):
-            @classmethod
-            def utcnow(cls):
-                return today_utc
-
         record = self.env['mail.test.activity'].create({'name': 'Record'})
 
-        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime):
+        with freeze_time(datetime(2020, 1, 1, 16)):
+            today_utc = datetime.today()
             activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
                 'activity_type_id': 1,
@@ -388,12 +382,6 @@ class TestActivityMixin(TestActivityCommon):
         different because of the timezone. There's also a tricky case for which we
         "reverse" the domain for performance purpose.
         """
-        today_utc = datetime(2020, 1, 1, 16, 0, 0)
-
-        class MockedDatetime(datetime):
-            @classmethod
-            def utcnow(cls):
-                return today_utc
 
         # Create some records without activity schedule on it for testing
         self.env['mail.test.activity'].create([
@@ -404,8 +392,8 @@ class TestActivityMixin(TestActivityCommon):
         origin_1, origin_2 = self.env['mail.test.activity'].search([], limit=2)
         activity_type = self.env.ref('test_mail.mail_act_test_todo')
 
-        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime), \
-            patch('odoo.addons.mail.models.mail_activity_mixin.datetime', MockedDatetime):
+        with freeze_time(datetime(2020, 1, 1, 16)):
+            today_utc = datetime.today()
             origin_1_activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
                 'activity_type_id': activity_type.id,
@@ -503,12 +491,6 @@ class TestActivityMixin(TestActivityCommon):
         should be "planned" and not "today". This case was tricky to implement in SQL
         that's why it has its own test.
         """
-        today_utc = datetime(2020, 1, 1, 23, 0, 0)
-
-        class MockedDatetime(datetime):
-            @classmethod
-            def utcnow(cls):
-                return today_utc
 
         # Create some records without activity schedule on it for testing
         self.env['mail.test.activity'].create([
@@ -518,7 +500,8 @@ class TestActivityMixin(TestActivityCommon):
 
         origin_1 = self.env['mail.test.activity'].search([], limit=1)
 
-        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime):
+        with freeze_time(datetime(2020, 1, 1, 23)):
+            today_utc = datetime.today()
             origin_1_activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
                 'activity_type_id': 1,
