@@ -7,6 +7,7 @@ import { useCallbackRecorder } from "@web/search/action_hook";
 const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell)`;
 const ROW_SELECTOR = `tr[role="row"]`;
 const EVENT_CONTAINER_SELECTOR = ".fc-daygrid-event-harness";
+const IGNORE_SELECTOR = [".fc-event", ".fc-more-cell", ".fc-more-popover"].join(",");
 
 function getClosestCell(ctx) {
     const { pointer, ref } = ctx;
@@ -114,6 +115,10 @@ export function useSquareSelection() {
 
     const onClick = (ev) => {
         if (selectState.dragging) {
+            return;
+        }
+        const ignoreElement = ev.target.closest(IGNORE_SELECTOR);
+        if (ignoreElement) {
             return;
         }
         const eventContainer = ev.target.closest(EVENT_CONTAINER_SELECTOR);
