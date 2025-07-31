@@ -60,21 +60,21 @@ class ResCurrency(models.Model):
         res = super().create(vals_list)
         self._toggle_group_multi_currency()
         # invalidate cache for get_all_currencies
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     def unlink(self):
         res = super().unlink()
         self._toggle_group_multi_currency()
         # invalidate cache for get_all_currencies
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     def write(self, vals):
         res = super().write(vals)
         if vals.keys() & {'active', 'digits', 'name', 'position', 'symbol'}:
             # invalidate cache for get_all_currencies
-            self.env.registry.clear_cache()
+            self.env.registry.clear_cache('stable')
         if 'active' not in vals:
             return res
         self._toggle_group_multi_currency()
@@ -260,7 +260,7 @@ class ResCurrency(models.Model):
         self.ensure_one()
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
-    @ormcache()
+    @ormcache(cache='stable')
     @api.model
     def get_all_currencies(self):
         currencies = self.sudo().search_fetch([('active', '=', True)], ['name', 'symbol', 'position', 'decimal_places'])

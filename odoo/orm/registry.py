@@ -52,8 +52,9 @@ _schema = logging.getLogger('odoo.schema')
 
 _REGISTRY_CACHES = {
     'default': 8192,
-    'assets': 512, # arbitrary
-    'templates': 1024, # arbitrary
+    'assets': 512,
+    'stable': 1024,
+    'templates': 1024,
     'routing': 1024,  # 2 entries per website
     'routing.rewrites': 8192,  # url_rewrite entries
     'templates.cached_values': 2048, # arbitrary
@@ -65,6 +66,7 @@ _REGISTRY_CACHES = {
 _CACHES_BY_KEY = {
     'default': ('default', 'templates.cached_values'),
     'assets': ('assets', 'templates.cached_values'),
+    'stable': ('stable', 'default', 'templates.cached_values'),
     'templates': ('templates', 'templates.cached_values'),
     'routing': ('routing', 'routing.rewrites', 'templates.cached_values'),
     'groups': ('groups', 'templates', 'templates.cached_values'),  # The processing of groups is saved in the view

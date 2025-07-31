@@ -291,7 +291,7 @@ class ResLang(models.Model):
         """ Return installed languages' (code, name) pairs sorted by name. """
         return [(code, data.name) for code, data in self._get_active_by('code').items()]
 
-    @tools.ormcache('field')
+    @tools.ormcache('field', cache='stable')
     def _get_active_by(self, field: str) -> LangDataDict:
         """ Return a LangDataDict mapping active languages' **unique**
         **required** ``self.CACHED_FIELDS`` values to their LangData.
@@ -322,7 +322,7 @@ class ResLang(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         for vals in vals_list:
             if not vals.get('url_code'):
                 vals['url_code'] = vals.get('iso_code') or vals['code']
@@ -364,7 +364,7 @@ class ResLang(models.Model):
                     long_lang.url_code = short_code
 
         self.env.flush_all()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -379,7 +379,7 @@ class ResLang(models.Model):
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
 
     def unlink(self):
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return super().unlink()
 
     def copy_data(self, default=None):

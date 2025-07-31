@@ -193,7 +193,7 @@ class ResUsers(models.Model):
         return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz', 'api_key_ids', 'phone']
 
     @api.model
-    @tools.ormcache()
+    @tools.ormcache(cache='stable')
     def _self_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
         """Readable and writable fields by portal users."""
         readable = frozenset(self.SELF_READABLE_FIELDS)
@@ -1179,7 +1179,7 @@ class ResUsers(models.Model):
     def get_company_currency_id(self):
         return self.env.company.currency_id.id
 
-    @tools.ormcache()
+    @tools.ormcache(cache='stable')
     def _crypt_context(self):
         """ Passlib CryptContext instance used to encrypt and verify
         passwords. Can be overridden if technical, legal or political matters
