@@ -373,6 +373,32 @@ async function discuss_settings_mute(request) {
     return "dummy";
 }
 
+registerRoute("/discuss/settings/custom_notifications", discuss_custom_notifications);
+/** @type {RouteCallback} */
+async function discuss_custom_notifications(request) {
+    /** @type {import("mock_models").ResUsersSettings} */
+    const ResUsersSettings = this.env["res.users.settings"];
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").DiscussChannelMember} */
+    const DiscussChannelMember = this.env["discuss.channel.member"];
+
+    const { custom_notifications, channel_id } = await parseRequestParams(request);
+    let record;
+    let model;
+    if (!channel_id) {
+        record = ResUsersSettings._find_or_create_for_user(this.env.uid);
+        model = ResUsersSettings;
+    } else {
+        record = DiscussChannel._find_or_create_member_for_self(channel_id);
+        model = DiscussChannelMember;
+    }
+    if (!record) {
+        return;
+    }
+    model.set_custom_notifications(record.id, custom_notifications);
+}
+
 registerRoute("/discuss/channel/notify_typing", discuss_channel_notify_typing);
 /** @type {RouteCallback} */
 async function discuss_channel_notify_typing(request) {

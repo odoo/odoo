@@ -17,12 +17,12 @@ declare module "models" {
         channels: ReturnType<Store['makeCachedFetchData']>;
         DiscussAppCategory: StaticMailRecord<DiscussAppCategory, typeof DiscussAppCategoryClass>;
         fetchSsearchConversationsSequential: () => Promise<any>;
-        getDiscussSidebarCategoryCounter: (categoryId: string) => number;
         searchConversations: (searchValue: string) => Promise<void>;
     }
     export interface Thread {
         _computeDiscussAppCategory: () => undefined|unknown;
         appAsUnreadChannels: DiscussApp;
+        categoryAsThreadWithCounter: DiscussAppCategory
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         discussAppCategory: DiscussAppCategory;
         displayInSidebar: boolean;

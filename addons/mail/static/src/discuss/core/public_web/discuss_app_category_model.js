@@ -96,6 +96,7 @@ export class DiscussAppCategory extends Record {
         },
         inverse: "discussAppCategory",
     });
+    threadsWithCounter = fields.Many("Thread", { inverse: "categoryAsThreadWithCounter" });
 }
 
 DiscussAppCategory.register();

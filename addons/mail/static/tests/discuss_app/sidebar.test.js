@@ -1277,3 +1277,66 @@ test("Redirect to the thread containing the starred message and highlight the me
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
     await contains(".o-mail-Message.o-highlighted", { text: "Hello there!!!" });
 });
+
+test("Sidebar channels show correct notification counter based on settings", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        channel_notifications: "all",
+    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
+    const mentionsChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+        name: "Mentions",
+    });
+    const regularChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+        name: "Regular",
+    });
+    const mentionMessageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        model: "discuss.channel",
+        res_id: mentionsChannelId,
+        body: "@Mitchell Admin",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: mentionMessageId,
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            author_id: partnerId,
+            model: "discuss.channel",
+            res_id: mentionsChannelId,
+            body: "test",
+        },
+        {
+            author_id: partnerId,
+            model: "discuss.channel",
+            res_id: regularChannelId,
+            body: "test",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel:contains(Mentions) .badge", { text: "2" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Regular) .badge", { text: "1" });
+    rpc("/discuss/settings/custom_notifications", { custom_notifications: false }); // default: @mention only
+    await contains(".o-mail-DiscussSidebarChannel:contains(Mentions) .badge", { text: "1" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Regular) .badge", { count: 0 });
+    rpc("/discuss/settings/custom_notifications", { custom_notifications: "no_notif" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Mentions) .badge", { count: 0 });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Regular) .badge", { count: 0 });
+});

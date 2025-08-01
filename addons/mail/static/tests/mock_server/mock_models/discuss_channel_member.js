@@ -271,4 +271,27 @@ export class DiscussChannelMember extends models.ServerModel {
                 .get_result()
         );
     }
+
+    set_custom_notifications(ids, custom_notifications) {
+        const kwargs = getKwArgs(arguments, "ids", "custom_notifications");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        custom_notifications = kwargs.custom_notifications;
+
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+
+        const channelMememberId = ids[0]; // simulate ensure_one.
+        DiscussChannelMember.write([channelMememberId], { custom_notifications });
+
+        const [partner, guest] = this.env["res.partner"]._get_current_persona();
+        this.env["bus.bus"]._sendone(
+            guest ?? partner,
+            "mail.record/insert",
+            new mailDataHelpers.Store(
+                DiscussChannelMember.browse(channelMememberId),
+                "custom_notifications"
+            ).get_result()
+        );
+    }
 }

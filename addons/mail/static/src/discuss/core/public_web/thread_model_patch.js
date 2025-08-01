@@ -13,6 +13,13 @@ const threadPatch = {
                 return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
             },
         });
+        this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
+            compute() {
+                return this.displayInSidebar && this.importantCounter > 0
+                    ? this.discussAppCategory
+                    : null;
+            },
+        });
         this.discussAppCategory = fields.One("DiscussAppCategory", {
             compute() {
                 return this._computeDiscussAppCategory();
