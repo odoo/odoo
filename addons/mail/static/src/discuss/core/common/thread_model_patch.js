@@ -330,6 +330,17 @@ const threadPatch = {
         if (this.isChatChannel && this.selfMember?.message_unread_counter_ui) {
             return this.selfMember.message_unread_counter_ui;
         }
+        if (this.discussAppCategory?.id === "channels") {
+            if (this.store.settings.channel_notifications === "no_notif") {
+                return 0;
+            }
+            if (
+                this.store.settings.channel_notifications === "all" &&
+                !this.selfMember?.mute_until_dt
+            ) {
+                return this.selfMember?.message_unread_counter_ui;
+            }
+        }
         return super.importantCounter;
     },
     /** @override */
