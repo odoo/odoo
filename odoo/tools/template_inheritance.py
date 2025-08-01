@@ -22,7 +22,8 @@ def add_stripped_items_before(node, spec, extract):
         parent = node.getparent()
         result = parent.text and RSTRIP_REGEXP.search(parent.text)
         before_text = result.group(0) if result else ''
-        parent.text = (parent.text or '').rstrip() + text
+        fallback_text = None if spec.text is None else ''
+        parent.text = ((parent.text or '').rstrip() + text) or fallback_text
     else:
         result = prev.tail and RSTRIP_REGEXP.search(prev.tail)
         before_text = result.group(0) if result else ''
