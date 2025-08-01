@@ -15,7 +15,7 @@ export class ContentEditablePlugin extends Plugin {
     static id = "contentEditablePlugin";
     resources = {
         normalize_handlers: withSequence(5, this.normalize.bind(this)),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_handlers: withSequence(Infinity, this.cleanForSave.bind(this)),
         filter_contenteditable_handlers: this.filterContentEditable.bind(this),
     };
 
