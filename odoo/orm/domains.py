@@ -1904,6 +1904,8 @@ def _operator_access_rule_domain(condition, model):
     access_domain = comodel._access_domain(operation)
     if access_domain.is_false():
         # no access to the comodel for any record
+        if operation not in model.env.registry['ir.rule']._MODES:
+            condition._raise("Invalid value for 'access' operator")
         return Domain.FALSE
     if access_domain.is_true() or comodel.env.su:
         # access to all or edge-case for super user

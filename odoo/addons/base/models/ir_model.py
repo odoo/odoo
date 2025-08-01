@@ -424,11 +424,16 @@ class IrModel(models.Model):
         if 'field_id' in vals:
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
         res = super().write(vals)
+        if not any(self._ids):
+            return res
         # ordering has been changed, reload registry to reflect update + signaling
         if 'order' in vals or 'fold_name' in vals:
             self.env.flush_all()  # _setup_models__ need to fetch the updated values from the db
             # incremental setup will reload custom models
             self.pool._setup_models__(self.env.cr, [])
+        if 'rule_ids' in vals or 'access_ids' in vals:
+            # for env['ir.model.access']._get_all_access_groups
+            self.env.registry.clear_cache('stable')
         return res
 
     @api.model_create_multi
@@ -444,6 +449,9 @@ class IrModel(models.Model):
             self.pool._setup_models__(self.env.cr, [])
             # update database schema
             self.pool.init_models(self.env.cr, manual_models, dict(self.env.context, update_custom_fields=True))
+        if res:
+            # for env['ir.model.access']._get_all_access_groups
+            self.env.registry.clear_cache('stable')
         return res
 
     @api.model
@@ -2138,23 +2146,48 @@ class IrModelAccess(models.Model):
         return [('%s/%s' % x) if x[0] else x[1] for x in self.env.cr.fetchall()]
 
     @api.model
+    @tools.ormcache(cache='stable')
+    def _get_all_access_groups(self):
+        """ Return all active access permissions.
+
+        :return: Dict {mode: {model_name: [group_ids]}}
+        """
+        modes = ('read', 'write', 'create', 'unlink')
+        self.flush_model()
+        all_access = self.env.execute_query_dict(SQL(
+            """
+            SELECT m.model, a.group_id, a.perm_read, a.perm_write, a.perm_create, a.perm_unlink
+            FROM ir_model_access a
+            LEFT JOIN ir_model m
+            ON m.id = a.model_id
+            WHERE a.active IS TRUE
+            """
+        ))
+        access_by_mode = {
+            mode: tools.groupby((a for a in all_access if a[f'perm_{mode}']), itemgetter('model'))
+            for mode in modes
+        }
+        return frozendict({
+            mode: frozendict({
+                model: frozenset(a['group_id'] or False for a in model_access)
+                for model, model_access in mode_access
+            })
+            for mode, mode_access in access_by_mode.items()
+        })
+
+    @api.model
     @tools.ormcache('model_name', 'access_mode', cache='stable')
     def _get_access_groups(self, model_name, access_mode='read'):
         """ Return the group expression object that represents the users who
         have ``access_mode`` to the model ``model_name``.
         """
-        assert access_mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-        model = self.env['ir.model']._get(model_name)
-        accesses = self.sudo().search([
-            (f'perm_{access_mode}', '=', True), ('model_id', '=', model.id),
-        ])
-
+        accesses = self._get_all_access_groups()[access_mode].get(model_name, ())
         group_definitions = self.env['res.groups']._get_group_definitions()
         if not accesses:
             return group_definitions.empty
-        if not all(access.group_id for access in accesses):  # there is some global access
+        if False in accesses:  # there is some global access
             return group_definitions.universe
-        return group_definitions.from_ids(accesses.group_id.ids)
+        return group_definitions.from_ids(accesses)
 
     # The context parameter is useful when the method translates error messages.
     # But as the method raises an exception in that case,  the key 'lang' might
@@ -2163,24 +2196,16 @@ class IrModelAccess(models.Model):
 
     @tools.ormcache('self.env.uid', 'mode')
     def _get_allowed_models(self, mode='read'):
-        assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-
-        group_ids = self.env.user._get_group_ids()
-        self.flush_model()
-        rows = self.env.execute_query(SQL("""
-            SELECT m.model
-              FROM ir_model_access a
-              JOIN ir_model m ON (m.id = a.model_id)
-             WHERE a.perm_%s
-               AND a.active
-               AND (
-                    a.group_id IS NULL OR
-                    a.group_id IN %s
-                )
-            GROUP BY m.model
-        """, SQL(mode), tuple(group_ids) or (None,)))
-
-        return frozenset(v[0] for v in rows)
+        access_by_model = self._get_all_access_groups().get(mode)
+        if not access_by_model:
+            return frozenset()
+        # include False to catch global access rules
+        user_group_ids = {*self.env.user._get_group_ids(), False}
+        return frozenset(
+            model
+            for model, accesses in access_by_model.items()
+            if not user_group_ids.isdisjoint(accesses)
+        )
 
     @api.model
     def check(self, model, mode='read', raise_exception=True):

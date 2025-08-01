@@ -1028,7 +1028,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=56, employee=57):
+        with self.assertQueryCount(admin=55, employee=57):
             record.message_post(
                 body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
@@ -1046,7 +1046,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         template = self.env.ref('test_mail.mail_test_container_tpl')
 
         # about 20 (19 ?) queries per additional customer group
-        with self.assertQueryCount(admin=70, employee=71):
+        with self.assertQueryCount(admin=69, employee=71):
             record.message_post_with_source(
                 template,
                 message_type='comment',

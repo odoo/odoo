@@ -874,8 +874,7 @@ class TestDomainOptimize(TransactionCase):
 
         with self.assertRaises(ValueError):
             Domain('number', 'access', 'read').optimize_dynamic(model)
-        with self.assertRaises(AssertionError):
-            assert not model.sudo(False).env.su, 'Just raise an assert for super-user'
+        with self.assertRaises(ValueError):
             Domain('currency_id', 'access', 'blabla').optimize_dynamic(model)
 
     def test_not_optimize(self):
