@@ -138,4 +138,12 @@ export class ResUsersSettings extends models.ServerModel {
         });
         return volumeSettings;
     }
+
+    set_custom_notifications(ids, custom_notifications) {
+        const kwargs = getKwArgs(arguments, "ids", "custom_notifications");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        custom_notifications = kwargs.custom_notifications;
+        this.set_res_users_settings(ids, { channel_notifications: custom_notifications });
+    }
 }
