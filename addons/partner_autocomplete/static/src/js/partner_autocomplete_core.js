@@ -33,6 +33,19 @@ export function usePartnerAutocomplete() {
 
         // checkVATNumber is defined in library jsvat.
         // It validates that the input has a valid VAT number format
+        const indian_gstin_re = [
+                '[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Zz1-9A-Ja-j]{1}[0-9a-zA-Z]{1}', // Normal, Composite, Casual GSTIN
+                '[0-9]{4}[A-Z]{3}[0-9]{5}[UO]{1}[N][A-Z0-9]{1}', //UN/ON Body GSTIN
+                '[0-9]{4}[a-zA-Z]{3}[0-9]{5}[N][R][0-9a-zA-Z]{1}', //NRI GSTIN
+                '[0-9]{2}[a-zA-Z]{4}[a-zA-Z0-9]{1}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[DK]{1}[0-9a-zA-Z]{1}', //TDS GSTIN
+                '[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[C]{1}[0-9a-zA-Z]{1}' //TCS GSTIN
+            ]
+        const is_indian_gstin = indian_gstin_re.some(function (item) {
+             return (sanitizeVAT(value).match(item))
+        });
+        if (is_indian_gstin) {
+            return true;
+        }
         return checkVATNumber(sanitizeVAT(value));
     }
 
