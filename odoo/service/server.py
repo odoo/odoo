@@ -966,12 +966,29 @@ class PreforkServer(CommonServer):
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
+        # Before spawning any process, check the registry signaling
+        registries = Registry.registries.snapshot
+
+        def check_registries():
+            # check the registries on the first call only!
+            if not registries:
+                return
+            for registry in registries.values():
+                with registry.cursor() as cr:
+                    registry.check_signaling(cr)
+            registries.clear()
+            # Close all opened cursors
+            sql_db.close_all()
+
         if config['http_enable']:
             while len(self.workers_http) < self.population:
+                check_registries()
                 self.worker_spawn(WorkerHTTP, self.workers_http)
             if not self.long_polling_pid:
+                check_registries()
                 self.long_polling_spawn()
         while len(self.workers_cron) < config['max_cron_threads']:
+            check_registries()
             self.worker_spawn(WorkerCron, self.workers_cron)
 
     def sleep(self):
