@@ -14,6 +14,20 @@ class HrIndividualSkillMixin(models.AbstractModel):
     _order = "skill_type_id, skill_level_id"
     _rec_name = "skill_id"
 
+    def _get_passive_preserved_fields(self):
+        """
+        Return additional passive fields to be included when creating new skill records.
+
+        By default, only the linked field, skill_id, skill_level_id and skill_type_id are preserved and copied when
+        skills are created. This methods allows extending that set with additional passive fields.
+        Passive fields are fields that are included when new records are created because of a modification but don't
+        trigger record creation themselves when modified.
+
+        :return: List of field names to copy to new skills
+        :rtype: list[str]
+        """
+        return []
+
     def _linked_field_name(self):
         raise NotImplementedError()
 
@@ -379,6 +393,19 @@ class HrIndividualSkillMixin(models.AbstractModel):
 
         return skills_to_archive._expire_individual_skills() + [[0, 0, new_create_val] for new_create_val in vals_to_return]
 
+    def _get_preserved_field_value(self, field, skill):
+        """
+        Extracts the appropriate value from a preserved field to be passed into a vals dict for record creation.
+
+        Return the raw value for most fields (char, float, etc.) but extracts id(s) for relational fields.
+        """
+        field_type = self._fields[field].type
+        if field_type == "many2one":
+            return skill[field].id
+        if field_type == "many2many" or field_type == "one2many":
+            return skill[field].ids
+        return skill[field]
+
     def _write_individual_skills(self, commands):
         """
         Transform a list of write commands into a list of create, write and unlink commands according to the logic of
@@ -404,11 +431,16 @@ class HrIndividualSkillMixin(models.AbstractModel):
                 result_command.append([1, ind_skill.id, vals])
                 remove_from_expire += ind_skill
                 continue
+            additional_vals = {
+                field: vals.get(field, self._get_preserved_field_value(field, ind_skill))
+                for field in self._get_passive_preserved_fields()
+            }
             new_vals = {
                 f'{self._linked_field_name()}': vals.get(self._linked_field_name(), ind_skill[self._linked_field_name()].id),
                 'skill_id': vals.get('skill_id', ind_skill.skill_id.id),
                 'skill_level_id': vals.get('skill_level_id', ind_skill.skill_level_id.id),
                 'skill_type_id': vals.get('skill_type_id', ind_skill.skill_type_id.id),
+                **additional_vals,
             }
             skill_type = self.env['hr.skill.type'].browse(new_vals['skill_type_id'])
             valid_from = vals.get('valid_from', ind_skill.valid_from if skill_type.is_certification else fields.Date.today())
