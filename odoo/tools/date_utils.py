@@ -75,8 +75,8 @@ def time_to_float(duration: time | timedelta) -> float:
         return duration.total_seconds() / 3600
     if duration == time.max:
         return 24.0
-    seconds = time.microsecond / 1_000_000 + time.second + time.minute * 60
-    return seconds / 3600 + time.hour
+    seconds = duration.microsecond / 1_000_000 + duration.second + duration.minute * 60
+    return seconds / 3600 + duration.hour
 
 
 def localized(dt: datetime) -> datetime:
