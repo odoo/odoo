@@ -4676,6 +4676,68 @@ class TestMrpOrder(TestMrpCommon):
         wos_to_set.write({'date_start': date_start, 'date_finished': date_finished})
         self.assertTrue(mo.workorder_ids[-1].show_json_popover)
 
+    def test_mo_date_finished_conversion(self):
+        """ Test that date_finished is correctly calculated with factor based on production quantity vs BOM quantity ratio.
+
+        Uses BOM 1 (bom_1) with produce_delay = 10 days and product_qty = 4.0.
+        Tests different production quantities and UoM to verify factor calculation:
+        - Production 4 products (same as BOM): date_start + 10 days
+        - Production 1 product (1/4 of BOM): date_start + 2.5 days
+        - Production 8 products (2x BOM): date_start + 20 days
+        - Production 1 dozen (different UoM): date_start + 30 days
+        """
+        self.bom_1.produce_delay = 10
+
+        # Create a single manufacturing order
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_4
+        production_form.bom_id = self.bom_1
+        production_form.product_uom_id = self.uom_unit
+        production_form.date_start = datetime(2025, 1, 1, 1, 0, 0)
+        production = production_form.save()
+
+        # Test case 1: Production 4 products (same as BOM quantity)
+        with Form(production) as production_form:
+            production_form.product_qty = 4.0
+        production = production_form.save()
+
+        # Expected: date_start + 10 days = 2025-01-11 01:00:00
+        expected_date_4 = datetime(2025, 1, 1, 1, 0, 0) + timedelta(days=10)
+        self.assertEqual(production.date_finished, expected_date_4,
+                        "Date finished should be start date + 10 days for 4 products production")
+
+        # Test case 2: Production 1 product (1/4 of BOM quantity)
+        with Form(production) as production_form:
+            production_form.product_qty = 1.0
+        production = production_form.save()
+
+        # Expected: date_start + (10 / 4) days = 2025-01-03 13:00:00 (2.5 days)
+        expected_date_1 = datetime(2025, 1, 1, 1, 0, 0) + timedelta(days=2.5)
+        self.assertEqual(production.date_finished, expected_date_1,
+                        "Date finished should be start date + 2.5 days for 1 product production")
+
+        # Test case 3: Production 8 products (2x BOM quantity)
+        with Form(production) as production_form:
+            production_form.product_qty = 8.0
+        production = production_form.save()
+
+        # Expected: date_start + (10 * 2) days = 2025-01-21 01:00:00 (20 days)
+        expected_date_8 = datetime(2025, 1, 1, 1, 0, 0) + timedelta(days=20)
+        self.assertEqual(production.date_finished, expected_date_8,
+                        "Date finished should be start date + 20 days for 8 products production")
+
+        # Test case 4: Change product_uom_id to dozen (different UoM scenario)
+        with Form(production) as production_form:
+            production_form.product_uom_id = self.uom_dozen
+            production_form.product_qty = 1.0  # 1 dozen = 12 units
+        production = production_form.save()
+
+        # Expected: factor = 1 dozen / 4 units = 12/4 = 3
+        # date_start + (3 * 10) days = 2025-01-31 01:00:00 (30 days)
+        expected_date_dozen = datetime(2025, 1, 1, 1, 0, 0) + timedelta(days=30)
+        self.assertEqual(production.date_finished, expected_date_dozen,
+                        "Date finished should be start date + 30 days for 1 dozen production")
+
 
 @tagged('post_install', '-at_install')
 class TestMrpSynchronization(HttpCase):
