@@ -31,6 +31,7 @@ class TestMembership(TestSalesCommon):
         self.assertTrue(self.new_team.with_user(self.env.user).is_membership_multi)
 
         self.env['ir.config_parameter'].sudo().set_param('sales_team.membership_multi', False)
+        self.env.invalidate_all()  # is_membership_multi isn't promised to be recomputed, explict invalidation is needed
         self.assertFalse(self.sales_team_1.with_user(self.env.user).is_membership_multi)
         self.assertFalse(self.new_team.with_user(self.env.user).is_membership_multi)
 
