@@ -7,15 +7,7 @@
 
 .o-mail-MessagingMenu-list {
     background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
-}
-
-.o-mail-MessagingMenu-navbar button {
-    border-top: 2px solid !important;
-    border-color: transparent !important;
-
-    &.o-active {
-        border-top-color: var(--mail-MessagingMenu-activeBorderTopColor, rgba($primary, .75)) !important;
-    }
+    --list-group-border-color: #{var(--mail-MessagingMenu-listBorderColor, rgba($gray-200, .5))};
 }
 
 .o-mail-MessagingMenu-tabCounter, .o-mail-MessagingMenu-tabUnread {

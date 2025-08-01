@@ -1729,7 +1729,7 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o-mail-MessagingMenu-navbar button.fw-bold", { text: "Mailboxes" });
+    await contains(".o-mail-MessagingMenu-navbar button.o-active", { text: "Mailboxes" });
     await contains("button.active.o-active", { text: "Inbox" });
     await contains("h4", { text: "Your inbox is empty" });
 });

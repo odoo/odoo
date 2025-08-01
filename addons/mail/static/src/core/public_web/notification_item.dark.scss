@@ -1,12 +1,3 @@
 .o-mail-NotificationItem {
     --mail-NotificationItem-activeOutlineOpacity: 1;
-    --mail-NotificationItem-bg: #{lighten(mix($gray-100, $gray-200, 65%), 1.5%)};
-
-    &.o-important {
-        background-color: mix($gray-100, darken($info, 5%), 82.5%) !important;
-        border-color: lighten(mix($gray-100, darken($info, 5%), 82.5%), 5%) !important;
-    }
-    &:hover, &.o-active {
-        background-color: mix($o-gray-200, $o-gray-300) !important;
-    }
 }
