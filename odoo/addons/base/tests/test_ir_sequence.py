@@ -192,6 +192,21 @@ class TestIrSequenceGenerate(BaseCase):
             with self.assertRaises(UserError):
                 env['ir.sequence'].next_by_code('test_sequence_type_7')
 
+    def test_ir_sequence_suffix(self):
+        """ test whether the raise a user error for an invalid sequence """
+
+        # try to create a sequence with invalid suffix
+        with environment() as env:
+            seq = env['ir.sequence'].create({
+                'code': 'test_sequence_type_8',
+                'name': 'Test sequence',
+                'prefix': '',
+                'suffix': '/%(Y)s',
+            })
+            self.assertTrue(seq)
+            with self.assertRaises(UserError):
+                env['ir.sequence'].next_by_code('test_sequence_type_8')
+
     @classmethod
     def tearDownClass(cls):
         drop_sequence('test_sequence_type_5')
