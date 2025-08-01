@@ -21,8 +21,9 @@
         <field name="name">purchase.bill.union.tree</field>
         <field name="model">purchase.bill.union</field>
         <field name="arch" type="xml">
-            <tree string="Reference Document">
-                <field name="name"/>
+            <tree>
+                <field name="display_name"/>
+                <field name="name" optional="hide"/>
                 <field name="reference"/>
                 <field name="partner_id"/>
                 <field name="date"/>
