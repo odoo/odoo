@@ -36,6 +36,15 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.is_delivery
 
+    def _get_invalid_delivery_weight_lines(self):
+        """Retrieve lines containing physical products with no weight defined."""
+        return self.filtered(
+            lambda line:
+                line.product_qty > 0
+                and line.product_id.type not in ('service', 'combo')
+                and line.product_id.weight == 0,
+        )
+
     # override to allow deletion of delivery line in a confirmed order
     def _check_line_unlink(self):
         """
