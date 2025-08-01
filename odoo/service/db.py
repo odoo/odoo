@@ -1,4 +1,5 @@
 import base64
+import functools
 import json
 import logging
 import os
@@ -13,7 +14,6 @@ from xml.etree import ElementTree as ET
 
 import psycopg2
 from psycopg2.extensions import quote_ident
-from decorator import decorator
 from pytz import country_timezones
 
 import odoo.api
@@ -43,22 +43,25 @@ def database_identifier(cr, name: str) -> SQL:
     return SQL(name)
 
 
-def check_db_management_enabled(method):
-    def if_db_mgt_enabled(method, self, *args, **kwargs):
+def check_db_management_enabled(func, /):
+    @functools.wraps(func)
+    def if_db_mgt_enabled(*args, **kwargs):
         if not odoo.tools.config['list_db']:
             _logger.error('Database management functions blocked, admin disabled database listing')
             raise AccessDenied()
-        return method(self, *args, **kwargs)
-    return decorator(if_db_mgt_enabled, method)
+        return func(*args, **kwargs)
+    return if_db_mgt_enabled
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Master password required
-#----------------------------------------------------------
+# ----------------------------------------------------------
+
 
 def check_super(passwd):
     if passwd and odoo.tools.config.verify_admin_password(passwd):
         return True
     raise odoo.exceptions.AccessDenied()
+
 
 # This should be moved to odoo.modules.db, along side initialize().
 def _initialize_db(db_name, demo, lang, user_password, login='admin', country_code=None, phone=None):
