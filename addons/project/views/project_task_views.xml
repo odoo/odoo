@@ -83,8 +83,8 @@
                     <filter string="Deadline" name="date_deadline" date="date_deadline">
                         <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;=', 'today +1d')]"/>
                         <filter name="deadline_this_week" string="This Week" domain="[
-                            ('date_deadline', '&gt;=', '=monday'),
-                            ('date_deadline', '&lt;', '=monday +1w'),
+                            ('date_deadline', '&gt;=', '=week_start'),
+                            ('date_deadline', '&lt;', '=week_start +1w'),
                         ]"/>
                         <filter name="deadline_today" string="Today" domain="[
                             ('date_deadline', '&gt;=', 'today'),
