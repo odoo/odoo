@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Mapping, Collection
-from decorator import decorator
 from inspect import signature, Parameter
+import functools
 import logging
 import signal
 import sys
@@ -92,7 +92,10 @@ class ormcache:
         self.method = method
         self.determine_key()
         assert self.key is not None, "ormcache.key not initialized"
-        lookup: C = decorator(self.lookup, method)  # type: ignore
+
+        @functools.wraps(method)
+        def lookup(*args, **kwargs):
+            return self.lookup(*args, **kwargs)
         lookup.__cache__ = self  # type: ignore
         return lookup
 
@@ -112,16 +115,14 @@ class ormcache:
         # build a string that represents function code and evaluate it
         args = ', '.join(
             # remove annotations because lambdas can't be type-annotated,
-            # and defaults because they are redundant (defaults are present
-            # in the wrapper function itself)
-            str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
+            str(params.replace(annotation=Parameter.empty))
             for params in signature(self.method).parameters.values()
         )
         values = ['self._name', 'method', *self.args]
         code = f"lambda {args}: ({''.join(a for arg in values for a in (arg, ','))})"
         self.key = unsafe_eval(code, {'method': self.method})
 
-    def lookup(self, method, *args, **kwargs):
+    def lookup(self, *args, **kwargs):
         model: BaseModel = args[0]
         d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
         key = self.key(*args, **kwargs)

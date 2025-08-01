@@ -35,7 +35,7 @@ from concurrent.futures import CancelledError, Future, InvalidStateError, wait
 from contextlib import contextmanager, ExitStack
 from copy import deepcopy
 from datetime import datetime
-from functools import lru_cache, partial
+from functools import lru_cache, partial, wraps
 from itertools import islice, zip_longest
 from textwrap import shorten
 from typing import Optional, Iterable, cast
@@ -70,18 +70,6 @@ from odoo.addons.base.models import ir_actions_report
 
 from . import case, test_cursor
 from .result import OdooTestResult
-
-try:
-    # the behaviour of decorator changed in 5.0.5 changing the structure of the traceback when
-    # an error is raised inside a method using a decorator.
-    # this is not a hudge problem for test execution but this makes error message
-    # more difficult to read and breaks test_with_decorators
-    # This also changes the error format making runbot error matching fail
-    # This also breaks the first frame meaning that the module detection will also fail on runbot
-    # In 5.1 decoratorx was introduced and it looks like it has the same behaviour of old decorator
-    from decorator import decoratorx as decorator
-except ImportError:
-    from decorator import decorator
 
 try:
     import websocket
@@ -2534,34 +2522,36 @@ def no_retry(arg):
 
 def users(*logins):
     """ Decorate a method to execute it once for each given user. """
-    @decorator
-    def _users(func, *args, **kwargs):
-        self = args[0]
-        old_uid = self.uid
-        try:
-            # retrieve users
-            Users = self.env['res.users'].with_context(active_test=False)
-            user_id = {
-                user.login: user.id
-                for user in Users.search([('login', 'in', list(logins))])
-            }
-            for login in logins:
-                with self.subTest(login=login):
-                    # switch user and execute func
-                    self.uid = user_id[login]
-                    func(*args, **kwargs)
-                    self.env.flush_all()
-                # Invalidate the cache between subtests, in order to not reuse
-                # the former user's cache (`test_read_mail`, `test_write_mail`)
-                self.env.invalidate_all()
-        finally:
-            self.uid = old_uid
+    assert logins, "Expecting at least one login to execute"
 
-    return _users
+    def users_decorator(func, /):
+        @wraps(func)
+        def with_users(self, *args, **kwargs):
+            old_uid = self.uid
+            try:
+                # retrieve users
+                Users = self.env['res.users'].with_context(active_test=False)
+                user_id = {
+                    user.login: user.id
+                    for user in Users.search([('login', 'in', list(logins))])
+                }
+                for login in logins:
+                    with self.subTest(login=login):
+                        # switch user and execute func
+                        self.uid = user_id[login]
+                        func(self, *args, **kwargs)
+                        self.env.flush_all()
+                    # Invalidate the cache between subtests, in order to not reuse
+                    # the former user's cache (`test_read_mail`, `test_write_mail`)
+                    self.env.invalidate_all()
+            finally:
+                self.uid = old_uid
+
+        return with_users
+    return users_decorator
 
 
-@decorator
-def warmup(func, *args, **kwargs):
+def warmup(func, /):
     """
     Stabilize assertQueries and assertQueryCount assertions.
 
@@ -2573,18 +2563,20 @@ def warmup(func, *args, **kwargs):
     assertQueries and assertQueryCount assertions, it also discardes all
     changes but the ormcaches ones.
     """
-    self = args[0]
-    self.env.flush_all()
-    self.env.invalidate_all()
-    # run once to warm up the caches
-    self.warm = False
-    with contextlib.closing(self.cr.savepoint(flush=False)):
-        func(*args, **kwargs)
+    @wraps(func)
+    def warmup(self, *args, **kwargs):
         self.env.flush_all()
-    # run once for real
-    self.env.invalidate_all()
-    self.warm = True
-    func(*args, **kwargs)
+        self.env.invalidate_all()
+        # run once to warm up the caches
+        self.warm = False
+        with contextlib.closing(self.cr.savepoint(flush=False)):
+            func(self, *args, **kwargs)
+            self.env.flush_all()
+        # run once for real
+        self.env.invalidate_all()
+        self.warm = True
+        func(self, *args, **kwargs)
+    return warmup
 
 
 def can_import(module):
