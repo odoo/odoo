@@ -42,7 +42,7 @@ class SmsSms(models.Model):
     number = fields.Char('Number')
     body = fields.Text()
     partner_id = fields.Many2one('res.partner', 'Customer')
-    mail_message_id = fields.Many2one('mail.message', index=True)
+    mail_message_id = fields.Many2one('mail.message', index='btree_not_null')
     state = fields.Selection([
         ('outgoing', 'In Queue'),
         ('process', 'Processing'),

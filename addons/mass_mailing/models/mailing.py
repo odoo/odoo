@@ -120,7 +120,7 @@ class MassMailing(models.Model):
         'ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
-    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True, ondelete='set null')
+    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index='btree_not_null', ondelete='set null')
     medium_id = fields.Many2one(
         'utm.medium', string='Medium',
         compute='_compute_medium_id', readonly=False, store=True,
