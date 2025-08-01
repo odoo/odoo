@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryAll } from "@odoo/hoot-dom";
+import { queryAll, press, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { getBasicData } from "@spreadsheet/../tests/helpers/data";
+import { getBasicData, Product } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import {
     defineSpreadsheetDashboardModels,
@@ -11,6 +11,8 @@ import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helper
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
+import { range } from "@web/core/utils/numbers";
+import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
@@ -218,9 +220,9 @@ test("Can clear filter date filter value that defaults to current period", async
     const year = luxon.DateTime.local().year;
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year));
     await contains(".o_searchview_facet_label").click();
-    await contains(".o-filter-value input").click();
+    await contains('.o-filter-item[data-id="2"] input').click();
     await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
 
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year - 1));
 
@@ -302,7 +304,7 @@ test("Changing filter values will create a new share", async function () {
     await contains(".o_searchview_facet_label").click();
     await contains(".o-filter-value input").click();
     await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
 
     await contains("i.fa-share-alt").click();
     await animationFrame();
@@ -359,15 +361,12 @@ test("Global filter with same id is not shared between dashboards", async functi
     expect(".o_searchview_facet").toHaveCount(0);
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
 
-    await contains(".o-filters-search-dialog button.dropdown-toggle").click();
-    await contains(".o-dropdown-item").click();
-
     await contains(".o-autocomplete--input.o_input").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(0);
     await contains(".dropdown-item:first").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(1);
 
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
     expect(".o_searchview_facet").toHaveCount(1);
 
     await contains(".o_search_panel li:last-child").click();
@@ -399,47 +398,16 @@ test("Can add a new global filter from the search bar", async function () {
     await createSpreadsheetDashboard({ serverData });
 
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    expect(".o-filters-search-dialog button.dropdown-toggle").toHaveText("Add filter");
-    await contains(".o-filters-search-dialog button.dropdown-toggle").click();
-    await contains(".o-dropdown-item").click();
-
-    expect(".o-filters-search-dialog button.dropdown-toggle").toHaveCount(0);
 
     expect(".o-autocomplete--input.o_input").toHaveCount(1);
     expect(".o-autocomplete--input.o_input").toHaveValue("");
     await contains(".o-autocomplete--input.o_input").click();
     await contains(".o-autocomplete--dropdown-item").click();
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
 
     expect(".o_searchview_facet").toHaveCount(1);
     expect(".o_searchview_facet .o_searchview_facet_label").toHaveText("Relation Filter");
     expect(".o_searchview_facet .o_facet_value").toHaveText("xphone");
-});
-
-test("Can remove a global filter from the dialog", async function () {
-    const spreadsheetData = {
-        globalFilters: [
-            {
-                id: "1",
-                type: "relation",
-                label: "Relation Filter",
-                modelName: "product",
-                defaultValue: { operator: "in", ids: [37] }, // xphone
-            },
-        ],
-    };
-    const serverData = getServerData(spreadsheetData);
-    await createSpreadsheetDashboard({ serverData });
-
-    expect(".o_searchview_facet").toHaveCount(1);
-    expect(".o_searchview_facet .o_searchview_facet_label").toHaveText("Relation Filter");
-    expect(".o_searchview_facet .o_facet_value").toHaveText("xphone");
-
-    await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    await contains(".fa-trash").click();
-    await contains(".modal-footer .btn-primary").click();
-
-    expect(".o_searchview_facet").toHaveCount(0);
 });
 
 test("Can open the dialog by clicking on a facet", async function () {
@@ -458,8 +426,8 @@ test("Can open the dialog by clicking on a facet", async function () {
     await createSpreadsheetDashboard({ serverData });
 
     expect(".o_searchview_facet").toHaveCount(1);
-    await contains(".o_searchview_facet").click();
-    expect(".o-filters-search-dialog").toHaveCount(1);
+    await contains(".o_searchview_facet .o_searchview_facet_label ").click();
+    expect(".o-filter-values").toHaveCount(1);
 });
 
 test("Can open the dialog by clicking on the search bar", async function () {
@@ -477,8 +445,8 @@ test("Can open the dialog by clicking on the search bar", async function () {
     const serverData = getServerData(spreadsheetData);
     await createSpreadsheetDashboard({ serverData });
 
-    await contains(".o_searchview").click();
-    expect(".o-filters-search-dialog").toHaveCount(1);
+    await contains(".o_searchview input").click();
+    expect(".o-filter-values").toHaveCount(1);
 });
 
 test("Changes of global filters are not dispatched while inside the dialog", async function () {
@@ -498,13 +466,11 @@ test("Changes of global filters are not dispatched while inside the dialog", asy
     expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
 
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    await contains(".o-filters-search-dialog button.dropdown-toggle").click();
-    await contains(".o-dropdown-item").click();
 
     await contains(".o-autocomplete--input.o_input").click();
     await contains(".o-autocomplete--dropdown-item").click();
     expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
     expect(model.getters.getGlobalFilterValue("1")).toEqual({ operator: "in", ids: [37] });
 });
 
@@ -564,4 +530,170 @@ test("Unknown value for relation filter is displayed as inaccessible", async fun
     await createSpreadsheetDashboard({ serverData });
     expect(".o_searchview_facet").toHaveCount(1);
     expect(".o_searchview_facet .o_facet_value").toHaveText("Inaccessible/missing record ID");
+});
+
+describe("Quick search bar", () => {
+    const productFilter = {
+        id: "1",
+        type: "relation",
+        label: "Product",
+        modelName: "product",
+    };
+
+    const selectionFilter = {
+        id: "55",
+        type: "selection",
+        label: "Selection Filter",
+        resModel: "res.currency",
+        selectionField: "position",
+    };
+
+    test("Can quick search a string in a relational filter", async function () {
+        const spreadsheetData = { globalFilters: [productFilter] };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("phone");
+        expect(".o-dropdown-item.focus").toHaveText("Search Product for: phone");
+        await press("Enter");
+
+        const filterValue = model.getters.getGlobalFilterValue(productFilter.id);
+        expect(filterValue).toEqual({ operator: "ilike", strings: ["phone"] });
+    });
+
+    test("Can quick search a specific record in a relational filter", async function () {
+        const spreadsheetData = { globalFilters: [productFilter] };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("x");
+        expect(".o-dropdown-item.focus").toHaveText("Search Product for: x");
+        await contains(".o-dropdown-item.focus .o_expand").click();
+
+        const children = queryAll(".o-dropdown-item.o_indent");
+        expect(children.map((el) => el.innerText)).toEqual(["xphone", "xpad"]);
+        await contains(children[0]).click();
+
+        const filterValue = model.getters.getGlobalFilterValue(productFilter.id);
+        expect(filterValue).toEqual({ operator: "in", ids: [37] });
+    });
+
+    test("Can load more records in the quick search", async function () {
+        for (let i = 0; i < 15; i++) {
+            Product._records.push({ id: i, display_name: "name" + i });
+        }
+        const serverData = getServerData({ globalFilters: [productFilter] });
+        await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("name");
+        expect(".o-dropdown-item.focus").toHaveText("Search Product for: name");
+        await contains(".o-dropdown-item.focus .o_expand").click();
+
+        const children = queryAll(".o-dropdown-item.o_indent");
+        expect(children.map((el) => el.innerText)).toEqual([
+            ...range(0, 9).map((i) => "name" + i),
+            "Load more",
+        ]);
+        await contains(children.at(-1)).click();
+
+        expect(queryAllTexts(".o-dropdown-item.o_indent")).toEqual(
+            range(0, 15).map((i) => "name" + i)
+        );
+    });
+
+    test("Can quick search a string in a text filter", async function () {
+        const spreadsheetData = { globalFilters: [{ id: "2", type: "text", label: "Text" }] };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("phone");
+        expect(".o-dropdown-item.focus").toHaveText("Search Text for: phone");
+        await press("Enter");
+
+        const filterValue = model.getters.getGlobalFilterValue("2");
+        expect(filterValue).toEqual({ operator: "ilike", strings: ["phone"] });
+    });
+
+    test("Can quick search a string in a text filter with a range of allowed values", async function () {
+        const spreadsheetData = {
+            sheets: [{ id: "sh1", name: "Sh1", cells: { A1: "phone", A2: "tablet", A3: "table" } }],
+            globalFilters: [
+                {
+                    id: "2",
+                    type: "text",
+                    label: "Text",
+                    rangesOfAllowedValues: ["Sh1!A1:A5"],
+                },
+            ],
+        };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("a");
+        expect(".o-dropdown-item.focus").toHaveText("Search Text for: a");
+        await press("ArrowRight");
+        await animationFrame();
+
+        const children = queryAll(".o-dropdown-item.o_indent");
+        expect(children.map((el) => el.innerText)).toEqual(["tablet", "table"]);
+        await contains(children[1]).click();
+
+        const filterValue = model.getters.getGlobalFilterValue("2");
+        expect(filterValue).toEqual({ operator: "ilike", strings: ["table"] });
+    });
+
+    test("Cannot search for a string that is not in rangesOfAllowedValues", async function () {
+        const spreadsheetData = {
+            sheets: [{ id: "sh1", name: "Sh1", cells: { A1: "phone", A2: "tablet", A3: "table" } }],
+            globalFilters: [
+                {
+                    id: "2",
+                    type: "text",
+                    label: "Text",
+                    rangesOfAllowedValues: ["Sh1!A1:A5"],
+                },
+            ],
+        };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("desk");
+        expect(".o-dropdown-item.focus").toHaveText("Search Text for: desk");
+        await press("Enter");
+
+        const filterValue = model.getters.getGlobalFilterValue("2");
+        expect(filterValue).toEqual(undefined);
+    });
+
+    test("Can quick search a selection filter value", async function () {
+        const spreadsheetData = { globalFilters: [selectionFilter] };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("a");
+        expect(".o-dropdown-item.focus").toHaveText("Search Selection Filter for: a");
+        await contains(".o-dropdown-item.focus .o_expand").click();
+
+        const children = queryAll(".o-dropdown-item.o_indent");
+        expect(children.map((el) => el.innerText)).toEqual(["A"]);
+        await contains(children[0]).click();
+
+        const filterValue = model.getters.getGlobalFilterValue(selectionFilter.id);
+        expect(filterValue).toEqual({ operator: "in", selectionValues: ["after"] });
+    });
+
+    test("Date and numeric filters are not in the quick search results", async function () {
+        const numericFilter = { id: "255", type: "numeric", label: "Numeric Filter" };
+        const spreadsheetData = {
+            globalFilters: [productFilter, THIS_YEAR_GLOBAL_FILTER, numericFilter, selectionFilter],
+        };
+        const serverData = getServerData(spreadsheetData);
+        await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("phone");
+        expect(queryAllTexts(".o-dropdown-item")).toEqual([
+            "Search Product for: phone",
+            "Search Selection Filter for: phone",
+        ]);
+    });
 });
