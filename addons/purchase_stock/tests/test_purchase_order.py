@@ -485,6 +485,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
+            'type': 'product',
             'seller_ids': [(0, 0, {
                 'partner_id': self.partner_a.id,
                 'min_qty': 1,
