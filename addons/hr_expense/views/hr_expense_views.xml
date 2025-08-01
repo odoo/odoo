@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="res_users_view_form_preferences" model="ir.ui.view">
-            <field name="name">hr.user.preferences.form.inherit.hr.expense</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="hr.res_users_view_form_profile" />
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='managers']" position="inside">
-                    <field name="expense_manager_id" placeholder="Auto-validation" string="Expense" readonly="not can_edit" context="{'default_company_id': company_id}"/>
-                </xpath>
-                 <xpath expr="//group[@name='managers']" position="attributes">
-                    <attribute name="invisible">0</attribute>
-                </xpath>
-            </field>
-        </record>
-
         <record id="hr_expense_view_expenses_analysis_tree" model="ir.ui.view">
             <field name="name">hr.expense.list</field>
             <field name="model">hr.expense</field>

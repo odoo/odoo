@@ -5,9 +5,9 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="auth_totp.view_totp_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_totp_enable_wizard']" position="after">
-                <button groups="base.group_erp_manager" invisible="id == uid"
-                        name="action_totp_invite" string="Invite to use 2FA" type="object" class="btn btn-secondary"/>
+            <xpath expr="//button[@name='action_totp_enable_wizard'][hasclass('disabled')]" position="after">
+                <button groups="base.group_erp_manager" invisible="id == uid or totp_enabled"
+                        name="action_totp_invite" string="Invite to use 2FA" type="object" class="btn btn-primary h-100 ms-2"/>
             </xpath>
         </field>
     </record>
@@ -35,7 +35,7 @@
                 <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image':'image_128'}"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Name" required="True" readonly="context.get('from_my_profile', False)"/>
+                            <field name="name" placeholder="Name" required="True" readonly="context.get('from_my_preferences', False)"/>
                         </h1>
                     </div>
             </notebook>

@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { contains, insertText } from "@web/../tests/utils";
 
 /**
  * Verify that a user can modify their own profile information.
@@ -13,21 +12,17 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
         },
         {
             content: "Open preferences / profile screen",
-            trigger: "[data-menu=settings]",
+            trigger: "[data-menu=preferences]",
             run: "click",
         },
         {
-            content: "Update the email address",
-            trigger: 'div[name="email"] input',
-            async run() {
-                await insertText("div[name='email'] input", "updatedemail@example.com", {
-                    replace: true,
-                });
-                await contains(".o_form_dirty", { count: 1 });
-            },
+            content: "Update the notification type",
+            trigger: '.modal div[name="notification_type"] input[data-value="inbox"]',
+            run: "click",
         },
         {
-            trigger: "body.modal-open",
+            content: "Verify that the form must be save",
+            trigger: ".o_form_dirty",
         },
         {
             content: "Save the form",
@@ -37,9 +32,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
         {
             content: "Wait until the modal is closed",
             trigger: "body:not(.modal-open)",
-            async run() {
-                await contains(".o_form_dirty", { count: 0 });
-            },
         },
     ],
 });

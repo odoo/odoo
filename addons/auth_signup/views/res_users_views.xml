@@ -8,13 +8,21 @@
             <field name="arch" type="xml">
                 <!-- add state field in header -->
                 <xpath expr="//header" position="inside">
-                    <button string="Send Password Reset Instructions"
-                                type="object" name="action_reset_password"
-                                invisible="state != 'active'"/>
                     <button string="Send an Invitation Email"
                                 type="object" name="action_reset_password" context="{'create_user': 1}"
                                 invisible="state != 'new'"/>
                     <field name="state" widget="statusbar"/>
+                </xpath>
+                <xpath expr="//div[@name='auth']" position="attributes">
+                    <attribute name="invisible">state != 'active'</attribute>
+                </xpath>
+                <xpath expr="//a[@name='change_password']" position="attributes">
+                    <attribute name="invisible">id != uid</attribute>
+                </xpath>
+                <xpath expr="//div[@name='auth']" position="inside">
+                    <button string="Send Password Reset"
+                            type="object" name="action_reset_password"
+                            invisible="id == uid" class="btn btn-secondary h-100"/>
                 </xpath>
             </field>
         </record>

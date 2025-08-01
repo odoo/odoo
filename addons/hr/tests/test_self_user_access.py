@@ -21,7 +21,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': james.id,
             'bank_account_id': self.env['res.partner.bank'].create({'acc_number': 'BE1234567890', 'partner_id': james.partner_id.id}).id
         })
-        view = self.env.ref('hr.res_users_view_form_profile')
+        view = self.env.ref('hr.res_users_view_form_preferences')
         view_infos = james.get_view(view.id)
         fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
         james.read(fields)
@@ -36,7 +36,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': james.id,
         })
 
-        view = self.env.ref('hr.res_users_view_form_profile')
+        view = self.env.ref('hr.res_users_view_form_preferences')
         fields = james._fields
         view_infos = james.get_view(view.id)
         employee_related_fields = {
@@ -59,7 +59,7 @@ class TestSelfAccessProfile(TestHrCommon):
 
     def test_profile_view_fields(self):
         """ A simple user should see all fields in profile view, even if they are protected by groups """
-        view = self.env.ref('hr.res_users_view_form_profile')
+        view = self.env.ref('hr.res_users_view_form_preferences')
 
         # For reference, check the view with user with every groups protecting user fields
         all_groups_xml_ids = chain(*[
@@ -92,7 +92,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'name': 'James',
             'user_id': james.id,
         })
-        view = self.env.ref('hr.res_users_view_form_profile')
+        view = self.env.ref('hr.res_users_view_form_preferences')
         available_actions = james.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar'].get('action', {})
         change_password_action = self.env.ref("base.change_password_wizard_action")
 
@@ -105,7 +105,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'name': 'John',
             'user_id': john.id,
         })
-        view = self.env.ref('hr.res_users_view_form_profile')
+        view = self.env.ref('hr.res_users_view_form_preferences')
         available_actions = john.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
         self.assertTrue(any(x['id'] == change_password_action.id for x in available_actions))
 
@@ -234,7 +234,7 @@ class TestSelfAccessRights(TestHrCommon):
             it should not cause an access error if these fields are in `SELF_READABLE_FIELDS`.
         """
         self.env['res.lang']._activate_lang("fr_FR")
-        with Form(self.richard.with_user(self.richard), view='hr.res_users_view_form_profile') as form:
+        with Form(self.richard.with_user(self.richard), view='hr.res_users_view_form_preferences') as form:
             # triggering an onchange should not trigger some access error
             form.lang = "fr_FR"
             form.tz = "Europe/Brussels"
@@ -253,8 +253,6 @@ class TestSelfAccessRights(TestHrCommon):
         self.assertFalse(hubert.env.user.has_group('hr.group_hr_user'))
         self.assertFalse(hubert.env.su)
 
-        self.assertEqual(hubert.read(['employee_bank_account_id'])[0]['employee_bank_account_id'][1], 'FR******7890')
-        self.assertEqual(hubert.sudo().employee_bank_account_id.display_name, 'FR******7890')
         self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_id.display_name, 'FR******7890')
 
         hubert_acc.invalidate_recordset(["display_name"])

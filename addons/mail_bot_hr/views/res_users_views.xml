@@ -4,18 +4,23 @@
         <record id="res_users_view_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.preferences.form.simplified.inherit</field>
             <field name="model">res.users</field>
-            <field name="inherit_id" ref="hr.res_users_view_form_simple_modif" />
-            <field name="priority">15</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <widget name="notification_alert" position="replace" />
+                <footer position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </footer>
+                <h1 position="replace"/>
+                <xpath expr="//field[@name='image_1920']" position="replace"/>
             </field>
         </record>
 
-        <record id="res_users_view_form_profile" model="ir.ui.view">
+        <record id="res_users_view_form_preferences" model="ir.ui.view">
             <field name="name">res.users.profile.form.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id"
-                   ref="hr.res_users_view_form_profile" />
+                   ref="hr.res_users_view_form_preferences"/>
             <field name="arch" type="xml">
                 <sheet position="before">
                     <widget name="notification_alert" />

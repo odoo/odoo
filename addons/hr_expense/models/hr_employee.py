@@ -68,19 +68,3 @@ class HrEmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 
     expense_manager_id = fields.Many2one('res.users', readonly=True)
-
-
-class ResUsers(models.Model):
-    _inherit = 'res.users'
-
-    expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', readonly=False)
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['expense_manager_id']
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + [
-            'expense_manager_id',
-        ]

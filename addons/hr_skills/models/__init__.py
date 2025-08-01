@@ -9,5 +9,4 @@ from . import hr_individual_skill_mixin
 from . import hr_employee_skill
 from . import hr_skill_level
 from . import hr_skill_type
-from . import res_users
 from . import resource_resource

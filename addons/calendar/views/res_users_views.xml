@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='tz']" position="after">
-                    <field name="calendar_default_privacy" readonly="0" string="Calendar Default Privacy" invisible="share"/>
+                    <field name="calendar_default_privacy" readonly="0" string="Privacy" invisible="share"/>
                 </xpath>
             </field>
         </record>
@@ -18,10 +18,8 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='messaging']|//field[@name='signature']" position="after">
-                    <group string="Calendar" name="calendar">
-                        <field name="calendar_default_privacy" readonly="0" string="Calendar Default Privacy" invisible="share"/>
-                    </group>
+                <xpath expr="//field[@name='tz']" position="after">
+                    <field name="calendar_default_privacy" readonly="0" string="Privacy" invisible="share"/>
                 </xpath>
             </field>
         </record>

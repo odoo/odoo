@@ -475,14 +475,14 @@ class TestUsers2(UsersCommonCase):
         but part of the `SELF_WRITEABLE_FIELDS` is shown in the user profile preferences form and is editable"""
         my_user = self.env['res.users'].browse(self.env.user.id)
         self.assertIn(
-            'email',
+            'tz',
             my_user.SELF_WRITEABLE_FIELDS,
             "This test doesn't make sense if not tested on a field part of the SELF_WRITEABLE_FIELDS"
         )
-        self.patch(self.env.registry['res.users']._fields['email'], 'groups', 'base.group_system')
+        self.patch(self.env.registry['res.users']._fields['tz'], 'groups', 'base.group_system')
         with Form(my_user, view='base.view_users_form_simple_modif') as UserForm:
-            UserForm.email = "foo@bar.com"
-        self.assertEqual(my_user.email, "foo@bar.com")
+            UserForm.tz = "Pacific/Apia"
+        self.assertEqual(my_user.tz, "Pacific/Apia")
 
     @warmup
     def test_write_group_ids_performance(self):
