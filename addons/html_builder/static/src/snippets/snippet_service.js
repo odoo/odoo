@@ -365,9 +365,7 @@ export class SnippetModel extends Reactive {
                         const rootEl = snippetEl.matches(".s_popup")
                             ? snippetCopyEl.firstElementChild
                             : snippetCopyEl;
-                        for (const cleanForSave of cleanForSaveHandlers) {
-                            await cleanForSave({ root: rootEl });
-                        }
+                        cleanForSaveHandlers.forEach((handler) => handler({ root: rootEl }));
 
                         const defaultSnippetName = isButton
                             ? _t("Custom Button")

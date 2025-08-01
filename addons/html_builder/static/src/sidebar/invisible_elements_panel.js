@@ -79,17 +79,17 @@ export class InvisibleElementsPanel extends Component {
         this.state.invisibleEntries = createInvisibleEntries(rootInvisibleSnippetEls);
     }
 
-    async toggleElementVisibility(invisibleEntry) {
+    toggleElementVisibility(invisibleEntry) {
         const snippetEl = invisibleEntry.snippetEl;
         if (invisibleEntry.isVisible) {
             // Toggle the entry visibility to "Hide".
             invisibleEntry.isVisible = false;
-            await this.shared.visibility.toggleTargetVisibility(snippetEl, false);
+            this.shared.visibility.toggleTargetVisibility(snippetEl, false);
             this.shared.builderOptions.deactivateContainers();
         } else {
             // Toggle the entry visibility to "Show".
             invisibleEntry.isVisible = true;
-            await this.shared.visibility.toggleTargetVisibility(snippetEl, true);
+            this.shared.visibility.toggleTargetVisibility(snippetEl, true);
             this.env.editor.dispatchTo("on_reveal_target_handlers", snippetEl);
             this.shared.builderOptions.updateContainers(snippetEl);
             // Scroll to the target if not visible.

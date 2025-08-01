@@ -80,15 +80,13 @@ export class SavePlugin extends Plugin {
             );
         });
         const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
-            const cleanedEls = [];
-            for (const dirtyEl of dirtyEls) {
+            const cleanedEls = dirtyEls.map((dirtyEl) => {
                 dirtyEl.classList.remove("o_dirty");
                 const cleanedEl = dirtyEl.cloneNode(true);
-                for (const cleanForSave of this.getResource("clean_for_save_handlers")) {
-                    await cleanForSave({ root: cleanedEl });
-                }
-                cleanedEls.push(cleanedEl);
-            }
+                this.dispatchTo("clean_for_save_handlers", { root: cleanedEl });
+                return cleanedEl;
+            });
+
             for (const saveElementsOverride of this.getResource("save_elements_overrides")) {
                 if (await saveElementsOverride(cleanedEls)) {
                     return;

@@ -16,13 +16,13 @@ export class PopupVisibilityPlugin extends Plugin {
     };
 
     setup() {
-        this.addDomListener(this.editable, "click", async (ev) => {
+        this.addDomListener(this.editable, "click", (ev) => {
             // Note: links are excluded here so that internal modal buttons do
             // not close the popup as we want to allow edition of those buttons.
             if (ev.target.matches(".s_popup .js_close_popup:not(a, .btn)")) {
                 ev.stopPropagation();
                 const popupEl = ev.target.closest(".s_popup");
-                await this.dependencies.visibility.hideElement(popupEl);
+                this.dependencies.visibility.hideElement(popupEl);
             }
         });
         const history = this.dependencies.history;
@@ -55,18 +55,11 @@ export class PopupVisibilityPlugin extends Plugin {
         }
     }
 
-    async onTargetHide(targetEl, isCleaning) {
+    onTargetHide(targetEl, isCleaning) {
         // Do not use Bootstrap to close the popup, as we are cleaning a
         // clone of it. Instead, hide it manually (see `cleanForSave`).
-        if (isCleaning) {
-            return;
-        }
-        if (targetEl.matches(".s_popup")) {
-            const modalEl = targetEl.querySelector(".modal");
-            await new Promise((resolve) => {
-                modalEl.addEventListener("hidden.bs.modal", resolve, { once: true });
-                this.window.Modal.getOrCreateInstance(modalEl).hide();
-            });
+        if (targetEl.matches(".s_popup") && !isCleaning) {
+            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).hide();
         }
     }
 
@@ -88,7 +81,7 @@ export class PopupVisibilityPlugin extends Plugin {
      *
      * @param {HTMLElement} targetEl the element
      */
-    async hidePopupsWithoutTarget(targetEl) {
+    hidePopupsWithoutTarget(targetEl) {
         const openPopupEls = this.editable.querySelectorAll(".s_popup:not([data-invisible='1']");
         if (!openPopupEls.length) {
             return;
@@ -96,7 +89,7 @@ export class PopupVisibilityPlugin extends Plugin {
 
         for (const popupEl of openPopupEls) {
             if (!popupEl.contains(targetEl)) {
-                await this.dependencies.visibility.toggleTargetVisibility(popupEl, false);
+                this.dependencies.visibility.toggleTargetVisibility(popupEl, false);
             }
         }
         this.config.updateInvisibleElementsPanel();

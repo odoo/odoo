@@ -54,11 +54,11 @@ export class VisibilityPlugin extends Plugin {
         this.config.updateInvisibleElementsPanel();
     }
 
-    async cleanForSaveVisibility({ root: rootEl }) {
+    cleanForSaveVisibility({ root: rootEl }) {
         const invisibleEls = getElementsWithOption(rootEl, invisibleElementsSelector);
         for (const invisibleEl of invisibleEls) {
             // Hide the invisible elements.
-            await this.toggleTargetVisibility(invisibleEl, false, false, true);
+            this.toggleTargetVisibility(invisibleEl, false, false, true);
             // Remove the `data-invisible` attribute from conditionally hidden
             // elements.
             if (invisibleEl.matches("[data-visibility='conditional']")) {
@@ -67,11 +67,11 @@ export class VisibilityPlugin extends Plugin {
         }
     }
 
-    async onSnippetDropped({ snippetEl }) {
+    onSnippetDropped({ snippetEl }) {
         // Show the invisible elements.
         const invisibleEls = getElementsWithOption(snippetEl, invisibleElementsSelector);
         for (const invisibleEl of invisibleEls) {
-            await this.toggleTargetVisibility(invisibleEl, true);
+            this.toggleTargetVisibility(invisibleEl, true);
         }
     }
 
@@ -98,12 +98,10 @@ export class VisibilityPlugin extends Plugin {
      * clean_for_save handler.
      * @returns {Boolean}
      */
-    async toggleTargetVisibility(editingEl, show, considerDeviceVisibility, isCleaning = false) {
+    toggleTargetVisibility(editingEl, show, considerDeviceVisibility, isCleaning = false) {
         show = this.toggleVisibilityStatus(editingEl, show, considerDeviceVisibility);
         const resourceName = show ? "target_show" : "target_hide";
-        for (const onTargetShowOrHide of this.getResource(resourceName)) {
-            await onTargetShowOrHide(editingEl, isCleaning);
-        }
+        this.dispatchTo(resourceName, editingEl);
         return show;
     }
 
@@ -161,8 +159,8 @@ export class VisibilityPlugin extends Plugin {
      *
      * @param {HTMLElement} toHideEl the element to hide.
      */
-    async hideElement(toHideEl) {
-        await this.toggleTargetVisibility(toHideEl, false);
+    hideElement(toHideEl) {
+        this.toggleTargetVisibility(toHideEl, false);
         this.dependencies.builderOptions.deactivateContainers();
         this.config.updateInvisibleElementsPanel();
         this.dependencies.disableSnippets.disableUndroppableSnippets();
