@@ -103,6 +103,36 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return SHOW_ALL_ITEMS_TOOLTIP;
     }
 
+    get hidePrices() {
+        return this.record.data.hide_prices;
+    }
+
+    get hideCompositions() {
+        return this.record.data.hide_composition;
+    }
+
+    async toggleHidePrices(record) {
+        const sectionRecords = getSectionRecords(this.props.list, record, record.display_type === 'sub_section');
+        const commands = [];
+        for (const sectionRecord of sectionRecords) {
+            commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
+                hide_prices: !record.data.hide_prices,
+            }));
+        }
+        await this.props.list.applyCommands(commands, { sort: true });
+    }
+
+    async toggleHideComposition(record) {
+        const sectionRecords = getSectionRecords(this.props.list, record, record.display_type === 'sub_section');
+        const commands = [];
+        for (const sectionRecord of sectionRecords) {
+            commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
+                hide_composition: !record.data.hide_composition,
+            }));
+        }
+        await this.props.list.applyCommands(commands, { sort: true });
+    }
+
     async addRowAfterSection(record, addSubSection) {
         const canProceed = await this.props.list.leaveEditMode();
         if (!canProceed) {
@@ -276,11 +306,15 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     getRowClass(record) {
         const existingClasses = super.getRowClass(record);
-        return `${existingClasses} o_is_${record.data.display_type}`;
+        let newClasses = `${existingClasses} o_is_${record.data.display_type}`;
+        if (record.data.hide_composition) {
+            newClasses += " text-muted";
+        }
+        return newClasses;
     }
 
     getCellClass(column, record) {
-        const classNames = super.getCellClass(column, record);
+        let classNames = super.getCellClass(column, record);
         if (
             this.isSectionOrNote(record) &&
             column.widget !== "handle" &&
@@ -288,6 +322,11 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         ) {
             return `${classNames} o_hidden`;
         }
+
+        if (record.data.hide_prices && this.props.aggregatedFields.includes(column.name)) {
+            classNames += " text-muted";
+        }
+
         return classNames;
     }
 
