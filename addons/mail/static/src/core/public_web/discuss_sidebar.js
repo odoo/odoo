@@ -1,10 +1,12 @@
-import { Component, useSubEnv } from "@odoo/owl";
+import { useHover } from "@mail/utils/common/hooks";
+import { Component, onMounted, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DiscussActions } from "../common/discuss_actions";
 
 import { registry } from "@web/core/registry";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export const discussSidebarItemsRegistry = registry.category("mail.discuss_sidebar_items");
 
@@ -15,29 +17,44 @@ export const discussSidebarItemsRegistry = registry.category("mail.discuss_sideb
 export class DiscussSidebar extends Component {
     static template = "mail.DiscussSidebar";
     static props = {};
-    static components = { DiscussActions, Dropdown };
+    static components = { DiscussActions, Dropdown, ResizablePanel };
 
     setup() {
         super.setup();
+        this.command = useService("command");
         this.store = useService("mail.store");
+        this.ui = useService("ui");
         useSubEnv({ inDiscussSidebar: true });
+        onMounted(() => {
+            this.mounted = true;
+        });
+        this.searchHover = useHover(["search-btn", "search-floating"], {
+            onHover: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.searchFloating.isOpen = true;
+                }
+            },
+            onAway: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.searchFloating.isOpen = false;
+                }
+            },
+        });
+        this.searchFloating = useDropdownState();
     }
 
     get discussSidebarItems() {
         return discussSidebarItemsRegistry.getAll();
     }
 
-    get optionActions() {
-        return [
-            {
-                id: "toggle-size",
-                name: this.store.discuss.isSidebarCompact
-                    ? _t("Expand panel")
-                    : _t("Collapse panel"),
-                icon: this.store.discuss.isSidebarCompact ? "fa fa-expand" : "fa fa-compress",
-                onSelected: () =>
-                    (this.store.discuss.isSidebarCompact = !this.store.discuss.isSidebarCompact),
-            },
-        ];
+    onClickFindOrStartConversation() {
+        this.command.openMainPalette({ searchValue: "@" });
+    }
+
+    onResize(width) {
+        if (!this.mounted) {
+            return; // ignore resize from mount not triggered by user
+        }
+        this.store.discuss.isSidebarCompact = width <= 100;
     }
 }

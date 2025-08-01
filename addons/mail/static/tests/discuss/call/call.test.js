@@ -252,7 +252,7 @@ test("Camera video stream stays in focus when on/off", async () => {
 test("Create a direct message channel when clicking on start a meeting", async () => {
     await start();
     await openDiscuss();
-    await click("button", { text: "Start a meeting" });
+    await click("button[title='New Meeting']");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
     await contains(".o-discuss-ChannelInvitation");
@@ -312,7 +312,7 @@ test("join/leave sounds are only played on main tab", async () => {
     await waitForSteps(["tab1 - play - call-leave"]);
 });
 
-test("'Start a meeting' in mobile", async () => {
+test("'New Meeting' in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
@@ -322,7 +322,7 @@ test("'Start a meeting' in mobile", async () => {
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chats" });
-    await click("button", { text: "Start a meeting" });
+    await click("button", { text: "New Meeting" });
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Partner 2" });
     await click("button:not([disabled])", { text: "Invite to Group Chat" });
     await contains(".o-discuss-Call");

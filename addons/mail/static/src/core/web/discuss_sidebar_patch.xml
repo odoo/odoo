@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension">
-        <xpath expr="//*[@name='options-btn']" position="after">
+        <xpath expr="//*[@t-ref='top']" position="inside">
             <Dropdown t-if="store.discuss.isSidebarCompact" state="meetingFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-0 min-w-0 shadow-sm o-rounded-bubble'" manual="true">
                 <t t-call="mail.DiscussSidebar.startMeetingButton"/>
                 <t t-set-slot="content">
                     <div t-ref="meeting-floating">
-                        <span class="text-muted user-select-none" t-esc="startMeetingText"/>
+                        <span class="text-muted user-select-none" t-esc="newMeetingText"/>
                     </div>
                 </t>
             </Dropdown>
@@ -15,6 +15,6 @@
     </t>
 
     <t t-name="mail.DiscussSidebar.startMeetingButton">
-        <button class="btn btn-primary rounded-3 d-flex align-items-center gap-1" t-att-class="{ 'o-px-1_5 py-2': store.discuss.isSidebarCompact, 'btn-sm mx-5': !store.discuss.isSidebarCompact }" t-on-click="store.startMeeting" data-hotkey="m" t-ref="meeting-btn"><i class="fa fa-fw fa-users opacity-75"/><span t-if="!store.discuss.isSidebarCompact" t-esc="startMeetingText"/></button>
+        <button class="btn btn-primary rounded d-flex align-items-center gap-1 o-p-1_5" t-att-title="newMeetingText" t-on-click="store.startMeeting" data-hotkey="m" t-ref="meeting-btn"><i class="fa fa-fw fa-user-plus opacity-75"/></button>
     </t>
 </templates>

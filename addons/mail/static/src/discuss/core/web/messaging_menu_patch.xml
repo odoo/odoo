@@ -9,7 +9,7 @@
             <t t-if="ui.isSmall">
                 <t t-if="store.discuss.activeTab !== 'main' or !env.inDiscussApp">
                     <button name="startMeetingButton" class="w-50 m-1 me-0 btn btn-primary" t-on-click.stop="onClickStartMeeting">
-                        <i class="fa fa-users"/> Start a meeting
+                        <i class="fa fa-user-plus"/> New Meeting
                     </button>
                     <button t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
                         <i class="fa fa-pencil"/> Start a conversation

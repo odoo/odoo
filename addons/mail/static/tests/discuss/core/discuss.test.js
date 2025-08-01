@@ -66,7 +66,7 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await waitForSteps(["subscribe"]);
     await openDiscuss();
     await waitForSteps([]);
-    await click("input[placeholder='Find or start a conversation']");
+    await click("input[placeholder='Search conversations']");
     await insertText("input[placeholder='Search a conversation']", "new channel");
     await waitForSteps(["subscribe"]);
 });
