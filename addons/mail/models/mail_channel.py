@@ -291,11 +291,12 @@ class Channel(models.Model):
             self.env['mail.channel.member'].sudo().create(to_create)
 
     def _subscribe_users_automatically_get_members(self):
-        """ Return new members per channel ID """
+        """Return new members per channel ID, considering only active users."""
         return dict(
-            (channel.id, (channel.group_ids.users.partner_id - channel.channel_partner_ids).ids)
-            for channel in self
-        )
+            (channel.id,
+             (channel.group_ids.users.filtered(lambda u: u.active).partner_id - channel.channel_partner_ids).ids)
+                for channel in self
+            )
 
     def action_unfollow(self):
         self._action_unfollow(self.env.user.partner_id)
