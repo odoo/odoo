@@ -46,6 +46,7 @@
         <field ref="model_sale_order" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
     <record id="sale_order_see_all" model="ir.rule">
         <field name="name">All Orders</field>
@@ -120,6 +121,9 @@
         <field name="model_id" ref="model_account_move"/>
         <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <record id="account_invoice_rule_see_all" model="ir.rule">
@@ -134,6 +138,9 @@
         <field name="model_id" ref="model_account_move_line"/>
         <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <record id="account_invoice_line_rule_see_all" model="ir.rule">
@@ -141,6 +148,9 @@
         <field name="model_id" ref="model_account_move_line"/>
         <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <!-- Wizard access rules -->
@@ -149,6 +159,7 @@
         <field name="model_id" ref="account.model_account_invoice_send"/>
         <field name="domain_force">[('invoice_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_ids.invoice_user_id', '=', user.id), ('invoice_ids.invoice_user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <record id="account_invoice_send_rule_see_all" model="ir.rule">
@@ -156,6 +167,7 @@
         <field name="model_id" ref="account.model_account_invoice_send"/>
         <field name="domain_force">[('invoice_ids.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <record id="sale_payment_provider_onboarding_wizard_rule" model="ir.rule">
