@@ -230,7 +230,7 @@ registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         run: "click",
     }, {
         content: "unsplash image (mocked to logo) should have been used",
-        trigger: ":iframe #wrap .s_image_gallery img[src^='/unsplash/HQqIOc8oYro/fox']",
+        trigger: ":iframe #wrap .s_image_gallery img[data-original-src^='/unsplash/HQqIOc8oYro/fox']",
         run() {
             unpatchMediaDialog();
         },
