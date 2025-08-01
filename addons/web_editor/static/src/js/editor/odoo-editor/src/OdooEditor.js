@@ -4494,6 +4494,11 @@ export class OdooEditor extends EventTarget {
         }
 
         const node = ev.target;
+        // hande uploaded documents
+        if (node.tagName === 'A' && node.classList.contains('o_image') && !this.historyCanUndo()) {
+            const url = node.getAttribute('href');
+            window.open(url, '_blank');
+        }
         // handle checkbox lists
         if (node.tagName == 'LI' && getListMode(node.parentElement) == 'CL') {
             const beforStyle = window.getComputedStyle(node, ':before');
