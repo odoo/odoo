@@ -100,7 +100,7 @@ class L10n_LatamCheck(models.Model):
     @api.depends('outstanding_line_id.amount_residual')
     def _compute_issue_state(self):
         for rec in self:
-            if not rec.outstanding_line_id:
+            if rec.payment_id.payment_method_code not in 'own_checks' or not rec.outstanding_line_id:
                 rec.issue_state = False
             elif rec.amount and not rec.outstanding_line_id.amount_residual:
                 if any(
