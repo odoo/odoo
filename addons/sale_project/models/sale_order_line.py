@@ -135,7 +135,8 @@ class SaleOrderLine(models.Model):
 
     @api.depends('order_id.partner_id', 'product_id', 'order_id.project_id')
     def _compute_analytic_distribution(self):
-        super()._compute_analytic_distribution()
+        if not self.order_id.project_id:
+            super()._compute_analytic_distribution()
         for line in self:
             project = line.product_id.project_id or line.order_id.project_id
             if line.display_type or not line.product_id or not project:

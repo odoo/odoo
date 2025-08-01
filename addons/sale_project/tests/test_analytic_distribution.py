@@ -137,3 +137,51 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
             [(0, '=', 1)],
             "Domain should be (0, '=', 1) when analytic_distribution is missing."
         )
+
+    def test_compute_sol_project_analytic_distribution_model(self):
+        """
+        Ensure other analytic plans added onto the SOL does not get
+        overwritten by the recompute when a new project gets created upon
+        confirming a quotation.
+        """
+        # Create a mandatory analytic plan and its analytic account
+        analytic_plan = self.plan_b
+        analytic_plan.write({'default_applicability': 'mandatory'})
+        account_b = self.env['account.analytic.account'].create({
+            'name': 'account',
+            'plan_id': analytic_plan.id,
+        })
+
+        # Create an analytic distribution model that uses another analytic account
+        distribution_model = self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {str(self.analytic_account_sale.id): 100}
+        })
+
+        # Create a quotation with a product that creates project on order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_delivery_manual5.id,
+        })
+
+        # SOL have the distribution model analytic account by now
+        self.assertEqual(
+            sale_order_line.analytic_distribution,
+            distribution_model.analytic_distribution,
+            "The sale order line's analytic distribution should include the distribution model's accounts"
+        )
+
+        # Add the mandated analytic plan onto the SOL
+        sale_order_line.write({'analytic_distribution': {f'{self.analytic_account_sale.id},{account_b.id}': 100}})
+
+        # Confirm the quotation
+        sale_order.action_confirm()
+
+        # Check that the compute_analytic_distribution does not overwrite the mandated plan
+        self.assertEqual(
+            sale_order_line.analytic_distribution,
+            {f'{self.analytic_account_sale.id},{account_b.id}': 100},
+            "The sale order line's analytic distribution should include the mandated analytic plan"
+        )
