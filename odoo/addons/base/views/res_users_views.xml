@@ -353,85 +353,88 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" edit="1">
-                    <widget name="notification_alert"/>
-                    <field name="image_1920" readonly="0" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
-                    <h1>
-                        <field name="name" readonly="1" class="oe_inline"/>
-                    </h1>
-                    <notebook>
-                        <page string="Preferences" name="preferences_page">
-                            <group name="preferences">
-                                <group>
-                                    <field name="email" widget="email" readonly="0"/>
-                                    <field name="phone"/>
+                    <header></header>
+                    <sheet>
+                        <widget name="notification_alert"/>
+                        <field name="image_1920" readonly="0" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
+                        <h1>
+                            <field name="name" readonly="1" class="oe_inline"/>
+                        </h1>
+                        <notebook>
+                            <page string="Preferences" name="preferences_page">
+                                <group name="preferences">
+                                    <group>
+                                        <field name="email" widget="email" readonly="0"/>
+                                        <field name="phone"/>
+                                    </group>
+                                    <group>
+                                        <label for="lang"/>
+                                        <div class="o_row">
+                                            <field name="lang" required="1" readonly="0"/>
+                                            <button
+                                                type="action"
+                                                name="%(base.action_view_base_language_install)d"
+                                                class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
+                                                aria-label="Add a language"
+                                                groups="base.group_system"
+                                                title="Add a language"
+                                            />
+                                        </div>
+                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
+                                    </group>
                                 </group>
-                                <group>
-                                    <label for="lang"/>
-                                    <div class="o_row">
-                                        <field name="lang" required="1" readonly="0"/>
-                                        <button
-                                            type="action"
-                                            name="%(base.action_view_base_language_install)d"
-                                            class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
-                                            aria-label="Add a language"
-                                            groups="base.group_system"
-                                            title="Add a language"
-                                        />
+                                <group name="signature">
+                                    <field name="signature" readonly="0" options="{'codeview': true}"/>
+                                </group>
+                                <group name="status" string="Status" invisible="1">
+                                    <field name="company_id" options="{'no_create': True}" readonly="0"
+                                        groups="base.group_multi_company"/>
+                                </group>
+                                <group name="preference_contact"></group>
+                            </page>
+                            <page string="Account Security" name="page_account_security">
+                                <group name="auth" string="Password Management">
+                                    <div colspan="2">
+                                        <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                                     </div>
-                                    <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                                    <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
                                 </group>
-                            </group>
-                            <group name="signature">
-                                <field name="signature" readonly="0" options="{'codeview': true}"/>
-                            </group>
-                            <group name="status" string="Status" invisible="1">
-                                <field name="company_id" options="{'no_create': True}" readonly="0"
-                                    groups="base.group_multi_company"/>
-                            </group>
-                            <group name="preference_contact"></group>
-                        </page>
-                        <page string="Account Security" name="page_account_security">
-                            <group name="auth" string="Password Management">
-                                <div colspan="2">
-                                    <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
-                                </div>
-                            </group>
-                            <group name="access" string="Other Devices">
-                                <div colspan="2">
-                                    <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary"/>
-                                </div>
-                            </group>
-                            <group string="API Keys">
-                                <div class="text-muted" colspan="2">
-                                    API Keys are used to connect to Odoo from external tools without the need for a password or Two-factor Authentication.
-                                    <widget name="documentation_link" path="/developer/misc/api/external_api.html#api-keys" lable="Learn more" icon="fa-fw o_button_icon fa-info-circle"/>
-                                </div>
-                                <div colspan="2" invisible="not api_key_ids">
-                                    <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
-                                        <list editable="bottom" create="false" delete="false">
-                                            <field name="name"/>
-                                            <field name="scope"/>
-                                            <field name="create_date"/>
-                                            <field name="expiration_date"/>
-                                            <button type="object" name="remove"
-                                                    string="Delete API key." icon="fa-trash"/>
-                                        </list>
-                                    </field>
-                                </div>
-                                <div colspan="2">
-                                    <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary"/>
-                                </div>
-                            </group>
-                        </page>
-                        <page string="Devices" name="page_devices">
-                            <field name="device_ids" mode="kanban"/>
-                        </page>
-                    </notebook>
-                    <footer>
-                        <button name="preference_save" type="object" string="Save" class="btn-primary" data-hotkey="q"/>
-                        <button name="preference_cancel" string="Cancel" special="cancel" data-hotkey="x" class="btn-secondary"/>
-                    </footer>
+                                <group name="access" string="Other Devices">
+                                    <div colspan="2">
+                                        <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary"/>
+                                    </div>
+                                </group>
+                                <group string="API Keys">
+                                    <div class="text-muted" colspan="2">
+                                        API Keys are used to connect to Odoo from external tools without the need for a password or Two-factor Authentication.
+                                        <widget name="documentation_link" path="/developer/misc/api/external_api.html#api-keys" lable="Learn more" icon="fa-fw o_button_icon fa-info-circle"/>
+                                    </div>
+                                    <div colspan="2" invisible="not api_key_ids">
+                                        <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
+                                            <list editable="bottom" create="false" delete="false">
+                                                <field name="name"/>
+                                                <field name="scope"/>
+                                                <field name="create_date"/>
+                                                <field name="expiration_date"/>
+                                                <button type="object" name="remove"
+                                                        string="Delete API key." icon="fa-trash"/>
+                                            </list>
+                                        </field>
+                                    </div>
+                                    <div colspan="2">
+                                        <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary"/>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Devices" name="page_devices">
+                                <field name="device_ids" mode="kanban"/>
+                            </page>
+                        </notebook>
+                        <footer>
+                            <button name="preference_save" type="object" string="Save" class="btn-primary" data-hotkey="q"/>
+                            <button name="preference_cancel" string="Cancel" special="cancel" data-hotkey="x" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
                 </form>
             </field>
         </record>

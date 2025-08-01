@@ -15,6 +15,7 @@ from dateutil.parser import parse
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
@@ -94,6 +95,12 @@ class MailMail(models.Model):
     scheduled_date = fields.Datetime('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
     fetchmail_server_id = fields.Many2one('fetchmail.server', "Inbound Mail Server", readonly=True, index='btree_not_null')
+
+    @api.constrains('mail_message_id', 'mail_server_id')
+    def _check_mail_server_id(self):
+        for mail in self:
+            if mail.mail_server_id and not mail._filter_mail_mail_servers(mail.mail_server_id):
+                raise ValidationError(_("You may not create a message using another user's mail server."))
 
     def _compute_body_content(self):
         for mail in self:
@@ -331,6 +338,14 @@ class MailMail(models.Model):
                 10 * 1024  # adding 10Ko as security
         )
 
+    def _filter_mail_mail_servers(self, mail_servers):
+        if (
+            len(self.mail_message_id.create_uid) > 1 or  # multiple create_uids -> subset that's allowed for all
+            self.env['ir.config_parameter'].sudo().get_param('mail.disable_personal_mail_servers', False)
+        ):
+            return mail_servers.filtered(lambda server: not server.owner_user_id)
+        return mail_servers.filtered(lambda server: server.owner_user_id in [self.env['res.users'], self.mail_message_id.create_uid])
+
     def _prepare_outgoing_body(self):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
@@ -515,23 +530,21 @@ class MailMail(models.Model):
             mail_server_id, email_from, Records<mail.mail>.ids
         """
         mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
+        all_mail_servers = self.env['ir.mail_server'].sudo().search([], order='sequence, id')
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
-        for values in mail_values:
+        for mail, values in zip(self, mail_values):
             # protect against ill-formatted email_from when formataddr was used on an already formatted email
             emails_from = tools.mail.email_split_and_format_normalize(values['email_from'])
             email_from = emails_from[0] if emails_from else values['email_from']
             mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
             alias_domain_id = values['record_alias_domain_id'][0] if values['record_alias_domain_id'] else False
-            key = (mail_server_id, alias_domain_id, email_from)
+            key = (mail_server_id, alias_domain_id, email_from, mail._filter_mail_mail_servers(all_mail_servers))
             group_per_email_from[key].append(values['id'])
 
-        # Then find the mail server for each email_from and group the <mail.mail>
-        # per mail_server_id and smtp_from
-        mail_servers = self.env['ir.mail_server'].sudo().search([], order='sequence, id')
         group_per_smtp_from = defaultdict(list)
-        for (mail_server_id, alias_domain_id, email_from), mail_ids in group_per_email_from.items():
+        for (mail_server_id, alias_domain_id, email_from, allowed_mail_servers), mail_ids in group_per_email_from.items():
             if not mail_server_id:
                 mail_server = self.env['ir.mail_server']
                 if alias_domain_id:
@@ -540,7 +553,7 @@ class MailMail(models.Model):
                         domain_notifications_email=alias_domain.default_from_email,
                         domain_bounce_address=alias_domain.bounce_email,
                     )
-                mail_server, smtp_from = mail_server._find_mail_server(email_from, mail_servers)
+                mail_server, smtp_from = mail_server._find_mail_server(email_from, allowed_mail_servers)
                 mail_server_id = mail_server.id if mail_server else False
             else:
                 smtp_from = email_from
@@ -646,6 +659,9 @@ class MailMail(models.Model):
         if IrMailServer._disable_send():
             # during testing skip sending e-mails unless monkeypatched
             return True
+        # check that every email is allowed on this mail server
+        if mail_server and not self._filter_mail_mail_servers(mail_server):
+            raise UserError(_('Unauthorized server for some of the sending mails.'))
         # Only retrieve recipient followers of the mails if needed
         mails_with_unfollow_link = self.filtered(lambda m: m.body_html and '/mail/unfollow' in m.body_html)
         doc_to_followers = self.env['mail.followers']._get_mail_doc_to_followers(mails_with_unfollow_link.ids)

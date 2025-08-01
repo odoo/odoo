@@ -3,6 +3,7 @@
 
 import json
 import logging
+import requests
 
 from werkzeug.exceptions import Forbidden
 
@@ -10,6 +11,7 @@ from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq
+from odoo.addons.google_gmail.models.google_gmail_mixin import GMAIL_TOKEN_REQUEST_TIMEOUT
 
 _logger = logging.getLogger(__name__)
 
@@ -23,12 +25,12 @@ class GoogleGmailController(http.Controller):
         We will fetch the refresh token and the access token thanks to this authorization
         code and save those values on the given mail server.
         """
-        if not request.env.user.has_group('base.group_system'):
-            _logger.error('Google Gmail: non-system user trying to link an Gmail account.')
-            raise Forbidden()
-
         if error:
-            return _('An error occur during the authentication process.')
+            _logger.warning("Google Gmail: an error occurred %s", error)
+            return request.render('google_gmail.google_gmail_oauth_error', {
+                'error': _('An error occurred during the authentication process.'),
+                'redirect_url': '/odoo',
+            })
 
         try:
             state = json.loads(state)
@@ -39,31 +41,85 @@ class GoogleGmailController(http.Controller):
             _logger.error('Google Gmail: Wrong state value %r.', state)
             raise Forbidden()
 
+        record_sudo = self._get_gmail_record(model_name, rec_id, csrf_token)
+
+        try:
+            refresh_token, access_token, expiration = record_sudo._fetch_gmail_refresh_token(code)
+        except UserError as e:
+            return request.render('google_gmail.google_gmail_oauth_error', {
+                'error': str(e),
+                'redirect_url': self._get_redirect_url(record_sudo),
+            })
+
+        return self._check_email_and_redirect_to_gmail_record(access_token, expiration, refresh_token, record_sudo)
+
+    def _get_gmail_record(self, model_name, rec_id, csrf_token):
+        """Return the record after checking the CSRF token."""
         model = request.env[model_name]
 
         if not isinstance(model, request.env.registry['google.gmail.mixin']):
             # The model must inherits from the "google.gmail.mixin" mixin
+            _logger.error('Google Gmail: Wrong model %r.', model_name)
             raise Forbidden()
 
-        record = model.browse(rec_id).exists()
+        record = model.browse(int(rec_id)).exists().sudo()
         if not record:
+            _logger.error('Google Gmail: No record found.')
             raise Forbidden()
 
         if not csrf_token or not consteq(csrf_token, record._get_gmail_csrf_token()):
             _logger.error('Google Gmail: Wrong CSRF token during Gmail authentication.')
             raise Forbidden()
 
-        try:
-            refresh_token, access_token, expiration = record._fetch_gmail_refresh_token(code)
-        except UserError:
-            return _('An error occur during the authentication process.')
+        return record
+
+    def _check_email_and_redirect_to_gmail_record(self, access_token, expiration, refresh_token, record):
+        # Verify the token information (that the email set on the
+        # server is the email used to login on Gmail)
+        if record.owner_user_id or not request.env.user.has_group('base.group_system'):
+            # https://developers.google.com/identity/protocols/oauth2/scopes
+            response = requests.get(
+                'https://www.googleapis.com/oauth2/v2/userinfo',
+                params={'access_token': access_token},
+                timeout=GMAIL_TOKEN_REQUEST_TIMEOUT,
+            )
+            if not response.ok:
+                _logger.error('Google Gmail: Could not verify the token information: %s.', response.text)
+                raise Forbidden()
+
+            response = response.json()
+
+            if not response.get('verified_email') or response.get('email') != record[record._email_field]:
+                _logger.error('Google Gmail: Invalid email address: %r != %s.', response, record[record._email_field])
+                return request.render('google_gmail.google_gmail_oauth_error', {
+                    'error': _(
+                        "Oops, you're creating an authorization to send from %(email_login)s but your address is %(email_server)s. Make sure your addresses match!",
+                        email_login=response.get('email'),
+                        email_server=record[record._email_field],
+                    ),
+                    'redirect_url': self._get_redirect_url(record),
+                })
 
         record.write({
+            'active': True,
             'google_gmail_access_token': access_token,
             'google_gmail_access_token_expiration': expiration,
-            'google_gmail_authorization_code': code,
             'google_gmail_refresh_token': refresh_token,
         })
+        return request.redirect(self._get_redirect_url(record))
 
-        url = f'/odoo/{model_name}/{rec_id}'
-        return request.redirect(url)
+    def _get_redirect_url(self, record):
+        """Return the redirect URL for the given record.
+
+        If the user configured a personal mail server, we redirect him
+        to the user preference view. If it's an admin and that he
+        configured a standard incoming / outgoing mail server, then we
+        redirect it to the mail server form view.
+        """
+        if (
+            (record._name != 'ir.mail_server'
+            or record != request.env.user.outgoing_mail_server_id)
+            and request.env.user.has_group('base.group_system')
+        ):
+            return f'/odoo/{record._name}/{record.id}'
+        return f'/odoo/my-preferences/{request.env.user.id}'

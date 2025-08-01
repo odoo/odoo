@@ -56,7 +56,8 @@
                                             required="smtp_authentication != 'cli'"/>
                                     </group>
                                     <group>
-                                        <field name="smtp_user" invisible="smtp_authentication == 'certificate'" force_save="1"/>
+                                        <label for="smtp_user" string="Username" invisible="smtp_authentication == 'certificate'"/>
+                                        <field name="smtp_user" invisible="smtp_authentication == 'certificate'" force_save="1" nolabel="1"/>
                                         <field name="smtp_pass" invisible="smtp_authentication != 'login'" password="True" force_save="1"/>
                                         <field name="smtp_ssl_certificate" invisible="smtp_authentication != 'certificate'" force_save="1"/>
                                         <field name="smtp_ssl_private_key" invisible="smtp_authentication != 'certificate'" force_save="1"/>
@@ -107,6 +108,13 @@
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="ir_mail_server_list" />
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
+            <field name="help" type="html">
+                <div>
+                    <b class="o_view_nocontent_smiling_face">
+                        No Outgoing Servers yet
+                    </b>
+                </div>
+            </field>
         </record>
 
         <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="5" groups="base.group_no_one"/>

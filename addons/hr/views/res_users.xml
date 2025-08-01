@@ -50,13 +50,8 @@
                     <attribute name="delete">false</attribute>
                     <attribute name="js_class">hr_employee_profile_form</attribute>
                 </form>
-                <notebook position="replace">
-                        <field name="hr_presence_state" invisible="1"/>
-                        <header>
-                        </header>
-                        <sheet>$0</sheet>
-                </notebook>
                 <notebook position="before">
+                    <field name="hr_presence_state" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button
                             id="hr_presence_button"
