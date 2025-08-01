@@ -54,6 +54,7 @@ class ResUsers(models.Model):
                             'model': 'mailing.mailing',
                             'type': 'activity',
                             'icon': icon,
+                            'domain': [('active', 'in', [True, False])],
                             'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                             'res_ids': res_ids,
                             "view_type": view_type,
@@ -65,7 +66,10 @@ class ResUsers(models.Model):
 
                 for mailing_type in user_activities.keys():
                     user_activities[mailing_type].update({
-                        'domain': json.dumps([['activity_ids.res_id', 'in', list(user_activities[mailing_type]['res_ids'])]])
+                        'domain': json.dumps([
+                            ['active', 'in', [True, False]],
+                            ['activity_ids.res_id', 'in', list(user_activities[mailing_type]['res_ids'])],
+                        ])
                     })
                 activities.extend(list(user_activities.values()))
                 break
