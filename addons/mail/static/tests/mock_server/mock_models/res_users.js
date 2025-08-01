@@ -172,6 +172,10 @@ export class ResUsers extends webModels.ResUsers {
                     id: modelName, // for simplicity
                     model: modelName,
                     name: modelName,
+                    domain:
+                        modelName && "active" in this.env[modelName]._fields
+                            ? [["active", "in", [true, false]]]
+                            : [],
                     overdue_count: 0,
                     planned_count: 0,
                     today_count: 0,
