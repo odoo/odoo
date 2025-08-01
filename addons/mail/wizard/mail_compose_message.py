@@ -814,6 +814,7 @@ class MailComposeMessage(models.TransientModel):
         for res_ids_iter in tools.split_every(batch_size, res_ids):
             prepared_mail_values_filtered = self._manage_mail_values(self._prepare_mail_values(res_ids_iter))
             iter_mails_sudo = self.env['mail.mail'].sudo().create(list(prepared_mail_values_filtered.values()))
+            self.env['mail.notification'].create(self._generate_mail_notification_values(iter_mails_sudo))
             mails_sudo += iter_mails_sudo
 
             records = self.env[self.model].browse(prepared_mail_values_filtered.keys()) if self.model and hasattr(self.env[self.model], 'message_post') else False
@@ -843,6 +844,23 @@ class MailComposeMessage(models.TransientModel):
             self.env.invalidate_all()
 
         return mails_sudo
+
+    def _generate_mail_notification_values(self, mails):
+        if self.auto_delete and not self.auto_delete_keep_log:
+            return []
+
+        create_vals_all = []
+        for mail, notif_base_values in zip(mails, mails._get_notification_values()):
+            emails = set(tools.mail.email_split_and_format_normalize(f'{mail.email_to or ""}, {mail.email_cc or ""}'))
+            emails = emails or ([mail.email_to] if mail.email_to else "")
+
+            # if no recipient, the email will have mail_email_missing failure_type
+            if not mail.recipient_ids and not emails:
+                create_vals_all.append(notif_base_values)
+            else:
+                create_vals_all.extend(notif_base_values | {'res_partner_id': partner.id} for partner in mail.recipient_ids)
+                create_vals_all.extend(notif_base_values | {'mail_email_address': email} for email in emails)
+        return create_vals_all
 
     def open_template_creation_wizard(self):
         """ hit save as template button: opens a wizard that prompts for the template's subject.
@@ -895,6 +913,14 @@ class MailComposeMessage(models.TransientModel):
     # ------------------------------------------------------------
     # RENDERING / VALUES GENERATION
     # ------------------------------------------------------------
+
+    def _invalid_email_state(self):
+        """Gives state of an email when the address is invalid or missing.
+
+        We consider that if not keeping logs, users will not care to correct record-wise errors as it was "send and forget".
+        Whereas if they do keep logs, they will want to know that the message was not actually sent.
+        """
+        return 'cancel' if self.auto_delete and not self.auto_delete_keep_log else 'exception'
 
     def _prepare_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create either
@@ -1019,7 +1045,7 @@ class MailComposeMessage(models.TransientModel):
         if email_mode:
             values.update(
                 auto_delete=self.auto_delete,
-                is_notification=self.auto_delete_keep_log,
+                is_notification=not self.auto_delete or self.auto_delete_keep_log,
                 model=self.model,
             )
         # specific to post mode
@@ -1311,6 +1337,8 @@ class MailComposeMessage(models.TransientModel):
 
             # prevent sending to blocked addresses that were included by mistake
             # blacklisted or optout or duplicate -> cancel
+            # invalid or missing email -> error if logged, otherwise cancel
+            invalid_email_state = self._invalid_email_state()
             if record_id in blacklist_ids:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_bl'
@@ -1318,10 +1346,10 @@ class MailComposeMessage(models.TransientModel):
                 mail_values['is_notification'] = False
             # void or falsy values -> error
             elif not any(recipients['mail_to']):
-                mail_values['state'] = 'cancel'
+                mail_values['state'] = invalid_email_state
                 mail_values['failure_type'] = 'mail_email_missing'
             elif not any(recipients['mail_to_normalized']):
-                mail_values['state'] = 'cancel'
+                mail_values['state'] = invalid_email_state
                 mail_values['failure_type'] = 'mail_email_invalid'
             elif optout_emails and all(
                 mail_to in optout_emails for mail_to in recipients['mail_to_normalized']
