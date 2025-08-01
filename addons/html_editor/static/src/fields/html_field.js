@@ -351,6 +351,11 @@ export const htmlField = {
         if ("baseContainers" in options) {
             editorConfig.baseContainers = options.baseContainers;
         }
+        if ("cleanEmptyStructuralContainers" in options) {
+            editorConfig.cleanEmptyStructuralContainers = Boolean(
+                options.cleanEmptyStructuralContainers
+            );
+        }
         return {
             editorConfig,
             isCollaborative: options.collaborative,
