@@ -10,7 +10,7 @@ from odoo.fields import Command, Date, Domain
 from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_list, SQL, LazyTranslate
+from odoo.tools import format_list, SQL, LazyTranslate, OrderedSet
 from odoo.addons.resource.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
@@ -243,6 +243,13 @@ class ProjectTask(models.Model):
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility", tracking=False)
+    is_visibility_followers = fields.Boolean(
+        string="Does the task belong to a followers-only project",
+        search='_search_is_visibility_followers',
+        compute='_compute_is_visibility_followers',
+        tracking=False,
+        readonly=True,
+    )
     subtask_completion_percentage = fields.Float(compute="_compute_subtask_completion_percentage", export_string_translation=False)
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', digits=(16, 2), store=True, aggregator="avg")
@@ -480,6 +487,50 @@ class ProjectTask(models.Model):
                 super().message_subscribe(project_follower.partner_id.ids, task_subtypes)
         return super().message_subscribe(partner_ids, subtype_ids)
 
+    @api.model
+    def _search_message_is_follower(self, operator, operand):
+        # The user is considered a follower of the task
+        # if he is following the task or its project.
+        if (
+            operator not in ('in', 'not in')
+            and isinstance(operand, OrderedSet)
+            and all(op in (True, False) for op in operand)
+        ):
+            raise NotImplemented
+
+        # Drop the leaf if searching for both True and False
+        if len(operand) > 1:
+            return Domain.TRUE
+
+        # We suppose that on average, a partner isn't a follower of many projects,
+        # compared to tasks, so we can retrieve their ids directly
+        followed_projects_ids = (
+            self.env['mail.followers']
+            .sudo()
+            .search_fetch([
+                ('res_model', '=', 'project.project'),
+                ('partner_id', 'in', self.env.user.partner_id.ids),
+            ], ['res_id'])
+            .mapped('res_id')
+        )
+        positive_search = (operator == 'in' and True in operand) or (operator == 'not in' and False in operand)
+        following_project_domain = Domain([('project_id', 'in' if positive_search else 'not in', followed_projects_ids)])
+        following_task_domain = Domain(super()._search_message_is_follower(operator, operand))
+        return following_project_domain | following_task_domain
+
+    @api.depends('project_id')
+    def _compute_message_is_follower(self):
+        # The user is considered a follower of the task
+        # if he is following the task or its project.
+        super()._compute_message_is_follower()
+        tasks_not_followed = self.filtered(lambda t: not t.message_is_follower)
+        # A lambda user cannot read tasks belonging to projects with 'followers' privacy
+        tasks_not_followed.sudo().fetch(['project_id'])
+        projects_followed = tasks_not_followed.project_id.filtered(lambda p: p.message_is_follower)
+        followed_project_ids = set(projects_followed)
+        for task in tasks_not_followed:
+            task.message_is_follower = task.project_id in followed_project_ids
+
     @api.constrains('depend_on_ids')
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle('depend_on_ids'):
@@ -642,6 +693,52 @@ class ProjectTask(models.Model):
         }
         for task in self:
             task.subtask_count, task.closed_subtask_count = total_and_closed_subtask_count_per_parent_id.get(task.id, (0, 0))
+
+    @api.model
+    def _search_is_visibility_followers(self, operator, operand):
+        if not (
+            operator in ('in', 'not in')
+            and isinstance(operand, OrderedSet)
+            and all(op in (True, False) for op in operand)
+        ):
+            raise NotImplemented
+
+        # Drop the leaf if searching for both True and False
+        if len(operand) > 1:
+            return Domain.TRUE
+
+        # Inline the ids of the private projects, as on average,
+        # it's the smallest set of projects based on their visibility
+        private_projects_ids = (
+            self.env['project.project']
+            .with_context(active_test=False)
+            .sudo()
+            ._search([('privacy_visibility', '=', 'followers')])
+            .get_result_ids()
+        )
+
+        positive_search = (operator == 'in' and True in operand) or (operator == 'not in' and False in operand)
+        visibility_domain = Domain([('project_id', 'in' if positive_search else 'not in', private_projects_ids)])
+        private_task_domain = Domain([('project_id', '=', False)])
+        # project's visibility doesn't apply to private tasks
+        return visibility_domain & ~private_task_domain
+
+    @api.depends('project_privacy_visibility', 'project_id')
+    def _compute_is_visibility_followers(self):
+        private_projects_ids = (
+            self.env['project.project']
+            .with_context(active_test=False)
+            .sudo()
+            ._search([
+                ('privacy_visibility', '=', 'followers'),
+                ('task_ids', 'in', self.ids)
+            ])
+            .get_result_ids()
+        )
+        private_projects_set = set(private_projects_ids)
+        self.fetch(['project_id'])
+        for task in self:
+            task.is_visibility_followers = task.project_id.id in private_projects_set if task.project_id else False
 
     @api.depends('partner_id.phone')
     def _compute_partner_phone(self):

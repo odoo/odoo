@@ -71,7 +71,7 @@
         <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">['|',
                                         ('privacy_visibility', '!=', 'followers'),
-                                        ('message_partner_ids', 'in', [user.partner_id.id])
+                                        ('message_is_follower', 'in', [user.partner_id.id])
                                     ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
@@ -90,15 +90,14 @@
         <field name="perm_unlink" eval="False"/>
         <field name="domain_force">[
             '|',
-                '&amp;',
-                    ('project_id', '!=', False),
-                    '|',
-                        ('project_id.privacy_visibility', '!=', 'followers'),
-                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                # Non-follower projects are accessible
+                ('is_visibility_followers', '=', False),
+                # For follower-only projects, user must be follower of project/task OR assigned to task
                 '|',
-                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # message_is_follower has a special search override for project.task to include followers of the task's project
+                    ('message_is_follower', '=', True),
                     # to subscribe check access to the record, follower is not enough at creation
-                    ('user_ids', 'in', user.id)
+                    ('user_ids', 'in', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
@@ -155,15 +154,14 @@
         <field name="perm_read" eval="False"/>
         <field name="domain_force">[
             '|',
-                '&amp;',
-                    ('project_id', '!=', False),
-                    '|',
-                        ('project_id.privacy_visibility', '!=', 'followers'),
-                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                # Non-follower projects are accessible
+                ('is_visibility_followers', '=', False),
+                # For follower-only projects, user must be follower of project/task OR assigned to task
                 '|',
-                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # message_is_follower has a special search override for project.task to include followers of the task's project
+                    ('message_is_follower', '=', True),
                     # to subscribe check access to the record, follower is not enough at creation
-                    ('user_ids', 'in', user.id)
+                    ('user_ids', 'in', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
@@ -172,10 +170,8 @@
         <field name="name">Project: See private tasks</field>
         <field name="model_id" ref="project.model_project_task"/>
         <field name="domain_force">[
-            ('project_id.privacy_visibility', '!=', 'followers'),
-            '|', '|', ('project_id', '!=', False),
-                      ('parent_id', '!=', False),
-                 ('user_ids', 'in', user.id),
+            ('project_id', '=', False),
+            ('user_ids', 'in', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
@@ -206,7 +202,7 @@
         <field name="name">Project/Task: portal users: can only see a task if he's a collaborator of the project and a follower of the task</field>
         <field name="model_id" ref="project.model_project_task"/>
         <field name="domain_force">[
-            ('project_id.privacy_visibility', '=', 'portal'),
+            ('project_privacy_visibility', '=', 'portal'),
             ('active', '=', True),
             '|',
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
@@ -227,7 +223,7 @@
         <field name="model_id" ref="project.model_project_task"/>
         <field name="active">0</field>
         <field name="domain_force">[
-            ('project_id.privacy_visibility', '=', 'portal'),
+            ('project_privacy_visibility', '=', 'portal'),
             ('active', '=', True),
             '|',
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
@@ -254,12 +250,14 @@
         <field name="model_id" ref="model_project_update"/>
         <field name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+            ('project_id', 'any', [
                 '|',
+                    '|',
+                        ('privacy_visibility', '!=', 'followers'),
+                        ('message_is_follower', '=', True),
                     ('user_id', '=', user.id),
-                    ('project_id.user_id', '=', user.id)
+            ]),
+            ('user_id', '=', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
@@ -323,11 +321,12 @@
         <field name="name">Project/Milestone: employees: follow required for follower-only projects</field>
         <field name="model_id" ref="model_project_milestone"/>
         <field name="domain_force">[
-        '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id),
+            ('project_id', 'any', [
+                '|',
+                    '|', ('privacy_visibility', '!=', 'followers'),
+                         ('message_is_follower', '=', True),
+                    ('user_id', '=', user.id),
+            ])
         ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
@@ -343,8 +342,10 @@
         <field name="name">Project/milestone portal users: portal user can read with project sharing feature</field>
         <field name="model_id" ref="project.model_project_milestone"/>
         <field name="domain_force">[
-            ('project_id.privacy_visibility', '=', 'portal'),
-            ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+            ('project_id', 'any', [
+                ('privacy_visibility', '=', 'portal'),
+                ('collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+            ])
         ]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>

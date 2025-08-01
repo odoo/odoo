@@ -8,8 +8,8 @@ class ProjectCollaborator(models.Model):
     _inherit = 'project.collaborator'
 
     @api.model
-    def _toggle_project_sharing_portal_rules(self, active):
-        super()._toggle_project_sharing_portal_rules(active)
+    def _set_project_sharing_portal_rules(self, active):
+        super()._set_project_sharing_portal_rules(active)
         # ir.model.access
         access_timesheet_portal = self.env.ref('hr_timesheet.access_account_analytic_line_portal_user').sudo()
         if access_timesheet_portal.active != active:

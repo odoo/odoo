@@ -200,6 +200,8 @@ class ProjectProject(models.Model):
     is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     is_template = fields.Boolean(copy=False, export_string_translation=False)
 
+    _private_project_idx = models.Index("(id) WHERE privacy_visibility IN ('followers')")
+
     _project_date_greater = models.Constraint(
         'check(date >= date_start)',
         "The project's start date must be before its end date.",
@@ -586,7 +588,7 @@ class ProjectProject(models.Model):
         # Here we modify the project's stage according to the selected company (selecting the first
         # stage in sequence that is linked to the company).
         company_id = vals.get('company_id')
-        if self.env.user.has_group('project.group_project_stages') and company_id:
+        if company_id and self.env.user.has_group('project.group_project_stages'):
             projects_already_with_company = self.filtered(lambda p: p.company_id.id == company_id)
             if projects_already_with_company:
                 projects_already_with_company.write({key: value for key, value in vals.items() if key != 'company_id'})
