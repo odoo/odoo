@@ -76,8 +76,16 @@ odoo.define('point_of_sale.ControlButtonsMixin', function (require) {
             const cbMissingReference = [];
             // 1. First pass. If the reference control button isn't there, collect it for second pass.
             for (let cb of controlButtonsToPosition) {
-                const [locator, index] = locate(cb);
+                const [locator, index, reference] = locate(cb);
                 if (index == -1) {
+                    if (locator === 'replace' && cb.name === reference) {
+                        var i = cbMissingReference.length
+                        while (i--) {
+                            if (cbMissingReference[i].name === cb.name) {
+                                cbMissingReference.splice(i, 1);
+                            }
+                        }
+                    }
                     cbMissingReference.push(cb);
                     continue;
                 }
