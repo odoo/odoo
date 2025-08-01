@@ -37,7 +37,8 @@ export class MessagingMenu extends Component {
 
     onClickThread(isMarkAsRead, thread) {
         if (!isMarkAsRead) {
-            this.openDiscussion(thread);
+            thread.open({ focus: true, fromMessagingMenu: true, bypassCompact: true });
+            this.dropdown.close();
             return;
         }
         this.markAsRead(thread);
@@ -140,11 +141,6 @@ export class MessagingMenu extends Component {
                 label: _t("Channels"),
             },
         ];
-    }
-
-    openDiscussion(thread) {
-        thread.open({ focus: true, fromMessagingMenu: true, bypassCompact: true });
-        this.dropdown.close();
     }
 
     onClickNavTab(tabId) {

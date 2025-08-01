@@ -14,10 +14,12 @@ import {
     setElementContent,
 } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
+import { getOrigin } from "@web/core/utils/urls";
 import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
+const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -98,9 +100,25 @@ function linkify(text) {
     while ((match = urlRegexp.exec(text)) !== null) {
         result = htmlJoin([result, text.slice(curIndex, match.index)]);
         // Decode the url first, in case it's already an encoded url
-        const url = decodeURI(match[0]);
-        const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        result = markup`${result}<a target="_blank" rel="noreferrer noopener" href="${href}">${url}</a>`;
+        const inputUrl = decodeURI(match[0]);
+        const url = !/^https?:\/\//i.test(inputUrl) ? "http://" + inputUrl : inputUrl;
+        const link = document.createElement("a");
+        setAttributes(link, {
+            target: "_blank",
+            rel: "noreferrer noopener",
+            href: encodeURI(url),
+        });
+        link.textContent = inputUrl;
+        const messageMatch = messageUrlRegExp.exec(url);
+        if (messageMatch !== null) {
+            setAttributes(link, {
+                "data-oe-id": messageMatch[1],
+                "data-oe-model": "mail.message",
+            });
+            link.classList.add("o_message_redirect");
+        }
+        // markup: outerHTML is safe when used as a node
+        result = htmlJoin([result, markup(link.outerHTML)]);
         curIndex = match.index + match[0].length;
     }
     return htmlJoin([result, text.slice(curIndex)]);

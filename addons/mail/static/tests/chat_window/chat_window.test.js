@@ -77,76 +77,6 @@ test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut f
     await contains(".o-mail-Message");
 });
 
-test("Message post in chat window of chatter should log a note", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
-    const messageId = pyEnv["mail.message"].create({
-        model: "res.partner",
-        body: "A needaction message to have it in messaging menu",
-        author_id: serverState.odoobotId,
-        needaction: true,
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-Message", {
-        text: "A needaction message to have it in messaging menu",
-        contains: [".o-mail-Message-bubble"], // bubble = "Send message" mode
-    });
-    await contains(".o-mail-Composer [placeholder='Log an internal note…']");
-    await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
-    triggerHotkey("control+Enter");
-    await contains(".o-mail-Message", {
-        text: "Test",
-        contains: [".o-mail-Message-bubble", { count: 0 }], // no bubble = "Log note" mode
-    });
-});
-
-test("Chatter in chat window should scroll to most recent message", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
-    // Fill both channels with random messages in order for the scrollbar to
-    // appear.
-    pyEnv["mail.message"].create(
-        Array(50)
-            .fill(0)
-            .map((_, index) => ({
-                model: "res.partner",
-                body: "Non Empty Body ".repeat(25),
-                author_id: serverState.odoobotId,
-                needaction: true,
-                res_id: partnerId,
-            }))
-    );
-    const lastMessageId = pyEnv["mail.message"].create({
-        model: "res.partner",
-        body: "A needaction message to have it in messaging menu",
-        author_id: serverState.odoobotId,
-        needaction: true,
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: lastMessageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-Thread", { scroll: "bottom" });
-});
-
 test("load messages from opening chat window from messaging menu", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -1076,31 +1006,31 @@ test("Ctrl+k opens the @ command palette", async () => {
 
 test("Do not squash logged notes", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const partnerId = pyEnv["discuss.channel"].create({ name: "test channel" });
     const messageId = pyEnv["mail.message"].create([
         {
-            model: "res.partner",
+            model: "discuss.channel",
             body: "Test Message",
             author_id: partnerId,
             needaction: true,
             res_id: partnerId,
         },
         {
-            model: "res.partner",
+            model: "discuss.channel",
             body: "Message",
             author_id: serverState.partnerId,
             needaction: true,
             res_id: partnerId,
         },
         {
-            model: "res.partner",
+            model: "discuss.channel",
             body: "Message Squashed",
             author_id: serverState.partnerId,
             needaction: true,
             res_id: partnerId,
         },
         {
-            model: "res.partner",
+            model: "discuss.channel",
             body: "Hello",
             author_id: serverState.partnerId,
             needaction: true,
@@ -1110,7 +1040,7 @@ test("Do not squash logged notes", async () => {
             ])[0],
         },
         {
-            model: "res.partner",
+            model: "discuss.channel",
             body: "World!",
             author_id: serverState.partnerId,
             needaction: true,

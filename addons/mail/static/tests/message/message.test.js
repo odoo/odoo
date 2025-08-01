@@ -1976,7 +1976,9 @@ test("Copy Message Link", async () => {
     await waitForSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await press("Enter");
-    await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
+    await contains(`.o-mail-Message a[href='${url(`/mail/message/${messageId_2}`)}']`, {
+        text: "channel1",
+    });
 });
 
 test("deleted message should not have translate feature", async () => {
@@ -2057,4 +2059,28 @@ test("Pause GIF when thread is not focused", async () => {
     await contains(".o-mail-AttachmentImage[data-paused]");
     await focus(".o-mail-Thread");
     await contains(".o-mail-AttachmentImage:not([data-paused])");
+});
+
+test("Prettify message links", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel1" });
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const messageId_1 = pyEnv["mail.message"].create({
+        body: "Message on partner",
+        res_id: partnerId,
+        model: "res.partner",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(
+        ".o-mail-Composer-input",
+        `${url(`/mail/message/${messageId_1}`)} ${url(`/mail/message/100`)}`
+    );
+    await press("Enter");
+    await contains(".o-mail-Message", { text: "TestPartner" });
+    await contains(".o-mail-Message .fa.fa-comment");
+    await contains(".o-mail-Message", { text: url(`/mail/message/100`) });
 });

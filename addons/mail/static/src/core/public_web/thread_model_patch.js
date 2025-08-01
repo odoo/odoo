@@ -91,13 +91,6 @@ patch(Thread.prototype, {
             this.store.env.services.action.currentController.action.context.active_id = activeId;
         }
     },
-    open(options) {
-        if (this.store.env.services.ui.isSmall) {
-            this.openChatWindow(options);
-            return;
-        }
-        this.setAsDiscussThread();
-    },
     async unpin() {
         this.isLocallyPinned = false;
         if (this.eq(this.store.discuss.thread)) {
