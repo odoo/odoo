@@ -22,6 +22,22 @@ class ChannelActionDialog extends Component {
 }
 
 threadActionsRegistry
+    .add("join-channel", {
+        condition(component) {
+            return (
+                component.thread?.hasMemberList &&
+                !component.thread?.hasSelfAsMember &&
+                component.store.self.type !== "guest"
+            );
+        },
+        icon: "fa fa-fw fa-sign-in",
+        iconLarge: "fa fa-fw fa-lg fa-sign-in",
+        name: _t("Join channel"),
+        open(component) {
+            component.store.joinChannel(component.thread.id, component.thread.name);
+        },
+        sequence: 2,
+    })
     .add("notification-settings", {
         condition(component) {
             return (
