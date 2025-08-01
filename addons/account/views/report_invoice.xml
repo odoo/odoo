@@ -149,8 +149,9 @@
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <t t-set="display_taxes" t-value="any(l.tax_ids for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
+                        <t t-set="has_long_desc" t-value="any(line.name and line.name.count('\n') > 30 for line in o.invoice_line_ids if line.name)"/>
                         <table class="o_has_total_table table o_main_table table-borderless mb-0" name="invoice_line_table">
-                            <thead>
+                            <thead t-attf-style="#{has_long_desc and 'display: table-row-group;' or ''}">
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
                                     <th name="th_quantity" class="text-end"><span>Quantity</span></th>
