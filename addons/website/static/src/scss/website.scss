@@ -475,28 +475,16 @@ $-header-nav-link-height: $nav-link-height;
     }
 }
 
-.o_footer {
+@if index(("descriptive", "contact", "mega", "mega_columns", "mega_links", "mega_cards"), o-website-value("footer-template")) {
+    $o-color-palette: map-merge($o-color-palette, ('footer': 1));
+} @else if o-website-value('footer-template') == 'minimalist' {
+    $o-color-palette: map-merge($o-color-palette, ('footer': 2));
+}
 
-    @if
-        o-website-value('footer-template') == 'descriptive' or
-        o-website-value('footer-template') == 'contact' or
-        o-website-value('footer-template') == 'mega' or
-        o-website-value('footer-template') == 'mega_columns' or
-        o-website-value('footer-template') == 'mega_links' or
-        o-website-value('footer-template') == 'mega_cards'
-    {
-        @include o-apply-colors('footer-bright');
-        @include o-apply-colors('footer-bright-custom');
-        @include o-add-gradient('footer-bright-gradient');
-    } @else if o-website-value('footer-template') == 'minimalist' {
-        @include o-apply-colors('footer-light');
-        @include o-apply-colors('footer-light-custom');
-        @include o-add-gradient('footer-light-gradient');
-    } @else {
+.o_footer {
         @include o-apply-colors('footer');
         @include o-apply-colors('footer-custom');
         @include o-add-gradient('footer-gradient');
-    }
 
     .o_footer_copyright {
         @if

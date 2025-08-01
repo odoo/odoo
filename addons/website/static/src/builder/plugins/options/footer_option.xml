@@ -98,8 +98,8 @@
 
 <t t-name="website.FooterColorsOption">
     <BuilderRow label.translate="Background">
+            <!-- t-if="isActiveItem('footer_default_opt') || isActiveItem('footer_centered_opt') || isActiveItem('footer_links_opt') || isActiveItem('footer_call_to_action_opt') || isActiveItem('footer_headline_opt')" -->
         <BuilderColorPicker
-            t-if="isActiveItem('footer_default_opt') || isActiveItem('footer_centered_opt') || isActiveItem('footer_links_opt') || isActiveItem('footer_call_to_action_opt') || isActiveItem('footer_headline_opt')"
             enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
             defaultColor="''"
@@ -110,7 +110,7 @@
                 combinationColor: 'footer',
                 nullValue: 'NULL',
             }"/>
-        <BuilderColorPicker
+        <!-- <BuilderColorPicker
             t-if="isActiveItem('footer_descriptive_opt') || isActiveItem('footer_contact_opt') || isActiveItem('footer_mega_opt') || isActiveItem('footer_mega_columns_opt') || isActiveItem('footer_mega_links_opt') || isActiveItem('footer_mega_cards_opt')"
             enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
@@ -133,7 +133,7 @@
                 gradientColor: 'footer-light-gradient',
                 combinationColor: 'footer-light',
                 nullValue: 'NULL',
-            }"/>
+            }"/> -->
     </BuilderRow>
 </t>
 
