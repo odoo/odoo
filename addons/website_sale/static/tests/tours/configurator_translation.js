@@ -1,6 +1,6 @@
 import { registry } from '@web/core/registry';
 import { patch } from '@web/core/utils/patch';
-import '@website/../tests/tours/configurator_translation';
+import '@website/../tests/tours/configurator';
 
 /*
  * @override of website tour to include eCommerce configuration steps
