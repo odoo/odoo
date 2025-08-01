@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="spreadsheet.DateFilterValue">
-        <Dropdown navigationOptions="{ 'shouldFocusChildInput': false }">
-            <input class="o_input w-100 o-date-filter-input" readonly="true" t-att-value="inputValue"/>
+        <Dropdown
+            menuClass="'mt-1'"
+            navigationOptions="{ 'shouldFocusChildInput': false }"
+            state="dropdownState"
+            manual="true"
+            position="'bottom-start'">
+            <input class="o_input w-100 o-date-filter-input" readonly="true" t-att-value="inputValue" t-on-click="onInputClick"/>
             <t t-set-slot="content">
                 <DateFilterDropdown
                     value="props.value"

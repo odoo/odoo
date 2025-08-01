@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DateFilterDropdown } from "../date_filter_dropdown/date_filter_dropdown";
 import { dateFilterValueToString } from "@spreadsheet/global_filters/helpers";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 /**
  * This component is used to select a date filter value.
@@ -15,6 +16,14 @@ export class DateFilterValue extends Component {
         value: { type: Object, optional: true },
         update: Function,
     };
+
+    setup() {
+        this.dropdownState = useDropdownState();
+    }
+
+    onInputClick() {
+        this.dropdownState.open();
+    }
 
     get inputValue() {
         return dateFilterValueToString(this.props.value);
