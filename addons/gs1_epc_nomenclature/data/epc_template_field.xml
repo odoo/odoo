@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [TDS 2.1] https://ref.gs1.org/standards/tds/ -->
+<odoo>
+    <data noupdate="1">
+        <!-- Notes : -->
+        <!-- All current schemes have a header of 8 bits fixed length. -->
+        <!-- However, part §14.2 of [TDS 2.1] specify this may evolve in the future. -->
+        <!-- Although, in this case, there will still be a first header of 8 bits equal to 0xFF, -->
+        <!-- such that we'll can specify the remaining of the longer header as a new field, -->
+        <!-- without heavily affecting the structure and behavior chosen here.-->
+        <record id="gs1_epc_template_field_header" model="gs1.epc.template.field">
+            <field name="name">EPC Header</field>
+            <field name="sequence">0</field>
+            <field name="bit_size_min">8</field>
+            <field name="bit_size_max">8</field>
+            <field name="encoding">integer</field>
+        </record>
+        <record id="gs1_epc_template_field_filter" model="gs1.epc.template.field">
+            <field name="name">Filter</field>
+            <field name="sequence">4</field>
+            <field name="bit_size_min">3</field>
+            <field name="bit_size_max">3</field>
+            <field name="encoding">integer</field>
+            <field name="uri_portion">F</field>
+        </record>
+        <record id="gs1_epc_template_field_partition" model="gs1.epc.template.field">
+            <field name="name">Partition</field>
+            <field name="sequence">6</field>
+            <field name="bit_size_min">3</field>
+            <field name="bit_size_max">3</field>
+            <field name="encoding">partition_table</field>
+        </record>
+        <record id="gs1_epc_template_field_company_prefix" model="gs1.epc.template.field">
+            <field name="name">GS1 Company Prefix</field>
+            <field name="sequence">8</field>
+            <field name="bit_size_min">20</field>
+            <field name="bit_size_max">40</field>
+            <field name="encoding">integer</field>
+            <field name="uri_portion">C</field>
+        </record>
+        <record id="gs1_epc_template_field_item_reference" model="gs1.epc.template.field">
+            <field name="name">Item Reference</field>
+            <field name="sequence">10</field>
+            <field name="bit_size_min">4</field>
+            <field name="bit_size_max">24</field>
+            <field name="encoding">integer</field>
+            <field name="uri_portion">I</field>
+        </record>
+        <record id="gs1_epc_template_field_serial_integer" model="gs1.epc.template.field">
+            <field name="name">Serial (Integer)</field>
+            <field name="sequence">12</field>
+            <field name="bit_size_min">18</field>
+            <field name="bit_size_max">38</field>
+            <field name="encoding">integer</field>
+            <field name="uri_portion">S</field>
+        </record>
+        <record id="gs1_epc_template_field_serial_string" model="gs1.epc.template.field">
+            <field name="name">Serial (Alphanumeric)</field>
+            <field name="sequence">12</field>
+            <field name="bit_size_min">140</field>
+            <field name="bit_size_max">140</field>
+            <field name="encoding">string</field>
+            <field name="uri_portion">S</field>
+        </record>
+        <record id="gs1_epc_template_field_blank" model="gs1.epc.template.field">
+            <field name="name">Blank Filler</field>
+            <field name="sequence">255</field>
+            <field name="bit_size_min">24</field>
+            <field name="bit_size_max">24</field>
+            <field name="encoding">blank</field>
+        </record>
+        <record id="gs1_epc_template_field_location_reference" model="gs1.epc.template.field">
+            <field name="name">Location Reference</field>
+            <field name="sequence">10</field>
+            <field name="bit_size_min">1</field>
+            <field name="bit_size_max">21</field>
+            <field name="encoding">integer</field>
+            <field name="uri_portion">L</field>
+        </record>
+        <record id="gs1_epc_template_field_extension_integer" model="gs1.epc.template.field">
+            <field name="name">Extension (Integer)</field>
+            <field name="sequence">12</field>
+            <field name="bit_size_min">41</field>
+            <field name="bit_size_max">41</field>
+            <field name="encoding">integer</field>
+            <field name="uri_portion">E</field>
+        </record>
+        <record id="gs1_epc_template_field_extension_string" model="gs1.epc.template.field">
+            <field name="name">Extension (Alphanumeric)</field>
+            <field name="sequence">12</field>
+            <field name="bit_size_min">140</field>
+            <field name="bit_size_max">140</field>
+            <field name="encoding">string</field>
+            <field name="uri_portion">E</field>
+        </record>
+        <!-- TODO : >= TDS 2.0 -->
+        <!-- <record id="gs1_epc_template_field_aidc_toggle_bit" model="gs1.epc.template.field"> -->
+            <!-- <field name="name">+Data Toggle</field> -->
+            <!-- <field name="sequence">2</field> Reserve 1 for future -->
+            <!-- <field name="bit_size_min">1</field> -->
+            <!-- <field name="bit_size_max">1</field> -->
+            <!-- <field name="encoding">aidc_toggle_bit</field> -->
+        <!-- </record> -->
+        <!-- <record id="gs1_epc_template_field_aidc_data_header" model="gs1.epc.template.field"> -->
+            <!-- <field name="name">AIDC Data Header</field> -->
+            <!-- <field name="bit_size_min">8</field> -->
+            <!-- <field name="bit_size_max">16</field> -->
+            <!-- <field name="encoding">aidc_header</field> aidc_header is not an actual TDS encoding but is particular, looks like a partition table with a sub-encoding -->
+        <!-- </record> -->
+        <!-- Not an official field but implicit, needed for technical reason -->
+        <!-- <record id="gs1_epc_template_field_aidc_data" model="gs1.epc.template.field"> -->
+            <!-- <field name="name">AIDC Data</field> -->
+            <!-- <field name="bit_size_min">0</field> -->
+            <!-- <field name="bit_size_max">0</field> -->
+            <!-- <field name="encoding">variable_encoding</field> -->
+        <!-- </record> -->
+        <!-- <record id="gs1_epc_template_field_gtin" model="gs1.epc.template.field"> -->
+            <!-- <field name="name">GTIN</field> -->
+            <!-- <field name="sequence">6</field> -->
+            <!-- <field name="bit_size_min">38</field> -->
+            <!-- <field name="bit_size_max">148</field> -->
+            <!-- <field name="encoding">partition</field> -->
+            <!-- <field name="uri_component">F.C</field> -->
+        <!-- </record> -->
+
+    </data>
+</odoo>

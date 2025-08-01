@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [TDS 2.1] https://ref.gs1.org/standards/tds/2.1.0 -->
+<odoo>
+    <data noupdate="1">
+        <record id="gs1_epc_template_scheme_sgtin96" model="gs1.epc.template.scheme">
+            <field name="name">SGTIN-96</field>
+            <field name="description">Serialised Global Trade Item Number</field>
+            <field name="bit_size_min">96</field> <!-- May be computed based on epc_field_ids-->
+            <field name="bit_size_max">96</field>
+            <field name="header_value" eval="int('30', 16)"/>
+            <field name="partition_table_name">sgtin</field>
+            <field name="uri_pattern_pure">urn:epc:id:sgtin:CompanyPrefix.ItemRefAndIndicator.SerialNumber</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sgtin-96:F.C.I.S</field>
+            <field name="field_template_ids"
+                   eval="[Command.set([
+                            ref('gs1_epc_template_field_header'),
+                            ref('gs1_epc_template_field_filter'),
+                            ref('gs1_epc_template_field_partition'),
+                            ref('gs1_epc_template_field_company_prefix'),
+                            ref('gs1_epc_template_field_item_reference'),
+                            ref('gs1_epc_template_field_serial_integer')
+                         ])]"
+            />
+        </record>
+        <record id="gs1_epc_template_scheme_sgtin198" model="gs1.epc.template.scheme">
+            <field name="name">SGTIN-198</field>
+            <field name="description">Serialised Global Trade Item Number</field>
+            <field name="bit_size_min">198</field>
+            <field name="bit_size_max">198</field>
+            <field name="header_value" eval="int('36', 16)"/>
+            <field name="partition_table_name">sgtin</field>
+            <field name="uri_pattern_pure">urn:epc:id:sgtin:CompanyPrefix.ItemRefAndIndicator.SerialNumber</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sgtin-198:F.C.I.S</field>
+            <field name="field_template_ids"
+                   eval="[Command.set([
+                            ref('gs1_epc_template_field_header'),
+                            ref('gs1_epc_template_field_filter'),
+                            ref('gs1_epc_template_field_partition'),
+                            ref('gs1_epc_template_field_company_prefix'),
+                            ref('gs1_epc_template_field_item_reference'),
+                            ref('gs1_epc_template_field_serial_string')
+                        ])]"
+            />
+        </record>
+        <record id="gs1_epc_template_scheme_sgtin+" model="gs1.epc.template.scheme">
+            <field name="name">SGTIN+</field>
+            <field name="description">Serialised Global Trade Item Number</field>
+            <field name="bit_size_min">76</field>
+            <field name="bit_size_max">216</field>
+            <field name="header_value" eval="int('F7', 16)"/>
+            <field name="aidc_available" eval="True"/>
+
+            <field name="uri_pattern_pure">urn:epc:id:sgtin:GTIN.SerialNumber</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sgtin+:F.GTIN.S</field>
+            <field name="field_template_ids" eval="[Command.set([ref('gs1_epc_template_field_header')])]"/>
+        </record>
+        <record id="gs1_epc_template_scheme_dsgtin+" model="gs1.epc.template.scheme">
+            <field name="name">DSGTIN+</field>
+            <field name="description">Serialised Global Trade Item Number</field>
+            <field name="bit_size_min">96</field>
+            <field name="bit_size_max">236</field>
+            <field name="header_value" eval="int('FB', 16)"/>
+
+            <field name="uri_pattern_pure">urn:epc:id:sgtin:GTIN.SerialNumber</field>
+            <field name="uri_pattern_tag">urn:epc:tag:dsgtin+:F.GTIN.S</field>
+            <field name="field_template_ids" eval="[Command.set([ref('gs1_epc_template_field_header')])]"/>
+        </record>
+        <record id="gs1_epc_template_scheme_sscc96" model="gs1.epc.template.scheme">
+            <field name="name">SSCC-96</field>
+            <field name="description">Serial Shipping Container Code</field>
+            <field name="bit_size_min">96</field>
+            <field name="bit_size_max">96</field>
+            <field name="header_value" eval="int('31', 16)"/>
+            <field name="partition_table_name">sscc</field>
+            <field name="uri_pattern_pure">urn:epc:id:sscc:CompanyPrefix.SerialReference</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sscc-96:F.C.S</field>
+            <field name="field_template_ids"
+                   eval="[Command.set([
+                            ref('gs1_epc_template_field_header'),
+                            ref('gs1_epc_template_field_filter'),
+                            ref('gs1_epc_template_field_partition'),
+                            ref('gs1_epc_template_field_company_prefix'),
+                            ref('gs1_epc_template_field_serial_integer'),
+                            ref('gs1_epc_template_field_blank'),
+                        ])]"
+            />
+        </record>
+        <record id="gs1_epc_template_scheme_sscc+" model="gs1.epc.template.scheme">
+            <field name="name">SSCC+</field>
+            <field name="description">Serial Shipping Container Code</field>
+            <field name="bit_size_min">84</field>
+            <field name="bit_size_max">84</field>
+            <field name="header_value" eval="int('F9', 16)"/>
+
+            <field name="uri_pattern_pure">urn:epc:id:sscc:TODO</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sscc+:TODO</field>
+            <field name="field_template_ids" eval="[Command.set([ref('gs1_epc_template_field_header')])]"/>
+        </record>
+        <record id="gs1_epc_template_scheme_sgln96" model="gs1.epc.template.scheme">
+            <field name="name">SGLN-96</field>
+            <field name="description">Global Location Number</field>
+            <field name="bit_size_min">96</field>
+            <field name="bit_size_max">96</field>
+            <field name="header_value" eval="int('32', 16)"/>
+            <field name="partition_table_name">sgln</field>
+            <field name="uri_pattern_pure">urn:epc:id:sgln:CompanyPrefix.LocationReference.Extension</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sgln-96:F.C.L.E</field>
+            <field name="field_template_ids"
+                   eval="[Command.set([
+                            ref('gs1_epc_template_field_header'),
+                            ref('gs1_epc_template_field_filter'),
+                            ref('gs1_epc_template_field_partition'),
+                            ref('gs1_epc_template_field_company_prefix'),
+                            ref('gs1_epc_template_field_location_reference'),
+                            ref('gs1_epc_template_field_extension_integer'),
+                        ])]"
+            />
+        </record>
+        <record id="gs1_epc_template_scheme_sgln195" model="gs1.epc.template.scheme">
+            <field name="name">SGLN-195</field>
+            <field name="description">Global Location Number</field>
+            <field name="bit_size_min">195</field>
+            <field name="bit_size_max">195</field>
+            <field name="header_value" eval="int('39', 16)"/>
+            <field name="partition_table_name">sgln</field>
+            <field name="uri_pattern_pure">urn:epc:id:sgln:CompanyPrefix.LocationReference.Extension</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sgln-195:F.C.L.E</field>
+            <field name="field_template_ids"
+                   eval="[Command.set([
+                            ref('gs1_epc_template_field_header'),
+                            ref('gs1_epc_template_field_filter'),
+                            ref('gs1_epc_template_field_partition'),
+                            ref('gs1_epc_template_field_company_prefix'),
+                            ref('gs1_epc_template_field_location_reference'),
+                            ref('gs1_epc_template_field_extension_string'),
+                        ])]"
+            />
+        </record>
+        <record id="gs1_epc_template_scheme_sgln+" model="gs1.epc.template.scheme">
+            <field name="name">SGLN+</field>
+            <field name="description">Global Location Number</field>
+            <field name="bit_size_min">72</field>
+            <field name="bit_size_max">212</field>
+            <field name="header_value" eval="int('F2', 16)"/>
+
+            <field name="uri_pattern_pure">urn:epc:id:sgln:Gln.Extension</field>
+            <field name="uri_pattern_tag">urn:epc:tag:sgln+:(414).(254)</field>
+            <field name="field_template_ids" eval="[Command.set([ref('gs1_epc_template_field_header')])]"/>
+        </record>
+    </data>
+</odoo>
