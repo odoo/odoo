@@ -37,7 +37,7 @@ patch(ActivityMenu.prototype, {
                 action.domain = Domain.and([
                     action.domain || [],
                     [["active", "in", [true, false]]],
-                ]);
+                ]).toList();
                 this.action.doAction(action, {
                     newWindow,
                     additionalContext: context,
