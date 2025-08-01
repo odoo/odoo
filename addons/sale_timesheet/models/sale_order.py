@@ -81,6 +81,12 @@ class SaleOrder(models.Model):
             created_records.with_context(disable_project_task_generation=True).action_confirm()
         return created_records
 
+    def _has_timesheet_portal(self):
+        Timesheet = self.env['account.analytic.line']
+        initial_domain = Timesheet._timesheet_get_portal_domain()
+        domain = Domain.AND([initial_domain, [('order_id', '=', self.id)]])
+        return Timesheet.sudo().search(domain, limit=1)
+
     def _get_order_with_valid_service_product(self):
         SaleOrderLine = self.env['sale.order.line']
         return SaleOrderLine._read_group(Domain.AND([
