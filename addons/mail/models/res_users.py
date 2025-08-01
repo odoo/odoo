@@ -349,6 +349,7 @@ class ResUsers(models.Model):
                             ],
                         ),
                         "name",
+                        "tz",
                     ],
                 ),
                 settings=settings._res_users_settings_format(),
@@ -463,7 +464,7 @@ class ResUsers(models.Model):
         return list(user_activities.values())
 
     def _get_store_avatar_card_fields(self, target):
-        fields = ["name", "im_status", "share", "partner_id"]
+        fields = ["name", "im_status", "share", "partner_id", "tz"]
         if target.is_internal(self.env):
             fields.extend(["email", "phone"])
         return fields

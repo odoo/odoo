@@ -20,6 +20,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     };
 
     setup() {
+        super.setup();
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.openChat = useOpenChat("res.users");
@@ -37,7 +38,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     }
 
     get fieldNames() {
-        return ["email", "im_status", "name", "phone", "resource_type", "share", "user_id"];
+        return ["email", "im_status", "name", "phone", "resource_type", "share", "user_id", "tz"];
     }
 
     get name() {
