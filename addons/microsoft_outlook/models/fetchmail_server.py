@@ -46,7 +46,7 @@ class FetchmailServer(models.Model):
             self.microsoft_outlook_refresh_token = False
             self.microsoft_outlook_access_token = False
             self.microsoft_outlook_access_token_expiration = False
-            super(FetchmailServer, self).onchange_server_type()
+            super().onchange_server_type()
 
     def _imap_login__(self, connection):  # noqa: PLW3201
         """Authenticate the IMAP connection.

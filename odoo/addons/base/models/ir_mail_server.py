@@ -249,7 +249,7 @@ class IrMail_Server(models.Model):
     def _get_test_email_from(self):
         self.ensure_one()
         email_from = False
-        if from_filter_parts := [part.strip() for part in (self.from_filter or '').split(",") if part.strip()]:
+        if from_filter_parts := self._parse_from_filter(self.from_filter):
             # find first found complete email in filter parts
             email_from = next((email for email in from_filter_parts if "@" in email), False)
             # no complete email -> consider noreply
@@ -280,10 +280,10 @@ class IrMail_Server(models.Model):
         for server in self:
             smtp = False
             try:
-                smtp = self._connect__(mail_server_id=server.id, allow_archived=True)
                 # simulate sending an email from current user's address - without sending it!
                 email_from = server._get_test_email_from()
                 email_to = server._get_test_email_to()
+                smtp = self._connect__(mail_server_id=server.id, allow_archived=True, smtp_from=email_from)
                 # Testing the MAIL FROM step should detect sender filter problems
                 (code, repl) = smtp.mail(email_from)
                 if code != 250:
@@ -390,8 +390,8 @@ class IrMail_Server(models.Model):
         mail_server = smtp_encryption = None
         if mail_server_id:
             mail_server = self.sudo().browse(mail_server_id)
-            if not allow_archived and not mail_server.active:
-                raise UserError(_('The server "%s" cannot be used because it is archived.', mail_server.display_name))
+            self._check_forced_mail_server(mail_server, allow_archived, smtp_from)
+
         elif not host:
             mail_server, smtp_from = self.sudo()._find_mail_server(smtp_from)
 
@@ -512,6 +512,10 @@ class IrMail_Server(models.Model):
         connection.smtp_from = smtp_from
 
         return connection
+
+    def _check_forced_mail_server(self, mail_server, allow_archived, smtp_from):
+        if not allow_archived and not mail_server.active:
+            raise UserError(_('The server "%s" cannot be used because it is archived.', mail_server.display_name))
 
     def _smtp_login__(self, connection, smtp_user, smtp_password):  # noqa: PLW3201
         """Authenticate the SMTP connection.
@@ -834,6 +838,10 @@ class IrMail_Server(models.Model):
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 
+    def _find_mail_server_allowed_domain(self):
+        """Overridable domain getter for all mail servers that may be used as default."""
+        return fields.Domain.TRUE
+
     def _find_mail_server(self, email_from, mail_servers=None):
         """Find the appropriate mail server for the given email address.
 
@@ -850,7 +858,7 @@ class IrMail_Server(models.Model):
         notifications_domain = email_domain_extract(notifications_email)
 
         if mail_servers is None:
-            mail_servers = self.sudo().search([], order='sequence')
+            mail_servers = self.sudo().search(self._find_mail_server_allowed_domain(), order='sequence')
         # 0. Archived mail server should never be used
         mail_servers = mail_servers.filtered('active')
 
@@ -870,6 +878,8 @@ class IrMail_Server(models.Model):
 
             if mail_server := first_match(email_from_domain, email_domain_normalize):
                 return mail_server, email_from
+
+        mail_servers = self._filter_mail_servers_fallback(mail_servers)
 
         # 2. Try to find a mail server for <notifications@domain.com>
         if notifications_email:
@@ -909,6 +919,11 @@ class IrMail_Server(models.Model):
         return None, notifications_email or email_from
 
     @api.model
+    def _filter_mail_servers_fallback(self, servers):
+        """Filter the mail servers that can be used as fallback, or for default email from."""
+        return servers
+
+    @api.model
     def _match_from_filter(self, email_from, from_filter):
         """Return True is the given email address match the "from_filter" field.
 
@@ -921,12 +936,16 @@ class IrMail_Server(models.Model):
         normalized_mail_from = email_normalize(email_from)
         normalized_domain = email_domain_extract(normalized_mail_from)
 
-        for email_filter in [part.strip() for part in (from_filter or '').split(',') if part.strip()]:
+        for email_filter in self._parse_from_filter(from_filter):
             if '@' in email_filter and email_normalize(email_filter) == normalized_mail_from:
                 return True
             if '@' not in email_filter and email_domain_normalize(email_filter) == normalized_domain:
                 return True
         return False
+
+    @api.model
+    def _parse_from_filter(self, from_filter):
+        return [part.strip() for part in (from_filter or '').split(',') if part.strip()]
 
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
