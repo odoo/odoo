@@ -20,6 +20,42 @@ describe("replicate changes", () => {
         expect(":iframe span:contains(Contactez-nous ici)").toHaveCount(2);
     });
 
+    test("link and non-link elements", async () => {
+        const { editor } = await setupHTMLBuilder(
+            `
+            <div class="test-4">
+                <a data-oe-xpath="/t[1]/nav[1]/div[1]/div[1]/t[2]/ul[1]/li[2]/a[1]/" href="/blog/travel-1" data-oe-model="blog.blog" data-oe-id="1" data-oe-field="name" data-oe-type="char" data-oe-expression="nav_blog.name">Travel</a>
+            </div>
+            `,
+            {
+                headerContent: `
+            <div class="test-1">
+                <b data-oe-xpath="/t[1]/nav[1]/div[1]/ul[1]/li[3]/a[1]/b[1]" data-oe-model="blog.blog" data-oe-id="1" data-oe-field="name" data-oe-type="char" data-oe-expression="nav_blog.name">Travel</b>
+            </div>
+            <div class="test-2">
+                <a data-oe-xpath="/t[1]/div[1]/div[1]/b[1]/a[1]" href="/blog/travel-1" data-oe-model="blog.post" data-oe-id="1" data-oe-field="blog_id" data-oe-type="many2one" data-oe-expression="blog_post.blog_id" data-oe-many2one-id="1" data-oe-many2one-model="blog.blog">Travel</a>
+            </div>
+            <div class="test-3">
+                <span data-oe-xpath="/t[1]/nav[1]/div[1]/div[1]/t[2]/ul[1]/li[2]/a[1]/span[1]" data-oe-model="blog.blog" data-oe-id="1" data-oe-field="name" data-oe-type="char" data-oe-expression="nav_blog.name">Travel</span>
+            </div>
+        `,
+            }
+        );
+        queryOne(":iframe .test-1 b").append(" Abroad");
+        editor.shared.history.addStep();
+        expect(":iframe .test-1 b").toHaveText("Travel Abroad");
+        expect(":iframe .test-2 a").toHaveText("Travel Abroad");
+        expect(":iframe .test-3 span").toHaveText("Travel Abroad");
+        expect(":iframe .test-4 a").toHaveInnerHTML("\u{FEFF}Travel Abroad\u{FEFF}"); // link in editable get feff
+
+        queryOne(":iframe .test-4 a").append("!"); // the feff should not be forwarded
+        editor.shared.history.addStep();
+        expect(":iframe .test-1 b").toHaveText("Travel Abroad!");
+        expect(":iframe .test-2 a").toHaveText("Travel Abroad!");
+        expect(":iframe .test-3 span").toHaveText("Travel Abroad!");
+        expect(":iframe .test-4 a").toHaveInnerHTML("\u{FEFF}Travel Abroad!\u{FEFF}");
+    });
+
     test("menu items", async () => {
         const { editor } = await setupHTMLBuilder("", {
             headerContent: `
