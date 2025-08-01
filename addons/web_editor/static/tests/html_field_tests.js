@@ -1017,6 +1017,44 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
     QUnit.module('Paste');
 
+    // testing if it is possible to paste an image in the editor when allowPastingFiles is set to false
+    QUnit.test("Paste image in the editor", async (assert) => {
+        assert.expect(3);
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: "",
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'allowPastingFiles': false}"/>
+                </form>`,
+        });
+
+        const editable = document.querySelector(".odoo-editor-editable");
+        const p = editable.firstElementChild;
+        Wysiwyg.setRange(p);
+
+        const clipboardData = new DataTransfer();
+        clipboardData.setData('text/html', '<p>a<img src="data:image/png;base64,iVBORw0KGg></p>');
+        p.dispatchEvent(new ClipboardEvent('paste', { clipboardData, bubbles: true }));
+        assert.strictEqual(p.outerHTML, '<p>a</p>', "The image should not be pasted");
+
+        clipboardData.setData('text/html', '<p>b</p>');
+        p.dispatchEvent(new ClipboardEvent('paste', { clipboardData, bubbles: true }));
+        assert.strictEqual(p.outerHTML, '<p>ab</p>', "The text should be pasted");
+
+        clipboardData.setData('text/html', '<img src="data:image/png;base64,iVBORw0KGg">');
+        p.dispatchEvent(new ClipboardEvent('paste', { clipboardData, bubbles: true }));
+        assert.strictEqual(p.outerHTML, '<p>ab<br></p>', "The image should be pasted");
+    });
+
     QUnit.test("Embed video by pasting video URL", async (assert) => {
         assert.expect(4);
 
