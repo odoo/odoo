@@ -329,6 +329,46 @@ class TranslationToolsTestCase(BaseCase):
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
 
+    def test_force_inline_translation(self):
+        """ Test xml_translate() with elements translated as a whole (using the
+            `o_translate_inline` class).
+        """
+        terms = []
+        source = """<form>
+                        <p>{}</p>
+                    </form>""".format
+        content_v1 = """<span class="o_text_highlight o_text_highlight_wavy {}">
+                        Go to the <a href="/contactus">Contact Us</a> page
+                    </span>""".format
+        content_v2 = """<span class="o_text_highlight o_text_highlight_wavy {}">
+                        <a href="/contactus">Contact Us</a>
+                    </span>""".format
+
+        source_v1 = source(content_v1(''))
+        source_inline_v1 = source(content_v1('o_translate_inline'))
+        source_inline_v2 = source(content_v2('o_translate_inline'))
+
+        # Translate an element without the `o_translate_inline` modifier.
+        result_1 = xml_translate(terms.append, source_v1)
+        self.assertEqual(result_1, source_v1)
+        self.assertItemsEqual(terms, ['Go to the', 'Contact Us', 'page'])
+
+        # Translate an element that has a non-"inline-translated" child
+        # amongst its text content.
+        terms = []
+        result_inline = xml_translate(terms.append, source_inline_v1)
+        self.assertEqual(result_inline, source_inline_v1)
+        # The `o_translate_inline` element should be translated as a whole.
+        self.assertItemsEqual(terms, [content_v1('o_translate_inline')])
+
+        # Translate an element that contains only a non-"inline-translated"
+        # child element.
+        terms = []
+        result_inline = xml_translate(terms.append, source_inline_v2)
+        self.assertEqual(result_inline, source_inline_v2)
+        # The `o_translate_inline` element should be translated as a whole.
+        self.assertItemsEqual(terms, [content_v2('o_translate_inline')])
+
 
 class TestLanguageInstall(TransactionCase):
     def test_language_install(self):
