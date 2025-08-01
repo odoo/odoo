@@ -364,9 +364,13 @@ export class Store extends BaseStore {
     }
 
     handleClickOnLink(ev, thread) {
-        const model = ev.target.dataset.oeModel;
-        const id = Number(ev.target.dataset.oeId);
-        if (ev.target.closest(".o_channel_redirect") && model && id) {
+        const link = ev.target.closest("a");
+        if (!link) {
+            return;
+        }
+        const model = link.dataset.oeModel;
+        const id = Number(link.dataset.oeId);
+        if (link.classList.contains("o_channel_redirect") && model && id) {
             ev.preventDefault();
             this.Thread.getOrFetch({ model, id }).then((thread) => {
                 if (thread) {
@@ -378,10 +382,35 @@ export class Store extends BaseStore {
                 }
             });
             return true;
-        } else if (ev.target.closest(".o_mail_redirect") && id) {
+        } else if (link.classList.contains("o_mail_redirect") && id) {
             ev.preventDefault();
             this.openChat({ partnerId: id });
             return true;
+        } else if (link.classList.contains("o_message_redirect_transformed") && id) {
+            const message = this["mail.message"].get(id);
+            const targetThread = message?.thread;
+            if (targetThread) {
+                targetThread.checkReadAccess().then((hasAccess) => {
+                    if (hasAccess) {
+                        targetThread.highlightMessage = message;
+                        const wasOpen = targetThread.open({ focus: true });
+                        if (!wasOpen) {
+                            window.open(link.href);
+                        }
+                    } else {
+                        if (this.self_partner) {
+                            this.env.services.notification.add(
+                                _t("You do not have the permission to access this thread."),
+                                { type: "warning" }
+                            );
+                        } else {
+                            window.open(link.href);
+                        }
+                    }
+                });
+                ev.preventDefault();
+                return true;
+            }
         }
         return false;
     }
@@ -459,11 +488,7 @@ export class Store extends BaseStore {
 
     getMentionsFromText(
         body,
-        {
-            mentionedChannels = [],
-            mentionedPartners = [],
-            mentionedRoles = [],
-        } = {}
+        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
         const validMentions = {};
         validMentions.threads = mentionedChannels.filter((thread) => {

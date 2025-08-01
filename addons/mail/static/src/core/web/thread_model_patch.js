@@ -48,28 +48,19 @@ const threadPatch = {
         );
         this.store.insert(data);
     },
+    /** @override */
     open(options) {
-        if (this.model === "discuss.channel" && !this.selfMember) {
-            this.store.env.services["bus_service"].addChannel(this.busChannel);
+        const res = super.open(...arguments);
+        if (res) {
+            return res;
         }
-        if (!this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-            this.openChatWindow(options);
-            return;
-        }
-        if (this.store.env.services.ui.isSmall && this.model === "discuss.channel") {
-            this.openChatWindow(options);
-            return;
-        }
-        if (this.model !== "discuss.channel") {
-            this.store.env.services.action.doAction({
-                type: "ir.actions.act_window",
-                res_id: this.id,
-                res_model: this.model,
-                views: [[false, "form"]],
-            });
-            return;
-        }
-        super.open(...arguments);
+        this.store.env.services.action.doAction({
+            type: "ir.actions.act_window",
+            res_id: this.id,
+            res_model: this.model,
+            views: [[false, "form"]],
+        });
+        return true;
     },
     async unpin() {
         await this.store.chatHub.initPromise;
@@ -84,6 +75,6 @@ const threadPatch = {
             partner_ids: [this.store.self.id],
         });
         this.store.insert(data);
-    }
+    },
 };
 patch(Thread.prototype, threadPatch);

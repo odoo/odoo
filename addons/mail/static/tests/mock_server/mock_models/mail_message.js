@@ -168,6 +168,7 @@ export class MailMessage extends models.ServerModel {
             store._add_record_fields(this.browse(message.id), data);
         }
         this._author_to_store(store);
+        this._store_add_linked_messages(store);
     }
 
     get _to_store_defaults() {
@@ -493,6 +494,48 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
+    }
+
+    /**
+     * @param {import("@mail/../tests/mock_server/mail_mock_server").mailDataHelpers.Store} store
+     */
+    _store_add_linked_messages(store) {
+        const mids = [];
+        for (const message of this) {
+            const body = message?.body || "";
+            const doc = new DOMParser().parseFromString(body, "text/html");
+            const anchors = doc.querySelectorAll(
+                'a.o_message_redirect[data-oe-model="mail.message"][data-oe-id]'
+            );
+            for (const a of anchors) {
+                const idStr = a.getAttribute("data-oe-id");
+                const id = parseInt(idStr, 10);
+                if (!Number.isNaN(id)) {
+                    mids.push(id);
+                }
+            }
+        }
+        for (const message of this.env["mail.message"]._filter([["id", "in", mids]])) {
+            if (message.model && message.res_id) {
+                const record = this.env[message.model]._filter([["id", "=", message.res_id]]);
+                store.add(
+                    this.env["mail.message"].browse(message.id),
+                    makeKwArgs({
+                        fields: [
+                            "model",
+                            "res_id",
+                            mailDataHelpers.Store.attr(
+                                "thread",
+                                mailDataHelpers.Store.one(
+                                    this.env[message.model].browse(record.id),
+                                    makeKwArgs({ fields: ["display_name"] })
+                                )
+                            ),
+                        ],
+                    })
+                );
+            }
+        }
     }
 
     /**

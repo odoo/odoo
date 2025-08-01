@@ -4779,6 +4779,7 @@ class MailThread(models.AbstractModel):
             Store.Many("partner_ids", ["avatar_128", "name"]),
             "pinned_at",
             "write_date",
+            *message._get_store_linked_messages_fields(),
         ]
         if body is not None:
             # sudo: mail.message.translation - discarding translations of message after editing it

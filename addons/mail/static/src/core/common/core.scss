@@ -292,7 +292,7 @@ $o-mail-utilities: map-merge(
     }
 }
 
-a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
+a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed {
     border-radius: $btn-border-radius-sm;
     padding: 0rem 0.1875rem;
     border: 1px solid;
@@ -300,7 +300,7 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     display: inline-block;
 }
 
-a.o_mail_redirect, a.o_channel_redirect {
+a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed {
     @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
 }
 

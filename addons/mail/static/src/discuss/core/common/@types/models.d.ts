@@ -17,6 +17,7 @@ declare module "models" {
         channelMembers: ChannelMember[];
     }
     export interface Store {
+        channelIdsFetchingDeferred: Map<number, Deferred>;
         channel_types_with_seen_infos: string[];
         createGroupChat: (param0: { default_display_mode: string, partners_to: number[], name: string }) => Promise<Thread>;
         "discuss.channel.member": StaticMailRecord<ChannelMember, typeof ChannelMemberClass>;

@@ -1,5 +1,4 @@
 import {
-    assertChatHub,
     click,
     contains,
     defineMailModels,
@@ -695,39 +694,6 @@ test("chat window header should not have unread counter for non-channel thread",
     await contains(".o-mail-ChatWindow-counter", { count: 0, text: "1" });
 });
 
-test("non-channel chat window are saved", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test" });
-    const messageId = pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "not empty",
-        model: "res.partner",
-        needaction: true,
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow", { count: 0 });
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow");
-    assertChatHub({ opened: [{ id: partnerId, model: "res.partner" }] });
-});
-
-test("non-channel chat window are restored", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test partner" });
-    setupChatHub({ opened: [{ id: partnerId, model: "res.partner" }] });
-    await start();
-    await contains(".o-mail-ChatWindow:contains('test partner')");
-});
-
 test("Thread messages are only loaded once", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
@@ -933,7 +899,7 @@ test("Update unread counter when receiving new message", async () => {
         channel_member_ids: [
             Command.create({
                 message_unread_counter: 1,
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
