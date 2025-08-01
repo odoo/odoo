@@ -75,6 +75,8 @@ class ResPartner(models.Model):
             'search_default_filter_ongoing': 1,
             'search_default_filter_lost': 1,
             'active_test': False,
+            'lead_parent_partner': self.ids,
+            'search_default_partner_filter': 1,
         }
         # we want the list view first
         action['views'] = sorted(action['views'], key=lambda view: view[1] != 'list')
