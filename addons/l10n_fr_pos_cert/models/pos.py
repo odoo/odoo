@@ -83,7 +83,7 @@ class PosOrder(models.Model):
         """ Returns the hash to write on pos orders when they get posted"""
         self.ensure_one()
         # build and return the hash
-        computed_hash = self._compute_hash(self.previous_order_id.l10n_fr_hash if self.previous_order_id else '')
+        computed_hash = self._compute_hash((self.previous_order_id.l10n_fr_hash or '') if self.previous_order_id else '')
         _logger.info(
             'Computed hash for order ID %s: %s \n String to hash: %s \n Previous hash: %s',
             self.id,
