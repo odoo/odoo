@@ -552,7 +552,7 @@
                     <t t-set="_s_searchbar_autocomplete_classes" t-valuef="bg-primary"> </t>
                 </t>
             </div>
-            <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
+            <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 pt-1 overflow-auto">
                 <div class="d-block d-lg-none accordion-item" t-if="hasPricelistDropdown">
                     <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
                         <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
@@ -568,20 +568,21 @@
                     <div id="o_wsale_offcanvas_pricelist"
                         class="accordion-collapse collapse"
                         aria-labelledby="o_wsale_offcanvas_orderby_header">
-                        <div class="accordion-body pt-0">
+                        <div class="accordion-body">
                             <div class="list-group list-group-flush">
                                 <a t-foreach="website_sale_pricelists" t-as="pl"
                                     role="menuitem"
                                     rel="noindex,nofollow"
                                     t-att-href="'/shop/change_pricelist/%s' % pl.id"
-                                    class="list-group-item border-0 ps-0 pb-0"
+                                    class="list-group-item mb-1 p-0 border-0"
                                     >
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
                                             t-attf-onclick="location.href='/shop/change_pricelist/#{pl.id}';"
                                             class="form-check-input o_not_editable"
                                             name="wsale_pricelist_radios_offcanvas"
-                                            t-att-checked="curr_pl == pl">
+                                            t-att-checked="curr_pl == pl"
+                                            tabindex="-1">
                                             <label class="form-check-label fw-normal" t-out="pl.name"/>
                                         </input>
                                     </div>
@@ -606,19 +607,20 @@
                     <div id="o_wsale_offcanvas_orderby"
                          class="accordion-collapse collapse"
                          aria-labelledby="o_wsale_offcanvas_orderby_header">
-                        <div class="accordion-body pt-0">
+                        <div class="accordion-body">
                             <div class="list-group list-group-flush">
                                 <a t-foreach="website_sale_sortable" t-as="sortby"
                                    role="menuitem"
                                    rel="noindex,nofollow"
                                    t-att-href="keep('/shop', order=sortby[0])"
-                                   class="list-group-item border-0 ps-0 pb-0">
+                                   class="list-group-item mb-1 p-0 border-0">
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
                                                t-attf-onclick="location.href='#{keep('/shop', order=sortby[0])}';"
                                                class="form-check-input o_not_editable"
                                                name="wsale_sortby_radios_offcanvas"
-                                               t-att-checked="isSortingBy and isSortingBy == sortby[1]">
+                                               t-att-checked="isSortingBy and isSortingBy == sortby[1]"
+                                               tabindex="-1">
                                             <label class="form-check-label fw-normal" t-out="sortby[1]"/>
                                         </input>
                                     </div>
@@ -641,7 +643,7 @@
                     <div id="o_wsale_offcanvas_categories"
                          class="accordion-collapse collapse"
                          aria-labelledby="o_wsale_offcanvas_categories_header">
-                        <div class="accordion-body pt-0">
+                        <div class="accordion-body">
                             <t t-call="website_sale.products_categories_list">
                                 <t t-set="isOffcanvas" t-value="true"/>
                                 <t t-set="_titleClasses" t-valuef="d-none"/>
@@ -680,13 +682,13 @@
                                      t-att-aria-expanded="(_status == 'active') and 'True' or 'False'"
                                      t-attf-aria-labelledby="o_wsale_offcanvas_attribute_{{a.id}}_header">
 
-                                    <div class="accordion-body pt-0">
+                                    <div class="accordion-body">
                                         <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
                                             <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
                                         </div>
                                         <div t-elif="a.display_type in ('radio', 'pills', 'select', 'multi')"
                                              class="list-group list-group-flush">
-                                            <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
+                                            <div t-foreach="a.value_ids" t-as="v" class="list-group-item mb-1 p-0 border-0">
                                                 <div class="form-check mb-1">
                                                     <input type="checkbox"
                                                            name="attrib"
@@ -724,7 +726,7 @@
                                  t-att-aria-expanded="(_status == 'active') and 'True' or 'False'"
                                  t-attf-aria-labelledby="o_wsale_offcanvas_tags_header"
                             >
-                                <div class="accordion-body pt-0">
+                                <div class="accordion-body">
                                     <div class="list-group list-group-flush">
                                         <t t-call="website_sale.filter_products_tags_list">
                                             <t t-set="all_tags" t-value="all_tags"/>
@@ -841,7 +843,7 @@
             <t t-set="isOpen" t-value="c.id in category.parents_and_self.ids"/>
 
             <li class="nav-item">
-                <div class="accordion-header d-flex mb-1">
+                <div class="accordion-header d-flex mb-1 mx-n1 px-1 rounded-1">
                     <t t-call="website_sale.categorie_link"/>
                     <button t-attf-id="o_wsale_cat_accordion_title_{{c.id}}"
                             t-attf-class="accordion-button p-0 ms-3 {{not isOpen and 'collapsed'}} w-auto flex-grow-1 bg-transparent shadow-none"
@@ -968,7 +970,7 @@
     </template>
 
     <template id="filter_products_tags_list">
-        <t t-foreach="all_tags" t-as="tag" class="list-group-item border-0 ps-0 pb-0">
+        <t t-foreach="all_tags" t-as="tag" class="list-group-item mb-1 p-0 border-0">
             <div class="form-check mb-1">
                 <input type="checkbox"
                        name="tags"
