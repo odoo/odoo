@@ -130,7 +130,9 @@ export class ProductNameAndDescriptionField extends Component {
 
     updateLabel(value) {
         this.props.record.update({
-            [this.descriptionColumn]: value || this.productName,
+            [this.descriptionColumn]: this.productName && value
+            ? this.productName.concat('\n', value)
+            : value || this.productName,
         });
     }
 
