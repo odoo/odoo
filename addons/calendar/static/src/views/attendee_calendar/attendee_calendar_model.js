@@ -125,6 +125,8 @@ export class AttendeeCalendarModel extends CalendarModel {
                     a.event_id === event.id
                 ));
                 if (attendeeInfo) {
+                    event.attendeeId = attendeeInfo.attendee_id;
+                    event.attendeeStatus = attendeeInfo.status;
                     event.isAlone = attendeeInfo.is_alone;
                     event.calendarAttendeeId = attendeeInfo.attendee_id;
                 }
