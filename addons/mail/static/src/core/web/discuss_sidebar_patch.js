@@ -23,7 +23,7 @@ patch(DiscussSidebar.prototype, {
         });
         this.meetingFloating = useDropdownState();
     },
-    get startMeetingText() {
-        return _t("Start a meeting");
+    get newMeetingText() {
+        return _t("New Meeting");
     },
 });

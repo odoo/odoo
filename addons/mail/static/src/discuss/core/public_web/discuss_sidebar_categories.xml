@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary mx-2 my-0 min-w-0 p-0 shadow-sm o-rounded-bubble'" manual="true">
-            <button class="o-mail-DiscussSidebarCategories-searchBtn btn btn-light d-flex align-items-center justify-content-center border-0 px-1 mx-2 opacity-75 bg-transparent" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-fw fa-search"/></button>
-            <t t-set-slot="content">
-                <div class="p-2" t-ref="search-floating">
-                    <span class="text-muted user-select-none">Find or start a conversation</span>
-                </div>
-            </t>
-        </Dropdown>
-        <div t-else="" class="o-mail-DiscussSidebarCategories-search rounded-3 mx-3 my-2 border border-secondary shadow-sm position-relative d-flex align-items-center justify-content-center gap-1" t-on-click="onClickFindOrStartConversation">
-            <input class="form-control rounded-3 border-0 bg-inherit" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Find or start a conversation" tabindex="0"/>
-            <div class="o-mail-DiscussSidebarCategories-searchClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
-        </div>
         <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat.id">
             <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategories.category">
                 <t t-set="category" t-value="cat"/>
