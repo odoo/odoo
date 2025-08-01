@@ -298,6 +298,18 @@ class AccountBankStatementLine(models.Model):
                 # The journal entry seems reconciled.
                 st_line.is_reconciled = True
 
+    @api.onchange('amount_currency')
+    def _onchange_amount_currency(self):
+        for st_line in self:
+            if st_line.foreign_currency_id == st_line.currency_id:
+                st_line.amount = st_line.amount_currency
+            elif st_line.date and st_line.foreign_currency_id:
+                st_line.amount = st_line.foreign_currency_id._convert(
+                    from_amount=st_line.amount_currency,
+                    to_currency=st_line.currency_id,
+                    company=st_line.company_id,
+                    date=st_line.date,
+                )
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
