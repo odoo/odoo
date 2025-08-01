@@ -56,6 +56,8 @@ PROJECT_TASK_READABLE_FIELDS = {
     'display_follow_button',
     'is_template',
     'has_template_ancestor',
+    'access_token',
+    'access_url',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
