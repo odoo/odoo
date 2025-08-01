@@ -99,7 +99,7 @@ def _hasclass(context, *cls):
 
 
 def get_view_arch_from_file(filepath, xmlid):
-    module, view_id = xmlid.split('.')
+    module, view_id = xmlid.split('.', 1)
 
     xpath = f"//*[@id='{xmlid}' or @id='{view_id}']"
     # when view is created from model with inheritS of ir_ui_view, the
