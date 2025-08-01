@@ -71,7 +71,7 @@ defineMailModels();
 
 onRpc("has_group", () => true);
 
-test("can add a product in a section", async () => {
+test("can add a line in a section", async () => {
     await mountView({
         type: "form",
         resModel: "invoice",
@@ -85,7 +85,7 @@ test("can add a product in a section", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -113,7 +113,7 @@ test("can add a product in a section", async () => {
         "C1",
     ]);
     await contains(".o_list_section_options:eq(0) button").click();
-    await contains(".o-dropdown-item:contains(Add a product)").click();
+    await contains(".o-dropdown-item:contains(Add a line)").click();
     await edit("A3");
     await contains(getFixture()).click();
     expect(queryAllTexts(".o_data_row")).toEqual([
@@ -134,7 +134,7 @@ test("can add a product in a section", async () => {
     ]);
 });
 
-test("can add a product in a subsection", async () => {
+test("can add a line in a subsection", async () => {
     await mountView({
         type: "form",
         resModel: "invoice",
@@ -148,7 +148,7 @@ test("can add a product in a subsection", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -176,7 +176,7 @@ test("can add a product in a subsection", async () => {
         "C1",
     ]);
     await contains(".o_list_section_options:last button").click();
-    await contains(".o-dropdown-item:contains(Add a product)").click();
+    await contains(".o-dropdown-item:contains(Add a line)").click();
     await edit("Ca3");
     await contains(getFixture()).click();
     expect(queryAllTexts(".o_data_row")).toEqual([
@@ -211,7 +211,7 @@ test("can add a subsection in a section", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -284,7 +284,7 @@ test("can't add a subsection if value not in selection", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -314,7 +314,7 @@ test("can add a section after another", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -378,7 +378,7 @@ test("can add a subsection after another", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -442,7 +442,7 @@ test("can delete sections", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -488,7 +488,7 @@ test("can delete subsections", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -545,7 +545,7 @@ test("can duplicate sections", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -611,7 +611,7 @@ test("can duplicate subsections", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -694,7 +694,7 @@ test("can resequence records inside sections", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -788,7 +788,7 @@ test("resequence can be discarded", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -864,7 +864,7 @@ test("can resequence sections", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -905,7 +905,7 @@ test("add a section", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -969,7 +969,7 @@ test("add note", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -1033,7 +1033,7 @@ test("section_and_note_text widget", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -1097,7 +1097,7 @@ test("sections with required content field", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -1167,7 +1167,7 @@ test("sections duplicate with many2many", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
@@ -1270,7 +1270,7 @@ test("swap sections and subsections", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a product"/>
+                            <create name="add_line_control" string="Add a line"/>
                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>

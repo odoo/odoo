@@ -1128,7 +1128,8 @@
                                            'default_currency_id': currency_id or company_currency_id,
                                            'default_display_type': 'product',
                                            'quick_encoding_vals': quick_encoding_vals,
-                                       }" readonly="state != 'draft'">
+                                       }" readonly="state != 'draft'"
+                                       aggregated_fields="price_subtotal,price_total">
                                     <list name="journal_items" editable="bottom" string="Journal Items" default_order="sequence, id">
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
@@ -1205,6 +1206,9 @@
                                         <field name="company_id" column_invisible="True"/>
                                         <field name="company_currency_id" column_invisible="True"/>
                                         <field name="display_type" force_save="1" column_invisible="True"/>
+                                        <field name="collapse_prices" column_invisible="True"/>
+                                        <field name="collapse_composition" column_invisible="True"/>
+                                        <field name="parent_id" column_invisible="True"/>
                                     </list>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->
