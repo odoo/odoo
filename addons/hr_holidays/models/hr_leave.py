@@ -503,10 +503,16 @@ class HrLeave(models.Model):
                         days = (leave.date_to - leave.date_from).total_seconds() / 3600 / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
+                    if leave.employee_id.id not in work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)]:
+                        result[leave.id] = (0, 0)
+                        continue
                     work_time_per_day_list = work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
                 else:
+                    if leave.employee_id.id not in work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)]:
+                        result[leave.id] = (0, 0)
+                        continue
                     work_days_data = work_days_data_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
             else:
