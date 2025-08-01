@@ -460,7 +460,7 @@
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" />
                                 </div>
-                                <div t-if="record.contract_date_start.raw_value">
+                                <div t-if="record.contract_date_start.raw_value" groups="hr.group_hr_manager">
                                     <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
                                     <field name="contract_date_start"/>
                                     <span> - </span>
