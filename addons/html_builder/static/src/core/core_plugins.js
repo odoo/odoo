@@ -26,6 +26,7 @@ import { SaveSnippetPlugin } from "./save_snippet_plugin";
 import { SetupEditorPlugin } from "./setup_editor_plugin";
 import { VersionControlPlugin } from "./version_control_plugin";
 import { VisibilityPlugin } from "./visibility_plugin";
+import { FieldChangeReplicationPlugin } from "./field_change_replication_plugin";
 import { BuilderContentEditablePlugin } from "./builder_content_editable_plugin";
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
@@ -75,6 +76,7 @@ export const CORE_PLUGINS = [
     CompositeActionPlugin,
     CustomizeTabPlugin,
     VersionControlPlugin,
+    FieldChangeReplicationPlugin,
     BuilderContentEditablePlugin,
     ImageFieldPlugin,
     MonetaryFieldPlugin,

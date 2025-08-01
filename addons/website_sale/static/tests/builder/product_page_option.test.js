@@ -28,7 +28,7 @@ test("Product page options", async () => {
                             <div class="carousel-item h-100 text-center active o_colored_level" style="min-height: 693px;">
                                 <div name="o_img_with_max_suggested_width"
                                     class="d-flex align-items-start justify-content-center h-100 oe_unmovable o_editable"
-                                    data-oe-xpath="/t[1]/div[2]/div[1]" data-oe-model="product.product" data-oe-id="13"
+                                    data-oe-xpath="/t[1]/div[2]/div[1]" data-oe-model="product.product" data-oe-id="14"
                                     data-oe-field="image_1920" data-oe-type="image"
                                     data-oe-expression="product_image.image_1920" contenteditable="false">
                                     <img>
