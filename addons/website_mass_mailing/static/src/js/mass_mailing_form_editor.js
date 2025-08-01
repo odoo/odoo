@@ -24,6 +24,5 @@ FormEditorRegistry.add('create_mailing_contact', {
         modelRequired: true,
         string: _lt('Subscribe to'),
         type: 'many2many',
-        fieldName: "name",
     }],
 });
