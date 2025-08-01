@@ -22,7 +22,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             percentFactor: 0,
             multiplier: 0,
             estimatedPrice: 0.0,
-            warehouseId: null,
             suggestToggle: this._loadSuggestToggleState(), // defaults to isOn = true
         });
 
@@ -93,12 +92,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         if (suggestIsOn === false) {
             return context;
         }
-        if (this.state.basedOn === "actual_demand") {
-            context["actual_from_date"] = toServerDt(DateTime.now());
-            context["actual_to_date"] = toServerDt(
-                DateTime.now().plus({ days: this.state.numberOfDays })
-            );
-        } else {
+        if (this.state.basedOn !== "actual_demand") {
             const [startDate, limitDate] = this._getPeriodOfTime();
             context["monthly_demand_start_date"] = startDate;
             context["monthly_demand_limit_date"] = limitDate;
@@ -106,7 +100,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
         return {
             ...context,
-            warehouse_id: this.state.warehouseId,
+            warehouse_id: this.props.context.warehouse_id,
             suggest_based_on: this.state.basedOn,
             suggest_number_days: this.state.numberOfDays,
             suggest_percent: this.state.percentFactor,

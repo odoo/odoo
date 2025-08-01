@@ -27,21 +27,11 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'product_id': cls.product_1.id,
         }])
 
+    # Replicates the JS logic in product_catalog kanban controller
     def _get_suggested_products_context(self, based_on, number_of_days):
         if based_on == 'actual_demand':
-            context = {
-                'actual_from_date': fields.Datetime.now(),
-                'actual_to_date': fields.Datetime.now() + relativedelta(days=number_of_days),
-            }
-        else:
-            start_date, limit_date = self._get_period_of_time(based_on)
-            context = {
-                'monthly_demand_start_date': start_date,
-                'monthly_demand_limit_date': limit_date,
-            }
-        return context
+            return {}
 
-    def _get_period_of_time(self, based_on):
         start_date = datetime.now()
         limit_date = datetime.now()
         if based_on == 'one_week':
@@ -65,7 +55,12 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
                 limit_date = start_date + relativedelta(months=3)
             else:
                 limit_date = start_date + relativedelta(months=1)
-        return start_date, limit_date
+
+        context = {
+            'monthly_demand_start_date': start_date,
+            'monthly_demand_limit_date': limit_date,
+        }
+        return context
 
     def assertEstimatedPrice(self, po_suggest, po, context, price, based_on='one_month', days=30, factor=100, warehouse=False):
         """ This helper method does an assert for the `purchase.order.suggest` wizard
@@ -79,9 +74,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         if warehouse:
             warehouse_id = warehouse.id
 
-        product_context = self._get_suggested_products_context(based_on, days)
-        context_2 = {  # TODO better name
-            **product_context,
+        product_demand_context = self._get_suggested_products_context(based_on, days)
+        suggest_context = {  # TODO better name
+            **product_demand_context,
             "warehouse_id": warehouse_id,
             "suggest_multiplier": po_suggest.multiplier,
             "suggest_product_ids": context["default_product_ids"],
@@ -89,7 +84,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             "suggest_number_days": days,
             "suggest_percent": factor,
         }
-        po_id = self.env["purchase.order"].with_context(context_2).browse(po.id).ensure_one()
+        po_id = self.env["purchase.order"].with_context(suggest_context).browse(po.id).ensure_one()
         self.assertEqual(po_id.suggest_estimated_price, price)
 
     def actionAddAll(self, po_suggest, po, warehouse=False):
@@ -179,6 +174,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         self._create_and_process_delivery_at_date(
             [(product_2, 5)], today - relativedelta(days=3)
         )
+
         # Check product demand quantity.
         # With no dates given in the context, the monthly demand should take only last month.
         self.assertEqual(self.product_1.monthly_demand, 20)

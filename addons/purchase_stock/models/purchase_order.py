@@ -42,8 +42,7 @@ class PurchaseOrder(models.Model):
         compute='_compute_suggest_estimated_price',
         digits='Product Price')
 
-    @api.depends_context("suggest_based_on", "suggest_multiplier", "suggest_number_days", "warehouse_id",
-                         "actual_from_date", "actual_to_date")
+    @api.depends_context("suggest_based_on", "suggest_multiplier", "suggest_number_days", "warehouse_id")
     def _compute_suggest_estimated_price(self):
         ctx = self.env.context
         for purchase_order in self:
@@ -73,19 +72,14 @@ class PurchaseOrder(models.Model):
         product_ids = self.env['product.product'].with_context(order_id=po.id).search(domain)
         products = self.env['product.product'].with_context(suggest_ctx).browse(product_ids.ids)
 
-        supplierinfos = self.env['product.supplierinfo'].search([
-            ('partner_id', '=', self.partner_id.id),
-        ])
-
         po_lines_commands = []
         for product in products:
-            supplierinfo = supplierinfos.filtered(lambda supinfo: supinfo.product_id == product)[:1]
             suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
                 product,
                 product.suggested_qty,
                 product.uom_id,
                 po.company_id,
-                supplierinfo,
+                po.partner_id,
                 po
             )
             existing_po_lines = po.order_line.filtered(lambda pol: pol.product_id == product)
@@ -178,6 +172,12 @@ class PurchaseOrder(models.Model):
         kanban_view_id = self.env.ref('purchase_stock.product_view_kanban_catalog_purchase_only').id
         action['views'][0] = (kanban_view_id, 'kanban')
         return action
+
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'warehouse_id': self.picking_type_id.warehouse_id.id if self.picking_type_id else False
+        }
 
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)
@@ -441,8 +441,7 @@ class PurchaseOrder(models.Model):
         """ Add suggest_ctx to env in order to trigger product.product compute fields"""
         if kwargs.get('suggest_based_on'):
             suggest_ctx_keys = ('suggest_based_on', 'monthly_demand_start_date', 'monthly_demand_limit_date',
-                                'suggest_percent', 'suggest_multiplier', 'warehouse_id', 'actual_from_date',
-                                'actual_to_date', 'suggest_number_days')
+                                'suggest_percent', 'suggest_multiplier', 'warehouse_id', 'suggest_number_days')
             suggest_ctx = {k: v for k, v in kwargs.items() if k in suggest_ctx_keys}
             self_ctx = self.with_context(**suggest_ctx)
             return super(PurchaseOrder, self_ctx)._get_product_catalog_order_line_info(

@@ -20,13 +20,7 @@ class PurchaseStockSuggestController(http.Controller):
             if default is not None:
                 defaults[field] = default
 
-        wiz = (
-            request.env['purchase.order.suggest']
-            .with_context({
-                'default_warehouse_id': order.picking_type_id.warehouse_id.id,  # TODO consider more robust dest_out
-            })
-            .create({'purchase_order_id': order.id, **defaults})
-        )
+        wiz = request.env['purchase.order.suggest'].create({'purchase_order_id': order.id, **defaults})
 
         return {
             'wizardId': wiz.id,
@@ -37,7 +31,6 @@ class PurchaseStockSuggestController(http.Controller):
             'vendorName': order.partner_id.display_name,
             'currencySymbol': wiz.currency_id.symbol,
             'percentFactor': wiz.percent_factor,
-            'warehouseId': wiz.warehouse_id.id,
         }
 
     @http.route("/purchase_stock/update_purchase_suggest", type="jsonrpc", auth="user")

@@ -9,7 +9,6 @@ class PurchaseOrderSuggest(models.TransientModel):
     currency_id = fields.Many2one('res.currency', related='purchase_order_id.currency_id')
     partner_id = fields.Many2one('res.partner', related='purchase_order_id.partner_id', change_default=True)
     product_ids = fields.Many2many('product.product')
-    warehouse_id = fields.Many2one('stock.warehouse', string="Warehouse")
 
     based_on = fields.Selection(
         selection=[
