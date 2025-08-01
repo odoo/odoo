@@ -8,14 +8,14 @@
         name="Comparison List Button"
         priority="32"
     >
-        <xpath expr="//div[hasclass('o_wsale_product_btn_row')]" position="inside">
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]" position="inside">
             <t
                 t-set="isCompareAvailable"
                 t-value="product and product.valid_product_template_attribute_line_ids"
             />
 
-            <t t-if="isCompareAvailable" t-call="website_sale.products_item_element_visibility">
-                <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_comparison'"/>
+            <t t-if="isCompareAvailable" t-call="website_sale.product_tile_element_visibility">
+                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_comparison'"/>
 
                 <t
                     t-set="attrib_categories"
@@ -38,7 +38,7 @@
                 </button>
 
             </t>
-            <t t-else="" t-call="website_sale.products_item_element_visibility">
+            <t t-else="" t-call="website_sale.product_tile_element_visibility">
                 <!--
                     Render a placeholder to ensure alignment between entries with and without
                     comparison button

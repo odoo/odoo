@@ -2,7 +2,15 @@
 <odoo>
 
 <!-- ==== Main template ==== -->
-<template id="products_item" name="Products item">
+<!-- Product tiles. Used on the /shop page, the wishlist and the snippet.  -->
+<!-- TODO: rename `products_item` to `product_tile` -->
+<template id="website_sale.products_item" name="Products item">
+    <!-- Parameters:
+        - show_variations: Whether to show the variant preview on the tile.
+        - product: `product.template` record.
+        - product_variant: `product.product` record.
+    -->
+    <t t-set="show_variations" t-value="True if show_variations is None else show_variations"/>
 
     <!-- URLs -->
     <t t-if="not product_href">
@@ -16,7 +24,7 @@
         />
     </t>
     <!-- Variations/Attributes -->
-    <t t-if="not hide_variations">
+    <t t-if="show_variations">
         <t
             t-set="product_ptavs_data"
             t-value="previewed_attribute_values[product.id]"
@@ -27,19 +35,24 @@
                 t-value="product_ptavs_data.get('ptavs_data')"
             />
             <t
-                t-set="ptavsClasses"
-                t-value="'o_has_variations o_has_variations_onhover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' else 'o_has_variations o_has_variations_static'"
+                t-if="product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover'"
+                t-set="ptavs_classes"
+                t-value="'o_has_variations o_has_variations_onhover'"
+            />
+            <t
+                t-else=""
+                t-set="ptavs_classes"
+                t-value="'o_has_variations o_has_variations_static'"
             />
         </t>
     </t>
 
     <form
-        t-attf-class="oe_product_cart d-flex {{ptavsClasses}}"
+        t-attf-class="oe_product_cart d-flex {{ptavs_classes}}"
         t-att-data-publish="product.website_published and 'on' or 'off'"
         role="article"
         t-att-aria-label="product.name"
-        >
-
+    >
         <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
             <input
                 type="hidden"
@@ -49,71 +62,58 @@
             />
 
             <!-- Fetch Images Data -->
-            <t t-if="not product_image_url">
-                <t
-                    t-set="image_type"
-                    t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"
-                />
-                <t
-                    t-set="image_holder"
-                    t-value="product._get_image_holder()"
-                />
-                <t
-                    t-set="product_variant_id"
-                    t-value="product._get_first_possible_variant_id()"
-                />
-                <t
-                    t-set="product_variant"
-                    t-value="request.env['product.product'].browse(product_variant_id) if product_variant_id else None"
-                />
-                <t
-                    t-set="all_images"
-                    t-value="product_variant._get_images() if product_variant else product._get_images()"
-                />
-                <t
-                    t-set="primary_image"
-                    t-value="all_images[0] if all_images else image_holder"
-                />
-                <t
-                    t-set="secondary_image"
-                    t-value="all_images[1] if len(all_images) > 1 else None"
-                />
-            </t>
+            <!-- Use `variant` instead of reassigning `product_variant` beacause it's used to infer
+                 if variant information should be shown later. -->
+            <t
+                t-set="variant"
+                t-value="product_variant or request.env['product.product'].browse(product._get_first_possible_variant_id())"
+            />
+            <t
+                t-if="variant and variant.image_128"
+                t-set="all_images_list"
+                t-value="variant._get_images()"
+            />
+            <t
+                t-else=""
+                t-set="all_images_list"
+                t-value="product._get_images()"
+            />
+            <!--
+                Image holders are records of different types (`product.template`, `product.product`
+                or `product.image`) and are returned as a list.
+             -->
+            <t
+                t-set="primary_image_holder"
+                t-value="(all_images_list[:1]+[product])[0]"
+            />
+            <t
+                t-set="secondary_image_holder"
+                t-value="(all_images_list[1:2]+[False])[0]"
+            />
 
             <a
                 t-att-href="product_href"
-                t-attf-class="oe_product_image_link position-relative {{secondary_image and 'oe_product_image_link_has_secondary'}}"
+                t-attf-class="oe_product_image_link position-relative {{secondary_image_holder and 'oe_product_image_link_has_secondary'}}"
                 contenteditable="false"
                 t-att-title="product.name"
             >
-                <t t-if="not product_image_url">
-                    <!-- Primary image -->
-                    <span t-field="primary_image.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img h-100 w-100'}"
-                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
-                    />
+                <!-- Primary image -->
+                <span
+                    t-field="primary_image_holder.image_1920"
+                    t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img h-100 w-100'}"
+                    class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
+                />
 
-                    <!-- Secondary image -->
-                    <span t-if="secondary_image"
-                        t-field="secondary_image.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img_secondary h-100 w-100'}"
-                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_secondary h-100 justify-content-center align-items-center"
-                    />
-                </t>
-                <t t-else="">
-                    <span
-                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
-                    >
-                        <img
-                            t-att-src="product_image_url"
-                            class="oe_product_image_img h-100 w-100"
-                            alt="Product image"
-                        />
-                    </span>
-                </t>
+                <!-- Secondary image -->
+                <span
+                    t-if="secondary_image_holder"
+                    t-field="secondary_image_holder.image_1920"
+                    t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img_secondary h-100 w-100'}"
+                    class="oe_product_image_img_wrapper oe_product_image_img_wrapper_secondary h-100 justify-content-center align-items-center"
+                />
 
                 <!-- Ribbon -->
-                <t t-if="handleRibbons">
+                <t t-if="ribbon">
                     <t t-set="bg_color" t-value="ribbon.bg_color"/>
                     <t t-set="text_color" t-value="ribbon.text_color"/>
                     <span
@@ -140,12 +140,17 @@
                         <a
                             class="text-decoration-none"
                             t-att-href="product_href"
-                            t-att-content="product.name"
-                            t-att-title="product.name"
-                            t-field="product.name"
                         >
-                            <span t-if="product_name_static" t-out="product_name_static"/>
-                            <span t-else="" t-field="product.name"/>
+                            <span t-field="product.name"/>
+                            <t
+                                t-if="product_variant"
+                                t-set="combination_name"
+                                t-value="product_variant.product_template_attribute_value_ids._get_combination_name()"
+                            />
+                            <span
+                                t-if="combination_name"
+                                t-out="'('+combination_name+')'"
+                            />
                         </a>
                         <a
                             t-if="not product.website_published"
@@ -158,8 +163,8 @@
                         </a>
                     </h2>
                     <!-- Description -->
-                    <t t-call="website_sale.products_item_element_visibility">
-                        <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_description'"/>
+                    <t t-call="website_sale.product_tile_element_visibility">
+                        <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_description'"/>
 
                         <div class="oe_subdescription_wrapper">
                             <div
@@ -173,9 +178,9 @@
                     <!-- Rating -->
                     <t
                         t-if="is_view_active('website_sale.product_comment')"
-                        t-call="website_sale.products_item_element_visibility"
+                        t-call="website_sale.product_tile_element_visibility"
                     >
-                        <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_rating'"/>
+                        <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_rating'"/>
 
                         <div class="o_wsale_product_rating_wrapper">
                             <t t-call="portal_rating.rating_widget_stars_static">
@@ -189,7 +194,8 @@
             </div>
             <div class="o_wsale_product_sub justify-content-between gap-2">
                 <!-- Price(s) -->
-                <t t-if="not product_price">
+                <t t-if="product_price" t-out="product_price"/>
+                <t t-else="">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="product_price" aria-label="Price information">
                         <span
@@ -216,33 +222,32 @@
                         </t>
                     </div>
                 </t>
-                <t t-else="">
-                    <t t-out="product_price"/>
-                </t>
                 <!-- Actions -->
                 <div class="o_wsale_product_btn">
-                    <t t-if="not product_actions" t-call="website_sale.shop_product_buttons"/>
-                    <t t-else="" t-out="product_actions"/>
+                    <t t-if="product_actions" t-out="product_actions"/>
+                    <t t-else="" t-call="website_sale.shop_product_buttons"/>
                 </div>
             </div>
         </div>
     </form>
 </template>
 
-
+<!-- TODO: rename `shop_product_buttons` to `product_tile_actions` -->
 <template id="website_sale.shop_product_buttons" name="Products Actions">
     <t name="buttons_container">
-        <div class="o_wsale_product_btn_row">
-            <t t-call="website_sale.products_item_element_visibility">
-                <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_cta'"/>
-                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-                <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
+        <div class="o_wsale_product_action_row">
+            <t
+                t-if="product._website_show_quick_add()"
+                t-call="website_sale.product_tile_element_visibility"
+            >
+                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_cta'"/>
+                <input name="product_id" t-att-value="variant.id" type="hidden"/>
                 <input name="product_template_id" t-att-value="product.id" type="hidden"/>
                 <input name="product_type" t-att-value="product.type" type="hidden"/>
-                <a
-                    t-if="product._website_show_quick_add()"
+                <!-- type="button" needed as default type in a `form` is "sumbit" -->
+                <button
                     href="#"
-                    role="button"
+                    type="button"
                     class="o_wsale_product_btn_primary a-submit btn btn-primary"
                     aria-label="Shopping cart"
                     title="Shopping cart"
@@ -250,7 +255,7 @@
                 >
                     <i class="fa fa-fw fa-shopping-cart o_not-animable" role="presentation"/>
                     <span class="o_label small ms-1">Add to Cart</span>
-                </a>
+                </button>
             </t>
         </div>
     </t>
@@ -258,26 +263,38 @@
 
 <!-- Utilities -->
 
-<!--
-/// Product elements visibility control:
+<!-- Product Element Visibility Logic:
 
-Default behavior: All elements are injected into product cards and visibility is controlled
-through CSS classes.
+    This template controls whether a product tile element (e.g., price, description)
+    should be rendered in the DOM, depending on visibility settings and user role.
 
-Complex scenarios (/shop page): Disabled elements are injected ONLY during edit mode to:
-- Ensure smooth editing (eg., activating "Description" shows it immediately)
-- Avoid DOM bloat for non-editors
+    Behavior:
+    - If the element's CSS class (`visible_element_class`) is NOT present in `design_field`,
+    it's marked as "editor-only" (i.e., not normally visible).
+    - Such elements are only injected if the current user is a website editor.
+    - Otherwise, the element is always included for all users.
+
+    Purpose:
+    - Enables a better editing experience by letting designers preview and toggle elements live.
+    - Prevents rendering unused elements for visitors, reducing DOM size and improving performance.
+
+    Parameters:
+    - visible_element_class: The CSS class identifier for the element.
+    - design_field: A list of element classes currently enabled for display.
+    - product: The product template record.
+    - product_variant: The specific product variant record.
 -->
-<template id="website_sale.products_item_element_visibility" name="Product elements visibility">
-    <t t-set="forEditionOnly"
-        t-value="matchingClass and designField and matchingClass not in designField"
+<template id="website_sale.product_tile_element_visibility" name="Product tile elements visibility">
+    <t
+        t-set="show_only_in_editor_mode"
+        t-value="visible_element_class and design_field and visible_element_class not in design_field"
     />
     <t
-        t-set="userIsEditor"
+        t-set="is_editor_user"
         t-value="request.env.user.has_group('website.group_website_designer')"
     />
 
-    <t t-if="(forEditionOnly and userIsEditor) or not forEditionOnly">
+    <t t-if="(show_only_in_editor_mode and is_editor_user) or not show_only_in_editor_mode">
         <t t-out="0"/>
     </t>
 </template>

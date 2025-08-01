@@ -12,8 +12,8 @@
         <t name="buttons_container" position="inside">
             <t t-set="isWishlistAvailable" t-value="products_in_wishlist is not None"/>
 
-            <t t-if="isWishlistAvailable" t-call="website_sale.products_item_element_visibility">
-                <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_wishlist'"/>
+            <t t-if="isWishlistAvailable" t-call="website_sale.product_tile_element_visibility">
+                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_wishlist'"/>
 
                 <t t-set="in_wish" t-value="product in products_in_wishlist"/>
                 <t t-set="btnTitle">Add to wishlist</t>
@@ -325,19 +325,13 @@
                                         </button>
                                     </div>
                                     <t t-call="website_sale.products_item">
-                                        <t t-set="product" t-value="wish.product_id"/>
+                                        <t t-set="product" t-value="wish.product_id.product_tmpl_id"/>
+                                        <t t-set="product_variant" t-value="wish.product_id"/>
                                         <t t-set="product_href" t-value="wish.product_id.website_url"/>
-                                        <t t-set="hide_variations" t-value="true"/>
-                                        <t
-                                            t-set="product_name_static"
-                                            t-value="wish.product_id.display_name"
-                                        />
-                                        <t t-set="product_image_url"
-                                            t-valuef="/web/image/product.product/#{wish.product_id.id}/image_1920"
-                                        />
+                                        <t t-set="show_variations" t-value="False"/>
                                         <t t-set="product_price">
                                             <br t-if="combination_info['prevent_zero_price_sale']"/>
-                                            <div class="align-middle o_wish_price" t-else="">
+                                            <div t-else="" class="align-middle o_wish_price">
                                                 <t t-out="combination_info['price']"
                                                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                                 <small
@@ -352,7 +346,7 @@
                                             </div>
                                         </t>
                                         <t t-set="product_actions">
-                                            <div class="o_wsale_product_btn_row">
+                                            <div class="o_wsale_product_action_row">
                                                 <a
                                                     t-if="combination_info['prevent_zero_price_sale']"
                                                     t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"

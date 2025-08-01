@@ -322,7 +322,7 @@
         }
     }
 
-    .o_wsale_product_btn_row {
+    .o_wsale_product_action_row {
         display: contents;
         padding: var(--o-wsale-card-btns-row-padding, #{map-get($spacers, 2)});
     }
@@ -1035,7 +1035,7 @@ $_wsale_products_roundness_map: (
                 transition: transform .15s ease, opacity .15s ease;
             }
 
-            .o_wsale_product_btn_row {
+            .o_wsale_product_action_row {
                 display: flex;
                 gap: map-get($spacers, 2);
                 transform: translateX(var(--o-wsale-card-offset-x));
@@ -1047,7 +1047,7 @@ $_wsale_products_roundness_map: (
             }
         }
 
-        .o_has_variations .o_wsale_product_btn_row {
+        .o_has_variations .o_wsale_product_action_row {
             align-self: start;
             flex-direction: column;
             transform: translateX(var(--o-wsale-card-offset-x)) translateY(var(--o-wsale-card-offset-top));
@@ -1059,10 +1059,10 @@ $_wsale_products_roundness_map: (
 
         .oe_product_cart {
             &:hover, &:has(:focus-visible) {
-                .o_wsale_product_btn_row, .btn {
+                .o_wsale_product_action_row, .btn {
                     pointer-events: auto;
                 }
-                .o_wsale_product_btn_row .btn {
+                .o_wsale_product_action_row .btn {
                     opacity: 1;
                     transform: translate(0, (map-get($spacers, 2) * -1));
                     transition: transform .15s ease-out, opacity .35s ease-out;
@@ -1072,7 +1072,7 @@ $_wsale_products_roundness_map: (
                     }
                 }
 
-                &.o_has_variations .o_wsale_product_btn_row .btn {
+                &.o_has_variations .o_wsale_product_action_row .btn {
                     transform: translate(0, 0);
                 }
             }

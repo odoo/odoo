@@ -7,7 +7,11 @@
     t-inherit-mode="extension"
 >
     <BuilderRow id="'o_wsale_buttons_opt'" position="after">
-        <BuilderRow label.translate="Wishlist" t-if="isShop" level="1">
+        <BuilderRow
+            t-if="props.recordName === 'shop_opt_products_design_classes'"
+            label.translate="Wishlist"
+            level="1"
+        >
             <BuilderButton
                 title.translate="Wishlist"
                 icon="'fa-heart'"

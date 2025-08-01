@@ -1,80 +1,74 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { useState, onMounted, onWillDestroy } from "@odoo/owl";
+import { Plugin } from "@html_editor/plugin";
+import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { ProductsDesignPanel } from "./products_design_panel";
 
-export class ProductsDesignPanel extends BaseOptionComponent {
-    static template = "website_sale.ProductsDesignPanel";
-    static components = {
-        ...BaseOptionComponent.components,
-    };
-    static props = {
-        label: { type: String, optional: true },
-        recordName: { type: String, optional: true },
-        showLists: { type: Boolean, optional: true },
-        showSecondaryImage: { type: Boolean, optional: true },
-        openByDefault: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        label: "Design",
-        showLists: true,
-        showSecondaryImage: false,
-        openByDefault: false,
+export class ProductsDesignPanelPlugin extends Plugin {
+    static id = "productsDesignPanel";
+    static dependencies = ["builderActions", "builderComponents"];
+    static shared = ["registerPanel", "unregisterPanel"];
+
+    resources = {
+        builder_actions: {
+            classActionWithSave: ClassActionWithSuggestedAction,
+            setGap: SetGapAction,
+        },
+        builder_components: {
+            ProductsDesignPanel,
+        },
+        save_handlers: this.onSave.bind(this),
+        change_current_options_containers_listeners: () => {
+            this.panels.forEach(panel => {
+                if (panel.state.overlayVisible) {
+                    panel.closeDesignOverlay();
+                }
+            });
+        },
     };
 
     setup() {
-        super.setup();
-        this.state = useState({ overlayVisible: false });
-        this.needsDbPersistence = this.props.recordName?.length > 0;
+        this.panels = new Set();
+    }
 
-        onMounted(() => {
-            this.setupActionConnections();
-            this.registerWithPlugin();
+    registerPanel(panel) {
+        this.panels.add(panel);
+    }
 
-            if (this.props.openByDefault) {
-                this.openDesignOverlay();
+    unregisterPanel(panel) {
+        this.panels.delete(panel);
+    }
+
+    async onSave() {
+        const persistentPanels = Array.from(this.panels).filter(panel => panel.needsDbPersistence);
+
+        for (const panel of persistentPanels) {
+            const pageEl = panel.env.getEditingElement();
+            const updateData = {};
+
+            // Save gap
+            if (pageEl.dataset.gapToSave !== undefined) {
+                updateData.shop_gap = pageEl.dataset.gapToSave;
             }
-        });
 
-        onWillDestroy(() => {
-            this.unregisterFromPlugin();
-        });
-    }
+            // Scan DOM for all classes with o_wsale_products_opt_ prefix
+            const currentClasses = Array.from(pageEl.classList);
+            const productOptClasses = currentClasses.filter(className =>
+                className.startsWith('o_wsale_products_opt_')
+            );
 
-    registerWithPlugin() {
-        const plugin = this.env.editor.shared.productsDesignPanel;
-        if (plugin) {
-            plugin.registerPanel(this);
-        }
-    }
+            // Always save the classes field (empty string if no classes found)
+            updateData[panel.props.recordName] = productOptClasses.join(' ');
 
-    unregisterFromPlugin() {
-        const plugin = this.env.editor.shared.productsDesignPanel;
-        if (plugin) {
-            plugin.unregisterPanel(this);
-        }
-    }
+            // Early return only if no classes and no gap to save
+            if (productOptClasses.length === 0 && pageEl.dataset.gapToSave === undefined) {
+                continue;
+            }
 
-    setupActionConnections() {
-        // Set panel reference for setGap action
-        const builderActions = this.env.editor.shared.builderActions;
-        const action = builderActions.getAction('setGap');
-
-        if (action && action.setPanel) {
-            action.setPanel(this);
-        }
-    }
-
-    openDesignOverlay() {
-        this.state.overlayVisible = true;
-    }
-
-    closeDesignOverlay() {
-        this.state.overlayVisible = false;
-    }
-
-    onBackdropClick(ev) {
-        if (ev.target === ev.currentTarget) {
-            this.closeDesignOverlay();
+            // Save data
+            if (Object.keys(updateData).length > 0) {
+                await rpc("/shop/config/website", updateData);
+            }
         }
     }
 }
@@ -215,8 +209,4 @@ class SetGapAction extends BuilderAction {
     }
 }
 
-// Register actions with the main component
-ProductsDesignPanel.actions = {
-    classActionWithSave: ClassActionWithSuggestedAction,
-    setGap: SetGapAction,
-};
+registry.category("website-plugins").add(ProductsDesignPanelPlugin.id, ProductsDesignPanelPlugin);
