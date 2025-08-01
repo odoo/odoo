@@ -2979,3 +2979,21 @@ input[value*="data-oe-translation-source-sha"] {
     border-radius: $btn-border-radius;
     padding: $btn-padding-y $btn-padding-x;
 }
+
+// Image links
+
+// For links inside a flex parent; adjusts margins when wrapping an image.
+// A single 'width: 100%' rule isn't used to keep link size matching image.
+// The 'where:'s prevents overriding custom rules in stable.
+// TODO: remove the 'where:'s in master.
+.carousel-item, .d-flex {
+    & > :where(a:has(> .img:only-child.mh-100)) {
+        max-height: 100%;
+    }
+    & > :where(a:has(> .img:only-child.me-auto, > .img:only-child.mx-auto)) {
+        margin-right: auto;
+    }
+    & > :where(a:has(> .img:only-child.ms-auto, > .img:only-child.mx-auto)) {
+        margin-left: auto;
+    }
+}
