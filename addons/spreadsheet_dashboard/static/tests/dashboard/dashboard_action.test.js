@@ -220,7 +220,7 @@ test("Can clear filter date filter value that defaults to current period", async
     await contains(".o_searchview_facet_label").click();
     await contains('.o-filter-item[data-id="2"] input').click();
     await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
 
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year - 1));
 
@@ -302,7 +302,7 @@ test("Changing filter values will create a new share", async function () {
     await contains(".o_searchview_facet_label").click();
     await contains(".o-filter-value input").click();
     await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
 
     await contains("i.fa-share-alt").click();
     await animationFrame();
@@ -364,7 +364,7 @@ test("Global filter with same id is not shared between dashboards", async functi
     await contains(".dropdown-item:first").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(1);
 
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
     expect(".o_searchview_facet").toHaveCount(1);
 
     await contains(".o_search_panel li:last-child").click();
@@ -401,7 +401,7 @@ test("Can add a new global filter from the search bar", async function () {
     expect(".o-autocomplete--input.o_input").toHaveValue("");
     await contains(".o-autocomplete--input.o_input").click();
     await contains(".o-autocomplete--dropdown-item").click();
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
 
     expect(".o_searchview_facet").toHaveCount(1);
     expect(".o_searchview_facet .o_searchview_facet_label").toHaveText("Relation Filter");
@@ -425,7 +425,7 @@ test("Can open the dialog by clicking on a facet", async function () {
 
     expect(".o_searchview_facet").toHaveCount(1);
     await contains(".o_searchview_facet").click();
-    expect(".o-filters-search-dialog").toHaveCount(1);
+    expect(".o-filter-values").toHaveCount(1);
 });
 
 test("Can open the dialog by clicking on the search bar", async function () {
@@ -444,7 +444,7 @@ test("Can open the dialog by clicking on the search bar", async function () {
     await createSpreadsheetDashboard({ serverData });
 
     await contains(".o_searchview").click();
-    expect(".o-filters-search-dialog").toHaveCount(1);
+    expect(".o-filter-values").toHaveCount(1);
 });
 
 test("Changes of global filters are not dispatched while inside the dialog", async function () {
@@ -468,7 +468,7 @@ test("Changes of global filters are not dispatched while inside the dialog", asy
     await contains(".o-autocomplete--input.o_input").click();
     await contains(".o-autocomplete--dropdown-item").click();
     expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
-    await contains(".modal-footer .btn-primary").click();
+    await contains(".o-filter-values-footer .btn-primary").click();
     expect(model.getters.getGlobalFilterValue("1")).toEqual({ operator: "in", ids: [37] });
 });
 
