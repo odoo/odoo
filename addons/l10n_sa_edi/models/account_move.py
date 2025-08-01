@@ -103,7 +103,7 @@ class AccountMove(models.Model):
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
-            amount_total = float(xpath_ns('//cbc:TaxInclusiveAmount'))
+            amount_total = float(xpath_ns('//cbc:PayableAmount'))
             amount_tax = float(xpath_ns('//cac:TaxTotal/cbc:TaxAmount'))
             x509_certificate = load_der_x509_certificate(b64decode(x509_cert), default_backend())
             seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, journal_id.company_id.display_name.encode())
