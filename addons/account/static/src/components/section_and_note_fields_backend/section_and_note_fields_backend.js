@@ -13,27 +13,27 @@ const DISPLAY_TYPES = {
     SUBSECTION: "line_subsection",
 };
 
-function getPreviousSectionRecords(list, record) {
+export function getPreviousSectionRecords(list, record) {
     const { sectionRecords } = getRecordsUntilSection(list, record, false);
     return sectionRecords;
 }
 
-function getSectionRecords(list, record, subSection) {
+export function getSectionRecords(list, record, subSection) {
     const { sectionRecords } = getRecordsUntilSection(list, record, true, subSection);
     return sectionRecords;
 }
 
-function hasNextSection(list, record) {
+export function hasNextSection(list, record) {
     const { indexAtEnd } = getRecordsUntilSection(list, record, true);
     return indexAtEnd < list.records.length && list.records[indexAtEnd].data.display_type === record.data.display_type;
 }
 
-function hasPreviousSection(list, record) {
+export function hasPreviousSection(list, record) {
     const { indexAtEnd } = getRecordsUntilSection(list, record, false);
     return indexAtEnd >= 0 && list.records[indexAtEnd].data.display_type === record.data.display_type;
 }
 
-function getRecordsUntilSection(list, record, asc, subSection) {
+export function getRecordsUntilSection(list, record, asc, subSection) {
     const stopAtTypes = [DISPLAY_TYPES.SECTION];
     if (subSection ?? record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
         stopAtTypes.push(DISPLAY_TYPES.SUBSECTION);

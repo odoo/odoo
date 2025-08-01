@@ -496,8 +496,7 @@
                     <page string="Order Lines" name="order_lines">
                         <field
                             name="order_line"
-                            widget="sale_section_note_list"
-                            options="{'display_type_field':'display_type', 'section_content_field':'name', 'note_content_field':'name'}"
+                            widget="sol_o2m"
                             mode="list,kanban"
                             readonly="state == 'cancel' or locked">
                             <form>

@@ -12,9 +12,74 @@ import {
 } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
 import { registry } from '@web/core/registry';
 import { CharField } from '@web/views/fields/char/char_field';
+import { getRecordsUntilSection } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
+
+function getParentSection(list, record) {
+    const { parent } = getRecordsUntilSection(list, record, false, true).sectionRecords[0];
+    return parent;
+}
 
 export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
     static recordRowTemplate = 'sale.ListRenderer.RecordRow';
+
+    setup() {
+        super.setup();
+        this.pricesColumns = ['price_unit', 'price_subtotal', 'price_total', 'discount'];
+    }
+
+    parentSection(record, isSubSection= false) {
+        return getParentSection(this.props.list, record);
+    }
+
+    _papaSaysHide(record, key) {
+        if (this.isTopSection(record)) {
+            return false;
+        }
+
+        if ((tish.isSection(record) && !this.isTopSection(record)) && !this) {
+            return hierarchyItem.parent?.record.data[key];
+        }
+
+        if (hierarchyItem.isRecord || hierarchyItem.isNote) {
+            const parent = hierarchyItem.parent;
+            if (!parent || parent.isRoot) return false;
+
+            if (parent.isTopSection) {
+                return parent.record.data[key];
+            }
+
+            if (parent.isSubSection) {
+                return parent.parent.isTopSection
+                    ? parent.parent.record.data[key] || parent.record.data[key]
+                    : parent.record.data[key];
+            }
+        }
+
+        return false;
+    }
+
+    getDropDownItems(record) {
+        return [
+            {
+                id: "toggleComposition",
+                label: record.data.hide_composition ? _t("Show Composition") : _t("Hide Composition"),
+                icon: record.data.hide_composition ? "fa-eye" : "fa-eye-slash",
+                onSelected: async () => {
+                    const changes = { hide_composition: !hierarchyItem.record.data.hide_composition };
+                    await hierarchyItem.record.update(changes);
+                },
+            },
+            {
+                id: "togglePrices",
+                label: record.data.hide_prices ? _t("Show Prices") : _t("Hide Prices"),
+                icon: record.data.hide_prices ? "fa-eye" : "fa-eye-slash",
+                onSelected: async () => {
+                    const changes = { hide_prices: !record.data.hide_prices };
+                    await record.update(changes);
+                },
+            },
+        ];
+    }
 
     /**
      * Product description widget logic
