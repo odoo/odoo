@@ -103,6 +103,56 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return SHOW_ALL_ITEMS_TOOLTIP;
     }
 
+    get hidePrices() {
+        return this.record.data.collapse_prices;
+    }
+
+    get hideCompositions() {
+        return this.record.data.collapse_composition;
+    }
+
+    get showPricesButton() {
+        if (this.record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
+            const parent_record = this.getParentSectionRecord(this.record);
+            return !parent_record?.data?.collapse_prices && !parent_record?.data?.collapse_composition;
+        }
+        return true;
+    }
+
+    get showCompositionButton() {
+        if (this.record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
+            return !this.getParentSectionRecord(this.record)?.data?.collapse_composition;
+        }
+        return true;
+    }
+
+    getParentSectionRecord(record) {
+        const parentRecord = this.props.list.records.filter((r) => r.resId === record.data?.parent_id?.id);
+        return parentRecord.length === 1 ? parentRecord[0] : false;
+    }
+
+    async toggleHidePrices(record) {
+        const sectionRecords = getSectionRecords(this.props.list, record);
+        const commands = [];
+        for (const sectionRecord of sectionRecords) {
+            commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
+                collapse_prices: !record.data.collapse_prices,
+            }));
+        }
+        await this.props.list.applyCommands(commands, { sort: true });
+    }
+
+    async toggleHideComposition(record) {
+        const sectionRecords = getSectionRecords(this.props.list, record);
+        const commands = [];
+        for (const sectionRecord of sectionRecords) {
+            commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
+                collapse_composition: !record.data.collapse_composition,
+            }));
+        }
+        await this.props.list.applyCommands(commands, { sort: true });
+    }
+
     async addRowAfterSection(record, addSubSection) {
         const canProceed = await this.props.list.leaveEditMode();
         if (!canProceed) {
@@ -274,13 +324,41 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return record.data.display_type === DISPLAY_TYPES.SECTION;
     }
 
+    isSubSection(record) {
+        return record.data.display_type === DISPLAY_TYPES.SUBSECTION;
+    }
+
+    isHidden(record, state) {
+        if (!this.isSection(record)) {
+            return true;
+        }
+
+        if (this.isTopSection(record)) {
+            return false;
+        }
+
+        if (this.isSubSection(record)) {
+            if (state === 'composition' && this.getParentSectionRecord(record)?.data?.collapse_composition) {
+                return true;
+            }
+
+            if (state === 'prices' && this.getParentSectionRecord(record)?.data?.collapse_prices) {
+                return true;
+            }
+        }
+    }
+
     getRowClass(record) {
         const existingClasses = super.getRowClass(record);
-        return `${existingClasses} o_is_${record.data.display_type}`;
+        let newClasses = `${existingClasses} o_is_${record.data.display_type}`;
+        if (this.isHidden(record, 'composition') && record.data.collapse_composition) {
+            newClasses += " text-muted";
+        }
+        return newClasses;
     }
 
     getCellClass(column, record) {
-        const classNames = super.getCellClass(column, record);
+        let classNames = super.getCellClass(column, record);
         if (
             this.isSectionOrNote(record) &&
             column.widget !== "handle" &&
@@ -288,6 +366,11 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         ) {
             return `${classNames} o_hidden`;
         }
+
+        if (this.isHidden(record, 'prices') && this.props.aggregatedFields.includes(column.name) && record.data.collapse_prices) {
+            classNames += " text-muted";
+        }
+
         return classNames;
     }
 

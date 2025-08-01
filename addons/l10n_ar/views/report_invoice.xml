@@ -127,9 +127,9 @@
         </td>
 
         <!-- use latam prices (to include/exclude VAT) -->
-        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="before">
+        <xpath expr="//t[@t-foreach='lines']/t" position="before">
             <t t-set="l10n_ar_values" t-value="line._l10n_ar_prices_and_taxes()"/>
-        </t>
+        </xpath>
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-field"></attribute>
             <attribute name="t-out">l10n_ar_values['price_unit']</attribute>

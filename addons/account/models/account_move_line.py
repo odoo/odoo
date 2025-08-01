@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.fields import Command, Domain
-from odoo.tools import frozendict, float_compare, Query, SQL, OrderedSet
+from odoo.tools import frozendict, float_compare, groupby, Query, SQL, OrderedSet
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -335,6 +335,25 @@ class AccountMoveLine(models.Model):
         compute='_compute_display_type', store=True, readonly=False, precompute=True,
         required=True,
     )
+    # section related fields
+    collapse_composition = fields.Boolean(
+        string="Hide Composition",
+        help="If checked, the lines below this section will not be displayed in reports and portal.",
+        compute="_compute_section_visibility_fields", store=True, readonly=False,
+    )
+    collapse_prices = fields.Boolean(
+        string="Hide Prices",
+        help="If checked, the prices of the lines below this section will not be displayed in reports and portal.",
+        compute="_compute_section_visibility_fields", store=True, readonly=False,
+    )
+    parent_id = fields.Many2one(
+        'account.move.line',
+        string="Parent Section Line",
+        compute='_compute_parent_id',
+        search='_search_parent_id',
+        copy=False,
+    )
+    child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='parent_id')
     product_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
@@ -1169,6 +1188,36 @@ class AccountMoveLine(models.Model):
                 line.matched_credit_ids.exchange_move_id.line_ids
             )
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
+
+    @api.depends('sequence', 'move_id')
+    def _compute_parent_id(self):
+        for _move, lines in self.grouped('move_id').items():
+            last_section = False
+            last_sub = False
+            for line in lines.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    last_section = line
+                    line.parent_id = False
+                    last_sub = False
+                elif line.display_type == 'line_subsection':
+                    line.parent_id = last_section
+                    last_sub = line
+                elif line.display_type == 'product':
+                    line.parent_id = last_sub or last_section or False
+                else:
+                    line.parent_id = False
+
+    @api.depends('parent_id')
+    def _compute_section_visibility_fields(self):
+        for line in self:
+            if line.display_type in ('line_section', 'line_subsection'):
+                continue
+
+            line.collapse_prices = line.parent_id.collapse_prices
+            line.collapse_composition = line.parent_id.collapse_composition
+
+    def _search_parent_id(self, operator, value):
+        return [('id', operator, value)]
 
     def _search_payment_date(self, operator, value):
         if operator == 'in':
@@ -3304,6 +3353,41 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
         return self.move_id.state == 'posted'
+
+    def get_lines_grouped_by_section(self):
+        """
+        Return a tax-wise summary of sale order lines linked to section.
+        Groups lines by their tax IDs and computes subtotal and total for each group.
+        """
+        self.ensure_one()
+
+        section_lines = self.child_ids + self.child_ids.child_ids
+        result = []
+        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
+            subtotal = sum(l.price_subtotal for l in lines)
+            price_total = sum(l.price_total for l in lines)
+
+            if subtotal or tax_labels:
+                result.append({
+                    'name': self.name,
+                    'taxes': tax_labels,
+                    'ids': [line.id for line in section_lines],
+                    'price_subtotal': subtotal,
+                    'price_total': price_total,
+                })
+
+        return result or [{
+            'name': self.name,
+            'taxes': [],
+            'ids': [],
+            'price_subtotal': 0.0,
+            'price_total': 0.0,
+        }]
+
+    def get_section_subtotal(self):
+        section_lines = self.child_ids + self.child_ids.child_ids
+        return sum(section_lines.mapped('price_subtotal'))
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS

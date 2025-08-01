@@ -18,7 +18,7 @@
                     <t t-set-slot="content">
                         <t t-if="this.isSectionInPage(record)">
                             <DropdownItem onSelected="() => this.addRowInSection(record, false)">
-                                <i class="me-1 fa fa-fw fa-plus"/><span>Add a product</span>
+                                <i class="me-1 fa fa-fw fa-plus"/><span>Add a line</span>
                             </DropdownItem>
                             <t t-if="this.isTopSection(record)">
                                 <DropdownItem onSelected="() => this.addRowAfterSection(record, false)">
@@ -35,6 +35,12 @@
                                     <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
                                 </DropdownItem>
                             </t>
+                            <DropdownItem t-if="showPricesButton" onSelected="() => this.toggleHidePrices(record)">
+                                <i class="me-1 fa fa-fw" t-att-class="hidePrices ? 'fa-eye' : 'fa-eye-slash'"/><span t-out="hidePrices ? 'Show Prices' : 'Hide Prices'"/>
+                            </DropdownItem>
+                            <DropdownItem t-if="showCompositionButton" onSelected="() => this.toggleHideComposition(record)">
+                                <i class="me-1 fa fa-fw" t-att-class="hideCompositions ? 'fa-eye' : 'fa-eye-slash'"/><span t-out="hideCompositions ? 'Show Composition' : 'Hide Composition'"/>
+                            </DropdownItem>
                             <DropdownItem onSelected="() => this.addNoteInSection(record)">
                                 <i class="me-1 fa fa-fw fa-sticky-note-o"/><span>Add a note</span>
                             </DropdownItem>
