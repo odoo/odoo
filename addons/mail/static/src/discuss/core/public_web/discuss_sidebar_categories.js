@@ -54,7 +54,7 @@ export class DiscussSidebarSubchannel extends Component {
     /** @param {MouseEvent} ev */
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
-        thread.setAsDiscussThread();
+        thread.open();
     }
 }
 
@@ -102,7 +102,9 @@ export class DiscussSidebarChannel extends Component {
         return {
             "bg-inherit": this.thread.notEq(this.store.discuss.thread),
             "o-active": this.thread.eq(this.store.discuss.thread),
-            "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.selfMember?.mute_until_dt,
+            "o-unread":
+                this.thread.selfMember?.message_unread_counter > 0 &&
+                !this.thread.selfMember?.mute_until_dt,
             "border-bottom-0 rounded-bottom-0": this.bordered,
             "opacity-50": this.thread.selfMember?.mute_until_dt,
             "position-relative justify-content-center o-compact mt-0 p-1":
@@ -132,9 +134,11 @@ export class DiscussSidebarChannel extends Component {
     get itemNameAttClass() {
         return {
             "o-unread fw-bolder":
-                this.thread.selfMember?.message_unread_counter > 0 && !this.thread.selfMember?.mute_until_dt,
+                this.thread.selfMember?.message_unread_counter > 0 &&
+                !this.thread.selfMember?.mute_until_dt,
             "text-muted":
-                this.thread.selfMember?.message_unread_counter === 0 || this.thread.selfMember?.mute_until_dt,
+                this.thread.selfMember?.message_unread_counter === 0 ||
+                this.thread.selfMember?.mute_until_dt,
         };
     }
 
@@ -161,7 +165,10 @@ export class DiscussSidebarChannel extends Component {
         if (!this.thread.selfMember?.mute_until_dt || sub.selfMember?.message_unread_counter > 0) {
             return true;
         }
-        return this.isSelfOrThreadActive && !(this.thread.selfMember?.mute_until_dt && sub.selfMember?.mute_until_dt);
+        return (
+            this.isSelfOrThreadActive &&
+            !(this.thread.selfMember?.mute_until_dt && sub.selfMember?.mute_until_dt)
+        );
     }
 
     get isSelfOrThreadActive() {
@@ -174,7 +181,7 @@ export class DiscussSidebarChannel extends Component {
     /** @param {MouseEvent} ev */
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
-        thread.setAsDiscussThread();
+        thread.open();
     }
 }
 

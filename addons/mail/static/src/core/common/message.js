@@ -34,7 +34,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
-import { url } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
@@ -402,8 +402,7 @@ export class Message extends Component {
         }
         const editedEl = bodyEl.querySelector(".o-mail-Message-edited");
         editedEl?.replaceChildren(renderToElement("mail.Message.edited"));
-        const linkEls = bodyEl.querySelectorAll(".o_channel_redirect");
-        for (const linkEl of linkEls) {
+        for (const linkEl of bodyEl.querySelectorAll(".o_channel_redirect")) {
             const text = linkEl.textContent.substring(1); // remove '#' prefix
             const icon = linkEl.classList.contains("o_channel_redirect_asThread")
                 ? "fa fa-comments-o"
@@ -411,6 +410,16 @@ export class Message extends Component {
             const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
             linkEl.replaceChildren(iconEl);
             linkEl.insertAdjacentText("beforeend", ` ${text}`);
+        }
+        for (const el of bodyEl.querySelectorAll(".o_message_redirect")) {
+            // only transform links targetting the same database
+            if (el.getAttribute("href")?.startsWith(getOrigin())) {
+                const message = this.store["mail.message"].get(el.dataset.oeId);
+                if (message?.thread?.displayName) {
+                    el.classList.add("o_message_redirect_transformed");
+                    el.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
+                }
+            }
         }
     }
 

@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
+import contextlib
 import logging
 import re
 import textwrap
 from binascii import Error as binascii_error
 from collections import defaultdict
+from lxml import html
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
@@ -91,6 +93,7 @@ class MailMessage(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
+    linked_message_ids = fields.Many2many("mail.message", compute="_compute_linked_message_ids")
     message_link_preview_ids = fields.One2many(
         "mail.message.link.preview", "message_id", groups="base.group_erp_manager"
     )
@@ -204,6 +207,33 @@ class MailMessage(models.Model):
         for message in self:
             plaintext_ct = tools.mail.html_to_inner_content(message.body)
             message.preview = textwrap.shorten(plaintext_ct, 190)
+
+    @api.depends_context("uid")
+    @api.depends("body")
+    def _compute_linked_message_ids(self):
+        """ Compute the linked messages from the body of the message."""
+        message_ids_by_message = defaultdict(list)
+        for message in self:
+            if tools.is_html_empty(message.body):
+                continue
+            str_ids = html.fromstring(message.body).xpath(
+                "//a[contains(@class, 'o_message_redirect') and @data-oe-model='mail.message']/@data-oe-id",
+            )
+            for str_id in str_ids:
+                with contextlib.suppress(ValueError, TypeError):
+                    message_ids_by_message[message].append(int(str_id))
+        mids = [mid for mids in message_ids_by_message.values() for mid in mids]
+        if not mids:
+            self.linked_message_ids = self.env["mail.message"]
+            return
+        # Remove any potential sudo from the env as linked messages are user input, returning them
+        # as sudo could lead to users being able to read any arbitrary message through this feature.
+        # Only allowed messages for the current user are acceptable.
+        linked_messages = self.sudo(False).search(Domain("id", "in", mids))
+        for message in self:
+            message.linked_message_ids = linked_messages.filtered(
+                lambda m, message=message: m.id in message_ids_by_message[message],
+            )
 
     @api.depends('model', 'res_id')
     def _compute_record_name(self):
@@ -1011,6 +1041,7 @@ class MailMessage(models.Model):
             # sudo: mail.message.subtype - reading subtype on accessible message is allowed
             Store.One("subtype_id", ["description"], sudo=True),
             "write_date",
+            *self._get_store_linked_messages_fields(),
         ]
         if target.is_internal(self.env):
             # sudo - mail.notification: internal users can access notifications.
@@ -1152,6 +1183,32 @@ class MailMessage(models.Model):
         if target.is_current_user(self.env) and self.is_current_user_or_guest_author:
             return self.env["ir.attachment"]._get_store_ownership_fields()
         return []
+
+    def _get_store_linked_messages_fields(self):
+        """Add the messages that are referenced by the current message's body to the given store.
+        This method should only return message data that are not sensitive to be broadcasted to
+        other users, as it doesn't check store.target by simplicity and the target might not
+        necessarily have permission to read the linked messages."""
+        record_by_message = self.linked_message_ids._record_by_message()
+        return [
+            Store.Many(
+                "linked_message_ids",
+                [
+                    "model",
+                    "res_id",
+                    Store.Attr(
+                        "thread",
+                        lambda m: Store.One(
+                            record_by_message.get(m),
+                            # sudo: mail.thread - reading record name of accessible message is acceptable
+                            [Store.Attr("display_name", sudo=True)],
+                            as_thread=True,
+                        ),
+                    ),
+                ],
+                only_data=True,
+            ),
+        ]
 
     def _extras_to_store(self, store: Store, format_reply):
         pass

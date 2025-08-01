@@ -438,6 +438,11 @@ export class Thread extends Record {
         return {};
     }
 
+    async checkReadAccess() {
+        await this.store.Thread.getOrFetch(this, ["hasReadAccess"]);
+        return this.hasReadAccess;
+    }
+
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",
@@ -729,8 +734,13 @@ export class Thread extends Record {
     /** @param {import("models").Message} message */
     onNewSelfMessage(message) {}
 
-    /** @param {Object} [options] */
-    open(options) {}
+    /**
+     * @param {Object} [options]
+     * @return {boolean} true if the thread was opened, false otherwise
+     */
+    open(options) {
+        return false;
+    }
 
     async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact } = {}) {
         const thread = await this.store.Thread.getOrFetch(this);

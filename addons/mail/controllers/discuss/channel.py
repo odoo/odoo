@@ -4,7 +4,6 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
-from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
@@ -46,10 +45,6 @@ class DiscussChannelWebclientController(WebclientController):
         if name == "discuss.channel":
             channels = request.env["discuss.channel"].search([("id", "in", params)])
             request.update_context(channels=request.env.context["channels"] | channels)
-            if not_found_channels := request.env["discuss.channel"].browse(
-                OrderedSet(int(cid) for cid in params) - OrderedSet(channels.ids)
-            ):
-                store.delete(not_found_channels)
         if name == "/discuss/get_or_create_chat":
             channel = request.env["discuss.channel"]._get_or_create_chat(
                 params["partners_to"], params.get("pin", True)

@@ -121,20 +121,7 @@ patch(MessagingMenu.prototype, {
         }
     },
     async openThread(thread) {
-        if (this.store.discuss.isActive) {
-            this.action.doAction({
-                type: "ir.actions.act_window",
-                res_model: thread.model,
-                views: [[false, "form"]],
-                res_id: thread.id,
-            });
-            await this.store.chatHub.initPromise;
-            // Close the related chat window as having both the form view
-            // and the chat window does not look good.
-            this.store.ChatWindow.get({ thread })?.close();
-        } else {
-            thread.open({ focus: true, fromMessagingMenu: true });
-        }
+        thread.open({ focus: true, fromMessagingMenu: true });
         this.dropdown.close();
     },
     openFailureView(failure) {

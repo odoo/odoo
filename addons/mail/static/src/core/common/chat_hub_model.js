@@ -104,7 +104,7 @@ export class ChatHub extends Record {
         /** @param {import("models").Thread[]} threads */
         const insertChatWindows = (threads) =>
             threads
-                .filter((thread) => thread)
+                .filter((thread) => thread?.model === "discuss.channel")
                 .map((thread) => this.store.ChatWindow.insert({ thread }));
         const toFold = insertChatWindows(foldThreads);
         const toOpen = insertChatWindows(openThreads);
