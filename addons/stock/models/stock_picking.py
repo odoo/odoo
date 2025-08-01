@@ -851,6 +851,10 @@ class Picking(models.Model):
 
         pickings = super().create(vals_list)
 
+        default_group_id = self.env['procurement.group'].browse(self.env.context.get('default_group_id'))
+        if default_group_id:
+            pickings.filtered(lambda p: not p.group_id).group_id = default_group_id
+
         for picking, scheduled_date in zip(pickings, scheduled_dates):
             if scheduled_date:
                 picking.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})

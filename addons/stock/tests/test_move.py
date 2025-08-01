@@ -5674,6 +5674,40 @@ class StockMove(TransactionCase):
         self.assertEqual(picking.state, 'done', 'Picking should still done after adding a new move line.')
         self.assertTrue(all(move.state == 'done' for move in picking.move_ids), 'Wrong state for move.')
 
+    def test_default_group_id_propagation(self):
+        move = self.env['stock.move'].create({
+            'name': 'move in',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+        })
+
+        pg1 = self.env['procurement.group'].create({})
+        picking = self.env['stock.picking'].with_context({
+            'default_group_id': pg1.id,
+        }).create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        self.assertEqual(picking.group_id.id, pg1.id)
+
+        picking.move_ids_without_package = [move.id]
+        self.assertEqual(picking.group_id.id, pg1.id)
+
+        move.group_id = None
+        pg2 = self.env['procurement.group'].create({})
+        picking_with_moves = self.env['stock.picking'].with_context({
+            'default_group_id': pg2.id,
+        }).create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'move_ids_without_package': [move.id]
+        })
+        self.assertEqual(picking_with_moves.group_id.id, pg2.id)
+
     def test_put_in_pack_1(self):
         """ Check that completing a move in 2 separate move lines and calling put in pack after
         each ml's creation puts them in different packages. """
