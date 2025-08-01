@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ga_alumno_list" >
+            <field name="name">Ga Alumno List</field>
+            <field name="model">ga.alumno</field>
+            <field name="arch" type="xml">
+                <tree string="Alumno" create="true" edit="true">
+                    <field name="codigo"/>
+                    <field name="ci"/>
+                    <field name="name"/>
+                    <field name="telefono"/>
+                    <field name="correo"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ga_alumno" >
+            <field name="name">Ga Alumno Form</field>
+            <field name="model">ga.alumno</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                    <field name="codigo"/>
+                    <field name="ci"/>
+                    <field name="name"/>
+                    <field name="fecha_nacimiento"/>
+                    <field name="genero"/>
+                    <field name="nacionalidad"/>
+                    <field name="domicilio"/>
+                    <field name="telefono"/>
+                    <field name="correo"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
