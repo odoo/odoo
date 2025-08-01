@@ -11,11 +11,6 @@ from collections.abc import Mapping
 from functools import wraps
 
 try:
-    from decorator import decoratorx as decorator
-except ImportError:
-    from decorator import decorator
-
-try:
     # available since python 3.13
     from warnings import deprecated
 except ImportError:

@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64encode
-from decorator import decorator
 import uuid
 
-from odoo import _, fields, modules
+from odoo.tools import _
 from odoo.tools.misc import file_open
 
 DEMO_BILL_PATH = 'account_peppol/tools/demo_bill'
@@ -142,13 +141,15 @@ _demo_behaviour = {
 # DECORATORS
 # -------------------------------------------------------------------------
 
-@decorator
-def handle_demo(func, self, *args, **kwargs):
+
+def handle_demo(func, /):
     """ This decorator is used on methods that should be mocked in demo mode.
 
     First handle the decision: "Are we in demo mode?", and conditionally decide which function to
     execute.
     """
-    if self.env.company._get_peppol_edi_mode() == 'demo':
-        return _demo_behaviour[func.__name__](func, self, *args, **kwargs)
-    return func(self, *args, **kwargs)
+    def wrapped(self, *args, **kwargs):
+        if self.env.company._get_peppol_edi_mode() == 'demo':
+            return _demo_behaviour[func.__name__](func, self, *args, **kwargs)
+        return func(self, *args, **kwargs)
+    return wrapped
