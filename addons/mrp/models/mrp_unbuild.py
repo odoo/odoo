@@ -132,7 +132,7 @@ class MrpUnbuild(models.Model):
         return {
             'move_id': finished_move.id,
             'lot_id': self.lot_id.id,
-            'quantity': finished_move.product_uom_qty,
+            'quantity': finished_move.product_uom_qty - finished_move.quantity,
             'product_id': finished_move.product_id.id,
             'product_uom_id': finished_move.product_uom.id,
             'location_id': finished_move.location_id.id,
@@ -177,8 +177,9 @@ class MrpUnbuild(models.Model):
             raise UserError(_('Some of your byproducts are tracked, you have to specify a manufacturing order in order to retrieve the correct byproducts.'))
 
         for finished_move in finished_moves:
-            finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
-            self.env['stock.move.line'].create(finished_move_line_vals)
+            if float_compare(finished_move.product_uom_qty, finished_move.quantity, precision_rounding=finished_move.product_uom.rounding) > 0:
+                finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
+                self.env['stock.move.line'].create(finished_move_line_vals)
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
