@@ -61,7 +61,7 @@ export class AttachDocumentWidget extends Component {
 
     async onFileUploaded(files) {
         const { action, record } = this.props;
-        if (action) {
+        if (action && files.length > 0) {
             const { resId, resModel } = record;
             await this.env.services.orm.call(resModel, action, [resId], {
                 attachment_ids: files.map((file) => file.id),
