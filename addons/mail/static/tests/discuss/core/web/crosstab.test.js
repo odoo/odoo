@@ -23,7 +23,7 @@ test("Channel subscription is renewed when channel is manually added", async () 
         },
     });
     await openDiscuss();
-    await click("input[placeholder='Find or start a conversation']");
+    await click("input[placeholder='Search conversations']");
     await insertText("input[placeholder='Search a conversation']", "General");
     await click("a", { text: "General" });
     await contains(".o-mail-DiscussSidebar-item", { text: "General" });
