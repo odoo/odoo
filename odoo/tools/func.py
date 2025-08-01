@@ -7,8 +7,6 @@ import warnings
 from collections.abc import Callable  # noqa: TC003
 from inspect import Parameter, getsourcefile, signature
 
-from decorator import decorator
-
 __all__ = [
     'classproperty',
     'conditional',
@@ -82,12 +80,18 @@ def filter_kwargs(func: Callable, kwargs: dict[str, typing.Any]) -> dict[str, ty
     return {key: kwargs[key] for key in kwargs if key not in leftovers}
 
 
-def synchronized(lock_attr: str = '_lock') -> Callable[[Callable[P, T]], Callable[P, T]]:
-    @decorator
-    def locked(func, inst, *args, **kwargs):
-        with getattr(inst, lock_attr):
-            return func(inst, *args, **kwargs)
-    return locked
+class synchronized:
+    def __init__(self, lock_attr: str = '_lock'):
+        self.lock_attr = lock_attr
+
+    def __call__(self, func, /):
+        lock_attr = self.lock_attr
+
+        @functools.wraps(func)
+        def locked(inst, *args, **kwargs):
+            with getattr(inst, lock_attr):
+                return func(inst, *args, **kwargs)
+        return locked
 
 
 locked = synchronized()

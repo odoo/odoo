@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import functools
 import logging
 import random
 import time
-
-from decorator import decorator
 
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -14,15 +13,18 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
 
-@decorator
-def prepare(func, self):
-    """Prepare data to remove common querries from the count.
+
+def prepare(func, /):
+    """Prepare data to remove common queries from the count.
 
     Must be run after `warmup` because of the invalidations"""
     # prefetch the data linked to the company and its country code to avoid changing
     # the query count during l10n tests
-    self.env.company.country_id.code
-    func(self)
+    @functools.wraps(func)
+    def test_func(self):
+        self.env.company.country_id.code
+        return func(self)
+    return test_func
 
 
 @tagged('so_batch_perf')

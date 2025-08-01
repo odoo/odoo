@@ -9,11 +9,6 @@ import typing
 from collections.abc import Mapping
 from functools import wraps
 
-try:
-    from decorator import decoratorx as decorator
-except ImportError:
-    from decorator import decorator
-
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
     from .types import BaseModel, ValuesType

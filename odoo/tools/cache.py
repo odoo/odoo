@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Mapping, Collection
-from decorator import decorator
 from inspect import signature, Parameter
 from itertools import chain
+import functools
 import logging
 import signal
 import sys
@@ -80,7 +80,10 @@ class ormcache:
         self.method = method
         self.determine_key()
         assert self.key is not None, "ormcache.key not initialized"
-        lookup: C = decorator(self.lookup, method)  # type: ignore
+
+        @functools.wraps(method)
+        def lookup(*args, **kwargs):
+            return self.lookup(*args, **kwargs)
         lookup.__cache__ = self  # type: ignore
         return lookup
 
@@ -96,10 +99,8 @@ class ormcache:
         if self.skiparg is None:
             # build a string that represents function code and evaluate it
             args = ', '.join(
-                # remove annotations because lambdas can't be type-annotated,
-                # and defaults because they are redundant (defaults are present
-                # in the wrapper function itself)
-                str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
+                # remove annotations because lambdas can't be type-annotated
+                str(params.replace(annotation=Parameter.empty))
                 for params in signature(self.method).parameters.values()
             )
             code = f"lambda {args}: ({''.join(a for arg in self.args for a in (arg, ','))})"
@@ -114,7 +115,7 @@ class ormcache:
         cache: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
         return cache, (model_name, self.method), counter
 
-    def lookup(self, method, *args, **kwargs):
+    def lookup(self, *args, **kwargs):
         d, key0, counter = self.lru(args[0])
         key = key0 + self.key(*args, **kwargs)
         try:
@@ -152,7 +153,7 @@ class ormcache_context(ormcache):
         # build a string that represents function code and evaluate it
         sign = signature(self.method)
         args = ', '.join(
-            str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
+            str(params.replace(annotation=Parameter.empty))
             for params in sign.parameters.values()
         )
         cont_expr = "(context or {})" if 'context' in sign.parameters else "self.env.context"
