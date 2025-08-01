@@ -149,10 +149,19 @@
                                 </div>
                             </div>
 
-                            <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
+                            <label for="location"/>
+                            <div>
+                                <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
+                                <div invisible="not location or videocall_location">
+                                    <button name="set_discuss_videocall_location" type="object" class="btn btn-link p-0"
+                                        context="{'recurrence_update': recurrence_update}">
+                                        <span class="fa fa-plus"></span> <span>Odoo meeting</span>
+                                    </button>
+                                </div>
+                            </div>
                             <label for="videocall_location" class="opacity-100" invisible="location and not videocall_location"/>
-                            <div name="videocall_location_div" invisible="location and not videocall_location">
-                                <div class="d-flex">
+                            <div name="videocall_location_div">
+                                <div class="d-flex" invisible="location and not videocall_location">
                                     <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar"
                                         force_save="1" class="mb-0" readonly="videocall_source == 'discuss' or not user_can_edit"/>
                                     <div class="d-flex flex-nowrap">
