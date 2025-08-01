@@ -1,16 +1,17 @@
-.product-card .card-header img {
-    aspect-ratio: 1;
-    object-fit: contain;
-}
+.product-card {
+    border: $border-width solid $border-color;
+    transition: border-color 0.2s ease-in-out;
 
-.product-card:hover {
-    border: (1 * $border-width) solid $primary;
+    img {
+        aspect-ratio: 1;
+        object-fit: contain;
+    }
+
+    &:hover {
+        border-color: $primary;
+    }
 }
 
 .product-card.selected {
-    border: (2 * $border-width) solid $primary;
-}
-
-.product-card .card-subtitle {
-    font-size: 0.95rem;
+    border-color: $primary
 }
