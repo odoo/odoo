@@ -94,7 +94,7 @@ callActionsRegistry
     .add("fullscreen", {
         condition: (component) => Boolean(component.rtc),
         name: (component) =>
-            component.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Enter Full Screen"),
+            component.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen"),
         isActive: (component) => component.rtc.state.isFullscreen,
         inactiveIcon: "fa-arrows-alt",
         icon: "fa-compress",
