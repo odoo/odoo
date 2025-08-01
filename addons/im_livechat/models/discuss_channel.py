@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
+from odoo.tools import email_normalize, email_split, format_list, html2plaintext, plaintext2html
 
 from markupsafe import Markup
 
@@ -551,6 +551,8 @@ class DiscussChannel(models.Model):
         post_joined_message=True,
         inviting_partner=None,
     ):
+        # sudo: discuss.channel: filtering channels without agent to update failure state is acceptable
+        without_agent = self.sudo().filtered(lambda c: not c.livechat_agent_history_ids)
         all_new_members = super()._add_members(
             guests=guests,
             partners=partners,
@@ -560,11 +562,36 @@ class DiscussChannel(models.Model):
             post_joined_message=post_joined_message,
             inviting_partner=inviting_partner,
         )
+        # sudo: discuss.channel: filtering channels without agent to update failure state is acceptable
+        with_first_agent = without_agent - self.sudo().filtered(
+            lambda channel: not channel.livechat_agent_history_ids
+        )
         for channel in all_new_members.channel_id:
-            # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
-            if channel.sudo().livechat_status == "need_help":
-                # sudo: discuss.channel - writing livechat_status when a new operator joins is acceptable
-                channel.sudo().livechat_status = "in_progress"
+            # sudo: discuss.channel - reading live chat state and update it after adding a member
+            # is allowed.
+            to_write = {}
+            channel_sudo = channel.sudo()
+            if channel_sudo.livechat_status == "need_help":
+                to_write["livechat_status"] = "in_progress"
+            if channel_sudo in with_first_agent:
+                agent_partner = channel_sudo.livechat_agent_history_ids.partner_id
+                to_write.update(
+                    {
+                        "livechat_operator_id": agent_partner,
+                        "livechat_failure": "no_answer",
+                        "name": format_list(
+                            self.env,
+                            channel_sudo.channel_member_ids.mapped(
+                                lambda m: m.partner_id.user_livechat_username
+                                if m.partner_id.user_livechat_username
+                                and m.livechat_member_type == "agent"
+                                else m.partner_id.name or m.guest_id.name
+                            )
+                        ),
+                    }
+                )
+            if to_write:
+                channel_sudo.write(to_write)
         return all_new_members
 
     def _message_post_after_hook(self, message, msg_vals):
@@ -580,7 +607,8 @@ class DiscussChannel(models.Model):
                 .browse(self.env.context.get("selected_answer_id"))
                 .exists()
             )
-            if selected_answer in self.chatbot_current_step_id.answer_ids:
+            # sudo - chatbot.script.answer: finding the selected answer is allowed.
+            if selected_answer in self.sudo().chatbot_current_step_id.answer_ids:
                 # sudo - chatbot.message: finding the question message to update the user answer is allowed.
                 question_msg = (
                     self.env["chatbot.message"]

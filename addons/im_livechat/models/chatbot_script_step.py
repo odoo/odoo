@@ -346,7 +346,7 @@ class ChatbotScriptStep(models.Model):
         return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
     def _process_step_forward_operator(self, discuss_channel, users=None):
-        """ Special type of step that will add a human operator to the conversation when reached,
+        """Special type of step that will add a human operator to the conversation when reached,
         which stops the script and allow the visitor to discuss with a real person.
 
         In case we don't find any operator (e.g: no-one is available) we don't post any messages.
@@ -357,59 +357,40 @@ class ChatbotScriptStep(models.Model):
         :param users: recordset of candidate operators, if not provided the currently available
             users of the livechat channel are used as candidates instead.
         """
-
-        human_operator = False
+        human_agent = self.env["res.users"]
         posted_message = self.env["mail.message"]
 
         if discuss_channel.livechat_channel_id:
             # sudo: res.users - visitor can access operator of their channel
-            human_operator = discuss_channel.livechat_channel_id.sudo()._get_operator(
+            human_agent = discuss_channel.livechat_channel_id.sudo()._get_operator(
                 lang=self.env.context.get("lang"),
                 country_id=discuss_channel.country_id.id,
                 expertises=self.operator_expertise_ids,
                 users=users,
             )
-
         # handle edge case where we found yourself as available operator -> don't do anything
         # it will act as if no-one is available (which is fine)
-        if human_operator and human_operator != self.env.user:
+        if human_agent and human_agent != self.env.user:
             if self.message:
                 # first post the message of the step (if we have one)
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
-
-            # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
+            # sudo - discuss.channel: forwarding the customer to a human agent as part of this chat bot
+            # step is allowed.
             discuss_channel.sudo()._add_members(
-                users=human_operator,
+                users=human_agent,
                 create_member_params={
                     "livechat_member_type": "agent",
                     "agent_expertise_ids": self.operator_expertise_ids.ids,
                 },
                 inviting_partner=self.chatbot_script_id.operator_partner_id,
             )
-            # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
-            # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
+            # sudo - discuss.channel: removing the bot from the channel as part of the chat bot forward
+            # step is allowed.
             channel_sudo = discuss_channel.sudo()
             if bot_member := channel_sudo.channel_member_ids.filtered(
                 lambda m: m.livechat_member_type == "bot"
             ):
                 channel_sudo._action_unfollow(partner=bot_member.partner_id, post_leave_message=False)
-            # finally, rename the channel to include the operator's name
-            channel_sudo.write(
-                {
-                    "livechat_failure": "no_answer",
-                    "livechat_operator_id": human_operator.partner_id,
-                    "name": " ".join(
-                        [
-                            self.env.user.display_name
-                            if not self.env.user._is_public()
-                            else channel_sudo.self_member_id.guest_id.name,
-                            human_operator.livechat_username
-                            if human_operator.livechat_username
-                            else human_operator.name,
-                        ]
-                    )
-                }
-            )
             step_message = next((
                 # sudo - chatbot.message.id: visitor can access chat bot messages.
                 m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids.sorted("id")
@@ -425,8 +406,6 @@ class ChatbotScriptStep(models.Model):
                     "operatorFound": True,
                 },
             ).bus_send()
-            channel_sudo._broadcast(human_operator.partner_id.ids)
-            discuss_channel.channel_pin(pinned=True)
         else:
             # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
             discuss_channel.sudo().livechat_failure = "no_agent"

@@ -236,13 +236,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     ),
                 },
             )
-            channel_data = Store().add(discuss_channel).get_result()
-            channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
-            channel_data_emp = Store().add(discuss_channel.with_user(self.user_employee)).get_result()
-            channel_data_emp["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
-            channel_data_emp["discuss.channel.member"][1]["message_unread_counter_bus_id"] = 0
-            channel_data = Store().add(discuss_channel).get_result()
-            channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             return (
                 [
                     (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
@@ -254,8 +247,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
                 ],
                 [
                     {
@@ -377,8 +368,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             ),
                         },
                     },
-                    {"type": "mail.record/insert", "payload": channel_data_emp},
-                    {"type": "mail.record/insert", "payload": channel_data},
                 ],
             )
 
