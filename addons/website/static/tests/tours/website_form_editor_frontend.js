@@ -13,17 +13,17 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Awesome Label')):hidden)" +
                 ":has(.s_website_form_field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Iphone'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Galaxy S'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Xperia'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Wiko Stairway'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='After-sales Service']:not([required])))" +
-                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Invoicing Service']:not([required])))" +
-                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Development Service']:not([required])))" +
-                ":has(.s_website_form_field:has(label:contains('Service')):has(input[type='radio'][name='Service'][value='Management Service']:not([required])))" +
-                ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Belgium'])))" +
-                ":has(.s_website_form_field.s_website_form_required:has(label:contains('State')):has(select[name='State'][required]:has(option[value='France'])))" +
-                ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
+                ":has(.checkbox:has(label:contains('Iphone')):has(input[type='checkbox'][required]))" +
+                ":has(.checkbox:has(label:contains('Galaxy S')):has(input[type='checkbox'][required]))" +
+                ":has(.checkbox:has(label:contains('Xperia')):has(input[type='checkbox'][required]))" +
+                ":has(.checkbox:has(label:contains('Wiko Stairway')):has(input[type='checkbox'][required]))" +
+                ":has(.radio:has(label:contains('After-sales Service')):has(input[type='radio']:not([required])))" +
+                ":has(.radio:has(label:contains('Invoicing Service')):has(input[type='radio']:not([required])))" +
+                ":has(.radio:has(label:contains('Development Service')):has(input[type='radio']:not([required])))" +
+                ":has(.radio:has(label:contains('Management Service')):has(input[type='radio']:not([required])))" +
+                ":has(.s_website_form_field:has(label:contains('State')):has(select[required] option:contains('Belgium')))" +
+                ":has(.s_website_form_field:has(label:contains('State')):has(select[required] option:contains('France')))" +
+                ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required] option:contains('Canada')))" +
                 ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
                 ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
                 ":has(.s_website_form_field:has(input[name='website_form_signature']))",
@@ -94,7 +94,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     },
     {
         content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
-        trigger:  "input[name=Products][value='Wiko Stairway']",
+        trigger:  "label:contains('Wiko Stairway')",
         run: "click",
     },
     {
@@ -109,18 +109,18 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     },
     {
         content:  "Check another product",
-        trigger:  "input[name='Products'][value='Xperia']",
+        trigger:  "label:contains('Xperia')",
         run: "click",
     },
     {
         content:  "Check a service",
-        trigger:  "input[name='Service'][value='Development Service']",
+        trigger:  "label:contains('Development Service')",
         run: "click",
     },
     {
         content:  "Select a State",
         trigger:  "select[name='State']",
-        run:      "select Canada",
+        run: "selectByLabel Canada",
     },
     {
         content:  "Complete Your Name field",
@@ -165,12 +165,13 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content: "Select state option",
         trigger: "select[name='State']",
-        run: "select 44 - UK",
+        run: "selectByLabel 44 - UK",
     },
     {
         content:  "Send the form",
         trigger:  ".s_website_form_send",
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content:  "Check form is submitted without errors",
