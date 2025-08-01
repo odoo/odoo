@@ -627,6 +627,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/ace/mode-python.js',
             'web/static/lib/ace/mode-xml.js',
             'web/static/lib/ace/mode-js.js',
+            'web/static/lib/ace/mode-sql.js',
             'web/static/lib/ace/mode-qweb.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web/static/lib/daterangepicker/daterangepicker.js',
