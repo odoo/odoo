@@ -29,7 +29,7 @@
     border-width: var(--o-wsale-card-border-width, 0);
     border-radius: var(--o-wsale-card-border-radius);
     padding: var(--o-wsale-card-padding, 0);
-    background-color: var(--o-wsale-card-bg, var(--o-wsale-card-cc-bg));
+    background-color: var(--o-wsale-card-bg);
     box-shadow: var(--o-wsale-card-shadow);
     color: var(--o-wsale-card-color, var(--o-wsale-card-cc-text));
     text-align: var(--o-wsale-card-text-align);
@@ -1114,6 +1114,8 @@ $_wsale_products_roundness_map: (
         --o-wsale-card-cc-muted: #{$-muted};
         --o-wsale-card-cc-headings: #{$-headings};
         --o-wsale-card-cc-link: #{$-link-color};
+
+        --o-wsale-card-bg: var(---o-wsale-card-cc-bg);
 
         &:where(.o_wsale_products_opt_actions_subtle) {
             .o_wsale_product_btn .btn {
