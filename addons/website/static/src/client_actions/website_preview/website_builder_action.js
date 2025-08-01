@@ -520,6 +520,7 @@ export class WebsiteBuilderClientAction extends Component {
                 this.websiteContent.el.contentWindow.location
             );
         } else {
+            // TODO REMOVE THIS COMMENT
             this.websiteContent.el.contentWindow.location.reload();
         }
         await this.loadIframeAndBundles(isEditing);

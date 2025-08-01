@@ -214,16 +214,25 @@ export class Builder extends Component {
     }
 
     discard() {
+        const dispatchDiscardAndCloseEditor = () => {
+            if (this.editor) {
+                for (const handler of this.editor.getResource("discard_handlers") || []) {
+                    handler();
+                }
+            }
+            this.props.closeEditor();
+        };
+
         if (this.state.canUndo) {
             this.dialog.add(ConfirmationDialog, {
                 body: _t(
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
                 ),
-                confirm: () => this.props.closeEditor(),
+                confirm: () => dispatchDiscardAndCloseEditor(),
                 cancel: () => {},
             });
         } else {
-            this.props.closeEditor();
+            dispatchDiscardAndCloseEditor();
         }
     }
 
