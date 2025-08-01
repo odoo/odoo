@@ -8,7 +8,7 @@ import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { Component, onWillUnmount, xml } from "@odoo/owl";
-import { FilterValuesList } from "@spreadsheet/global_filters/components/filters_search_dialog/filters_search_dialog";
+import { FilterValuesList } from "@spreadsheet/global_filters/components/filter_values_list/filter_values_list";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();

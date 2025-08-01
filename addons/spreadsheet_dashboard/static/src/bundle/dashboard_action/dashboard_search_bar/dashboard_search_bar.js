@@ -3,7 +3,7 @@ import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
-import { FilterValuesList } from "@spreadsheet/global_filters/components/filters_search_dialog/filters_search_dialog";
+import { FilterValuesList } from "@spreadsheet/global_filters/components/filter_values_list/filter_values_list";
 import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
