@@ -77,6 +77,13 @@ export class FieldChangeReplicationPlugin extends Plugin {
                     `[data-oe-id="${sourceEl.getAttribute("data-oe-many2one-id")}"]`;
             }
 
+            if (sourceEl.getAttribute("data-oe-field") === "name") {
+                selector +=
+                    ",[data-oe-model][data-oe-type=many2one]" +
+                    `[data-oe-many2one-model="${sourceEl.getAttribute("data-oe-model")}"]` +
+                    `[data-oe-many2one-id="${sourceEl.getAttribute("data-oe-id")}"]`;
+            }
+
             const targetEls = [...this.editable.querySelectorAll(selector)].filter(
                 (targetEl) => targetEl !== sourceEl
             );
