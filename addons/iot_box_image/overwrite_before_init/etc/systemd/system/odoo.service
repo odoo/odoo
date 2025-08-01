@@ -10,6 +10,7 @@ Group=odoo
 Environment="LIBCAMERA_LOG_LEVELS=3"
 Environment="XDG_RUNTIME_DIR=/run/odoo"
 Environment="XDG_CACHE_HOME=/run/odoo"
+Environment="ODOO_PY_COLORS=True"
 ExecStartPre=sudo /bin/mkdir -p /run/odoo
 ExecStartPre=sudo /bin/chown odoo:odoo /run/odoo
 ExecStartPre=sudo timedatectl set-ntp true
