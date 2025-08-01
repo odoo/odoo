@@ -139,6 +139,56 @@ class PaymentTransaction(models.Model):
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
             order.message_post(body=message, author_id=author.id)
 
+<<<<<<< 62d05a7a942ca344ca8ad02bc27ec58a565cab75
+||||||| 0f801c333c596cee17b091b9e6cf2573c4e484f9
+    def _reconcile_after_done(self):
+        """ Override of payment to automatically confirm quotations and generate invoices. """
+        confirmed_orders = self._check_amount_and_confirm_order()
+        payment_txs = self.filtered(lambda tx: tx.operation != 'validation')
+        (payment_txs.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+
+        auto_invoice = str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
+        if auto_invoice:
+            # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
+            # even if only a partial payment was made.
+            self._invoice_sale_orders()
+        super()._reconcile_after_done()
+        if auto_invoice:
+            if (
+                str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+                and (send_invoice_cron := self.env.ref('sale.send_invoice_cron', raise_if_not_found=False))
+            ):
+                send_invoice_cron._trigger()
+            else:
+                # Must be called after the super() call to make sure the invoice are correctly posted.
+                self._send_invoice()
+
+=======
+    def _reconcile_after_done(self):
+        """ Override of payment to automatically confirm quotations and generate invoices. """
+        confirmed_orders = self._check_amount_and_confirm_order()
+        payment_txs = self.filtered(lambda tx: tx.operation != 'validation')
+        (payment_txs.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+
+        auto_invoice = str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
+        if auto_invoice:
+            # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
+            # even if only a partial payment was made.
+            self._invoice_sale_orders()
+        super()._reconcile_after_done()
+        if auto_invoice and not self.env.context.get('skip_sale_auto_invoice_send'):
+            if (
+                str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+                and (send_invoice_cron := self.env.ref('sale.send_invoice_cron', raise_if_not_found=False))
+            ):
+                send_invoice_cron._trigger()
+            else:
+                # Must be called after the super() call to make sure the invoice are correctly posted.
+                self._send_invoice()
+
+>>>>>>> 1f3ca5888cd56bfa86123edffcd137e2267bfb30
     def _send_invoice(self):
         # Send messages as OdooBot so that
         #   * logged in users receive the invoice
