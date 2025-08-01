@@ -25,8 +25,8 @@ registry
             },
             // Assert that the cart's content is correct.
             {
-                content: "Proceed to checkout",
-                trigger: 'button:contains(Proceed to Checkout)',
+                content: "Go to checkout",
+                trigger: 'button:contains(Go to Checkout)',
                 run: 'click',
                 expectUnloadPage: true,
             },
