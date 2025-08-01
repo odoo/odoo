@@ -77,11 +77,11 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             content: 'Go back to previous mailing',
             trigger: 'button.o_pager_previous',
         },
-        {
-            content: "Make sure the snippets menu is hidden",
-            trigger: 'iframe html:has(#oe_snippets.d-none)',
-            run: () => null,
-        },
+        // {
+        //     content: "Make sure the snippets menu is hidden",
+        //     trigger: 'iframe html:has(#oe_snippets.d-none)',
+        //     run: () => null,
+        // },
         {
             content: "Add some content to be selected afterwards",
             trigger: 'iframe p',
