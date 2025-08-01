@@ -617,6 +617,31 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    def test_14_prioritize_invoice_line_classification_code(self):
+        """
+        Check if the classification code of invoice line is prioritized over the classification code of product
+        when the two codes differ.
+        """
+        invoice = self.init_invoice(
+            'out_invoice', products=self.product_a,
+        )
+        invoice.line_ids[0].write({
+            'l10n_my_edi_classification_code': '002',
+        })
+        invoice.action_post()
+
+        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        self.assertFalse(errors)
+
+        root = etree.fromstring(file)
+        class_root = root.xpath('cac:InvoiceLine/cac:Item/cac:CommodityClassification', namespaces=NS_MAP)[0]
+
+        self._assert_node_values(
+            class_root,
+            'cbc:ItemClassificationCode[@listID="CLASS"]',
+            invoice.line_ids[0].l10n_my_edi_classification_code,
+        )
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
