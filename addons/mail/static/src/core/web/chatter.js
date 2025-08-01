@@ -433,4 +433,13 @@ export class Chatter extends Component {
         }
         this.recipientsPopover.open(ev.target, { thread: this.state.thread });
     }
+
+    get isChatterMessagingDisabled() {
+        const thread = this.state.thread;
+        return (
+            !thread.hasWriteAccess &&
+            !(thread.hasReadAccess && thread.canPostOnReadonly) &&
+            this.props.threadId
+        );
+    }
 }
