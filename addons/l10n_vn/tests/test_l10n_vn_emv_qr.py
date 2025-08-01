@@ -47,6 +47,20 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
             'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100})],
         })
+        cls.partner_with_bank_account_no_proxy = cls.env['res.partner'].create({
+            'name': 'Mr. Triboulet',
+            'company_id': cls.company_data['company'].id,
+            'country_id': cls.env.ref('base.vn').id,
+            'city': 'Vietnam',
+            'bank_ids': [
+                Command.create({
+                    'acc_number': '123456789012345670',
+                    'bank_id': cls.bank_vn.id,
+                    'currency_id': cls.env.ref('base.VND').id,
+                    'allow_out_payment': True
+                })
+            ]
+        })
 
     def test_emv_qr_code_generation(self):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
@@ -108,3 +122,12 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
 
         # Check the whole qr code string
         self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914aAeEoOiIuUyYdD6007Vietnam62150811INVTEST00026304E1C2')
+
+    def test_create_payment_with_no_proxy_in_client(self):
+        new_payment = self.env['account.payment'].create({
+            'partner_id': self.partner_with_bank_account_no_proxy.id,
+            'payment_type': 'outbound'
+        })
+        # The payment must be created but the qr_code will raise a silent error (False value)
+        self.assertTrue(new_payment.exists())
+        self.assertFalse(new_payment.qr_code)
