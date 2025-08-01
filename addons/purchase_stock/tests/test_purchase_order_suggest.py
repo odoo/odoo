@@ -62,23 +62,18 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         }
         return context
 
-    def assertEstimatedPrice(self, po_suggest, po, context, price, based_on='one_month', days=30, factor=100, warehouse=False):
+    def assertEstimatedPrice(self, po, context, price, based_on='one_month', days=30, factor=100, warehouse=False):
         """ This helper method does an assert for the `purchase.order.suggest` wizard
         estimated price for the given parameters (use the default values if not set).
         Note that the wizard fields are updated each time this method is called."""
-        po_suggest.based_on = based_on
-        po_suggest.number_of_days = days
-        po_suggest.percent_factor = factor
-
         warehouse_id = self.picking_type_out.default_location_src_id.warehouse_id.id  # Same default as delivery
         if warehouse:
             warehouse_id = warehouse.id
 
         product_demand_context = self._get_suggested_products_context(based_on, days)
-        suggest_context = {  # TODO better name
+        suggest_context = {
             **product_demand_context,
             "warehouse_id": warehouse_id,
-            "suggest_multiplier": po_suggest.multiplier,
             "suggest_product_ids": context["default_product_ids"],
             "suggest_based_on": based_on,
             "suggest_number_days": days,
@@ -87,9 +82,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         po_id = self.env["purchase.order"].with_context(suggest_context).browse(po.id).ensure_one()
         self.assertEqual(po_id.suggest_estimated_price, price)
 
-    def actionAddAll(self, po_suggest, po, warehouse=False):
+    def actionAddAll(self, po, based_on='one_month', days=30, factor=100, warehouse=False):
         domain = []
-        product_context = self._get_suggested_products_context(po_suggest.based_on, po_suggest.number_of_days)
+        product_context = self._get_suggested_products_context(based_on, days)
 
         warehouse_id = self.picking_type_out.default_location_src_id.warehouse_id.id  # Same default as delivery
         if warehouse:
@@ -98,10 +93,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         context_2 = {
             "order_id": po.id,
             "warehouse_id": warehouse_id,
-            "suggest_multiplier": po_suggest.multiplier,
-            "suggest_based_on": po_suggest.based_on,
-            "suggest_percent": po_suggest.percent_factor,
-            "suggest_number_days": po_suggest.number_of_days,
+            "suggest_based_on": based_on,
+            "suggest_percent": factor,
+            "suggest_number_days": days,
             **product_context,
         }
         po_id = self.env["purchase.order"].with_context(context_2).browse(po.id).ensure_one()
@@ -242,42 +236,32 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': (self.product_1 | product_2 | product_3).ids,
         }
-        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
         # Check estimed price for default values (30 days, based on last month, with 100% factor.)
-        self.assertEstimatedPrice(po_suggest, po, context, 2700)
-        self.assertEstimatedPrice(po_suggest, po, context, 1350, days=15)
-        self.assertEstimatedPrice(po_suggest, po, context, 3410, factor=125)
+        self.assertEstimatedPrice(po, context, 2700)
+        self.assertEstimatedPrice(po, context, 1350, days=15)
+        self.assertEstimatedPrice(po, context, 3410, factor=125)
         # Check estimed price for 3 months.
-        self.assertEstimatedPrice(po_suggest, po, context, 1330, based_on='three_months')
-        self.assertEstimatedPrice(po_suggest, po, context, 3700, based_on='three_months', days=90)
+        self.assertEstimatedPrice(po, context, 1330, based_on='three_months')
+        self.assertEstimatedPrice(po, context, 3700, based_on='three_months', days=90)
         # Check estimed price for current year.
-        self.assertEstimatedPrice(po_suggest, po, context, 540, based_on='one_year')
-        self.assertEstimatedPrice(po_suggest, po, context, 5500, based_on='one_year', days=365)
+        self.assertEstimatedPrice(po, context, 540, based_on='one_year')
+        self.assertEstimatedPrice(po, context, 5500, based_on='one_year', days=365)
 
-        # Use suggest wizard to generate PO lines and check their values.
-        po_suggest.based_on = 'one_month'
-        po_suggest.number_of_days = 30
-        po_suggest.percent_factor = 100
-        self.actionAddAll(po_suggest, po)
+        # Use suggest to generate PO lines and check their values.
+        self.actionAddAll(po, based_on='one_month', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 20},
             {'product_id': product_2.id, 'product_qty': 10},
             {'product_id': product_3.id, 'product_qty': 10},
         ])
         # Regenerate PO lines for 3 months (existing lines qty must be updated.)
-        po_suggest.based_on = 'three_months'
-        po_suggest.number_of_days = 30
-        po_suggest.percent_factor = 100
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='three_months', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 9},
             {'product_id': product_2.id, 'product_qty': 4},
             {'product_id': product_3.id, 'product_qty': 7},
         ])
-        po_suggest.number_of_days = 90
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='three_months', days=90, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 25},
             {'product_id': product_2.id, 'product_qty': 10},
@@ -348,44 +332,32 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': (product_4 | product_5 | product_6).ids,
         }
-        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
         # Check estimed price when based on actual demand.
-        self.assertEstimatedPrice(po_suggest, po, context, 810, based_on='actual_demand')
-        self.assertEstimatedPrice(po_suggest, po, context, 1800, based_on='actual_demand', factor=200)
-        self.assertEstimatedPrice(po_suggest, po, context, 450, based_on='actual_demand', days=4)
-        self.assertEstimatedPrice(po_suggest, po, context, 180, based_on='actual_demand', days=4, factor=50)
-        self.assertEstimatedPrice(po_suggest, po, context, 0, based_on='actual_demand', days=2)
+        self.assertEstimatedPrice(po, context, 810, based_on='actual_demand')
+        self.assertEstimatedPrice(po, context, 1800, based_on='actual_demand', factor=200)
+        self.assertEstimatedPrice(po, context, 450, based_on='actual_demand', days=4)
+        self.assertEstimatedPrice(po, context, 180, based_on='actual_demand', days=4, factor=50)
+        self.assertEstimatedPrice(po, context, 0, based_on='actual_demand', days=2)
 
         # Use suggest wizard to generate PO lines and check their values.
-        po_suggest.based_on = 'actual_demand'
-        po_suggest.number_of_days = 30
-        po_suggest.percent_factor = 100
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='actual_demand', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': product_4.id, 'product_qty': 5},
             {'product_id': product_5.id, 'product_qty': 8},
         ])
 
-        po_suggest.number_of_days = 30
-        po_suggest.percent_factor = 200
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='actual_demand', days=30, factor=200)
         self.assertRecordValues(po.order_line, [
             {'product_id': product_4.id, 'product_qty': 11},
             {'product_id': product_5.id, 'product_qty': 18},
         ])
 
-        po_suggest.number_of_days = 4
-        po_suggest.percent_factor = 100
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='actual_demand', days=4, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': product_4.id, 'product_qty': 5},
         ])
 
-        po_suggest.number_of_days = 4
-        po_suggest.percent_factor = 50
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='actual_demand', days=4, factor=50)
         self.assertRecordValues(po.order_line, [
             {'product_id': product_4.id, 'product_qty': 2},
         ])
@@ -417,13 +389,10 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': [product_7.id],
         }
-        po_suggest_3 = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
         # suggested qty 1 < min pricelist 1 qty of 2 but should still use 20 $ / unit price
-        self.assertEstimatedPrice(po_suggest_3, po, context, 17, based_on='one_week', days=7)
-        self.assertEstimatedPrice(po_suggest_3, po, context, 34, based_on='one_week', days=14)  # suggested qty 2
-        self.assertEstimatedPrice(po_suggest_3, po, context, 52, based_on='one_week', days=28)  # suggested qty 4
+        self.assertEstimatedPrice(po, context, 17, based_on='one_week', days=7)
+        self.assertEstimatedPrice(po, context, 34, based_on='one_week', days=14)  # suggested qty 2
+        self.assertEstimatedPrice(po, context, 52, based_on='one_week', days=28)  # suggested qty 4
 
     def test_purchase_order_suggest_quantities_for_consu(self):
         """ Checks the suggest wizard works also with consumable products."""
@@ -504,38 +473,28 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': consu.ids,
         }
-        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
         # Check estimed price for default values (30 days, based on last month, with 100% factor.)
-        self.assertEstimatedPrice(po_suggest, po, context, 400)
-        self.assertEstimatedPrice(po_suggest, po, context, 200, days=15)
-        self.assertEstimatedPrice(po_suggest, po, context, 500, factor=125)
+        self.assertEstimatedPrice(po, context, 400)
+        self.assertEstimatedPrice(po, context, 200, days=15)
+        self.assertEstimatedPrice(po, context, 500, factor=125)
         # Check estimed price for 3 months.
-        self.assertEstimatedPrice(po_suggest, po, context, 180, based_on='three_months')
-        self.assertEstimatedPrice(po_suggest, po, context, 500, based_on='three_months', days=90)
+        self.assertEstimatedPrice(po, context, 180, based_on='three_months')
+        self.assertEstimatedPrice(po, context, 500, based_on='three_months', days=90)
         # Check estimed price for current year.
-        self.assertEstimatedPrice(po_suggest, po, context, 80, based_on='one_year')
-        self.assertEstimatedPrice(po_suggest, po, context, 840, based_on='one_year', days=365)
+        self.assertEstimatedPrice(po, context, 80, based_on='one_year')
+        self.assertEstimatedPrice(po, context, 840, based_on='one_year', days=365)
 
         # Use suggest wizard to generate PO lines and check their values.
-        po_suggest.based_on = 'one_month'
-        po_suggest.number_of_days = 30
-        po_suggest.percent_factor = 100
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='one_month', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': consu.id, 'product_qty': 20},
         ])
         # Regenerate PO lines for 3 months (existing lines qty must be updated.)
-        po_suggest.based_on = 'three_months'
-        po_suggest.number_of_days = 30
-        po_suggest.percent_factor = 100
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='three_months', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': consu.id, 'product_qty': 9},
         ])
-        po_suggest.number_of_days = 90
-        self.actionAddAll(po_suggest, po)
+        self.actionAddAll(po, based_on='three_months', days=90, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': consu.id, 'product_qty': 25},
         ])
@@ -554,12 +513,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': self.product_1.ids,
         }
-        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
         # Check estimed price no forecast quantity.
-        self.assertEstimatedPrice(po_suggest, po, context, 1200)
-        self.actionAddAll(po_suggest, po)
+        self.assertEstimatedPrice(po, context, 1200)
+        self.actionAddAll(po, based_on='one_month', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 12},
         ])
@@ -581,8 +537,8 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         receipt.action_assign()
         # Check estimed price deduce the forecast quantity.
         # TODO replace with hack below with invalidate_recordset(['achieved_amount'])
-        self.assertEstimatedPrice(po_suggest, po, context, 600, days=30.1)  # Force recompute qtys with change nb days
-        self.actionAddAll(po_suggest, po)
+        self.assertEstimatedPrice(po, context, 600, days=30.1)  # Force recompute qtys with change nb days
+        self.actionAddAll(po, based_on='one_month', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 6},
         ])
@@ -613,12 +569,8 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': product_ad.ids,
         }
-        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
-
-        self.assertEstimatedPrice(po_suggest, po, context, 275, based_on='actual_demand', days=4)
-        self.actionAddAll(po_suggest, po)
+        self.assertEstimatedPrice(po, context, 275, based_on='actual_demand', days=4)
+        self.actionAddAll(po, based_on='actual_demand', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': product_ad.id, 'product_qty': 5},
         ])
@@ -639,8 +591,8 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         receipt.action_confirm()
         receipt.action_assign()
 
-        self.assertEstimatedPrice(po_suggest, po, context, 55, based_on='actual_demand', days=4.1)  # Force recompute by changing nb days
-        self.actionAddAll(po_suggest, po)
+        self.assertEstimatedPrice(po, context, 55, based_on='actual_demand', days=4.1)  # Force recompute by changing nb days
+        self.actionAddAll(po, based_on='actual_demand', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
             {'product_id': product_ad.id, 'product_qty': 1},
         ])
@@ -669,18 +621,15 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po_1.picking_type_id.warehouse_id.id,
             'default_product_ids': self.product_1.ids,
         }
-        po_1_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
-        self.assertEstimatedPrice(po_1_suggest, po_1, context, 500, warehouse=main_warehouse)
-        self.assertEstimatedPrice(po_1_suggest, po_1, context, 1000, warehouse=self.warehouse_1)
+        self.assertEstimatedPrice(po_1, context, 500, warehouse=main_warehouse)
+        self.assertEstimatedPrice(po_1, context, 1000, warehouse=self.warehouse_1)
         # Generate PO line for qty demand based on one specific warehouse.
-        self.actionAddAll(po_1_suggest, po_1, main_warehouse)
+        self.actionAddAll(po_1, based_on='one_month', days=30, factor=100, warehouse=main_warehouse)
         self.assertRecordValues(po_1.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 5},
         ])
         # Generate PO line for qty demand based on other warehouse
-        self.actionAddAll(po_1_suggest, po_1, self.warehouse_1)
+        self.actionAddAll(po_1, based_on='one_month', days=30, factor=100, warehouse=self.warehouse_1)
         self.assertRecordValues(po_1.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 10},
         ])
@@ -694,13 +643,10 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po_2.picking_type_id.warehouse_id.id,
             'default_product_ids': self.product_1.ids,
         }
-        po_2_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
-        self.assertEstimatedPrice(po_2_suggest, po_2, context, 500, warehouse=main_warehouse)
-        self.assertEstimatedPrice(po_2_suggest, po_2, context, 1000, warehouse=self.warehouse_1)
+        self.assertEstimatedPrice(po_2, context, 500, warehouse=main_warehouse)
+        self.assertEstimatedPrice(po_2, context, 1000, warehouse=self.warehouse_1)
         # Generate PO line for qty demand based on one specific warehouse.
-        self.actionAddAll(po_2_suggest, po_2, self.warehouse_1)
+        self.actionAddAll(po_2, based_on='one_month', days=30, factor=100, warehouse=self.warehouse_1)
         self.assertRecordValues(po_2.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 10},
         ])
@@ -759,19 +705,16 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po_1.picking_type_id.warehouse_id.id,
             'default_product_ids': product_ad.ids,
         }
-        po_1_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
-        self.assertEstimatedPrice(po_1_suggest, po_1, context, 165, based_on='actual_demand', warehouse=main_warehouse)
-        self.assertEstimatedPrice(po_1_suggest, po_1, context, 220, based_on='actual_demand', warehouse=self.warehouse_1)
+        self.assertEstimatedPrice(po_1, context, 165, based_on='actual_demand', warehouse=main_warehouse)
+        self.assertEstimatedPrice(po_1, context, 220, based_on='actual_demand', warehouse=self.warehouse_1)
 
         # Generate PO line for qty demand based on 1st warehouse.
-        self.actionAddAll(po_1_suggest, po_1, self.warehouse_1)
+        self.actionAddAll(po_1, based_on='actual_demand', days=30, factor=100, warehouse=self.warehouse_1)
         self.assertRecordValues(po_1.order_line, [
             {'product_id': product_ad.id, 'product_qty': 4},
         ])
         # Generate PO line for qty demand based on 2nd specific warehouse.
-        self.actionAddAll(po_1_suggest, po_1, main_warehouse)
+        self.actionAddAll(po_1, based_on='actual_demand', days=30, factor=100, warehouse=main_warehouse)
         self.assertRecordValues(po_1.order_line, [
             {'product_id': product_ad.id, 'product_qty': 3},
         ])
@@ -785,12 +728,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'default_warehouse_id': po_2.picking_type_id.warehouse_id.id,
             'default_product_ids': product_ad.ids,
         }
-        po_2_suggest = self.env['purchase.order.suggest'].with_context(context).create({
-            'number_of_days': 30,
-        })
 
-        self.assertEstimatedPrice(po_2_suggest, po_2, context, 165, based_on='actual_demand', warehouse=main_warehouse)
-        self.assertEstimatedPrice(po_2_suggest, po_2, context, 220, based_on='actual_demand', warehouse=self.warehouse_1)
+        self.assertEstimatedPrice(po_2, context, 165, based_on='actual_demand', warehouse=main_warehouse)
+        self.assertEstimatedPrice(po_2, context, 220, based_on='actual_demand', warehouse=self.warehouse_1)
 
     def test_purchase_order_suggest_frontend(self):
         """ Tests the purchase catalog suggest component, in particular:

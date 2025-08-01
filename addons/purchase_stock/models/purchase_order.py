@@ -42,7 +42,7 @@ class PurchaseOrder(models.Model):
         compute='_compute_suggest_estimated_price',
         digits='Product Price')
 
-    @api.depends_context("suggest_based_on", "suggest_multiplier", "suggest_number_days", "warehouse_id")
+    @api.depends_context("suggest_based_on", "suggest_percent", "suggest_number_days", "warehouse_id")
     def _compute_suggest_estimated_price(self):
         ctx = self.env.context
         for purchase_order in self:
@@ -441,7 +441,7 @@ class PurchaseOrder(models.Model):
         """ Add suggest_ctx to env in order to trigger product.product compute fields"""
         if kwargs.get('suggest_based_on'):
             suggest_ctx_keys = ('suggest_based_on', 'monthly_demand_start_date', 'monthly_demand_limit_date',
-                                'suggest_percent', 'suggest_multiplier', 'warehouse_id', 'suggest_number_days')
+                                'suggest_percent', 'warehouse_id', 'suggest_number_days')
             suggest_ctx = {k: v for k, v in kwargs.items() if k in suggest_ctx_keys}
             self_ctx = self.with_context(**suggest_ctx)
             return super(PurchaseOrder, self_ctx)._get_product_catalog_order_line_info(

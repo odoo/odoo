@@ -14,37 +14,26 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
     setup() {
         super.setup();
         this.state = useState({
-            wizardId: null,
-            basedOnOptions: [],
-            basedOn: "",
-            numberOfDays: 0,
-            currencySymbol: null,
-            percentFactor: 0,
-            multiplier: 0,
+            basedOn: "one_month",
+            numberOfDays: 7,
+            currencySymbol: null, //TODO
+            percentFactor: 100,
             estimatedPrice: 0.0,
             suggestToggle: this._loadSuggestToggleState(), // defaults to isOn = true
         });
 
-        const debouncedSync = useDebounced(async () => {
-            const resp = await rpc("/purchase_stock/update_purchase_suggest", {
-                po_id: this.orderId,
-                wizard_id: this.state.wizardId,
-                domain: this.model.config.domain,
-                suggest_ctx: this._getCatalogContext(),
-            });
-            Object.assign(this.state, resp);
-            await this._reload_grid();
-        }, 300);
-
         onWillStart(async () => {
             this._baseContext = { ...this.model.config.context }; // For resetting when suggest is off
-            const init = await rpc("/purchase_stock/init_purchase_suggest", {
+        });
+
+        const debouncedSync = useDebounced(async () => {
+            this.state.estimatedPrice = await rpc("/purchase_stock/update_purchase_suggest", {
                 po_id: this.orderId,
                 domain: this.model.config.domain,
                 suggest_ctx: this._getCatalogContext(),
             });
-            Object.assign(this.state, init);
-        });
+            await this._reload_grid();
+        }, 300);
 
         useEffect(
             () => {
@@ -59,27 +48,24 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         );
 
         const onAddAll = async () => {
-            if (!this.state.wizardId) {
-                throw new Error("Error on server, please retry"); // Should never happen
-            }
             await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
                 this.model.config.domain,
                 this._getCatalogContext(),
             ]);
-            this.model.root.load(); // No other way for JS to know that product.product suggest values changed
+            this.model.root.load();
         };
 
         useSubEnv({
-            purchaseSuggestWizard: this.state,
+            suggest: this.state,
             addAllProducts: onAddAll,
         });
     }
 
-    /* Reload the Kanban view to display values based on Suggest component state */
+    /* Reload the Kanban view to display values based on suggest component state
+     and order the records with suggested quantities first if suggest is On */
     async _reload_grid() {
         this.model.config.context = this._getCatalogContext(this.state.suggestToggle.isOn);
         await this.model.root.load({}); // No other way for JS to know that product.product suggest values changed
-
         if (this.state.suggestToggle.isOn) {
             const cards = [...this.model.root.records];
             cards.sort((a, b) => (b.data.suggested_qty || 0) - (a.data.suggested_qty || 0));
@@ -87,6 +73,12 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         }
     }
 
+    /**
+     * Packs the suggest parameters and calculated values in a context object
+     * that can be used to calculate product.suggested_qty, purchase_order.suggest_estimated_price ...
+     * @param {boolean} suggestIsOn is the suggest feature active
+     * @returns {Object} context to compute Catalog Kanban (removes suggest params if suggestIsOff)
+     */
     _getCatalogContext(suggestIsOn = true) {
         const context = { ...this._baseContext };
         if (suggestIsOn === false) {
@@ -97,17 +89,16 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             context["monthly_demand_start_date"] = startDate;
             context["monthly_demand_limit_date"] = limitDate;
         }
-
         return {
             ...context,
             warehouse_id: this.props.context.warehouse_id,
             suggest_based_on: this.state.basedOn,
             suggest_number_days: this.state.numberOfDays,
             suggest_percent: this.state.percentFactor,
-            suggest_multiplier: this.state.multiplier,
         };
     }
 
+    /* Computes start and end datetime for the selected based_on option */
     _getPeriodOfTime() {
         const now = DateTime.now();
         const basedOn = this.state.basedOn;
@@ -117,18 +108,14 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             three_months: { months: 3 },
             one_year: { years: 1 },
         };
-
         if (basedOn in toNowOptions) {
             const start = now.minus(toNowOptions[basedOn]);
             return [toServerDt(start), toServerDt(now)];
         }
-
         const spanMonths = basedOn === "last_year_quarter" ? 3 : 1;
         const offsetMonths = basedOn === "last_year_2" ? 1 : basedOn === "last_year_3" ? 2 : 0;
-
         const start = now.minus({ years: 1 }).startOf("month").plus({ months: offsetMonths });
         const end = start.plus({ months: spanMonths });
-
         return [toServerDt(start), toServerDt(end)];
     }
 
