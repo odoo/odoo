@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import xml.etree.ElementTree as etree
 
-from difflib import SequenceMatcher
+from difflib import SequenceMatcher, unified_diff
+from bs4 import BeautifulSoup
 
 
 # ------------------------------------------------------------
@@ -27,10 +29,17 @@ PATCH_OPERATIONS = dict(
     replace=PATCH_OPERATION_REPLACE,
 )
 
-HTML_ATTRIBUTES_TO_REMOVE = [
-    "data-last-history-steps",
-]
-
+HTML_ATTRIBUTES_TO_REMOVE = ["data-last-history-steps"]
+HTML_TAG_ISOLATION_REGEX = r"^([^>]*>)(.*)$"
+ADDITION_COMPARISON_REGEX = r"\1<added>\2</added>"
+ADDITION_1ST_REPLACE_COMPARISON_REGEX = r"added>\2</added>"
+DELETION_COMPARISON_REGEX = r"\1<removed>\2</removed>"
+EMPTY_OPERATION_TAG = r"<(added|removed)><\/(added|removed)>"
+SAME_TAG_REPLACE_FIXER = r"<\/added><(?:[^\/>]|(?:><))+><removed>"
+UNNECESSARY_REPLACE_FIXER = (
+    r"<added>([^<](?!<\/added>)*)<\/added>"
+    r"<removed>([^<](?!<\/removed>)*)<\/removed>"
+)
 
 def apply_patch(initial_content, patch):
     """Apply a patch (multiple operations) on a content.
@@ -95,19 +104,6 @@ def apply_patch(initial_content, patch):
 
     return LINE_SEPARATOR.join(content)
 
-
-HTML_TAG_ISOLATION_REGEX = r"^([^>]*>)(.*)$"
-ADDITION_COMPARISON_REGEX = r"\1<added>\2</added>"
-ADDITION_1ST_REPLACE_COMPARISON_REGEX = r"added>\2</added>"
-DELETION_COMPARISON_REGEX = r"\1<removed>\2</removed>"
-EMPTY_OPERATION_TAG = r"<(added|removed)><\/(added|removed)>"
-SAME_TAG_REPLACE_FIXER = r"<\/added><(?:[^\/>]|(?:><))+><removed>"
-UNNECESSARY_REPLACE_FIXER = (
-    r"<added>([^<](?!<\/added>)*)<\/added>"
-    r"<removed>([^<](?!<\/removed>)*)<\/removed>"
-)
-
-
 def generate_comparison(new_content, old_content):
     """Compare a content to an older content
     and generate a comparison html between both content.
@@ -167,6 +163,7 @@ def generate_comparison(new_content, old_content):
         # We need to insert lines from last to the first
         # to preserve the indexes integrity.
         patch_content_line.reverse()
+
 
         for index in range(end_index, start_index - 1, -1):
             if operation_type in [
@@ -232,7 +229,6 @@ def generate_comparison(new_content, old_content):
 
     return final_comparison
 
-
 def _format_line_index(start, end):
     """Format the line index to be used in a patch operation.
 
@@ -246,7 +242,6 @@ def _format_line_index(start, end):
     if length <= 1:
         return "{}{}".format(PATCH_OPERATION_LINE_AT, start)
     return "{}{},{}".format(PATCH_OPERATION_LINE_AT, start, start + length - 1)
-
 
 def _patch_generator(new_content, old_content):
     """Generate a patch (multiple operations) between two contents.
@@ -300,7 +295,6 @@ def _patch_generator(new_content, old_content):
         else:
             yield str(patch_operation)
 
-
 def generate_patch(new_content, old_content):
     new_content = _remove_html_attribute(new_content, HTML_ATTRIBUTES_TO_REMOVE)
     old_content = _remove_html_attribute(old_content, HTML_ATTRIBUTES_TO_REMOVE)
@@ -309,7 +303,6 @@ def generate_patch(new_content, old_content):
         list(_patch_generator(new_content, old_content))
     )
 
-
 def _remove_html_attribute(html_content, attributes_to_remove):
     for attribute in attributes_to_remove:
         html_content = re.sub(
@@ -317,3 +310,34 @@ def _remove_html_attribute(html_content, attributes_to_remove):
         )
 
     return html_content
+
+def _indent(content):
+    """Indent the content using BeautifulSoup.
+
+    :param string content: the content to indent
+
+    :return: string: the indented content
+    """
+    content = "<document>" + _remove_html_attribute(content, HTML_ATTRIBUTES_TO_REMOVE) + "</document>"
+    soup = BeautifulSoup(content, 'html.parser')
+    return soup.prettify()
+
+def generate_unified_diff(new_content, old_content):
+    """Generate a unified diff between two contents.
+
+    :param string new_content: the current content
+    :param string old_content: the old content
+
+    :return: string: the unified diff content
+    """
+    new_content = _indent(new_content)
+    old_content = _indent(old_content)
+
+    return OPERATION_SEPARATOR.join(
+        list(unified_diff(
+            old_content.split(OPERATION_SEPARATOR),
+            new_content.split(OPERATION_SEPARATOR),
+            fromfile='old',
+            tofile='new'
+        ))
+    )
