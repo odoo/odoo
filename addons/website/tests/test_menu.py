@@ -123,6 +123,35 @@ class TestMenu(common.TransactionCase):
         default_menu.child_id[0].unlink()
         self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
 
+    def test_06_menu_and_page_connection(self):
+        Menu = self.env['website.menu']
+        Website = self.env['website']
+        website = Website.get_current_website()
+
+        # Step 1: Create a menu
+        menu = Menu.create({
+            'name': 'Test_menu',
+            'url': '/test',
+            'website_id': website.id,
+        })
+
+        # Step 2: Ensure the menu is initially not linked to any page
+        self.assertFalse(menu.page_id, "Menu should not be linked to any page initially.")
+
+        # Step 3: Create a page linked to the menu
+        new_page = Website.new_page(
+            name="test",
+            add_menu=True,
+            template='website.default_page',
+            ispage=True,
+        )
+
+        # Step 4: Validate the page is correctly linked to the menu
+        self.assertEqual(menu.id, new_page['menu_id'], "Page should be linked to the menu.")
+
+        # Step 5: Delete the page and verify the menu is also deleted
+        self.env['website.page'].browse(new_page['page_id']).unlink()
+        self.assertFalse(Menu.search([('id', '=', menu.id)]), "Menu should be deleted when the linked page is deleted.")
 
 class TestMenuHttp(common.HttpCase):
     def setUp(self):
