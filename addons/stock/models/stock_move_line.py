@@ -829,10 +829,10 @@ class StockMoveLine(models.Model):
 
         move_line_to_unlink = self.env['stock.move.line'].browse(to_unlink_candidate_ids)
         for m in (move_line_to_unlink.move_id | move_to_reassign):
-            m.write({
-                'procure_method': 'make_to_stock',
-                'move_orig_ids': [Command.clear()]
-            })
+            vals = {'procure_method': 'make_to_stock'}
+            if m._should_clear_move_orig_ids():
+                vals['move_orig_ids'] = [Command.clear()]
+            m.write(vals)
         move_line_to_unlink.unlink()
         move_to_reassign._action_assign()
 

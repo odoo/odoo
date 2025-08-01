@@ -88,5 +88,8 @@ class StockScrap(models.Model):
         if self.production_id and self.production_id.procurement_group_id:
             values.update({
                 'group_id': self.production_id.procurement_group_id,
+                'move_dest_ids': self.production_id.all_move_raw_ids.filtered(
+                    lambda m: m.location_id == self.location_id
+                        and m.product_id == self.product_id),
             })
         super().do_replenish(values)
