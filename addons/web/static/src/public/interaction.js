@@ -469,7 +469,7 @@ export class Interaction {
      * @param {import("@odoo/owl").Component} C
      * @param {Object|null} [props]
      */
-    mountComponent(el, C, props = null) {
-        this.__colibri__.mountComponent(el, C, props);
+    mountComponent(el, C, props = null, position = "beforeend") {
+        return this.__colibri__.mountComponent(el, C, props, position);
     }
 }

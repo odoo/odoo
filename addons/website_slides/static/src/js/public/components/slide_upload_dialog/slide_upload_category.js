@@ -358,9 +358,7 @@ export class SlideUploadCategory extends Component {
     async _fetch_choices(type, domain = [], fields = ["name"]) {
         const results = await rpc(`/slides/${type}/search_read`, { fields, domain });
 
-        return results.read_results.map((choice) => {
-            return { value: choice.id, label: choice.name };
-        });
+        return results.read_results.map((choice) => ({ value: choice.id, label: choice.name }));
     }
 
     /**
