@@ -34,12 +34,12 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if not move.picked or float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
+            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
                 continue
             productions = move._get_subcontract_production()
             if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
                 continue
-            move.show_subcontracting_details_visible = True
+            move.show_subcontracting_details_visible = move.picked or any(p.subcontracting_has_been_recorded and p.state != 'done' for p in productions)
 
     def _compute_show_details_visible(self):
         """ If the move is subcontract and the components are tracked. Then the
@@ -61,6 +61,13 @@ class StockMove(models.Model):
     def _compute_picked(self):
         subcontracted_moves = self.filtered(lambda m: m.is_subcontract and float_compare(m.product_uom_qty, m.quantity, precision_rounding=m.product_uom.rounding) != 0)
         super(StockMove, self - subcontracted_moves)._compute_picked()
+
+    def _compute_is_quantity_done_editable(self):
+        for move in self:
+            if move.is_subcontract and (move.move_orig_ids.production_id._has_tracked_component() or move.has_tracking != "none"):
+                move.is_quantity_done_editable = False
+            else:
+                super(StockMove, move)._compute_is_quantity_done_editable()
 
     def _set_quantity_done(self, qty):
         to_set_moves = self

@@ -675,10 +675,13 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         self.assertEqual(receipt.move_ids.mapped('picked'), [False, False])
         self.assertEqual(receipt.move_ids.mapped('quantity'), [5.0, 5.0])
+        self.assertEqual(receipt.move_ids.mapped('show_subcontracting_details_visible'), [False, False])
         receipt.move_ids[0].quantity = 2
         receipt.move_ids[1].quantity = 4
         self.assertEqual(receipt.move_ids.mapped('picked'), [False, False])
         self.assertEqual(receipt.move_ids.mapped('quantity'), [2.0, 4.0])
+        receipt.move_ids.invalidate_model(['show_subcontracting_details_visible'])
+        self.assertEqual(receipt.move_ids.mapped('show_subcontracting_details_visible'), [True, False])
         res = receipt.button_validate()
         wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
         wizard.process()
@@ -1221,6 +1224,8 @@ class TestSubcontractingTracking(TransactionCase):
 
         # We should be able to call the 'record_components' button
         self.assertEqual(picking_receipt.display_action_record_components, 'mandatory')
+        # We shouldn't be able to edit the quantity when there are tracked components
+        self.assertFalse(picking_receipt.move_ids.is_quantity_done_editable)
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
@@ -1298,6 +1303,8 @@ class TestSubcontractingTracking(TransactionCase):
 
         # We shouldn't be able to call the 'record_components' button
         self.assertEqual(picking_receipt.display_action_record_components, 'hide')
+        # We shouldn't be able to edit the quantity of a tracked move
+        self.assertFalse(picking_receipt.move_ids.is_quantity_done_editable)
 
         wh = picking_receipt.picking_type_id.warehouse_id
         lot_names_finished = [f"subtracked_{i}" for i in range(nb_finished_product)]
