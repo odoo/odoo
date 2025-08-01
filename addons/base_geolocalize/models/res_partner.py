@@ -57,6 +57,7 @@ class ResPartner(models.Model):
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                 'type': 'danger',
                 'title': _("Warning"),
-                'message': _('No match found for %(partner_names)s address(es).', partner_names=', '.join(partners_not_geo_localized.mapped('name')))
+                'message': _('No match found for %(partner_names)s address(es).',
+                             partner_names=', '.join(partners_not_geo_localized.mapped('display_name')))
             })
         return True
