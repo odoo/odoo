@@ -1,4 +1,7 @@
-from odoo import Command
+from datetime import timedelta
+from freezegun import freeze_time
+
+from odoo import Command, fields
 from odoo.tests import new_test_user, tagged
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCase
@@ -196,3 +199,26 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
         channel.with_user(self.visitor_user).message_post(body="", attachment_ids=[attachment2.id])
         channel_history = channel._get_channel_history()
         self.assertEqual(channel_history, 'Operator Here<br/>Visitor Here<br/>')
+
+    def test_gc_bot_sessions_after_one_day_inactivity(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Testing Bot"})
+        self.livechat_channel.rule_ids = [Command.create({"chatbot_script_id": chatbot_script.id})]
+        self.env["chatbot.script.step"].create({
+            "chatbot_script_id": chatbot_script.id,
+            "message": "Hello joey, how you doing?",
+            "step_type": "text",
+        })
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Thomas",
+                "chatbot_script_id": chatbot_script.id,
+                "channel_id": self.livechat_channel.id,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(hours=23))):
+            self.assertFalse(channel.livechat_end_dt)
+        with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
+            channel._gc_bot_only_ongoing_sessions()
+        self.assertTrue(channel.livechat_end_dt)
