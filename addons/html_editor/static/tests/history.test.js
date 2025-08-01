@@ -85,6 +85,16 @@ describe("undo", () => {
         redo(editor);
         expect(getContent(el)).toBe(`<p>a[]c</p>`);
     });
+
+    test("should undo same-text mutation", async () => {
+        const { el, editor } = await setupEditor(`<p>a</p>`);
+        const p = el.querySelector("p");
+        p.textContent = "b";
+        p.textContent = "b";
+        editor.shared.history.addStep();
+        undo(editor);
+        expect(p).toHaveText("a");
+    });
 });
 
 describe("redo", () => {
@@ -249,6 +259,14 @@ describe("step", () => {
             },
             contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
         });
+    });
+
+    test("should not add step after same-text mutation", async () => {
+        const { el, editor } = await setupEditor(`<p>a</p>`);
+        const p = el.querySelector("p");
+        p.textContent = "a";
+        editor.shared.history.addStep();
+        expect(editor.shared.history.canUndo()).toBe(false);
     });
 });
 
