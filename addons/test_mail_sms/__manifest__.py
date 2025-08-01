@@ -12,6 +12,7 @@ tests independently to functional aspects of other models. """,
     'depends': [
         'mail',
         'sms',
+        'sms_twilio',
         'test_performance',
     ],
     'data': [
