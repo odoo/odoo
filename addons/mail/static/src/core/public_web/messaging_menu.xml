@@ -7,7 +7,7 @@
 
 <t t-name="mail.MessagingMenu.content">
     <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
-        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush px-2 py-1 gap-1 o-scrollbar-thin" t-ref="notification-list">
+        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
             <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
@@ -15,6 +15,7 @@
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     iconSrc="thread.avatarUrl"
+                    important="thread.needactionCounter"
                     hasMarkAsReadButton="thread.isUnread"
                     muted="thread.selfMember?.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
@@ -55,14 +56,14 @@
             </t>
         </div>
     </div>
-    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex bg-view shadow-lg w-100 btn-group">
-        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0 rounded-0 bg-transparent position-relative" t-att-class="{
-            'text-primary fw-bold o-active': store.discuss.activeTab === tab.id,
+    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex bg-view border-top shadow-lg w-100 btn-group o-px-1_5">
+        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0 rounded-0 bg-transparent position-relative border-0" t-att-class="{
+            'o-fw-600 o-active': store.discuss.activeTab === tab.id,
             'pb-4': isIosPwa,
             'pb-2': !isIosPwa,
         }" t-on-click="() => this.onClickNavTab(tab.id)">
-            <i t-attf-class="p-1 fs-2 {{ tab.icon }}" t-att-class="{ 'text-primary': store.discuss.activeTab === tab.id, 'opacity-50': store.discuss.activeTab !== tab.id }"/>
-            <span class="smaller" t-esc="tab.label" t-att-class="{ 'text-primary': store.discuss.activeTab === tab.id, 'opacity-50': store.discuss.activeTab !== tab.id }"/>
+            <i t-attf-class="p-1 fs-2 {{ tab.icon }}" t-att-class="{ 'o-opacity-35': store.discuss.activeTab !== tab.id }"/>
+            <span class="smaller text-truncate" t-esc="tab.label" t-att-class="{ 'o-opacity-35': store.discuss.activeTab !== tab.id }"/>
             <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-esc="tab.counter"/>
             <span t-elif="tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="fa fa-circle"/></span>
         </button>
