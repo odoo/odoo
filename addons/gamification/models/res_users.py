@@ -122,6 +122,93 @@ class Users(models.Model):
         self.env['gamification.karma.tracking'].sudo().create(create_values)
         return True
 
+    def _get_tracking_karma_gain_position_per_grouping(self, domain, params={}):
+        """ Get absolute position in term of gained karma for users. First a ranking
+        of all users is done given a domain; then the position of each user
+        belonging to the current record set is extracted.
+
+        Example: in website profile, search users with name containing Norbert. Their
+        positions should not be 1 to 4 (assuming 4 results), but their actual position
+        in the karma gain ranking (with example domain being karma > 1,
+        website published True).
+
+        :param domain: general domain (i.e. active, karma > 1, website, ...)
+          to compute the absolute position of the current record set
+        :param params: (from_date, to_data, users_per_page, page, current_user_id)
+
+        :return list: [{
+            'user_id': user_id (belonging to current record set),
+            'karma_gain': integer, karma gained in the given timeframe,
+            'position': integer, ranking position
+        }, {..}] ordered by position desc
+        """
+        where_query = self.env['res.users']._where_calc(domain)
+        user_from_clause, user_where_clause, where_clause_params = where_query.get_sql()
+
+        from_date = params.get('from_date', None)
+        to_date = params.get('to_date', None)
+        page = params.get('page', 1)
+        users_per_page = params.get('users_per_page', 25)
+        current_user_id = params.get('current_user_id', None)
+
+        date_params = []
+        if from_date:
+            date_from_condition = 'AND tracking.tracking_date::DATE >= %s::DATE'
+            date_params.append(from_date)
+        if to_date:
+            date_to_condition = 'AND tracking.tracking_date::DATE <= %s::DATE'
+            date_params.append(to_date)
+
+        my_user_where_clause = 'WHERE user_id = %s' if current_user_id else 'WHERE %s'
+
+        query = """
+        WITH users_with_karma_gain AS (
+            SELECT
+                "res_users".id as user_id,
+                COALESCE(SUM("tracking".new_value - "tracking".old_value), 0) as karma_gain
+            FROM %(user_from_clause)s
+            LEFT JOIN "gamification_karma_tracking" as "tracking"
+            ON "res_users".id = "tracking".user_id AND "res_users"."active" = TRUE
+            WHERE %(user_where_clause)s %(date_from_condition)s %(date_to_condition)s
+            GROUP BY "res_users".id
+        ),
+        users_with_karma_position as (
+            SELECT
+                user_id,
+                karma_gain,
+                row_number() OVER (ORDER BY karma_gain DESC) AS karma_position
+            FROM "users_with_karma_gain"
+        ),
+        max_karma_position as (
+            SELECT MAX(karma_position) AS max_position
+            FROM "users_with_karma_position"
+        )
+        SELECT
+            user_id,
+            COALESCE(karma_gain, 0) AS karma_gain,
+            COALESCE(karma_position, max_position + 1) AS position
+        FROM "users_with_karma_position"
+        LEFT JOIN "max_karma_position" ON TRUE
+        %(my_user_where_clause)s
+        ORDER BY karma_gain DESC
+        OFFSET %%s
+        LIMIT %%s
+        """ % {
+            'user_from_clause': user_from_clause,
+            'user_where_clause': user_where_clause or (not from_date and not to_date and 'TRUE') or '',
+            'date_from_condition': date_from_condition if from_date else '',
+            'date_to_condition': date_to_condition if to_date else '',
+            'my_user_where_clause': my_user_where_clause
+        }
+
+        my_user_condition = current_user_id or 'TRUE'
+        offset = (page - 1) * users_per_page
+        limit = users_per_page
+
+        self.env.cr.execute(query, (where_clause_params + date_params + [my_user_condition, offset, limit]))
+        return self.env.cr.dictfetchall()
+
+    # TODO: this is not used anymore and can be deleted
     def _get_tracking_karma_gain_position(self, user_domain, from_date=None, to_date=None):
         """ Get absolute position in term of gained karma for users. First a ranking
         of all users is done given a user_domain; then the position of each user
