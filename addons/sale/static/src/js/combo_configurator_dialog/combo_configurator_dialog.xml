@@ -4,6 +4,7 @@
         <Dialog
             title="props.display_name"
             contentClass="'sale-combo-configurator-dialog'"
+            bodyClass="'d-flex flex-column gap-4'"
         >
             <div t-if="unconfigurableCombos.length" class="mb-4">
                 <span class="d-inline-block mb-3 h4">
@@ -49,7 +50,7 @@
                     t-attf-class="d-inline-block mb-3 h4 {{combo_index !== 0? 'mt-4' : ''}}"
                     t-out="combo.name"
                 />
-                <div class="combo-item-grid d-flex d-md-grid gap-4 pb-2 pb-md-0 overflow-x-auto">
+                <div class="row row-cols-1 row-cols-md-3 g-3">
                     <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
                         <ProductCard
                             product="getSelectedOrProvidedComboItem(combo.id, comboItem).product"
@@ -62,43 +63,46 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button
-                    name="sale_combo_configurator_confirm_button"
-                    class="btn btn-primary"
-                    t-att-disabled="!areAllCombosSelected || state.isLoading"
-                    t-on-click="confirm"
-                >
-                    Confirm
-                </button>
-                <button
-                    name="sale_combo_configurator_cancel_button"
-                    class="btn btn-secondary"
-                    t-on-click="cancel"
-                >
-                    Cancel
-                </button>
-                <!-- This div acts as a spacer to left-align the elements before it and right-align
-                the elements after it. -->
-                <div style="flex: 1" class="d-none d-md-block"/>
-                <div t-if="props.options?.showQuantity ?? true" class="w-100 w-md-auto mx-0 mx-md-2">
-                    <QuantityButtons
-                        quantity="state.quantity"
-                        setQuantity="quantity => this.setQuantity(quantity)"
-                        isMinusButtonDisabled="state.quantity === 1"
-                        btnClasses="'d-inline-block w-auto'"
-                    />
-                </div>
-                <div class="d-flex flex-column justify-content-center">
-                    <span
-                        name="sale_combo_configurator_total"
-                        class="h4 mb-0"
-                        t-out="totalMessage"
-                    />
-                    <span
-                        t-if="this.props.price_info"
-                        t-out="this.props.price_info"
-                        class="text-muted"
-                    />
+                <div class="d-flex flex-column-reverse flex-lg-row gap-3 w-100">
+                    <div class="d-flex flex-column flex-md-row gap-2">
+                        <button
+                            name="sale_combo_configurator_confirm_button"
+                            class="btn btn-primary w-100 w-lg-auto"
+                            t-att-disabled="!areAllCombosSelected || state.isLoading"
+                            t-on-click="confirm"
+                        >
+                            Confirm
+                        </button>
+                        <button
+                            name="sale_combo_configurator_cancel_button"
+                            class="btn btn-secondary w-100 w-lg-auto"
+                            t-on-click="cancel"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                    <div class="d-flex gap-3 align-items-center">
+                        <div t-if="props.options?.showQuantity ?? true" class="combo_configurator_quantity ps-lg-3">
+                            <QuantityButtons
+                                quantity="state.quantity"
+                                setQuantity="quantity => this.setQuantity(quantity)"
+                                isMinusButtonDisabled="state.quantity === 1"
+                                btnClasses="'d-inline-block w-auto'"
+                            />
+                        </div>
+                        <div class="w-100 w-md-auto">
+                            <span
+                                name="sale_combo_configurator_total"
+                                class="h6 mb-0"
+                                t-out="totalMessage"
+                            />
+                            <span
+                                t-if="this.props.price_info"
+                                t-out="this.props.price_info"
+                                class="text-muted"
+                            />
+                        </div>
+                    </div>
                 </div>
             </t>
         </Dialog>

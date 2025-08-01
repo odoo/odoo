@@ -1,40 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="sale.ProductCard">
-        <article
-            tabindex="0"
-            t-attf-class="product-card card flex-shrink-0 w-md-auto w-50 rounded cursor-pointer {{props.isSelected ? 'selected' : ''}}"
-            t-on-keypress="(event) => event.code === 'Space' ? props.onClick() : () => {}"
-            t-on-click="props.onClick"
-        >
-            <div class="card-header p-0">
+        <div class="col">
+            <article
+                tabindex="0"
+                t-attf-class="product-card d-flex align-items-start h-100 rounded p-2 cursor-pointer {{props.isSelected ? 'selected' : ''}}"
+                t-on-keypress="(event) => event.code === 'Space' ? props.onClick() : () => {}"
+                t-on-click="props.onClick"
+            >
                 <img
-                    class="w-100"
+                    class="w-25 border rounded"
                     t-att-src="props.product.image_src || `/web/image/product.product/${props.product.id}/image_256`"
                     alt="Product Image"
                 />
-            </div>
-            <div class="card-body">
-                <div class="card-title" t-out="props.product.display_name"/>
-                <t t-set="ptalsToShow" t-value="props.product.ptals.filter(shouldShowPtal)"/>
-                <div class="card-subtitle">
-                    <t t-if="ptalsToShow.length">
-                        <div
-                            t-foreach="ptalsToShow"
-                            t-as="ptal"
-                            t-key="ptal.id"
-                            t-out="ptal.ptalDisplayName"
-                            class="text-muted"
-                        />
-                    </t>
-                    <a t-elif="props.isConfigurable" href="#">Configure</a>
+                <div class="w-75 p-2">
+                    <t t-set="ptalsToShow" t-value="props.product.ptals.filter(shouldShowPtal)"/>
+                    <h6 class="mb-1" t-out="props.product.display_name"/>
+                    <div class="text-muted">
+                        <t t-if="ptalsToShow.length">
+                            <div
+                                t-foreach="ptalsToShow"
+                                t-as="ptal"
+                                t-key="ptal.id"
+                                t-out="ptal.ptalDisplayName"
+                            />
+                        </t>
+                        <small t-elif="props.isConfigurable">Click to configure</small>
+                    </div>
+                    <BadgeExtraPrice
+                        t-if="props.extraPrice"
+                        price="props.extraPrice"
+                        currencyId="env.currency.id"
+                    />
                 </div>
-                <BadgeExtraPrice
-                    t-if="props.extraPrice"
-                    price="props.extraPrice"
-                    currencyId="env.currency.id"
-                />
-            </div>
-        </article>
+            </article>
+        </div>
     </t>
 </templates>

@@ -2,13 +2,16 @@
 <templates xml:space="preserve">
     <t t-inherit="sale.QuantityButtons" t-inherit-mode="extension">
         <div name="quantity_buttons_wrapper" position="attributes">
-            <attribute name="class" add="css_quantity" separator=" "/>
+            <attribute name="class" add="css_quantity border rounded" separator=" "/>
         </div>
         <button name="sale_quantity_button_minus" position="attributes">
-            <attribute name="t-attf-class" remove="btn-secondary" add="btn-light" separator=" "/>
+            <attribute name="t-attf-class" remove="btn-secondary" add="btn-link text-600" separator=" "/>
         </button>
+        <input name="sale_quantity" position="attributes">
+            <attribute name="class" add="border-0" separator=" "/>
+        </input>
         <button name="sale_quantity_button_plus" position="attributes">
-            <attribute name="t-attf-class" remove="btn-secondary" add="btn-light" separator=" "/>
+            <attribute name="t-attf-class" remove="btn-secondary" add="btn-link text-600" separator=" "/>
         </button>
     </t>
 </templates>
