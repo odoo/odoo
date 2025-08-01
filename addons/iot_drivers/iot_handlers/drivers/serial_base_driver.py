@@ -128,9 +128,8 @@ class SerialDriver(Driver):
         """Establish a connection with the device if needed and have it perform a specific action.
 
         :param data: the `_actions` key mapped to the action method we want to call
-        :type data: string
         """
-
+        self.data['owner'] = data.get('session_id')
         if self._connection and self._connection.isOpen():
             self._do_action(data)
         else:
