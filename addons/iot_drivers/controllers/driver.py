@@ -40,6 +40,7 @@ class DriverController(http.Controller):
             _logger.warning("IoT Device with identifier %s not found", device_identifier)
             return False
 
+        data['session_id'] = session_id  # ensure session_id is in data as for websocket communication
         _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
         iot_device.action(data)
         return True
