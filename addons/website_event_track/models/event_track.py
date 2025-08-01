@@ -31,7 +31,7 @@ YAHOO_CALENDAR_URL = 'https://calendar.yahoo.com/?v=60&view=d&type=20&'
 class EventTrack(models.Model):
     _name = 'event.track'
     _description = 'Event Track'
-    _order = 'priority, date'
+    _order = 'priority desc, date'
     _inherit = [
         'mail.thread',
         'mail.activity.mixin',
