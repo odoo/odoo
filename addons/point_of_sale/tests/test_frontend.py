@@ -253,7 +253,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
 
-        fixed_pricelist = env['product.pricelist'].create({
+        cls.fixed_pricelist = env['product.pricelist'].create({
             'name': 'Fixed',
             'item_ids': [(0, 0, {
                 'compute_price': 'fixed',
@@ -461,7 +461,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Pricelist base rounding',
             'item_ids': [(0, 0, {
                 'base': 'pricelist',
-                'base_pricelist_id': fixed_pricelist.id,
+                'base_pricelist_id': cls.fixed_pricelist.id,
                 'compute_price': 'percentage',
                 'percent_price': 0.01,
             })],
@@ -585,6 +585,30 @@ class TestUi(TestPointOfSaleHttpCommon):
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
+
+    def test_03_pos_with_lots(self):
+        self.tip.write({
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'iface_tipproduct': True,
+            'tip_product_id': self.tip.id,
+            'ship_later': True,
+        })
+
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': self.fixed_pricelist.id,
+            'product_tmpl_id': self.monitor_stand.product_tmpl_id.id,
+            'min_quantity': 5,
+            'fixed_price': 1,
+        })
+
+        # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.monitor_stand.tracking = 'lot'
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_03_pos_with_lots', login="pos_user")
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
