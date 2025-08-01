@@ -11,5 +11,12 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">50</field>
         </record>
+
+        <record id="website_rewrite_course_to_slides" model="website.rewrite">
+            <field name="name">301 /course</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/course</field>
+            <field name="url_to">/slides</field>
+        </record>
     </data>
 </odoo>
