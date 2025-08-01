@@ -47,10 +47,10 @@ WITH service_costs AS (
         fleet_vehicle_model vem ON vem.id = ve.model_id
     CROSS JOIN generate_series((
             SELECT
-                min(date)
+                min(date_from)
                 FROM fleet_vehicle_log_services), CURRENT_DATE + '1 month'::interval, '1 month') d
         LEFT JOIN fleet_vehicle_log_services se ON se.vehicle_id = ve.id
-            AND date_trunc('month', se.date) = date_trunc('month', d)
+            AND date_trunc('month', se.date_from) = date_trunc('month', d)
     WHERE
         ve.active AND se.active AND se.state != 'cancelled'
     GROUP BY
