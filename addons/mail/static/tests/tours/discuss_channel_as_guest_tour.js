@@ -23,10 +23,6 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
             run: "press ctrl+k",
         },
         {
-            trigger: ".o_command_palette_search input",
-            run: "fill @",
-        },
-        {
             trigger: ".o-mail-DiscussCommand",
             async run() {
                 await contains(".fa-hashtag", {
