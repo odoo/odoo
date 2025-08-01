@@ -59,6 +59,7 @@ class ResUsers(models.Model):
                     'model': 'project.task',
                     'type': 'activity',
                     'icon': icon,
+                    'domain': [('active', 'in', [True, False])],
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                     'res_ids': set(),
                     'view_type': view_type,
@@ -70,7 +71,10 @@ class ResUsers(models.Model):
 
         for group in user_activities.values():
             group.update({
-                'domain': json.dumps([['activity_ids.res_id', 'in', list(group['res_ids'])]])
+                'domain': json.dumps([
+                    ['active', 'in', [True, False]],
+                    ['activity_ids.res_id', 'in', list(group['res_ids'])]
+                ])
             })
         activity_groups.extend(list(user_activities.values()))
 

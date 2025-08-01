@@ -365,6 +365,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                         {
                             "type": "activity",
                             "view_type": "list",
+                            "domain": [],
                             "overdue_count": 0,
                             "planned_count": 0,
                             "today_count": len(expected_other_activities),
@@ -386,6 +387,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                 self.assertIn(test_model_name, activity_groups_by_model)
                 self.assertDictEqual(
                     {
+                        "domain": [],
                         "type": "activity",
                         "view_type": "list",
                         "overdue_count": 0,

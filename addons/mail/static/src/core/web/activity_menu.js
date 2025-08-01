@@ -66,8 +66,7 @@ export class ActivityMenu extends Component {
             context["search_default_activities_upcoming_all"] = 1;
         }
 
-        // include archived records, as activities are more important than archived
-        let domain = [["active", "in", [true, false]]];
+        let domain = [];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
         }
