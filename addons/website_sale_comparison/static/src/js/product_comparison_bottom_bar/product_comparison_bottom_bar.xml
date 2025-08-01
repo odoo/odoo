@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_comparison.ProductComparisonBottomBar">
+        <div
+            t-if="state.isVisible"
+            class="o_comparison_bottom_bar fixed-bottom w-100 bg-body shadow-lg"
+            name="comparison_bottom_bar"
+        >
+            <div class="container-fluid d-flex align-items-center gap-3 py-2">
+                <ul class="list-unstyled d-none d-xl-flex flex-grow-1 flex-shrink-1 overflow-hidden gap-2 mb-0">
+                    <li t-foreach="state.products.values()" t-as="product" t-key="product.id" class="o_product_item d-flex align-items-center gap-2 flex-basis-25 pe-2 border-end text-truncate">
+                        <img
+                            t-attf-src="/web/image/product.product/{{product.id}}/image_256"
+                            class="o_product_image flex-shrink-0 rounded"
+                            alt="Product Image"
+                        />
+
+                        <!-- Product info -->
+                        <div class="flex-grow-1 text-truncate">
+                            <small t-out="product.display_name"/>
+                            <div t-if="!product.prevent_zero_price_sale" class="small fw-bold">
+                                <span t-out="formatPrice(product.price, product.currency_id)"/>
+                                <del t-if="product.strikethrough_price" class="text-muted ms-1" t-out="formatPrice(product.strikethrough_price, product.currency_id)"/>
+                            </div>
+                        </div>
+                        <!-- Remove button -->
+                        <button
+                            t-on-click="() => this._removeProduct(product.id)"
+                            class="btn btn-sm btn-light rounded-circle p-2 lh-1 flex-shrink-0"
+                            title="Remove product"
+                            aria-label="Remove product"
+                        >
+                            <i class="oi oi-close"></i>
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Actions section -->
+                <div class="d-flex gap-2 justify-content-end flex-shrink-0 w-auto">
+                    <!-- Mobile: Show only count, products in offcanvas -->
+                    <button
+                        class="btn btn-light d-xl-none me-auto"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#comparisonOffcanvas"
+                        aria-controls="comparisonOffcanvas"
+                    >
+                        <i class="oi oi-chevron-up"/>
+                    </button>
+
+                    <!-- Compare button -->
+                    <button
+                        t-on-click="goToComparison"
+                        t-att-disabled="productCount lt 2"
+                        class="btn btn-primary flex-grow-1 flex-md-grow-0"
+                        title="Compare products"
+                    >
+                        Compare
+                        <span class="badge text-bg-primary ms-2" t-out="productCount"></span>
+                    </button>
+                    <!-- Clear all button -->
+                    <button
+                        t-on-click="clearAll"
+                        class="btn btn-link text-reset"
+                        title="Clear all products"
+                    >
+                        <i class="oi oi-close"/>
+                    </button>
+                </div>
+                <!-- Mobile Offcanvas for product list -->
+                <div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="comparisonOffcanvas" aria-labelledby="comparisonOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="comparisonOffcanvasLabel">
+                            Compare Products (<span t-out="productCount"></span>/4)
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body pt-0">
+                        <ul class="list-group list-group-flush">
+                            <li t-foreach="state.products.values()" t-as="product" t-key="product.id" class="list-group-item d-flex align-items-center px-0 py-3">
+                                <img
+                                    t-attf-src="/web/image/product.product/{{product.id}}/image_256"
+                                    class="o_wsale_comparison_offcanvas_image me-3 flex-shrink-0 border rounded"
+                                    alt="Product Image"
+                                />
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-baseline justify-content-between">
+                                        <h6 class="mb-0" t-out="product.display_name"/>
+                                        <button
+                                            t-on-click="() => this._removeProduct(product.id)"
+                                            class="btn btn-link me-n3"
+                                            title="Remove product"
+                                            aria-label="Remove product"
+                                        >
+                                            <i class="fa fa-trash-o"/>
+                                        </button>
+                                    </div>
+                                    <h6 t-if="!product.prevent_zero_price_sale">
+                                        <del t-if="product.strikethrough_price" class="me-2 text-muted text-nowrap" t-out="formatPrice(product.strikethrough_price, product.currency_id)"/>
+                                        <span class="text-nowrap" t-out="formatPrice(product.price, product.currency_id)"/>
+                                    </h6>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <!-- Mobile action buttons -->
+                        <div class="d-flex gap-2 mt-3">
+                            <button
+                                t-on-click="goToComparison"
+                                t-att-disabled="productCount lt 2"
+                                class="btn btn-primary flex-fill"
+                                title="Compare products"
+                            >
+                                <i class="fa fa-exchange me-2"/>
+                                Compare (<span t-out="productCount"></span>)
+                            </button>
+
+                            <button
+                                t-on-click="clearAll"
+                                class="btn btn-light"
+                                title="Clear all products"
+                            >
+                                <i class="fa fa-trash me-1"/>
+                                Clear All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

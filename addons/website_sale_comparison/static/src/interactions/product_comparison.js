@@ -7,8 +7,8 @@ import { redirect } from '@web/core/utils/urls';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
 import {
-    ProductComparisonButton
-} from '@website_sale_comparison/js/product_comparison_button/product_comparison_button';
+    ProductComparisonBottomBar
+} from '@website_sale_comparison/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ProductComparison extends Interaction {
     static selector = '.js_sale';
@@ -21,7 +21,7 @@ export class ProductComparison extends Interaction {
 
     setup() {
         this.bus = new EventBus();
-        this.mountComponent(this.el, ProductComparisonButton, { bus: this.bus });
+        this.mountComponent(document.body, ProductComparisonBottomBar, { bus: this.bus });
         this.position = 0;
         
         // Mini sticky comparison elements
@@ -66,7 +66,7 @@ export class ProductComparison extends Interaction {
         this.bus.dispatchEvent(new CustomEvent('comparison_products_changed', { bubbles: true }));
         this._updateDisabled(el, true);
         await wSaleUtils.animateClone(
-            $('button[name="product_comparison_button"]'),
+            $('.o_comparison_bottom_bar'),
             $(this.el.querySelector('#product_detail_main') ?? form),
             -50,
             10,

@@ -72,3 +72,31 @@
         width: 100%;
     }
 }
+
+// Add padding to body when comparison bar is visible
+body:has(.o_comparison_bottom_bar) {
+    padding-bottom: 80px; // Height of comparison bar + some extra space
+}
+
+// Offset floating bar when comparison bar is visible
+body:has(.o_comparison_bottom_bar) #o_wsale_floating_bar_rail #o_wsale_floating_bar {
+    bottom: calc(var(--_container-gap) + 80px) !important; // Above comparison bar
+}
+
+// Add horizontal spacing when livechat is visible to prevent overlap
+body:has(.o_livechat_button) .o_comparison_bottom_bar .container-fluid,
+body:has(.im_livechat) .o_comparison_bottom_bar .container-fluid {
+    padding-right: 5rem; // Space for livechat button (usually ~60px width + gap)
+}
+
+// Bottom comparison bar
+.o_comparison_bottom_bar {
+
+    .o_product_image {
+        width: 2.5rem;
+    }
+
+    .o_wsale_comparison_offcanvas_image {
+        width: 5rem;
+    }
+}
