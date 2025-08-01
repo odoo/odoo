@@ -321,6 +321,15 @@ export class TicketScreen extends Component {
             originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
             refundDetail.destinationOrderUid = destinationOrder.uid;
         }
+        //remove refund lines not belonging to order lines
+        const orderLineIds = order.get_orderlines().map((l) => l.id);
+        const refundedLinesToRemove = destinationOrder.get_orderlines().filter(
+            (l) => l.refunded_orderline_id && !orderLineIds.includes(l.refunded_orderline_id)
+        );
+        for (const line of refundedLinesToRemove) {
+            destinationOrder.removeOrderline(line);
+        }
+
         // Second pass: update combo relationships in the destination order
         for (const refundDetail of allToRefundDetails) {
             const originalOrderline = refundDetail.orderline;
