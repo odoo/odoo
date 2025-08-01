@@ -21,15 +21,17 @@ class AccountTaxGroup(models.Model):
         string='(AR) Data Source',
     )
     l10n_ar_default_aliquot = fields.Float(digits=(16, 4), default=0.0, string='(AR) Default Aliquot')
+    l10n_ar_withholding_or_perception = fields.Char(compute='_compute_l10n_ar_withholding_or_perception', string='(AR) Withholding or Perception')
 
-    def _is_perception_or_withholding(self):
+    def _compute_l10n_ar_withholding_or_perception(self):
         """Return the tax type based on the tax group type."""
-        self.ensure_one()
-        if self.l10n_ar_tribute_afip_code in ['06', '07', '08', '09']:
-            return 'perception'
-        if not self.l10n_ar_tribute_afip_code and not self.l10n_ar_vat_afip_code:
-            return 'withholding'
-        raise UserError(_("Unknown tax type for tax group '%s'", self.name))
+        for rec in self:
+            if rec.l10n_ar_tribute_afip_code in ['06', '07', '08', '09']:
+                rec.l10n_ar_withholding_or_perception = 'perception'
+            elif not rec.l10n_ar_tribute_afip_code and not rec.l10n_ar_vat_afip_code:
+                rec.l10n_ar_withholding_or_perception = 'withholding'
+            else:
+                rec.l10n_ar_withholding_or_perception = False
 
     def _get_missing_taxes(self, partner, date, company):
         """Retrieve the missing taxes for the given partner and date.
@@ -200,7 +202,7 @@ class AccountTaxGroup(models.Model):
             aliquot = 0.0
         else:
             dict_alic = json_body.get("sdtConsultaAlicuotas")
-            aliquot = float(dict_alic.get("CRD_ALICUOTA_RET")) if self._is_perception_or_withholding() == 'withholding' else float(dict_alic.get("CRD_ALICUOTA_PER"))
+            aliquot = float(dict_alic.get("CRD_ALICUOTA_RET")) if self.l10n_ar_withholding_or_perception == 'withholding' else float(dict_alic.get("CRD_ALICUOTA_PER"))
             # We check if the par_cod is not for newly registered entities, which come with the date "0000-00-00"
             if dict_alic.get("CRD_PAR_CODIGO") != 'NUE_INS':
                 # Verify that the document date falls within the validity period
