@@ -28,6 +28,7 @@ import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_
 import { CarouselOptionTranslationPlugin } from "./plugins/carousel_option_translation_plugin";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { TranslateTableOfContentOptionPlugin } from "./plugins/options/table_of_content_option_plugin_translate";
+import { FieldChangeReplicationPlugin } from "@html_builder/core/field_change_replication_plugin";
 import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
@@ -52,6 +53,7 @@ const TRANSLATION_PLUGINS = [
     OperationPlugin,
     EditInteractionPlugin,
     TranslateTableOfContentOptionPlugin,
+    FieldChangeReplicationPlugin,
     BuilderContentEditablePlugin,
     CarouselOptionTranslationPlugin,
     ImageFieldPlugin,
