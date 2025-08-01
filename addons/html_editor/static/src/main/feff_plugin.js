@@ -24,7 +24,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 export class FeffPlugin extends Plugin {
     static id = "feff";
     static dependencies = ["selection"];
-    static shared = ["addFeff", "removeFeffs"];
+    static shared = ["addFeff", "removeFeffs", "surroundWithFeffs"];
 
     resources = {
         normalize_handlers: this.updateFeffs.bind(this),
@@ -76,6 +76,31 @@ export class FeffPlugin extends Plugin {
         cursors?.update(callbacksForCursorUpdate[position](element, feff));
         element[position](feff);
         return feff;
+    }
+
+    surroundWithFeffs(node, cursors) {
+        const addFeff = (position) => {
+            // skip cursor update for append, we want to keep it before
+            // the added FEFF
+            const c = position === "append" ? null : cursors;
+            return this.addFeff(node, position, c);
+        };
+
+        const zwnbspNodes = [];
+        for (const [position, relation] of [
+            ["before", "previousSibling"],
+            ["after", "nextSibling"],
+            ["prepend", "firstChild"],
+            ["append", "lastChild"],
+        ]) {
+            const candidate = node[relation];
+            const feff =
+                isZwnbsp(candidate) && !zwnbspNodes.includes(candidate)
+                    ? candidate
+                    : addFeff(position);
+            zwnbspNodes.push(feff);
+        }
+        return zwnbspNodes;
     }
 
     /**

@@ -1,16 +1,19 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
-import { isElement, isTextNode } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
-
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history", "input", "split"];
+    static dependencies = ["selection", "history", "input", "split", "feff"];
     resources = {
         input_handlers: this.onInput.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
+        feff_providers: (root, cursors) =>
+            [...selectElements(root, ".o_inline_code")].flatMap((code) =>
+                this.dependencies.feff.surroundWithFeffs(code, cursors)
+            ),
     };
 
     setup() {
@@ -115,7 +118,9 @@ export class InlineCodePlugin extends Plugin {
             let offset = selection.startOffset;
             let sibling = textNode.previousSibling;
             while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-                offset += sibling.textContent.length;
+                if (!isZwnbsp(sibling)) {
+                    offset += sibling.textContent.length;
+                }
                 sibling.textContent += textNode.textContent;
                 textNode.remove();
                 textNode = sibling;
@@ -123,7 +128,9 @@ export class InlineCodePlugin extends Plugin {
             }
             sibling = textNode.nextSibling;
             while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-                textNode.textContent += sibling.textContent;
+                if (!isZwnbsp(sibling)) {
+                    textNode.textContent += sibling.textContent;
+                }
                 sibling.remove();
                 sibling = sibling.nextSibling;
             }
@@ -175,18 +182,18 @@ export class InlineCodePlugin extends Plugin {
             }
             if (isClosingForward) {
                 // Move selection out of code element.
-                codeElement.after(document.createTextNode("\u200B"));
+                this.dependencies.history.addStep();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.nextSibling,
                     anchorOffset: 1,
                 });
             } else {
+                this.dependencies.history.addStep();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 0,
                 });
             }
         }
-        this.dependencies.history.addStep();
     }
 }
