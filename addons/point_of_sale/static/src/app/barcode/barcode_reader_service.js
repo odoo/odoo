@@ -47,7 +47,7 @@ export class BarcodeReader {
     }
 
     async _scan(code) {
-        if (!code) {
+        if (!code || this.bypassQR) {
             return;
         }
 
