@@ -312,7 +312,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         super()._add_invoice_line_item_nodes(line_node, vals)
 
         base_line = vals['base_line']
-        class_code = base_line['record'].product_id.product_tmpl_id.l10n_my_edi_classification_code
+        class_code = base_line['record'].l10n_my_edi_classification_code or \
+                     base_line['record'].product_id.product_tmpl_id.l10n_my_edi_classification_code
         if class_code:
             line_node['cac:Item']['cac:CommodityClassification'] = {
                 'cbc:ItemClassificationCode': {
