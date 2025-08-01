@@ -25,7 +25,7 @@ class StockMove(models.Model):
         bom = bom_line.bom_id
         if line.currency_id != self.company_id.currency_id:
             kit_price_unit = line.currency_id._convert(kit_price_unit, self.company_id.currency_id, self.company_id, fields.Date.context_today(self), round=False)
-        cost_share = self.bom_line_id._get_cost_share()
+        cost_share = self._get_cost_share()
         uom_factor = 1.0
         kit_product = bom.product_id or bom.product_tmpl_id
 
@@ -52,3 +52,15 @@ class StockMove(models.Model):
             if float_is_zero(valuation_total_qty, precision_rounding=related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.rounding):
                 raise UserError(_('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.', related_aml.product_id.display_name))
         return valuation_price_unit_total, valuation_total_qty
+
+    def _generate_phantom_moves(self, lines, move):
+        phantom_moves_vals_list = super()._generate_phantom_moves(lines, move)
+        for cost_share, phantom_move in zip((l[1]['cost_share'] for l in lines), phantom_moves_vals_list):
+            phantom_move['cost_share'] = cost_share
+        return phantom_moves_vals_list
+
+    def _get_cost_share(self):
+        self.ensure_one()
+        if any(move.cost_share != 0 for move in self.purchase_line_id.move_ids):
+            return self.cost_share
+        return 1 / len(self.bom_line_id.bom_id.bom_line_ids)
