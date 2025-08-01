@@ -48,7 +48,7 @@ class PurchaseRequisition(models.Model):
         return self.env['purchase.requisition.type'].search([], limit=1)
 
     name = fields.Char(string='Reference', required=True, copy=False, default='New', readonly=True)
-    origin = fields.Char(string='Source Document')
+    origin = fields.Char(string='Source Document', index='trigram')
     order_count = fields.Integer(compute='_compute_orders_number', string='Number of Orders')
     vendor_id = fields.Many2one('res.partner', string="Vendor", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     type_id = fields.Many2one('purchase.requisition.type', string="Agreement Type", required=True, default=_get_type_id)
@@ -175,7 +175,7 @@ class PurchaseRequisitionLine(models.Model):
     product_description_variants = fields.Char('Custom Description')
     price_unit = fields.Float(string='Unit Price', digits='Product Price')
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
-    requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
+    requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade', index=True)
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True)
     schedule_date = fields.Date(string='Scheduled Date')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
