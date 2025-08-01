@@ -70,7 +70,7 @@
                             </t>
                             <t t-if="!!env.debug and !props.readonly">
                                 <button
-                                    class="btn btn-sm btn-icon fa fa-refresh o_refresh_count"
+                                    t-att-class="'btn btn-sm btn-icon fa fa-refresh o_refresh_count' + (state.isValid ? '' : ' disabled')"
                                     role="img"
                                     aria-label="Refresh"
                                     title="Refresh"
