@@ -7,12 +7,26 @@
         <field name="inherit_id" ref="account.view_account_position_form"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="l10n_ar_perception_ids"
-                        widget="many2many_tags"
-                        invisible="'AR' not in fiscal_country_codes"/>
-                <field name="l10n_ar_withholding_ids"
-                        widget="many2many_tags"
-                        invisible="'AR' not in fiscal_country_codes"/>
+                <label for="l10n_ar_perception_ids"
+                       invisible="'AR' not in fiscal_country_codes"/>
+                <div class="o_row" invisible="'AR' not in fiscal_country_codes">
+                    <field name="l10n_ar_perception_ids"
+                            widget="many2many_tags"/>
+                    <button name="action_configure_perception_tax_groups"
+                            type="object"
+                            class="btn-link"
+                            icon="fa-external-link"/>
+                </div>
+                <label for="l10n_ar_withholding_ids"
+                       invisible="'AR' not in fiscal_country_codes"/>
+                <div class="o_row" invisible="'AR' not in fiscal_country_codes">
+                    <field name="l10n_ar_withholding_ids"
+                            widget="many2many_tags"/>
+                    <button name="action_configure_withholding_tax_groups"
+                            type="object"
+                            class="btn-link"
+                            icon="fa-external-link"/>
+                </div>
             </field>
         </field>
     </record>

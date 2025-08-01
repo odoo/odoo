@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class AccountFiscalPosition(models.Model):
@@ -42,13 +42,13 @@ class AccountFiscalPosition(models.Model):
         """
         self.ensure_one()
         taxes = self.env['account.tax']
-        
+
         # Filter tax groups by tax type
         if tax_type == 'perception':
             tax_groups = self.l10n_ar_perception_ids
         else:
             tax_groups = self.l10n_ar_withholding_ids
-        
+
         for tax_group in tax_groups:
             domain = self.env['l10n_ar.partner.tax']._check_company_domain(company)
             domain += [('tax_id.tax_group_id', '=', tax_group.id)]
@@ -60,12 +60,11 @@ class AccountFiscalPosition(models.Model):
                 partner_tax = partner.l10n_ar_partner_perception_ids.filtered_domain(domain).mapped('tax_id')
             elif tax_type == 'withholding':
                 partner_tax = partner.l10n_ar_partner_tax_ids.filtered_domain(domain).mapped('tax_id')
-            
+
             # Add taxes for tax groups that were not set on the partner
             if not partner_tax:
                 partner_tax = tax_group._get_missing_taxes(partner, date, company)
-            
-            import pdb; pdb.set_trace()  # Debugging line to inspect partner_tax
+
             if partner_tax.l10n_ar_tax_type not in ["earnings", "earnings_scale"] and partner_tax.amount == 0:
                 # if the tax is non earnings and the amount is 0, then we skip it
                 continue
@@ -102,3 +101,29 @@ class AccountFiscalPosition(models.Model):
         if not self.tax_ids and self.l10n_ar_perception_ids:
             return self.company_id.domestic_fiscal_position_id.map_tax(taxes)
         return super().map_tax(taxes)
+
+    def action_configure_perception_tax_groups(self):
+        """Open the tax groups view filtered by selected perception tax groups."""
+        self.ensure_one()
+        domain = [('id', 'in', self.l10n_ar_perception_ids.ids)]
+        return {
+            'name': 'Configure AR Perception Tax Groups',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.tax.group',
+            'view_mode': 'list,form',
+            'domain': domain,
+            'target': 'current',
+        }
+
+    def action_configure_withholding_tax_groups(self):
+        """Open the tax groups view filtered by selected withholding tax groups."""
+        self.ensure_one()
+        domain = [('id', 'in', self.l10n_ar_withholding_ids.ids)]
+        return {
+            'name': 'Configure AR Withholding Tax Groups',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.tax.group',
+            'view_mode': 'list,form',
+            'domain': domain,
+            'target': 'current',
+        }
