@@ -70,10 +70,43 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
+        await contains(".options-container table [data-action-id=updateDatasetLabel]:last input").click();
+        await animationFrame();
+        expect(
+            ".options-container [data-label='Dataset Color'] button.o_we_color_preview"
+        ).toHaveStyle({
+            backgroundColor: "rgb(74, 123, 140)",
+        });
+        expect(
+            ".options-container table [data-action-id=updateDatasetLabel]:last input"
+        ).toHaveStyle({
+            border: "2px solid rgb(74, 123, 140)",
+        });
+        expect(
+            ".options-container table [data-action-id=updateDatasetValue]:first input"
+        ).toHaveAttribute("style", "");
+    });
+    test("Bar chart => border color set as fallback for border on header input", async () => {
+        const type = "bar";
+        await setupWebsiteBuilder(chartTemplate(type, getData(type)));
+        await contains(":iframe .s_chart").click();
+        await animationFrame();
+        await contains(".options-container table [data-action-id=updateDatasetLabel]:first input").click();
+        await animationFrame();
+        expect(
+            ".options-container [data-label='Dataset Color'] button.o_we_color_preview"
+        ).toHaveStyle({
+            backgroundColor: "rgba(255, 255, 255, 0)",
+        });
+        expect(
+            ".options-container [data-label='Dataset Border'] button.o_we_color_preview"
+        ).toHaveStyle({
+            backgroundColor: "rgb(255, 127, 80)",
+        });
         expect(
             ".options-container table [data-action-id=updateDatasetLabel]:first input"
         ).toHaveStyle({
-            border: "2px solid rgb(217, 217, 217)",
+            border: "2px solid rgb(255, 127, 80)",
         });
         expect(
             ".options-container table [data-action-id=updateDatasetValue]:first input"
@@ -84,13 +117,46 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
+        await contains(".options-container table td:nth-child(3) [data-action-id=updateDatasetValue]:first input").click();
+        await animationFrame();
         expect(
-            ".options-container table [data-action-id=updateDatasetValue]:first input"
+            ".options-container [data-label='Data Color'] button.o_we_color_preview"
         ).toHaveStyle({
-            border: "2px solid rgb(217, 217, 217)",
+            backgroundColor: "rgb(74, 123, 140)",
         });
         expect(
-            ".options-container table [data-action-id=updateDatasetLabel]:first input"
+            ".options-container table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
+        ).toHaveStyle({
+            border: "2px solid rgb(74, 123, 140)",
+        });
+        expect(
+            ".options-container table th:nth-child(3) [data-action-id=updateDatasetLabel]:first input"
+        ).toHaveAttribute("style", "");
+    });
+    test("Pie chart => border color set as fallback for border on individual data inputs", async () => {
+        const type = "pie";
+        await setupWebsiteBuilder(chartTemplate(type, getData(type)));
+        await contains(":iframe .s_chart").click();
+        await animationFrame();
+        await contains(".options-container table td:nth-child(2) [data-action-id=updateDatasetValue]:first input").click();
+        await animationFrame();
+        expect(
+            ".options-container [data-label='Data Color'] button.o_we_color_preview"
+        ).toHaveStyle({
+            backgroundColor: "rgba(255, 255, 255, 0)",
+        });
+        expect(
+            ".options-container [data-label='Data Border'] button.o_we_color_preview"
+        ).toHaveStyle({
+            backgroundColor: "rgb(255, 127, 80)",
+        });
+        expect(
+            ".options-container table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
+        ).toHaveStyle({
+            border: "2px solid rgb(255, 127, 80)",
+        });
+        expect(
+            ".options-container table th:nth-child(2) [data-action-id=updateDatasetLabel]:first input"
         ).toHaveAttribute("style", "");
     });
 });
