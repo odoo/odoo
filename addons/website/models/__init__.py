@@ -2,6 +2,7 @@
 
 from . import assets
 from . import base_partner_merge
+from . import html_text_processor
 from . import ir_actions_server
 from . import ir_asset
 from . import ir_attachment
