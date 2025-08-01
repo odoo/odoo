@@ -45,7 +45,6 @@ export class ChatBubble extends Component {
             position: "left-middle",
             popoverClass:
                 "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
-            onClose: () => (this.state.showClose = false),
             ref: popoverRef,
         });
         this.env.bus.addEventListener("ChatBubble:preview-will-open", ({ detail }) => {
@@ -59,11 +58,10 @@ export class ChatBubble extends Component {
                 this.env.bus.trigger("ChatBubble:preview-will-open", this);
                 this.popover.open(this.rootRef.el, { chatWindow: this.props.chatWindow });
             },
-            onHovering: [100, () => (this.state.showClose = true)],
             onAway: () => this.popover.close(),
         });
         this.rootRef = useRef("root");
-        this.state = useState({ bouncing: false, showClose: true });
+        this.state = useState({ bouncing: false });
         useEffect(
             (importantCounter) => {
                 this.state.bouncing = Boolean(importantCounter);

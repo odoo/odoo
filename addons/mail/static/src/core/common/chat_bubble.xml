@@ -4,7 +4,7 @@
         <div class="o-mail-ChatBubble position-relative" t-att-name="props.chatWindow.displayName" t-att-class="{ 'o-bouncing': state.bouncing, 'o-active': popover.isOpen, 'o-mobile': isMobileOS }" t-on-click="() => props.chatWindow.open({ focus: true })" t-on-animationend="() => state.bouncing = false" t-ref="root">
             <span class="o-mail-ChatBubble-unreadIndicator position-absolute text-400" t-att-class="{ 'opacity-0': !thread?.isUnread or thread?.importantCounter }"><i class="fa fa-circle"/></span>
             <div t-if="thread?.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow" t-out="thread?.importantCounter"/>
-            <button t-if="state.showClose and !env.embedLivechat and !isMobileOS" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.close()"><i class="oi oi-close"/></button>
+            <button t-if="!env.embedLivechat and !isMobileOS" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.close()"><i class="oi oi-close"/></button>
             <ImStatus t-if="thread?.correspondent?.im_status and thread?.correspondent?.im_status != 'offline'" className="'o-mail-ChatBubble-status position-absolute'" member="thread.correspondent">
                 <t t-set-slot="pre_icon">
                     <i style="font-size: 18px; right: -2px; bottom: -2px; z-index: -1;" t-att-class="{
