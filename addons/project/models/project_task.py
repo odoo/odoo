@@ -57,6 +57,8 @@ PROJECT_TASK_READABLE_FIELDS = {
     'is_template',
     'has_template_ancestor',
     'stage_id_color',
+    'access_token',
+    'access_url',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
