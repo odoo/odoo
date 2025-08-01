@@ -10,6 +10,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import config, ormcache, mute_logger, SQL, str2bool
 
+_logger = logging.getLogger(__name__)
+
+USED_BEFORE_DEFINED = set()
+
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -76,13 +80,16 @@ class IrConfig_Parameter(models.Model):
         return self._get(key)
 
     @ormcache('key')
-    def _get(self, key):
+    def _get(self, key, warning=True):
         # we bypass the ORM because get_param() is used in some field's depends,
         # and must therefore work even when the ORM is not ready to work
         self.flush_model()
         self.env.cr.execute(SQL('SELECT "value", "type" FROM ir_config_parameter WHERE key = %s', key))
         result = self.env.cr.fetchone()
         if not result:
+            if warning and key not in USED_BEFORE_DEFINED:
+                USED_BEFORE_DEFINED.add(key)
+                _logger.warning(f'ir.config_parameter used before defined: {key}')
             return None
         value, type_ = result
         return self._convert_value(value, type_)
@@ -100,7 +107,7 @@ class IrConfig_Parameter(models.Model):
 
     @api.model
     def set(self, key, value, type_=None):
-        if value == self._get(key) and value is not None:
+        if value == self._get(key, warning=False) and value is not None:
             return
         param = self.search([('key', '=', key)])
         type_ = type_ or param.type or 'text'
