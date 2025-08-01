@@ -58,7 +58,7 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await click("[title='More']");
     await contains("[title='Raise Hand']");
-    await contains("[title='Enter Full Screen']");
+    await contains("[title='Fullscreen']");
 });
 
 test("mobile UI", async () => {
@@ -83,8 +83,7 @@ test("keep the `more` popover active when hovering it", async () => {
     await contains(".o-discuss-Call");
     await contains(".o-discuss-CallActionList");
     await click("[title='More']");
-    const enterFullScreenSelector =
-        ".o-discuss-CallActionList-dropdownItem[title='Enter Full Screen']";
+    const enterFullScreenSelector = ".o-discuss-CallActionList-dropdownItem[title='Fullscreen']";
     await contains(enterFullScreenSelector);
     await hover(queryFirst(enterFullScreenSelector));
     await contains(enterFullScreenSelector);
