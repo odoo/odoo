@@ -187,8 +187,14 @@ export async function simulateArrowKeyPress(editor, keys) {
     const alter = keysArray.includes("Shift") ? "extend" : "move";
     const direction =
         keysArray.includes("ArrowLeft") || keysArray.includes("ArrowUp") ? "left" : "right";
-    const granularity =
-        keysArray.includes("ArrowUp") || keysArray.includes("ArrowDown") ? "line" : "character";
+    let granularity;
+    if (keysArray.includes("ArrowUp") || keysArray.includes("ArrowDown")) {
+        granularity = "line";
+    } else if (keysArray.includes("Ctrl")) {
+        granularity = "word";
+    } else {
+        granularity = "character";
+    }
     const selection = editor.document.getSelection();
     selection.modify(alter, direction, granularity);
 }
