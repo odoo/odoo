@@ -5,9 +5,10 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import formatLang
+from odoo.exceptions import ValidationError
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
@@ -71,6 +72,23 @@ class ProjectUpdate(models.Model):
     def _compute_name_cropped(self):
         for u in self:
             u.name_cropped = (u.name[:57] + '...') if len(u.name) > 60 else u.name
+
+    # ---------------------------------
+    # Onchange
+    # ---------------------------------
+
+    @api.onchange('progress')
+    def _onchange_progress(self):
+        self._check_progress()
+
+    # ---------------------------------
+    # Constrains
+    # ---------------------------------
+
+    @api.constrains('progress')
+    def _check_progress(self):
+        if self.filtered(lambda t: not 100 >= t.progress >= 0):
+            raise ValidationError(_('The progress must be between 0 and 100%'))
 
     # ---------------------------------
     # ORM Override
