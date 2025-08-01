@@ -52,12 +52,12 @@ export class Many2OneAction extends BuilderAction {
         const { id, name } = JSON.parse(value);
         const { oeModel, oeId, oeField, oeContactOptions } = editingElement.dataset;
 
-        for (const el of [
-            ...this.editable.querySelectorAll(
-                `[data-oe-model="${oeModel}"][data-oe-id="${oeId}"][data-oe-field="${oeField}"]:not([data-oe-contact-options='${oeContactOptions}'])`
-            ),
-            editingElement,
-        ]) {
+        const selector =
+            `[data-oe-model="${oeModel}"][data-oe-id="${oeId}"][data-oe-field="${oeField}"]` +
+            (oeContactOptions === undefined
+                ? "[data-oe-contact-options]"
+                : `:not([data-oe-contact-options='${oeContactOptions}'])`);
+        for (const el of [...this.editable.querySelectorAll(selector), editingElement]) {
             el.dataset.oeMany2oneId = id;
             if (el.dataset.oeType === "contact") {
                 el.replaceChildren(
