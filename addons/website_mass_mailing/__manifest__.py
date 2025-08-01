@@ -15,6 +15,7 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'security/ir.model.access.csv',
         'data/ir_model_data.xml',
         'views/snippets_templates.xml',
+        'views/snippets/s_newsletter_benefits_popup.xml',
     ],
     'auto_install': ['website', 'mass_mailing'],
     'assets': {

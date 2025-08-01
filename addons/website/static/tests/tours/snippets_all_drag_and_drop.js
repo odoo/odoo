@@ -40,7 +40,7 @@ for (let snippet of snippetsNames) {
         name: snippet.split(":")[0],
         group: snippet.split(":")[1],
     };
-    const isModal = ["s_popup", "s_newsletter_subscribe_popup"].includes(snippet.name);
+    const isModal = ["s_popup", "s_newsletter_subscribe_popup", "s_newsletter_benefits_popup"].includes(snippet.name);
     const isDropInOnlySnippet = Object.keys(DROP_IN_ONLY_SNIPPETS).includes(snippet.name);
     const snippetKey = SUB_SNIPPET_TEMPLATES[snippet.name] || snippet.name;
 
