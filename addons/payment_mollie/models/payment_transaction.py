@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.urls import url_decode, url_parse
+
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
@@ -43,8 +45,8 @@ class PaymentTransaction(models.Model):
         # from being stripped off when redirecting the user to the checkout URL, which can happen
         # when only one payment method is enabled on Mollie and query parameters are provided.
         checkout_url = payment_data['_links']['checkout']['href']
-        parsed_url = urls.url_parse(checkout_url)
-        url_params = urls.url_decode(parsed_url.query)
+        parsed_url = url_parse(checkout_url)
+        url_params = url_decode(parsed_url.query)
         return {'api_url': checkout_url, 'url_params': url_params}
 
     def _mollie_prepare_payment_request_payload(self):
