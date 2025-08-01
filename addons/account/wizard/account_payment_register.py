@@ -1163,7 +1163,7 @@ class AccountPaymentRegister(models.TransientModel):
         payments = self.env['account.payment']
         for vals in to_process:
             payments |= vals['payment']
-        payments.action_post()
+        payments.with_context(skip_sale_auto_invoice_send=True).action_post()
 
     def _reconcile_payments(self, to_process, edit_mode=False):
         """ Reconcile the payments.
