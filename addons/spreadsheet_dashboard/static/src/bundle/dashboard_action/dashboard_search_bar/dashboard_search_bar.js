@@ -3,14 +3,17 @@ import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
-import { FiltersSearchDialog } from "@spreadsheet/global_filters/components/filters_search_dialog/filters_search_dialog";
+import { FilterValuesList } from "@spreadsheet/global_filters/components/filters_search_dialog/filters_search_dialog";
 import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export class DashboardSearchBar extends Component {
     static template = "spreadsheet_dashboard.DashboardSearchBar";
     static components = {
         DashboardFacet,
         DashboardDateFilter,
+        FilterValuesList,
+        Dropdown,
     };
     static props = { model: Object };
 
@@ -18,25 +21,28 @@ export class DashboardSearchBar extends Component {
         this.facets = [];
         this.firstDateFilter = undefined;
         this.nameService = useService("name");
-        this.dialog = useService("dialog");
 
-        this.searchBarDropdownState = useDropdownState();
+        this.filtersValuesDropdown = useDropdownState();
         onWillStart(this.computeState.bind(this));
         onWillUpdateProps(this.computeState.bind(this));
     }
 
-    openDialog() {
-        this.dialog.add(FiltersSearchDialog, {
-            model: this.props.model,
-        });
+    openFilterValueDropdown() {
+        this.filtersValuesDropdown.open();
+    }
+
+    closeFilterValueDropdown() {
+        this.filtersValuesDropdown.close();
+    }
+
+    toggleFilterValueDropdown() {
+        this.filtersValuesDropdown.isOpen
+            ? this.filtersValuesDropdown.close()
+            : this.filtersValuesDropdown.open();
     }
 
     clearFilter(id) {
         this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id });
-    }
-
-    onFacetClick() {
-        this.searchBarDropdownState.open();
     }
 
     updateFirstDateFilter(value) {

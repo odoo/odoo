@@ -1,8 +1,5 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 import {
@@ -15,18 +12,13 @@ import { isEmptyFilterValue } from "../../helpers";
 import { deepEqual } from "@web/core/utils/objects";
 
 /**
- * This component is used to display a dialog with the global filters of a
+ * This component is used to display a list of all the global filters of a
  * spreadsheet/dashboard. It allows the user to select the values of the filters
  * and confirm or discard the changes.
  */
-export class FiltersSearchDialog extends Component {
-    static template = "spreadsheet_dashboard.FiltersSearchDialog";
-    static components = {
-        Dialog,
-        Dropdown,
-        DropdownItem,
-        FilterValue,
-    };
+export class FilterValuesList extends Component {
+    static template = "spreadsheet_dashboard.FilterValuesList";
+    static components = { FilterValue };
 
     static props = {
         close: Function,
