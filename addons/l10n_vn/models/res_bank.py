@@ -34,24 +34,27 @@ class ResPartnerBank(models.Model):
         super(ResPartnerBank, self - bank_vn)._compute_display_qr_setting()
 
     def _get_merchant_account_info(self):
-        if self.country_code == 'VN':
-            proxy_type_mapping = {
-                'merchant_id': 'QRPUSH',
-                'payment_service': 'QRPUSH',
-                'atm_card': 'QRIBFTTC',
-                'bank_acc': 'QRIBFTTA',
-            }
-            payment_network = [
-                (0, self.bank_bic),
-                (1, self.proxy_value),
-            ]
-            vals = [
-                (0, 'A000000727'),
-                (1, ''.join([self._serialize(*val) for val in payment_network])),
-                (2, proxy_type_mapping[self.proxy_type]),
-            ]
-            return (38, ''.join([self._serialize(*val) for val in vals]))
-        return super()._get_merchant_account_info()
+
+        proxy_type_mapping = {
+            'merchant_id': 'QRPUSH',
+            'payment_service': 'QRPUSH',
+            'atm_card': 'QRIBFTTC',
+            'bank_acc': 'QRIBFTTA',
+        }
+
+        if self.country_code != 'VN' or self.proxy_type not in proxy_type_mapping:
+            return super()._get_merchant_account_info()
+
+        payment_network = [
+            (0, self.bank_bic),
+            (1, self.proxy_value),
+        ]
+        vals = [
+            (0, 'A000000727'),
+            (1, ''.join([self._serialize(*val) for val in payment_network])),
+            (2, proxy_type_mapping[self.proxy_type]),
+        ]
+        return (38, ''.join([self._serialize(*val) for val in vals]))
 
     def _get_additional_data_field(self, comment):
         if self.country_code == 'VN':
@@ -81,13 +84,13 @@ class ResPartnerBank(models.Model):
         if qr_method != 'emv_qr' or self.country_code != 'VN':
             return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
-        if not self._get_merchant_account_info():
-            return _("Missing Merchant Account Information.")
         if not (self.partner_id.city or self.partner_id.state_id):
             return _("Missing Merchant City or State.")
         if not self.proxy_type:
             return _("Missing Proxy Type.")
-        if not self.proxy_value:
-            return _("Missing Proxy Value.")
         if self.proxy_type not in ['merchant_id', 'payment_service', 'atm_card', 'bank_acc']:
             return _("The proxy type %s is not supported for Vietnamese partners. It must be either Merchant ID, ATM Card Number or Bank Account", self.proxy_type)
+        if not self.proxy_value:
+            return _("Missing Proxy Value.")
+        if not self._get_merchant_account_info():
+            return _("Missing Merchant Account Information.")
