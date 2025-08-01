@@ -32,7 +32,17 @@ class PageUrlField extends UrlField {
             (inputEl) => {
                 if (inputEl) {
                     const fireChangeEvent = () => {
-                        inputEl.dispatchEvent(new Event("change"));
+                        // handle out-of-date view without show_redirect_old_url
+                        if (!this.props.record.fields.show_redirect_old_url) {
+                            inputEl.dispatchEvent(new Event("change"));
+                            inputEl.removeEventListener("input", fireChangeEvent);
+                            return;
+                        }
+                        this.props.record.update({
+                            show_redirect_old_url:
+                                this.props.record.data.old_url !==
+                                this.props.record.data[this.props.name],
+                        });
                     };
 
                     inputEl.addEventListener("input", fireChangeEvent);
@@ -61,6 +71,7 @@ class PageUrlField extends UrlField {
 const pageUrlField = {
     ...urlField,
     component: PageUrlField,
+    fieldDependencies: [{ name: "old_url", type: "char" }],
 };
 
 registry.category("fields").add("page_url", pageUrlField);
