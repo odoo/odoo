@@ -497,6 +497,8 @@ class ResUsers(models.Model):
                 "model": model_name,
                 "type": "activity",
                 "icon": icon,
+                # activity more important than archived status, active_test is too broad
+                "domain": [('active', 'in', [True, False])] if model_name != "mail.activity" and "active" in Model else [],
                 "total_count": model_activity_states[model_name]['total_count'],
                 "today_count": model_activity_states[model_name]['today_count'],
                 "overdue_count": model_activity_states[model_name]['overdue_count'],
