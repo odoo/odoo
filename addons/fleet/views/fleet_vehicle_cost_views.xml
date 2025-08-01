@@ -226,7 +226,8 @@
                         <group>
                             <field name="description" />
                             <field name="service_type_id" />
-                            <field name="date" />
+                            <field name="date_from" string="Date" widget="daterange"
+                                options="{'end_date_field': 'date_to'}"/>
                             <field name="amount" widget="monetary"/>
                             <field name="vendor_id" widget="many2one_avatar"/>
                         </group>
@@ -253,7 +254,8 @@
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
             <list string="Services Logs" multi_edit="1" expand="1">
-                <field name="date" readonly="1" />
+                <field name="date_from" readonly="1"/>
+                <field name="date_to" readonly="1"/>
                 <field name="description" />
                 <field name="service_type_id" />
                 <field name="vehicle_id" readonly="1" widget="many2one_avatar" />
@@ -291,7 +293,13 @@
                         </div>
                         <div class="text-truncate">
                             <field name="purchaser_id"/>
-                            <field class="float-end" name="date"/>
+                            <div>
+                                <field name="date_from"/>
+                                <t t-if="record.date_to.raw_value">
+                                    <span class="text-muted"> - </span>
+                                    <field name="date_to"/>
+                                </t>
+                            </div>
                         </div>
                         <field class="text-truncate" name="vendor_id"/>
                         <footer class="pt-0">
@@ -309,7 +317,7 @@
        <field name="model">fleet.vehicle.log.services</field>
        <field name="arch" type="xml">
             <graph string="Services Costs Per Month" sample="1">
-                <field name="date"/>
+                <field name="date_from"/>
                 <field name="vehicle_id"/>
                 <field name="amount" type="measure"/>
             </graph>
