@@ -38,7 +38,7 @@ class SaleOrderLine(models.Model):
 
     def _lines_without_price_recomputation(self):
         """ Hook to allow filtering the lines to avoid the recomputation of the price. """
-        return self.filtered('sale_order_option_ids')
+        return self.env['sale.order.line']
 
     #=== TOOLING ===#
 
