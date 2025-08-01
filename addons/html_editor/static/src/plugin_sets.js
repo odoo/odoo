@@ -70,6 +70,7 @@ import { EditorVersionPlugin } from "./core/editor_version_plugin";
 import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
 import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_preview_plugin";
 import { StylePlugin } from "./core/style_plugin";
+import { ContentEditablePlugin } from "./core/content_editable_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -127,6 +128,7 @@ export const CORE_PLUGINS = [
     SplitPlugin,
     UserCommandPlugin,
     StylePlugin,
+    ContentEditablePlugin,
 ];
 
 export const MAIN_PLUGINS = [

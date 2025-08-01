@@ -158,30 +158,14 @@ export class FormOptionPlugin extends Plugin {
             SetFormCustomFieldValueListAction,
             PropertyAction,
         },
-        normalize_handlers: (rootEl) => {
-            for (const formEl of rootEl.querySelectorAll(".s_website_form form")) {
-                // Disable text edition
-                formEl.contentEditable = "false";
-                // Identify editable elements of the form: buttons, description,
-                // recaptcha and columns which are not fields.
-                const formEditableSelector = [
-                    ".s_website_form_send",
-                    ".s_website_form_field_description",
-                    ".s_website_form_recaptcha",
-                    ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
-                ]
-                    .map((selector) => `:scope ${selector}`)
-                    .join(", ");
-                for (const formEditableEl of formEl.querySelectorAll(formEditableSelector)) {
-                    formEditableEl.contentEditable = "true";
-                }
-            }
-        },
+        force_not_editable_selector: ".s_website_form form",
+        force_editable_selector: [
+            ".s_website_form_send",
+            ".s_website_form_field_description",
+            ".s_website_form_recaptcha",
+            ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
+        ].map((selector) => `.s_website_form form ${selector}`),
         clean_for_save_handlers: ({ root: rootEl }) => {
-            // Maybe useless if all contenteditable are removed
-            for (const formEl of rootEl.querySelectorAll(".s_website_form form")) {
-                formEl.removeAttribute("contenteditable");
-            }
             this.removeSuccessMessagePreviews(rootEl);
         },
         dropzone_selector: [
