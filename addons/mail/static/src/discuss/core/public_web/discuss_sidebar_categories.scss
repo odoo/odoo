@@ -90,25 +90,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     }
 }
 
-.o-mail-DiscussSidebarCategories-searchBtn {
-    padding-top: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
-    padding-bottom: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
-}
-
-.o-mail-DiscussSidebarCategories-search {
-    --border-opacity: .5;
-
-    &, & input {
-        background-color: $o-view-background-color !important;
-    }
-
-    &:has(.o-mail-DiscussSidebarCategories-searchClickable:hover) {
-        &, & input {
-            background-color: mix($gray-100, $gray-200) !important;
-        }
-    }
-}
-
 .o-mail-DiscussSidebarSubchannel svg {
     color: var(--mail-DiscussSidebarSubchannel-svgColor, mix($gray-300, $gray-400, 75%));
     left: 22px;

@@ -1,20 +1,16 @@
 .o-mail-DiscussSidebar {
     box-shadow: 1px 0px 6px -3px rgba(50, 50, 50, 0.15);
-    width: 60px;
+    max-width: $o-mail-Discuss-inspector;
     --border-opacity: 0.25;
+}
 
-    &:not(.o-compact) {
-        width: $o-mail-Discuss-inspector;
-    }
+.o-mail-DiscussSidebar-resizablePanelContainer {
+    max-width: $o-mail-Discuss-inspector;
 }
 
 .o-mail-DiscussSidebar-optionsBtn {
     --border-opacity: 0.5;
     padding: map-get($spacers, 1) / 2;
-
-    &:not(.o-compact) {
-        right: map-get($spacers, 2) + map-get($spacers, 1);
-    }
 }
 
 .o-mail-DiscussSidebar-badge {
@@ -58,4 +54,23 @@
             box-shadow: $box-shadow !important;
         }
     }
+}
+
+.o-mail-DiscussSidebar-search {
+    --border-opacity: .5;
+
+    &, & input {
+        background-color: $o-view-background-color !important;
+    }
+
+    &:has(.o-mail-DiscussSidebar-searchClickable:hover) {
+        &, & input {
+            background-color: mix($gray-100, $gray-200) !important;
+        }
+    }
+}
+
+.o-mail-DiscussSidebar-searchBtn {
+    padding-top: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
+    padding-bottom: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
 }
