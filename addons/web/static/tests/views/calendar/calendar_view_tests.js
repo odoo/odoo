@@ -478,6 +478,38 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
+    // QUnit.debug("land on the same date range when going back", async (assert) => {
+    //     assert.expect(2);
+    //     await makeView({
+    //         type: "calendar",
+    //         resModel: "event",
+    //         serverData,
+    //         arch: `<calendar date_start="start" date_stop="stop" all_day="allday" can_create="true"/>`,
+    //     });
+    //     assert.strictEqual(
+    //         target.querySelector(".o_control_panel .breadcrumb-item.active").textContent,
+    //         "undefined (Dec 11 – 17, 2016)",
+    //         "should display the current week"
+    //     );
+    //     await navigate(target, "next");
+    //     await new Promise(resolve => setTimeout(resolve, 10));
+    //     assert.strictEqual(
+    //         target.querySelector(".o_control_panel .breadcrumb-item.active").textContent,
+    //         "undefined (Dec 18 – 24, 2016)",
+    //         "should display the next week"
+    //     );
+
+    //     await click(target, ".o_calendar_create_buttons o-calendar-button-new")
+    //     await new Promise(resolve => setTimeout(resolve, 10));
+    //     await click(target, ".o_control_panel .o_back_button");
+    //     await new Promise(resolve => setTimeout(resolve, 10));
+    //     assert.strictEqual(
+    //         target.querySelector(".o_control_panel .breadcrumb-item.active").textContent,
+    //         "undefined (Dec 18 – 24, 2016)",
+    //         "should display the next week"
+    //     );
+    // });
+
     QUnit.test("filter panel autocomplete: updates when typing", async (assert) => {
         await makeView({
             type: "calendar",
