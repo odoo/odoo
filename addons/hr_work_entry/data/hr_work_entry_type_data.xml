@@ -679,6 +679,15 @@
         <field name="is_leave" eval="True"/>
     </record>
 
+    <record id="l10n_hk_work_entry_type_paternity_leave_80" model="hr.work.entry.type">
+        <field name="name">Paternity Leave 80%</field>
+        <field name="code">HKLEAVE221</field>
+        <field name="color">6</field>
+        <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
+        <field name="amount_rate">0.8</field>
+    </record>
+
     <record id="l10n_hk_work_entry_type_statutory_holiday" model="hr.work.entry.type">
         <field name="name">Statutory Holiday</field>
         <field name="code">HKLEAVE500</field>
