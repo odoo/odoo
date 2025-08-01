@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.WordartSelector" owl="1">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mt-1 mb-2">
+                <label>Presets</label>
+                <span type="button" class="btn btn-secondary mx-1" t-on-click="() => this.preset('3.11')">3.11</span>
+                <span type="button" class="btn btn-secondary mx-1" t-on-click="() => this.preset('curvy')">Curvy</span>
+                <span type="button" class="btn btn-secondary mx-1" t-on-click="() => this.preset('outline')">Outline</span>
+            </div>
+            <div class="mb-2">
+                <label for="text">Text</label>
+                <input id="text" type="text" class="o_input form-control" t-att-placeholder="placeholder" t-model="state.input" t-ref="autofocus"/>
+            </div>
+            <div class="mb-2">
+                <label for="font">Font</label>
+                <input id="font" type="text" class="o_input form-control" t-att-placeholder="placeholder" t-model="state.font"/>
+            </div>
+            <div class="mb-2">
+                <label for="fontsize">Font size</label>
+                <input id="fontsize" type="text" class="o_input form-control" t-att-placeholder="placeholder" t-model="state.fontSize"/>
+            </div>
+            <div class="mt-1 mb-2">
+                <input id="usefill" type="checkbox" class="form-check-input" t-model="state.useFill"/>
+                <label for="usefill" class="ms-1">Fill</label>
+                <input id="useborder" type="checkbox" class="ms-2 form-check-input" t-model="state.borderPlain"/>
+                <label for="useborder" class="ms-1">Plain Border</label>
+            </div>
+            <div class="mt-1 mb-2">
+                <input id="multiborder" type="checkbox" class="form-check-input" t-model="state.borderMulticolor"/>
+                <label for="multiborder" class="ms-1">Multicolor border</label>
+                <input id="animateborder" type="checkbox" class="ms-2 form-check-input" t-model="state.borderAnimation"/>
+                <label for="animateborder" class="ms-1">Animate border</label>
+            </div>
+            <div class="mb-2">
+                <label for="curve" class="ms-1">Curve</label>
+                <input name="curve" type="text" class="o_input form-control" t-att-placeholder="Curve" t-model="state.curve"/>
+            </div>
+            <div class="mt-1 mb-2">
+                <input id="useshadow" type="checkbox" class="form-check-input" t-model="state.useShadow"/>
+                <label for="useshadow" class="ms-1">Shadow</label>
+                <input id="useshifted" type="checkbox" class="ms-2 form-check-input" t-model="state.useShifted"/>
+                <label for="useshifted" class="ms-1">Shifted trail</label>
+            </div>
+        </div>
+        <div class="o_wordart_preview col-md-6">
+            <svg viewBox="0 0 800 600" t-ref="svg" class="o_wordart" data-name="Wordart">
+                <style>
+                    svg.o_wordart text {
+                        <t t-out="'font: ' + state.fontSize + ' ' + state.font +';'"/>
+                    }
+                    svg.o_wordart [href] {
+                        pointer-events: none;
+                    }
+            
+                    <t t-if="state.borderMulticolor">
+                        svg.o_wordart .text-copy {
+                            fill: none;
+                            stroke: white;
+                            <t t-out="'stroke-dasharray: ' + state.strokeStep + '% ' + state.strokeStep * (state.colors.length - 1) + '%;'"/>
+                            stroke-width: 1.5px;
+                  
+                            animation: stroke-offset 2.5s infinite linear;
+                        }
+                
+                        <t t-foreach="[...state.colors.entries()]" t-as="color" t-key="color[0]">
+                            <t t-out="'svg.o_wordart .text-copy:nth-child(' + (color[0] + 1) + ') {'"/>
+                                <t t-out="'stroke: ' + color[1] + ';'"/>
+                                <t t-out="'stroke-dashoffset: ' + state.strokeStep * color[0] + '%;'"/>
+                            }
+                        </t>
+                        <t t-if="state.borderAnimation">
+                            @keyframes stroke-offset {
+                                50% {
+                                    <t t-out="'stroke-dashoffset: ' + state.strokeStep * state.colors.length + '%;'"/>  
+                                    <t t-out="'stroke-dasharray: 0 ' + state.strokeStep * state.colors.length * 2.5 + '%;'"/>
+                                }
+                            }
+                        </t>
+                    </t>
+                </style>
+                <defs>
+                    <path t-att-d="state.curve" id="wa-curve" fill="none" t-att-stroke="state.curveColor" stroke-width="state.curveStrokeWidth" />
+                    <linearGradient id="wa-gradient" t-att-gradientTransform="'rotate(' + state.fillGradient.rotate + ')'">
+                        <t t-foreach="state.fillGradient.stops" t-as="stop" t-key="stop.offset">
+                            <stop t-att-offset="stop.offset + '%'" t-att-stop-color="stop.stopColor" />
+                        </t>
+                    </linearGradient>
+                    <filter id="wa-shadow">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="10"></feGaussianBlur>
+                    </filter>
+                    <symbol id="wa-text">
+                        <text text-anchor="middle" x="50%" y="68%">
+                            <t t-if="state.curve">
+                                <textPath href="#wa-curve" startOffset="-20%">
+                                    <t t-out="state.input or placeholder"/>
+                                </textPath>
+                            </t>
+                            <t t-else="">
+                                <t t-out="state.input or placeholder"/>
+                            </t>
+                        </text>
+                    </symbol>
+                </defs>
+                <g>
+                    <t t-if="state.useShadow">
+                        <use y="5%" href="#wa-text" opacity="0.5" stroke="#00cccc" filter="url(#wa-shadow)" stroke-width=".035em" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"></use>
+                    </t>
+                    <t t-if="state.useShifted">
+                        <t t-foreach="[...state.shiftedFills.entries()]" t-as="fill" t-key="fill[0]">
+                            <use t-att-x="fill[1][0] + '%'" t-att-y="fill[1][1] + '%'" href="#wa-text" t-att-fill="fill[1][2]"></use>
+                        </t>
+                    </t>
+                    <t t-if="state.borderMulticolor">
+                        <t t-foreach="[...state.colors.entries()]" t-as="color" t-key="color[0]">
+                            <use href="#wa-text" class="text-copy"></use>
+                        </t>
+                    </t>
+                    <t t-if="state.useFill">
+                        <use href="#wa-text" t-att-style="(state.borderPlain ? 'stroke: black; stroke-width: 1px;' : '') + 'fill: url(#wa-gradient);' + (state.borderMulticolor ? ' fill-opacity: 75%;' : '')"></use>
+                    </t>
+                </g>
+            </svg>
+        </div>
+    </div>
+</t>
+</templates>
