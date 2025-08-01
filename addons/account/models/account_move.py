@@ -470,7 +470,7 @@ class AccountMove(models.Model):
     )
     invoice_has_outstanding = fields.Boolean(
         groups="account.group_account_invoice,account.group_account_readonly",
-        compute='_compute_payments_widget_to_reconcile_info',
+        compute='_compute_invoice_has_outstanding',
     )
     invoice_payments_widget = fields.Binary(
         groups="account.group_account_invoice,account.group_account_readonly",
@@ -1333,9 +1333,9 @@ class AccountMove(models.Model):
                     }
 
     def _compute_payments_widget_to_reconcile_info(self):
+
         for move in self:
             move.invoice_outstanding_credits_debits_widget = False
-            move.invoice_has_outstanding = False
 
             if move.state not in {'draft', 'posted'} \
                     or move.payment_state not in ('not_paid', 'partial') \
@@ -1350,17 +1350,16 @@ class AccountMove(models.Model):
                 ('parent_state', '=', 'posted'),
                 ('partner_id', '=', move.commercial_partner_id.id),
                 ('reconciled', '=', False),
+                ('balance', '<' if move.is_inbound() else '>', 0.0),
                 '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
             ]
 
-            payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
-
-            if move.is_inbound():
-                domain.append(('balance', '<', 0.0))
-                payments_widget_vals['title'] = _('Outstanding credits')
-            else:
-                domain.append(('balance', '>', 0.0))
-                payments_widget_vals['title'] = _('Outstanding debits')
+            payments_widget_vals = {
+                'outstanding': True,
+                'content': [],
+                'move_id': move.id,
+                'title': _('Outstanding credits') if move.is_inbound() else _('Outstanding debits')
+            }
 
             for line in self.env['account.move.line'].search(domain):
 
@@ -1389,11 +1388,13 @@ class AccountMove(models.Model):
                     'account_payment_id': line.payment_id.id,
                 })
 
-            if not payments_widget_vals['content']:
-                continue
+            if payments_widget_vals['content']:
+                move.invoice_outstanding_credits_debits_widget = payments_widget_vals
 
-            move.invoice_outstanding_credits_debits_widget = payments_widget_vals
-            move.invoice_has_outstanding = True
+    @api.depends('invoice_outstanding_credits_debits_widget')
+    def _compute_invoice_has_outstanding(self):
+        for move in self:
+            move.invoice_has_outstanding = bool(move.invoice_outstanding_credits_debits_widget)
 
     @api.depends('partner_id', 'company_id')
     def _compute_preferred_payment_method_line_id(self):
