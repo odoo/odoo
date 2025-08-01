@@ -1,5 +1,9 @@
 import {
     containsAnyNonPhrasingContent,
+    getDeepestPosition,
+    isContentEditable,
+    isElement,
+    isEmpty,
     isMediaElement,
     isProtected,
     isProtecting,
@@ -14,10 +18,12 @@ import {
 } from "../utils/base_container";
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { childNodeIndex } from "@html_editor/utils/position";
 
 export class BaseContainerPlugin extends Plugin {
     static id = "baseContainer";
     static shared = ["createBaseContainer", "getDefaultNodeName", "isCandidateForBaseContainer"];
+    static dependencies = ["selection"];
     /**
      * Register one of the predicates for `invalid_for_base_container_predicates`
      * as a property for optimization, see variants of `isCandidateForBaseContainer`.
@@ -37,6 +43,12 @@ export class BaseContainerPlugin extends Plugin {
         // because a `div` may only have the baseContainer identity if it does not
         // already have another incompatible identity given by another plugin.
         normalize_handlers: withSequence(Infinity, this.normalizeDivBaseContainers.bind(this)),
+        delete_handlers: () => {
+            if (this.config.cleanEmptyStructuralContainers === false) {
+                return;
+            }
+            this.cleanEmptyStructuralContainers();
+        },
         unsplittable_node_predicates: (node) => {
             if (node.nodeName !== "DIV") {
                 return false;
@@ -63,6 +75,46 @@ export class BaseContainerPlugin extends Plugin {
 
     getDefaultNodeName() {
         return this.config.baseContainer || "P";
+    }
+
+    cleanEmptyStructuralContainers() {
+        const node = this.document.getSelection().anchorNode;
+
+        if (!isElement(node) || !isEmpty(node)) {
+            return;
+        }
+
+        const closestEditable = (n) =>
+            isContentEditable(n.parentElement) ? closestEditable(n.parentElement) : n;
+
+        const isUnsplittable = this.isUnsplittablePredicate(node);
+        const isCandidateForBase = this.isCandidateForBaseContainerAllowUnsplittable(node);
+
+        if (isUnsplittable || !isCandidateForBase) {
+            return;
+        }
+
+        let anchorNode = node.parentElement;
+        if (
+            anchorNode === closestEditable(node) ||
+            !SUPPORTED_BASE_CONTAINER_NAMES.includes(anchorNode.nodeName) ||
+            this.getResource("unremovable_node_predicates").some((p) => p(anchorNode))
+        ) {
+            return;
+        }
+
+        if (isEmpty(anchorNode)) {
+            fillEmpty(anchorNode);
+        }
+
+        let anchorOffset = childNodeIndex(node);
+        node.remove();
+
+        [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
+        this.dependencies.selection.setSelection({
+            anchorNode,
+            anchorOffset,
+        });
     }
 
     /**
