@@ -1737,7 +1737,7 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
-    generateOrderChange(order, orderChange, categories, reprint = false) {
+    generateOrderChange(order, orderChange, categories, reprint = false, singlePrinter = true) {
         const isPartOfCombo = (line) =>
             line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
         const comboChanges = orderChange.new.filter(isPartOfCombo);
@@ -1755,7 +1755,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         const orderData = this.getOrderData(order, reprint);
 
-        const changes = this.filterChangeByCategories(categories, orderChange);
+        const changes = this.filterChangeByCategories(categories, orderChange, singlePrinter);
         return { orderData, changes };
     }
 
@@ -1768,7 +1768,8 @@ export class PosStore extends WithLazyGetterTrap {
                 order,
                 orderChange,
                 printer.config.product_categories_ids,
-                reprint
+                reprint,
+                this.unwatched.printers.length === 1
             );
 
             if (changes.new.length) {
@@ -1854,12 +1855,12 @@ export class PosStore extends WithLazyGetterTrap {
         return await printer.printReceipt(receipt);
     }
 
-    filterChangeByCategories(categories, currentOrderChange) {
+    filterChangeByCategories(categories, currentOrderChange, singlePrinter = true) {
         const filterFn = (change) => {
             const product = this.models["product.product"].get(change["product_id"]);
             const categoryIds = product.parentPosCategIds;
 
-            if (change.isCombo) {
+            if (change.isCombo && singlePrinter) {
                 return true;
             }
             for (const categoryId of categoryIds) {
