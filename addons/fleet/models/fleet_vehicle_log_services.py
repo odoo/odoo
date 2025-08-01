@@ -23,7 +23,9 @@ class FleetVehicleLogServices(models.Model):
         compute="_get_odometer", inverse='_set_odometer', string='Odometer Value',
         help='Odometer measure of the vehicle at the moment of this log')
     odometer_unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    date = fields.Date(help='Date when the cost has been executed', default=fields.Date.context_today)
+    date_from = fields.Date(string='Start of Service', help='Date when the cost has been executed',
+        default=fields.Date.context_today)
+    date_to = fields.Date(string='End of Service')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     purchaser_id = fields.Many2one('res.partner', string="Driver", compute='_compute_purchaser_id', readonly=False, store=True)
@@ -53,7 +55,7 @@ class FleetVehicleLogServices(models.Model):
                 raise UserError(_('Emptying the odometer value of a vehicle is not allowed.'))
             odometer = self.env['fleet.vehicle.odometer'].create({
                 'value': record.odometer,
-                'date': record.date or fields.Date.context_today(record),
+                'date': record.date_from or fields.Date.context_today(record),
                 'vehicle_id': record.vehicle_id.id
             })
             self.odometer_id = odometer
