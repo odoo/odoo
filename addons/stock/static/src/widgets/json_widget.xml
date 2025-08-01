@@ -12,11 +12,12 @@
         </p>
         <table t-if="jsonValue.lead_days_description" class="table table-borderless table-sm">
             <tbody>
-                <tr>
+                <tr class="table-secondary">
                     <td>Today</td>
                     <td class="text-end" t-out="jsonValue.today"/>
                 </tr>
-                <tr t-foreach="jsonValue.lead_days_description" t-key="descr" t-as="descr">
+                <tr t-foreach="jsonValue.lead_days_description" t-key="descr" t-as="descr"
+                    t-attf-class="{{ descr[2] ? 'table-secondary' : '' }}">
                     <td t-out="descr[0]"/>
                     <td class="text-end" t-out="descr[1]"/>
                 </tr>

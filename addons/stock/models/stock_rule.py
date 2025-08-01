@@ -413,21 +413,23 @@ class StockRule(models.Model):
         """
         _ = self.env._
         delays = defaultdict(float)
-        delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
-        delays['total_delay'] += delay
+        delay_description = []
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
+        # Check if the rules have lead time
+        delaying_rules = self.filtered(lambda r: r.action in ['pull', 'pull_push'] and r.delay)
+        if delaying_rules:
+            delays['total_delay'] += sum(delaying_rules.mapped('delay'))
+            if not bypass_delay_description:
+                delay_description = [
+                    (_('Delay on %s', rule.name), _('+ %d day(s)', rule.delay))
+                    for rule in delaying_rules
+                ]
+        # Check if there's a horizon set
         global_horizon_days = self.env.context.get('global_horizon_days', self.env.company.horizon_days)
         if global_horizon_days:
-            delays['total_delay'] += int(global_horizon_days)
-        if self.env.context.get('bypass_delay_description'):
-            delay_description = []
-        else:
-            delay_description = [
-                (_('Delay on %s', rule.name), _('+ %d day(s)', rule.delay))
-                for rule in self
-                if rule.action in ['pull', 'pull_push'] and rule.delay
-            ]
-        if global_horizon_days:
-            delay_description.append((_('Time Horizon'), _('+ %d day(s)', int(global_horizon_days))))
+            delays['total_delay'] += global_horizon_days
+            if not bypass_delay_description:
+                delay_description.append((_('Time Horizon'), _('+ %d day(s)', global_horizon_days)))
         return delays, delay_description
 
 
