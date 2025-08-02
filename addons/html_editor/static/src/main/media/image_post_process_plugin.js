@@ -62,7 +62,9 @@ export class ImagePostProcessPlugin extends Plugin {
             aspectRatio,
             quality,
         } = data;
-
+        if (img.classList.contains(img.dataset.className)) {
+            img.classList.remove(img.dataset.className);
+        }
         const { postProcessCroppedCanvas, perspective, getHeight } = processContext;
 
         // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)

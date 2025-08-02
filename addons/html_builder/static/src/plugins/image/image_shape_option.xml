@@ -19,8 +19,8 @@
                 icon="'oi-close'"
                 className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'"
                 t-if="state.hasShape"/>
-        </div>
-    </BuilderRow>
+            </div>
+        </BuilderRow>
     <t t-if="this.state.hasShape">
         <t t-set="enabledTabs" t-value="['solid', 'custom']" />
         <BuilderRow label.translate="Colors" level="2">
@@ -56,6 +56,8 @@
             <BuilderCheckbox action="'toggleImageShapeRatio'" />
         </BuilderRow>
     </t>
+    <BorderConfigurator label.translate="Border"/>
+    <ShadowOption/>
 </t>
 
 </templates>

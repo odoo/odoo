@@ -79,6 +79,8 @@ export class ImageShapeOptionPlugin extends Plugin {
         //todo: handle hover effect after
         // todo: find a way to apply to carousel thumbnail
     }
+
+
     async processImageWarmup(img, newDataset) {
         const getData = (propName) =>
             propName in newDataset ? newDataset[propName] : img.dataset[propName];
@@ -162,6 +164,9 @@ export class ImageShapeOptionPlugin extends Plugin {
     async processImagePost(b64url, handlerDataset, processContext) {
         const { svg, svgAspectRatio, svgWidth } = processContext;
         if (!svg) {
+            return;
+        }
+        if(processContext.newDataset.className === "rounded-circle") {
             return;
         }
         svg.querySelectorAll("image").forEach((image) => {
@@ -373,10 +378,31 @@ export class SetImageShapeAction extends BuilderAction {
         // todo nby: re-read the old option method `setImgShape` and be sure all the logic is in there
         return this.dependencies.imageShapeOption.loadShape(img, params);
     }
-    apply({ editingElement: img, loadResult: updateImageAttributes }) {
-        updateImageAttributes();
-        const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
-        img.dataset.fileName = `${imgFilename}.svg`;
+    apply({ editingElement: img, loadResult: updateImageAttributes, isPreviewing, params: { mainParam: className } }) {
+    updateImageAttributes();
+
+    if (isPreviewing) {
+        //  Hover preview behavior
+        if(className){
+            img.classList.add(className);
+        }
+        return;
+    }
+    if(className){
+        img.classList.add(className);
+    }
+
+
+    const dataset = img.dataset;
+        const originalSrc = dataset.originalSrc;
+        if (originalSrc && typeof originalSrc === "string") {
+            const imgFilename = originalSrc.split("/").pop()?.split(".")[0];
+            if (imgFilename) {
+                dataset.fileName = `${imgFilename}.svg`;
+            }
+        } else {
+            console.warn("originalSrc not found in dataset. Skipping fileName assignment.");
+        }
     }
 }
 export class SetImgShapeColorAction extends BuilderAction {
