@@ -46,15 +46,16 @@
             <field name="parent_id" ref="sale.mt_order_confirmed"/>
             <field name="relation_field">team_id</field>
         </record>
-        <record id="mt_salesteam_invoice_created" model="mail.message.subtype">
-            <field name="name">Invoice Created</field>
+        <record id="mt_salesteam_invoice_paid" model="mail.message.subtype">
+            <field name="name">Invoice Paid</field>
             <field name="sequence">35</field>
             <field name="res_model">crm.team</field>
-            <field name="parent_id" ref="account.mt_invoice_created"/>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="account.mt_invoice_paid"/>
             <field name="relation_field">team_id</field>
         </record>
-        <record id="mt_salesteam_invoice_confirmed" model="mail.message.subtype">
-            <field name="name">Invoice Confirmed</field>
+        <record id="mt_salesteam_invoice_posted" model="mail.message.subtype">
+            <field name="name">Invoice Posted</field>
             <field name="sequence">40</field>
             <field name="res_model">crm.team</field>
             <field name="parent_id" ref="account.mt_invoice_validated"/>
