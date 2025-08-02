@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="l10n_in_ewaybill_stock_inherit_report" inherit_id="l10n_in_ewaybill.report_ewaybill">
-        <xpath expr="//t[@t-name='ewaybill_header']" position="replace">
+        <xpath expr="//h4[@id='title']" position="replace">
             <h4 t-if="doc.state not in ewaybill_states and doc.picking_id"
                 style="margin-top: 1rem;">
                 Delivery Challan

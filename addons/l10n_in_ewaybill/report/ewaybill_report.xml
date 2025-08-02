@@ -23,9 +23,7 @@
                                              style="max-width: 8rem; height: auto;" alt="Company Logo"/>
                                     </td>
                                     <td id="ewaybill_header">
-                                        <t t-name="ewaybill_header">
-                                            <h4 style="margin-top: 1rem;">e-Way Bill</h4>
-                                        </t>
+                                        <h4 id="title" style="margin-top: 1rem;">e-Way Bill</h4>
                                     </td>
                                     <td t-if="doc.state in ewaybill_states">
                                         <img t-if="doc.name != False"
