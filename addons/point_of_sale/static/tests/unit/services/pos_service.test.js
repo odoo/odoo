@@ -32,6 +32,18 @@ describe("pos_store.js", () => {
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
     });
 
+    test("syncToIndexedDbCalledPoSOrderLine", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store); // Should have 2 lines
+        let syncCount = 0;
+        store.data.debouncedSynchronizeLocalDataInIndexedDB = () => {
+            syncCount += 1;
+        };
+        store.data.initListeners();
+        order.lines[0].setQuantity(5, true);
+        expect(syncCount).toBe(1);
+    });
+
     describe("syncAllOrders", () => {
         test("simple sync", async () => {
             const store = await setupPosEnv();
