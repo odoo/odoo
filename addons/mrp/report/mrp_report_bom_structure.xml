@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_mrp_bom">
+        <style>
+            td {
+              font-size: 16px;
+            }
+            th {
+                font-size: 18px;
+            }
+        </style>
         <div class="o_mrp_bom_report_page container py-3 py-lg-5 px-0 bg-view">
             <div t-if="data.get('lines')">
-                <div class="px-3 mb-5">
-                    <h1>BoM Overview</h1>
-                    <h3 t-esc="data['name']"/>
-                    <hr t-if="data['bom_code']"/>
-                    <h6 t-if="data['bom_code']">Reference: <t t-esc="data['bom_code']"/></h6>
-                </div>
                 <t t-set="currency" t-value="data['currency']"/>
                 <table class="o_mrp_bom_expandable table table-borderless">
                     <thead>
@@ -98,8 +100,9 @@
         <t t-foreach="data['lines']" t-as="l">
             <tr t-if="l['visible']">
                 <td name="td_mrp_code">
-                    <span t-attf-style="margin-left: {{ str(l['level'] * 20) }}px"/>
-                    <span t-esc="l['name']"/>
+                    <div t-attf-style="margin-left: {{ l['level'] * 20 }}px; max-width: 280px; word-wrap: break-word;">
+                        <span t-esc="l['name']"/>
+                    </div>
                 </td>
                 <td class="text-end">
                     <t t-if="l['type'] == 'operation'" t-esc="l['quantity']" t-options='{"widget": "float_time"}'/>
@@ -129,7 +132,10 @@
                     </span>
                 </td>
                 <td t-if="data['forecast_mode']">
-                    <span t-if="l.get('route_name')" t-attf-class="{{'text-danger' if l.get('route_alert') else ''}}"><t t-esc="l['route_name']"/>: <t t-esc="l['route_detail']"/></span>
+                    <div t-if="l.get('route_name')" t-attf-class="{{'text-danger' if l.get('route_alert') else ''}}" style="max-width: 280px; word-wrap: break-word;">
+                        <t t-esc="l['route_name']"/>:
+                        <t t-esc="l['route_detail']"/>
+                    </div>
                 </td>
                 <td t-else=""/>
                 <td t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-esc="l['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
