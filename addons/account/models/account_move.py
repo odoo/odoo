@@ -3860,7 +3860,10 @@ class AccountMove(models.Model):
         """
         common_domain = expression.AND([
             common_domain or [],
-            [('state', '=', 'posted')],
+            expression.OR([
+                [('state', '=', 'posted')],
+                [('sequence_number', '!=', False)],
+            ])
         ])
         if force_hash:
             return common_domain
