@@ -500,7 +500,8 @@ patch(PosOrder.prototype, {
             (dp) => dp.name === "Product Price"
         );
         pointsForProgramsCountedRules = {};
-        const orderLines = this.getOrderlines();
+        const orderLines = this.getOrderlines().filter((line) => !line.combo_parent_id);
+
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id;
@@ -543,11 +544,19 @@ patch(PosOrder.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.getPriceWithTax(),
+                    (sum, line) =>
+                        sum +
+                        (line.combo_line_ids.length > 0
+                            ? line.getComboTotalPrice()
+                            : line.getPriceWithTax()),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.getPriceWithoutTax(),
+                    (sum, line) =>
+                        sum +
+                        (line.combo_line_ids.length > 0
+                            ? line.getComboTotalPriceWithoutTax()
+                            : line.getPriceWithoutTax()),
                     0
                 );
                 const amountCheck =
@@ -588,7 +597,10 @@ patch(PosOrder.prototype, {
                             qtyPerProduct[line._reward_product_id?.id || line.getProduct().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.getPriceWithTax();
+                        orderedProductPaid +=
+                            line.combo_line_ids.length > 0
+                                ? line.getComboTotalPrice()
+                                : line.getPriceWithTax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
