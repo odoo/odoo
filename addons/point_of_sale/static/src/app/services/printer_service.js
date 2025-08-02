@@ -53,6 +53,9 @@ export class PrinterService extends Reactive {
         }
         this.state.isPrinting = true;
         const el = await this.renderer.toHtml(component, props);
+        if (!el) {
+            return;
+        }
         try {
             await waitImages(el);
         } catch (e) {
