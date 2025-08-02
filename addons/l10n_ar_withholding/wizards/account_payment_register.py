@@ -20,14 +20,37 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.depends('l10n_latam_move_check_ids.amount', 'amount', 'l10n_ar_net_amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_l10n_ar_adjustment_warning(self):
-        wizard_register = self
         for wizard in self:
             checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
             checks_amount = sum(checks.mapped('amount'))
-            if checks_amount and wizard.l10n_ar_net_amount != checks_amount:
-                wizard.l10n_ar_adjustment_warning = True
-                wizard_register -= wizard
-        wizard_register.l10n_ar_adjustment_warning = False
+            if checks_amount and not wizard.currency_id.is_zero(checks_amount - wizard.l10n_ar_net_amount):
+                if wizard.partner_type == 'supplier':
+                    original_amount = wizard.amount
+                    f_delta = checks_amount - wizard.l10n_ar_net_amount
+                    if f_delta < 0:
+                        # Removing withholdings can result in an overshoot of the initial amount
+                        wizard.amount = checks_amount
+                        f_delta = checks_amount - wizard.l10n_ar_net_amount
+                    d = f_delta
+                    f_previous = wizard.l10n_ar_net_amount
+                    wizard.amount += d
+                    for i in range(200):
+                        f_delta = checks_amount - wizard.l10n_ar_net_amount
+                        if wizard.currency_id.is_zero(f_delta):
+                            break
+                        der = ((wizard.l10n_ar_net_amount - f_previous) / d) if abs(d) >= 0.01 else 1.0
+                        if wizard.currency_id.is_zero(der):
+                            i = 200
+                            break
+                        d = max(f_delta / der, 0.01)
+                        f_previous = wizard.l10n_ar_net_amount
+                        wizard.amount += d
+                    if i == 200:
+                        # Adjustment failed, resetting
+                        wizard.amount = original_amount
+                wizard.l10n_ar_adjustment_warning = not wizard.currency_id.is_zero(checks_amount - wizard.l10n_ar_net_amount)
+            else:
+                wizard.l10n_ar_adjustment_warning = False
 
     @api.depends('amount', 'l10n_ar_withholding_ids.amount')
     def _compute_l10n_ar_net_amount(self):
@@ -116,3 +139,11 @@ class AccountPaymentRegister(models.TransientModel):
         if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
             raise ValidationError(_("A payment cannot have withholding if the payment method has no outstanding accounts"))
         return super().action_create_payments()
+
+    @api.constrains('l10n_latam_move_check_ids.amount', 'amount', 'l10n_ar_net_amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
+    def _check_checks_amount(self):
+        for wizard in self:
+            checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
+            checks_amount = sum(checks.mapped('amount'))
+            if checks_amount and not wizard.currency_id.is_zero(checks_amount - wizard.l10n_ar_net_amount) and wizard.partner_type == 'customer':
+                raise ValidationError(_("Oops! It seems you’re trying to confirm the payment, but the total amount doesn’t match the sum of the check amounts.\nPlease adjust the payment total or the withholding amounts so that the final check amount is correct."))
