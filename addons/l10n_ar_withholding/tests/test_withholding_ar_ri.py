@@ -267,6 +267,7 @@ class TestL10nArWithholdingArRi(TestAr):
         wizard = self.new_payment_register(invoice, taxes)
         wizard.amount -= 2420
         self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1360)
+        wizard.action_create_payments()
 
     def test_08_earnings_withholding_applied_with_scale_and_minimun_withholdable_amount_set(self):
         """Payment with withholding tax type 'Earnings Scale' and minimun withholdable amount set. Verify withholding amount."""
@@ -281,6 +282,7 @@ class TestL10nArWithholdingArRi(TestAr):
         taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
         wizard = self.new_payment_register(invoice, taxes)
         self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 0.0)
+        wizard.action_create_payments()
 
     def test_09_foreign_invoice(self):
         """ Ensure a correct behavior when the invoice has a foreign currency and the payment not. """
