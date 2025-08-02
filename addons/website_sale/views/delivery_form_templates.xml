@@ -6,7 +6,7 @@
             - delivery_methods: The delivery methods to display, as a `delivery.carrier` recordset.
             - selected_dm_id: The selected delivery method id.
         -->
-        <form id="o_delivery_form" class="o_delivery_form mb-4">
+        <form id="o_delivery_form" class="o_delivery_form mb-4 pt-2">
             <h5>Delivery method</h5>
             <ul t-if="delivery_methods" id="o_delivery_methods" class="list-group">
                 <t t-foreach="delivery_methods" t-as="dm">
