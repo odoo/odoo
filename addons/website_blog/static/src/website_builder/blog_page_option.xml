@@ -43,10 +43,46 @@
         <BuilderRow label.translate="Breadcrumb">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_breadcrumb']}"/>
         </BuilderRow>
+        <BuilderRow label.translate="Comments" tooltip.translate="Enable comments">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_comment']}"/>
+        </BuilderRow>
 
         <BuilderRow label.translate="Bottom">
-            <BuilderButton label.translate="Next Article" actionParam="{views: ['website_blog.opt_blog_post_read_next']}"/>
-            <BuilderButton label.translate="Comments" actionParam="{views: ['website_blog.opt_blog_post_comment']}"/>
+            <BuilderSelect preview="false">
+                <BuilderSelectItem id="'none_opt'"
+                    actionParam="{views: [
+                        '!website_blog.opt_blog_post_read_next',
+                        '!website_blog.opt_blog_post_read_next_recommended'
+                    ]}">
+                    None
+                </BuilderSelectItem>
+
+                <BuilderSelectItem id="'next_article_opt'" action="'nextArticle'"
+                    actionParam="{views:
+                        ['website_blog.opt_blog_post_read_next',
+                        '!website_blog.opt_blog_post_read_next_recommended'
+                    ]}">
+                    Next Article
+                </BuilderSelectItem>
+
+                <BuilderSelectItem id="'recommended_next_article_opt'" action="'recommendedNextArticle'"
+                    actionParam="{views: [
+                        'website_blog.opt_blog_post_read_next_recommended',
+                        '!website_blog.opt_blog_post_read_next'
+                    ]}">
+                    Recommended
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="1" t-if="isActiveItem('recommended_next_article_opt')">
+            <BuilderMany2One
+                id="'recommended_post_selector'"
+                action="'toggleRecommendedBlog'"
+                model="'blog.post'"
+                fields="['id', 'name']"
+                domain="[['is_published', '=', true]]"
+                allowUnselect="false"
+            />
         </BuilderRow>
     </BuilderContext>
 </t>

@@ -112,3 +112,37 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env.ref("website_blog.opt_blog_sidebar_show").active = True
         self.env.ref("website_blog.opt_blog_post_sidebar").active = True
         self.start_tour("/blog", "blog_sidebar_with_date_and_tag", login="admin")
+
+    def test_next_article(self):
+        # Test next article is correctly displayed.
+        Blog = self.env['blog.blog'].create({
+            "name": 'Blog Test',
+            "subtitle": 'Blog Test Subtitle',
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
+        })
+
+        self.env['blog.post'].create({
+            "name": "Post Test 1",
+            "subtitle": "Subtitle Test",
+            "blog_id": Blog.id,
+            "author_id": self.env.user.id,
+            "is_published": True,
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
+        })
+        self.env['blog.post'].create({
+            "name": "Post Test 2",
+            "subtitle": "Subtitle Test",
+            "blog_id": Blog.id,
+            "author_id": self.env.user.id,
+            "is_published": True,
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_2.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
+        })
+        self.env['blog.post'].create({
+            "name": "Post Test 3",
+            "subtitle": "Subtitle Test",
+            "blog_id": Blog.id,
+            "author_id": self.env.user.id,
+            "is_published": True,
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_3.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
+        })
+        self.start_tour("/blog", "blog_next_article", login="admin")
