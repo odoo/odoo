@@ -84,7 +84,7 @@
                             string="Remove from Templates"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
                     </header>
-                    <div class="alert alert-info" role="alert"
+                    <div class="alert alert-info o_mass_mailing_alert_message" role="alert"
                             invisible="state not in ['in_queue', 'done'] and sent == 0 and canceled == 0 and scheduled == 0 and failed == 0 and not warning_message">
                         <div class="o_mails_canceled" invisible="canceled == 0">
                             <button class="btn btn-link py-0"
