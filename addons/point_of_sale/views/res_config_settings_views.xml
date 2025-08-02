@@ -108,7 +108,7 @@
                                                 invisible="not group_cash_rounding"/>
                                     </div>
                                 </setting>
-                                <setting help="Set a maximum difference allowed between the expected and counted money during the closing of the session">
+                                <setting id="set_maximum_difference" help="Set a maximum difference allowed between the expected and counted money during the closing of the session">
                                     <field name="pos_set_maximum_difference" />
                                     <div class="content-group mt16" invisible="not pos_set_maximum_difference">
                                         <label for="pos_amount_authorized_diff" string="Authorized Difference" class="fw-normal me-1"/>
@@ -126,9 +126,6 @@
                                 </setting>
                             </block>
                             <block title="PoS Interface" id="pos_interface_section">
-                                <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template" role="alert">
-                                    There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
-                                </div>
                                 <setting id="multiple_employee_session" title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form." string="Log in with Employees" help="Allow to log and switch between selected Employees" documentation="/applications/sales/point_of_sale/employee_login.html">
                                     <field name="pos_module_pos_hr"/>
                                     <div class="content-group mt16" invisible="not pos_module_pos_hr">
@@ -279,7 +276,7 @@
                                 <setting id="manual_discount" help="Allow cashiers to set a discount per line" documentation="/applications/sales/point_of_sale/pricing/discounts.html">
                                     <field name="pos_manual_discount"/>
                                 </setting>
-                                <setting help="Adds a button to set a global discount" documentation="/applications/sales/point_of_sale/pricing/discounts.html">
+                                <setting id="pos_global_discount" help="Adds a button to set a global discount" documentation="/applications/sales/point_of_sale/pricing/discounts.html">
                                     <field name="pos_module_pos_discount"/>
                                     <div class="content-group mt16" invisible="not pos_module_pos_discount">
                                         <div class="text-warning mb4" id="warning_text_pos_discount" >
@@ -341,7 +338,7 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting help="Print basic ticket without prices. Can be used for gifts.">
+                                <setting id="basic_receipt" help="Print basic ticket without prices. Can be used for gifts.">
                                     <field name="pos_basic_receipt"/>
                                 </setting>
                             </block>
@@ -453,7 +450,7 @@
                                 <setting title="Operation types show up in the Inventory dashboard." string="Operation Type" help="Used to record product pickings. Products are consumed from its default source location.">
                                     <field name="pos_picking_type_id" domain="[('company_id', '=', company_id)]" required="pos_config_id"/>
                                 </setting>
-                                <setting string="Allow Ship Later" help="Sell products and deliver them later.">
+                                <setting id="ship_later" string="Allow Ship Later" help="Sell products and deliver them later.">
                                     <field name="pos_ship_later"/>
                                     <div class="content-group mt16" invisible="not pos_ship_later">
                                         <div class="row">
