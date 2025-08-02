@@ -123,14 +123,14 @@
                             <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                             <aside>
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'"
-                                    class="o_image_64_cover float-start mb-2 me-2" alt="Employee's image"/>
+                                    class="o_image_64_cover float-start me-2 mt-2" alt="Employee's image"/>
                             </aside>
                             <main class="ps-3">
                                 <div class="o_holidays_kanban_card">
-                                    <field class="fw-bold fs-3 mb-2" name="employee_id"/>
-                                    <div class="d-flex flex-row">
+                                    <field class="fw-bold fs-3 mb-2" name="employee_id" style="max-width: 15vw; position: relative; top: 50%; transform: translateY(100%);"/>
+                                    <div class="d-flex flex-row" style="transform: translateY(-25%);">
                                         <div class="col-md-9 col-lg-9 col-10 d-flex flex-row o_hr_holidays_value">
-                                            <div class="col-md-5 col-lg-7 col-6 o_hr_holidays_name">
+                                            <div class="col-md-5 col-lg-4 col-6 o_hr_holidays_name" style="margin-left: 20vw;">
                                                 <field name="holiday_status_id" class="fw-bold"/>
                                                 <div class="d-flex flex-row">
                                                     <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
