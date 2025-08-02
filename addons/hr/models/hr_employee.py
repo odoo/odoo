@@ -213,6 +213,7 @@ class HrEmployee(models.Model):
         return result
 
     @api.model
+    @api.deprecated("Override of a deprecated method")
     def check_field_access_rights(self, operation, field_names):
         # DISCLAIMER: Dirty hack to avoid having to create a bridge module to override only a
         # groups on a field which is not prefetched (because not stored) but would crash anyway
