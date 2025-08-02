@@ -9,7 +9,7 @@
                     <button
                         name="action_job_add_applicants"
                         string="Create Applications"
-                        invisible="context.get('default_job_id') or context.get('no_create_application_button')"
+                        invisible="context.get('default_job_id') or not context.get('default_talent_pool_ids')"
                         type="object"
                     />
                     <button
