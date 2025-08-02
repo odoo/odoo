@@ -63,13 +63,19 @@
                             name="action_send_and_print"
                             type="object"
                             class="btn-primary"
-                            invisible="not sending_methods"/>
+                            invisible="not sending_methods or scheduled_date"/>
                     <button string="Generate"
                             data-hotkey="q"
                             name="action_send_and_print"
                             type="object"
                             class="btn-primary"
-                            invisible="sending_methods"/>
+                            invisible="sending_methods or scheduled_date"/>
+                    <button string="Schedule"
+                            data-hotkey="q"
+                            name="action_schedule_message"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not scheduled_date"/>
                     <button string="Discard"
                             data-hotkey="x"
                             special="cancel"
@@ -77,6 +83,7 @@
 
                     <field name="mail_attachments_widget" widget="mail_attachments_selector" invisible="'email' not in sending_methods"/>
                     <field name="template_id" widget="mail_composer_template_selector"/>
+                    <field name="scheduled_date" widget="text_scheduled_date" invisible="not sending_methods and not extra_edis"/>
                 </footer>
             </form>
         </field>
