@@ -1251,8 +1251,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2024-01-27',
         })
         holiday_status = self.holidays_type_4.with_user(self.user_employee_id)
-        self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 16.0)
-        self.assertEqual(leave.duration_display, '4 days')
+        self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 15.0)
+        self.assertEqual(leave.duration_display, '5 days')
 
     def test_default_request_date_timezone(self):
         """
