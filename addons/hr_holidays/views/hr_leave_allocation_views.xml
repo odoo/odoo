@@ -136,6 +136,8 @@
                                 invisible="allocation_type == 'regular'"
                                 required="allocation_type == 'accrual'"
                                 readonly="not is_officer or state == 'validate'"/>
+                            <field name="is_anniversary_plan" invisible="allocation_type == 'regular'"/>
+                            <field name="first_contract_date" invisible="allocation_type == 'regular'"/>
                             <div class="o_td_label" name="validity_label" invisible="not is_officer">
                                 <label for="date_from" string="Validity Period"
                                     invisible="allocation_type == 'accrual' or state != 'confirm'"/>

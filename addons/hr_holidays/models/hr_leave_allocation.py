@@ -57,9 +57,11 @@ class HrLeaveAllocation(models.Model):
         help="The status is 'To Approve', when an allocation request is created."
         "\nThe status is 'Refused', when an allocation request is refused by manager."
         "\nThe status is 'Approved', when an allocation request is approved by manager.")
-    date_from = fields.Date('Start Date', index=True, copy=False, default=fields.Date.context_today,
-        tracking=True, required=True)
-    date_to = fields.Date('End Date', copy=False, tracking=True)
+    date_from = fields.Date('Start Date', index=True, copy=False, readonly=False,
+        tracking=True, required=True, store=True, compute="_compute_date_from")
+    date_to = fields.Date('End Date', copy=False, tracking=True, compute="_compute_date_to", store=True, readonly=False)
+    is_anniversary_plan = fields.Boolean('Is based on employee first contract anniversary?', related='accrual_plan_id.is_anniversary_plan', readonly=True)
+    first_contract_date = fields.Date('First Contract Date', compute="_compute_first_contract_date")
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_holiday_status_id', store=True, string="Time Off Type", required=True, readonly=False,
         domain=_domain_holiday_status_id,
@@ -167,6 +169,25 @@ class HrLeaveAllocation(models.Model):
         for allocation in self:
             if not allocation.is_name_custom:
                 allocation.name = allocation._get_title()
+
+    @api.depends('accrual_plan_id.is_anniversary_plan', 'employee_id')
+    def _compute_date_from(self):
+        for allocation in self:
+            if allocation.accrual_plan_id and allocation.employee_id and allocation.accrual_plan_id.is_anniversary_plan:
+                allocation.date_from = allocation.employee_id._get_first_version_date() or fields.Date.context_today(allocation)
+            else:
+                allocation.date_from = fields.Date.context_today(allocation)
+
+    @api.depends('employee_id')
+    def _compute_first_contract_date(self):
+        for allocation in self:
+            allocation.first_contract_date = allocation.employee_id._get_first_version_date() if allocation.employee_id else False
+
+    @api.depends('accrual_plan_id.is_anniversary_plan')
+    def _compute_date_to(self):
+        for allocation in self:
+            if allocation.accrual_plan_id and allocation.accrual_plan_id.is_anniversary_plan:
+                allocation.date_to = False
 
     @api.depends('name', 'date_from', 'date_to')
     def _compute_description_validity(self):
