@@ -440,8 +440,8 @@ class Many2one(_Relational):
                 ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
                 invf._update_cache(corecord, ids1)
 
-    def to_sql(self, model: BaseModel, alias: str) -> SQL:
-        sql_field = super().to_sql(model, alias)
+    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
+        sql_field = super().to_sql(model, alias, query)
         if self.company_dependent:
             comodel = model.env[self.comodel_name]
             sql_field = SQL(
@@ -1135,7 +1135,7 @@ class One2many(_RelationalMulti):
 
         comodel = model.env[self.comodel_name].sudo()
         inverse_field = comodel._fields[self.inverse_name]
-        if not inverse_field.store:
+        if not (inverse_field.store or inverse_field.compute_sql):
             # determine ids1 in model related to ids2
             # TODO should we support this in the future?
             recs = comodel.browse(coquery).with_context(prefetch_fields=False)
