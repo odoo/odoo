@@ -239,6 +239,7 @@ def get_default_session():
         'uid': None,
         'session_token': None,
         '_trace': [],
+        'create_time': time.time(),
     }
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
@@ -2389,7 +2390,7 @@ class HttpDispatcher(Dispatcher):
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
             if was_connected:
                 root.session_store.rotate(session, self.request.env)
-                response.set_cookie('session_id', session.sid, max_age=get_session_max_inactivity(self.env), httponly=True)
+                response.set_cookie('session_id', session.sid, max_age=get_session_max_inactivity(self.request.env), httponly=True)
             return response
 
         if isinstance(exc, HTTPException):

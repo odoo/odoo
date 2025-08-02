@@ -1088,7 +1088,9 @@ class ResUsers(models.Model):
     def _get_group_ids(self):
         """ Return ``self``'s group ids (as a tuple)."""
         self.ensure_one()
-        return self.all_group_ids._ids
+        # `with_context({})` because this method is decorated with `@ormcache('self._ids')`,
+        # it cannot depend on the context (e.g. `active_test`, `lang`, ...)
+        return self.with_context({}).all_group_ids._ids
 
     def _action_show(self):
         """If self is a singleton, directly access the form view. If it is a recordset, open a list view"""
