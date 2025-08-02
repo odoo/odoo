@@ -142,18 +142,18 @@ class HrVersion(models.Model):
     tz = fields.Selection(related='employee_id.tz')
 
     # Contract Information
-    contract_date_start = fields.Date('Contract Start Date', tracking=True, groups="hr.group_hr_user")
+    contract_date_start = fields.Date('Contract Start Date', tracking=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(
         'Contract End Date', tracking=True, help="End date of the contract (if it's a fixed-term contract).",
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_manager")
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
-                                 groups="hr.group_hr_user")
-    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
-    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
-    is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_user")
-    is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_user")
-    is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_user")
-    is_in_contract = fields.Boolean(compute='_compute_is_in_contract', groups="hr.group_hr_user")
+                                 groups="hr.group_hr_manager")
+    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager")
+    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager")
+    is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_manager")
+    is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_manager")
+    is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_manager")
+    is_in_contract = fields.Boolean(compute='_compute_is_in_contract', groups="hr.group_hr_manager")
 
     contract_template_id = fields.Many2one(
         'hr.version', string="Contract Template", groups="hr.group_hr_user",
@@ -165,8 +165,9 @@ class HrVersion(models.Model):
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee", groups="hr.group_hr_user")
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     wage = fields.Monetary('Wage', tracking=True, help="Employee's monthly gross wage.", aggregator="avg",
-                           groups="hr.group_hr_user")
-    contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage', groups="hr.group_hr_user")
+                           groups="hr.group_hr_manager")
+    contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage', groups="hr.group_hr_manager")
+    # [XBO] TODO: remove me in master
     company_country_id = fields.Many2one('res.country', string="Company country",
                                          related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
@@ -209,7 +210,7 @@ class HrVersion(models.Model):
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
     def _check_dates(self):
-        version_read_group = self.env['hr.version']._read_group(
+        version_read_group = self.env['hr.version'].sudo()._read_group(
             [
                 ('id', 'not in', self.ids),
                 ('employee_id', 'in', self.employee_id.ids),
@@ -221,7 +222,7 @@ class HrVersion(models.Model):
         dates_per_employee = defaultdict(list)
         for employee, date_start, date_end, versions in version_read_group:
             dates_per_employee[employee].append((date_start, date_end, versions))
-        for version in self:
+        for version in self.sudo():  # sudo needed to read contract dates
             if not version.contract_date_start or not version.employee_id:
                 continue
             if version.contract_date_end and version.contract_date_start > version.contract_date_end:

@@ -99,8 +99,8 @@ class HrVersion(models.Model):
         domain = [
             ('state', '!=', 'refuse'),
             ('employee_id', 'in', self.mapped('employee_id.id')),
-            ('date_from', '<=', max(end or date.max for end in self.mapped('date_end'))),
-            ('date_to', '>=', min(self.mapped('date_start'))),
+            ('date_from', '<=', max(end or date.max for end in self.sudo().mapped('contract_date_end'))),
+            ('date_to', '>=', min(self.sudo().mapped('contract_date_start'))),
         ]
         if extra_domain:
             domain = Domain.AND([domain, extra_domain])
@@ -110,7 +110,7 @@ class HrVersion(models.Model):
         domain = [
             ('state', '!=', 'refuse'),
             ('employee_id', 'in', vals['employee_id']),
-            ('date_to', '>=', fields.Date.from_string(vals.get('contract_date_start', vals['date_version']))),
+            ('date_to', '>=', fields.Date.from_string(vals.get('contract_date_start', vals.get('date_version', fields.Date.today())))),
             ('resource_calendar_id', '!=', vals.get('resource_calendar_id')),
         ]
         if vals.get('contract_date_end'):
