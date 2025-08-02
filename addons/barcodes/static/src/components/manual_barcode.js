@@ -8,9 +8,11 @@ export class BarcodeInput extends Component {
     static props = {
         onSubmit: Function,
         placeholder: { type: String, optional: true },
+        autofocus: { type: Boolean, optional: true },
     };
     static defaultProps = {
         placeholder: _t("Enter a barcode..."),
+        autofocus: true,
     };
     setup() {
         this.state = useState({
@@ -19,7 +21,9 @@ export class BarcodeInput extends Component {
         this.barcodeManual = useRef("manualBarcode");
         // Autofocus processing was blocked because a document already has a focused element.
         onMounted(() => {
-            this.barcodeManual.el.focus();
+            if (this.props.autofocus) {
+                this.barcodeManual.el.focus();
+            }
         });
     }
 
