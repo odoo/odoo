@@ -34,6 +34,7 @@ export class PosOrder extends Base {
         if (!vals.last_order_preparation_change) {
             this.last_order_preparation_change = {
                 lines: {},
+                metadata: {},
                 general_customer_note: "",
                 internal_note: "",
                 sittingMode: 0,
@@ -337,6 +338,9 @@ export class PosOrder extends Base {
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
         this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+        this.last_order_preparation_change.metadata = {
+            serverDate: serializeDateTime(DateTime.now()),
+        };
     }
 
     isEmpty() {
