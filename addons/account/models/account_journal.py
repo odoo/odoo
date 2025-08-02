@@ -512,7 +512,7 @@ class AccountJournal(models.Model):
                 # Ensure you don't have the same payment_method/name combination twice on the same journal.
                 counter = {}
                 for line in lines:
-                    if method_information_mapping.get(line.payment_method_id.id, {}).get('mode') not in ('electronic', 'unique'):
+                    if method_information_mapping.get(line.payment_method_id.id, {}).get('mode') != 'unique':
                         continue
 
                     key = line.payment_method_id.id, line.name
