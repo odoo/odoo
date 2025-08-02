@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
+from collections import defaultdict
 
 
 class Partner(models.Model):
@@ -141,6 +142,14 @@ class Partner(models.Model):
             ('mail_message_id.model', '!=', False),
             ('mail_message_id.res_id', '!=', 0),
         ], limit=100)
+        found = defaultdict(list)
+        for message in notifications.mail_message_id:
+            found[message.model].append(message.res_id)
+        existing = {
+            model: set(self.env[model].browse(ids).exists().ids)
+            for model, ids in found.items()
+        }
+        notifications = notifications.filtered(lambda n: n.mail_message_id.res_id in existing[n.mail_message_id.model])
         return notifications.mail_message_id._message_notification_format()
 
     def _get_channels_as_member(self):
