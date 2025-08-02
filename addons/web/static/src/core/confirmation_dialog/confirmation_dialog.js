@@ -14,7 +14,7 @@ export class ConfirmationDialog extends Component {
     }
     async _cancel() {
         if (this.isConfirmedOrCancelled) {
-            return;
+            return this.props.close();
         }
         this.isConfirmedOrCancelled = true;
         this.disableButtons();
