@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="hr_job_form_inherit_hr_recruitment_skills" model="ir.ui.view">
-        <field name="name">hr.job.view.form.inherit</field>
+    <record id="hr_job_list_inherit_hr_recruitment_skills" model="ir.ui.view">
+        <field name="name">hr.job.view.list.inherit</field>
         <field name="model">hr.job</field>
-        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_view_tree_inherit"/>
         <field name="arch" type="xml">
-            <field name="contract_type_id" position="after">
-                <field 
-                    name="skill_ids"
-                    widget="many2many_tags"
-                    options="{'color_field': 'color'}"
-                    context="{'search_default_group_skill_type_id': 1}"
-                    />
+            <field name="department_id" position="after">
+                <field name="applicant_matching_score" widget="progressbar" invisible="not applicant_matching_score" column_invisible="not context.get('active_applicant_id')"/>
             </field>
         </field>
     </record>

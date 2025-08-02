@@ -1,9 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2.errors import UniqueViolation
-
-from odoo.tests import Form, tagged, TransactionCase
-from odoo.tools.misc import mute_logger
+from odoo.tests import Form, TransactionCase, tagged
 
 
 @tagged("recruitment")
@@ -40,7 +37,7 @@ class TestRecruitmentSkills(TransactionCase):
         Test that adding a skill to an applicant works
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -61,25 +58,26 @@ class TestRecruitmentSkills(TransactionCase):
         Assert that adding the same skill twice to an applicant does not work
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
         app_form.save()
+        self.assertEqual(len(self.t_applicant.applicant_skill_ids), 1)
 
-        with self.assertRaises(UniqueViolation), mute_logger("odoo.sql_db"):
-            with app_form.applicant_skill_ids.new() as skill:
-                skill.skill_type_id = self.t_skill_type
-                skill.skill_id = self.t_skill_1
-                skill.skill_level_id = self.t_skill_level_1
-            app_form.save()
+        with app_form.current_applicant_skill_ids.new() as skill:
+            skill.skill_type_id = self.t_skill_type
+            skill.skill_id = self.t_skill_1
+            skill.skill_level_id = self.t_skill_level_1
+        app_form.save()
+        self.assertEqual(len(self.t_applicant.applicant_skill_ids), 1)
 
     def test_one_skill_is_copied_from_applicant_to_talent(self):
         """
         Assert that a skill is copied from the applicant to the talent when the talent is created
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -109,15 +107,13 @@ class TestRecruitmentSkills(TransactionCase):
         """
         Assert that multiple skills are copied from the applicant to the talent when the talent is created
         """
+        skills = [self.t_skill_1, self.t_skill_2]
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill_1:
-            skill_1.skill_type_id = self.t_skill_type
-            skill_1.skill_id = self.t_skill_1
-            skill_1.skill_level_id = self.t_skill_level_1
-        with app_form.applicant_skill_ids.new() as skill_2:
-            skill_2.skill_type_id = self.t_skill_type
-            skill_2.skill_id = self.t_skill_2
-            skill_2.skill_level_id = self.t_skill_level_1
+        for skill in skills:
+            with app_form.current_applicant_skill_ids.new() as new_skill:
+                new_skill.skill_type_id = self.t_skill_type
+                new_skill.skill_id = skill
+                new_skill.skill_level_id = self.t_skill_level_1
         app_form.save()
 
         talent = (
@@ -166,7 +162,7 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
 
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -206,12 +202,12 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
         with Form(talent) as talent_form:
-            with talent_form.applicant_skill_ids.new() as skill:
+            with talent_form.current_applicant_skill_ids.new() as skill:
                 skill.skill_type_id = self.t_skill_type
                 skill.skill_id = self.t_skill_1
                 skill.skill_level_id = self.t_skill_level_1
 
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -244,7 +240,7 @@ class TestRecruitmentSkills(TransactionCase):
         In this test the skill does not exist on the talent prior to updating it to the applicant.
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -256,9 +252,9 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
         with Form(talent) as talent_form:
-            talent_form.applicant_skill_ids.remove(0)
+            talent_form.current_applicant_skill_ids.remove(0)
 
-        with app_form.applicant_skill_ids.edit(0) as skill:
+        with app_form.current_applicant_skill_ids.edit(0) as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_2
@@ -290,7 +286,7 @@ class TestRecruitmentSkills(TransactionCase):
         In this test the skill exists on the talent prior to updating it to the applicant.
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -302,7 +298,7 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
 
-        with app_form.applicant_skill_ids.edit(0) as skill:
+        with app_form.current_applicant_skill_ids.edit(0) as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_2
@@ -334,7 +330,7 @@ class TestRecruitmentSkills(TransactionCase):
         In this test the skill does not exist on the talent prior to deleting it on the applicant.
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -346,9 +342,9 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
         with Form(talent) as talent_form:
-            talent_form.applicant_skill_ids.remove(0)
+            talent_form.current_applicant_skill_ids.remove(0)
 
-        app_form.applicant_skill_ids.remove(0)
+        app_form.current_applicant_skill_ids.remove(0)
 
         app_form.save()
 
@@ -366,7 +362,7 @@ class TestRecruitmentSkills(TransactionCase):
         In this test the skill exists on the talent prior to deleting it on the applicant.
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -378,7 +374,7 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
 
-        app_form.applicant_skill_ids.remove(0)
+        app_form.current_applicant_skill_ids.remove(0)
 
         app_form.save()
 
@@ -400,7 +396,7 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
         talent_form = Form(talent)
-        with talent_form.applicant_skill_ids.new() as skill:
+        with talent_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -425,7 +421,7 @@ class TestRecruitmentSkills(TransactionCase):
         This test ensures that when a skill is updated on a talent, the linked applicants are unaffected.
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -437,7 +433,7 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
         talent_form = Form(talent)
-        with talent_form.applicant_skill_ids.edit(0) as skill:
+        with talent_form.current_applicant_skill_ids.edit(0) as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_2
@@ -467,7 +463,7 @@ class TestRecruitmentSkills(TransactionCase):
         This test ensures that when a skill is deleted on a talent, the linked applicants are unaffected.
         """
         app_form = Form(self.t_applicant)
-        with app_form.applicant_skill_ids.new() as skill:
+        with app_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
@@ -479,7 +475,7 @@ class TestRecruitmentSkills(TransactionCase):
             ._add_applicants_to_pool()
         )
         with Form(talent) as talent_form:
-            talent_form.applicant_skill_ids.remove(0)
+            talent_form.current_applicant_skill_ids.remove(0)
 
         expected_app = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
         app_skill = {
@@ -499,8 +495,23 @@ class TestRecruitmentSkills(TransactionCase):
         first_job = self.env["hr.job"].create({"name": "First Job"})
         second_job = self.env["hr.job"].create({"name": "Second Job"})
         applicant.job_id = first_job
-        applicant.write({"skill_ids": [(4, self.t_skill_1.id)]})
-        second_job.write({"skill_ids": [(4, self.t_skill_1.id)]})
+
+        app_form = Form(self.t_applicant)
+        with app_form.current_applicant_skill_ids.new() as applicant_skill:
+            applicant_skill.skill_type_id = self.t_skill_type
+            applicant_skill.skill_id = self.t_skill_1
+            applicant_skill.skill_level_id = self.t_skill_level_1
+        app_form.save()
+
+        self.env["hr.job.skill"].create(
+            {
+                "job_id": second_job.id,
+                "skill_id": self.t_skill_1.id,
+                "skill_type_id": self.t_skill_type.id,
+                "skill_level_id": self.t_skill_level_1.id,
+            }
+        )
+
         action = second_job.action_search_matching_applicants()
         domain = action["domain"]
         context = action["context"]

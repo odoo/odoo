@@ -48,10 +48,6 @@ class HrJob(models.Model):
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruiter",
-        domain="[('share', '=', False), ('company_ids', 'in', company_id)]", default=lambda self: self.env.user,
-        tracking=True, help="The Recruiter will be the default value for all Applicants in this job \
-            position. The Recruiter is automatically added to all meetings with the Applicant.")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     employee_count = fields.Integer(compute='_compute_employee_count')
@@ -62,8 +58,7 @@ class HrJob(models.Model):
     interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
     industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True)
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id", readonly=True)
-    compensation = fields.Monetary(currency_field="currency_id")
+    expected_degree = fields.Many2one("hr.recruitment.degree")
 
     activity_count = fields.Integer(compute='_compute_activities')
 
