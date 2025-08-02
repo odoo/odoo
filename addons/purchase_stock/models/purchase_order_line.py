@@ -95,7 +95,15 @@ class PurchaseOrderLine(models.Model):
         values = vals
         if values.get('date_planned'):
             new_date = fields.Datetime.to_datetime(values['date_planned'])
-            self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
+            if self.move_ids.picking_id.picking_type_code != "incoming":
+                self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
+            for move in self.move_ids:
+                if move.state not in ['done', 'cancel'] and move.picking_id.picking_type_code == "incoming":
+                    move.date = values['date_planned']
+        if values.get('date_promised'):
+            for move in self.move_ids:
+                if move.state not in ['done', 'cancel'] and move.picking_id.picking_type_code == "incoming":
+                    move.date_deadline = values['date_promised']
         lines = self.filtered(lambda l: l.order_id.state == 'purchase'
                                         and not l.display_type)
 

@@ -101,6 +101,10 @@ class PurchaseOrder(models.Model):
                         to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
                 if to_log:
                     order._log_decrease_ordered_quantity(to_log)
+        if vals.get('date_planned'):
+            for picking in self.picking_ids:
+                if picking.state not in ['done', 'cancel'] and picking.picking_type_code == "incoming":
+                    picking.scheduled_date = vals['date_planned']
         return res
 
     # --------------------------------------------------

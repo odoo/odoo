@@ -24,6 +24,8 @@ class PurchaseOrderLine(models.Model):
         string='Expected Arrival', index=True,
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
+    date_promised = fields.Datetime('Promised Date', compute="_compute_date_promised", readonly=False, store=True,
+        help="Delivery Date promised by the vendor. If the vendor delivers products after this date, their On-Time rate will be negatively impacted.")
     discount = fields.Float(
         string="Discount (%)",
         compute='_compute_price_unit_and_date_planned_and_name',
@@ -361,6 +363,12 @@ class PurchaseOrderLine(models.Model):
             if not line.name or line.name in default_names:
                 product_ctx = {'seller_id': line.selected_seller_id.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
+
+    @api.depends('order_id.state')
+    def _compute_date_promised(self):
+        for line in self:
+            if line.order_id.state == 'purchase':
+                line.date_promised = line.date_planned if not line.order_id.date_promised else line.order_id.date_promised
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
