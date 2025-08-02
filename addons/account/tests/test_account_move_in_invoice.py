@@ -1060,8 +1060,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.tax_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'amount_currency': 24.001,
-                'debit': 8.0,
+                'amount_currency': 0,
+                'debit': 0.0,
             },
             {
                 **self.tax_line_vals_2,
@@ -1072,8 +1072,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.term_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'amount_currency': -208.006,
-                'credit': 69.33,
+                'amount_currency': -184.005,
+                'credit': 61.33,
                 'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
@@ -1081,8 +1081,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'date': fields.Date.from_string('2016-01-01'),
             'amount_untaxed': 160.005,
-            'amount_tax': 48.001,
-            'amount_total': 208.006,
+            'amount_tax': 24.0,
+            'amount_total': 184.005,
         })
 
         # Exit the multi-currencies.
