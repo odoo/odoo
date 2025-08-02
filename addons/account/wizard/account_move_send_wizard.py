@@ -50,6 +50,7 @@ class AccountMoveSendWizard(models.TransientModel):
         comodel_name='ir.actions.report',
         compute="_compute_available_pdf_report_ids",
     )
+    is_partners_email_available = fields.Boolean(compute='_compute_is_partners_email_available')
 
     display_pdf_report_id = fields.Boolean(compute='_compute_display_pdf_report_id')
 
@@ -98,7 +99,7 @@ class AccountMoveSendWizard(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('sending_methods', 'extra_edis', 'mail_partner_ids')
+    @api.depends('sending_methods', 'extra_edis')
     def _compute_alerts(self):
         for wizard in self:
             move_data = {
@@ -106,7 +107,6 @@ class AccountMoveSendWizard(models.TransientModel):
                     'sending_methods': wizard.sending_methods or {},
                     'invoice_edi_format': wizard.invoice_edi_format,
                     'extra_edis': wizard.extra_edis or {},
-                    'mail_partner_ids': wizard.mail_partner_ids
                 }
             }
             wizard.alerts = self._get_alerts(wizard.move_id, move_data)
@@ -258,6 +258,16 @@ class AccountMoveSendWizard(models.TransientModel):
     def _compute_render_model(self):
         # OVERRIDE 'mail.composer.mixin'
         self.render_model = 'account.move'
+
+    @api.depends('sending_methods', 'mail_partner_ids')
+    def _compute_is_partners_email_available(self):
+        """Compute if all selected partners have an email address."""
+        for wizard in self:
+            if wizard.sending_methods and 'email' in wizard.sending_methods:
+                wizard.is_partners_email_available = all(wizard.mail_partner_ids.mapped('email'))
+            else:
+                # If email is not in sending methods, we don't care about partners emails.
+                wizard.is_partners_email_available = True
 
     # Similar of mail.compose.message
     def open_template_creation_wizard(self):

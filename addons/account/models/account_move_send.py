@@ -110,30 +110,16 @@ class AccountMoveSend(models.AbstractModel):
         - action the action to run when the link is clicked
         """
         alerts = {}
-
-        # Filter moves that are trying to send via email
-        email_moves = moves.filtered(lambda m: 'email' in moves_data[m]['sending_methods'])
-        if email_moves:
-            # Identify partners without email depending on batch/single send
-            if is_batch := len(moves) > 1:
-                # Batch sending
-                partners_without_mail = email_moves.filtered(lambda m: not m.partner_id.email).mapped('partner_id')
-            else:
-                # Single sending
-                partners_without_mail = moves_data[email_moves]['mail_partner_ids'].filtered(lambda p: not p.email)
-
-            # If there are partners without email, add an alert
-            if partners_without_mail:
-                alerts['account_missing_email'] = {
-                    'level': 'warning' if is_batch else 'danger',
-                    'message': _("Partner(s) should have an email address."),
-                    'action_text': _("View Partner(s)") if is_batch else False,
-                    'action': (
-                        partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)"))
-                        if is_batch else False
-                    ),
-                }
-
+        if len(moves) > 1 and (partners_without_mail := moves.filtered(
+                lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id
+        ):
+            # should only appear in mass invoice sending
+            alerts['account_missing_email'] = {
+                'level': 'warning',
+                'message': _("Partner(s) should have an email address."),
+                'action_text': _("View Partner(s)"),
+                'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)")),
+            }
         return alerts
 
     # -------------------------------------------------------------------------
