@@ -11,9 +11,27 @@
                 !((isCombo(record) || isComboItem(record)) &amp;&amp; column.widget === 'handle')
             </attribute>
         </Field>
-         <!-- Remove the "delete" button for combo item lines. -->
-        <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
-            <attribute name="t-att-class">{'d-none': isComboItem(record)}</attribute>
-        </xpath>
+    </t>
+
+    <t
+        t-name="sale.SectionListRenderer.Row"
+        t-inherit="web.SectionListRenderer.Row"
+        t-inherit-mode="primary"
+    >
+        <t t-elif="hierarchyItem.isNote" position="after">
+            <t t-elif="isCombo(record)">
+                <t t-call="sale.SectionListRenderer.ComboRow"/>
+            </t>
+        </t>
+    </t>
+
+    <t
+        t-name="sale.SectionListRenderer.ComboRow"
+        t-inherit="web.SectionListRenderer.NoteRow"
+        t-inherit-mode="primary"
+    >
+        <t t-foreach="this.getNoteColumns(record)" position="attributes">
+            <attribute name="t-foreach">this.getComboColumns(record)</attribute>       
+        </t>
     </t>
 </templates>
