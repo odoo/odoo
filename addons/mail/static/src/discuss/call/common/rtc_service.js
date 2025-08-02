@@ -616,6 +616,7 @@ export class Rtc extends Record {
      * @param {import("models").Thread} [channel]
      */
     endCall(channel = this.state.channel) {
+        channel.lastCallUsedCamera = Boolean(this.state.cameraTrack);
         this._endHost();
         channel.rtcInvitingSession = undefined;
         channel.activeRtcSession = undefined;
