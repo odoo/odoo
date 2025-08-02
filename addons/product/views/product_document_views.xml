@@ -50,7 +50,7 @@
         <field name="name">product.document.kanban</field>
         <field name="model">product.document</field>
         <field name="arch" type="xml">
-            <kanban js_class="product_documents_kanban" can_open="0">
+            <kanban js_class="product_documents_kanban" create="false" can_open="0">
                 <field name="sequence" widget="handle"/>
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
