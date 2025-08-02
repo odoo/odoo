@@ -1854,6 +1854,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
         if cancel_backorder:
             backorder_moves.with_context(moves_todo=moves_todo)._action_cancel()
+        package_quants = moves_todo.mapped('move_line_ids.package_id.quant_ids')
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
@@ -1863,7 +1864,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
-            self.env['stock.quant']._unlink_zero_quants()
+            package_quants._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
