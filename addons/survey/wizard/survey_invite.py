@@ -154,7 +154,7 @@ class SurveyInvite(models.TransientModel):
 
     @api.depends('template_id', 'partner_ids')
     def _compute_subject(self):
-        for invite in self.filtered(lambda inv: not inv.subject):
+        for invite in self:
             if invite.template_id and invite.template_id.subject:
                 invite.subject = invite.template_id.subject
             else:
