@@ -216,6 +216,12 @@
     }
 }
 
+.o-overlay-item:has(.o_tour_pointer) {
+    // This z-index is meant to be higher than the .o_burger_menu, .o_app_menu_sidebar z-index
+    // which is equal to $zindex-tooltip + 10
+    z-index: $zindex-tooltip + 20;
+}
+
 @media print {
     .o_tour_pointer {
         display: none !important;
