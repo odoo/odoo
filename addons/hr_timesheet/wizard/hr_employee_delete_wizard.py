@@ -40,7 +40,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
             'view_mode': 'form',
             'target': 'new',
             'context': {
-                'active_id': self.employee_ids.id,
+                'active_ids': self.employee_ids.ids,
                 'employee_termination': True,
             }
         }
