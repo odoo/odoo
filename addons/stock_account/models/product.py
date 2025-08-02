@@ -34,6 +34,7 @@ class ProductTemplate(models.Model):
         compute='_compute_lot_valuated', store=True, readonly=False,
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
+    product_tmpl_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_tmpl_id')
 
     @api.depends('tracking')
     def _compute_lot_valuated(self):
