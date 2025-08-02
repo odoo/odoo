@@ -13,8 +13,9 @@
                     </div>
                     <group name="top_info">
                         <group name="top_info_left">
-                            <field name="job_id" groups="hr.group_hr_manager"/>
-                            <field name="department_id" groups="hr.group_hr_manager"/>
+                            <field name="job_id" groups="hr.group_hr_manager,hr.group_hr_contract_template_editor"/>
+                            <field name="department_id" groups="hr.group_hr_manager,hr.group_hr_contract_template_editor"/>
+                            <field name="company_id" groups="hr.group_hr_manager,hr.group_hr_contract_template_editor"/>
                         </group>
                         <group name="top_info_right">
                             <label for="contract_type_id" string="Contract Type"/>
