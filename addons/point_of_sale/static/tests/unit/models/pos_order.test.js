@@ -149,4 +149,126 @@ describe("pos.order", () => {
         expect(taxTotalsWDiscount.total_amount).toBe(12.03);
         expect(taxTotalsWDiscount.tax_amount_currency).toBe(1.83);
     });
+
+    test("preventRoundingErrorsCombo", async () => {
+        const store = await setupPosEnv();
+
+        const lines = store.models.loadConnectedData({
+            "product.template": [
+                {
+                    id: 555,
+                    name: "Test Combo Product Template",
+                    combo_ids: [123],
+                    product_variant_ids: [7],
+                    taxes_id: [],
+                },
+            ],
+            "product.combo.item": [
+                {
+                    id: 111,
+                    combo_id: 123,
+                    product_id: 5,
+                    extra_price: 0,
+                },
+                {
+                    id: 222,
+                    combo_id: 123,
+                    product_id: 6,
+                    extra_price: 0,
+                },
+                {
+                    id: 333,
+                    combo_id: 123,
+                    product_id: 6,
+                    extra_price: 0,
+                },
+            ],
+            "product.combo": [
+                {
+                    id: 123,
+                    name: "Test Combo",
+                    qty_max: 6,
+                    qty_free: 3,
+                    base_price: 20,
+                    combo_item_ids: [111, 222, 333],
+                },
+            ],
+            "product.product": [
+                {
+                    id: 7,
+                    display_name: "Test Combo Product",
+                    product_tmpl_id: 555,
+                    lst_price: 50,
+                    combo_ids: [1],
+                },
+            ],
+            "pos.order": [
+                {
+                    id: 1,
+                    name: "Test Order",
+                },
+                {
+                    id: 2,
+                    name: "Test Order 2",
+                },
+                {
+                    id: 3,
+                    name: "Test Order 3",
+                },
+            ],
+        });
+        // Same taxes for every product
+        store.models["product.product"].get(6).taxes_id = [1];
+
+        // 3 of the same product
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(555),
+                payload: [[{ combo_item_id: store.models["product.combo.item"].get(111), qty: 3 }]],
+                qty: 1,
+            },
+            lines["pos.order"][0]
+        );
+        expect(lines["pos.order"][0].amount_total).toBe(57.5);
+        expect(lines["pos.order"][0].lines[1].qty).toBe(3);
+        expect(lines["pos.order"][0].lines[1].price_unit).toBe(50 / 3);
+
+        // 3 different products
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(555),
+                payload: [
+                    [
+                        { combo_item_id: store.models["product.combo.item"].get(111), qty: 1 },
+                        { combo_item_id: store.models["product.combo.item"].get(222), qty: 1 },
+                        { combo_item_id: store.models["product.combo.item"].get(333), qty: 1 },
+                    ],
+                ],
+                qty: 1,
+            },
+            lines["pos.order"][1]
+        );
+        expect(lines["pos.order"][1].amount_total).toBe(57.5);
+        expect(lines["pos.order"][1].lines[1].price_unit).toBe(16.67);
+        expect(lines["pos.order"][1].lines[2].price_unit).toBe(16.67);
+        expect(lines["pos.order"][1].lines[3].price_unit).toBe(16.659999999999997);
+
+        // 3 of the same product and 3 of the same extra items
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(555),
+                payload: [
+                    [{ combo_item_id: store.models["product.combo.item"].get(111), qty: 3 }],
+                    [{ combo_item_id: store.models["product.combo.item"].get(111), qty: 3 }],
+                ],
+                qty: 1,
+            },
+            lines["pos.order"][2]
+        );
+        expect(lines["pos.order"][2].amount_total).toBe(126.5);
+        expect(lines["pos.order"][2].lines[1].qty).toBe(3);
+        expect(lines["pos.order"][2].lines[1].price_unit).toBe(50 / 3);
+        expect(lines["pos.order"][2].lines[2].qty).toBe(3);
+        expect(lines["pos.order"][2].lines[2].price_unit).toBe(20);
+    });
 });

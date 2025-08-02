@@ -391,6 +391,9 @@ export class PosOrderline extends Base {
         const ProductPrice = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
         );
+        if (this.combo_item_id) {
+            return this.price_unit || 0;
+        }
         return ProductPrice.round(this.price_unit || 0);
     }
 
