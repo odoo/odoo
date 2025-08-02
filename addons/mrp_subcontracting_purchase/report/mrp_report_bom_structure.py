@@ -16,7 +16,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         resupply_state, resupply_delay = super()._get_resupply_availability(route_info, components)
         if route_info.get('route_type') == 'subcontract' and resupply_delay:
             # always add `Purchase security lead days` and `Days to Purchase`
-            extra_delay = route_info['bom'].company_id.po_lead + route_info['bom'].company_id.days_to_purchase
+            extra_delay = route_info['bom'].company_id.days_to_purchase
             route_info['lead_time'] += extra_delay
             route_info['manufacture_delay'] += extra_delay
             subcontract_delay = resupply_delay + extra_delay

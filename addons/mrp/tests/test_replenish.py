@@ -182,8 +182,8 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertEqual(move_to_scrap.quantity, 10, "Scrapped component should return to qty 10")
         self.assertEqual(move_other.quantity, 10, "Other component should still be qty 10")
 
-    def test_global_visibility_days_affect_lead_time_manufacture_rule(self):
-        """ Ensure global visibility days will only be captured one time in an orderpoint's
+    def test_global_horizon_days_affect_lead_time_manufacture_rule(self):
+        """ Ensure global horizon days will only be captured one time in an orderpoint's
         lead_days/json_lead_days.
         """
         self.warehouse_1.manufacture_steps = 'pbm'
@@ -205,7 +205,7 @@ class TestMrpReplenish(TestMrpCommon):
                 'location_dest_id': self.customer_location.id,
             })],
         })
-        out_picking.with_context(global_visibility_days=365).action_assign()
+        out_picking.with_context(global_horizon_days=365).action_assign()
         r = orderpoint.action_stock_replenishment_info()
         repl_info = self.env[r['res_model']].browse(r['res_id'])
         lead_days_date = datetime.strptime(

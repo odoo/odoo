@@ -88,6 +88,7 @@ class MrpBom(models.Model):
         string="Days to prepare Manufacturing Order", default=0,
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
              "Note that security lead times will also be considered when appropriate.")
+    show_set_bom_button = fields.Boolean(compute="_compute_show_set_bom_button")
 
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
@@ -583,6 +584,31 @@ class MrpBom(models.Model):
 
         # None were found, so we skip the line
         return True
+
+    ### replenishment wizard stuff ###
+
+    def _compute_show_set_bom_button(self):
+        self.show_set_bom_button = True
+        orderpoint_id = self.env.context.get('orderpoint_id', self.env.context.get('default_orderpoint_id'))
+        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
+        if orderpoint:
+            self.filtered(
+                lambda s: s.id == orderpoint.bom_id.id
+            ).show_set_bom_button = False
+
+    def action_set_bom(self):
+        self.ensure_one()
+        orderpoint_id = self.env.context.get('orderpoint_id')
+        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
+        if not orderpoint:
+            return
+        if 'manufacture' not in orderpoint.route_id.rule_ids.mapped('action'):
+            orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'manufacture')], limit=1).route_id.id
+        orderpoint.bom_id = self
+        bom_qty = self.product_uom_id._compute_quantity(self.product_qty, orderpoint.product_id.uom_id)
+        if orderpoint.qty_to_order < bom_qty:
+            orderpoint.qty_to_order = bom_qty
+        return orderpoint.action_stock_replenishment_info()
 
 
 class MrpBomLine(models.Model):

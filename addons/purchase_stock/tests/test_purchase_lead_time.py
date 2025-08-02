@@ -254,7 +254,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
-        orderpoint_form.visibility_days = 1.0
         orderpoint_form.save()
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_company(company2))

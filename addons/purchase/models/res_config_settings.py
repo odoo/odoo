@@ -17,19 +17,9 @@ class ResConfigSettings(models.TransientModel):
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
     module_purchase_product_matrix = fields.Boolean("Purchase Grid Entry")
-    po_lead = fields.Float(related='company_id.po_lead', readonly=False)
-    use_po_lead = fields.Boolean(
-        string="Security Lead Time for Purchase",
-        config_parameter='purchase.use_po_lead',
-        help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.")
 
     group_send_reminder = fields.Boolean("Receipt Reminder", implied_group='purchase.group_send_reminder', default=True,
         help="Allow automatically send email to remind your vendor the receipt date")
-
-    @api.onchange('use_po_lead')
-    def _onchange_use_po_lead(self):
-        if not self.use_po_lead:
-            self.po_lead = 0.0
 
     @api.onchange('group_product_variant')
     def _onchange_group_product_variant_purchase(self):

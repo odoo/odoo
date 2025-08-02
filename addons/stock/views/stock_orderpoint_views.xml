@@ -38,9 +38,9 @@
                 <field name="qty_forecast" force_save="1"/>
                 <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" invisible="not id or unwanted_replenish"/>
                 <button name="action_product_forecast_report" type="object" icon="fa-warning text-warning" title="Due to receipts scheduled in the future, you might end up with excessive stock . Check the Forecasted Report  before reordering" invisible="not id or not unwanted_replenish"/>
-                <field name="visibility_days" optional="hidden"/>
                 <field name="route_id" options="{'no_create': True, 'no_open': True}" optional="hidden"/>
-                <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id"/>
+                <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id or show_supply_warning"/>
+                <button name="action_stock_replenishment_info" type="object" icon="fa-warning text-warning" title="Your product is missing a way to be replenished (Vendor, Bill of Materials)." invisible="not (id and show_supply_warning)"/>
                 <field name="trigger" optional="hide"/>
                 <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" string="Min" optional="show"/>
@@ -51,6 +51,7 @@
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="Remove manually entered value and replace by the quantity to order based on the forecasted quantities" invisible="not qty_to_order_manual"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="-" class="disabled opacity-0" invisible="qty_to_order_manual"/>
                 <field name="product_uom_name" string="Unit" groups="uom.group_uom"/>
+                <field name="deadline_date" string="Deadline" optional="hide"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order" type="object" class="o_replenish_buttons" icon="fa-truck"
                     invisible="qty_to_order &lt;= 0.0"/>
@@ -68,13 +69,13 @@
         <field name="arch" type="xml">
             <search string="Replenishment Report Search">
                 <field name="product_id"/>
-                <field name="trigger"/>
                 <field name="product_category_id"/>
                 <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                <field name="name" string="Reordering Rule"/>
-                <filter string="Trigger Manual" name="filter_creation_trigger" domain="[('trigger', '=', 'manual')]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Manual" name="filter_creation_manual_trigger" domain="[('trigger', '=', 'manual')]"/>
+                <filter string="Automatic" name="filter_creation_automatic_trigger" domain="[('trigger', '=', 'auto')]"/>
                 <separator/>
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
                 <separator/>
@@ -156,7 +157,6 @@
                                 <field name="group_id" groups="stock.group_adv_location"/>
                             </div>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="visibility_days"/>
                         </group>
                     </group>
                 </sheet>
@@ -181,11 +181,23 @@
         </field>
     </record>
 
+    <record id="view_warehouse_orderpoint_tree_editable_show_trigger" model="ir.ui.view">
+        <field name="name">stock.warehouse.orderpoint.list.editable.inherit.show_trigger</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="inherit_id" ref="stock.view_warehouse_orderpoint_tree_editable"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='trigger']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_orderpoint" model="ir.actions.act_window">
         <field name="name">Reordering Rules</field>
         <field name="res_model">stock.warehouse.orderpoint</field>
         <field name="view_mode">list,kanban,form</field>
-        <field name="view_id" ref="view_warehouse_orderpoint_tree_editable"/>
+        <field name="view_id" ref="view_warehouse_orderpoint_tree_editable_show_trigger"/>
         <field name="search_view_id" ref="warehouse_orderpoint_search"/>
         <field name="context">{'search_default_trigger': 'auto'}</field>
         <field name="help" type="html">

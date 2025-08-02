@@ -11,9 +11,6 @@
                     <field name="default_picking_policy" class="o_light_label w-auto" widget="selection"/>
                 </setting>
             </setting>
-            <xpath expr="//block[@id='schedule_info']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
             <div id="sale_security_lead" position="replace">
                 <setting company_dependent="1" help="Schedule deliveries earlier to avoid delays" documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html" title="Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.">
                     <field name="use_security_lead"/>

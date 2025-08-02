@@ -36,6 +36,17 @@ class StockReplenishmentInfo(models.TransientModel):
 
     @api.depends('orderpoint_id')
     def _compute_json_lead_days(self):
+        def _format_description(description):
+            formatted_description = []
+            intermediary_date = fields.Date.today()
+            for line in reversed(description):
+                if isinstance(line[1], str):
+                    formatted_description.append((line[0], line[1], False))
+                else:
+                    intermediary_date = intermediary_date + relativedelta(days=int(line[1]))
+                    formatted_description.append((line[0], format_date(self.env, intermediary_date), True))
+            return formatted_description
+
         self.json_lead_days = False
         for replenishment_report in self:
             if not replenishment_report.orderpoint_id.product_id or not replenishment_report.orderpoint_id.location_id:
@@ -44,6 +55,8 @@ class StockReplenishmentInfo(models.TransientModel):
             orderpoints_values = orderpoint._get_lead_days_values()
             dummy, lead_days_description = orderpoint.rule_ids._get_lead_days(
                 orderpoint.product_id, **orderpoints_values)
+            if lead_days_description:
+                lead_days_description = _format_description(lead_days_description)
             replenishment_report.json_lead_days = dumps({
                 'lead_days_date': format_date(self.env, replenishment_report.orderpoint_id.lead_days_date),
                 'lead_days_description': lead_days_description,
@@ -55,8 +68,7 @@ class StockReplenishmentInfo(models.TransientModel):
                 'product_max_qty': self.env['ir.qweb.field.float'].value_to_html(orderpoint.product_max_qty, {'decimal_precision': 'Product Unit'}),
                 'product_uom_name': orderpoint.product_uom_name,
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
-                'visibility_days': orderpoint.visibility_days if orderpoint.product_uom.compare(orderpoint.qty_forecast, orderpoint.product_min_qty) < 0 else 0,
-                'visibility_days_date': format_date(self.env, replenishment_report.orderpoint_id.lead_days_date + relativedelta(days=orderpoint.visibility_days))
+                'visibility_days_date': format_date(self.env, replenishment_report.orderpoint_id.lead_days_date)
             })
 
     @api.depends('orderpoint_id')
