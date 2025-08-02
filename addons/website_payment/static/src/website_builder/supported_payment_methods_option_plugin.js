@@ -23,14 +23,9 @@ class SupportedPaymentMethodsOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, { getButtons: this.getOptionButtons.bind(this) }),
     };
 
-    setup() {
-        // Invalidate the cache if the user made backend changes and reloads the page.
-        this.addDomListener(this.window, "beforeunload", this.invalidateSnippetCache.bind(this));
-    }
-
     /**
      * Add a reload button at the top in case the user made some changes to the supported payment
-     * methods.
+     * methods. This only reloads the snippet element and not the entire editor page.
      */
     getOptionButtons(editingElement) {
         if (editingElement.dataset.snippet !== 's_supported_payment_methods') {
@@ -40,15 +35,11 @@ class SupportedPaymentMethodsOptionPlugin extends Plugin {
             class: 'fa fa-fw fa-rotate-right btn btn-outline-info',
             title: _t("Reload the payment methods"),
             handler: () => {
-                this.invalidateSnippetCache();
+                // Invalidate the interaction cache to force a new call to the server.
+                browser.sessionStorage.removeItem('website_payment.supported_payment_methods');
                 this.dependencies.edit_interaction.restartInteractions(editingElement);
             }
         }];
-    }
-
-    invalidateSnippetCache() {
-        // Invalidate the interaction cache to force a new call to the server.
-        browser.sessionStorage.removeItem('website_payment.supported_payment_methods');
     }
 }
 
