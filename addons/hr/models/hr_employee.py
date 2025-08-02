@@ -238,6 +238,10 @@ class HrEmployeePrivate(models.Model):
         self.flush_recordset(field_names)
         public = self.env['hr.employee.public'].browse(self._ids)
         public.fetch(field_names)
+        if related_fields_private := [field_name for field_name in field_names if
+                                      self.env['hr.employee.public']._fields[field_name].related_field
+                                      and self.env['hr.employee.public']._fields[field_name].related_field.model_name == 'hr.employee']:
+            public.read(related_fields_private)
         self._copy_cache_from(public, field_names)
 
     def _check_private_fields(self, field_names):
