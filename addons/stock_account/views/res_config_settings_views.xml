@@ -19,6 +19,11 @@
                         </setting>
                     </block>
                 </block>
+                <xpath expr="//setting[@id='sell_purchase_uom']" position="after">
+                    <setting id="default_cost_method" help="Set the default cost method for your products. Can be overwritten on product categories." company_dependent="1">
+                        <field name="cost_method" string="Costing Method"/>
+                    </setting>
+                </xpath>
             </field>
         </record>
     </data>
