@@ -21,7 +21,7 @@
             <xpath expr="//page[@name='operations']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='lot_producing_id']" position="attributes">
+            <xpath expr="//field[@name='lot_producing_ids']" position="attributes">
                 <attribute name="invisible">product_tracking in ('none', False)</attribute>
                 <attribute name="required">product_tracking not in ('none', False)</attribute>
             </xpath>
@@ -71,7 +71,7 @@
                 <attribute name="readonly">True</attribute>
                 <attribute name="invisible">False</attribute>
             </xpath>
-            <xpath expr="//field[@name='lot_producing_id']" position="attributes">
+            <xpath expr="//field[@name='lot_producing_ids']" position="attributes">
                 <attribute name="domain">[('id', '=', False)]</attribute>
                 <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
             </xpath>

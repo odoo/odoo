@@ -46,7 +46,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         # Each generated serial number should have its own mo
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), count)
         # Check generated serial numbers
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#1", "sn#2", "sn#3", "sn#4", "sn#5"])
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_ids.mapped('name'), ["sn#1", "sn#2", "sn#3", "sn#4", "sn#5"])
 
     def test_smp_produce_all_but_one(self):
         """Create a MO for a product tracked by serial number.
@@ -125,7 +125,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         mos = mo.procurement_group_id.mrp_production_ids
         mos.button_mark_done()
 
-        self.assertRecordValues(mos.lot_producing_id, [
+        self.assertRecordValues(mos.lot_producing_ids, [
             {'product_qty': 1},
             {'product_qty': 1},
             {'product_qty': 1},
@@ -232,7 +232,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         # Each generated serial number should have its own mo
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
         # Check generated serial numbers
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#3", "sn#4"])
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_ids.mapped('name'), ["sn#3", "sn#4"])
         #check byproduct quantity
         self.assertEqual(mo.procurement_group_id.mrp_production_ids.move_byproduct_ids.mapped('quantity'), [1, 1])
         # check the component quantity
@@ -251,7 +251,14 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         comp1, comp2 = mo.move_raw_ids.mapped('product_id')
         self.env['stock.quant']._update_available_quantity(comp1, mo.warehouse_id.lot_stock_id, 5)
         # Generate an SN using the action_generate_serial
-        mo.action_generate_serial()
+        res_dict = mo.action_generate_serial()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.production.serials')
+        serials_wizard = Form.from_action(self.env, res_dict)
+        serials_wizard.lot_name = 'sn#1'
+        serials_wizard.lot_quantity = 1
+        res_dict = serials_wizard.save().action_generate_serial_numbers()
+        serials_wizard = Form.from_action(self.env, res_dict)
+        serials_wizard.save().action_apply()
         # In the end mass produce the SN's
         action = mo.action_mass_produce()
         wizard = Form(self.env['mrp.batch.produce'].with_context(**action['context']))
@@ -267,7 +274,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertIn("-001", mo.name)
         self.assertEqual(mo.state, "to_close")
         # Each generated serial number should have its own mo
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#5", "sn#6", "sn#7"])
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_ids.mapped('name'), ["sn#5", "sn#6", "sn#7"])
         # check the component quantity
         self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
             {'quantity': 1.0, 'picked': True},
