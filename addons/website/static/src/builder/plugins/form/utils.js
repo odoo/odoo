@@ -414,6 +414,14 @@ export function getDependencyEl(fieldEl) {
 }
 
 /**
+ * @param {HTMLElement} fieldEl
+ * @returns {HTMLElement} The current field input
+ */
+export function getCurrentFieldInputEl(fieldEl) {
+    return fieldEl.querySelector(".s_website_form_input");
+}
+
+/**
  * @param {HTMLElement} dependentFieldEl
  * @param {HTMLElement} targetFieldEl
  * @returns {boolean} "true" if adding "dependentFieldEl" or any other field
