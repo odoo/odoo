@@ -2,6 +2,11 @@
 from odoo import api, models, fields
 from odoo.tools.sql import column_exists, create_column
 
+PE_DOC_SUBTYPES = [
+    ["l10n_pe.document_type01", "l10n_pe.document_type07", "l10n_pe.document_type08"],  # e-invoice
+    ["l10n_pe.document_type02", "l10n_pe.document_type07b", "l10n_pe.document_type08b"],  # e-boleta
+]
+
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -11,8 +16,30 @@ class AccountMove(models.Model):
         result = super()._get_l10n_latam_documents_domain()
         if self.company_id.country_id.code != "PE" or not self.journal_id.l10n_latam_use_documents:
             return result
+        original_move = self.reversed_entry_id or self.debit_origin_id
+        if original_move:
+            if self.debit_origin_id:
+                result.append(("internal_type", "=", "debit_note"))
+            doc_type = original_move.l10n_latam_document_type_id
+            if doc_type:
+                doc_type_xml_id = doc_type.get_external_id().get(doc_type.id)
+                matching_subtype_ids = next(
+                    (
+                        [self.env.ref(sub_id).id for sub_id in group]
+                        for group in PE_DOC_SUBTYPES
+                        if doc_type_xml_id in group
+                    ), []
+                )
+                if matching_subtype_ids:
+                    result += [("id", "in", tuple(matching_subtype_ids))]
         if self.journal_id.type == "sale":
             result.append(("code", "in", ("01", "03", "07", "08", "20", "40")))
+            if self.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code != "6" and self.move_type == "out_invoice":
+                doc_type_ids_RUC = [
+                    self.env.ref(doc_type).id
+                    for doc_type in ("l10n_pe.document_type08b", "l10n_pe.document_type02", "l10n_pe.document_type07b")
+                ]
+                result.append(("id", "in", doc_type_ids_RUC))
         return result
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'partner_id')
