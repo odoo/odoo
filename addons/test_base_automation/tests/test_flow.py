@@ -1,7 +1,9 @@
 # # -*- coding: utf-8 -*-
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import babel
 import datetime
 import json
+import pytz
 import sys
 from freezegun import freeze_time
 from unittest.mock import patch
@@ -1649,6 +1651,12 @@ class TestCompute(common.TransactionCase):
 
     def test_03_server_action_code_history_wizard(self):
         self.env.user.tz = 'Europe/Brussels'  # UTC +2 for May 2025
+        tzinfo = pytz.timezone(self.env.user.tz)
+
+        def get_dt_label(dt):
+            dt = pytz.utc.localize(dt, is_dst=False)
+            dt = dt.astimezone(tzinfo)
+            return babel.dates.format_datetime(dt, locale='en_US')
 
         def get_history(action):
             return self.env["ir.actions.server.history"].search([("action_id", "=", action.id)])
@@ -1667,28 +1675,28 @@ class TestCompute(common.TransactionCase):
                 "state": "code",
                 "code": "pass",
             })
-        expected.insert(0, {
-            "code": "pass",
-            "display_name": f"May 1, 2025, 10:00:00 AM - {self.env.ref('base.user_root').name}",
-        })
+            expected.insert(0, {
+                "code": "pass",
+                "display_name": f"{get_dt_label(self.env.cr._now)} - {self.env.ref('base.user_root').name}",
+            })
         assert_history(action, expected)
 
         with freeze_time("2025-05-01 08:30:00"):
             self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
             action.with_user(self.env.ref('base.user_admin')).write({"code": "hello"})
-        expected.insert(0, {
-            "code": "hello",
-            "display_name": f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}",
-        })
+            expected.insert(0, {
+                "code": "hello",
+                "display_name": f"{get_dt_label(self.env.cr._now)} - {self.env.ref('base.user_admin').name}",
+            })
         assert_history(action, expected)
 
         with freeze_time("2025-05-05 11:30:00"):
             self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
             action.with_user(self.env.ref('base.user_admin')).write({"code": "coucou"})
-        expected.insert(0, {
-            "code": "coucou",
-            "display_name": f"May 5, 2025, 1:30:00 PM - {self.env.ref('base.user_admin').name}",
-        })
+            expected.insert(0, {
+                "code": "coucou",
+                "display_name": f"{get_dt_label(self.env.cr._now)} - {self.env.ref('base.user_admin').name}",
+            })
         assert_history(action, expected)
 
         with freeze_time("2025-05-12 09:30:00"):
@@ -1697,7 +1705,7 @@ class TestCompute(common.TransactionCase):
                 self.assertRecordValues(wizard_form.revision, [
                     {
                         "code": "hello",
-                        "display_name": f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}",
+                        "display_name": f"{get_dt_label(datetime.datetime(2025, 5, 1, 8, 30))} - {self.env.ref('base.user_admin').name}",
                     }
                 ])
                 first_diff = str(wizard_form.code_diff)
@@ -1705,12 +1713,12 @@ class TestCompute(common.TransactionCase):
                 second_diff = str(wizard_form.code_diff)
                 self.assertNotEqual(first_diff, second_diff)
             wizard_form.record.restore_revision()
+            expected.insert(0, {
+                "code": "pass",
+                "display_name": f"{get_dt_label(self.env.cr._now)} - {self.env.ref('base.user_root').name}",
+            })
 
         self.assertEqual(action.code, "pass")
-        expected.insert(0, {
-            "code": "pass",
-            "display_name": f"May 12, 2025, 11:30:00 AM - {self.env.ref('base.user_root').name}",
-        })
         assert_history(action, expected)
 
 
