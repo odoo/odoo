@@ -13,7 +13,7 @@
                         <t t-if="task">
                             <p class="lead mb-0">Your task has been sent.</p>
                             <p class="lead">Our team will get right on it.</p>
-                            <a t-if="request.session.uid and task.sudo().project_id.id and task.project_privacy_visibility != 'followers'" class="my-3 border rounded px-4 py-3 bg-100 fs-5 fw-bold shadow-sm text-decoration-none" t-attf-href="/my/task/#{task.id}" t-att-title="'Ticket #' + str(task.id)">
+                            <a t-if="request.session.uid and task.sudo().project_id.id and task.project_privacy_visibility in ['employees', 'portal']" class="my-3 border rounded px-4 py-3 bg-100 fs-5 fw-bold shadow-sm text-decoration-none" t-attf-href="/my/task/#{task.id}" t-att-title="'Ticket #' + str(task.id)">
                                 Task #<span t-field="task.id"/>
                             </a>
                             <span t-else="" class="my-3 border rounded px-4 py-3 fs-5 fw-bold shadow-sm">
