@@ -527,11 +527,11 @@ class HolidaysRequest(models.Model):
     def _compute_has_mandatory_day(self):
         date_from, date_to = min(self.mapped('date_from')), max(self.mapped('date_to'))
         if date_from and date_to:
-            mandatory_days = self.employee_id._get_mandatory_days(
-                date_from.date(),
-                date_to.date())
-
             for leave in self:
+                mandatory_days = self.employee_id._get_mandatory_days(
+                    date_from.date(),
+                    date_to.date())
+
                 domain = [
                     ('start_date', '<=', leave.date_to.date()),
                     ('end_date', '>=', leave.date_from.date()),
