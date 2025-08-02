@@ -10,6 +10,7 @@ import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Snippet } from "./snippet";
 import { CustomInnerSnippet } from "./custom_inner_snippet";
+import { fuzzyLookup } from "@web/core/utils/search";
 
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
@@ -25,7 +26,7 @@ export class BlockTab extends Component {
         this.snippetModel = useSnippets(this.props.snippetsName);
         this.blockTabRef = useRef("block-tab");
         // Needed to avoid race condition in tours.
-        this.state = useState({ ongoingInsertion: false });
+        this.state = useState({ ongoingInsertion: false, innerSearch: "" });
 
         onMounted(() => {
             this.makeSnippetDraggable();
@@ -46,6 +47,14 @@ export class BlockTab extends Component {
 
     get shared() {
         return this.env.editor.shared;
+    }
+
+    get innerContent() {
+        const snippets = this.snippetModel.snippetInnerContents;
+        if (this.state.innerSearch) {
+            return fuzzyLookup(this.state.innerSearch, snippets, s => '' + s.name+s.title);
+        }
+        return snippets;
     }
 
     /**
