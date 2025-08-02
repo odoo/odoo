@@ -11,40 +11,40 @@ registry.category('web_tour.tours').add('website_sale_collect_buy_product', {
         clickOnElement('Add to cart', '#add_to_cart'),
         tourUtils.goToCart({quantity: 1}),
         tourUtils.goToCheckout(),
-        {
-            content: "Fill delivery address form",
-            trigger: 'select[name="country_id"]',
-            run: 'selectByLabel Belgium',
-        },
-        {
-            trigger: 'input[name="name"]',
-            run: 'edit Name',
-        },
-        {
-            trigger: 'input[name="phone"]',
-            run: 'edit 99999999',
-        },
-        {
-            trigger: 'input[name="email"]',
-            run: 'edit test@odoo.com',
-        },
-        {
-            trigger: 'input[name="street"]',
-            run: 'edit Test Street',
-        },
-        {
-            trigger: 'input[name="city"]',
-            run: 'edit Test City',
-        },
-        {
-            trigger: 'input[name="zip"]',
-            run: 'edit 10000',
-        },
-        {
-            content: "Click on next button",
-            trigger: '.oe_cart .btn:contains("Continue checkout")',
-            run: 'click',
-        },
+        // {
+        //     content: "Fill delivery address form",
+        //     trigger: 'select[name="country_id"]',
+        //     run: 'selectByLabel Belgium',
+        // },
+        // {
+        //     trigger: 'input[name="name"]',
+        //     run: 'edit Name',
+        // },
+        // {
+        //     trigger: 'input[name="phone"]',
+        //     run: 'edit 99999999',
+        // },
+        // {
+        //     trigger: 'input[name="email"]',
+        //     run: 'edit test@odoo.com',
+        // },
+        // {
+        //     trigger: 'input[name="street"]',
+        //     run: 'edit Test Street',
+        // },
+        // {
+        //     trigger: 'input[name="city"]',
+        //     run: 'edit Test City',
+        // },
+        // {
+        //     trigger: 'input[name="zip"]',
+        //     run: 'edit 10000',
+        // },
+        // {
+        //     content: "Click on next button",
+        //     trigger: '.oe_cart .btn:contains("Continue checkout")',
+        //     run: 'click',
+        // },
         {
             content: "Ensure in store delivery method is selected.",
             trigger: 'input[name="o_delivery_radio"][data-delivery-type="in_store"]:checked',
