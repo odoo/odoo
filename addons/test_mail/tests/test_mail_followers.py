@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+
+from datetime import datetime, timedelta
+from markupsafe import Markup
 from unittest.mock import patch
 from urllib.parse import urlparse
-
-from markupsafe import Markup
 
 from odoo import Command
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
@@ -839,6 +840,43 @@ class RecipientsNotificationTest(MailCommon):
             pids=test_partners.ids
         )
         self.assertRecipientsData(recipients_data, False, test_partners)
+
+    @users('employee')
+    def test_recipients_fetch_ooo(self):
+        test_records = self.env['mail.test.simple'].create([
+            {
+                'email_from': f'ignasse.{idx}@example.com',
+                'name': f'Test {idx}',
+            } for idx in range(5)
+        ])
+        for test_record in test_records:
+            # test_record.message_subscribe(partner_ids=(self.partner_portal + self.user_2.partner_id).ids)
+            test_record.message_subscribe(partner_ids=(self.user_2.partner_id).ids)
+            test_record.message_unsubscribe(partner_ids=(self.partner_employee).ids)
+        now = datetime(2025, 6, 8, 8, 45, 12)
+
+        for ooo_from, ooo_to, exp_ooo in [
+            (False, False, False),
+            (now - timedelta(hours=2), False, True),  # only a from is ok
+            (now - timedelta(hours=2), now + timedelta(hours=1), True),  # open timeframe
+            (now - timedelta(hours=2), now - timedelta(hours=1), False),  # closed timeframe
+            (now + timedelta(hours=1), False, False),  # future
+        ]:
+            with self.mock_datetime_and_now(now):
+                (self.user_2 + self.user_portal).write({
+                    'out_of_office_from': ooo_from,
+                    'out_of_office_to': ooo_to,
+                    'out_of_office_message': 'PAS LA BISOUS',
+                })
+                for test_subtype in (self.env.ref('mail.mt_comment').id, False):
+                    with self.subTest(ooo_from=ooo_from, ooo_to=ooo_to, test_subtype=test_subtype):
+                        res = self.env['mail.followers']._get_recipient_data(
+                            test_records[0], 'comment', self.env.ref('mail.mt_comment').id,
+                        )
+                        self.assertEqual(
+                            res[test_records[0].id][self.user_2.partner_id.id]['ooo_activated'],
+                            exp_ooo)
+                        # self.assertFalse(res[test_records[0].id][self.user_portal.partner_id.id]['ooo_activated'])
 
     def test_subscribe_post_author(self):
         """ Test author is added in followers, unless it is archived / odoobot """

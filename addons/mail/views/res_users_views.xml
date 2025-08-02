@@ -38,6 +38,12 @@
                     <field name="signature" position="attributes">
                         <attribute name="widget">html_mail</attribute>
                     </field>
+                    <field name="signature" position="after">
+                        <field name="out_of_office_from" widget="daterange"
+                               options="{'end_date_field': 'out_of_office_to'}"/>
+                        <field name="out_of_office_to" invisible="1"/>  <!-- otherwise it is visible, smort -->
+                        <field name="out_of_office_message"/>
+                    </field>
                 </data>
             </field>
         </record>
@@ -64,6 +70,12 @@
                     </xpath>
                     <field name="signature" position="attributes">
                         <attribute name="widget">html_mail</attribute>
+                    </field>
+                    <field name="signature" position="after">
+                        <field name="out_of_office_from" widget="daterange"
+                               options="{'end_date_field': 'out_of_office_to'}"/>
+                        <field name="out_of_office_to" invisible="1"/>  <!-- otherwise it is visible, smort -->
+                        <field name="out_of_office_message"/>
                     </field>
                 </data>
             </field>
