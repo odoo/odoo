@@ -76,6 +76,9 @@
             <div t-if="line.note" class="fst-italic" style="font-size: 91%;">
                 <t t-esc="line.note.split('\n').join(', ')"/><br/>
             </div>
+            <div t-if="line.customer_note" class="fst-italic" style="font-size: 91%;">
+                <t t-esc="line.customer_note"/><br/>
+            </div>
         </div>
     </t>
 </templates>

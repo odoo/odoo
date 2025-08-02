@@ -434,6 +434,8 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             ProductScreen.clickDisplayedProduct("Product Test"),
             Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
+            // Cutomer Note on orderline
+            ProductScreen.addCustomerNote("Test customer note - orderline"),
             ProductScreen.totalAmountIs("10"),
             {
                 content: "Check if order preparation contains always Variant",
@@ -449,6 +451,9 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     }
                     if (rendered.innerHTML.includes("DUPLICATA!")) {
                         throw new Error("DUPLICATA! should not be present in printed receipt");
+                    }
+                    if (!rendered.innerHTML.includes("Test customer note - orderline")) {
+                        throw new Error("customer note on orderline not found in printed receipt");
                     }
                 },
             },
