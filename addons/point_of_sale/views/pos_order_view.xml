@@ -383,7 +383,7 @@
         <field name="res_model">pos.order.line</field>
         <field name="view_mode">list</field>
         <field name="view_id" ref="view_pos_order_line"/>
-        <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
+        <field name="domain">[('create_date', '&gt;=', 'today'), ('create_date', '&lt;', 'today +1d')]</field>
     </record>
 
     <record id="view_pos_order_tree_all_sales_lines" model="ir.ui.view">

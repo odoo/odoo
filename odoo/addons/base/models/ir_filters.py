@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 
 from odoo import api, fields, models
-from odoo.tools.safe_eval import safe_eval, datetime
 
 
 class IrFilters(models.Model):
@@ -64,11 +63,10 @@ class IrFilters(models.Model):
         return new_filter
 
     def _get_eval_domain(self):
-        self.ensure_one()
-        return safe_eval(self.domain, {
-            'datetime': datetime,
-            'context_today': datetime.datetime.now,
-        })
+        try:
+            return ast.literal_eval(self.domain)
+        except ValueError as e:
+            raise ValueError("Invalid domain: {self.domain}") from e
 
     @api.model
     def _get_action_domain(self, action_id=None, embedded_action_id=None, embedded_parent_res_id=None):
