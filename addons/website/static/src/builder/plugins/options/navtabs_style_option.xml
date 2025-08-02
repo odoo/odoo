@@ -6,7 +6,7 @@
             <BuilderSelectItem actionValue="'nav-underline'" id="'underline_opt'">Underline</BuilderSelectItem>
             <BuilderSelectItem actionValue="'nav-tabs'" id="'tabs_opt'">Tabs</BuilderSelectItem>
             <BuilderSelectItem actionValue="'nav-buttons'" id="'buttons_opt'">Buttons</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'nav-pills'" id="'pills_opt'">Pills</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'nav-pills'" classAction="'s_tabs_pills_template'" id="'pills_opt'">Pills</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <t t-if="isActiveItem('tabs_opt') or isActiveItem('buttons_opt')">
