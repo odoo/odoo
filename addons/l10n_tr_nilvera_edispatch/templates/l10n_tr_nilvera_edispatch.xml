@@ -24,7 +24,7 @@
             <cbc:StreetName t-out="partner.street"/>
             <cbc:CitySubdivisionName t-out="partner.city"/>
             <cbc:CityName t-out="partner.state_id.name"/>
-            <cbc:PostalZone t-out="zipcode"/>
+            <cbc:PostalZone t-out="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_nilvera_edispatch_customs_zip"/>
             <t t-set="tr_country" t-value="partner.country_id.with_context(lang='tr_TR')"/>
             <cac:Country>
                 <cbc:IdentificationCode t-out="tr_country.code"/>
@@ -109,31 +109,26 @@
             <cac:DespatchSupplierParty>
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
                     <t t-set="partner" t-value="current_company"/>
-                    <t t-set="zipcode" t-value="partner.zip"/>
                 </t>
             </cac:DespatchSupplierParty>
             <cac:DeliveryCustomerParty>
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
-                    <t t-set="partner" t-value="picking.partner_id"/>
-                    <t t-set="zipcode" t-value="partner.zip"/>
+                    <t t-set="partner" t-value="picking.partner_id.commercial_partner_id"/>
                 </t>
             </cac:DeliveryCustomerParty>
             <cac:BuyerCustomerParty t-if="picking.l10n_tr_nilvera_buyer_id">
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
                     <t t-set="partner" t-value="picking.l10n_tr_nilvera_buyer_id"/>
-                    <t t-set="zipcode" t-value="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_nilvera_edispatch_customs_zip"/>
                 </t>
             </cac:BuyerCustomerParty>
             <cac:SellerSupplierParty t-if="picking.l10n_tr_nilvera_seller_supplier_id">
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
                     <t t-set="partner" t-value="picking.l10n_tr_nilvera_seller_supplier_id"/>
-                    <t t-set="zipcode" t-value="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_nilvera_edispatch_customs_zip"/>
                 </t>
             </cac:SellerSupplierParty>
             <cac:OriginatorCustomerParty t-if="picking.l10n_tr_nilvera_buyer_originator_id">
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
                     <t t-set="partner" t-value="picking.l10n_tr_nilvera_buyer_originator_id"/>
-                    <t t-set="zipcode" t-value="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_nilvera_edispatch_customs_zip"/>
                 </t>
             </cac:OriginatorCustomerParty>
             <cac:Shipment>
