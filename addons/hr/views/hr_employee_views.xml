@@ -213,13 +213,19 @@
                                         <field name="emergency_contact" string="Contact"/>
                                         <field name="emergency_phone" class="o_force_ltr" string="Phone"/>
                                     </group>
-                                    <group string="Visa">
-                                        <field name="visa_no"/>
-                                        <field name="visa_expire"/>
-                                    </group>
-                                    <group string="Work Permit">
-                                        <field name="permit_no"/>
-                                        <field name="work_permit_expiration_date" string="Expiration Date"/>
+                                    <group string="Visa &amp; Work Permit">
+                                        <label for="visa_no"/>
+                                        <div class="o_wrap_label d-flex flex-row gap-3 align-items-baseline">
+                                            <field name="visa_no" />
+                                            <label for="visa_expire" class="flex-shrink-0" invisible="not visa_no" string="Expires on"/>
+                                            <field name="visa_expire" invisible="not visa_no"/>
+                                        </div>
+                                        <label for="permit_no"/>
+                                        <div class="o_wrap_label d-flex flex-row gap-3 align-items-baseline">
+                                            <field name="permit_no" />
+                                            <label for="work_permit_expiration_date" class="flex-shrink-0" invisible="not permit_no" string="Expires on"/>
+                                            <field name="work_permit_expiration_date" invisible="not permit_no"/>
+                                        </div>
                                         <field name="work_permit_name" invisible="1"/>
                                         <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name" string="Document"/>
                                     </group>
@@ -227,7 +233,12 @@
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id"/>
                                         <field name="ssnid"/>
-                                        <field name="passport_id"/>
+                                        <label for="passport_id"/>
+                                        <div class="o_wrap_label d-flex flex-row gap-3 align-items-baseline">
+                                            <field name="passport_id" />
+                                            <label for="passport_expiration_date" class="flex-shrink-0" invisible="not passport_id" string="Expires on"/>
+                                            <field name="passport_expiration_date" invisible="not passport_id"/>
+                                        </div>
                                     </group>
                                     <group string="Location" name="hr_location_group">
                                         <label for="private_street" string="Private Address"/>
