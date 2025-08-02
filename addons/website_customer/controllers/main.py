@@ -8,6 +8,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.tools.translate import _
 from odoo.http import request
+from odoo.addons.website.controllers.main import QueryURL
 
 
 class WebsiteCustomer(GoogleMap):
@@ -49,8 +50,18 @@ class WebsiteCustomer(GoogleMap):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    def tags_list(self, tag_ids, current_tag):
+        tag_ids = list(tag_ids)
+        if current_tag in tag_ids:
+            tag_ids.remove(current_tag)
+        else:
+            tag_ids.append(current_tag)
+
+        return request.env['res.partner.tag'].browse(tag_ids)
+
     @http.route([
         '/customers',
+        '/customers/tag/<string:tag_id>',
         '/customers/page/<int:page>',
         '/customers/country/<model("res.country"):country>',
         '/customers/country/<model("res.country"):country>/page/<int:page>',
@@ -74,9 +85,17 @@ class WebsiteCustomer(GoogleMap):
             ]
 
         tag_id = post.get('tag_id')
+        active_tags = Tag
         if tag_id:
-            tag_id = request.env['ir.http']._unslug(tag_id)[1] or 0
+            tag_id = [request.env['ir.http']._unslug(tag_id)[1] for tag_id in tag_id.split(',')] or []
             domain += [('website_tag_ids', 'in', tag_id)]
+            active_tags = Tag.browse(tag_id).exists()
+            fixed_tag_slug = ",".join(request.env['ir.http']._slug(t) for t in active_tags)
+            if fixed_tag_slug != tag_id:
+                path = request.httprequest.full_path
+                new_url = path.replace("/tag/%s" % tag_id, fixed_tag_slug and "/tag/%s" % fixed_tag_slug or "", 1)
+                if new_url != path:  # check that really replaced and avoid loop
+                    return request.redirect(new_url, 301)
 
         # group by industry, based on customers found with the search(domain)
         industry_groups = Partner.sudo()._read_group(
@@ -154,9 +173,16 @@ class WebsiteCustomer(GoogleMap):
             'search_path': "?%s" % werkzeug.urls.url_encode(post),
             'tag': tag,
             'tags': tags,
+            'tags_list': self.tags_list,
+            'active_tag_ids': active_tags.ids,
+            'search': search_value,
+            'search_count': partner_count,
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
         }
+
+        values['customer_url'] = QueryURL('/customers', ['partners', 'tag'], tag=tags, search=search_value)
+
         return request.render("website_customer.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
