@@ -160,7 +160,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(sum(sam_move.mapped("product_qty")), 1)
 
         mo_backorder = production.procurement_group_id.mrp_production_ids[-1]
-        self.assertEqual(mo_backorder.delivery_count, 2)
+        self.assertEqual(mo_backorder.delivery_count, 1)
 
         pbm_move |= mo_backorder.move_raw_ids.move_orig_ids
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_1.id).mapped("product_qty")), 16)
@@ -171,7 +171,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
 
         mo_backorder.button_mark_done()
         self.assertEqual(len(sam_move), 1.0)
-        self.assertEqual(sam_move.product_qty, 4.0)
+        self.assertEqual(sam_move.product_qty, 1.0)
 
     def test_tracking_backorder_series_lot_1(self):
         """ Create a MO of 4 tracked products. all component is tracked by lots
@@ -879,6 +879,74 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertRecordValues(mo_all_produced, [{'state': 'done', 'qty_produced': product_qty, 'mrp_production_backorder_count': 1, 'priority': '0'}])
         self.assertRecordValues(mo_ask, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
         self.assertRecordValues(mo_never, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
+
+    def test_split_pre_post_pickings_when_mo_is_split(self):
+        """
+        Test that when the Manufacturing Order (MO) is split, a new split pre-picking/transfer of components will be created for each generated backorder MO,
+        ensuring that all backorders are processed independently.
+        """
+        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
+        location = self.env.ref('stock.stock_location_stock')
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        Product = self.env['product.product']
+        product_finish = Product.create({
+            'name': 'product1',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        component1 = Product.create({
+            'name': 'product2',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        component2 = Product.create({
+            'name': 'product3',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        self.env['stock.quant']._update_available_quantity(component1, location, 50)
+        self.env['stock.quant']._update_available_quantity(component2, location, 50)
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_finish.id,
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component1.id, 'product_qty': 2}),
+                (0, 0, {'product_id': component2.id, 'product_qty': 2}),
+            ],
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finish
+        mo_form.picking_type_id = self.warehouse.manu_type_id
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        action = mo.action_split()
+        wizard = Form.from_action(self.env, action)
+        wizard.counter = 2
+        action = wizard.save().action_split()
+
+        # check that the MO is split in 2.
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+
+        for backorder in mo.procurement_group_id.mrp_production_ids:
+            # Verify that there is only one picking for each backorder before the MO is completed.
+            # Verify the quantity for each move in the backorder's pickings.
+            self.assertEqual(len(backorder.picking_ids), 1)
+            self.assertEqual(backorder.picking_ids.move_ids.mapped('product_uom_qty'), [2, 2])
+
+            # After the MO is done, confirm that there are two pickings for each backorder.
+            # Also, ensure that each picking's origin matches the MO name.
+            backorder.button_mark_done()
+            self.assertEqual(len(backorder.picking_ids), 2)
+            self.assertTrue(all(picking.origin == backorder.name for picking in backorder.picking_ids))
 
 
 class TestMrpWorkorderBackorder(TransactionCase):
