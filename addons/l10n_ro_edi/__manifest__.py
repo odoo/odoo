@@ -24,5 +24,8 @@ E-invoice implementation for Romania
         'web.assets_backend': [
             'l10n_ro_edi/static/src/components/*',
         ],
+        'web.tests_assets': [
+            'l10n_ro_edi/static/tests/legacy/helpers/mock_server.js',
+        ],
     }
 }
