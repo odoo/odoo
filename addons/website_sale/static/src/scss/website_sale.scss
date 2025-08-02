@@ -393,8 +393,7 @@ $input-border-color: $gray-400;
                 width: max-content;
 
                 li {
-                    flex: 0 0 var(--o-wsale-filmstrip-item-width, auto);
-                    min-width: 0;
+                    width: var(--o-wsale-filmstrip-item-width, auto);
                     aspect-ratio: var(--o-wsale-filmstrip-item-aspect-ratio, unset);
 
                     @include media-breakpoint-down (md) {
@@ -499,6 +498,52 @@ $input-border-color: $gray-400;
 
         .o_pricelist_dropdown + .o_sortby_dropdown {
             margin-left: map-get($spacers, 2) * -1;
+        }
+
+        &.o_wsale_products_header_is_category {
+            &:where(:not(.o_wsale_products_header_show_category_title)) {
+                .o_wsale_category_title:where(:not(.o_wsale_category_title_is_search)) {
+                    display: none !important;
+                }
+            }
+
+            &:where(:not(.o_wsale_products_header_show_category_description)) {
+                .o_wsale_category_description {
+                    display: none !important;
+                }
+            }
+
+            &:where(.o_wsale_products_header_category_center_content) {
+                .o_wsale_category_title, .o_wsale_category_description {
+                    align-self: center;
+                }
+
+                .o_wsale_category_description div {
+                    max-width: 38rem;
+                }
+
+                #o_wsale_categories_filmstrip {
+                    justify-content: center;
+                }
+            }
+        }
+
+        &.o_wsale_products_header_is_shop {
+            &:where(:not(.o_wsale_products_header_show_shop_title)) {
+                .o_wsale_shop_title {
+                    display: none !important;
+                }
+            }
+
+            &:where(.o_wsale_products_header_shop_center_content) {
+                .o_wsale_shop_title {
+                    align-self: center;
+                }
+
+                #o_wsale_categories_filmstrip {
+                    justify-content: center;
+                }
+            }
         }
     }
 

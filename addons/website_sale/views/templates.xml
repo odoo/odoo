@@ -491,6 +491,13 @@
             <t t-set="opt_wsale_attributes_top" t-value="is_view_active('website_sale.products_attributes_top')"/>
             <t t-set="opt_wsale_floating_bar" t-value="is_view_active('website_sale.floating_bar')"/>
 
+            <t t-set="opt_wsale_show_shop_title" t-value="is_view_active('website_sale.products_shop_title')"/>
+            <t t-set="opt_wsale_shop_title_align" t-value="is_view_active('website_sale.products_shop_title_align')"/>
+
+            <t t-set="opt_wsale_show_category_title" t-value="is_view_active('website_sale.products_category_title')"/>
+            <t t-set="opt_wsale_show_category_description" t-value="is_view_active('website_sale.products_category_description')"/>
+            <t t-set="opt_wsale_category_align" t-value="is_view_active('website_sale.products_category_align')"/>
+
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
 
@@ -578,7 +585,7 @@
                             </div>
                             <t t-call="website_sale.sidebar_dropzone_at_bottom"/>
                         </aside>
-                        <div id="products_grid" t-attf-class="col">
+                        <div id="products_grid" t-attf-class="col #{'o_wsale_is_category' if category else ''}">
                             <t
                                 t-set="_header_has_content"
                                 t-value="category or opt_wsale_categories_top or (not opt_wsale_floating_bar and (opt_wsale_attributes_top or is_view_active('website_sale.search') or is_view_active('website_sale.sort') or hasPricelistDropdown))"
@@ -586,17 +593,34 @@
 
                             <header
                                 id="o_wsale_products_header"
-                                t-attf-class="d-flex flex-column gap-2 {{_header_has_content and 'py-3' or (not _header_has_content and not opt_wsale_design_grid and 'py-3')}}"
-                                >
+                                t-attf-class="d-flex flex-column gap-2
+                                    {{_header_has_content and 'py-3' or (not _header_has_content and not opt_wsale_design_grid and 'py-3')}}
+                                    {{'o_wsale_products_header_is_category' if category else 'o_wsale_products_header_is_shop'}}
+                                    {{'o_wsale_products_header_show_category_title' if opt_wsale_show_category_title else ''}}
+                                    {{'o_wsale_products_header_show_category_description' if opt_wsale_show_category_description else ''}}
+                                    {{'o_wsale_products_header_category_center_content' if opt_wsale_category_align else ''}}
+                                    {{'o_wsale_products_header_show_shop_title' if opt_wsale_show_shop_title else ''}}
+                                    {{'o_wsale_products_header_shop_center_content' if opt_wsale_shop_title_align else ''}}"
+                            >
                                 <t t-if="category and not search" t-call="website_sale.products_breadcrumb">
                                     <t
                                         t-set="_classes"
                                         t-valuef="d-none d-lg-flex w-100 p-0 mb-0 small"
                                     />
                                 </t>
+                                <t t-if="category">
+                                    <t t-set="editor_msg">
+                                        Drag building blocks here to customize the header for categories.
+                                    </t>
+                                    <div
+                                        id="products_header_category_dropzone"
+                                        class="oe_structure oe_empty"
+                                        t-att-data-editor-message="editor_msg"
+                                    />
+                                </t>
                                 <h1
                                     t-if="category or search"
-                                    t-attf-class="d-flex gap-1 align-items-center mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and bool(category) and 'mb-2'}}"
+                                    t-attf-class="o_wsale_category_title d-flex gap-1 align-items-center mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and bool(category) and 'mb-2'}} {{'o_wsale_category_title_is_search' if search else ''}}"
                                 >
                                     <a
                                         t-if="(search and not category) or (not search and category)"
@@ -635,18 +659,36 @@
                                     </span>
                                     <t t-elif="category" t-esc="category.name"/>
                                 </h1>
-                                <h1 class="h4-fs" t-if="not category and not search">
+                                <h1
+                                    class="o_wsale_shop_title h4-fs"
+                                    t-if="not category and not search"
+                                >
                                     All products
                                 </h1>
                                 <t t-if="category">
-                                    <t t-set='editor_msg'>
+                                    <div
+                                        t-if="not search"
+                                        t-attf-class="o_wsale_category_description #{'mb-3' if category.website_description else ''}"
+                                        t-out="category.website_description"
+                                    />
+                                    <t t-set='header_editor_message'>
                                         Drag building blocks here to customize the header for
                                         "<t t-esc='category.name'/>" category.
                                     </t>
                                     <div
                                         id="category_header"
+                                        t-att-data-editor-message="header_editor_message"
+                                        t-field="category.website_header"
+                                    />
+                                </t>
+                                <t t-else="">
+                                    <t t-set="editor_msg">
+                                        Drag building blocks here to customize the header for the shop page.
+                                    </t>
+                                    <div
+                                        id="products_header_shop_dropzone"
+                                        class="oe_structure oe_empty"
                                         t-att-data-editor-message="editor_msg"
-                                        t-field="category.website_description"
                                     />
                                 </t>
                                 <t t-if="opt_wsale_categories_top"
@@ -951,6 +993,13 @@
     <template id="website_sale.products_categories" active="False" name="Categories in Left Side "/>
     <template id="website_sale.products_categories_top" active="True" name="Categories in top-nav"/>
     <template id="website_sale.products_attributes_top" active="False" name="Attributes in top-nav"/>
+
+    <template id="website_sale.products_shop_title" active="True" name="Show Shop Title"/>
+    <template id="website_sale.products_shop_title_align" active="False" name="Align Shop Title"/>
+
+    <template id="website_sale.products_category_title" active="True" name="Show Category Title"/>
+    <template id="website_sale.products_category_description" active="True" name="Show Category Description"/>
+    <template id="website_sale.products_category_align" active="False" name="Align Category"/>
 
     <template id="website_sale.filter_color_attributes" name="Color attributes in Filter">
         <t t-foreach="a.value_ids" t-as="v">
@@ -1364,12 +1413,14 @@
         <div
             t-if="entries"
             id="o_wsale_categories_filmstrip"
-            class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch w-100 overflow-hidden"
+            class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch overflow-hidden"
             role="navigation"
         >
-            <div class="o_wsale_filmstrip_wrapper position-relative w-100 overflow-auto z-1">
+            <div
+                class="o_wsale_filmstrip_wrapper position-relative overflow-auto z-1"
+            >
                 <ul
-                    class="o_wsale_filmstrip d-flex align-items-stretch mb-0 w-100 list-unstyled overflow-visible"
+                    class="o_wsale_filmstrip d-flex align-items-stretch mb-0 list-unstyled overflow-visible"
                     role="menu"
                     aria-label="Categories"
                 >
