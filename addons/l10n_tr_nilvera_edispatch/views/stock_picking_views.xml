@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="vpicktree_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
+        <field name="name">stock.picking.view.list.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="js_class">l10n_tr_edispatch_tree</attribute>
+            </tree>
+        </field>
+    </record>
+
     <record id="view_picking_internal_search_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
         <field name="name">stock.picking.internal.search.inherit.l10n.tr.nilvera.edispatch</field>
         <field name="model">stock.picking</field>
@@ -38,7 +49,33 @@
                             <field name="l10n_tr_nilvera_seller_supplier_id"/>
                             <field name="l10n_tr_nilvera_buyer_originator_id"/>
                             <field name="l10n_tr_nilvera_delivery_notes"/>
-                            <field name="l10n_tr_nilvera_dispatch_state"/>
+                            <field name="l10n_tr_nilvera_dispatch_state" invisible="picking_type_code != 'outgoing'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="l10n_tr_vehicle_details" string="Vehicle Information">
+                            <field name="l10n_tr_vehicle_plate" context="{'default_plate_number_type': 'vehicle'}"/>
+                            <field name="l10n_tr_nilvera_trailer_plate_ids" widget="many2many_tags" context="{'default_plate_number_type': 'trailer'}"/>
+                        </group>
+                        <group name="l10n_tr_driver_details" string="Driver Information">
+                            <field name="l10n_tr_nilvera_driver_ids" widget="many2many_tags" create="0" group_create="0" domain="[('is_company', '=', False)]"/>
+                        </group>
+                    </group>
+                </page>
+                <!-- The tab name needs to be changed for incoming receipts -->
+                <page name="l10n_tr_ereceipt" string="e-Receipt" invisible="country_code != 'TR' or picking_type_code != 'incoming'">
+                    <group>
+                        <group name="l10n_tr_delivery_details" string="General Information">
+                            <field name="l10n_tr_nilvera_dispatch_type"  required="country_code == 'TR'"/>
+                            <field name="l10n_tr_nilvera_carrier_id" string="Carrier" domain="[('is_company', '=', True)]"/>
+                            <field name="l10n_tr_nilvera_delivery_printed_number" invisible="l10n_tr_nilvera_dispatch_type != 'MATBUDAN'"/>
+                            <field name="l10n_tr_nilvera_delivery_date" invisible="l10n_tr_nilvera_dispatch_type != 'MATBUDAN'"/>
+                        </group>
+                        <group name="l10n_tr_additionals" string="Additional Information">
+                            <field name="l10n_tr_nilvera_buyer_id"/>
+                            <field name="l10n_tr_nilvera_seller_supplier_id"/>
+                            <field name="l10n_tr_nilvera_buyer_originator_id"/>
+                            <field name="l10n_tr_nilvera_delivery_notes"/>
                         </group>
                     </group>
                     <group>
