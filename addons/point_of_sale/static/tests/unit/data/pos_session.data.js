@@ -67,8 +67,21 @@ export class PosSession extends models.ServerModel {
         ];
     }
 
-    load_data_params() {
-        const modelToLoad = this._load_pos_data_models();
+    // These methods are designed to be overridden to customize the POS data loading behavior using the provided `opts`.
+    getModelsToLoad(opts) {
+        return this._load_pos_data_models();
+    }
+
+    getModelFieldsToLoad(model, opts) {
+        return model._load_pos_data_fields();
+    }
+
+    processPosReadData(model, records, opts) {
+        return (model._post_read_pos_data && model._post_read_pos_data(records)) || records;
+    }
+
+    load_data_params(opts = {}) {
+        const modelToLoad = this.getModelsToLoad(opts);
         const response = modelToLoad.reduce((acc, modelName) => {
             acc[modelName] = {
                 fields: {},
@@ -78,8 +91,9 @@ export class PosSession extends models.ServerModel {
         }, {});
 
         for (const model of modelToLoad) {
-            const posFields = MockServer.env[model]._load_pos_data_fields();
-            const allFields = MockServer.env[model].fields_get();
+            const serverModel = MockServer.env[model];
+            const posFields = this.getModelFieldsToLoad(serverModel, opts);
+            const allFields = serverModel.fields_get();
             const base = posFields.length ? posFields : Object.keys(allFields);
 
             if (!base.includes("id")) {
@@ -111,8 +125,8 @@ export class PosSession extends models.ServerModel {
         return response;
     }
 
-    load_data() {
-        const modelToLoad = this._load_pos_data_models();
+    load_data(opts = {}) {
+        const modelToLoad = this.getModelsToLoad(opts);
         const response = modelToLoad.reduce((acc, modelName) => {
             acc[modelName] = {};
             return acc;
@@ -120,10 +134,9 @@ export class PosSession extends models.ServerModel {
 
         for (const modelName of modelToLoad) {
             const model = MockServer.env[modelName];
-            const posFields = model._load_pos_data_fields();
+            const posFields = this.getModelFieldsToLoad(model, opts);
             const records = model.search_read([], posFields, false, false, false, false);
-            response[modelName] =
-                (model._post_read_pos_data && model._post_read_pos_data(records)) || records;
+            response[modelName] = this.processPosReadData(model, records, opts);
         }
 
         return response;
