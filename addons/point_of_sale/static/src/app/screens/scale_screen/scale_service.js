@@ -73,8 +73,8 @@ export class PosScaleService extends Reactive {
     setProduct(product, unitPrice) {
         this.product = {
             name: product.display_name || _t("Unnamed Product"),
-            unitOfMeasure: product.uom_id?.name || "kg",
-            rounding: product.uom_id?.rounding || 0.001,
+            unitOfMeasure: product.get_unit()?.name || "kg",
+            rounding: product.get_unit()?.rounding || 0.001,
             unitPrice,
         };
     }

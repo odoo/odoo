@@ -562,7 +562,7 @@ export class PosStore extends Reactive {
         const formattedUnitPrice = this.env.utils.formatCurrency(this.getProductPrice(product));
 
         if (product.to_weight) {
-            return `${formattedUnitPrice}/${product.uom_id.name}`;
+            return `${formattedUnitPrice}/${product.get_unit().name}`;
         } else {
             return formattedUnitPrice;
         }
