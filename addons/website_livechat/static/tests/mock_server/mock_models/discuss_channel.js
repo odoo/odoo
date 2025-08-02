@@ -1,6 +1,14 @@
 import { livechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 import { fields } from "@web/../tests/web_test_helpers";
 
+function historyDataToString(history) {
+    const formatDateTime = (dateTime) => {
+        const match = dateTime.match(/.* ([0-9]{2}:[0-9]{2}:)/);
+        return match ? match[1].slice(0, -1) : "";
+    };
+    return history.map((h) => `${h[0]} (${formatDateTime(h[1])})`).join(" → ");
+}
+
 export class DiscussChannel extends livechatModels.DiscussChannel {
     livechat_visitor_id = fields.Many2one({ relation: "website.visitor", string: "Visitor" }); // FIXME: somehow not fetched properly
 
@@ -28,10 +36,13 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
                 const [visitor] = WebsiteVisitor.browse(channel.livechat_visitor_id);
                 const [partner] = ResPartner.browse(visitor.partner_id);
                 const [country] = ResCountry.browse(visitor.country_id);
+                const visitorHistoryData = JSON.parse(visitor.history_data || "[]");
+
                 channelInfo.visitor = {
                     country: country ? { id: country.id, code: country.code } : false,
                     name: partner?.name || partner?.display_name || visitor.display_name || `Visitor #${visitor.id}`,
-                    history: visitor.history, // TODO should be computed
+                    history: historyDataToString(visitorHistoryData),
+                    history_data: visitorHistoryData,
                     id: visitor.id,
                     is_connected: visitor.is_connected,
                     lang_name: visitor.lang_id ? ResLang.read(visitor.lang_id)[0].name : false,

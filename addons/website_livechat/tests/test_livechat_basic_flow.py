@@ -35,11 +35,24 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             'visit_datetime': self.base_datetime - datetime.timedelta(minutes=20),
         }])
 
-        handmade_history = "%s (21:10) → %s (21:20) → %s (21:30)" % (
-            self.env.ref('website.homepage_page').name,
-            self.env.ref('website.contactus_page').name,
-            self.env.ref('website.homepage_page').name,
-        )
+        handmade_history = [
+            (
+                self.env.ref("website.homepage_page").name,
+                (self.base_datetime - datetime.timedelta(minutes=20)).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+            ),
+            (
+                self.env.ref("website.contactus_page").name,
+                (self.base_datetime - datetime.timedelta(minutes=10)).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+            ),
+            (
+                self.env.ref("website.homepage_page").name,
+                self.base_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            ),
+        ]
         history = self.env['discuss.channel']._get_visitor_history(self.visitor)
 
         self.assertEqual(history, handmade_history)
