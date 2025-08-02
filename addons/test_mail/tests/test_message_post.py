@@ -946,6 +946,56 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         ]}]
         self.assertMailNotifications(msg, recipients_info)
 
+    @mute_logger(
+        "odoo.addons.mail.models.mail_mail",
+        "odoo.addons.mail.models.mail_message_schedule",
+        "odoo.models.unlink",
+    )
+    def test_message_post_schedule_deleted(self):
+        """A message is scheduled, its owner is deleted, then nothing is sent."""
+        now = datetime.utcnow().replace(second=0, microsecond=0)
+        scheduled_datetime = now + timedelta(days=5)
+        self.user_employee.write({"notification_type": "inbox"})
+        test_record = self.test_record.with_env(self.env)
+        test_record.message_subscribe(self.partner_employee.ids)
+        # Post a scheduled message
+        with freeze_time(now), self.assertMsgWithoutNotifications():
+            msg = test_record.message_post(
+                body="<p>Test</p>",
+                message_type="comment",
+                subject="Subject",
+                subtype_xmlid="mail.mt_comment",
+                scheduled_date=scheduled_datetime,
+            )
+        self.assertFalse(self._new_mails)
+        self.assertFalse(self._mails)
+        schedules = (
+            self.env["mail.message.schedule"]
+            .sudo()
+            .search([("mail_message_id", "=", msg.id)])
+        )
+        self.assertEqual(len(schedules), 1, msg="Should have scheduled the message")
+        self.assertEqual(schedules.scheduled_datetime, scheduled_datetime)
+        # Nothing sent now, as it is scheduled
+        with freeze_time(now):
+            self.env["mail.message.schedule"].sudo()._send_notifications_cron()
+        self.assertTrue(schedules.exists(), msg="Should not have sent the message")
+        # In the mean time, some FK deletes the record where the message is scheduled, skipping its unlink() override
+        self.env.cr.execute(
+            f"DELETE FROM {test_record._table} WHERE id = %s", (test_record.id,)
+        )
+        test_record.invalidate_recordset()
+        # Send the scheduled message from the cron at right date
+        with (
+            freeze_time(now + timedelta(days=5)),
+            self.mock_mail_gateway(mail_unlink_sent=True),
+        ):
+            self.env["mail.message.schedule"].sudo()._send_notifications_cron()
+        # Check schedule was consumed and nothing was sent
+        self.assertFalse(schedules.exists(), msg="Should have deleted the schedule")
+        self.assertFalse(self._new_mails)
+        self.assertFalse(self._mails)
+
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule', 'odoo.models.unlink')
     def test_message_post_schedule_update(self):
