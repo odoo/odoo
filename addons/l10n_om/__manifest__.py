@@ -16,12 +16,13 @@ Activates:
 """,
     'countries': ['om'],
     'depends': [
-        'account',
+        'account_reports'
     ],
     'auto_install': True,
     'data': [
         'data/res.country.state.csv',
         'data/tax_report.xml',
+        'data/account_report_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
