@@ -162,7 +162,6 @@ test("Channel member count update after user joined", async () => {
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Harry" });
     await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
-    await click("[title='Members']");
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 2" });
 });
 
