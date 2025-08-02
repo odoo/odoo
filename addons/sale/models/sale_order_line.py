@@ -585,15 +585,12 @@ class SaleOrderLine(models.Model):
         line = self.with_company(self.company_id)
         price = line._get_display_price()
         product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
-        price_unit = line.product_id._get_tax_included_unit_price_from_price(
+        line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
             price,
             product_taxes=product_taxes,
             fiscal_position=line.order_id.fiscal_position_id,
         )
-        line.update({
-            'price_unit': price_unit,
-            'technical_price_unit': price_unit,
-        })
+        line.technical_price_unit = line.price_unit
 
     def _get_order_date(self):
         self.ensure_one()
