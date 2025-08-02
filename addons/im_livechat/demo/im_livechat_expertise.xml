@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="im_livechat_expertise_technical_support" model="im_livechat.expertise">
+            <field name="name">Technical Support</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+        <record id="im_livechat_expertise_product_inquiries" model="im_livechat.expertise">
+            <field name="name">Product Inquiries</field>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+        <record id="im_livechat_expertise_billing_support" model="im_livechat.expertise">
+            <field name="name">Billing Support</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
+        </record>
+        <record id="im_livechat_expertise_shipping_tracking" model="im_livechat.expertise">
+            <field name="name">Shipping &amp; Tracking</field>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+        <record id="im_livechat_expertise_returns_refunds" model="im_livechat.expertise">
+            <field name="name">Returns &amp; Refunds</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+        <record id="im_livechat_expertise_account_management" model="im_livechat.expertise">
+            <field name="name">Account Management</field>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+        <record id="im_livechat_expertise_sales_consultation" model="im_livechat.expertise">
+            <field name="name">Sales Consultation</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+        <record id="im_livechat_expertise_general_queries" model="im_livechat.expertise">
+            <field name="name">General Queries</field>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+    </data>
+</odoo>
