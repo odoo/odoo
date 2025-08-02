@@ -16,6 +16,13 @@ class AccountMoveLine(models.Model):
         string='Sales Order Lines', readonly=True, copy=False)
     sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
 
+    def _compute_is_storno(self):
+        # EXTENDS 'account'
+        super()._compute_is_storno()
+        for line in self:
+            if line.is_downpayment:
+                line.is_storno = line.company_id.account_storno and line.balance > 0.0
+
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'sale_line_ids' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
