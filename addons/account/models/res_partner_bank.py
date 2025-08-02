@@ -86,7 +86,11 @@ class ResPartnerBank(models.Model):
             ids=self.ids,
         )))
         for bank in self:
-            bank.duplicate_bank_partner_ids = self.env['res.partner'].browse(id2duplicates.get(bank._origin.id))
+            duplicate_record = id2duplicates.get(bank._origin.id)
+            if duplicate_record and duplicate_record[0]:
+                bank.duplicate_bank_partner_ids = self.env['res.partner'].browse(duplicate_record)
+            else:
+                bank.duplicate_bank_partner_ids = []
 
     @api.depends('partner_id.country_id', 'sanitized_acc_number', 'allow_out_payment', 'acc_type')
     def _compute_display_account_warning(self):
