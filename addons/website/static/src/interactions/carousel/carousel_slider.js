@@ -20,6 +20,7 @@ export class CarouselSlider extends Interaction {
                 "min-height": this.maxHeight ? `${this.maxHeight}px` : "",
             }),
         },
+        ".slide-link-wrapper": { "t-att-class": () => ({ "d-none": false }) },
     };
     carouselOptions = undefined;
 

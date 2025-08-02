@@ -8,6 +8,7 @@ const CarouselSliderEdit = I => class extends I {
             ...this.dynamicContent._root,
             "t-on-content_changed": this.onContentChanged,
         },
+        ".slide-link-wrapper": { "t-att-class": () => ({ "d-none": true }) },
     };
     // Pause carousel in edit mode.
     carouselOptions = { ride: false, pause: true };

@@ -887,6 +887,8 @@ $-o-carousel-indicators-dots-size: .75rem;
 $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacers, 5)});
 
 %o_horizontal_controllers {
+    pointer-events: none;
+
     @include media-breakpoint-up(md) {
         .carousel-indicators {
             position: relative;
@@ -897,6 +899,13 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             position: relative;
             width: auto;
         }
+    }
+
+    // Make the entire slide clickable by disabling pointer events on the
+    // carousel control's wrapper, while keeping the controls themselves
+    // clickable.
+    .carousel-indicators button, .carousel-control-prev, .carousel-control-next {
+        pointer-events: auto;
     }
 
     .o_arrows_wrapper {
@@ -1090,6 +1099,16 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     .carousel-control-next,
     .carousel-indicators {
         position: absolute;
+    }
+
+    // Make the entire slide clickable by disabling pointer events on the
+    // carousel control's wrapper, while keeping the controls themselves
+    // clickable.
+    .carousel-indicators {
+        pointer-events: none;
+        button {
+            pointer-events: auto;
+        }
     }
 
     .carousel-control-prev-icon, .carousel-control-next-icon {
