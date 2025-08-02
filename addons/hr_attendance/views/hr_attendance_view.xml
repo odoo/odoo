@@ -40,27 +40,6 @@
         </field>
     </record>
 
-    <record id="view_hr_attendance_kanban" model="ir.ui.view">
-        <field name="name">hr.attendance.kanban</field>
-        <field name="model">hr.attendance</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" sample="1">
-                <field name="check_in"/>
-                <field name="check_out"/>
-                <templates>
-                    <t t-name="card">
-                        <field name="employee_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" class="fs-5 fw-bold mb-2"/>
-                        <hr class="mt4 mb8"/>
-                        <div>
-                            <i class="fa fa-calendar me-1" aria-label="Period" role="img" title="Period"></i>
-                            <field name="check_in" /> - <field name="check_out" />
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
     <record id="hr_attendance_view_form" model="ir.ui.view">
         <field name="name">hr.attendance.form</field>
         <field name="model">hr.attendance</field>
@@ -313,6 +292,7 @@
     <record id="hr_attendance_reporting" model="ir.actions.act_window">
         <field name="name">Attendances</field>
         <field name="res_model">hr.attendance</field>
+        <field name="path">attendance-report</field>
         <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
         <field name="context">
@@ -444,7 +424,19 @@
 
     <menuitem id="menu_action_open_form" name="Kiosk Mode" action="open_kiosk_url" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager"/>
 
-    <menuitem id="menu_hr_attendance_reporting" name="Reporting" action="hr_attendance_reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer"/>
+    <menuitem
+        id="menu_hr_attendance_reporting"
+        name="Reporting"
+        parent="menu_hr_attendance_root"
+        sequence="15"
+        groups="hr_attendance.group_hr_attendance_officer"/>
+
+    <menuitem
+        id="menu_hr_attendance_attendance_reporting"
+        name="Attendances"
+        action="hr_attendance_reporting"
+        parent="menu_hr_attendance_reporting"
+        sequence="10"/>
 
     <menuitem id="menu_hr_attendance_overview" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_officer"/>
 
