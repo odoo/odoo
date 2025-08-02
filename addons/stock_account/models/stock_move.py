@@ -447,7 +447,7 @@ class StockMove(models.Model):
             return False
 
         return self.env['account.analytic.account']._perform_analytic_distribution(
-            self._get_analytic_distribution(), amount, unit_amount, self.analytic_account_line_ids, self)
+            self._get_analytic_distribution(), amount, unit_amount, self.sudo().analytic_account_line_ids, self)
 
     def _ignore_automatic_valuation(self):
         return False
