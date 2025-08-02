@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 import { _t } from "@web/core/l10n/translation";
+import { generatePdfThumbnail } from "@mail/utils/common/pdf_thumbnail";
 
 export class Attachment extends FileModelMixin(Record) {
     static _name = "ir.attachment";
@@ -28,6 +29,14 @@ export class Attachment extends FileModelMixin(Record) {
     /** @type {string} */
     ownership_token;
     create_date = fields.Datetime();
+    thumbnail = fields.Attr(undefined, {
+        compute() {
+            if (!this.thumbnail) {
+                this.setPdfThumbnail();
+            }
+            return this.thumbnail;
+        },
+    });
 
     get gifPaused() {
         return this.thread ? !this.thread.isFocused : !this.composer?.isFocused;
@@ -75,6 +84,17 @@ export class Attachment extends FileModelMixin(Record) {
 
     get previewName() {
         return this.voice ? _t("Voice Message") : this.name || "";
+    }
+
+    async setPdfThumbnail(width = 180, height = 110) {
+        const { thumbnail } = await generatePdfThumbnail(this.urlRoute, {
+            width,
+            height,
+            stripBase64Prefix: false,
+        });
+        if (thumbnail) {
+            this.thumbnail = thumbnail;
+        }
     }
 }
 

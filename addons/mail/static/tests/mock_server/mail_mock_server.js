@@ -178,6 +178,10 @@ async function load_attachments(request) {
     return new mailDataHelpers.Store(IrAttachment.browse(attachmentIds)).get_result();
 }
 
+registerRoute("/web/content/", function () {
+    return;
+});
+
 registerRoute("/mail/rtc/channel/join_call", channel_call_join);
 /** @type {RouteCallback} */
 async function channel_call_join(request) {
