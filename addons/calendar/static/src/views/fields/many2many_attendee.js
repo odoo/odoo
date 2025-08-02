@@ -5,6 +5,8 @@ import {
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { AttendeeTagsList } from "@calendar/views/fields/attendee_tags_list";
+import { AvatarPartnerCardPopover } from "@calendar/views/avatar_partner_card/avatar_partner_card";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 const ICON_BY_STATUS = {
     accepted: "fa-check",
@@ -19,6 +21,7 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
     };
     setup() {
         super.setup();
+        this.avatarCard = usePopover(AvatarPartnerCardPopover);
         this.specialData = useSpecialData((orm, props) => {
             const { context, name, record } = props;
             return orm.call(
@@ -30,6 +33,35 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
                 }
             );
         });
+    }
+
+    displayAvatarCard(record) {
+        return !this.env.isSmall && this.relation === "res.partner";
+    }
+
+    getAvatarCardProps(record) {
+        return {
+            id: record.resId,
+        };
+    }
+
+    getTagProps(record) {
+        return {
+            ...super.getTagProps(...arguments),
+            onImageClicked: (ev) => {
+                if (!this.displayAvatarCard(record)) {
+                    return;
+                }
+                const target = ev.currentTarget;
+                if (
+                    !this.avatarCard.isOpen ||
+                    (this.lastOpenedId && record.resId !== this.lastOpenedId)
+                ) {
+                    this.avatarCard.open(target, this.getAvatarCardProps(record));
+                    this.lastOpenedId = record.resId;
+                }
+            },
+        };
     }
 
     get tags() {
