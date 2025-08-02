@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import pytz
 
 from collections import defaultdict
 
@@ -1444,3 +1445,46 @@ class HrEmployee(models.Model):
                 for field in employee_fields
             ])
         return employee_fields
+
+    def _get_employee_working_periods(self, start, stop):
+        """
+            A dedicated method to get working period values neccessary.Returns the rows by
+            adding contract details for each row of employees_rows.
+            :param employee_ids: A list of employee ids each row
+            :return: employees_rows + contract details
+        """
+        employees_rows = {employee: {"working_periods": []} for employee in self.ids}
+        # Contracts of employees in current scale of time
+        contracts = self._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+        # Contracts of employees who don't have active contract in current scale of time
+        employees_with_contract_outside_current_scale = dict(
+            self.env["hr.version"].sudo()._read_group(
+                    domain=[
+                        ("employee_id", "in", (self - contracts.employee_id).ids),
+                    ],
+                    groupby=["employee_id"],
+                    aggregates=["__count"],
+                    having=[("__count", ">", 0)]
+                )
+        )
+        employees_with_contract_in_current_scale = []
+        for contract in contracts:
+            employee_id = contract.employee_id.id
+            end_datetime = contract.date_end and contract.date_end + relativedelta(hour=23, minute=59, second=59)
+            if end_datetime:
+                user_tz = pytz.timezone(self.env.user.tz or self.env.context.get('tz') or 'UTC')
+                end_datetime = user_tz.localize(end_datetime).astimezone(pytz.utc).replace(tzinfo=None)
+                end_datetime = fields.Datetime.to_string(end_datetime)
+            employees_with_contract_in_current_scale.append(employee_id)
+            employees_rows[employee_id]["working_periods"].append({
+                "start": fields.Datetime.to_string(contract.date_start),
+                "end": end_datetime,
+            })
+        for employee in self - self.browse(employees_with_contract_in_current_scale):
+            if employee in employees_with_contract_outside_current_scale:
+                continue
+            employees_rows[employee.id]["working_periods"].append({
+                "start": start,
+                "end": stop,
+            })
+        return employees_rows
