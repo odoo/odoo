@@ -29,7 +29,9 @@ export class PosOrderline extends Base {
     }
 
     set_full_product_name() {
-        this.full_product_name = constructFullProductName(this);
+        this.full_product_name = !this.full_product_name?.length
+            ? constructFullProductName(this)
+            : this.full_product_name;
     }
 
     setOptions(options) {
