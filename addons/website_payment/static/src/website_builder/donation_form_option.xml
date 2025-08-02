@@ -1,0 +1,12 @@
+<templates>
+
+    <t t-inherit="website.s_website_form_form_option" t-inherit-mode="extension">
+        <xpath expr="//t[@t-foreach]" position="attributes">
+            <attribute name="t-if">model.website_form_key != 'donation_form'</attribute>
+        </xpath>
+        <xpath expr="//BuilderRow[@label.translate=&quot;On Success&quot;]" position="attributes">
+            <attribute name="t-if">state.activeForm.website_form_key !== 'donation_form'</attribute>
+        </xpath>
+    </t>
+
+</templates>

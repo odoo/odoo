@@ -62,6 +62,7 @@ export class FormOptionPlugin extends Plugin {
             {
                 Component: FormOptionAddFieldButton,
                 selector: ".s_website_form",
+                exclude: ".payment_form_container",
                 applyTo: "form",
                 props: {
                     addField: (formEl) => this.addFieldToForm(formEl),
