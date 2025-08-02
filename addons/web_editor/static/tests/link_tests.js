@@ -211,6 +211,43 @@ QUnit.module(
             );
         });
 
+        QUnit.test("should wrap font-size element inside link element", async function (assert) {
+            const { editor, editable } = onMount();
+            const p = editable.querySelector("p");
+            setSelection(p, 0);
+            insertText(editor, "Testing");
+            setSelection(p, 0, p, 7);
+            await nextTick();
+
+            // Click on font size button from floating toolbar.
+            editor.document.querySelector("#toolbar #fontSizeCurrentValue").click();
+            await nextTick();
+            // Select font size item.
+            const fontSizeItem = editor.document.querySelector(
+                '#toolbar a[data-apply-class="display-1-fs"]'
+            );
+            await fontSizeItem.dispatchEvent(new Event("mousedown"));
+            assert.strictEqual(
+                editable.innerHTML,
+                `<p><span class="display-1-fs">Testing</span></p>`
+            );
+
+            // Click on link button from floating toolbar
+            editor.document.querySelector("#toolbar .fa-link").click();
+            await nextTick();
+            // Insert link url
+            inputText('input[id="o_link_dialog_url_input"]', "#");
+            await nextTick();
+            editor.document.querySelector("span.btn-primary").click();
+            await nextTick();
+            // Click on Insert button
+            editor.document.querySelector(".o_dialog footer button.btn-primary").click();
+            await nextTick();
+            assert.strictEqual(
+                editable.innerHTML,
+                `<p>\ufeff<a class="o_translate_inline btn btn-primary" href="#" target="_blank">\ufeff<span class="display-1-fs">Testing</span>\ufeff</a>\ufeff</p>`
+            );
+        });
 
         QUnit.module("PowerBox related");
 
