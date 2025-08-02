@@ -219,6 +219,11 @@ class AccountMove(models.Model):
         column2='payment_id',
         copy=False,
     )
+    reconciled_payment_ids = fields.Many2many('account.payment', string="Reconciled Payments",
+        compute='_compute_reconciled_payment_ids',
+        search='_search_reconciled_payment_ids',
+        help='Payments that have been reconciliated with these invoices journal items.'
+    )
     payment_count = fields.Integer(compute='_compute_payment_count')
 
     # === Statement fields === #
@@ -1140,7 +1145,7 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
 
-    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids.state')
+    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids.state', 'reconciled_payment_ids.state')
     def _compute_payment_state(self):
         groups = self.grouped(lambda move:
             'legacy' if move.payment_state == 'invoicing_legacy' else
@@ -1234,10 +1239,10 @@ class AccountMove(models.Model):
         for move in self:
             move.status_in_payment = move.state if move.state in ('draft', 'cancel') else move.payment_state
 
-    @api.depends('matched_payment_ids')
+    @api.depends('matched_payment_ids', 'reconciled_payment_ids')
     def _compute_payment_count(self):
         for invoice in self:
-            invoice.payment_count = len(invoice.matched_payment_ids)
+            invoice.payment_count = len(invoice.matched_payment_ids | invoice.reconciled_payment_ids)
 
     @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due')
     def _compute_needed_terms(self):
@@ -2074,6 +2079,56 @@ class AccountMove(models.Model):
         for move in self:
             move.next_payment_date = min([line.payment_date for line in move.line_ids.filtered(lambda l: l.payment_date and not l.reconciled)], default=False)
 
+    @api.depends('line_ids.matched_debit_ids', 'line_ids.matched_credit_ids')
+    def _compute_reconciled_payment_ids(self):
+        ''' Retrieve the payments reconciled to the invoices through the reconciliation (account.partial.reconcile) '''
+        stored_invoices = self.filtered('id')
+        if not stored_invoices:
+            self.reconciled_payment_ids = self.env['account.payment']
+            return
+
+        for move in self:
+            move.reconciled_payment_ids = self.env['account.payment']
+
+        self.env['account.payment'].flush_model(fnames=['move_id', 'outstanding_account_id'])
+        self.env['account.move'].flush_model(fnames=['move_type', 'origin_payment_id', 'statement_line_id'])
+        self.env['account.move.line'].flush_model(fnames=['move_id', 'account_id', 'statement_line_id'])
+        self.env['account.partial.reconcile'].flush_model(fnames=['debit_move_id', 'credit_move_id'])
+
+        self._cr.execute('''
+            SELECT
+                invoice.id,
+                ARRAY_AGG(DISTINCT payment.id) AS payment_ids,
+                invoice.move_type
+            FROM account_payment payment
+            JOIN account_move move ON move.id = payment.move_id
+            JOIN account_move_line line ON line.move_id = move.id
+            JOIN account_partial_reconcile part ON
+                part.debit_move_id = line.id
+                OR
+                part.credit_move_id = line.id
+            JOIN account_move_line counterpart_line ON
+                part.debit_move_id = counterpart_line.id
+                OR
+                part.credit_move_id = counterpart_line.id
+            JOIN account_move invoice ON invoice.id = counterpart_line.move_id
+            JOIN account_account account ON account.id = line.account_id
+            WHERE account.account_type IN ('asset_receivable', 'liability_payable')
+                AND invoice.id IN %(invoice_ids)s
+                AND line.id != counterpart_line.id
+                AND invoice.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+            GROUP BY invoice.id, invoice.move_type
+        ''', {
+            'invoice_ids': tuple(stored_invoices.ids)
+        })
+        query_res = self._cr.dictfetchall()
+
+        if query_res:
+            for res in query_res:
+                move = self.browse(res['id'])
+                if res['move_type'] in self.env['account.move'].get_sale_types(include_receipts=True):
+                    move.reconciled_payment_ids = self.env['account.payment'].browse(res.get('payment_ids', []))
+
     def _search_next_payment_date(self, operator, value):
         if operator not in ('=', '<', '<='):
             raise UserError(self.env._('Operation not supported'))
@@ -2087,6 +2142,12 @@ class AccountMove(models.Model):
         field = 'name' if 'like' in operator else 'id'
         journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
         return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
+
+    def _search_reconciled_payment_ids(self, operator, value):
+        payments = self.env['account.payment'].browse(value)
+        moves = self.env['account.move'].search([('origin_payment_id', 'in', payments.ids)])
+        return [('id', operator, moves.ids)]
+
     # -------------------------------------------------------------------------
     # INVERSE METHODS
     # -------------------------------------------------------------------------
@@ -5091,7 +5152,8 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def open_payments(self):
-        return self.matched_payment_ids._get_records_action(name=_("Payments"))
+        payments = self.matched_payment_ids | self.reconciled_payment_ids
+        return payments._get_records_action(name=_("Payments"))
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
