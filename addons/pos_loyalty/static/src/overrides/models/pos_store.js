@@ -429,7 +429,13 @@ patch(PosStore.prototype, {
         await this.updatePrograms();
         if (rewardsToApply.length == 1) {
             const reward = rewardsToApply[0];
-            order._applyReward(reward.reward, reward.coupon_id, { product });
+            const lineProduct =
+                result.product_id || typeof result.raw.product_id === "number"
+                    ? this.models["product.product"].get(result.raw.product_id)
+                    : result.raw.product_id;
+            order._applyReward(reward.reward, reward.coupon_id, {
+                product: lineProduct || product,
+            });
         }
         this.updateRewards();
 
