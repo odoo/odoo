@@ -12,7 +12,9 @@ $o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
     }
 
     > input {
-        display: none;
+        &:focus + span {
+            box-shadow: 0 0 0 3px lighten($o-brand-primary, 30%);
+        }
 
         + span {
             border-radius: $o-we-switch-size;
