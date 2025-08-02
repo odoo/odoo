@@ -216,15 +216,8 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
 
         # Add an exclusion
         ptav_with_exclusion.write({
-            'exclude_for': [
-                Command.create({
-                    'product_tmpl_id': product_template.id,
-                    'value_ids': [
-                        Command.set([
-                            ptav_excluded.id,
-                        ]),
-                    ],
-                }),
+            'excluded_value_ids': [
+                Command.link(ptav_excluded.id),
             ],
         })
         self.assertEqual(len(product_template.product_variant_ids), 3)

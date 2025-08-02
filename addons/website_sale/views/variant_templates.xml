@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="variants">
-        <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination)"/>
+        <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions()"/>
         <ul
             t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 pt-3 #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
             t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
@@ -191,7 +191,7 @@
     </template>
     <template id="badge_extra_price" name="Badge Extra Price">
         <t t-set="price_extra" t-value="ptav._get_extra_price(combination_info)"/>
-        <span t-if="price_extra" t-attf-class="{{'badge text-bg-primary' if attribute.display_type != 'pills' else 'small text-muted'}}">
+        <span t-if="price_extra and ptav.show_price_extra" t-attf-class="{{'badge text-bg-primary' if attribute.display_type != 'pills' else 'small text-muted'}}">
             <!--
                 price_extra is displayed as catalog price instead of
                 price after pricelist because it is impossible to

@@ -366,17 +366,12 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         self.env['product.template.attribute.value'].search([
             ('product_tmpl_id', '=', product_template.id),
             ('price_extra', '=', 1),
-        ]).exclude_for = [
-            Command.create({
-                'product_tmpl_id': product_template.id,
-                'value_ids': [Command.set(
-                    self.env['product.template.attribute.value'].search([
-                        ('product_tmpl_id', '=', product_template.id),
-                        ('price_extra', '=', 3)
-                    ]).ids
-                )],
-            }),
-        ]
+        ]).excluded_value_ids = [
+            Command.link(value) for value in self.env['product.template.attribute.value'].search([
+                    ('product_tmpl_id', '=', product_template.id),
+                    ('price_extra', '=', 3)
+                ]).ids
+]
 
         self.start_tour("/", 'tour_shop_multi_checkbox', login="portal")
 
