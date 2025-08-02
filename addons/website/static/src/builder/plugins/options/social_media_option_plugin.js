@@ -140,6 +140,7 @@ class SocialMediaOptionPlugin extends Plugin {
             EditRecordedSocialMediaLinkAction,
             EditSocialMediaLinkAction,
             AddSocialMediaLinkAction,
+            CustomizeIconLinkUnderlineVisibility,
         },
         normalize_handlers: this.normalize.bind(this),
         save_handlers: this.saveRecordedSocialMedia.bind(this),
@@ -445,6 +446,9 @@ export class AddSocialMediaLinkAction extends BuilderAction {
             )
         );
     }
+}
+export class CustomizeIconLinkUnderlineVisibility extends BuilderAction {
+    static id = "customizeiconlinkunderlinevisibility";
 }
 
 registry.category("website-plugins").add(SocialMediaOptionPlugin.id, SocialMediaOptionPlugin);

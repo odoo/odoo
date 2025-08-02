@@ -243,6 +243,7 @@
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website_common.scss',
             'website/static/src/scss/website_controller_page.scss',
+            'website/static/src/scss/social_media_link_underline.scss',
             'website/static/src/scss/website.ui.scss',
             'website/static/src/libs/zoomodoo/zoomodoo.js',
             'website/static/src/libs/bootstrap/bootstrap.js',

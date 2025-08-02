@@ -1,0 +1,21 @@
+.s_social_media,.snippet_social_link {
+    &[data-customizeiconlinkunderlinevisibility="always"] a {
+        text-decoration: underline !important;
+    }
+
+    &[data-customizeiconlinkunderlinevisibility="hover"] a {
+        text-decoration: none !important;
+
+        &:hover {
+            text-decoration: underline !important;
+        }
+    }
+
+    &[data-customizeiconlinkunderlinevisibility="never"] a {
+        text-decoration: none !important;
+
+        &:hover {
+            text-decoration: none !important;
+        }
+    }
+}
