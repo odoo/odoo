@@ -1560,9 +1560,9 @@ diff_match_patch.patch_obj.prototype.toString = function () {
  * @odoo
  * Export main object and attach useful variables
  */
-
-export const DiffMatchPatch = Object.assign(diff_match_patch, {
+export const DiffMatchPatch = diff_match_patch;
+export const diff = {
     DIFF_DELETE,
     DIFF_INSERT,
-    DIFF_EQUAL
-});
+    DIFF_EQUAL,
+};

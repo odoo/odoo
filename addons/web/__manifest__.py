@@ -436,6 +436,11 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_tests'),
             'web/static/tests/legacy/ignore_missing_deps_stop.js',
         ],
+        # Lazy-loaded assets needed by test framework when not in headless mode
+        'web.assets_unit_tests_ui': [
+            "web/static/lib/diff_match_patch/diff_match_patch.js",
+            "web/static/lib/highlight/highlight.js",
+        ],
         # Assets for test framework and setup
         'web.assets_unit_tests_setup': [
             'web/static/src/module_loader.js',
