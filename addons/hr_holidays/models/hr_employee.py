@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 import pytz
 
 from odoo import _, api, fields, models
+from odoo.osv import expression
 
 
 class HrEmployee(models.Model):
@@ -115,16 +116,12 @@ class HrEmployee(models.Model):
             ('company_id', 'in', self.env.companies.ids),
             '|',
             ('resource_calendar_id', '=', False),
-            ('resource_calendar_id', '=', self.resource_calendar_id.id),
+            ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
         ]
 
-        if self.department_id:
-            domain += [
-                '|',
-                ('department_ids', '=', False),
-                ('department_ids', 'parent_of', self.department_id.id),
-            ]
-        else:
-            domain += [('department_ids', '=', False)]
+        department_domain = [('department_ids', '=', False)]
+        for department in self.department_id:
+            department_domain = expression.OR([department_domain, [('department_ids', 'parent_of', department.id)]])
+        domain = expression.AND([domain, department_domain])
 
         return self.env['hr.leave.mandatory.day'].search(domain)
