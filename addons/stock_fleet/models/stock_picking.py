@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import Command, api, fields, models
 
 
 class StockPickingType(models.Model):
@@ -10,6 +10,18 @@ class StockPickingType(models.Model):
         'Dispatch Management',
         help="Enable this option to display dispatch management related details in the batch/wave form view and operations kanban overview."
     )
+    dock_ids = fields.Many2many(
+        'stock.location',
+        'dock_location_stock_picking_type_rel',
+        domain="[('warehouse_id', '=', warehouse_id), ('usage', '=', 'internal')]",
+        compute='_compute_dock_ids', store=True, readonly=False
+    )
+
+    @api.depends('warehouse_id')
+    def _compute_dock_ids(self):
+        for picking_type in self:
+            if picking_type.warehouse_id != picking_type._origin.warehouse_id and picking_type.dock_ids:
+                picking_type.dock_ids = [Command.clear()]
 
 
 class StockPicking(models.Model):

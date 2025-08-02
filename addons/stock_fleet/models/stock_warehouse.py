@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import Command, models
 
 
 class StockWarehouse(models.Model):
@@ -15,6 +15,8 @@ class StockWarehouse(models.Model):
 
         if values.get('out_type_id'):
             values['out_type_id']['dispatch_management'] = True
+            if self.delivery_steps in ('pick_ship', 'pick_pack_ship'):
+                values['out_type_id']['dock_ids'] = [Command.link(self.wh_output_stock_loc_id.id)]
         if values.get('in_type_id'):
             values['in_type_id']['dispatch_management'] = True
 
