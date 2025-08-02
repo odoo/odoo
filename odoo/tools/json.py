@@ -69,5 +69,5 @@ def json_default(obj):
     if isinstance(obj, ReadonlyDict):
         return dict(obj)
     if isinstance(obj, bytes):
-        return obj.decode()
+        return obj.decode(errors='ignore')
     return str(obj)
