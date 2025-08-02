@@ -804,7 +804,12 @@ class AccountMoveLine(models.Model):
         for line in self.filtered(lambda l: l.parent_state == 'draft'):
             # vendor bills should have the product purchase UOM
             if line.move_id.is_purchase_document():
-                line.product_uom_id = line.product_id.seller_ids.filtered(lambda s: s.partner_id == line.partner_id).product_uom_id or line.product_id.uom_id
+                seller_ids = line.product_id.seller_ids.filtered(lambda s: s.partner_id == line.partner_id)
+                seller = (
+                    seller_ids.filtered(lambda s: s.company_id == line.company_id)[:1]
+                    or seller_ids.filtered(lambda s: not s.company_id)[:1]
+                )
+                line.product_uom_id = seller.product_uom_id or line.product_id.uom_id
             else:
                 line.product_uom_id = line.product_id.uom_id
 
