@@ -3,7 +3,7 @@
 from datetime import datetime
 from dateutil import relativedelta
 
-from odoo import _, api, Command, fields, models, SUPERUSER_ID
+from odoo import _, api, Command, fields, models, SUPERUSER_ID, registry
 from odoo.tools import str2bool
 
 
@@ -131,8 +131,23 @@ class PaymentTransaction(models.Model):
             ):
                 send_invoice_cron._trigger()
             else:
-                # Must be called after the super() call to make sure the invoice are correctly posted.
-                self._send_invoice()
+                # Must be called after the super() call to make sure the invoices are correctly posted.
+                self._send_invoice_post_commit()
+
+    def _send_invoice_post_commit(self):
+        if self.env['account.move']._can_commit():
+            transaction_ids = self.ids
+            dbname = self.env.cr.dbname
+            context = self.env.context
+
+            @self.env.cr.postcommit.add
+            def send_invoices():
+                db_registry = registry(dbname)
+                with db_registry.cursor() as cr:
+                    env = api.Environment(cr, SUPERUSER_ID, context)
+                    env['payment.transaction'].browse(transaction_ids)._send_invoice()
+        else:
+            self._send_invoice()
 
     def _send_invoice(self):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(
