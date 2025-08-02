@@ -12,16 +12,16 @@
                         </button>
                     </t>
                     <t t-esc="revenue_label" t-else=""/>
-                    <a
+                    <button
                         class="revenue_section btn btn-link my-n2 py-2 text-action"
-                        t-if="revenue.action" href="#"
+                        t-if="revenue.action"
                         t-on-click="() => this.props.onClick(revenue.action)"
                         t-att-class="{ 'ms-auto': env.isSmall, 'opacity-0': !env.isSmall and state.isFolded, 'opacity-100-hover': !env.isSmall }"
                         aria-label="Internal link"
                         data-tooltip="Internal link"
                     >
                         <i class="oi oi-arrow-right"/>
-                    </a>
+                    </button>
                 </div>
             </td>
             <td t-attf-class="text-end {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
@@ -44,9 +44,9 @@
                             <tr t-foreach="sale_items" t-as="sale_item" t-key="sale_item.id">
                                 <t t-set="uom_name" t-value="sale_item.product_uom_id and sale_item.product_uom_id[1]"/>
                                 <td class="ps-4">
-                                    <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
+                                    <button t-if="sale_item.action" class="btn btn-link fw-normal p-0 text-start" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
                                         <t t-esc="sale_item.display_name"/>
-                                    </a>
+                                    </button>
                                     <t t-else="" t-esc="sale_item.display_name"/>
                                 </td>
                                 <td class="text-end">
