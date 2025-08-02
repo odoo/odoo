@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.CodeToolbar">
+        <div class="o_code_toolbar">
+            <div data-prevent-closing-overlay="true">
+                <Dropdown menuClass="'o_language_selector'">
+                    <button class="btn" t-att-title="props.languages[state.language]" name="language">
+                        <span class="px-1" t-esc="props.languages[state.language]"/>
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="Object.entries(props.languages)" t-as="language" t-key="language[0]">
+                            <DropdownItem
+                                attrs="{ name: language[1] }"
+                                onSelected="() => this.selectLanguage(language[0])" t-on-pointerdown.prevent="() => {}">
+                                <t t-esc="language[1]"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+                <CopyButton content="() => props.prismSource.value" copyText.translate="Copy" successText.translate="Code copied to the clipboard."/>
+            </div>
+        </div>
+    </t>
+</templates>

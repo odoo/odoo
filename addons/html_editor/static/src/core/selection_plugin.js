@@ -95,12 +95,13 @@ export function isNotAllowedContent(node) {
     return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
 }
 
-export const isHtmlContentSupported = weakMemoize((/** @type {EditorSelection} */ selection) => {
-    return !closestElement(
-        selection.focusNode,
-        '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
-    );
-});
+export const isHtmlContentSupported = weakMemoize(
+    (/** @type {EditorSelection} */ selection) =>
+        !closestElement(
+            selection.focusNode,
+            '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
+        )
+);
 
 /**
  * @returns edge text nodes if they do not have content selected
@@ -166,7 +167,6 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['getTargetedBlocks'] } getTargetedBlocks
  * @property { SelectionPlugin['getTargetedNodes'] } getTargetedNodes
  * @property { SelectionPlugin['modifySelection'] } modifySelection
- * @property { SelectionPlugin['preserveFocus'] } preserveFocus
  * @property { SelectionPlugin['preserveSelection'] } preserveSelection
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
  * @property { SelectionPlugin['areNodeContentsFullySelected'] } areNodeContentsFullySelected
@@ -188,7 +188,6 @@ export class SelectionPlugin extends Plugin {
         "setCursorStart",
         "setCursorEnd",
         "extractContent",
-        "preserveFocus",
         "preserveSelection",
         "resetSelection",
         "getTargetedNodes",
@@ -466,6 +465,7 @@ export class SelectionPlugin extends Plugin {
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
                 ? Object.freeze({
+                      isCollapsed: selection.isCollapsed,
                       anchorNode: selection.anchorNode,
                       anchorOffset: selection.anchorOffset,
                       focusNode: selection.focusNode,
@@ -654,25 +654,6 @@ export class SelectionPlugin extends Plugin {
             }
             for (const { textarea, start, end, direction } of selections) {
                 textarea.setSelectionRange(start, end, direction);
-            }
-        };
-    }
-
-    /**
-     * Take the current active element and return a function that restores the
-     * focus in it if its content is editable.
-     *
-     * @returns {() => void}
-     */
-    preserveFocus() {
-        const activeElement = this.document.activeElement;
-        return () => {
-            if (
-                activeElement &&
-                activeElement !== this.document.activeElement &&
-                this.isNodeEditable(activeElement)
-            ) {
-                activeElement.focus();
             }
         };
     }
@@ -877,6 +858,13 @@ export class SelectionPlugin extends Plugin {
         }
         const isSelectionOnEditableRoot = (s) => s.isCollapsed && s.anchorNode === this.editable;
         if (!isSelectionOnEditableRoot(editableSelection)) {
+            return false;
+        }
+        if (
+            this.getResource("bypass_fix_selection_on_editable_root_predicates").some((fn) =>
+                fn(selectionData)
+            )
+        ) {
             return false;
         }
         if (this.delegateTo("fix_selection_on_editable_root_overrides", editableSelection)) {
