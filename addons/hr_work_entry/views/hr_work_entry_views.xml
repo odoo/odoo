@@ -55,7 +55,7 @@
                 multi_create_view="hr_work_entry.hr_work_entry_view_calendar_multi_create_form"
                 js_class="work_entries_calendar">
                 <!-- Sidebar favorites filters -->
-                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" filter_field="is_checked" avatar_field="avatar_128" widget="many2one_avatar_employee"/>
+                <field name="employee_id" filters="1" write_field="employee_id" filter_field="is_checked" avatar_field="avatar_128" widget="many2one_avatar_employee"/>
                 <field name="state"/>
             </calendar>
         </field>

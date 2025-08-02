@@ -321,7 +321,7 @@ export class CalendarModel extends Model {
                 continue;
             }
             for (const filter of section.filters) {
-                if (filter.active && filter.type === "record") {
+                if (filter.active) {
                     records.push({
                         ...rawRecord,
                         ...values,
