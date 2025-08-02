@@ -3,15 +3,15 @@ import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
-export class WorkcenterCapacityProduct extends Many2One {
-    static template = "mrp.WorkcenterCapacityProduct";
+export class ForcedPlaceholder extends Many2One {
+    static template = "stock.ForcedPlaceholder";
     static components = { ...Many2One.components };
     static props = { ...Many2One.props };
 }
 
-export class WorkcenterCapacityProductField extends Component {
-    static template = "mrp.WorkcenterCapacityProductField";
-    static components = { WorkcenterCapacityProduct };
+export class ForcedPlaceholderField extends Component {
+    static template = "stock.ForcedPlaceholderField";
+    static components = { ForcedPlaceholder };
     static props = { ...Many2OneField.props };
 
     get m2oProps() {
@@ -19,6 +19,6 @@ export class WorkcenterCapacityProductField extends Component {
     }
 }
 
-registry.category("fields").add("mrp_workcenter_capacity_product", {
-    ...buildM2OFieldDescription(WorkcenterCapacityProductField),
+registry.category("fields").add("stock.forced_placeholder", {
+    ...buildM2OFieldDescription(ForcedPlaceholderField),
 });

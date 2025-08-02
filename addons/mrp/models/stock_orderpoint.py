@@ -13,6 +13,7 @@ class StockWarehouseOrderpoint(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+    bom_id_placeholder = fields.Char(compute='_compute_bom_id_placeholder')
     manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
     def _get_replenishment_order_notification(self):
@@ -44,13 +45,33 @@ class StockWarehouseOrderpoint(models.Model):
             if 'manufacture' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.bom_ids.product_uom_id
 
-    @api.depends('route_id')
+    @api.onchange('bom_id')
+    def _compute_new_route_id_from_bom(self):
+        for o in self:
+            if not o.route_id and o.bom_id:
+                o.route_id = self.env['stock.rule'].search([('action', '=', 'manufacture')])[0].route_id
+
+    @api.depends('route_id', 'route_id_placeholder')
     def _compute_show_bom(self):
         manufacture_route = []
         for res in self.env['stock.rule'].search_read([('action', '=', 'manufacture')], ['route_id']):
             manufacture_route.append(res['route_id'][0])
         for orderpoint in self:
-            orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
+            orderpoint.show_bom = (
+                orderpoint.route_id.id in manufacture_route
+            ) or (
+                orderpoint._get_default_rule().action == 'manufacture'
+            )
+
+    @api.depends('route_id', 'route_id_placeholder')
+    def _compute_bom_id_placeholder(self):
+        for o in self:
+            o.bom_id_placeholder = ''
+            default_rule = o._get_default_rule()
+            if o.show_bom and default_rule:
+                bom = default_rule._get_matching_bom(o.product_id, o.company_id, {})
+                if bom:
+                    o.bom_id_placeholder = bom.display_name
 
     def _compute_visibility_days(self):
         res = super()._compute_visibility_days()
