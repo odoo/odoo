@@ -121,6 +121,7 @@ The non-standard operators can be reduced to standard operators by using the
 optimization function. See the respective optimization functions for the
 details.
 """
+INTERNAL_CONDITION_OPERATORS = frozenset(('any!', 'not any!'))
 
 NEGATIVE_CONDITION_OPERATORS = {
     'not any': 'any',
@@ -246,7 +247,7 @@ class Domain:
                         # process subdomains when processing internal operators
                         if item[1] in ('any', 'any!', 'not any', 'not any!') and isinstance(item[2], (list, tuple)):
                             item = (item[0], item[1], Domain(item[2], internal=True))
-                    elif item[1] in ('any!', 'not any!'):
+                    elif item[1] in INTERNAL_CONDITION_OPERATORS:
                         # internal operators are not accepted
                         raise ValueError(f"Domain() invalid item in domain: {item!r}")
                     stack.append(Domain(*item))
@@ -275,9 +276,8 @@ class Domain:
     def FALSE(cls) -> Domain:
         return _FALSE_DOMAIN
 
-    @staticmethod
-    def is_negative_operator(operator: str) -> bool:
-        return operator in NEGATIVE_CONDITION_OPERATORS
+    INTERNAL_OPERATORS = INTERNAL_CONDITION_OPERATORS
+    NEGATIVE_OPERATORS = NEGATIVE_CONDITION_OPERATORS
 
     @staticmethod
     def custom(
@@ -1293,7 +1293,7 @@ def _optimize_any_domain(condition, model):
     """Make sure the value is an optimized domain (or Query or SQL)"""
     value = condition.value
     if isinstance(value, ANY_TYPES) and not isinstance(value, Domain):
-        if '!' not in condition.operator:
+        if condition.operator in ('any', 'not any'):
             # update operator to 'any!'
             return DomainCondition(condition.field_expr, condition.operator + '!', condition.value)
         return condition

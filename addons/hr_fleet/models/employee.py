@@ -37,7 +37,7 @@ class HrEmployee(models.Model):
                 employee.license_plate = ' '.join(employee.car_ids.filtered('license_plate').mapped('license_plate')) or employee.private_car_plate
 
     def _search_license_plate(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return ['|', ('car_ids.license_plate', operator, value), ('private_car_plate', operator, value)]
 

@@ -116,7 +116,7 @@ class MailActivityMixin(models.AbstractModel):
             record.activity_user_id = record.activity_ids[0].user_id if record.activity_ids else False
 
     def _search_activity_exception_decoration(self, operator, operand):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return [('activity_ids.activity_type_id.decoration_type', operator, operand)]
 
@@ -199,7 +199,7 @@ class MailActivityMixin(models.AbstractModel):
     def _search_activity_date_deadline(self, operator, operand):
         if operator == 'in' and False in operand:
             return Domain('activity_ids', '=', False) | Domain(self._search_activity_date_deadline('in', operand - {False}))
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return Domain('activity_ids.date_deadline', operator, operand)
 
@@ -207,7 +207,7 @@ class MailActivityMixin(models.AbstractModel):
     def _search_activity_user_id(self, operator, operand):
         # field supports comparison with any boolean
         domain = Domain.FALSE
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         if operator == 'in':
             bools, values = partition(lambda v: isinstance(v, bool), operand)
@@ -224,13 +224,13 @@ class MailActivityMixin(models.AbstractModel):
 
     @api.model
     def _search_activity_type_id(self, operator, operand):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return [('activity_ids.activity_type_id', operator, operand)]
 
     @api.model
     def _search_activity_summary(self, operator, operand):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return [('activity_ids.summary', operator, operand)]
 
@@ -245,7 +245,7 @@ class MailActivityMixin(models.AbstractModel):
             ), False)
 
     def _search_my_activity_date_deadline(self, operator, operand):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return [('activity_ids', 'any', [
             ('active', '=', True),  # never overdue if "done"

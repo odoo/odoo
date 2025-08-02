@@ -46,7 +46,7 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
             line[line.auto_account_id.plan_id._column_name()] = line.auto_account_id
 
     def _search_auto_account(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         return Domain.OR([

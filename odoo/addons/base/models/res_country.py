@@ -90,7 +90,7 @@ class ResCountry(models.Model):
         result = []
         domain = Domain(domain or Domain.TRUE)
         # first search by code
-        if not Domain.is_negative_operator(operator) and name and len(name) == 2:
+        if not operator in Domain.NEGATIVE_OPERATORS and name and len(name) == 2:
             countries = self.search_fetch(domain & Domain('code', operator, name), ['display_name'], limit=limit)
             result.extend((country.id, country.display_name) for country in countries.sudo())
             domain &= Domain('id', 'not in', countries.ids)
@@ -219,7 +219,7 @@ class ResCountryState(models.Model):
                     break
             return result
         # first search by code (with =ilike)
-        if not Domain.is_negative_operator(operator) and name:
+        if not operator in Domain.NEGATIVE_OPERATORS and name:
             states = self.search_fetch(domain & Domain('code', '=like', name), ['display_name'], limit=limit)
             result.extend((state.id, state.display_name) for state in states.sudo())
             domain &= Domain('id', 'not in', states.ids)
@@ -234,7 +234,7 @@ class ResCountryState(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
-        if value and not Domain.is_negative_operator(operator):
+        if value and not operator in Domain.NEGATIVE_OPERATORS:
             if operator in ('ilike', '='):
                 domain |= self._get_name_search_domain(value, operator)
             elif operator == 'in':

@@ -140,7 +140,7 @@ class StockMoveLine(models.Model):
                 line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
 
     def _search_picking_type_id(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return Domain('picking_id.picking_type_id', operator, value)
 

@@ -178,7 +178,7 @@ class MailThread(models.AbstractModel):
     @api.model
     def _search_message_partner_ids(self, operator, operand):
         """Search function for message_follower_ids"""
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         if not (self.env.su or self.env.user._is_internal()):
             user_partner = self.env.user.partner_id
