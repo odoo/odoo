@@ -58,6 +58,9 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function (require) {
         async getPayload() {
             return null;
         }
+        get decimalSeparator() {
+            return this.env._t.database.parameters.decimal_point;
+        }
     }
 
     return AbstractAwaitablePopup;

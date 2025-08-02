@@ -9,7 +9,7 @@
                     <div class="opening-cash-section">
                         <span class="info-title">Opening cash</span>
                         <div class="cash-input-sub-section" t-on-input="handleInputChange">
-                            <input class="pos-input" t-ref="openingCashInput"/>
+                            <input class="pos-input" t-ref="openingCashInput" t-on-keypress="_onAmountKeypress"/>
                             <div class="button icon" t-on-click="openDetailsPopup">
                                 <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
                             </div>

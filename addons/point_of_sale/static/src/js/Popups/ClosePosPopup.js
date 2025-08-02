@@ -77,6 +77,15 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 },
             });
         }
+        _onAmountKeypress(event) {
+            if (event.code === "NumpadDecimal") {
+                event.preventDefault();
+                let from = event.target.selectionStart;
+                let to = event.target.selectionEnd;
+                let current_value = this.closingCashInputRef.el.value
+                this.closingCashInputRef.el.value = current_value.substring(0, from) + this.decimalSeparator + current_value.substring(to);
+            }
+        }
         handleInputChange(paymentId, event) {
             if (event.target.classList.contains('invalid-cash-input')) return;
             let expectedAmount;
