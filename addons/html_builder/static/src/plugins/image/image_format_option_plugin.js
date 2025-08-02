@@ -7,6 +7,7 @@ import { Plugin } from "@html_editor/plugin";
 import { loadImage, loadImageInfo } from "@html_editor/utils/image_processing";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 class ImageFormatOptionPlugin extends Plugin {
     static id = "imageFormatOption";
@@ -15,6 +16,15 @@ class ImageFormatOptionPlugin extends Plugin {
         builder_actions: {
             SetImageFormatAction,
             SetImageQualityAction,
+        },
+        on_snippet_dropped_handlers: async ({ snippetEl }) => {
+            for (const imgEl of selectElements(
+                snippetEl,
+                "img:not([data-mimetype]), .oe_img_bg:not([data-mimetype])"
+            )) {
+                const info = await loadImageInfo(imgEl);
+                imgEl.dataset.mimetype = info.mimetypeBeforeConversion;
+            }
         },
     };
     /**
