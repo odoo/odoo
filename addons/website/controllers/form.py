@@ -4,20 +4,22 @@ import base64
 import json
 import psycopg2
 
-from markupsafe import Markup
+from markupsafe import Markup, escape
 from psycopg2 import IntegrityError
 import re
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID
+from odoo import Command, http, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
 from odoo.tools.translate import _, LazyTranslate
+import logging
 
 _lt = LazyTranslate(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteForm(http.Controller):
@@ -65,6 +67,20 @@ class WebsiteForm(http.Controller):
             return json.dumps({
                 'error': _("The form's specified model does not exist")
             })
+        user_email = kwargs.get("email_from") or kwargs.get("email")
+        visitor_name = kwargs.get("partner_name") or kwargs.get("contact_name") or kwargs.get("name")
+        send_a_copy_dict = json.loads(kwargs.get("send_a_copy"))
+        kwargs.pop('send_a_copy')
+        if user_email and send_a_copy_dict:
+            template = request.env.ref("website.email_template_form_submission")
+            filled_values = nl2br(
+                Markup("").join(
+                    Markup("<b>{label}:</b> {value}<br/>").format(
+                        label=escape(key), value=escape(value)
+                    ) for key, value in send_a_copy_dict.items()
+                )
+            )
+            template_sudo = template.sudo()
 
         try:
             data = self.extract_data(model_record, kwargs)
@@ -76,7 +92,7 @@ class WebsiteForm(http.Controller):
         try:
             id_record = self.insert_record(request, model_record, data['record'], data['custom'], data.get('meta'))
             if id_record:
-                self.insert_attachment(model_record, id_record, data['attachments'])
+                self.insert_attachment(model_record, id_record, data['attachments'], template_sudo)
                 # in case of an email, we want to send it immediately instead of waiting
                 # for the email queue to process
 
@@ -92,6 +108,14 @@ class WebsiteForm(http.Controller):
                             raise AccessDenied(self.env._('invalid website_form_signature'))
                     request.env[model_name].sudo().browse(id_record).send()
 
+                try:
+                    template_sudo.with_context(
+                        filled_values=filled_values, visitor_name=visitor_name, to_mail=user_email
+                    ).send_mail(
+                        2, force_send=True, raise_exception=True
+                    )
+                except Exception:
+                    _logger.exception("Error while sending a copy of the form submission to the user")
         # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1
         # TODO: How to get the name of the erroneous field ?
@@ -296,7 +320,7 @@ class WebsiteForm(http.Controller):
         return record.id
 
     # Link all files attached on the form
-    def insert_attachment(self, model_sudo, id_record, files):
+    def insert_attachment(self, model_sudo, id_record, files, template=None):
         if not model_sudo.env.su:
             raise ValueError("model_sudo should get passed with sudo")
         model_name = model_sudo.model
@@ -334,3 +358,8 @@ class WebsiteForm(http.Controller):
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
                 record.attachment_ids = [(4, attachment_id_id)]
+
+        if template:
+            template.attachment_ids = [Command.clear()]
+            for attachment_id_id in orphan_attachment_ids:
+                template.attachment_ids = [Command.link(attachment_id_id)]
