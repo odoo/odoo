@@ -49,7 +49,7 @@ class MrpBatchProduct(models.TransientModel):
             for move_raw in wizard.production_id.move_raw_ids:
                 if move_raw.product_id.tracking == "none":
                     continue
-                text += wizard.component_separator + move_raw.product_id.display_name
+                text += (wizard.component_separator or '') + move_raw.product_id.display_name
             wizard.production_text_help = text
 
     def action_prepare(self):
