@@ -16,7 +16,7 @@
                 <button type="object"
                     name="action_view_picking"
                     class="oe_stat_button"
-                    icon="fa-truck" invisible="incoming_picking_count == 0" groups="stock.group_stock_user">
+                    icon="fa-truck" invisible="incoming_picking_count == 0" groups="stock.group_stock_user,purchase.group_purchase_user">
                     <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
                 </button>
             </xpath>
