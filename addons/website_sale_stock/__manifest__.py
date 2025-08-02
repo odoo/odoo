@@ -37,7 +37,6 @@ Then it can be made specific at the product level.
             'website_sale_stock/static/src/js/product_card/*',
             'website_sale_stock/static/src/js/product_configurator_dialog/*',
             'website_sale_stock/static/src/js/website_sale.js',
-            'website_sale_stock/static/src/js/website_sale_reorder.js',
             'website_sale_stock/static/src/xml/**/*',
         ],
         'web.assets_tests': [

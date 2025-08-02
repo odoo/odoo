@@ -60,10 +60,6 @@ class ResConfigSettings(models.TransientModel):
         related='website_id.contact_us_button_url',
         readonly=False,
     )
-    website_sale_enabled_portal_reorder_button = fields.Boolean(
-        related='website_id.enabled_portal_reorder_button',
-        readonly=False,
-    )
     show_line_subtotals_tax_selection = fields.Selection(
         related='website_id.show_line_subtotals_tax_selection',
         readonly=False,
