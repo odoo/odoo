@@ -238,7 +238,7 @@ function falseHandlerDecorator(adapter) {
             return adapter.increment(normalizedValue, step);
         },
         normalizeFunctionValue(value) {
-            if (value.toLowerCase() === "false") {
+            if ((typeof value === "string" && value.toLowerCase() === "false") || value === false) {
                 return false;
             }
             return adapter.normalizeFunctionValue(value);

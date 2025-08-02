@@ -4,6 +4,8 @@ import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
     getPyEnv,
+    Partner,
+    Product,
 } from "@spreadsheet/../tests/helpers/data";
 
 import { selectCell, setCellContent, updatePivot } from "@spreadsheet/../tests/helpers/commands";
@@ -365,4 +367,69 @@ test("See records is not visible if the pivot is not loaded, even if the cell ha
     deferred.resolve();
     await animationFrame();
     expect(action.isVisible(env)).toBe(true);
+});
+
+test("See records with custom pivot groups", async function () {
+    Product._records.push({ id: 200, display_name: "chair", name: "chair" });
+    Partner._records.push({ id: 200, bar: false, product_id: 200, probability: 100 });
+
+    let doActionReceivedDomain = undefined;
+    mockService("action", {
+        doAction: (actionRequest, options = {}) => {
+            expect.step("doAction");
+            doActionReceivedDomain = actionRequest.domain;
+            expect(options.viewType).toBe("list");
+        },
+    });
+
+    const { env, model, pivotId } = await createSpreadsheetWithPivot();
+    updatePivot(model, pivotId, {
+        columns: [{ fieldName: "GroupedProducts", order: "asc" }],
+        rows: [{ fieldName: "bar", order: "asc" }],
+        measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+        customFields: {
+            GroupedProducts: {
+                parentField: "product_id",
+                name: "GroupedProducts",
+                groups: [
+                    { name: "Group1", values: [37, 41] },
+                    { name: "Others", values: [], isOtherGroup: true },
+                ],
+            },
+        },
+    });
+    await waitForDataLoaded(model);
+
+    selectCell(model, "B1"); // "Group1" group column header
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction"]);
+    expect(doActionReceivedDomain).toEqual(["|", ["product_id", "=", 37], ["product_id", "=", 41]]);
+
+    selectCell(model, "B2"); // "Probability" measure header
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction"]);
+    expect(doActionReceivedDomain).toEqual(["|", ["product_id", "=", 37], ["product_id", "=", 41]]);
+
+    selectCell(model, "B4"); // Pivot value for "Group1" group and bar = true
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction"]);
+    expect(doActionReceivedDomain).toEqual([
+        "|",
+        "&",
+        ["product_id", "=", 37],
+        ["bar", "=", true],
+        "&",
+        ["product_id", "=", 41],
+        ["bar", "=", true],
+    ]);
+
+    selectCell(model, "C1"); // "Others" group column header
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction"]);
+    expect(doActionReceivedDomain).toEqual([["product_id", "=", 200]]);
+
+    selectCell(model, "C3"); // Pivot value for "Others" group and bar = false
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect.verifySteps(["doAction"]);
+    expect(doActionReceivedDomain).toEqual(["&", ["product_id", "=", 200], ["bar", "=", false]]);
 });
