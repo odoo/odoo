@@ -33,6 +33,6 @@ test("unsafe content is escaped when wrapping emojis with title", async () => {
     await loadEmoji();
     const result = decorateEmojis("<img src='javascript:alert(\"xss\")'/>😇");
     expect(result.toString()).toEqual(
-        '&lt;img src=\'javascript:alert("xss")\'/&gt;<span class="o-mail-emoji" title=":innocent: :halo:">😇</span>'
+        '&lt;img src=&#x27;javascript:alert(&quot;xss&quot;)&#x27;/&gt;<span class="o-mail-emoji" title=":innocent: :halo:">😇</span>'
     );
 });

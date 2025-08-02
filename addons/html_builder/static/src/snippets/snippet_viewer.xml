@@ -13,7 +13,7 @@
                     <div t-if="snippet.imagePreviewSrc" class="s_dialog_preview s_dialog_preview_image">
                         <img t-att-src="snippet.imagePreviewSrc" loading="eager"/>
                     </div>
-                    <t t-else="" t-out="this.getContent(snippet.content)"/>
+                    <t t-else="" t-out="this.getOuterHtml(snippet.content)"/>
                     <button t-if="snippet.moduleId" class="o_snippet_preview_install_btn btn text-white rounded-1 mx-auto p-2 bottom-50"
                             t-esc="this.getButtonInstallName(snippet)"/>
                 </div>

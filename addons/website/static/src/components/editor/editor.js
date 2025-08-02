@@ -1,13 +1,6 @@
 import { useService } from '@web/core/utils/hooks';
-import {
-    markup,
-    Component,
-    useState,
-    useEffect,
-    onWillStart,
-    onMounted,
-    onWillUnmount,
-} from "@odoo/owl";
+import { getInnerHtml } from "@web/core/utils/html";
+import { Component, onMounted, onWillStart, onWillUnmount, useEffect, useState } from "@odoo/owl";
 
 export class WebsiteEditorComponent extends Component {
     static template = "website.WebsiteEditorComponent";
@@ -86,7 +79,7 @@ export class WebsiteEditorComponent extends Component {
     willReload(widgetEl) {
         this.websiteService.blockPreview();
         if (widgetEl) {
-            this.loadingDummy = markup(widgetEl.innerHTML);
+            this.loadingDummy = getInnerHtml(widgetEl);
         }
         this.state.reloading = true;
         document.body.classList.add('editor_has_dummy_snippets');

@@ -6,6 +6,8 @@ import { normalize } from "@web/core/l10n/utils";
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
+    getInnerHtml,
+    getOuterHtml,
     htmlFormatList,
     htmlJoin,
     htmlReplace,
@@ -144,10 +146,10 @@ export function addLink(node, transformChildren) {
         return node.textContent;
     }
     if (node.tagName === "A") {
-        return markup(node.outerHTML);
+        return getOuterHtml(node);
     }
     transformChildren();
-    return markup(node.outerHTML);
+    return getOuterHtml(node);
 }
 
 /**
@@ -222,7 +224,7 @@ function generateMentionsLinks(
             contenteditable: "false",
         });
         link.textContent = mention.text;
-        body = htmlReplace(body, mention.placeholder, markup(link.outerHTML));
+        body = htmlReplace(body, mention.placeholder, getOuterHtml(link));
     }
     return htmlEscape(body);
 }
@@ -261,7 +263,7 @@ export function getNonEditableMentions(body) {
     for (const mention of doc.body.querySelectorAll(".o_channel_redirect")) {
         mention.setAttribute("contenteditable", false);
     }
-    return markup(doc.body.innerHTML);
+    return getInnerHtml(doc.body);
 }
 
 /**
@@ -350,5 +352,5 @@ export function decorateEmojis(content) {
         );
         node.replaceWith(...span.childNodes);
     }
-    return markup(doc.body.innerHTML);
+    return getInnerHtml(doc.body);
 }
