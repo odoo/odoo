@@ -55,11 +55,15 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
         content: "Click on newly created link",
         trigger: `${FIRST_PARAGRAPH} a`,
     },
+    // Disabling this step as the feature is not robust and leads to undeterministic behavior
+    // For more information, see https://github.com/odoo/odoo/pull/154244
+    /*
     {
         content: "Popover should be shown",
         trigger: 'iframe .o_edit_menu_popover .o_we_url_link:contains("Contact Us")', // At this point preview is loaded
         run: function () {}, // it's a check
     },
+    */
     ...clickEditLink,
     {
         content: "Type the link URL /",
