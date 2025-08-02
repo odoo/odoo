@@ -703,10 +703,15 @@
                 <form string="Account Entry" js_class="account_move_form">
                     <header>
                         <!-- Post -->
-                        <button name="action_post" string="Post" class="oe_highlight"
-                                type="object" groups="account.group_account_invoice" data-hotkey="q"
-                                context="{'validate_analytic': True, 'disable_abnormal_invoice_detection': False}"
-                                invisible="hide_post_button or move_type != 'entry'"/>
+                        <sheet>
+    <field name="hide_post_button" invisible="1"/>
+                            
+    <button name="action_post" string="Confirm" class="oe_highlight"
+            type="object" groups="account.group_account_invoice" data-hotkey="q"
+            context="{'validate_analytic': True}"
+            invisible="hide_post_button or move_type == 'entry' or display_inactive_currency_warning"/>
+</sheet>
+
                         <button name="action_post" string="Confirm" class="oe_highlight"
                                 type="object" groups="account.group_account_invoice" data-hotkey="q"
                                 context="{'validate_analytic': True, 'disable_abnormal_invoice_detection': False}"
