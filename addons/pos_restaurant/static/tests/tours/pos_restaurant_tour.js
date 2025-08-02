@@ -15,8 +15,20 @@ import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { delay } from "@odoo/hoot-dom";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
+<<<<<<< b8c32d95d74042f1494bfd59bd1686ffc3922639
 import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+||||||| 3173a5f993a3ffa3d3a14d29713142e5b6b314d9
+import { generatePreparationReceiptElement } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+=======
+import { generatePreparationReceiptElement } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
+import {
+    negate,
+    negateStep,
+    assertCurrentOrderDirty,
+} from "@point_of_sale/../tests/generic_helpers/utils";
+>>>>>>> 7cd43c04b74026201b20bf14f14092ae7f8620c5
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -854,5 +866,136 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Minute Maid", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(1),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_sync_lines_qty_update", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Coca-Cola"),
+            Chrome.waitRequest(), // Wait for sync request (the order is created)
+            assertCurrentOrderDirty(false),
+            Numpad.click("3"),
+            Order.hasLine({ productName: "Coca-Cola", quantity: 3 }),
+            assertCurrentOrderDirty(true),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            Chrome.waitRequest(), // Wait for sync request
+            FloorScreen.clickTable("5"),
+            ProductScreen.isShown(),
+            assertCurrentOrderDirty(false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_sync_set_partner", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            Chrome.waitRequest(), // Wait for sync request
+            assertCurrentOrderDirty(false),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            assertCurrentOrderDirty(true),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            Chrome.waitRequest(), // Wait for sync request
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_sync_set_note", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            Chrome.waitRequest(), // Wait for sync request
+            assertCurrentOrderDirty(false),
+            ProductScreen.isShown(),
+            ProductScreen.addInternalNote("Hello world"),
+            assertCurrentOrderDirty(true),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            Chrome.waitRequest(), // Wait for sync request
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_sync_set_line_note", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            Chrome.waitRequest(), // Wait for sync request
+            assertCurrentOrderDirty(false),
+            ProductScreen.isShown(),
+            ProductScreen.clickLine("Coca-Cola"),
+            ProductScreen.addInternalNote("Demo note"),
+            assertCurrentOrderDirty(true),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            Chrome.waitRequest(), // Wait for sync request
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_sync_set_pricelist", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            Chrome.waitRequest(), // Wait for sync request
+            assertCurrentOrderDirty(false),
+            ProductScreen.isShown(),
+            ProductScreen.clickLine("Coca-Cola"),
+            ProductScreen.clickPriceList("Restaurant Pricelist"),
+            assertCurrentOrderDirty(true),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            Chrome.waitRequest(), // Wait for sync request
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_delete_line_release_table", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Coca-Cola"),
+            ProductScreen.selectedOrderlineHasDirect("Coca-Cola"),
+            ...["⌫", "⌫"].map(Numpad.click),
+            ProductScreen.releaseTable(),
+            FloorScreen.clickTable("5"),
+            Chrome.waitRequest(),
+            negateStep(...Order.hasLine({ productName: "Coca-Cola" })),
         ].flat(),
 });
