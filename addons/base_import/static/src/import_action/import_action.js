@@ -107,7 +107,7 @@ export class ImportAction extends Component {
                 [false, "list"],
                 [false, "form"],
             ],
-            domain: [["id", "in", resIds]],
+            domain: resIds != null ? [["id", "in", resIds]] : [],
             target: "current",
         });
     }
