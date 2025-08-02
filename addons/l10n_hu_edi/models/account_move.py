@@ -511,13 +511,16 @@ class AccountMove(models.Model):
             invoice.l10n_hu_edi_batch_upload_index = i
 
         def get_operation_type(invoice):
-            operation_type = 'MODIFY'
             base_invoice = invoice._l10n_hu_get_chain_base()
+            modification_invoices = (invoice._l10n_hu_get_chain_invoices() - base_invoice)
+
+            all_notes_residual_zero = all(note.amount_residual == 0 for note in modification_invoices)
+
             if invoice == base_invoice:
-                operation_type = 'CREATE'
-            elif base_invoice.amount_residual == 0:
-                operation_type = 'STORNO'
-            return operation_type
+                return 'CREATE'
+            if base_invoice.amount_residual == 0 and all_notes_residual_zero:
+                return 'STORNO'
+            return 'MODIFY'
 
         invoice_operations = [
             {
