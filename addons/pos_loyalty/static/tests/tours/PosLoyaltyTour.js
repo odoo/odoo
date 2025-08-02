@@ -551,3 +551,19 @@ registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
             PosLoyalty.finalizeOrder("Cash", "575.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.pointsTotalIs(90),
+            PosLoyalty.orderTotalIs("0.0"),
+        ].flat(),
+});
+

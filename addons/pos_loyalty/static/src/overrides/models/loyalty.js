@@ -587,7 +587,9 @@ patch(Order.prototype, {
             };
             let [won, spent, total] = [0, 0, 0];
             const balance = loyaltyCard.balance;
-            won += points - this._getPointsCorrection(program);
+            if (this._canGenerateRewards(program, this.get_total_with_tax, this.get_total_without_tax)) {
+                won += points - this._getPointsCorrection(program);
+            }
             if (coupon_id !== 0) {
                 for (const line of this._get_reward_lines()) {
                     if (line.coupon_id === coupon_id) {
