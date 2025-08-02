@@ -460,6 +460,9 @@
                                     <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'javascript'}" />
                                 </group>
                             </group>
+                            <group>
+                                <field name="usage"/>
+                            </group>
                             <t invisible="state != 'multi'">
                                 <field name="child_ids" widget="many2many" mode="kanban" context="{
                                     'is_modal': 1,
@@ -469,11 +472,11 @@
                                     If several actions return an action, only the last one will be executed.
                                 </p>
                             </t>
-                            <notebook invisible="state != 'code'">
-                                <page string="Code">
+                            <notebook>
+                                <page string="Code" invisible="state != 'code'">
                                     <field name="code" invisible="state != 'code'" widget="code" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                                 </page>
-                                <page string="Help">
+                                <page string="Help" invisible="state != 'code'" name="ir_actions_server_code_help">
                                     <p>The following variables can be used:</p>
                                     <ul>
                                         <li><code>env</code>: environment on which the action is triggered</li>
@@ -502,6 +505,7 @@ env['res.partner'].create({'name': partner_name})
     </pre>
                                     </div>
                                 </page>
+                                <page string="Usage" name="usage" invisible="1"/>
                             </notebook>
                         </t>
                     </sheet>
@@ -544,6 +548,7 @@ env['res.partner'].create({'name': partner_name})
                                     'sms': 'fa-mobile',
                                     'webhook': 'fa-paper-plane',
                                     'whatsapp': 'fa-whatsapp',
+                                    'ai': 'fa-magic',
                                 }[record.state.raw_value] || 'fa-circle-thin'"
                             />
                             <i class="fa fa-warning text-warning px-2 m-0" invisible="not warning" t-att-title="record.warning.raw_value"/>
