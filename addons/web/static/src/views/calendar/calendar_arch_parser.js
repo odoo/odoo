@@ -56,6 +56,7 @@ export class CalendarArchParser {
         const jsClass = xmlDoc.getAttribute("js_class") || null;
         const monthOverflow = exprToBoolean(xmlDoc.getAttribute("month_overflow"), true);
         const multiCreateView = xmlDoc.getAttribute("multi_create_view");
+        const multiCreateFormTitle = xmlDoc.getAttribute("multi_create_form_title");
         const quickCreate = exprToBoolean(xmlDoc.getAttribute("quick_create"), true);
         const quickCreateViewId =
             (quickCreate && parseInt(xmlDoc.getAttribute("quick_create_view_id"), 10)) || null;
@@ -136,6 +137,7 @@ export class CalendarArchParser {
             formViewId,
             hasEditDialog,
             multiCreateView,
+            multiCreateFormTitle,
             quickCreate,
             quickCreateViewId,
             isDateHidden,
