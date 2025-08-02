@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="survey.SurveySurveyActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p>
+                    No Survey Found
+                </p><p>
+                    Pick a sample or <a action="action_load_sample_custom" class="o_survey_load_sample"
+                        t-on-click.stop.prevent="() => this.onStartFromScratchClick()">Start from scratch</a>.
+                </p>
+
+                <div class="row mb-4 w-100 px-5 justify-content-center">
+                    <t t-set="templateNames" t-value="Object.keys(surveyTemplateData)"/>
+                    <t t-set="cardClass" t-value="'col-md-3 p-2 m-3'"/>
+                    <t t-set="imageClass" t-value="'col-lg-4 p-3'"/>
+                    <t t-set="descriptionClass" t-value="'col-lg-8 p-3 text-start'"/>
+                    <t t-foreach="templateNames" t-as="templateName" t-key="templateName">
+                        <t t-set="templateInfo" t-value="surveyTemplateData[templateName]"/>
+                        <t t-if="templateNames.length === 4">
+                            <t t-set="cardClass" t-value="'col-md-4 col-xl-2 p-3 ps-2 pt-4 my-3'"/>
+                            <t t-set="xOffsetCardClass"
+                               t-value="templateName_index % 2 === 0 ? 'offset-md-2 offset-xl-4 me-md-3' : 'ms-md-3 me-md-auto'"/>
+                            <t t-set="imageClass" t-value="'col-md-4 p-1 ps-0'"/>
+                            <t t-set="descriptionClass" t-value="'col-md-8 ps-md-3 text-start'"/>
+                        </t>
+                        <div t-attf-class="flex-row o_survey_load_sample o_survey_sample_card card rounded flex-wrap cursor-pointer {{cardClass}} {{xOffsetCardClass}}"
+                             t-on-click.stop.prevent="() => this.onTemplateClick(templateInfo)">
+                            <div t-attf-class="{{imageClass}}">
+                                <img class="img-fluid" t-attf-src="{{templateInfo.icon}}" t-attf-alt="{{templateInfo.title}}"/>
+                            </div>
+                            <div t-attf-class="{{descriptionClass}}">
+                                <h3 t-out="templateInfo.title"/>
+                                <p t-out="templateInfo.description"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</odoo>

@@ -1047,11 +1047,10 @@
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
-                    'default_type':'lead',
-                    'search_default_type': 'lead',
-                    'search_default_to_process':1,
-                }
-            </field>
+                'default_type': 'lead',
+                'search_default_type': 'lead',
+                'search_default_to_process': 1,
+            }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a Lead

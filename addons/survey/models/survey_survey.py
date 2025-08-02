@@ -548,6 +548,7 @@ class SurveySurvey(models.Model):
                 user = partner.user_ids[0]
 
             invite_token = additional_vals.pop('invite_token', False)
+            nickname = additional_vals.pop('nickname', False)
             survey._check_answer_creation(user, partner, email, test_entry=test_entry, check_attempts=check_attempts, invite_token=invite_token)
             answer_vals = {
                 'survey_id': survey.id,
@@ -563,14 +564,14 @@ class SurveySurvey(models.Model):
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
                 answer_vals['email'] = user.email
-                answer_vals['nickname'] = user.name
+                answer_vals['nickname'] = nickname or user.name
             elif partner:
                 answer_vals['partner_id'] = partner.id
                 answer_vals['email'] = partner.email
-                answer_vals['nickname'] = partner.name
+                answer_vals['nickname'] = nickname or partner.name
             else:
                 answer_vals['email'] = email
-                answer_vals['nickname'] = email
+                answer_vals['nickname'] = nickname
 
             if invite_token:
                 answer_vals['invite_token'] = invite_token

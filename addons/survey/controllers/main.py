@@ -193,6 +193,7 @@ class Survey(http.Controller):
     def _prepare_retry_additional_values(self, answer):
         return {
             'deadline': answer.deadline,
+            'nickname': answer.nickname,
         }
 
     def _prepare_survey_finished_values(self, survey, answer, token=False):
