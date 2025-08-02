@@ -176,6 +176,13 @@ class ProjectProject(models.Model):
             self._ensure_sale_order_linked([sol_id])
         return project
 
+    def unlink(self):
+        sale_order = self.reinvoiced_sale_order_id | self.sale_order_id
+        res = super().unlink()
+        # Updated the analytic_distribution of the order line
+        sale_order.order_line._compute_analytic_distribution()
+        return res
+
     def action_view_sols(self):
         self.ensure_one()
         all_sale_order_lines = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]})
