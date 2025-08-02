@@ -756,13 +756,13 @@ class TestPartnerAddressCompany(TransactionCase):
             individual.write({'parent_id': company})
         self.assertFalse(company.industry_id, 'Industry is not considered for upstream')
         self.assertEqual(company.ref, 'COMPANYREF', 'not updated from contact child')
-        self.assertEqual(company.vat, 'BEINDIVIDUAL')
+        self.assertFalse(company.vat, 'Tax ID is not considered for upstream')
         for fname, fvalue in self.test_address_values_cmp.items():
             self.assertEqual(company[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
             self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
         self.assertEqual(individual.industry_id, self.test_industries[0], 'No upstream sync, but no reset either')
         self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
-        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+        self.assertFalse(individual.vat, 'Child has a tax ID equal to that of the parent')
 
     def test_commercial_partner_nullcompany(self):
         """ The commercial partner is the first/nearest ancestor-or-self which
@@ -799,8 +799,8 @@ class TestPartnerAddressCompany(TransactionCase):
                 "check that is_company=null is properly handled when looking for ancestor"
             )
 
-    def test_commercial_field_sync(self):
-        """Check if commercial fields are synced properly: testing with VAT field"""
+    def test_vat_computation(self):
+        """Check if VAT field is computed and propagated correctly"""
         company_1, company_2 = self.env['res.partner'].create([
             {
                 'company_registry': '123456789',
@@ -859,8 +859,10 @@ class TestPartnerAddressCompany(TransactionCase):
         # UPSTREAM: now supported
         contactvat = 'BE445566'
         contact.write({'vat': contactvat})
-        for partner in company_2 + contact + contact_dlr + contact_ct + contact2:
-            self.assertEqual(partner.vat, contactvat, 'Commercial sync works upstream, therefore also for siblings')
+        for partner in contact + contact_dlr + contact_ct:
+            self.assertEqual(partner.vat, contactvat, 'Child is updated, and so are its children contacts')
+        for partner in company_2 + contact2:
+            self.assertEqual(partner.vat, 'BEnew', 'Parent and sibling of contact are not updated')
 
         # MISC PARENT MANIPULATION
         # promote p1 to commercial entity
@@ -873,7 +875,7 @@ class TestPartnerAddressCompany(TransactionCase):
         })
         self.assertEqual(contact.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(contact.commercial_partner_id, contact, 'Incorrect commercial entity resolution after setting is_company')
-        self.assertEqual(contact2.vat, contactvat, 'Old sibling untouched')
+        self.assertEqual(contact2.vat, 'BEnew', 'Old sibling untouched')
         self.assertEqual(company_1.vat, 'BE013456789', 'Should not impact parent')
         self.assertEqual(contact_dlr.vat, newcontactvat, 'Promotion propagated')
         self.assertEqual(contact_ct.vat, newcontactvat, 'Promotion propagated')
@@ -882,7 +884,7 @@ class TestPartnerAddressCompany(TransactionCase):
         contact.write({'parent_id': company_2.id})
         self.assertEqual(contact.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(contact.commercial_partner_id, contact, 'Incorrect commercial entity resolution after setting is_company')
-        self.assertEqual(company_2.vat, contactvat, 'Should not impact parent')
+        self.assertEqual(company_2.vat, 'BEnew', 'Should not impact parent')
         self.assertEqual(contact_dlr.vat, newcontactvat, 'Parent company stop auto sync')
         self.assertEqual(contact_ct.vat, newcontactvat, 'Parent company stop auto sync')
 
@@ -890,8 +892,8 @@ class TestPartnerAddressCompany(TransactionCase):
         sunhelmvat2 = 'BE0112233453'
         company_2.write({'vat': sunhelmvat2})
         for partner in contact + contact_ct + contact_dlr:
-            self.assertEqual(contact.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
-        for partner in contact2:
+            self.assertEqual(partner.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
+        for partner in company_2 + contact2:
             self.assertEqual(partner.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
 
     def test_commercial_field_sync_reset(self):

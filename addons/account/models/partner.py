@@ -204,7 +204,7 @@ class AccountFiscalPosition(models.Model):
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
         return super(AccountFiscalPosition, self).write(vals)
 
-    def _get_fpos_ranking_functions(self, partner):
+    def _get_fpos_ranking_functions(self, delivery_partner, vat_partner):
         """Get comparison functions to rank fiscal positions.
 
         All functions are applied to the fiscal position and return a value.
@@ -214,8 +214,11 @@ class AccountFiscalPosition(models.Model):
         If the value returned by one of the function is falsy, the fiscal position is
         filtered out and not even considered for the ranking.
 
-        :param partner: the partner to consider for the ranking of the fiscal positions
-        :type partner: :class:`res.partner`
+        :param delivery_partner: the partner to consider for the ranking of the fiscal positions
+        :type delivery_partner: :class:`res.partner`
+        :param vat_partner: the partner to consider for the vat-related the fiscal positions.
+            Often it is the same as the delivery_partner.
+        :type vat_partner: :class:`res.partner`
         :return: a list of tuples with a name and the function to apply. The name is only
             used to facilitate extending the comparators.
         :rtype: list[tuple[str, function]
@@ -223,25 +226,25 @@ class AccountFiscalPosition(models.Model):
         return [
             ('vat_required', lambda fpos: (
                 not fpos.vat_required
-                or (partner._get_vat_required_valid(company=self.env.company) and 2)
+                or (vat_partner._get_vat_required_valid(company=self.env.company) and 2)
             )),
             ('company_id', lambda fpos: len(fpos.company_id.parent_ids)),
             ('zipcode', lambda fpos:(
                 not (fpos.zip_from and fpos.zip_to)
-                or (partner.zip and (fpos.zip_from <= partner.zip <= fpos.zip_to) and 2)
+                or (delivery_partner.zip and (fpos.zip_from <= delivery_partner.zip <= fpos.zip_to) and 2)
             )),
             ('state_id', lambda fpos: (
                 not fpos.state_ids
-                or (partner.state_id in fpos.state_ids and 2)
+                or (delivery_partner.state_id in fpos.state_ids and 2)
             )),
             ('country_id', lambda fpos: (
                 not fpos.country_id
-                or (partner.country_id == fpos.country_id and 2)
+                or (delivery_partner.country_id == fpos.country_id and 2)
             )),
             ('country_group', lambda fpos: (
                 not fpos.country_group_id
-                or (partner.country_id in fpos.country_group_id.country_ids and
-                    (not partner.state_id or partner.state_id not in fpos.country_group_id.exclude_state_ids) and 2)
+                or (delivery_partner.country_id in fpos.country_group_id.country_ids and
+                    (not delivery_partner.state_id or delivery_partner.state_id not in fpos.country_group_id.exclude_state_ids) and 2)
             )),
             ('sequence', lambda fpos: -(fpos.sequence or 0.1)),  # do not filter out sequence=0, priority to lowest sequence in `max` method
         ]
@@ -256,15 +259,10 @@ class AccountFiscalPosition(models.Model):
             return self.env['account.fiscal.position']
 
         company = self.env.company
-        intra_eu = vat_exclusion = False
-        if company.vat and partner.vat:
-            eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
-            intra_eu = company.vat[:2] in eu_country_codes and partner.vat[:2] in eu_country_codes
-            vat_exclusion = company.vat[:2] == partner.vat[:2]
 
-        # If company and partner have the same vat prefix (and are both within the EU), use invoicing
-        if not delivery or (intra_eu and vat_exclusion):
+        if not delivery:
             delivery = partner
+        vat_partner = delivery if delivery in partner.child_ids else partner
 
         # partner manually set fiscal position always win
         manual_fiscal_position = (
@@ -278,7 +276,7 @@ class AccountFiscalPosition(models.Model):
             return self.env['account.fiscal.position']
 
         # Search for a auto applied fiscal position matching the partner
-        ranking_subfunctions = self._get_fpos_ranking_functions(delivery)
+        ranking_subfunctions = self._get_fpos_ranking_functions(delivery, vat_partner)
         def ranking_function(fpos):
             return tuple(rank[1](fpos) for rank in ranking_subfunctions)
 
@@ -819,7 +817,7 @@ class ResPartner(models.Model):
 
     def _check_vat(self, validation="error"):
         for partner in self:
-            vat, _country_code = self._run_vat_checks(partner.commercial_partner_id.country_id, partner.vat,
+            vat, _country_code = self._run_vat_checks(partner.country_id, partner.vat,
                                                partner_name=partner.name, validation=validation)
             if vat != partner.vat:  # To avoid unnecessary queries (perf tested)
                 partner.vat = vat

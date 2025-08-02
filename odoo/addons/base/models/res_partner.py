@@ -233,7 +233,15 @@ class ResPartner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat = fields.Char(
+        string='Tax ID',
+        index=True,
+        compute='_compute_vat',
+        recursive=True,
+        store=True,
+        readonly=False,
+        help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.",
+    )
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
     same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
@@ -484,6 +492,11 @@ class ResPartner(models.Model):
     def _compute_vat_label(self):
         self.vat_label = self.env.company.country_id.vat_label or _("Tax ID")
 
+    @api.depends('parent_id.vat', 'is_company')
+    def _compute_vat(self):
+        for partner in self.filtered(lambda p: not p.is_company):
+            partner.vat = partner.parent_id.vat
+
     @api.depends('parent_id', 'type')
     def _compute_type_address_label(self):
         for partner in self:
@@ -691,7 +704,7 @@ class ResPartner(models.Model):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. When modified on a children, update is
         propagated until the commercial entity. """
-        return ['vat']
+        return []
 
     def _get_commercial_values(self):
         """ Get commercial values from record. Return only set values, as they
