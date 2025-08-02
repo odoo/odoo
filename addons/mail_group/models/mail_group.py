@@ -294,7 +294,7 @@ class MailGroup(models.Model):
         # First create the <mail.message>
         Mailthread = self.env['mail.thread']
         values = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
-        author_id, email_from = Mailthread._message_compute_author(author_id, email_from, raise_on_email=True)
+        author_id, email_from = Mailthread._message_compute_author(author_id, email_from)
 
         values.update({
             'author_id': author_id,
