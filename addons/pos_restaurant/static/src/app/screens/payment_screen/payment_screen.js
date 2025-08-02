@@ -32,7 +32,7 @@ patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
         if (
             this.pos.config.module_pos_restaurant &&
-            this.pos.getOrder().hasChange &&
+            this.pos.categoryCount.length &&
             !this.pos.getOrder().isRefund
         ) {
             const confirmed = await ask(this.dialog, {

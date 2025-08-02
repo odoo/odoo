@@ -17,6 +17,11 @@ describe("pos_store.js", () => {
         store.computeTableCount();
         expect(table.uiState.orderCount).toBe(1);
     });
+    test("categoryCount", async () => {
+        const store = await setupPosEnv();
+        await getFilledOrder(store);
+        expect(store.categoryCount).toHaveLength(2);
+    });
 
     describe("class DevicesSynchronisation", () => {
         test("Synchronization for a filled table has arrived", async () => {
