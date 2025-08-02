@@ -120,6 +120,10 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     async _submitForm(ev) {
+        // Don't submit the form if you're in edit mode.
+        if (ev.currentTarget.querySelector('span').classList.contains('o_editable')) {
+            return;
+        }
         ev.stopPropagation();
         ev.preventDefault();
 
