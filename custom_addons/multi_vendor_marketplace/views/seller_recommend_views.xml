@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Action for Seller recommend-->
+    <record id="seller_recommend_action" model="ir.actions.act_window">
+        <field name="name">Seller Recommend</field>
+        <field name="res_model">seller.recommend</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="context">{"search_default_recommend_filter":1}</field>
+    </record>
+    <!--        SELLER REVIEW TREE VIEW-->
+    <record id="seller_recommend_view_tree" model="ir.ui.view">
+        <field name="name">seller.recommend.view.tree</field>
+        <field name="model">seller.recommend</field>
+        <field name="arch" type="xml">
+            <tree string="Seller Review">
+                <field name="seller_id"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+    <!--    SELLER REVIEW KANBAN VIEW-->
+    <record id="seller_recommend_view_kanban" model="ir.ui.view">
+        <field name="name">seller.recommend.view.kanban</field>
+        <field name="model">seller.recommend</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="bg-light d-flex justify-content-between oe_kanban_global_click">
+                            <div style="align:left; width: 150px;">
+                                <div>
+                                    <strong>Seller:</strong>
+                                    <field name="seller_id"/>
+                                </div>
+                                <div>
+                                    <strong>By:</strong>
+                                    <field name="partner_id"/>
+                                </div>
+                                <br/>
+                                <div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="o_kanban_record_top mb-0">
+                                    <div class="o_kanban_record_headings">
+                                    </div>
+                                </div>
+                                <div name="detail" class="mt-1">
+                                </div>
+                                <strong>
+                                </strong>
+                                <div>
+                                    <strong>Recommend :</strong>
+                                    <div class="bg-danger text-dark"
+                                         style="display: inline-flex;">
+                                        <field name="recommend"/>
+                                    </div>
+                                    <div>
+                                        <strong>
+                                            <field name="date"/>
+                                        </strong>
+                                    </div>
+                                    <div class="bg-info text-dark"
+                                         style="display: inline-flex;">
+                                        <field name="state"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--    Search view -->
+    <record id="seller_recommend_view_search" model="ir.ui.view">
+        <field name="name">seller.recommend.view.search</field>
+        <field name="model">seller.recommend</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="seller_id"/>
+                <field name="partner_id"/>
+                <filter string="Recommend" name="recommend_filter"
+                        context="{'group_by': 'recommend'}"/>
+            </search>
+        </field>
+    </record>
+    <!--    SELLER RECOMMEND FORM VIEW-->
+    <record id="seller_recommend_view_form" model="ir.ui.view">
+        <field name="name">seller.recommend.view.form</field>
+        <field name="model">seller.recommend</field>
+        <field name="arch" type="xml">
+            <form string="Social Media">
+                <header>
+                    <button class="oe_highlight" icon="fa-globe"
+                            string="Publish on Website"
+                            type="object" name="action_publish"
+                            states="unpublished"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="published,unpublished"/>
+                    <button class="oe_highlight" icon="fa-globe"
+                            string="Unpublish on Website"
+                            type="object" name="action_unpublish"
+                            states="published"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="seller_id"/>
+                        </group>
+                        <group>
+                            <field name="recommend"/>
+                        </group>
+                    </group>
+                </sheet>
+                <sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Seller Recommendation menu-->
+    <menuitem id="seller_recommend" parent="seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              name="Seller Recommendation" sequence="19"
+              action="seller_recommend_action"/>
+</odoo>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Seller shop information in the website   -->
+    <template id="seller_information" inherit_id="website_sale.product"
+              name="Seller information" active="True">
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="after">
+            <t t-set="product_variant_id"
+               t-value="product._get_first_possible_variant_id()"/>
+            <input name="product_id" t-att-value="product_variant_id"
+                   type="hidden"/>
+            <t t-if="product_variant_id">
+                <div style=" width:354px;margin-top: 13px;margin-left: -13px; height: 90px;">
+                    <a id="test" role="button"
+                       t-attf-class="btn btn-outline-primary"
+                       style="margin-left:240px;margin-top:2px;width:100px;"
+                       t-att-href="'/seller_shop?product_id=%s' % product_variant_id">
+                        <i class="fa fa-bolt me-2"/>
+                        <t t-set="seller"
+                           t-value="request.env['product.product'].sudo().browse(product_variant_id).seller_id"/>
+                        <br/>
+                            <t t-esc="seller.name"/>
+                    </a>
+                    <t t-if="seller.image_1920">
+                    <div align="left"
+                         class="card"
+                         style=" width:90px; margin-left: 13px;margin-top: -81px;height: 91px;"
+                         t-esc="seller.image_1920"
+                         t-options="{'widget':'image'}"/>
+                    </t>
+                    <t t-else="">
+                        <div align="left"
+                     class="card"
+                     style=" width:90px; margin-left: 13px;margin-top: -81px;height: 91px;">
+                        <img t-attf-src="/multi_vendor_marketplace/static/src/img/user.png" width="90" height="90" alt=""/>
+                        </div>
+                    </t>
+                    <div class="o_website_rating_static" style="margin-left:115px;margin-top:-25px">
+                        <t t-set="average" t-value="seller.avg_rating"/>
+                        <t t-if="average == 1">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average &gt;1 and average &lt; 2">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-half-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average ==2">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average &gt;2 and average &lt; 3">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-half-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average ==3">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average &gt; 3 and average &lt; 4">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-half-o"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average ==4">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average &gt;4 and average &lt;5">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star-half-o"
+                               role="img"/>
+                        </t>
+                        <t t-elif="average==5">
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                            <i class="fa fa-star"
+                               role="img"/>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-star-o"
+                                 role="img"/>
+                            <i class="fa fa-star-o"
+                                 role="img"/>
+                            <i class="fa fa-star-o"
+                                 role="img"/>
+                            <i class="fa fa-star-o"
+                                 role="img"/>
+                            <i class="fa fa-star-o"
+                                 role="img"/>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
