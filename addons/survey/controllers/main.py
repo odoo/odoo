@@ -272,16 +272,18 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+        triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
+        data.update({
+            'triggered_questions_by_answer': {
+                answer.id: triggered_questions.ids
+                for answer, triggered_questions in triggered_questions_by_answer.items()
+            },
+        })
         if survey_sudo.questions_layout != 'page_per_question':
-            triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
                 'triggering_answers_by_question': {
                     question.id: triggering_answers.ids
                     for question, triggering_answers in triggering_answers_by_question.items() if triggering_answers
-                },
-                'triggered_questions_by_answer': {
-                    answer.id: triggered_questions.ids
-                    for answer, triggered_questions in triggered_questions_by_answer.items()
                 },
                 'selected_answers': selected_answers.ids
             })
@@ -582,6 +584,27 @@ class Survey(http.Controller):
             answer_sudo.last_displayed_page_id = page_or_question_id
 
         return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo)
+
+    @http.route('/survey/check_last/<string:survey_token>/<string:answer_token>/<int:page_or_question_id>',
+                type='json', auth='public', website=True)
+    def survey_check_last(self, survey_token, answer_token, page_or_question_id):
+        """ Check if the given page/question is the last one.
+        Only taking into account the active conditional questions.
+        """
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True:
+            return False
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+        pages_or_questions = survey_sudo._get_pages_or_questions(answer_sudo)
+        current_page_index = pages_or_questions.ids.index(page_or_question_id)
+        next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
+        if next_page_or_question_candidates:
+            inactive_questions = answer_sudo._get_inactive_conditional_questions()
+            if survey_sudo.questions_layout == 'page_per_question':
+                return not any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+            if survey_sudo.questions_layout == 'page_per_section':
+                return not any(next_question not in inactive_questions for section in next_page_or_question_candidates for next_question in section.question_ids)
+        return True
 
     def _extract_comment_from_answers(self, question, answers):
         """ Answers is a custom structure depending of the question type
