@@ -33,6 +33,8 @@ This addon provides an extensible, maintainable editor.
             ('include', 'html_editor.assets_readonly'),
             'html_editor/static/src/*',
             'html_editor/static/src/components/history_dialog/**/*',
+            'html_editor/static/lib/diff2html/diff2html.min.css',
+            'html_editor/static/lib/diff2html/diff2html.min.js',
             'html_editor/static/src/core/**/*',
             'html_editor/static/src/main/**/*',
             'html_editor/static/src/others/collaboration/**/*',
