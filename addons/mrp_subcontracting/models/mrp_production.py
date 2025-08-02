@@ -173,6 +173,21 @@ class MrpProduction(models.Model):
 
         return self.filtered(filter_in)
 
+    def _subcontracting_filter_to_backorder(self):
+        """ Filter subcontracting production where quantities are still pending """
+        
+        # Not enough to check for "in progress"
+        # some BoM might have workorders due to the BoM being previously
+        # a non-subcontracting BoM and they won't be set on "To Close" state
+        # automatically
+        orders = self.filtered(lambda mo: mo.state == "progress")
+
+        # Therefore, also check whether the backorder split function would work
+        # or if there are any pending quantities on the MO
+        orders = orders.filtered(lambda mo: not float_is_zero(mo._get_quantity_to_backorder(), 
+                                                          precision_rounding=mo.product_uom_id.rounding))
+        return orders
+
     def _has_been_recorded(self):
         self.ensure_one()
         if self.state in ('cancel', 'done'):
