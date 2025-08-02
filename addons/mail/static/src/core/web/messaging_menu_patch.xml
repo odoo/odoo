@@ -25,6 +25,7 @@
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                        <button t-if="store.self.main_user_id?.notification_type === 'inbox'" class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'inbox' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'inbox'">Inbox</button>
                         <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
                         <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                     </t>
@@ -99,6 +100,12 @@
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </t>
+        </xpath>
+        <xpath expr="//*[@name='threads']" position="after">
+            <div t-ref="loadMoreSentinel" class="o-mail-MessagingMenu-loadMore"
+                style="min-height: 1px;"
+                t-att-class="{'d-none': !!state.tabState[store.discuss.activeTab]?.[1]}"
+                t-on-click="loadMoreMessagingMenuData"/>
         </xpath>
     </t>
 </templates>

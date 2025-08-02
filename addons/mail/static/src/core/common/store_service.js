@@ -162,14 +162,26 @@ export class Store extends BaseStore {
         compute() {
             /** @type {import("models").Thread[]} */
             const searchTerm = cleanTerm(this.discuss.searchTerm);
-            let threads = Object.values(this.Thread.records).filter(
-                (thread) =>
-                    (thread.displayToSelf ||
-                        (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
-                    cleanTerm(thread.displayName).includes(searchTerm)
-            );
             const tab = this.discuss.activeTab;
-            if (tab !== "main") {
+            let threads = Object.values(this.Thread.records);
+            threads =
+                tab === "inbox"
+                    ? threads
+                    : threads.filter(
+                          (thread) =>
+                              (thread.displayToSelf ||
+                                  (thread.needactionMessages.length > 0 &&
+                                      thread.model !== "mail.box")) &&
+                              cleanTerm(thread.displayName).includes(searchTerm)
+                      );
+            if (tab === "inbox") {
+                threads = threads.filter(
+                    (thread) =>
+                        thread.model !== "mail.box" &&
+                        thread.channel_type === undefined &&
+                        cleanTerm(thread.displayName).includes(searchTerm)
+                );
+            } else if (tab !== "main") {
                 threads = threads.filter(({ channel_type }) =>
                     this.tabToThreadType(tab).includes(channel_type)
                 );
