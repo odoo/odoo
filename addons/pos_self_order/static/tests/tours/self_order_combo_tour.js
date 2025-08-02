@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
+import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 
 registry.category("web_tour.tours").add("self_combo_selector", {
     steps: () => [
@@ -66,5 +67,16 @@ registry.category("web_tour.tours").add("self_combo_selector_category", {
         Utils.clickBtn("Order"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
+    ],
+});
+
+registry.category("web_tour.tours").add("test_product_dont_display_all_variants", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickCategory("Uncategorised"),
+        ProductPage.clickProduct("Meal Combo"),
+        ProductPage.clickComboProduct("Coke"),
+        Utils.clickBtn("Add to cart"),
     ],
 });
