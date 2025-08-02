@@ -7,11 +7,16 @@ import {
     hover,
     press,
     queryAll,
+<<<<<<< ff569b56d147d73303826e6984af58579c4c6680
     queryFirst,
     queryOne,
     setInputRange,
     waitFor,
     waitUntil,
+||||||| d363c3ec467e494aa2c807d976fea7ef2502012b
+=======
+    manuallyDispatchProgrammaticEvent,
+>>>>>>> bf85d5333e8afec48d7609210a127820cd2a5467
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -882,5 +887,29 @@ describe("color preview", () => {
             </table>
         `);
         await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should preview background color on moving opacity slider in custom tab", async () => {
+        await setupEditor(`<p>[test]</p>`);
+        await expectElementCount(".o-we-toolbar", 1);
+        await click(".o-select-color-background");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        const newColor = "#FF0000";
+        await contains(".o_hex_input").edit(newColor);
+        const slider = document.querySelector(".o_opacity_slider");
+        const rect = slider.getBoundingClientRect();
+        const middleY = rect.top + rect.height / 2;
+        manuallyDispatchProgrammaticEvent(slider, "mousedown", {
+            clientX: rect.left,
+            clientY: middleY,
+        });
+        const fontEl = queryOne("font");
+        const bgColor = fontEl.style.backgroundColor;
+        expect(bgColor).toMatch(/^rgba\(255,\s*0,\s*0,\s*0\.\d+\)$/);
+        manuallyDispatchProgrammaticEvent(slider, "mouseup", {
+            clientX: rect.left,
+            clientY: middleY,
+        });
     });
 });

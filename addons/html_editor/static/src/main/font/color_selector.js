@@ -65,6 +65,7 @@ export class ColorSelector extends Component {
         );
     }
 
+<<<<<<< ff569b56d147d73303826e6984af58579c4c6680
     getCorrespondingColorTab(color) {
         if (!color || this.solidColors.includes(color.toUpperCase())) {
             return "solid";
@@ -72,6 +73,107 @@ export class ColorSelector extends Component {
             return "gradient";
         } else {
             return "custom";
+||||||| d363c3ec467e494aa2c807d976fea7ef2502012b
+    setTab(tab) {
+        this.state.activeTab = tab;
+    }
+
+    processColorFromEvent(ev) {
+        let color = ev.target.dataset.color;
+        if (color && !isCSSColor(color) && !isColorGradient(color)) {
+            color = (this.mode === "color" ? "text-" : "bg-") + color;
+        }
+        return color;
+    }
+
+    applyColor(color) {
+        this.currentCustomColor.color = color;
+        this.props.applyColor({ color: color || "", mode: this.mode });
+        this.props.focusEditable();
+    }
+
+    onColorApply(ev) {
+        if (ev.target.tagName !== "BUTTON") {
+            return;
+        }
+        const color = this.processColorFromEvent(ev);
+        this.applyColor(color);
+        this.dropdown.close();
+    }
+
+    onColorPreview(ev) {
+        const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
+        this.props.applyColorPreview({ color: color || "", mode: this.mode });
+    }
+
+    onColorHover(ev) {
+        if (ev.target.tagName !== "BUTTON") {
+            return;
+        }
+        this.onColorPreview(ev);
+    }
+
+    onColorHoverOut(ev) {
+        if (ev.target.tagName !== "BUTTON") {
+            return;
+        }
+        this.props.applyColorResetPreview();
+    }
+
+    getCurrentGradientColor() {
+        if (isColorGradient(this.selectedColors[this.mode])) {
+            return this.selectedColors[this.mode];
+=======
+    setTab(tab) {
+        this.state.activeTab = tab;
+    }
+
+    processColorFromEvent(ev) {
+        let color = ev.target.dataset.color;
+        if (color && !isCSSColor(color) && !isColorGradient(color)) {
+            color = (this.mode === "color" ? "text-" : "bg-") + color;
+        }
+        return color;
+    }
+
+    applyColor(color) {
+        this.currentCustomColor.color = color;
+        this.props.applyColor({ color: color || "", mode: this.mode });
+        this.props.focusEditable();
+    }
+
+    onColorApply(ev) {
+        if (ev.target.tagName !== "BUTTON") {
+            return;
+        }
+        const color = this.processColorFromEvent(ev);
+        this.applyColor(color);
+        this.dropdown.close();
+    }
+
+    onColorPreview(ev) {
+        const color = ev.cssColor ? ev.cssColor : this.processColorFromEvent(ev);
+        this.props.applyColorPreview({ color: color || "", mode: this.mode });
+    }
+
+    onColorHover(ev) {
+        if (ev.target.tagName !== "BUTTON") {
+            return;
+        }
+        this.onColorPreview(ev);
+    }
+
+    onColorHoverOut(ev) {
+        if (ev.target.tagName !== "BUTTON") {
+            return;
+        }
+        this.props.applyColorResetPreview();
+    }
+
+    getCurrentGradientColor() {
+        if (isColorGradient(this.selectedColors[this.mode])) {
+            return this.selectedColors[this.mode];
+>>>>>>> bf85d5333e8afec48d7609210a127820cd2a5467
         }
     }
 
