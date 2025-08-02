@@ -879,6 +879,10 @@ class MrpProduction(models.Model):
                 raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
     def write(self, vals):
+        if 'default_product_qty' in self.env.context:
+            new_ctx = self.env.context.copy()
+            new_ctx.pop('default_product_qty')
+            self = self.with_context(new_ctx)  # noqa: PLW0642
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
             vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
             del vals['move_byproduct_ids']
