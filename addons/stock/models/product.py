@@ -1068,7 +1068,7 @@ class ProductTemplate(models.Model):
 
         res = super().write(vals)
         if clean_inventory:
-            self.env['stock.quant'].sudo()._clean_reservations()
+            self._clean_stock()
         return res
 
     def copy(self, default=None):
@@ -1086,6 +1086,9 @@ class ProductTemplate(models.Model):
             storage_category_capacity_vals.append(storage_category_capacity.copy_data({'product_id': new_product_dict[product_attribute_value]})[0])
         self.env['stock.storage.category.capacity'].create(storage_category_capacity_vals)
         return new_products
+
+    def _clean_stock(self):
+        self.env['stock.quant'].sudo()._clean_reservations()
 
     def _should_open_product_quants(self):
         self.ensure_one()
