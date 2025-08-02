@@ -34,7 +34,15 @@ async function performAction(trigger, action) {
         return;
     }
     try {
-        return await action(trigger);
+        // Let the browser finish what it's doing before do action, for example:
+        // - Complete an appearance animation (fade-in, slide-in, etc.)
+        // - Trigger JS listeners related to the appearance in the DOM (MutationObserver, etc.)
+        // - Wait for sub-elements to also be available
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        const result = await action(trigger);
+        // Wait for any post-action effects (e.g., animations or DOM updates) to complete
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        return result;
     } catch (error) {
         throw new MacroError("Action", `ERROR during perform action:\n${error.message}`, {
             cause: error,
@@ -66,7 +74,6 @@ async function waitForTrigger(trigger) {
         return;
     }
     try {
-        await delay(50);
         return await waitUntil(() => {
             if (typeof trigger === "function") {
                 return trigger();
