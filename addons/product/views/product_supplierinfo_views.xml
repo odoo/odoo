@@ -88,7 +88,7 @@
         <field name="name">product.supplierinfo.list.view</field>
         <field name="model">product.supplierinfo</field>
         <field name="arch" type="xml">
-            <list string="Vendor Information" multi_edit="1">
+            <list string="Vendor Information" multi_edit="1" decoration-muted="(date_start and (context_today().strftime('%Y-%m-%d') &lt; date_start)) or (date_end and (context_today().strftime('%Y-%m-%d') &gt; date_end))">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="product_id" optional="hide"
