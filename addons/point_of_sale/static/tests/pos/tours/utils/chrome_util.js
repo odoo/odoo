@@ -24,6 +24,7 @@ export function clickMenuDropdownOption(name, { expectUnloadPage = false } = {})
         expectUnloadPage,
     };
 }
+<<<<<<< 7dfbaa4315eb8c0ec09582152857c1192a28fcae
 export function isCashMoveButtonHidden() {
     return [
         {
@@ -31,6 +32,18 @@ export function isCashMoveButtonHidden() {
         },
     ];
 }
+||||||| bc3308a0647f5a39e400d5686874ed6c6fc84191
+=======
+export function isCashMoveButtonHidden() {
+    return [
+        clickMenuButton(),
+        {
+            trigger: "span.dropdown-item:not(:contains(Cash In/Out))",
+            run: () => {},
+        },
+    ];
+}
+>>>>>>> eaabe25d9cc1349892ad8f1e95071f7fd2380af2
 export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",
