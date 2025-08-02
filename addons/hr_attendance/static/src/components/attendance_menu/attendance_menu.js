@@ -7,6 +7,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
 import { isIosApp } from "@web/core/browser/feature_detection";
 const { DateTime } = luxon;
 
@@ -24,6 +25,7 @@ export class ActivityMenu extends Component {
             checkedIn: false,
             isDisplayed: false
         });
+        this.signInOut = debounce(this.signInOut, 1000, true);
         this.date_formatter = registry.category("formatters").get("float_time")
         // load data but do not wait for it to render to prevent from delaying
         // the whole webclient
