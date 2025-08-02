@@ -163,7 +163,10 @@ export class ImageCrop extends Component {
 
         if (this.uncroppable) {
             this.notification.add(
-                markup(_t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo.")),
+                _t(
+                    "This type of image is not supported for cropping.%(br)sIf you want to crop it, please first download it from the original source and upload it in Odoo.",
+                    { br: markup`<br/>` }
+                ),
                 {
                     title: _t("This image is an external image"),
                     type: 'warning',
