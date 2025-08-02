@@ -18,10 +18,7 @@ class ResConfigSettings(models.TransientModel):
                                              config_parameter='hr_expense.use_mailgateway')
     module_hr_payroll_expense = fields.Boolean(string='Reimburse Expenses in Payslip')
     module_hr_expense_extract = fields.Boolean(string='Send bills to OCR to generate expenses')
-
-    # This module is not installable yet, but will be in the following weeks
     module_hr_expense_stripe = fields.Boolean(string='Link your stripe issuing account to manage company credit cards for your employees through Odoo')
-
     expense_journal_id = fields.Many2one('account.journal', related='company_id.expense_journal_id', readonly=False, check_company=True, domain="[('type', '=', 'purchase')]")
     company_expense_allowed_payment_method_line_ids = fields.Many2many(
         comodel_name='account.payment.method.line',
