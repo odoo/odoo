@@ -8,7 +8,7 @@ def _create_picking_seq(env):
         wh = ptype.warehouse_id
         ptype.l10n_it_ddt_sequence_id = env['ir.sequence'].create({
         'name': wh.name + ' ' + ' Sequence ' + ' ' + ptype.sequence_code,
-        'prefix': wh.code + '/' + ptype.sequence_code + '/DDT', 'padding': 5,
+        'prefix': ptype.sequence_code + 'DDT', 'padding': 5,
         'company_id': wh.company_id.id,
         'implementation': 'no_gap',
     }).id
