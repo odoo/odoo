@@ -383,7 +383,7 @@ class HrEmployeePrivate(models.Model):
 
     def _prepare_resource_values(self, vals, tz):
         resource_vals = super()._prepare_resource_values(vals, tz)
-        vals.pop('name')  # Already considered by super call but no popped
+        vals.pop('name', None)  # Already considered by super call but no popped
         # We need to pop it to avoid useless resource update (& write) call
         # on every newly created resource (with the correct name already)
         user_id = vals.pop('user_id', None)
