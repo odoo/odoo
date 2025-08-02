@@ -1447,3 +1447,43 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_date_from': '2024-07-01',
                 'request_date_to': '2024-07-02',
             })
+
+    def test_leave_duration_on_public_holiday_with_flexible_request(self):
+        """
+            Test the cases with flexible request:
+             - Leave with having public holidays on the same day
+             - Leave with public holidays in between but no calendar
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8,
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        })
+        leave_data = [
+            {
+                'name': 'Leave with having public holidays on the same day',
+                'request_date_from': date(2022, 3, 11),
+                'request_date_to': date(2022, 3, 11),
+            },
+            {
+                "name": 'Leave with no public holiday in between',
+                "request_date_from": date(2022, 3, 10),
+                "request_date_to": date(2022, 3, 12),
+            }
+        ]
+        leaves = self.env["hr.leave"].with_user(self.user_employee_id).create([
+            {
+                **data,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.holidays_type_1.id,
+            }
+            for data in leave_data
+        ])
+        self.assertEqual(leaves[0].number_of_days, 0, "Leave with public holiday on the same day should have 0 days duration")
+        self.assertEqual(leaves[1].number_of_days, 2, "Leave with 1 public holiday in between should have 2 days duration")
