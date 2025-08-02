@@ -4543,6 +4543,73 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_discount_allocation_balances_with_precise_currency_rate(self):
+        """ Test that discount lines balance correctly with a precise currency rate. """
+        discount_account = self.company_data['default_account_expense'].copy()
+        product_line_account = self.company_data['default_account_revenue']
+        product_line_account_copy = self.company_data['default_account_revenue'].copy()
+        self.company_data['company'].account_discount_expense_allocation_id = discount_account
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'rate': 0.019560839590356895,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.company_data['company'].id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'account_id': product_line_account.id,
+                    'quantity': 1,
+                    'price_unit': 480.0,
+                    'discount': 10.0,
+                }),
+                Command.create({
+                    'account_id': product_line_account.id,
+                    'quantity': 1,
+                    'price_unit': 150.0,
+                    'discount': 30.0,
+                }),
+                Command.create({
+                    'account_id': product_line_account_copy.id,
+                    'quantity': 1,
+                    'price_unit': 700.0,
+                    'discount': 20.0,
+                }),
+                Command.create({
+                    'account_id': product_line_account.id,
+                    'quantity': 1,
+                    'price_unit': -322.0,
+                }),
+            ],
+        })
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'discount'), [
+            {
+                'account_id': product_line_account.id,
+                'tax_ids': [],
+                'amount_currency': -93.0,
+                'debit': 0.0,
+                'credit': 4754.39,
+            },
+            {
+                'account_id': discount_account.id,
+                'tax_ids': [],
+                'amount_currency': 233.0,
+                'debit': 11911.55,
+                'credit': 0.0,
+            },
+            {
+                'account_id': product_line_account_copy.id,
+                'tax_ids': [],
+                'amount_currency': -140.0,
+                'debit': 0.0,
+                'credit': 7157.16,
+            },
+        ])
+
     def test_out_invoice_partner_context(self):
         """No line should take the partner of the context instead of the one specified in the create vals."""
         move = self.env['account.move'].with_context(default_partner_id=self.partner_b.id).create({
