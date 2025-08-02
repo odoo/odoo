@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//span[@name='website_menu']" position='after'>
-                <span>
-                    <label for="booth_menu" string="Booth Menu Item"/>
+                <span class="d-inline-block">
                     <field name="booth_menu"/>
+                    <label for="booth_menu" string="Booth Menu Item"/>
                 </span>
             </xpath>
         </field>
