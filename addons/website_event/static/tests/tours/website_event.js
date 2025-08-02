@@ -48,7 +48,7 @@ function websiteCreateEventTourSteps() {
         },
         {
             trigger:
-                ".modal-dialog div[name='event_ticket_ids'] .o_field_x2many_list_row_add a:contains('Add a line')",
+                ".modal-dialog div[name='event_ticket_ids'] .o_field_x2many_list_row_add button:contains('Add a line')",
             content: "Click here to add a ticket",
             tooltipPosition: "bottom",
             run: "click",

@@ -77,11 +77,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: "div.o_notebook_headers",
 },
 {
-    trigger: 'a.nav-link:contains(Timesheets)',
+    trigger: 'button.nav-link:contains(Timesheets)',
     content: 'Click on Timesheets page to log a timesheet',
     run: "click",
 }, {
-    trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add a[role="button"]',
+    trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add button[role="button"]',
     content: 'Click on Add a line to create a new timesheet into the task.',
     run: "click",
 }, {
@@ -147,7 +147,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: "div.o_notebook_headers",
 },
 {
-    trigger: 'a.nav-link[name="settings"]',
+    trigger: 'button.nav-link[name="settings"]',
     content: 'Click on Settings page to check the allow_billable checkbox',
     run: "click",
 }, {
@@ -179,11 +179,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: "div.o_notebook_headers",
 },
 {
-    trigger: 'a.nav-link[name="billing_employee_rate"]',
+    trigger: 'button.nav-link[name="billing_employee_rate"]',
     content: 'Click on Invoicing tab to configure the invoicing of this project.',
     run: "click",
 }, {
-    trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > a[role="button"]',
+    trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > button[role="button"]',
     content: 'Click on Add a line on the mapping list view.',
     run: "click",
 }, {
@@ -233,7 +233,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: "div.o_notebook_headers",
 },
 {
-    trigger: 'a.nav-link[name="settings"]',
+    trigger: 'button.nav-link[name="settings"]',
     content: 'Click on Settings tab to configure this project.',
     run: "click",
 }, {

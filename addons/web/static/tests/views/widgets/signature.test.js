@@ -145,7 +145,7 @@ test("Signature widget: full_name option on desktop", async () => {
     // Clicks on the sign button to open the sign modal.
     await click("span.o_sign_label");
     await waitFor(".modal .modal-body");
-    expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1);
+    expect(".modal .modal-body button.o_web_sign_auto_button").toHaveCount(1);
     expect.verifySteps(["Pop's Chock'lit"]);
 });
 
@@ -175,7 +175,7 @@ test("Signature widget: full_name option on mobile", async () => {
     // Clicks on the sign button to open the sign modal.
     await click("span.o_sign_label");
     await waitFor(".modal .modal-body");
-    expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1);
+    expect(".modal .modal-body button.o_web_sign_auto_button").toHaveCount(1);
     expect.verifySteps(["Pop's Chock'lit"]);
 });
 

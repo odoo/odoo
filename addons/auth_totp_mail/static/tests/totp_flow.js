@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('totp_admin_self_invite', {
     run: "click",
 }, {
     content: "go to Account security Tab",
-    trigger: "a.nav-link:contains(Account Security)",
+    trigger: "button.nav-link:contains(Account Security)",
     run: "click",
 }, {
     content: "check that user cannot invite themselves to use 2FA.",
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add('totp_admin_invite', {
     run: "click",
 }, {
     content: "go to Account security Tab",
-    trigger: "a.nav-link:contains(Account Security)",
+    trigger: "button.nav-link:contains(Account Security)",
     run: "click",
 }, {
     content: "check that test_user user can be invited to use 2FA.",

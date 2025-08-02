@@ -347,7 +347,7 @@ test("check condition by default when creating a new rule", async () => {
     serverState.debug = "";
     Partner._fields.country_id = fields.Char({ string: "Country ID" });
     await makeExpressionEditor({ expression: "expr" });
-    await contains("a[role='button']").click();
+    await contains("button[role='button']:contains(New Rule)").click();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: "expr" },

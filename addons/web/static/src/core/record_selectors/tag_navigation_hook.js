@@ -49,6 +49,7 @@ export function useTagNavigation(refName, options = {}) {
             tagsContainerRef.el?.querySelectorAll(":scope .o_tag, :scope .o-autocomplete--input") ??
             [],
         isNavigationAvailable: ({ navigator, target }) => isEnabled() && navigator.contains(target),
+        shouldFocusChildInput: false,
         hotkeys: {
             tab: null,
             "shift+tab": null,

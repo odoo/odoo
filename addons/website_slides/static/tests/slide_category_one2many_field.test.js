@@ -1,19 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { click, waitFor } from "@odoo/hoot-dom";
-import {
-    defineModels,
-    fields,
-    models,
-    mountView,
-} from "@web/../tests/web_test_helpers";
+import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 import { defineWebsiteSlidesModels } from "@website_slides/../tests/website_slides_test_helpers";
 
 class Partner extends models.Model {
     lines = fields.One2many({ relation: "lines_sections" });
 
-    _records = [
-        { id: 1, lines: [1, 2] },
-    ];
+    _records = [{ id: 1, lines: [1, 2] }];
 }
 
 class LinesSections extends models.Model {
@@ -41,7 +34,7 @@ class LinesSections extends models.Model {
     ];
 
     _views = {
-        form: /*xml*/`
+        form: /*xml*/ `
             <form>
                 <field name="display_name"/>
             </form>
@@ -167,7 +160,7 @@ test("can create section inline", async () => {
     });
     expect(".o_selected_row.o_is_section").toHaveCount(0);
 
-    await click(".o_field_x2many_list_row_add a:nth-child(2)");
+    await click(".o_field_x2many_list_row_add button:nth-child(2)");
     await waitFor(".o_selected_row.o_is_section");
     expect(".o_selected_row.o_is_section").toHaveCount(1);
     expect(".modal .o_form_view").toHaveCount(0);
@@ -194,7 +187,7 @@ test("creates real record in form dialog", async () => {
             </form>`,
     });
 
-    await click(".o_field_x2many_list_row_add a:nth-child(1)");
+    await click(".o_field_x2many_list_row_add button:nth-child(1)");
     await waitFor(".modal .o_form_view");
     expect(".o_selected_row").toHaveCount(0);
     expect(".modal .o_form_view").toHaveCount(1);

@@ -68,13 +68,13 @@
 
     <t t-name="web.CalendarCommonPopover.footer">
         <t t-if="isEventEditable or isEventViewable">
-            <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">
+            <button class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">
                 <t t-if="isEventEditable">Edit</t>
                 <t t-else="">View</t>
-            </a>
+            </button>
         </t>
         <t t-if="isEventDeletable">
-            <a href="#" class="btn btn-secondary o_cw_popover_delete" t-on-click="onDeleteEvent">Delete</a>
+            <button class="btn btn-secondary o_cw_popover_delete" t-on-click="onDeleteEvent">Delete</button>
         </t>
     </t>
 

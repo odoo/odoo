@@ -176,8 +176,8 @@
                             <span t-else="">Leaderboard</span>
                         </h1>
                         <div t-att-class="'o_survey_leaderboard_buttons fw-bold %s' % 'd-none' if not is_last_question else 'ms-2'">
-                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mt-1"><i class="fa fa-close"/> Close</a>
-                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mt-1" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</a>
+                            <button role="button" class="o_survey_session_close btn btn-primary mt-1"><i class="fa fa-close"/> Close</button>
+                            <button role="button" class="o_survey_session_close btn btn-primary mt-1" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</button>
                         </div>
                     </div>
                     <div class="justify-content-center d-flex flex-column flex-grow-1 mt-5 mb-5 pb-5 o_survey_session_leaderboard_container"/>

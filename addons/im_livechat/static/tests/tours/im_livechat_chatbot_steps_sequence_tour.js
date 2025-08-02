@@ -7,7 +7,7 @@ import { stepUtils } from "@web_tour/tour_utils";
 function createChatbotSteps(...stepMessages) {
     return [
         {
-            trigger: "div[name='script_step_ids'] .o_field_x2many_list_row_add a",
+            trigger: "div[name='script_step_ids'] .o_field_x2many_list_row_add button",
             run: "click",
         },
         ...stepMessages

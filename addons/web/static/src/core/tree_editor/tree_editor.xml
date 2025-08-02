@@ -26,7 +26,7 @@
                 <t t-if="node.children.length" t-call="web.TreeEditor.connector.children" />
                 <t t-if="!props.readonly">
                     <div class="o_tree_editor_row d-flex align-items-center" t-att-class="{ 'ps-4': addPadding || props.isSubTree }">
-                        <a href="#" role="button" t-on-click="() => this.addNewCondition(node)">New Rule</a>
+                        <button class="btn btn-link p-0 fw-normal" role="button" t-on-click="() => this.addNewCondition(node)">New Rule</button>
                     </div>
                 </t>
             </div>

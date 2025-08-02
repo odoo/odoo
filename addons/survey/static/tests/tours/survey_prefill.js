@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
     }, {
         // Go back to previous page
         content: 'Click on the previous page name in the breadcrumb',
-        trigger: 'ol.breadcrumb a:first',
+        trigger: 'ol.breadcrumb button:first',
         run: "click",
     }, {
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website?") input',

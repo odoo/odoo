@@ -42,8 +42,8 @@
     <t t-name="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
         <xpath expr="//t[@t-foreach='visibleTags']" position="before">
             <t t-if="canDisplayQuickAssignAvatar">
-                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" data-tooltip="Assign"
-                   aria-label="Assign" class="o_quick_assign fa o_m2m_avatar btn-link d-flex align-items-center text-dark" t-attf-class="{{ props.tags.length ? 'fa-pencil' : 'fa-user-plus' }}" role="button"/>
+                <button t-on-click.stop.prevent="openPopover" tabIndex="-1" data-tooltip="Assign"
+                   aria-label="Assign" class="o_quick_assign fa o_m2m_avatar btn-link d-flex align-items-center text-dark p-0" t-attf-class="{{ props.tags.length ? 'fa-pencil' : 'fa-user-plus' }}" role="button"/>
             </t>
         </xpath>
     </t>

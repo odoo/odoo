@@ -242,7 +242,7 @@ test("Can replace icon using toolbar", async () => {
     await contains("button[name='icon_replace']").click();
     await animationFrame();
     expect("main.modal-body").toHaveCount(1);
-    expect("main.modal-body a.nav-link.active").toHaveText("Icons");
+    expect("main.modal-body button.nav-link.active").toHaveText("Icons");
     // Corresponding icon should be highlighted in dialog
     expect("main.modal-body span.fa-heart.o_we_attachment_selected").toHaveCount(1);
 

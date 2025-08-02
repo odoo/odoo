@@ -40,10 +40,10 @@
 
     <t t-name="web.CalendarYearPopover.footer">
         <t t-if="props.model.canCreate">
-            <a href="#" class="btn-link o_cw_popover_create" t-on-click.prevent="onCreateButtonClick">
+            <button class="btn btn-link o_cw_popover_create text-start p-0" t-on-click.prevent="onCreateButtonClick">
                 <i class="fa fa-plus" />
                 Create
-            </a>
+            </button>
         </t>
         <t t-else="">
             <button class="btn btn-primary o-default-button" t-on-click="props.close">
@@ -53,17 +53,16 @@
     </t>
 
     <t t-name="web.CalendarYearPopover.record">
-        <a
-            href="#"
+        <button
             t-on-click.prevent="() => this.onRecordClick(record)"
             t-attf-style="{{ getRecordStyle(record) }}"
-            t-attf-class="o_cw_popover_link d-flex align-items-center gap-1 {{ getRecordClass(record) }} {{record.startHour ? 'o_event_dot' : 'o_event_allday'}}"
+            t-attf-class="border-0 o_cw_popover_link d-flex align-items-center gap-1 {{ getRecordClass(record) }} {{record.startHour ? 'o_event_dot' : 'o_event_allday'}}"
             t-att-data-id="record.id"
             t-att-data-title="record.title"
         >
             <span t-if="record.startHour"><t t-out="record.startHour" /></span>
             <span t-esc="record.title"/>
-        </a>
+        </button>
     </t>
 
 </templates>
