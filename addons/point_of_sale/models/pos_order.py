@@ -255,6 +255,12 @@ class PosOrder(models.Model):
                     'display_type': 'line_note',
                 }))
 
+        if self.general_note:
+            invoice_lines.append((0, None, {
+                'name': self['general_note'],
+                'display_type': 'line_note',
+            }))
+
         return invoice_lines
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
