@@ -1,21 +1,12 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, useChildSubEnv, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { download } from "@web/core/network/download";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { Spreadsheet, Model, registries } from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
 import { migrate } from "../o_spreadsheet/migration";
 import { useSpreadsheetPrint } from "../hooks";
-
-registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
-    name: _t("Download"),
-    execute: (env) => env.downloadExcel(),
-    isReadonlyAllowed: true,
-    icon: "o-spreadsheet-Icon.DOWNLOAD",
-});
 
 export class PublicReadonlySpreadsheet extends Component {
     static props = {
@@ -28,13 +19,6 @@ export class PublicReadonlySpreadsheet extends Component {
         this.http = useService("http");
         this.state = useState({
             isFilterShown: false,
-        });
-        useChildSubEnv({
-            downloadExcel: () =>
-                download({
-                    url: this.props.downloadExcelUrl,
-                    data: {},
-                }),
         });
         useSpreadsheetPrint(() => this.model);
         onWillStart(this.createModel.bind(this));
