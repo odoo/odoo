@@ -196,10 +196,14 @@ test("translate select", async () => {
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
     await contains(":iframe [data-initial-translation-value='Option 1']").click();
-    await contains(".modal .modal-body input").edit("Option fr");
+    await contains(".modal .modal-body div > :nth-child(1)").edit("Option fr 1");
+    await contains(".modal .modal-body div > :nth-child(2)").edit("Option fr 2");
     await contains(".modal .btn:contains('Ok')").click();
     expect(queryAllTexts(":iframe [data-initial-translation-value='Option 1']")).toEqual([
-        "Option fr",
+        "Option fr 1",
+    ]);
+    expect(queryAllTexts(":iframe [data-initial-translation-value='Option 2']")).toEqual([
+        "Option fr 2",
     ]);
 });
 
