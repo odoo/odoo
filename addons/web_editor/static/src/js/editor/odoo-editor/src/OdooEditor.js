@@ -4726,8 +4726,8 @@ export class OdooEditor extends EventTarget {
         ev.preventDefault();
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
-        const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
-        const clipboardHtml = ev.clipboardData.getData('text/html');
+        let odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
+        let clipboardHtml = ev.clipboardData.getData('text/html');
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
         // Replace entire link if its label is fully selected.
         const link = closestElement(sel.anchorNode, 'a');
@@ -4740,6 +4740,7 @@ export class OdooEditor extends EventTarget {
             const text = ev.clipboardData.getData("text/plain");
             this._applyCommand("insert", text);
         } else if (odooEditorHtml) {
+            odooEditorHtml = odooEditorHtml.replace(/(?<=>)\s+(?=<\/?(?:table|thead|tbody|tfoot|tr|th|td)\b)/gs, '');
             const fragment = parseHTML(odooEditorHtml);
             const selector = this.options.renderingClasses.map(c => `.${c}`).join(',');
             if (selector) {
@@ -4752,6 +4753,7 @@ export class OdooEditor extends EventTarget {
                 this._applyCommand('insert', fragment);
             }
         } else if (files.length || clipboardHtml) {
+            clipboardHtml = clipboardHtml.replace(/(?<=>)\s+(?=<\/?(?:table|thead|tbody|tfoot|tr|th|td)\b)/gs, '');
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
             // When copy pasting a table from the outside, a picture of the
             // table can be included in the clipboard as an image file. In that
