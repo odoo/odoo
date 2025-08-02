@@ -28,13 +28,6 @@
         <field name="domain_force">[('mrp_production_ids', 'in', user.partner_id.commercial_partner_id.production_ids.ids)]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
-
-    <record model="ir.rule" id="consumption_warning_line_subcontractor_rule">
-        <field name="name">MRP Consumption Warning Lines Subcontractor</field>
-        <field name="model_id" ref="mrp.model_mrp_consumption_warning_line"/>
-        <field name="domain_force">[('mrp_production_id', 'in', user.partner_id.commercial_partner_id.production_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-    </record>
     
     <record model="ir.rule" id="stock_move_subcontractor_rule">
         <field name="name">Stock Moves Subcontractor</field>

@@ -80,9 +80,9 @@ class MrpProduction(models.Model):
 
         if self.move_raw_ids and not any(self.move_raw_ids.mapped('quantity')):
             raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
-        consumption_issues = self._get_consumption_issues()
-        if consumption_issues:
-            return self._action_generate_consumption_wizard(consumption_issues)
+        inconsistent_moves = self._get_inconsistent_moves()
+        if inconsistent_moves:
+            return self._action_generate_consumption_wizard(inconsistent_moves)
         self.sudo()._update_finished_move()  # Portal user may need sudo rights to update pickings
         self.subcontracting_has_been_recorded = True
 

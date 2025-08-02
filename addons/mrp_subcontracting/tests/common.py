@@ -35,7 +35,6 @@ class TestMrpSubcontractingCommon(TransactionCase):
         })
         bom_form = Form(cls.env['mrp.bom'])
         bom_form.type = 'subcontract'
-        bom_form.consumption = 'strict'
         bom_form.product_tmpl_id = cls.finished.product_tmpl_id
         bom_form.subcontractor_ids.add(cls.subcontractor_partner1)
         with bom_form.bom_line_ids.new() as bom_line:
@@ -45,6 +44,7 @@ class TestMrpSubcontractingCommon(TransactionCase):
             bom_line.product_id = cls.comp2
             bom_line.product_qty = 1
         cls.bom = bom_form.save()
+        cls.bom.consumption = 'strict'
 
         # Create a BoM for cls.comp2
         cls.comp2comp = cls.env['product.product'].create({

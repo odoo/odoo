@@ -12,7 +12,8 @@
                     <field name="consumption" invisible="1"/>
                     <field name="mrp_production_count" invisible="1"/>
                     <div class="m-2">
-                        You consumed a different quantity than expected for the following products.
+                        You consumed a different quantity than expected for the following products<span invisible="not mrp_production_ids.bom_id">
+                        or consumed a product that is not included in the bill of materials</span>.
                         <b invisible="consumption == 'strict'">
                             Please confirm it has been done on purpose.
                         </b>
@@ -22,14 +23,13 @@
                             <span invisible="mrp_production_count == 1">these manufacturing orders</span>.
                         </b>
                     </div>
-                    <field name="mrp_consumption_warning_line_ids" nolabel="1">
+                    <field name="inconsistent_move_ids" nolabel="1">
                         <list create="0" delete="0" editable="top">
-                            <field name="mrp_production_id" column_invisible="parent.mrp_production_count == 1" force_save="1"/>
-                            <field name="consumption" column_invisible="True" force_save="1"/>
-                            <field name="product_id" force_save="1"/>
-                            <field name="product_uom_id" groups="uom.group_uom" force_save="1" widget="many2one_uom"/>
-                            <field name="product_expected_qty_uom" force_save="1"/>
-                            <field name="product_consumed_qty_uom" force_save="1"/>
+                            <field name="raw_material_production_id" column_invisible="parent.mrp_production_count == 1"/>
+                            <field name="product_id"/>
+                            <field name="product_uom" groups="uom.group_uom" force_save="1" widget="many2one_uom"/>
+                            <field name="expected_qty" string="To Consume" force_save="1"/>
+                            <field name="quantity" string="Consumed" force_save="1"/>
                         </list>
                     </field>
                     <footer>
