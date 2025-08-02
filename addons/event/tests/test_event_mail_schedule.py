@@ -977,9 +977,8 @@ class TestMailScheduleInternals(EventMailCommon):
             "The duplicate configuration (first one from event_type.event_type_mail_ids which has same configuration as the sent one) should not have been added")
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
-    def test_archived_event_mail_schedule(self):
-        """ Test mail scheduling for archived events """
-        event_cron_id = self.env.ref('event.event_mail_scheduler')
+    def test_prevent_mail_schedulers(self):
+        """ Test mail scheduling for archived and cancelled events """
 
         # deactivate other schedulers to avoid messing with crons
         self.env['event.mail'].search([]).unlink()
@@ -1036,4 +1035,20 @@ class TestMailScheduleInternals(EventMailCommon):
         self.execute_event_cron(freeze_date=now_start)
 
         # check that scheduler is not executed
+        self.assertFalse(event_prev_scheduler.mail_done, 'event: reminder scheduler should should have run')
+
+        # unarchive to test cancelled event schedulers
+        test_event.action_unarchive()
+
+        # event cancelled
+        test_event.kanban_state = 'cancel'
+
+        # Mail states should be Cancelled
+        for mail_id in test_event.event_mail_ids:
+            self.assertEqual(mail_id.mail_state, 'cancelled', 'Mail state should be cancelled')
+
+        self.execute_event_cron(freeze_date=now_start)
+
+        # check that scheduler is not executed for cancelled event
+        self.assertEqual(len(self._new_mails), 0, 'No mail should be sent for cancelled event')
         self.assertFalse(event_prev_scheduler.mail_done, 'event: reminder scheduler should should have run')

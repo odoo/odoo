@@ -50,11 +50,8 @@
                     </div>
                     <field name="active" invisible="1"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="legend_blocked" invisible="1"/>
-                    <field name="legend_normal" invisible="1"/>
-                    <field name="legend_done" invisible="1"/>
                     <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="kanban_state" widget="state_selection" class="ms-auto float-end"/>
+                    <field name="kanban_state" widget="event_state_selection" class="ms-auto float-end"/>
                     <div class="oe_title">
                         <label for="name" string="Event Name"/>
                         <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Conference for Architects"/></h1>
@@ -106,7 +103,13 @@
                                     <field name="scheduled_date" groups="base.group_no_one"/>
                                     <field name="mail_count_done"/>
                                     <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
-                                        options="{'error': 'fa fa-exclamation-triangle', 'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
+                                        options="{
+                                            'error': 'fa fa-exclamation-triangle',
+                                            'sent': 'fa fa-check',
+                                            'scheduled': 'fa fa-hourglass-half',
+                                            'running': 'fa fa-cogs',
+                                            'cancelled': 'fa fa-times-circle'
+                                        }"/>
                                 </list>
                             </field>
                         </page>
@@ -248,7 +251,6 @@
                 <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                 <field name="date_begin"/>
                 <field name="date_end"/>
-                <field name="legend_done"/>
                 <templates>
                     <t t-name="card" class="p-0 row">
                         <aside class="col-4 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
@@ -280,8 +282,8 @@
                             <footer class="pt-1 p-0 m-0">
                                 <field name="activity_ids" widget="kanban_activity"/>
                                 <div class="d-flex ms-auto">
-                                    <field class="mt-1 mr4" name="kanban_state" widget="state_selection"/>
                                     <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field class="ms-1 my-auto" name="kanban_state" widget="event_state_selection"/>
                                 </div>
                             </footer>
                         </main>

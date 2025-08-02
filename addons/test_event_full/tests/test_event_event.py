@@ -72,6 +72,20 @@ class TestEventEvent(TestEventFullCommon):
             self.assertTrue(event.is_ongoing)
             self.assertTrue(event.event_registrations_started)
 
+    def test_event_kanban_state_on_stage_change(self):
+        """Test that kanban_state updates correctly when stage is changed."""
+        test_event_1 = self.env['event.event'].browse(self.test_event.ids)
+        test_event_2 = test_event_1.copy()
+
+        test_event_1.kanban_state = 'done'
+        test_event_2.kanban_state = 'cancel'  # Event Cancelled
+
+        new_stage = self.env['event.stage'].create({'name': 'New Stage', 'sequence': 1})
+        (test_event_1 | test_event_2).stage_id = new_stage.id  # Change event stage
+
+        self.assertEqual(test_event_1.kanban_state, 'normal', 'kanban state should reset to "normal" on stage change')
+        self.assertEqual(test_event_2.kanban_state, 'cancel', 'kanban state should not reset on stage change')
+
     @freeze_time('2021-12-01 11:00:00')
     @users('event_user')
     def test_event_seats_and_schedulers(self):
