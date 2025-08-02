@@ -174,3 +174,31 @@ test("unnamed group chat should display correct name just after being invited", 
         text: "You have been invited to #Jane and Mitchell Admin",
     });
 });
+
+test("Create group chat transfers active call to new group chat", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "TestPartner1" },
+        { name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Start Call']");
+    await contains(".o-mail-DiscussSidebarChannel.o-ongoingCall", { text: "TestPartner1" });
+
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
+    await click("button[title='Create Group Chat']:enabled");
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-ongoingCall)", { text: "TestPartner1" });
+    await contains(".o-mail-DiscussSidebarChannel.o-ongoingCall", {
+        text: "Mitchell Admin, TestPartner1, and TestPartner2",
+    });
+});
