@@ -745,6 +745,7 @@ class BaseCase(case.TestCase):
                         # don't round if there's no currency set
                         if c := record[currency_field_name]:
                             record_value = Approx(record_value, c, decorate=False)
+
                 r[field_name] = record_value
             record_reformatted.append(r)
 
@@ -968,6 +969,18 @@ class Like:
 
     def __repr__(self):
         return repr(self.pattern)
+
+
+class WhitespaceInsensitive(str):
+    __slots__ = ()
+
+    def __hash__(self):
+        return hash(re.sub(r'\s+', ' ', self))
+
+    def __eq__(self, other):
+        if not isinstance(other, str):
+            return NotImplemented
+        return re.sub(r'\s+', ' ', self) == re.sub(r'\s+', ' ', other)
 
 
 class Approx:  # noqa: PLW1641
