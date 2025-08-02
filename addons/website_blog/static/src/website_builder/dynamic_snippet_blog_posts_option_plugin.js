@@ -18,37 +18,85 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
             props: {
                 modelNameFilter: this.modelNameFilter,
                 fetchBlogs: this.fetchBlogs.bind(this),
+                fetchTags: this.fetchTags.bind(this),
+                fetchAuthors: this._fetchAuthors.bind(this),
             },
             selector: this.selector,
         }),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     setup() {
-        this.blogs = undefined;
+        this.data = {
+            blogs : [],
+            tags : [],
+            authors : [],
+        };
     }
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(this.selector)) {
             setDatasetIfUndefined(snippetEl, "filterByBlogId", -1);
+            setDatasetIfUndefined(snippetEl, "filterByTagId", -1);
+            setDatasetIfUndefined(snippetEl, "filterByAuthorId", -1);
             await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter
             );
         }
     }
+
     async fetchBlogs() {
-        if (!this.blogs) {
-            this.blogs = this._fetchBlogs();
+        if (!this.data.blogs.length) {
+            this.data.blogs = this._fetchData("blog.blog");
         }
-        return this.blogs;
+        return this.data.blogs;
     }
-    async _fetchBlogs() {
-        // TODO put in an utility function
+
+    async fetchTags() {
+        if (!this.data.tags.length) {
+            this.data.tags = this._fetchData("blog.tag", []);
+        }
+
+        return this.data.tags;
+    }
+
+    async _fetchData(model, websiteDomain = []) {
+        if (!websiteDomain) {
+            websiteDomain = [
+                "|",
+                ["website_id", "=", false],
+                ["website_id", "=", this.services.website.currentWebsite.id],
+            ];
+        }
+
+        return this.services.orm.searchRead(model, websiteDomain, [
+            "id",
+            "name",
+        ]);
+    }
+
+    async _fetchAuthors() {
+        if (this.data.authors.length) {
+            return this.data.authors;
+        }
+
         const websiteDomain = [
             "|",
             ["website_id", "=", false],
             ["website_id", "=", this.services.website.currentWebsite.id],
         ];
-        return this.services.orm.searchRead("blog.blog", websiteDomain, ["id", "name"]);
+
+        const rawGroups = await this.services.orm.call(
+            "blog.post",
+            "read_group",
+            [websiteDomain, ["author_id"], ["author_id"]]
+        );
+
+        this.data.authors = rawGroups
+            .map((group) => group.author_id)
+            .filter(Boolean)
+            .map(([id, name]) => ({ id, name }));
+
+        return this.data.authors;
     }
 }
 
