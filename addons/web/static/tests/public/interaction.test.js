@@ -209,6 +209,34 @@ describe("adding listeners", () => {
         expect(clicked).toBe(1);
         expect("span").toHaveAttribute("x", "1");
     });
+
+    test("events triggered before interaction is ready are buffered and replayed", async () => {
+        let clicked = 0;
+        const def = new Deferred();
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: { "t-on-click": () => clicked++ },
+            };
+            willStart() {
+                expect.step("willStart");
+                return def;
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(Test, TemplateTest, { waitForStart: false });
+        expect.verifySteps(["willStart"]);
+        expect(clicked).toBe(0);
+        await click("span");
+        expect(clicked).toBe(0);
+        def.resolve();
+        expect.verifySteps([]);
+        await animationFrame();
+        expect.verifySteps(["start"]);
+        expect(clicked).toBe(1);
+    });
 });
 
 describe("using selectors", () => {
