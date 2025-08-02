@@ -612,7 +612,10 @@ font[class*='bg-'] {
 }
 
 // Icons
-.fa {
+.social_media_img {
+    object-fit: cover;
+}
+.fa, .social_media_img {
     $-size: map-get($spacers, 5);
 
     font-family: "FontAwesome" !important;
