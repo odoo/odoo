@@ -80,7 +80,7 @@
                                 <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
                                     Print Report
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => pos.closePos()">
+                                <DropdownItem onSelected="() => this.clickBackend()">
                                     Backend
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => this.pos.closeSession()">

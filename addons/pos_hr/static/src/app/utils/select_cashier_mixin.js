@@ -37,13 +37,13 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         if (!pin) {
             inputPin = await makeAwaitable(dialog, NumberPopup, {
                 formatDisplayedValue: (x) => x.replace(/./g, "•"),
-                title: _t("Password?"),
+                title: _t("Pin code"),
             });
         } else {
             if (employee._pin !== Sha1.hash(inputPin)) {
                 inputPin = await makeAwaitable(dialog, NumberPopup, {
                     formatDisplayedValue: (x) => x.replace(/./g, "•"),
-                    title: _t("Password?"),
+                    title: _t("Pin code"),
                 });
             }
         }
@@ -60,7 +60,12 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
     /**
      * Select a cashier, the returning value will either be an object or nothing (undefined)
      */
-    return async function selectCashier(pin = false, login = false, list = false) {
+    return async function selectCashier(
+        pin = false,
+        login = false,
+        list = false,
+        excludeCurrentCashier = true
+    ) {
         if (!pos.config.module_pos_hr) {
             return;
         }
@@ -81,9 +86,10 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         };
 
         let employee = false;
-        const allEmployees = pos.models["hr.employee"].filter(
-            (employee) => employee.id !== pos.getCashier()?.id
-        );
+        const employeeList = list?.length ? list : pos.models["hr.employee"];
+        const allEmployees = excludeCurrentCashier
+            ? employeeList.filter((employee) => employee.id !== pos.getCashier()?.id)
+            : employeeList;
         const pinMatchEmployees = allEmployees.filter(
             (employee) => !pin || Sha1.hash(pin) === employee._pin
         );
@@ -100,10 +106,13 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         }
 
         if (pinMatchEmployees.length > 1 || list) {
-            employee = await makeAwaitable(dialog, SelectionPopup, {
-                title: _t("Change Cashier"),
-                list: prepareList(allEmployees),
-            });
+            employee =
+                employeeList.length == 1
+                    ? employeeList[0]
+                    : await makeAwaitable(dialog, SelectionPopup, {
+                          title: _t("Select Cashier"),
+                          list: prepareList(allEmployees),
+                      });
 
             if (!employee) {
                 return;
