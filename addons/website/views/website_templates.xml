@@ -248,7 +248,7 @@
         <attribute name="t-if">not editable</attribute>
     </xpath>
 
-    <xpath expr="//div[@id='wrapwrap']" position="after">
+    <xpath expr="//head" position="inside">
         <t t-if="website.google_analytics_key and not editable">
             <script id="tracking_code" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}" async="async"/>
             <script id="tracking_code_config">
