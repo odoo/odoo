@@ -233,8 +233,8 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         run: "click",
     },
     {
-        content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel:contains('Column')",
+        content: "Check that only the 'Text - Image' entry is in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + .o_we_invisible_entry:contains('Banner')",
     },
     {
         content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
@@ -244,6 +244,10 @@ registerWebsitePreviewTour("conditional_visibility_5", {
     {
         content: "Check that the snippet is visible on the website",
         trigger: ":iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
+    },
+    {
+        content: "Check that the 'Column' entry is in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
     },
     {
         content: "Change visibility of the 'Text - Image' snippet",
@@ -278,7 +282,16 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         run: "click",
     },
     {
-        content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel:contains('Column')",
+        content: "Check that only the 'Text - Image' entry is in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + .o_we_invisible_entry:contains('Banner')",
+    },
+    {
+        content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image')",
+        run: "click",
+    },
+    {
+        content: "Check that the 'Column' entry is in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
     },
 ]);

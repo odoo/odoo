@@ -86,6 +86,7 @@ export class SavePlugin extends Plugin {
                 this.dispatchTo("clean_for_save_handlers", { root: cleanedEl });
                 return cleanedEl;
             });
+
             for (const saveElementsOverride of this.getResource("save_elements_overrides")) {
                 if (await saveElementsOverride(cleanedEls)) {
                     return;
