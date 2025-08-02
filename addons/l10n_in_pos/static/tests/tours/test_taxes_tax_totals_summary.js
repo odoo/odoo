@@ -30,6 +30,7 @@ export function assertTaxTotals(baseAmount, taxAmount, totalAmount) {
         PaymentScreen.remainingIs("0.0"),
 
         PaymentScreen.clickInvoiceButton(),
+        PaymentScreen.isInvoiceOptionSelected(),
         PaymentScreen.clickValidate(),
 
         ReceiptScreen.receiptAmountTotalIs(totalAmount),
