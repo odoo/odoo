@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 11:42+0000\n"
-"PO-Revision-Date: 2025-07-02 18:14+0400\n"
+"POT-Creation-Date: 2025-07-09 12:44+0000\n"
+"PO-Revision-Date: 2025-06-26 14:58+0400\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Language: ar\n"
@@ -25,9 +25,6 @@ msgid ""
 "Building Number: %(building_number)s, Plot Identification: %(plot_identification)s\n"
 "Neighborhood: %(neighborhood)s"
 msgstr ""
-"\n"
-"رقم المبنى: %(building_number)s, مُعرّف قطعة الأرض: %(plot_identification)s\n"
-"الحي: %(neighborhood)s "
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -510,8 +507,6 @@ msgid ""
 "Invoice could not be reported:\n"
 "%s"
 msgstr ""
-"تعذر الإبلاغ عن الفاتورة:\n"
-"%s"
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_chain_index
@@ -749,6 +744,13 @@ msgstr "معرف جواز السفر"
 #: code:addons/l10n_sa_edi/migrations/0.2/post-migrate.py:0
 msgid "Please Re-Onboard the Journal for a new serial number"
 msgstr "يرجى إعادة تجهيز دفتر اليومية للحصول على رقم تسلسلي جديد"
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+#, python-format
+msgid "Please make sure that the invoice company matches the journal company on all invoices you wish to confirm"
+msgstr "يرجى التأكد من أن الشركة المرتبطة بالفاتورة تطابق الشركة المرتبطة بالدفتر المحاسبي في جميع الفواتير التي ترغب في تأكيدها."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -1138,6 +1140,7 @@ msgid "You need to request the CCSID first before you can proceed"
 msgstr "عليك طلب CCSID أولاً قبل الاستمرار"
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_send__l10n_sa_edi_enable_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid "ZATCA"
 msgstr "زاتكا"

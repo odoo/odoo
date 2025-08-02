@@ -3,3 +3,4 @@
 
 from . import common
 from . import test_edi_zatca
+from . import test_account_move
