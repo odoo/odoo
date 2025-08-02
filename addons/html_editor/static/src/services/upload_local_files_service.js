@@ -66,8 +66,13 @@ export const uploadLocalFileService = {
             try {
                 const files = await selectLocalFiles({ multiple, accept });
                 const attachments = await filesToAttachments(files, { resModel, resId });
-                if (accessToken && attachments.length && !attachments[0].public) {
-                    await addAccessToken(attachments);
+                if (accessToken) {
+                    const attachmentsWithoutAccessToken = attachments.filter(
+                        (attachment) => attachment.public && !attachment.access_token
+                    );
+                    if (attachmentsWithoutAccessToken.length) {
+                        await addAccessToken(attachmentsWithoutAccessToken);
+                    }
                 }
                 return attachments;
             } catch {
