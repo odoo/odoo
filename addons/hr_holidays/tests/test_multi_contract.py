@@ -101,6 +101,26 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'wage': 5000.0,
         })
 
+    def test_leave_same_contract_multiple_versions_with_different_schedules(self):
+        self.contract_cdi.contract_date_end = date(2022, 7, 30)
+        self.jules_emp.create_version({
+            'date_version': date(2022, 6, 10),
+            'contract_date_start': self.contract_cdi.contract_date_start,
+            'contract_date_end': self.contract_cdi.contract_date_end,
+            'name': 'New Version with a different schedule for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5000.0,
+        })
+        with self.assertRaises(ValidationError):
+            leave = self.create_leave(datetime(2022, 6, 1, 7, 0, 0), datetime(2022, 6, 30, 18, 0, 0), name="Doctor Appointment", employee_id=self.jules_emp.id)
+            leave.action_approve()
+
+        leave = self.create_leave(datetime(2022, 5, 1, 7, 0, 0), datetime(2022, 5, 10, 18, 0, 0), name="Doctor Appointment", employee_id=self.jules_emp.id)
+        leave.action_approve()
+
+        leave = self.create_leave(datetime(2022, 6, 15, 7, 0, 0), datetime(2022, 7, 20, 18, 0, 0), name="Doctor Appointment", employee_id=self.jules_emp.id)
+        leave.action_approve()
+
     def test_leave_multi_contracts_split(self):
         # Check that setting a contract as running correctly
         # splits the existing time off for this employee that
