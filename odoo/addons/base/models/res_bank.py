@@ -100,10 +100,7 @@ class ResPartnerBank(models.Model):
     country_code = fields.Char(related='partner_id.country_code', string="Country Code")
     note = fields.Text('Notes')
 
-    _unique_number = models.Constraint(
-        'unique(sanitized_acc_number, partner_id)',
-        "The combination Account Number/Partner must be unique.",
-    )
+    _unique_number = models.UniqueIndex("(sanitized_acc_number, partner_id) WHERE active IS TRUE")
 
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):
