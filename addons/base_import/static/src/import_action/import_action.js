@@ -98,18 +98,22 @@ export class ImportAction extends Component {
     }
 
     exit(resIds) {
-        this.actionService.doAction({
-            type: "ir.actions.act_window",
-            name: _t("Imported records"),
-            res_model: this.model.resModel,
-            view_mode: "tree,form",
-            views: [
-                [false, "list"],
-                [false, "form"],
-            ],
-            domain: [["id", "in", resIds]],
-            target: "current",
-        });
+        if (resIds?.length > 0) {
+            this.actionService.doAction({
+                type: "ir.actions.act_window",
+                name: _t("Imported records"),
+                res_model: this.model.resModel,
+                view_mode: "tree,form",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+                domain: [["id", "in", resIds]],
+                target: "current",
+            });
+        } else {
+            this.env.config.historyBack();
+        }
     }
 
     get display() {

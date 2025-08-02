@@ -473,6 +473,61 @@ describe("Import view", () => {
     });
 
     test.tags("desktop");
+    test("canceling import does not trigger an error or traceback", async () => {
+        mockService("http", {
+            post(route, params) {
+                expect.step(route);
+                expect(params.ufile[0].name).toBe("fake_file.csv");
+                return super.post(route, params);
+            },
+        });
+
+        patchWithCleanup(ImportAction.prototype, {
+            exit(resIds) {
+                expect.step("exit called");
+                expect(resIds).toEqual(undefined);
+                super.exit(resIds);
+            },
+        });
+
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
+        onRpc("base_import.import", "parse_preview", ({ route }) => expect.step(route));
+
+        await mountWebClient();
+        await getService("action").doAction(1);
+        expect.verifySteps(["/web/dataset/call_kw/base_import.import/create"]);
+        await animationFrame();
+
+        expect(".o_control_panel button").toHaveCount(2);
+        expect(".o_import_action").toHaveCount(1);
+
+        // Click on 'Cancel' before uploading a file.
+        expect(".o_control_panel_main_buttons button.btn-secondary").toHaveText("Cancel");
+        await contains(".o_control_panel_main_buttons button.btn-secondary").click();
+        expect.verifySteps(["exit called"]);
+        expect("modal-content o_error_dialog").toHaveCount(0);
+
+        // Upload a file
+        const file = new File(["fake_file"], "fake_file.csv", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        expect.verifySteps([
+            "/base_import/set_file",
+            "/web/dataset/call_kw/base_import.import/parse_preview",
+        ]);
+
+        // Click on 'Cancel' after uploading a file.
+        expect(".o_control_panel button").toHaveCount(4);
+        expect(".o_control_panel_main_buttons button.btn-secondary:nth-of-type(3)").toHaveText(
+            "Cancel"
+        );
+        await contains(".o_control_panel_main_buttons button.btn-secondary:nth-of-type(3)").click();
+        expect.verifySteps(["exit called"]);
+        expect("modal-content o_error_dialog").toHaveCount(0);
+    });
+
+    test.tags("desktop");
     test("drag-and-drop file support", async () => {
         onRpc("has_group", () => true);
         mockService("http", {
