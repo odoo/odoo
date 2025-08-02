@@ -198,7 +198,7 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("A Test Partner AAA"),
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
         ].flat(),
 });
@@ -411,7 +411,7 @@ registry.category("web_tour.tours").add("POSSalePaymentScreenInvoiceOrder", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("A Test Partner"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.clickPaymentMethod("Bank"),
