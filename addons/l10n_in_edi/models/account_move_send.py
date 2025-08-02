@@ -26,6 +26,11 @@ class AccountMoveSend(models.AbstractModel):
         })
         return res
 
+    @api.model
+    def _is_edi_asynchronous(self, edi_key):
+        # EXTENDS 'account'
+        return edi_key == 'in_edi_send' or super()._is_edi_asynchronous(edi_key)
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
