@@ -5413,6 +5413,13 @@ class AccountMove(models.Model):
 
         return report_action
 
+    def action_invoice_download_all(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/all?allow_fallback=true',
+            'target': 'download',
+        }
+
     def action_invoice_download_pdf(self, target = "download"):
         return {
             'type': 'ir.actions.act_url',
@@ -6569,7 +6576,7 @@ class AccountMove(models.Model):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
         # TO OVERRIDE
-        return []
+        return [{'key': 'download_all', 'description': _('Export ZIP'), **self.action_invoice_download_all()}]
 
     @staticmethod
     def _can_commit():
