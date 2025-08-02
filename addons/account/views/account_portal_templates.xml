@@ -257,7 +257,7 @@
                     You can choose how you want us to send your invoices, and with which electronic format.
                 </small>
             </div>
-            <div class="row m-0 p-0" t-if="len(invoice_sending_methods) > 1">
+            <div class="row m-0 p-0" t-if="invoice_sending_methods and len(invoice_sending_methods) > 1">
                 <div class="col-xl-6">
                     <label class="col-form-label" for="invoice_sending_method">Receive invoices</label>
                     <select name="invoice_sending_method" class="form-select">
