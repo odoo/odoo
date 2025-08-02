@@ -65,7 +65,7 @@
                     deprecated. Click the "Connect" button below to use the recommended OAuth
                     method.
                 </div>
-                <div invisible="code != 'razorpay' or razorpay_account_id">
+                <div invisible="code != 'razorpay' or razorpay_account_id or state == 'enabled'">
                     <button
                         string="Connect"
                         type="object"

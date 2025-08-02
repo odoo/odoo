@@ -7,7 +7,7 @@ import pprint
 
 import requests
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_razorpay import const
@@ -48,6 +48,18 @@ class PaymentProvider(models.Model):
             'support_refund': 'partial',
             'support_tokenization': True,
         })
+
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('state')
+    def _check_razorpay_credentials(self):
+        """ Check that the Razorpay credentials are valid.
+
+        :raise ValidationError: If the Razorpay credentials are not valid.
+        """
+        for provider in self.filtered(lambda p: p.code == 'razorpay' and p.state == 'enabled'):
+            if not provider.razorpay_key_id or not provider.razorpay_key_secret:
+                raise ValidationError(_("Razorpay Key Id and Key Secret must be set."))
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 

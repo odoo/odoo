@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 import requests
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.http import request
 
@@ -130,6 +130,18 @@ class PaymentProvider(models.Model):
                 'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
             },
         }
+
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('state')
+    def _check_razorpay_credentials(self):
+        """ Check that the Razorpay OAuth credentials are valid.
+
+        :raise ValidationError: If the Razorpay account could not be linked.
+        """
+        for provider in self.filtered(lambda p: p.code == 'razorpay' and p.state == 'enabled'):
+            if not provider.razorpay_account_id:
+                super()._check_razorpay_credentials()
 
     # === BUSINESS METHODS - OAUTH === #
 
