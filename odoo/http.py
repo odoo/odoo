@@ -2180,7 +2180,9 @@ class Request:
                 try:
                     return service_model.retrying(func, env=self.env)
                 except psycopg2.errors.ReadOnlySqlTransaction as exc:
-                    _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
+                    loglevel = getattr(exc, 'loglevel', logging.WARNING)
+                    exc_info = getattr(exc, 'exc_info', True)
+                    _logger.log(loglevel, "%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=exc_info)
                     continue
                 except Exception as exc:
                     if isinstance(exc, HTTPException) and exc.code is None:
