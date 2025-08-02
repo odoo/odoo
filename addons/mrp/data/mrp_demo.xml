@@ -619,7 +619,9 @@
         </record>
 
         <!-- Run Scheduler -->
-        <function model="procurement.group" name="run_scheduler"/>
+        <function model="procurement.group" name="run_scheduler_orderpoints"/>
+        <function model="procurement.group" name="run_scheduler_reservations"/>
+        <function model="procurement.group" name="run_scheduler_clean_quants"/>
 
 
         <!-- OEE -->
