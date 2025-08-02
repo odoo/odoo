@@ -708,171 +708,169 @@
     <t t-set="current_department_param" t-value="'&amp;department_id=%s' % department_id.id if department_id else '&amp;is_other_department=1' if is_other_department else ''"/>
     <t t-set="current_office_param" t-value="'' if is_remote else '&amp;office_id=%s' % office_id.id if office_id else ''"/>
     <t t-set="current_employment_type_param" t-value="'&amp;is_untyped=1' if is_untyped else ('&amp;contract_type_id=%s' % contract_type_id.id if contract_type_id else '')"/>
+    <t t-set="current_industry_param"
+        t-value="'&amp;industry_id=%s' % industry_id.id if industry_id else '' or '&amp;is_industry_untyped=1' if is_industry_untyped else ''"/>
     <t t-set="opt_jobs_filter_countries" t-value="is_view_active('website_hr_recruitment.job_filter_by_countries')"/>
     <t t-set="opt_jobs_filter_departments" t-value="is_view_active('website_hr_recruitment.job_filter_by_departments')"/>
     <t t-set="opt_jobs_filter_offices" t-value="is_view_active('website_hr_recruitment.job_filter_by_offices')"/>
     <t t-set="opt_jobs_filter_employment_type" t-value="is_view_active('website_hr_recruitment.job_filter_by_employment_type')"/>
     <t t-set="opt_jobs_search_bar" t-value="is_view_active('website_hr_recruitment.job_search_bar')"/>
+    <t t-set="opt_jobs_filter_industry" t-value="is_view_active('website_hr_recruitment.job_filter_by_industry')"/>
+    <t t-set="opt_jobs_reset_filters" t-value="is_view_active('website_hr_recruitment.job_reset_filters')"/>
     <!-- Filters -->
     <ul class="o_jobs_topbar_filters flex-md-nowrap nav py-2 py-md-0 ps-lg-3"/>
     <!-- Search bar -->
     <div t-if="opt_jobs_search_bar" class="o_jobs_topbar_search_bar d-flex align-items-center justify-content-end w-md-100 w-lg-25 me-2 me-lg-0 ps-lg-2"/>
 </template>
 
-<!-- Filter - Countries -->
+<template id="job_filter_base">
+    <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1">
+        <t t-if="jobs">
+            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" t-att="dropdown_id">
+                <i t-att-class="icon_class"/>
+                <t t-if="selected_filter" t-out="selected_filter.name"/>
+                <t t-elif="is_unset_selected">
+                    <t t-if="untype_label" t-out="untype_label"/>
+                    <t t-else="">Unspecified <t t-out="filter_label"/></t>
+                </t>
+                <t t-else="">All <t t-out="filter_label"/></t>
+            </button>
+            <div class="dropdown-menu w-100 w-md-auto" t-att-aria-labelledby="dropdown_id">
+                <t t-foreach="count_per_filter.items()" t-as="filter_item">
+                    <t t-set="selection" t-value="filter_item[0]"/>
+                    <t t-set="count" t-value="filter_item[1]"/>
+                    <t t-if="selection=='all'">
+                        <a t-attf-href="/jobs?#{all_arg}&amp;#{non_filter_params}"
+                           t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if selected_filter or is_unset_selected else ' active'}">
+                            All <t t-out="filter_label"/><span t-attf-class="badge text-bg-primary ms-2" t-out="count"/>
+                        </a>
+                    </t>
+                    <t t-elif="selection">
+                        <a t-attf-href="/jobs?#{id_selected_arg}=#{selection.id}&amp;#{non_filter_params}"
+                           t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if selected_filter and selected_filter.id == selection.id else ''}">
+                            <t t-out="selection.name"/><span t-attf-class="badge text-bg-primary ms-2" t-out="count"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <a t-attf-href="/jobs?#{unset_arg}&amp;#{non_filter_params}"
+                           t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_unset_selected else ''}">
+                            <t t-if="untype_label" t-out="untype_label"/>
+                            <t t-else="">Unspecified <t t-out="filter_label"/></t>
+                            <span t-attf-class="badge text-bg-primary ms-2" t-out="count"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <button class="btn btn-light w-100" t-att="dropdown_id">
+                <i t-att-class="icon_class"/>
+                <t t-if="selected_filter" t-out="selected_filter.name"/>
+                <t t-elif="is_untyped">
+                    <t t-if="untype_label" t-out="untype_label"/>
+                    <t t-else="">Unspecified <t t-out="filter_label"/></t>
+                </t>
+                <t t-else="">All <t t-out="filter_label"/></t>
+            </button>
+        </t>
+    </li>
+</template>
+
 <template id="job_filter_by_countries" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="10">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_country_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}"/>
-        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="countriesDropdown">
-                <i class="fa fa-map-marker"/>
-                <t t-if="country_id" t-out="country_id.name"/>
-                <t t-elif="is_remote">Remote</t>
-                <t t-else="">All Countries</t>
-            </button>
-            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="countriesDropdown">
-                <a t-attf-href="/jobs?all_countries=1#{non_country_params}"
-                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if country_id or is_remote else ' active'}">
-                    All Countries
-                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_country.get('all', '0')"/>
-                </a>
-                <t t-foreach="countries" t-as="country">
-                    <t t-if="country">
-                        <a t-attf-href="/jobs?country_id=#{country.id}#{non_country_params}"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if country_id and country_id.id == country.id else ''}">
-                            <t t-out="country.name"/>
-                            <span t-attf-class="badge #{' bg-light text-primary' if country_id and country_id.id == country.id else ' text-bg-primary'} ms-2" t-out="count_per_country.get(country, '0')"/>
-                        </a>
-                    </t>
-                    <t t-else="">
-                        <a t-attf-href="/jobs?is_remote=1#{current_department_param}#{current_employment_type_param}"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_remote else ''}">
-                            Remote
-                            <span t-attf-class="badge #{' bg-light text-primary' if is_remote else ' text-bg-primary'} ms-2" t-out="count_per_country.get(None, '0')"/>
-                        </a>
-                    </t>
-                </t>
-            </div>
-        </li>
+        <t t-call="website_hr_recruitment.job_filter_base">
+            <t t-set="filter_label" t-value="'Countries'"/>
+            <t t-set="selected_filter" t-value="country_id"/>
+            <t t-set="is_unset_selected" t-value="is_remote"/>
+            <t t-set="id_selected_arg" t-value="'country_id'"/>
+            <t t-set="all_arg" t-value="'all_countries=1'"/>
+            <t t-set="unset_arg" t-value="'is_remote=1'"/>
+            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
+            <t t-set="count_per_filter" t-value="count_per_country"/>
+            <t t-set="icon_class" t-value="'fa fa-map-marker'"/>
+            <t t-set="dropdown_id" t-value="'countriesDropdown'"/>
+        </t>
     </xpath>
 </template>
 
-<!-- Filter - Departments -->
-<template id="job_filter_by_departments" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="30">
+<template id="job_filter_by_industries" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="15">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_department_params" t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}"/>
-        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="departmentsDropdown">
-                <i class="fa fa-sitemap"/>
-                <t t-if="department_id" t-out="department_id.name"/>
-                <t t-elif="is_other_department">Others</t>
-                <t t-else="">All Departments</t>
-            </button>
-            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="departmentsDropdown">
-                <a t-attf-href="/jobs?all_departments=1#{non_department_params}"
-                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if department_id or is_other_department else ' active'}">
-                    All Departments
-                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_department.get('all', '0')"/>
-                </a>
-                <t t-foreach="departments" t-as="department">
-                    <t t-if="department">
-                        <a t-attf-href="/jobs?department_id=#{department.id}#{non_department_params}"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if department_id and department_id.id == department.id else ''}">
-                            <t t-out="department.name"/>
-                            <span t-attf-class="badge #{' text-bg-primary' if department_id and department_id.id == department.id else ' text-bg-primary'} ms-2" t-out="count_per_department.get(department, '0')"/>
-                        </a>
-                    </t>
-                    <t t-else="">
-                        <a t-attf-href="/jobs?is_other_department=1#{non_department_params}"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if is_other_department else ''}">
-                            Others
-                            <span t-attf-class="badge #{' text-bg-primary' if is_other_department else ' text-bg-primary'} ms-2" t-out="count_per_department.get(None, '0')"/>
-                        </a>
-                    </t>
-                </t>
-            </div>
-        </li>
+        <t t-call="website_hr_recruitment.job_filter_base">
+            <t t-set="filter_label" t-value="'Industries'"/>
+            <t t-set="selected_filter" t-value="industry_id"/>
+            <t t-set="is_unset_selected" t-value="is_industry_untyped"/>
+            <t t-set="id_selected_arg" t-value="'industry_id'"/>
+            <t t-set="all_arg" t-value="'all_industries=1'"/>
+            <t t-set="unset_arg" t-value="'is_industry_untyped=1'"/>
+            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_country_param}"/>
+            <t t-set="count_per_filter" t-value="count_per_industry"/>
+            <t t-set="icon_class" t-value="'fa fa-industry'"/>
+            <t t-set="dropdown_id" t-value="'industriesDropdown'"/>
+        </t>
     </xpath>
 </template>
 
-<!-- Filter - Offices -->
 <template id="job_filter_by_offices" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="20">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_location_params" t-valuef="#{current_department_param}#{current_employment_type_param}"/>
-        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
-                <i class="fa fa-building"/>
-                <t t-if="office_id">
-                    <span t-if="len(office_id.contact_address) &lt;= 5" class="fst-italic">No address specified</span>
-                    <t t-out="office_id.city"/><t t-if="office_id.country_id">, <t t-out="office_id.country_id.name"/></t>
-                </t>
-                <t t-elif="is_remote">Remote</t>
-                <t t-else="">All Offices</t>
-            </button>
-            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="officesDropdown">
-                <a t-attf-href="/jobs?#{'all_countries=1' if is_remote else current_country_path}#{non_location_params}"
-                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if office_id or is_remote else ' active'}">
-                    All Offices
-                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_office.get('all', '0')"/>
-                </a>
-                <t t-foreach="offices" t-as="thisoffice">
-                    <t t-if="thisoffice">
-                        <a t-attf-href="/jobs?office_id=#{thisoffice.id}#{'' if is_remote else current_country_param}#{non_location_params}"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if office_id and office_id.id == thisoffice.id else ''}">
-                            <t t-if="not (thisoffice.city or thisoffice.country_id)"><span class="fst-italic">No address specified</span></t>
-                            <t t-else="">
-                                <t t-out="thisoffice.city"/><t t-if="thisoffice.country_id">, <t t-out="thisoffice.country_id.name"/></t>
-                            </t>
-                            <span t-attf-class="badge #{' text-bg-primary' if office_id and office_id.id == thisoffice.id else ' text-bg-primary'} ms-2" t-out="count_per_office.get(thisoffice, '0')"/>
-                        </a>
-                    </t>
-                    <t t-else="">
-                        <a t-attf-href="/jobs?is_remote=1#{non_location_params}"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_remote else ''}">
-                            Remote
-                            <span t-attf-class="badge #{' text-bg-primary' if is_remote else ' text-bg-primary'} ms-2" t-out="count_per_office.get(None, '0')"/>
-                        </a>
-                    </t>
-                </t>
-            </div>
-        </li>
+        <t t-call="website_hr_recruitment.job_filter_base">
+            <t t-set="filter_label" t-value="'Offices'"/>
+            <t t-set="selected_filter" t-value="office_id"/>
+            <t t-set="is_unset_selected" t-value="is_remote"/>
+            <t t-set="id_selected_arg" t-value="'office_id'"/>
+            <t t-set="all_arg" t-value="'all_offices=1'"/>
+            <t t-set="unset_arg" t-value="'is_remote=1'"/>
+            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"/>
+            <t t-set="count_per_filter" t-value="count_per_office"/>
+            <t t-set="icon_class" t-value="'fa fa-building'"/>
+            <t t-set="dropdown_id" t-value="'officesDropdown'"/>
+            <t t-set="untype_label" t-value="'Remote'"/>
+        </t>
     </xpath>
 </template>
 
-<!-- Filter - Employment Type -->
+<template id="job_filter_by_departments" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="30">
+    <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
+        <t t-call="website_hr_recruitment.job_filter_base">
+            <t t-set="filter_label" t-value="'Departments'"/>
+            <t t-set="selected_filter" t-value="department_id"/>
+            <t t-set="is_unset_selected" t-value="is_other_department"/>
+            <t t-set="id_selected_arg" t-value="'department_id'"/>
+            <t t-set="all_arg" t-value="'all_departments=1'"/>
+            <t t-set="unset_arg" t-value="'is_other_department=1'"/>
+            <t t-set="non_filter_params" t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
+            <t t-set="count_per_filter" t-value="count_per_department"/>
+            <t t-set="icon_class" t-value="'fa fa-sitemap'"/>
+            <t t-set="dropdown_id" t-value="'departmentsDropdown'"/>
+            <t t-set="untype_label" t-value="'Others'"/>
+        </t>
+    </xpath>
+</template>
+
 <template id="job_filter_by_employment_type" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="40">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_employment_type_params" t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}"/>
-        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
-                <i class="fa fa-suitcase"/>
-                <t t-if="contract_type_id and 'name' in contract_type_id" t-out="contract_type_id.name"/>
-                <t t-elif="is_untyped">Unspecified type</t>
-                <t t-else="">All Types</t>
-            </button>
-            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="employmentDropdown">
-                <a t-attf-href="/jobs?all_employment_types=1#{non_employment_type_params}"
-                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if contract_type_id or is_untyped else ' active'}">
-                    All Types
-                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_employment_type.get('all', '0')"/>
-                </a>
-                <t t-foreach="employment_types" t-as="employment_type">
-                    <t t-if="employment_type">
-                        <a t-attf-href="/jobs?contract_type_id=#{employment_type.id}#{non_employment_type_params}"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if contract_type_id and contract_type_id == employment_type.id else ''}">
-                            <t t-out="employment_type.name"/>
-                            <span t-attf-class="badge #{' text-bg-primary' if contract_type_id and contract_type_id == employment_type.id else ' text-bg-primary'} ms-2" t-out="count_per_employment_type.get(employment_type, '0')"/>
-                        </a>
-                    </t>
-                </t>
-                <t t-if="count_per_employment_type.get(None, 0)">
-                    <a t-attf-href="/jobs?is_untyped=1#{non_employment_type_params}"
-                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_untyped else ''}">
-                        Unspecified type
-                        <span t-attf-class="badge #{' text-bg-primary' if is_remote else ' text-bg-primary'} ms-2" t-out="count_per_employment_type.get(None, '0')"/>
-                    </a>
-                </t>
-            </div>
+        <t t-call="website_hr_recruitment.job_filter_base">
+            <t t-set="filter_label" t-value="'Types'"/>
+            <t t-set="selected_filter" t-value="contract_type_id"/>
+            <t t-set="is_unset_selected" t-value="is_untyped"/>
+            <t t-set="id_selected_arg" t-value="'contract_type_id'"/>
+            <t t-set="all_arg" t-value="'all_employment_types=1'"/>
+            <t t-set="unset_arg" t-value="'is_untyped=1'"/>
+            <t t-set="non_filter_params" t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"/>
+            <t t-set="count_per_filter" t-value="count_per_employment_type"/>
+            <t t-set="icon_class" t-value="'fa fa-suitcase'"/>
+            <t t-set="dropdown_id" t-value="'employmentDropdown'"/>
+        </t>
+    </xpath>
+</template>
+
+<!-- reset filters -->
+<template id="job_reset_filters"
+    inherit_id="website_hr_recruitment.topbar_customizations"
+    active="False"
+    priority="50">
+    <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
+        <li class="nav-item me-2 my-1">
+            <a t-attf-href="/jobs#{('?search=' + search) if search else ''}" class="btn btn-light w-100"><i class="fa fa-undo"/></a>
         </li>
     </xpath>
 </template>
