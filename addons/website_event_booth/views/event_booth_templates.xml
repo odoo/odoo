@@ -15,7 +15,7 @@
                 <div t-if="event.is_finished" class="container">
                     <div class="row">
                         <div class="col-12 text-center">
-                            <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+                            <div class="my-4"><t t-call="website_event.event_empty_events_svg"/></div>
                             <h2>Event Finished</h2>
                             <p>It's no longer possible to book a booth.</p>
                         </div>
@@ -24,7 +24,7 @@
                 <div t-elif="not event_booths" class="container">
                     <div class="row">
                         <div class="col-12 text-center">
-                            <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+                            <div class="my-4"><t t-call="website_event.event_empty_events_svg"/></div>
                             <h2>Registration Not Open.</h2>
                             <p>This event is not open to exhibitors registration at this time.</p>
                             <p>Check our <a class="o_translate_inline" href="/event" title="List of Future Events" aria-label="Link to list of future events">list of future events</a>.</p>

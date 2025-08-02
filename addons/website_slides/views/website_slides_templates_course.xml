@@ -119,11 +119,8 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" t-attf-class="wrap mt-0">
-            <div class="oe_structure oe_empty" t-call="website.record_cover">
-                <t t-set="_record" t-value="channel"/>
-                <t t-set="use_filters" t-value="True"/>
-                <t t-set="use_size" t-value="True"/>
-                <t t-set="use_text_align" t-value="True"/>
+            <div class="oe_structure oe_empty">
+            <t t-call="website.record_cover" _record="channel" use_filters="True" use_size="True" use_text_align="True">
                 <div t-attf-class="o_wslides_course_header position-relative pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
                     <t t-call="website_slides.course_nav"/>
                     <div class="container mt-5 mt-md-3 mt-xl-4">
@@ -164,6 +161,7 @@
                         </div>
                     </div>
                 </div>
+            </t>
             </div>
 
             <div class="o_wslides_course_main">
@@ -824,7 +822,7 @@
                 </div>
                 <div class="row mx-n2">
                     <t t-foreach="category['slides']" t-as="slide">
-                        <div class="col-12 col-sm-6 col-lg-4 px-2 d-flex" t-call="website_slides.lesson_card"/>
+                        <div class="col-12 col-sm-6 col-lg-4 px-2 d-flex"><t t-call="website_slides.lesson_card"/></div>
                     </t>
                 </div>
             </div>

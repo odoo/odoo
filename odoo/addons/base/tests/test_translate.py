@@ -315,7 +315,7 @@ class TranslationToolsTestCase(BaseCase):
         source = """<t t-name="stuff">
                         <t t-set="first" t-value="33"/>
                         <t t-set="second" t-valuef="no-translate-{{first}}"/>
-                        <t t-set="toto" t-valuef.translate="My ro-{{first}}"/>
+                        <t t-set="toto" t-valuef.translate.f="My ro-{{first}}"/>
                         <span t-attf-title="Big #{toto} first {{first}} second:{{second}}"/>
 
                         <div data-stuff.translate="cat"/>
@@ -336,7 +336,7 @@ class TranslationToolsTestCase(BaseCase):
         self.assertEqual(result, """<t t-name="stuff">
                         <t t-set="first" t-value="33"/>
                         <t t-set="second" t-valuef="no-translate-{{first}}"/>
-                        <t t-set="toto" t-valuef.translate="Translated ro-{{first}} and None"/>
+                        <t t-set="toto" t-valuef.translate.f="Translated ro-{{first}} and None"/>
                         <span t-attf-title="Big Translated #{toto} second ({{second}}) first None"/>
 
                         <div data-stuff.translate="dog"/>

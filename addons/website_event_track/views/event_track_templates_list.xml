@@ -187,7 +187,7 @@
 <template id="tracks_main" name="Tracks: Main Display">
     <!-- No tracks -->
     <div t-if="not tracks" class="col-12 text-center">
-        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <div class="my-4"><t t-call="website_event.event_empty_events_svg"/></div>
         <h4>No track found.</h4>
         <p t-if="search_key">We could not find any track matching your search for: <strong t-out="search_key"/>.</p>
         <p t-else="">We could not find any track at this moment.</p>
@@ -198,9 +198,9 @@
         </div>
     </div>
     <!-- Cards -->
-    <div class="col-12" t-call="website_event_track.tracks_display_cards"/>
+    <div class="col-12"><t t-call="website_event_track.tracks_display_cards"/></div>
     <!-- List -->
-    <div class="col-12" t-call="website_event_track.tracks_display_list"/>
+    <div class="col-12"><t t-call="website_event_track.tracks_display_list"/></div>
 </template>
 
 <!-- Tracks: Cards-based display -->

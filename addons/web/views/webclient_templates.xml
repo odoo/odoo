@@ -52,9 +52,7 @@
             }
         </script>
         <t t-call-assets="web.assets_frontend_minimal" t-css="false" defer_load="True"/>
-        <t t-call="web.conditional_assets_tests">
-            <t t-set="ignore_missing_deps" t-value="True"/>
-        </t>
+        <t t-call="web.conditional_assets_tests" ignore_missing_deps="True"/>
         <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
       </xpath>
         <xpath expr="//t[@t-out='0']" position="replace">

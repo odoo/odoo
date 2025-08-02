@@ -7,9 +7,10 @@ from lxml import etree, html
 from lxml.builder import E
 from textwrap import dedent
 
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.addons.base.models.ir_qweb import QWebException, render
+from odoo.addons.base.models.ir_qweb import QWebError, render
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, MissingError
@@ -17,6 +18,7 @@ from odoo.exceptions import UserError, MissingError
 unsafe_eval = eval
 
 
+@tagged('post_install', '-at_install')
 class TestQWebTField(TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
@@ -57,13 +59,13 @@ class TestQWebTField(TransactionCase):
     def test_reject_crummy_tags(self):
         field = etree.Element('td', {'t-field': 'company.name'})
 
-        with self.assertRaisesRegex(QWebException, r'QWeb widgets do not work correctly'):
+        with self.assertRaisesRegex(QWebError, r'QWeb widgets do not work correctly'):
             self.engine._render(field, {'company': None})
 
     def test_reject_t_tag(self):
         field = etree.Element('t', {'t-field': 'company.name'})
 
-        with self.assertRaisesRegex(QWebException, r't-field can not be used on a t element'):
+        with self.assertRaisesRegex(QWebError, r't-field can not be used on a t element'):
             self.engine._render(field, {'company': None})
 
     def test_render_t_options(self):
@@ -157,6 +159,7 @@ class TestQWebTField(TransactionCase):
         self.assertEqual(str(rendered.strip()), result.strip())
 
 
+@tagged('post_install', '-at_install')
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
         """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
@@ -567,7 +570,7 @@ class TestQWebNS(TransactionCase):
             'arch': """
                 <t t-name="base.dummy2">
                     <root xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                        <cac:line t-foreach="[1, 2]" t-as="i" t-call="base.dummy"/>
+                        <cac:line t-foreach="[1, 2]" t-as="i"><t t-call="base.dummy"/></cac:line>
                     </root>
                 </t>
             """
@@ -663,7 +666,7 @@ class TestQWebNS(TransactionCase):
         except TypeError as e:
             error_msg = e.args[0]
 
-        with self.assertRaises(QWebException, msg=error_msg):
+        with self.assertRaises(QWebError, msg=error_msg):
             self.env['ir.qweb']._render(view1.id)
 
 
@@ -696,6 +699,8 @@ class TestQWebNS(TransactionCase):
 
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
 
+
+@tagged('post_install', '-at_install')
 class TestQWebBasic(TransactionCase):
     def test_compile_expr(self):
         tests = [
@@ -759,15 +764,14 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
-            error = str(e)
-            self.assertIn("KeyError: 't-as'", error)
-            self.assertIn('<t t-foreach="[3, 2, 1]"/>', error)
+        except QWebError as e:
+            self.assertIn("KeyError: 't-as'", str(e))
+            self.assertIn('<t t-foreach="[3, 2, 1]"/>', str(e.qweb))
 
     def test_foreach_as_error_2(self):
         t = self.env['ir.ui.view'].create({
@@ -779,12 +783,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("KeyError: 't-as'", error)
             self.assertIn('<t t-foreach="[3, 2, 1]" t-as=""/>', error)
@@ -799,12 +803,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("The varname 'b-2' can only contain alphanumeric characters and underscores", error)
             self.assertIn('<t t-foreach="[3, 2, 1]" t-as="b-2"/>', error)
@@ -1074,6 +1078,31 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
+    def test_set_body_3(self):
+        # test if the cached result don't fail
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.test_set_body_3',
+            'arch_db': '''<t t-name="set">
+                <t t-set="a_empty"><t t-out="''"/></t>
+                <t t-set="abc"> toto   </t>
+                <div t-att-a="abc" t-att-b="abc.strip()" t-att-c="abc[2]" t-att-d="abc[2:4]" t-att-len="len(abc)" t-att-bool="bool(abc)" t-att-bool_empty="str(bool(a_empty))">123</div>
+            </t>'''
+        })
+        result = """
+                <div a=" toto   " b="toto" c="o" d="ot" len="8" bool="True" bool_empty="False">123</div>
+            """
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+        # test string operations with the content value
+        for test, res in [('abc.strip()', 'toto'), ('abc[2]', 'o'), ('abc[2:4]', 'ot'), ('len(abc)', 8), ('bool(abc)', True)]:
+            t.arch_db = '''<t t-name="set"><t t-set="abc"> toto   </t><div t-att-a="%s">123</div></t>''' % test
+            result = """<div a="%s">123</div>""" % res
+            rendered = self.env['ir.qweb']._render(t.id)
+            self.assertEqual(str(rendered.strip()), result.strip(), (test, res))
+
     @mute_logger('odoo.addons.base.models.ir_qweb')
     def test_set_error_1(self):
         t = self.env['ir.ui.view'].create({
@@ -1084,12 +1113,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("KeyError: 't-set'", error)
             self.assertIn('<t t-set="" t-value="1"/>', error)
@@ -1104,12 +1133,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("The varname can only contain alphanumeric characters and underscores", error)
             self.assertIn('<t t-set="b-2" t-value="1"/>', error)
@@ -1221,6 +1250,24 @@ class TestQWebBasic(TransactionCase):
         values = {'v': '"yes"'}
         rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
+
+    def test_out_json(self):
+        # Use str method will use the string value. t-out will escape this str
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="attr-set">
+                <t t-set="abc"> <span> a </span> </t>
+                <t t-set="props" t-value="{ 'a': 1, 'abc': abc }"/>
+                <div t-att-data="json.dumps(props)"/>
+            </t>'''
+        })
+        result = """
+                <div data="{&#34;a&#34;: 1, &#34;abc&#34;: &#34; &lt;span&gt; a &lt;/span&gt; &#34;}"></div>
+            """
+        values = {'v': '"yes"'}
+        rendered = self.env['ir.qweb']._render(t.id, values)
+        self.assertEqual(str(rendered.strip()), result.strip())
 
     def test_out_escape_text(self):
         view1 = self.env['ir.ui.view'].create({
@@ -1412,12 +1459,12 @@ class TestQWebBasic(TransactionCase):
                 </section>
             </t>'''
         })
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn('<div t-esc="abc + def"/>', error)
 
@@ -1433,12 +1480,12 @@ class TestQWebBasic(TransactionCase):
                 </section>
             </t>'''
         })
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn('Can not compile expression', error)
             self.assertIn('<div t-esc="abc + def + ("/>', error)
@@ -1450,19 +1497,19 @@ class TestQWebBasic(TransactionCase):
                         <span>content</span>
                     </div>
                 </section>'''
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(template)
         try:
             self.env['ir.qweb']._render(template)
-        except ValueError as e:
+        except QWebError as e:
             self.assertIn('Inline templates must be passed as `etree` documents', str(e))
 
         template = '''toto <t t-esc="content"/>'''
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(template)
         try:
             self.env['ir.qweb']._render(template)
-        except ValueError as e:
+        except QWebError as e:
             self.assertIn('Inline templates must be passed as `etree` documents', str(e))
 
     def test_error_message_4(self):
@@ -1481,11 +1528,11 @@ class TestQWebBasic(TransactionCase):
         except MissingError as e:
             self.assertIn('Template not found', str(e))
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(False)
         try:
             self.env['ir.qweb']._render(False)
-        except AssertionError as e:
+        except QWebError as e:
             self.assertIn('template is required', str(e))
 
     def test_error_message_5(self):
@@ -1525,6 +1572,104 @@ class TestQWebBasic(TransactionCase):
         # re try this rendering but raise (use cached method)
         with self.assertRaises(UserError, msg="Not Found"):
             self.env['ir.qweb']._render(-9999)
+
+    def test_error_message_9(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_9_callee',
+            'arch_db': '<article><t t-out="b % 99"/></article>'
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_9',
+            'arch_db': '''<section>
+                    <t t-set="a"><div><t t-out="1/div"/> (%s)</div></t>
+                    <t t-call="base.view_test_error_9_callee" b="a"/>
+                </section>'''
+        })
+
+        xml = self.env['ir.qweb']._render(t.id, {'div': 1})
+        self.assertEqual(str(xml).strip(), '''<section><article><div>1.0 (99)</div></article>
+                </section>''')
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            error = str(e)
+            self.assertIn('ZeroDivisionError', error)
+            self.assertIn('Element: <t t-out="1/div"/>', error)
+            self.assertIn("""'/section/t[1]', '<t t-set="a"/>'""", error)
+            self.assertIn("""'/article/t', '<t t-out="b % 99"/>'""", error)
+            self.assertIn("""'/section/t[2]', '<t t-call="base.view_test_error_9_callee" b="a"/>'""", error)
+
+        # an error triggered on first render
+        self.env.registry.clear_cache('templates')
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            error = str(e)
+            self.assertIn('ZeroDivisionError', error)
+            self.assertIn("""'/section/t[1]', '<t t-set="a"/>'""", error)
+            self.assertIn("""'/article/t', '<t t-out="b % 99"/>'""", error)
+            self.assertIn("""'/section/t[2]', '<t t-call="base.view_test_error_9_callee" b="a"/>'""", error)
+
+    def test_error_message_10(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_9_callee',
+            'arch_db': '<article><t t-out="b"/></article>'
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_9',
+            'arch_db': '''<section>
+                    <t t-set="a"><div><t t-out="1/div"/> (%s)</div></t>
+                    <t t-call="base.view_test_error_9_callee" b="a"/>
+                </section>'''
+        })
+
+        xml = self.env['ir.qweb']._render(t.id, {'div': 1})
+        self.assertEqual(str(xml).strip(), '''<section><article><div>1.0 (%s)</div></article>
+                </section>''')
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            error = str(e)
+            self.assertIn('ZeroDivisionError', error)
+            self.assertIn('Element: <t t-out="1/div"/>', error)
+            self.assertIn("""'/section/t[1]', '<t t-set="a"/>'""", error)
+            self.assertIn("""'/article/t', '<t t-out="b"/>'""", error)
+            self.assertIn("""'/section/t[2]', '<t t-call="base.view_test_error_9_callee" b="a"/>'""", error)
+
+        # an error triggered on first render
+        self.env.registry.clear_cache('templates')
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            error = str(e)
+            self.assertIn('ZeroDivisionError', error)
+            self.assertIn("""'/section/t[1]', '<t t-set="a"/>'""", error)
+            self.assertIn("""'/article/t', '<t t-out="b"/>'""", error)
+            self.assertIn("""'/section/t[2]', '<t t-call="base.view_test_error_9_callee" b="a"/>'""", error)
 
     def test_call_set(self):
         view0 = self.env['ir.ui.view'].create({
@@ -1584,15 +1729,88 @@ class TestQWebBasic(TransactionCase):
             """
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(MissingError):
             self.env['ir.qweb']._render(view1.id)
 
         try:
             self.env['ir.qweb']._render(view1.id)
-        except QWebException as e:
-            error = str(e)
-            self.assertIn('Template not found: base.dummy', error)
+        except MissingError as e:
+            error = str(e.qweb)
+            self.assertIn("Template not found: 'base.dummy'", error)
             self.assertIn('<t t-call="base.dummy"/>', error)
+
+    def test_call_infinity_error(self):
+        self.env['ir.ui.view'].create({
+            'name': 'dummy',
+            'type': 'qweb',
+            'key': 'base.dummy',
+            'arch_db': '<article><t t-call="base.dummy"/></article>'
+        })
+        view1 = self.env['ir.ui.view'].create({
+            'name': "other",
+            'type': 'qweb',
+            'arch': '<div><t t-call="base.dummy"/></div>'
+        })
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(view1.id)
+
+        try:
+            self.env['ir.qweb']._render(view1.id)
+        except QWebError as e:
+            error = str(e)
+            self.assertIn('Qweb template infinity loop', error)
+            self.assertIn("""'/article/t', '<t t-call="base.dummy"/>'""", error)
+
+    def test_call_call_0(self):
+        self.env['ir.ui.view'].create({
+            'name': 'micro_child',
+            'type': 'qweb',
+            'key': 'base.micro_child',
+            'arch_db': '<article><t t-out="0"/></article>'
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'wrap',
+            'type': 'qweb',
+            'key': 'base.wrap',
+            'arch_db': '<wrap><t t-out="0"/></wrap>'
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'child',
+            'type': 'qweb',
+            'key': 'base.child',
+            'arch_db': '<t t-call="base.wrap"><section><t t-call="base.micro_child"><t t-out="0"/></t></section></t>'
+        })
+        view1 = self.env['ir.ui.view'].create({
+            'name': "other",
+            'type': 'qweb',
+            'arch': '<div><t t-call="base.child">test</t></div>'
+        })
+
+        result = self.env['ir.qweb']._render(view1.id)
+        self.assertEqual(str(result), "<div><wrap><section><article>test</article></section></wrap></div>")
+
+    def test_call_foreach_call(self):
+        self.env['ir.ui.view'].create({
+            'name': 'child',
+            'type': 'qweb',
+            'key': 'base.child',
+            'arch_db': '<article><t t-out="toto"/></article>'
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'wrap',
+            'type': 'qweb',
+            'key': 'base.wrap',
+            'arch_db': '<wrap><t t-out="0"/></wrap>'
+        })
+        view1 = self.env['ir.ui.view'].create({
+            'name': "other",
+            'type': 'qweb',
+            'arch': '<t t-call="base.wrap"><div><t t-foreach="[1,2,3]" t-as="toto"><t t-call="base.child">test</t></t></div></t>'
+        })
+
+        result = self.env['ir.qweb']._render(view1.id)
+        self.assertEqual(str(result), "<wrap><div><article>1</article><article>2</article><article>3</article></div></wrap>")
 
     def test_render_t_call_propagates_t_lang(self):
         current_lang = 'en_US'
@@ -1776,11 +1994,11 @@ class TestQWebBasic(TransactionCase):
         })
 
         # Check that we cannot bypass the templates subfolder. We should only be able to read file under this specific subfolder
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render('base/tests/file_template/templates/../unreadable_file_template.xml', values={})
 
         # Check that as above, if we do not have a parent called templates, the file become unreadable for security reasons.
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render('base/tests/file_template/unreadable_file_template.xml', values={})
 
     def test_void_element(self):
@@ -1830,6 +2048,32 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(view.id)
 
         self.assertEqual(str(rendered), result)
+
+    def test_t_foreach_t_call(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.test',
+            'arch_db': '''<t t-out="value"/>'''
+        })
+        view = self.env['ir.ui.view'].create({
+            'name': 'master',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='master'>
+                    <t t-set="value" t-value="3"/>
+                    a) <t t-call="base.test"/>
+                    b) <t t-foreach="[0, 1]" t-as="value"><t t-call="base.test"/>;</t>
+                    c) <t t-foreach="[0, 1]" t-as="value" t-call="base.test"/>
+                </t>'''
+        })
+
+        result = '''
+                    a) 3
+                    b) 0;1;
+                    c) 01
+        '''
+        rendered = self.env['ir.qweb']._render(view.id)
+        self.assertEqual(str(rendered).strip(), result.strip())
 
     def test_space_remove_technical_all(self):
         test = self.env['ir.ui.view'].create({
@@ -1933,6 +2177,7 @@ class TestQWebBasic(TransactionCase):
         self.assertEqual(str(rendered), result)
 
 
+@tagged('post_install', '-at_install')
 class TestQwebPerformance(TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
@@ -2074,6 +2319,7 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 7
 
 
+@tagged('post_install', '-at_install')
 class TestQwebCache(TransactionCase):
     def test_render_xml_cache_base(self):
         view1 = self.env['ir.ui.view'].create({
@@ -2878,7 +3124,7 @@ class TestQwebCache(TransactionCase):
             """
         })
 
-        with self.assertRaisesRegex(QWebException, "The value type of 't-nocache-record' cannot be cached"):
+        with self.assertRaisesRegex(QWebError, "The value type of 't-nocache-record' cannot be cached"):
             self.env['ir.qweb'].with_context(is_t_cache_disabled=False)._render(template_page.id, {
                 'cache_id': 1,
                 'view_record': self.env['ir.ui.view'].search([], limit=1),
@@ -3015,19 +3261,19 @@ class TestQwebCache(TransactionCase):
             'type': 'qweb',
             'arch': """
                 <t t-name="template_page">
-                    <root t-cache="cache_1">
+                    <cache_1 t-cache="cache_1">
                         <t t-set="a">
-                            <section t-cache="cache_2">
+                            <cache_2 t-cache="cache_2">
                                 <t t-set="counter" t-value="counter + 100"/>
-                                <article t-nocache="" class="no_cache"><t t-out="counter"/></article>
+                                <nocache t-nocache="" class="no_cache"><t t-out="counter"/></nocache>
                                 <div>cache: <t t-out="counter"/></div>
-                            </section>
-                            <footer t-nocache="" class="no_cache"><t t-out="counter * 10"/></footer>
+                            </cache_2>
+                            <nocache t-nocache="" class="no_cache"><t t-out="counter * 10"/></nocache>
                         </t>
                         <div>
                             <t t-out="a"/>
                         </div>
-                    </root>
+                    </cache_1>
                 </t>
             """
         })
@@ -3039,15 +3285,15 @@ class TestQwebCache(TransactionCase):
             'counter': 1,
         })
         result = """
-            <root>
+            <cache_1>
                 <div>
-                    <section>
-                        <article class="no_cache">1</article>
+                    <cache_2>
+                        <nocache class="no_cache">1</nocache>
                         <div>cache: 101</div>
-                    </section>
-                    <footer class="no_cache">10</footer>
+                    </cache_2>
+                    <nocache class="no_cache">10</nocache>
                 </div>
-            </root>
+            </cache_1>
         """
         self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1')
 
@@ -3057,15 +3303,15 @@ class TestQwebCache(TransactionCase):
             'counter': 2,
         })
         result = """
-            <root>
+            <cache_1>
                 <div>
-                    <section>
-                        <article class="no_cache">2</article>
+                    <cache_2>
+                        <nocache class="no_cache">2</nocache>
                         <div>cache: 101</div>
-                    </section>
-                    <footer class="no_cache">20</footer>
+                    </cache_2>
+                    <nocache class="no_cache">20</nocache>
                 </div>
-            </root>
+            </cache_1>
         """
         self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2')
 
@@ -3075,15 +3321,15 @@ class TestQwebCache(TransactionCase):
             'counter': 3,
         })
         result = """
-            <root>
+            <cache_1>
                 <div>
-                    <section>
-                        <article class="no_cache">2</article>
+                    <cache_2>
+                        <nocache class="no_cache">3</nocache>
                         <div>cache: 101</div>
-                    </section>
-                    <footer class="no_cache">20</footer>
+                    </cache_2>
+                    <nocache class="no_cache">30</nocache>
                 </div>
-            </root>
+            </cache_1>
         """
         self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3')
 
@@ -3093,15 +3339,15 @@ class TestQwebCache(TransactionCase):
             'counter': 3,
         })
         result = """
-            <root>
+            <cache_1>
                 <div>
-                    <section>
-                        <article class="no_cache">3</article>
+                    <cache_2>
+                        <nocache class="no_cache">3</nocache>
                         <div>cache: 103</div>
-                    </section>
-                    <footer class="no_cache">30</footer>
+                    </cache_2>
+                    <nocache class="no_cache">30</nocache>
                 </div>
-            </root>
+            </cache_1>
         """
         self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 4')
 
@@ -3250,6 +3496,748 @@ class TestQwebCache(TransactionCase):
             </root>
         """
         self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3')
+
+    def test_render_xml_nocache_in_nocache(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <cache_a t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>(counter + 100)
+                        <t t-out="counter"/>
+                        <nocache t-nocache="wrap cache_b">
+                            <t t-set="counter" t-value="counter + 10"/>(counter + 10)
+                            <t t-out="counter"/>
+                            <cache_b t-cache="cache_b">
+                                <t t-out="counter"/>
+                                <nocache_value t-nocache="" t-nocache-a="counter"><t t-out="a"/></nocache_value>
+                                <nocache t-nocache=""><t t-out="counter"/></nocache>
+                            </cache_b>
+                        </nocache>
+                    </cache_a>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+        })
+        result = """
+            <cache_a>(counter + 100)
+                101
+                <nocache>(counter + 10)
+                    11
+                    <cache_b>
+                        11
+                        <nocache_value>11</nocache_value>
+                        <nocache>1</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+        })
+        result = """
+            <cache_a>(counter + 100)
+                101
+                <nocache>(counter + 10)
+                    12
+                    <cache_b>
+                        11
+                        <nocache_value>11</nocache_value>
+                        <nocache>2</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+        })
+        result = """
+            <cache_a>(counter + 100)
+                101
+                <nocache>(counter + 10)
+                    13
+                    <cache_b>
+                        13
+                        <nocache_value>13</nocache_value>
+                        <nocache>3</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+        })
+        result = """
+            <cache_a>(counter + 100)
+                104
+                <nocache>(counter + 10)
+                    14
+                    <cache_b>
+                        13
+                        <nocache_value>13</nocache_value>
+                        <nocache>4</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_alone(self):
+        """ t-nocache without any parented t-cache is ignored"""
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <section>
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <t t-out="counter"/>
+                        <nocache t-nocache="">
+                            <t t-set="counter" t-value="counter + 10"/>
+                            <t t-out="counter"/>
+                        </nocache>
+                        <t t-out="counter"/>
+                        <nocache_value t-nocache="" t-nocache-a="counter"><t t-out="a"/></nocache_value>
+                        <nocache t-nocache=""><t t-out="counter"/></nocache>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'counter': 1,
+        })
+        result = """
+            <section>
+                101
+                <nocache>
+                    111
+                </nocache>
+                111
+                <nocache_value>111</nocache_value>
+                <nocache>111</nocache>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'counter': 2,
+        })
+        result = """
+            <section>
+                102
+                <nocache>
+                    112
+                </nocache>
+                112
+                <nocache_value>112</nocache_value>
+                <nocache>112</nocache>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call_simple(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '''
+                        <nocache t-nocache="">
+                            <cache_b t-cache="cache_b">
+                                <div><t t-out="counter"/></div>
+                                <nocache_value t-nocache="" t-nocache-a="counter"><t t-out="a"/></nocache_value>
+                                <nocache t-nocache=""><t t-out="counter"/></nocache>
+                            </cache_b>
+                        </nocache>
+            '''
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <cache_a t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <div><t t-out="counter"/></div>
+                        <t t-call="base.testing_callee"/>
+                    </cache_a>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+        })
+        result = """
+            <cache_a>
+                <div>101</div><nocache>
+                    <cache_b>
+                        <div>1</div>
+                        <nocache_value>1</nocache_value>
+                        <nocache>1</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+        })
+        result = """
+            <cache_a>
+                <div>101</div><nocache>
+                    <cache_b>
+                        <div>1</div>
+                        <nocache_value>1</nocache_value>
+                        <nocache>2</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+        })
+        result = """
+            <cache_a>
+                <div>101</div><nocache>
+                    <cache_b>
+                        <div>3</div>
+                        <nocache_value>3</nocache_value>
+                        <nocache>3</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+        })
+        result = """
+            <cache_a>
+                <div>104</div><nocache>
+                    <cache_b>
+                        <div>3</div>
+                        <nocache_value>3</nocache_value>
+                        <nocache>4</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee_1',
+            'arch_db': '''<nocache_value t-nocache="" t-nocache-a="counter">cache:<t t-out="a"/> val:<t t-out="val"/></nocache_value>'''
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee_2',
+            'arch_db': '''<nocache t-nocache=""><t t-out="counter"/></nocache>'''
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '''
+                        <nocache t-nocache="">
+                            <cache_b t-cache="cache_b">
+                                <t t-out="counter"/>
+                                <t t-call="base.testing_callee_1"/>
+                                <t t-call="base.testing_callee_2"/>
+                            </cache_b>
+                        </nocache>
+            '''
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <cache_a t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <t t-out="counter"/>
+                        <t t-call="base.testing_callee"/>
+                    </cache_a>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+            'val': 1,
+        })
+        result = """
+            <cache_a>
+                101<nocache>
+                    <cache_b>
+                        1<nocache_value>cache:1 val:1</nocache_value><nocache>1</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+            'val': 2,
+        })
+        result = """
+            <cache_a>
+                101<nocache>
+                    <cache_b>
+                        1<nocache_value>cache:1 val:2</nocache_value><nocache>2</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+            'val': 3,
+        })
+        result = """
+            <cache_a>
+                101<nocache>
+                    <cache_b>
+                        3<nocache_value>cache:3 val:3</nocache_value><nocache>3</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+            'val': 4,
+        })
+        result = """
+            <cache_a>
+                104<nocache>
+                    <cache_b>
+                        3<nocache_value>cache:3 val:4</nocache_value><nocache>4</nocache>
+                    </cache_b>
+                </nocache>
+            </cache_a>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call_0(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '<callee><t t-out="0"/></callee>'
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <t t-set="counter" t-value="counter + 100"/>
+                    <cache t-cache="cache_a">
+                        <t t-call="base.testing_callee">
+                            <counter><t t-out="counter"/></counter>
+                            <nocache><t t-nocache="" t-out="counter"/></nocache>
+                        </t>
+                    </cache>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'counter': 1,
+        })
+
+        result = """
+            <cache><callee>
+                    <counter>101</counter>
+                    <nocache>1</nocache>
+                </callee>
+            </cache>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'counter': 2,
+        })
+        result = """
+            <cache><callee>
+                    <counter>101</counter>
+                    <nocache>2</nocache>
+                </callee>
+            </cache>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'counter': 3,
+        })
+        result = """
+            <cache><callee>
+                    <counter>103</counter>
+                    <nocache>3</nocache>
+                </callee>
+            </cache>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call_new(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee_1',
+            'arch_db': '''<div t-nocache="" t-nocache-a="counter"><t t-out="a"/> <t t-out="val"/></div>'''
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee_2',
+            'arch_db': '''<div t-nocache=""><t t-out="counter"/></div>'''
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '''
+                        <article t-nocache="">
+                            <card t-cache="cache_b">
+                                <div><t t-out="counter"/></div>
+                                <t t-call="base.testing_callee_1" toto.f="will be streamed"/>
+                                <t t-call="base.testing_callee_2" toto.f="will be streamed"/>
+                            </card>
+                        </article>
+            '''
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <div><t t-out="counter"/></div>
+                        <t t-call="base.testing_callee" toto.f="will be streamed"/>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+            'val': 1,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>1</div><div>1 1</div><div>1</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+            'val': 2,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>1</div><div>1 2</div><div>2</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+            'val': 3,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>3</div><div>3 3</div><div>3</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+            'val': 4,
+        })
+        result = """
+            <section>
+                <div>104</div><article>
+                    <card>
+                        <div>3</div><div>3 4</div><div>4</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call_new_2(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '''
+                        <article>
+                            <card>
+                                <div><t t-out="counter"/></div>
+                                <div t-nocache="" t-nocache-a="counter"><t t-out="a"/> <t t-out="val"/></div>
+                                <div t-nocache=""><t t-out="counter"/></div>
+                            </card>
+                        </article>
+            '''
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <t t-cache="cache_b">
+                            <div><t t-out="counter"/></div>
+                            <t t-call="base.testing_callee" toto.f="will be streamed"/>
+                        </t>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+            'val': 10,
+        })
+        result = """
+            <section>
+
+                    <div>101</div><article>
+                    <card>
+                        <div>101</div>
+                        <div>101 10</div>
+                        <div>1</div>
+                    </card>
+                </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+            'val': 20,
+        })
+        result = """
+            <section>
+
+                    <div>101</div><article>
+                    <card>
+                        <div>101</div>
+                        <div>101 20</div>
+                        <div>2</div>
+                    </card>
+                </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+            'val': 30,
+        })
+        result = """
+            <section>
+
+                    <div>101</div><article>
+                    <card>
+                        <div>101</div>
+                        <div>101 30</div>
+                        <div>3</div>
+                    </card>
+                </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+            'val': 40,
+        })
+        result = """
+            <section>
+
+                    <div>104</div><article>
+                    <card>
+                        <div>104</div>
+                        <div>104 40</div>
+                        <div>4</div>
+                    </card>
+                </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call_0_new(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '<article><t t-out="0"/></article>'
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <t t-set="counter" t-value="counter + 100"/>
+                    <section>
+                        <t t-cache="cache_a">
+                            <t t-call="base.testing_callee" toto.f="will be streamed">
+                                <button><t t-out="counter"/> <t t-nocache="" t-out="counter"/></button>
+                            </t>
+                        </t>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'counter': 1,
+        })
+        result = """
+            <section>
+                <article>
+                        <button>101 1</button>
+                    </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'counter': 2,
+        })
+        result = """
+            <section>
+                <article>
+                        <button>101 2</button>
+                    </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'counter': 3,
+        })
+        result = """
+            <section>
+                <article>
+                        <button>103 3</button>
+                    </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
 
     def test_render_xml_conditional_cache(self):
         view1 = self.env['ir.ui.view'].create({

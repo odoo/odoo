@@ -10,9 +10,8 @@
                     <p class="lead">Here are some common questions about our company.</p>
                 </div>
                 <div class="col-lg-7 offset-lg-1 s_col_no_bgcolor" data-name="Accordion Box">
-                    <t t-call="website.s_accordion">
-                        <t t-set="extra_classes" t-valuef="accordion-flush"/>
-                    </t>
+                    <t t-call="website.s_accordion"
+                        extra_classes.f="accordion-flush"/>
                 </div>
             </div>
         </div>

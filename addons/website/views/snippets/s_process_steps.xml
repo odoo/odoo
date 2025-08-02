@@ -84,13 +84,12 @@
                     data-css-property="stroke" data-change-color="true"/>
             </we-row>
         </div>
-        <t t-call="website.snippet_options_background_options">
-            <t t-set="selector" t-value="'.s_process_step .s_process_step_number'"/>
-            <t t-set="with_colors" t-value="True"/>
-            <t t-set="with_images" t-value="False"/>
-            <t t-set="with_color_combinations" t-value="False"/>
-            <t t-set="with_gradients" t-value="True"/>
-        </t>
+        <t t-call="website.snippet_options_background_options"
+            selector.f=".s_process_step .s_process_step_number"
+            with_colors="True"
+            with_images="False"
+            with_color_combinations="False"
+            with_gradients="True"/>
     </xpath>
 </template>
 
