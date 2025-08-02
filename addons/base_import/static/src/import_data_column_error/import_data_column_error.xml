@@ -10,9 +10,9 @@
                 </p>
                 <ul>
                     <t t-foreach="props.errors" t-as="error" t-key="error_index">
-                        <a t-if="error_index === 3" href="#" class="o_import_report_count" t-on-click="() => this.state.isExpanded = !this.state.isExpanded">
+                        <button t-if="error_index === 3" class="o_import_report_count btn btn-link p-0" t-on-click="() => this.state.isExpanded = !this.state.isExpanded">
                             <i t-attf-class="fa fa-chevron-{{state.isExpanded ? 'up' : 'down'}}"></i> <t t-esc="props.errors.length - error_index"/> more
-                        </a>
+                        </button>
                         <li t-if="isErrorVisible(error_index)" t-attf-class="o_import_report_more p-0 text-{{error.priority}} {{error_index > 2 ? 'list-unstyled' : ''}}">
                             <t t-if="error.rows.from === error.rows.to">
                                 <b t-esc="error.value"/> at row <t t-esc="error.rows.from + 1"/>
@@ -29,9 +29,9 @@
             <t t-if="moreInfo">
                 <t t-if="typeof moreInfo === 'string'" t-esc="moreInfo"/>
                 <div t-else="" class="o_import_moreinfo" t-on-click="onMoreInfoClicked">
-                    <a href="#" class="o_import_see_all">
+                    <button class="o_import_see_all btn btn-link p-0">
                         <i class="oi oi-arrow-right"></i> See possible values
-                    </a>
+                    </button>
                 </div>
                 <ul t-if="state.moreInfoContent" class="o_import_report_more">
                     <li t-foreach="state.moreInfoContent" t-as="msg" t-key="msg_index"><t t-esc="msg"/></li>
