@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="mail_notification_preview_hide_button">
+            <xpath expr="//a[contains(@href, '/mail/view') and contains(., 'Ver Orden de venta')]" position="replace">
+                <t/>
+            </xpath>
+
+            <xpath expr="//div[@itemprop='potentialAction']" position="replace">
+                <t/>
+            </xpath>
+        </template>
+</odoo>
+

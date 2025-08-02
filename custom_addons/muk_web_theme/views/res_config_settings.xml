@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+	<record id="view_res_config_settings_appsbar_form" model="ir.ui.view">
+	    <field name="name">res.config.settings.form</field>
+	    <field name="model">res.config.settings</field>
+	    <field name="inherit_id" ref="muk_web_appsbar.view_res_config_settings_form"/>
+	    <field name="arch" type="xml">
+	    	<xpath expr="//field[@name='appbar_image']/../.." position="attributes">
+	    		<attribute name="invisible">1</attribute>
+	    	</xpath>
+	    </field>
+	</record>
+
+	<record id="view_res_config_settings_colors_form" model="ir.ui.view">
+	    <field name="name">res.config.settings.form</field>
+	    <field name="model">res.config.settings</field>
+	    <field name="inherit_id" ref="muk_web_colors.view_res_config_settings_form"/>
+	    <field name="arch" type="xml">
+	    	<xpath expr="//block[@id='branding_settings']" position="attributes">
+	    		<attribute name="invisible">1</attribute>
+	    	</xpath>
+	    	<xpath expr="//block[@id='branding_settings']" position="after">
+	    		<block title="Backend Theme" id="theme_settings">
+	    			<setting string="Theme Colors" help="Customize the look and feel of the theme">
+                     	<div class="w-50 row">
+                            <label for="color_brand_light" string="Brand" class="d-block w-75 py-2"/>
+                            <field name="color_brand_light" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="color_primary_light" string="Primary" class="d-block w-75 py-2"/>
+                            <field name="color_primary_light" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="theme_color_appsmenu_text" string="Menu Text" class="d-block w-75 py-2"/>
+                            <field name="theme_color_appsmenu_text" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="theme_color_appbar_text" string="Apps Text" class="d-block w-75 py-2"/>
+                            <field name="theme_color_appbar_text" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="theme_color_appbar_active" string="Apps Active" class="d-block w-75 py-2"/>
+                            <field name="theme_color_appbar_active" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="theme_color_appbar_background" string="Background" class="d-block w-75 py-2"/>
+                            <field name="theme_color_appbar_background" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                    </setting>
+	    			<setting string="Context Colors" help="Customize context colors of the system">
+                     	<div class="w-50 row">
+                            <label for="color_info_light" string="Info" class="d-block w-75 py-2"/>
+                            <field name="color_info_light" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="color_success_light" string="Success" class="d-block w-75 py-2"/>
+                            <field name="color_success_light" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="color_warning_light" string="Warning" class="d-block w-75 py-2"/>
+                            <field name="color_warning_light" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                     	<div class="w-50 row">
+                            <label for="color_danger_light" string="Danger" class="d-block w-75 py-2"/>
+                            <field name="color_danger_light" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>                        
+                        <button 
+                            name="action_reset_theme_color_assets" 
+                            icon="oi-arrow-right" 
+                            type="object" 
+                            string="Reset Theme Colors" 
+                            class="btn-link"
+                        />
+                    </setting>
+	    			<setting 
+	    				string="Background Image" 
+	    				company_dependent="1" 
+	    				help="Set the background image for the apps menu"
+	    			>
+	    				<field name="theme_background_image" widget="image" class="ml-4 w-75"/>
+                    </setting>
+                    <setting 
+                    	string="Favicon &amp; Logo" 
+                    	company_dependent="1" 
+                    	help="Set your own favicon and logo for the appsbar"
+                    >
+		    			<div class="w-50 row">
+	                    	<label for="appbar_image" string="Logo" class="o_light_label mb-1"/>
+	                        <field name="appbar_image" widget="image" class="ml-4 oe_avatar"/>
+	                        <div class="w-100 mt-1"/>
+	                    	<label for="theme_favicon" string="Favicon" class="o_light_label mb-1"/>
+	                        <field name="theme_favicon" widget="image" class="ml-4 oe_avatar"/>
+	                    </div>
+	                </setting>
+	    		</block>
+	    	</xpath>
+	    </field>
+	</record>
+	
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="custom_mail_notification_layout" name="Mail: mail notification layout template">
+            <t t-name="sale_extension.custom_mail_notification_layout">
+            <html t-att-lang="lang">
+            <head>
+                <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+            </head>
+            <body style="font-family:Verdana, Arial,sans-serif; color: #454748;">
+            <t t-set="subtype_internal" t-value="subtype and subtype.internal"/>
+            <t t-set="show_header" t-value="email_notification_force_header or (
+                email_notification_allow_header and has_button_access) and email_notification_force_header"/> 
+            <t t-set="show_footer" t-value="email_notification_force_footer or (
+                email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
+            
+            <t t-call="mail.notification_preview"/> 
+
+            <div style="max-width: 900px; width: 100%;">
+            <div t-if="show_header and (subtitles or has_button_access or not is_discussion)"
+                    summary="o_mail_notification" style="padding: 0px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
+                    <tbody>
+                        <tr>
+                            <td valign="center" style="white-space:nowrap;">
+                                <table cellspacing="0" cellpadding="0" border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td t-if="subtitles" style="font-size: 12px;">
+                                                <t t-foreach="subtitles" t-as="subtitle">
+                                                    <span t-attf-style="{{ 'font-weight:bold;' if subtitle_first else '' }}"
+                                                          t-out="subtitle"/>
+                                                    <br t-if="not subtitle_last"/>
+                                                </t>
+                                            </td>
+                                            <td t-else=""><span style="font-weight:bold;" t-out="record_name"/><br/></td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="center">
+                                <hr width="100%"
+                                    style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin: 10px 0px;"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div t-out="message.body" style="font-size: 13px;"/>
+            <ul t-if="tracking_values">
+                <t t-foreach="tracking_values" t-as="tracking">
+                    <li><t t-out="tracking[0]"/>: <t t-if="tracking[1]" t-out="tracking[1]"/><em t-else="">None</em> &#8594; <t t-if="tracking[2]" t-out="tracking[2]"/><em t-else="">None</em></li>
+                </t>
+            </ul>
+            <t class="o_signature">
+                <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
+            </t>
+            <div t-if="show_footer" style="margin-top:16px;">
+                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+                <b t-out="company.name" style="font-size:11px;"/><br/>
+                <p style="color: #999999; margin-top:2px; font-size:11px;">
+                    <t t-out="company.phone"/>
+                    <t t-if="company.email and company.phone"> |</t>
+                    <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-out="company.email"/></a>
+                    <t t-if="company.website and (company.phone or company.email)"> |</t>
+                    <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;"><t t-out="company.website"/></a>
+                </p>
+            </div>
+            </div>
+            </body>
+            </html>
+            </t>
+        </template>
+    </data>
+</odoo>

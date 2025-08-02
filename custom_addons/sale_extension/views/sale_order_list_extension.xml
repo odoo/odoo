@@ -1,0 +1,70 @@
+<odoo>
+    <record id="sale_order_list_hide_fields" model="ir.ui.view">
+        <field name="name">sale.order.list.hide_fields</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='activity_ids']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_untaxed']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_tax']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_status']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='client_order_ref']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='expected_date']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='commitment_date']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_list_extension" model="ir.ui.view">
+        <field name="name">sale.order.list.extension</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="delivery_date" optional="show"/>
+                <field name="delivery_method" optional="show"/>
+                <field name="date_order" optional="show" string="Fecha de cotización"/>
+                <field name="discount" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
