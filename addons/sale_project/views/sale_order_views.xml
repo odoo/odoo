@@ -28,22 +28,6 @@
                 >
                     <field name="milestone_count" widget="statinfo" string="Milestones"/>
                 </button>
-                <button
-                    name="action_view_task"
-                    type="object"
-                    class="oe_stat_button"
-                    icon="fa-check"
-                    invisible="not show_task_button"
-                    groups="project.group_project_user"
-                >
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Tasks</span>
-                        <span class="o_stat_value">
-                            <field name="closed_task_count"/> / <field name="tasks_count"/>
-                            (<field name="completed_task_percentage" widget="percentage" options="{'digits': [1, 0]}"/>)
-                        </span>
-                    </div>
-                </button>
             </button>
             <field name="journal_id" position="before">
                 <field name="project_id" groups="project.group_project_user"

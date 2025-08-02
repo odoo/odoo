@@ -19,4 +19,46 @@
         </field>
     </record>
 
+    <record id="view_create_project_wizard_form" model="ir.ui.view">
+        <field name="name">project.template.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Project">
+                <div class="oe_title mb-lg-3 mb-md-2">
+                    <label for="name" string="Name"/>
+                    <h1>
+                        <field name="name" class="o_project_name" placeholder="e.g. Office Party"/>
+                    </h1>
+                </div>
+                <div class="oe_title mb-lg-3 mb-md-2">
+                    <label for="template_id" string="Project Template"/>
+                    <h1>
+                        <field name="template_id" domain="[('is_template', '=', True)]" class="o_project_name" placeholder="New project"/>
+                    </h1>
+                </div>
+                <div class="row o_settings_container"/>
+                <div name="alias_def" class="mt-2" colspan="2">
+                    <label for="alias_name" string="Create tasks by sending an email to"/>
+                    <span>
+                        <field name="alias_name" placeholder="e.g. office-party"/>@
+                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                options="{'no_create': True, 'no_open': True}"/>
+                    </span>
+                </div>
+                <footer>
+                    <button name="action_create_project_from_so" type="object" string="Create Project" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_create_project_wizard" model="ir.actions.act_window">
+        <field name="name">Create a Project</field>
+        <field name="res_model">project.template.create.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_create_project_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
 </odoo>

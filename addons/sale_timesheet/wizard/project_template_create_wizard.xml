@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_create_project_wizard_form" model="ir.ui.view">
+        <field name="name">project.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="sale_project.view_create_project_wizard_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
+                <setting string="Timesheets" help="Log time on tasks">
+                    <field name="allow_timesheets"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

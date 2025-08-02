@@ -383,7 +383,6 @@ class TestSaleProject(TestSaleProjectCommon):
             'order_id': sale_order_1.id,
         }])
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # add a milestone product
         line_delivered_milestone = self.env['sale.order.line'].create({
             'product_id': self.product_service_delivered_milestone.id,
@@ -394,18 +393,15 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_1.with_user(user_wrong_group)._compute_show_project_and_task_button()
         self.assertFalse(sale_order_1.show_create_project_button, "The user does not have the right to create a new project, the button should be hidden")
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # the user has project creation right
         sale_order_1._compute_show_project_and_task_button()
         self.assertTrue(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # add a project to the SO
         line_delivered_milestone.project_id = self.project_global
         sale_order_1._compute_show_project_and_task_button()
         self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be hidden")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
-        self.assertTrue(sale_order_1.show_task_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
 
         # add an ordered_prepaid service product
         line_prepaid = self.env['sale.order.line'].create({
@@ -415,7 +411,6 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_2._compute_show_project_and_task_button()
         self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_2.show_task_button, "There is no project on the sale order, the button should be hidden")
         # create a new task, whose sale order item is a sol of the SO
         task = self.env['project.task'].create({
             'name': 'Test Task',
@@ -426,13 +421,6 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_2._compute_show_project_and_task_button()
         self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertTrue(sale_order_2.show_task_button, "There is no project on the sale order and there is a task whose sale item is one of the sale_line of the SO, the button should be displayed")
-        self.assertEqual(sale_order_2.tasks_ids, task)
-        task.action_convert_to_template()
-        sale_order_2._compute_tasks_ids()
-        sale_order_2._compute_show_project_and_task_button()
-        self.assertFalse(sale_order_2.show_task_button, 'The button should no longer be visible since no tasks are linked to the SO.')
-        self.assertFalse(sale_order_2.tasks_ids, 'No tasks should be linked to the SO since the task has been converted into a template.')
 
         # add a manual service product
         self.env['sale.order.line'].create({
@@ -442,7 +430,6 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_3._compute_show_project_and_task_button()
         self.assertTrue(sale_order_3.show_create_project_button, "There is a product service with the service_policy set on 'manual' on the sale order, the button should be displayed")
         self.assertFalse(sale_order_3.show_project_button, "There is no project on the sale order, the button should be hidden")
-        self.assertFalse(sale_order_3.show_task_button, "There is no project on the sale order, the button should be hidden")
 
     def test_create_task_from_template_line(self):
         """
@@ -888,30 +875,6 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order_action = multi_company_project.with_company(company).action_view_sos()
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
-
-    def test_action_view_task_stages(self):
-        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
-        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
-
-        sale_order_2 = SaleOrder.create({
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
-        })
-        sale_line_1_order_2 = SaleOrderLine.create({
-            'product_id': self.product_order_service1.id,
-            'product_uom_qty': 10,
-            'price_unit': self.product_order_service1.list_price,
-            'order_id': sale_order_2.id,
-        })
-
-        self.env['project.task'].create({
-            'name': 'Task',
-            'sale_line_id': sale_line_1_order_2.id,
-            'project_id': self.project_global.id,
-        })
-        action = sale_order_2.action_view_task()
-        self.assertEqual(action["context"]["default_project_id"], self.project_global.id)
 
     def test_creating_AA_when_adding_service_to_confirmed_so(self):
         sale_order = self.env['sale.order'].create({
@@ -1501,4 +1464,85 @@ class TestSaleProject(TestSaleProjectCommon):
             sol_2.analytic_distribution,
             {str(so.project_id.account_id.id): 100},
             "The analytic distribution of `sol_2` should be set to the reference AA of the SO.",
+        )
+
+    def test_project_creation_with_and_without_template(self):
+        """
+        Test creating a project from a sale order, both with and without using a project template.
+        Steps:
+        -------
+        1. Create a project template and add one task to it.
+
+        Flow 1: Creating project without template
+        -----------------------------------------
+        2. Create a sale order.
+        3. Confirm the sale order.
+        4. Open the create project wizard and create project without selecting template.
+        5. Check:
+        - The new project should not have any tasks.
+        - The project should be linked to the correct sale order.
+
+        Flow 2: Creating project with template
+        --------------------------------------
+        6. Create a sale order.
+        7. Confirm the sale order.
+        8. Open the create project wizard and create project with selected template.
+        9. Check:
+            - The project should have the task copied from the template.
+            - The task name should match what we gave in the template.
+            - The project should be linked to the correct sale order.
+        """
+        template = self.env['project.project'].create({
+            'name': 'Template Project',
+            'is_template': True,
+        })
+        self.env['project.task'].create({'name': 'Task 1', 'project_id': template.id})
+        sale_order_no_template = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_consumable.id,
+                }),
+            ],
+        })
+        sale_order_no_template.action_confirm()
+        action = sale_order_no_template.action_create_project()
+        with Form(self.env[action['res_model']].with_context(action['context'])) as wizard_form:
+            wizard_form.name = "Project Without Template"
+            project_action = wizard_form.save().action_create_project_from_so()
+
+        project_rec = self.env['project.project'].browse(project_action['res_id'])
+        self.assertFalse(project_rec.task_ids, "Project should not have tasks when created without template.")
+        self.assertEqual(
+            project_rec.reinvoiced_sale_order_id.id,
+            sale_order_no_template.id,
+            "Project should be linked to the sale order."
+        )
+        sale_order_with_template = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_consumable.id,
+                }),
+            ],
+        })
+        sale_order_with_template.action_confirm()
+        action = sale_order_with_template.action_create_project()
+        view_id = self.env.ref('sale_project.view_create_project_wizard_form').id
+        with Form(self.env[action['res_model']].with_context(action['context']), view=view_id) as wizard_form:
+            wizard_form.name = "Project From Template"
+            wizard_form.template_id = template
+            project_action = wizard_form.save().action_create_project_from_so()
+
+        project_from_template = self.env['project.project'].browse(project_action['res_id'])
+        self.assertEqual(len(project_from_template.task_ids), 1, "Project should have 1 task copied from the template.")
+        self.assertEqual(
+            {task.name for task in project_from_template.task_ids},
+            {'Task 1'},
+            "Copied tasks should match template tasks."
+        )
+        self.assertEqual(
+            project_from_template.reinvoiced_sale_order_id.id,
+            sale_order_with_template.id,
+            "Project should be linked to the sale order."
         )
