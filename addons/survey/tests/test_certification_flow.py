@@ -213,3 +213,91 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'skipped': 0,
             }
         }, "With the configured randomization, there should be exactly 1 correctly answered question in the 'Page 1' section.")
+
+
+    def test_layout_change_with_existing_user_input(self):
+        """Test that changing survey layout doesn't break navigation for existing user inputs.
+        
+        This test verifies the case where a user is already enrolled in a survey
+        and the layout is changed, causing previously stored question/page IDs to no longer
+        exist in the current survey flow.
+        """
+        with self.with_user('survey_user'):
+            survey = self.env['survey.survey'].create({
+                'title': 'Layout Change Test Survey',
+                'access_mode': 'public',
+                'questions_layout': 'page_per_question',
+                'users_can_go_back': True,
+            })
+
+            q01 = self._add_question(
+                None, 'First Question', 'simple_choice',
+                sequence=1,
+                constr_mandatory=True,
+                survey_id=survey.id,
+                labels=[
+                    {'value': 'Answer 1'},
+                    {'value': 'Answer 2'},
+                ]
+            )
+
+            q02 = self._add_question(
+                None, 'Second Question', 'simple_choice',
+                sequence=2,
+                constr_mandatory=True,
+                survey_id=survey.id,
+                labels=[
+                    {'value': 'Answer 1'},
+                    {'value': 'Answer 2'},
+                ]
+            )
+
+        self.authenticate('user_emp', 'user_emp')
+        
+        response = self._access_start(survey)
+        self.assertResponse(response, 200)
+        
+        user_input = self.env['survey.user_input'].search([
+            ('survey_id', '=', survey.id),
+            ('partner_id', '=', self.user_emp.partner_id)
+        ])
+        self.assertEqual(len(user_input), 1)
+        
+        response = self._access_page(survey, user_input.access_token)
+        csrf_token = self._find_csrf_token(response.text)
+        self._answer_question(q01, q01.suggested_answer_ids.ids[0], user_input.access_token, csrf_token)
+        
+        current_question_id = q01.id
+        
+        with self.with_user('survey_user'):
+            page = self._add_question(
+                None, 'Main Section', None,
+                sequence=1,
+                survey_id=survey.id,
+                is_page=True,
+            )
+            
+            q01.write({'page_id': page.id, 'sequence': 2})
+            q02.write({'page_id': page.id, 'sequence': 3})
+            
+            survey.write({'questions_layout': 'page_per_section'})
+        
+        pages_or_questions = survey._get_pages_or_questions(user_input)
+        self.assertNotIn(current_question_id, pages_or_questions.ids, 
+                        "Current question ID should not be in the new layout flow")
+        
+        next_page = survey._get_next_page_or_question(user_input, current_question_id, go_back=False)
+        expected_first_page = pages_or_questions[0] if pages_or_questions else self.env['survey.question']
+        self.assertEqual(next_page, expected_first_page,
+                        "Should fallback to first valid page when current ID doesn't exist in flow")
+        
+        prev_page = survey._get_next_page_or_question(user_input, current_question_id, go_back=True)
+        self.assertEqual(prev_page, expected_first_page,
+                        "Should fallback to first valid page when going back with invalid ID")
+        
+        response = self._access_page(survey, user_input.access_token)
+        self.assertResponse(response, 200, 
+                            "Survey should be accessible after layout change")
+        
+        self.assertIn('Main Section', response.text,
+                    "Should display the new section after layout change")
