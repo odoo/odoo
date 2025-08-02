@@ -532,7 +532,7 @@
                             class="d-none d-lg-block position-sticky align-self-start col clearfix"
                         >
                             <t t-call="website_sale.sidebar_dropzone_at_top"/>
-                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 pt-2 px-lg-2 ps-2 overflow-y-scroll">
+                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 px-lg-2 ps-2 overflow-y-scroll">
                                 <t
                                     t-set="is_sidebar_collapsible"
                                     t-value="is_view_active('website_sale.products_categories_list_collapsible')"
@@ -564,7 +564,7 @@
                                     </a>
                                 </div>
                                 <div
-                                    t-attf-class="products_attributes_filters d-empty-none {{opt_wsale_categories and 'border-top'}}"
+                                    t-attf-class="products_attributes_filters d-empty-none {{opt_wsale_categories and 'border-top'}} {{'pt-3' if not is_sidebar_collapsible else ''}}"
                                 />
                                 <t
                                     t-if="show_price_filter"
