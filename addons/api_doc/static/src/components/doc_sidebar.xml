@@ -2,34 +2,34 @@
 <templates xml:space="preserve">
 
 <t t-name="web.DocSidebar">
-    <div class="o-doc-sidebar position-sticky bg-1 border-end flex flex-column">
-        <div>
+    <div class="o-doc-sidebar pt-3 ps-3 position-sticky bg-1 border-end d-flex flex-nowrap flex-column">
+        <div class="pe-4 pb-4">
             <input t-on-input="onSearchInput" class="w-100" placeholder="Search for models..."/>
         </div>
-        <div class="o-doc-sidebar-content h-100 flex-basis flex flex-column gap-1" t-ref="containerRef">
+        <div class="o-doc-sidebar-content h-100 flex-fill d-flex flex-nowrap flex-column gap-1" t-ref="containerRef">
             <t t-foreach="filteredAddons" t-as="addon" t-key="addon.name">
                 <div
-                    class="position-sticky bg-1 top-0 flex w-100 cursor-pointer capitalize user-select-none"
-                    t-on-click="() => this.toggleAddon(addon.name)"
+                    class="position-sticky o-doc-sidebar-header top-0 d-flex flex-nowrap w-100 cursor-pointer text-capitalize user-select-none"
+                    t-on-click="(ev) => this.toggleAddon(ev, addon.name)"
                     role="button"
                 >
-                    <div class="icon-btn ps-1" role="button" t-att-class="{ o_collapsed: isCollapsed(addon.name)}">
+                    <div class="icon-btn ps-2 pt-2" role="button" t-att-class="{ o_collapsed: isCollapsed(addon.name)}">
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
                     </div>
-                    <h3 class="ms-1" t-out="addon.name"></h3>
+                    <h4 class="ms-2" t-out="addon.name"></h4>
                 </div>
 
-                <div t-if="!isCollapsed(addon.name)" class="ms-1 ps-1 border-start">
+                <div t-if="!isCollapsed(addon.name)" class="ms-2 ps-2 border-start">
                     <t t-foreach="addon.models" t-as="model" t-key="model.model">
                         <a
-                            class="btn block bg-none user-select-none"
+                            class="btn d-block bg-none text-start"
                             href="#"
                             t-on-click="() => this.modelStore.setActiveModel({ model })"
                             t-att-class="{ o_active: isActiveItem(model) }"
                             role="button"
                         >
                             <div t-out="model.name"></div>
-                            <small class="block" t-out="model.model"></small>
+                            <small class="d-block" t-out="model.model"></small>
                         </a>
                     </t>
                 </div>

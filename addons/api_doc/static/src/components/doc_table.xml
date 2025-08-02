@@ -37,16 +37,19 @@
                 >
                     <i
                         t-if="row.subData"
-                        class="fa fa-bars o-doc-sub-table-btn inline me-1 cursor-pointer"
+                        class="fa fa-bars o-doc-sub-table-btn d-inline me-1 cursor-pointer"
                         aria-hidden="true"
                         t-on-click="(ev) => this.showSubTable(ev, row.subData)"
                     />
 
                     <t t-if="row and row.type == 'tooltip'">
-                        <div t-if="row.value" class="tooltip w-100 h-100">
-                            <i class="fa fa-question-circle" aria-hidden="true"></i>
-                            <span class="tooltiptext" t-out="row.value"></span>
-                        </div>
+                        <i
+                            class="fa fa-question-circle"
+                            aria-hidden="true"
+                            t-if="row.value"
+                            t-on-mouseover="(ev) => this.showDynamicTooltip(ev, row.value)"
+                            t-on-mouseleave="() => this.hideDynamicTooltip()"
+                        ></i>
                     </t>
                     <t t-else="" t-tag="getTag(row)" t-att-class="getClass(row)" t-out="getValue(row)"/>
 
@@ -58,7 +61,7 @@
                     >
                         <t t-out="row.relation"/>
                         <i
-                            class="fa fa-external-link ps-1 inline"
+                            class="fa fa-external-link ps-1 d-inline"
                             aria-hidden="true"
                         ></i>
                     </a>
@@ -82,6 +85,13 @@
         t-ref="subTableRef"
     >
         <DocTable data="state.subTable"/>
+    </div>
+    <div
+        class="o-doc-dynamic-tooltip"
+        t-att-style="state.tooltipStyle"
+        t-ref="tooltipRef"
+    >
+        <t t-out="state.tooltipContent"/>
     </div>
 </t>
 

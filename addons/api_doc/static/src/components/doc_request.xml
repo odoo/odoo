@@ -3,9 +3,9 @@
 
 <t t-name="web.DocRequest">
     <div class="o_doc_request h-100">
-        <div class="flex justify-content-between align-items-center mb-1">
-            <h3>Request</h3>
-            <div class="flex">
+        <div class="d-flex flex-nowrap justify-content-between align-items-center mb-1">
+            <h4>Request</h4>
+            <div class="d-flex flex-nowrap">
                 <select class="me-1" t-on-change="event => this.selectLanguage(event.target.value)">
                     <option
                         t-foreach="LANGUAGES"
@@ -17,12 +17,12 @@
                     />
                 </select>
                 <button
-                    class="btn primary flex align-items-center"
+                    class="btn primary d-flex flex-nowrap align-items-center"
                     t-on-click="execute"
                     t-att-disabled="state.exampleLanguage !== 'json'"
                 >
                     <span>Run</span>
-                    <i class="fa fa-play ms-1" aria-hidden="true"></i>
+                    <i class="fa fa-play ms-2" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
@@ -37,8 +37,8 @@
             showLineNumbers="false"
         />
 
-        <div class="mt-2 flex align-items-center mb-1">
-            <h3>Response</h3>
+        <div class="mt-2 d-flex flex-nowrap align-items-center mb-1">
+            <h4>Response</h4>
             <span t-if="hasResponse and !state.response.error" class="badge success ms-1">Success</span>
             <span t-if="hasResponse and state.response.error" class="badge error ms-1">Failed</span>
         </div>
@@ -53,8 +53,8 @@
                 theme="'monokai'"
                 showLineNumbers="false"
             />
-            <div t-else="" class="alert error mt-1flex flex-column">
-                <h5 class="mb-2 flex align-items-center">
+            <div t-else="" class="alert error mt-1 d-flex flex-nowrap flex-column">
+                <h5 class="mb-2 d-flex flex-nowrap align-items-center">
                     <i class="pe-1 fa fa-exclamation-triangle" aria-hidden="true"></i>
                     <span>Error <t t-out="state.response.status"/> while executing request</span>
                 </h5>

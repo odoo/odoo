@@ -140,7 +140,7 @@ export function getParameterDefaultValue(name, parameter) {
         /\b(list|sequence|collection|tuple|range|set)\b/i.test(parameter.annotation)
     ) {
         return [];
-    } else if (/dict|kwargs/i.test(parameter.annotation)) {
+    } else if (/dict/i.test(parameter.annotation)) {
         return {};
     } else {
         return "";

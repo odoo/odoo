@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="web.DocApiKeyModal">
-    <div class="modal-bg flex justify-content-center align-items-center">
-        <div class="modal p-2 flex flex-column mb-1" t-ref="modalRef">
+    <div class="modal-bg d-flex flex-nowrap justify-content-center align-items-center">
+        <div class="modal p-3 d-flex flex-nowrap flex-column mb-2" style="height: 14rem; width: 25rem" t-ref="modalRef">
             <h2 class="mb-2">API key</h2>
 
             <p>To try the API, please insert your API key here</p>
@@ -13,7 +13,7 @@
                 autocorrect="off"
             />
 
-            <div class="flex flex-content-between mt-3">
+            <div class="d-flex flex-nowrap flex-content-between mt-2">
                 <button class="btn me-1" t-on-click="save">Save</button>
                 <button class="btn" t-on-click="cancel">Cancel</button>
             </div>
