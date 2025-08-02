@@ -280,8 +280,7 @@ class TestSaleProject(TransactionCaseWithUserDemo):
         self.assertEqual(sale_order.tasks_count, 2, "SO should have 2 related tasks")
         self.assertNotIn(default_task, sale_order.tasks_ids, "SO should link to the default task from the context")
 
-
-    def test_include_archived_projects_in_stat_btn_related_view(self):
+    def test_exclude_archived_projects_in_stat_btn_related_view(self):
         """Checks if the project stat-button action includes both archived and active projects."""
         # Setup
         project_A = self.env['project.project'].create({'name': 'Project_A'})
@@ -327,8 +326,11 @@ class TestSaleProject(TransactionCaseWithUserDemo):
         # Check if button action includes both projects BEFORE archivization
         action = sale_order.action_view_project_ids()
         self.assertEqual(len(action['domain'][0][2]), 2, "Domain should contain 2 projects.")
+        self.assertEqual(sale_order.project_count, 2, "Expected 2 projects linked to the sale order.")
 
         # Check if button action includes both projects AFTER archivization
         project_B.write({'active': False})
+        sale_order._compute_project_ids()
+        self.assertEqual(sale_order.project_count, 1, "Expected 1 project linked to the sale order.")
         action = sale_order.action_view_project_ids()
-        self.assertEqual(len(action['domain'][0][2]), 2, "Domain should contain 2 projects. (one archived, one not)")
+        self.assertEqual(len(action['domain'][0][2]), 1, "Domain should contain 1 active project")
