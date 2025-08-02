@@ -10,17 +10,23 @@ class JobAddApplicants(models.TransientModel):
 
     def _add_applicants_to_job(self):
         applicant_data = self.applicant_ids.copy_data()
-        new_applicants = self.env["hr.applicant"].create(
-            [
-                {
-                    **applicant,
-                    "job_id": job.id,
-                    "talent_pool_ids": False,
-                }
-                for applicant in applicant_data
-                for job in self.job_ids
-            ]
-        )
+        new_applicants = self.env["hr.applicant"]
+        for applicant in applicant_data:
+            for job in self.job_ids:
+                stage_ids = self.env['hr.recruitment.stage'].search([
+                    '|',
+                    ('job_ids', '=', False),
+                    ('job_ids', '=', job.id),
+                    ('fold', '=', False)
+                ], order='sequence asc', limit=1).ids
+                new_applicants |= self.env["hr.applicant"].create([
+                    {
+                        **applicant,
+                        "job_id": job.id,
+                        "talent_pool_ids": False,
+                        "stage_id": stage_ids[0] if stage_ids else False,
+                    }
+                ])
         return new_applicants
 
     def action_add_applicants_to_job(self):
