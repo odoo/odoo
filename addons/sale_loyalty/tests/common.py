@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from contextlib import contextmanager
+from unittest.mock import patch
+
+from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
@@ -189,6 +193,12 @@ class TestSaleCouponCommon(SaleCommon):
                 'required_points': 1,
             })],
         })
+
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt):
+        with freeze_time(mock_dt), \
+                patch.object(self.env.cr, 'now', lambda: mock_dt):
+            yield
 
     def _extract_rewards_from_claimable(self, status):
         rewards = self.env['loyalty.reward']
