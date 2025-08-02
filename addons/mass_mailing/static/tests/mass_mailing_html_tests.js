@@ -20,8 +20,15 @@ function makeFakeMailStoreService() {
     };
 }
 
+function makeFakeAILauncherService() {
+    return {
+        start: (env) => ({}),
+    };
+}
+
 function loadServices() {
     registry.category("services").add("mail.store", makeFakeMailStoreService());
+    registry.category("services").add("aiChatLauncher", makeFakeAILauncherService());
 }
 
 QUnit.module('mass_mailing', {}, function () {
