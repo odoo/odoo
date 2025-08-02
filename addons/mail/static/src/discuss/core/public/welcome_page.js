@@ -1,12 +1,14 @@
-import { Component, useRef, useState, onMounted } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 
+import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { browser } from "@web/core/browser/browser";
-import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class WelcomePage extends Component {
     static props = ["proceed?"];
     static template = "mail.WelcomePage";
+    static components = { DeviceSelect };
 
     setup() {
         super.setup();
@@ -26,6 +28,30 @@ export class WelcomePage extends Component {
                 this.enableVideo();
             }
         });
+        useEffect(
+            () => {
+                if (this.state.audioStream) {
+                    this.stopTracksOnMediaStream(this.state.audioStream);
+                    this.enableMicrophone();
+                }
+            },
+            () => [this.store.settings.audioInputDeviceId]
+        );
+        useEffect(
+            () => {
+                if (this.state.videoStream) {
+                    this.stopTracksOnMediaStream(this.state.videoStream);
+                    this.enableVideo();
+                }
+            },
+            () => [this.store.settings.cameraInputDeviceId]
+        );
+        useEffect(
+            (deviceId) => {
+                this.audioRef.el?.setSinkId?.(deviceId).catch(() => {});
+            },
+            () => [this.store.settings.audioOutputDeviceId]
+        );
     }
 
     onKeydownInput(ev) {
@@ -60,7 +86,9 @@ export class WelcomePage extends Component {
             return;
         }
         try {
-            this.state.audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.state.audioStream = await navigator.mediaDevices.getUserMedia({
+                audio: this.store.settings.audioConstraints,
+            });
             this.audioRef.el.srcObject = this.state.audioStream;
         } catch {
             // TODO: display popup asking the user to re-enable their mic
@@ -81,7 +109,9 @@ export class WelcomePage extends Component {
             return;
         }
         try {
-            this.state.videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            this.state.videoStream = await navigator.mediaDevices.getUserMedia({
+                video: this.store.settings.cameraConstraints,
+            });
             this.videoRef.el.srcObject = this.state.videoStream;
         } catch {
             // TODO: display popup asking the user to re-enable their camera
