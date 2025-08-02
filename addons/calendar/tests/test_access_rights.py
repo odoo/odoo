@@ -231,7 +231,11 @@ class TestAccessRights(TransactionCase):
             self.assertEqual(hidden_information, value, "The field '%s' information must be hidden, even for uninvited admins." % field)
 
         # For the public event, ensure that the same fields can be read by the admin.
-        for (field, value) in [('name', 'pub'), ('location', 'loc_2'), ('description', "<p>pub</p>")]:
+        for (field, value) in [
+            ('name', 'pub'),
+            ('location', 'loc_2'),
+            ('description', '<div>pub<br><strong>Booked by</strong><br>john (base.group_user)<br><a href="mailto:j.j@example.com">j.j@example.com</a></div>'),
+        ]:
             field_information = self.read_event(self.admin_user, john_public_evt, field)
             self.assertEqual(str(field_information), value, "The field '%s' information must be readable by the admin." % field)
 

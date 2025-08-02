@@ -1398,7 +1398,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': {'date': str(event.start_date), 'dateTime': None},
             'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'coucou',
-            'description': '',
+            'description': self._get_event_description(event),
             'location': '',
             'guestsCanModify': True,
             'organizer': {'email': 'c.c@example.com', 'self': False},

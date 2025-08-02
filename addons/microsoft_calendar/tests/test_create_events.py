@@ -3,6 +3,7 @@
 from unittest.mock import patch, call
 from datetime import timedelta, datetime
 from freezegun import freeze_time
+from markupsafe import Markup
 
 from odoo import Command, fields
 
@@ -104,7 +105,11 @@ class TestCreateEvents(TestCommon):
         outlook_event = dict(self.simple_event_from_outlook_attendee, organizer={
             'emailAddress': {'address': "john.doe@odoo.com", 'name': "John Doe"},
         })
-        expected_event = dict(self.expected_odoo_event_from_outlook, user_id=False)
+        expected_event = dict(
+            self.expected_odoo_event_from_outlook,
+            user_id=False,
+            description=Markup('<p>my simple event</p>'),
+        )
 
         mock_get_events.return_value = (MicrosoftEvent([outlook_event]), None)
         existing_records = self.env["calendar.event"].search([])
@@ -485,7 +490,11 @@ class TestCreateEvents(TestCommon):
         # arrange
         outlook_event = self.simple_event_from_outlook_attendee
         outlook_event = dict(self.simple_event_from_outlook_attendee, organizer=None)
-        expected_event = dict(self.expected_odoo_event_from_outlook, user_id=False)
+        expected_event = dict(
+            self.expected_odoo_event_from_outlook,
+            user_id=False,
+            description=Markup('<p>my simple event</p>'),
+        )
 
         mock_get_events.return_value = (MicrosoftEvent([outlook_event]), None)
         existing_records = self.env["calendar.event"].search([])

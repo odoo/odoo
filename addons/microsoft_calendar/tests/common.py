@@ -246,7 +246,8 @@ class TestCommon(HttpCase):
 
         self.expected_odoo_event_from_outlook = {
             "name": "simple_event",
-            "description": Markup('<p>my simple event</p>'),
+            "description": Markup('<div>my simple event<br><strong>Booked by</strong><br>'
+                'Mike Organizer<br><a href="mailto:mike@organizer.com">mike@organizer.com</a></div>'),
             "active": True,
             "start": self.start_date,
             "stop": self.end_date,
