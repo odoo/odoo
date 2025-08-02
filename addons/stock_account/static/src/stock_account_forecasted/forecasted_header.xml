@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template">
     <t t-name="stock_account.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension">
-        <xpath expr="//h6[@name='product_variants']" position="after">
+        <xpath expr="//div[hasclass('o_product_name')]" position="inside">
             <h6 t-if="() => env.user.has_group('stock.group_stock_manager')">
                 Value On Hand:
                 <a href="#"

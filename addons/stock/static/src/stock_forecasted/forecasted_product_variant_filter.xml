@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="stock.ForecastedProductVariantFilter">
+        <div t-if="displayProductVariantFilter" class="btn-group">
+            <Dropdown menuClass="o_filter_menu" items="variantItems">
+                <button class="btn btn-secondary">
+                    <span class="fa fa-sitemap"/> Variant: <t t-out="activeVariant.display_name"/>
+                </button>
+            </Dropdown>
+        </div>
+    </t>
+</templates>
