@@ -123,7 +123,7 @@ class Channel(models.Model):
     @api.depends('channel_type', 'image_128', 'uuid')
     def _compute_avatar_128(self):
         for record in self:
-            record.avatar_128 = record.image_128 or record._generate_avatar()
+            record.avatar_128 = record._origin.image_128 or record._generate_avatar()
 
     def _generate_avatar(self):
         if self.channel_type not in ('channel', 'group'):
