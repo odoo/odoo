@@ -135,13 +135,13 @@ export class SnippetModel extends Reactive {
                     [this.snippetsName, {}],
                     { context }
                 );
-                const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
+                this.snippetsDocument = new DOMParser().parseFromString(html, "text/html");
                 const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
                 for (const processor of Object.values(processors)) {
-                    processor(this.snippetsName, snippetsDocument);
+                    processor(this.snippetsName, this.snippetsDocument);
                 }
-                this.computeSnippetTemplates(snippetsDocument);
-                this.setSnippetName(snippetsDocument);
+                this.computeSnippetTemplates(this.snippetsDocument);
+                this.setSnippetName(this.snippetsDocument);
             })();
         }
         return this.loadProm;
@@ -273,13 +273,17 @@ export class SnippetModel extends Reactive {
             return;
         }
         snippet.title = newName;
+        for (const snippetEl of this.snippetsDocument.body.querySelectorAll(
+            `snippets#snippet_custom > [data-oe-snippet-key = ${snippet.key}]`
+        )) {
+            snippetEl.setAttribute("name", newName);
+            snippetEl.children[0].dataset["name"] = newName;
+        }
         await this.orm.call("ir.ui.view", "rename_snippet", [], {
             name: newName,
             view_id: snippet.viewId,
             template_key: this.snippetsName,
         });
-        // Reload snippet to have updated name.
-        await this.reload();
     }
 
     setSnippetName(snippetsDocument) {
