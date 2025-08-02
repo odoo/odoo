@@ -1415,11 +1415,18 @@ class Base_ImportImport(models.TransientModel):
 
     def _parse_datetime_data(self, import_fields, input_file_data):
         errors = []
-        field_types = self.env[self.res_model].fields_get(import_fields, ['type'])
-        allowed_date_fields = {
-            name for name, info in field_types.items() if info.get('type') in ('date', 'datetime')
-        }
+        allowed_date_fields = set()
 
+        def _collect_date_fields(import_fields, model, prefix):
+            all_fields = self.env[model].fields_get(attributes=["type", "relation"])
+            for name, field in all_fields.items():
+                name = prefix + name
+                if field['type'] in ('date', 'datetime') and name in import_fields:
+                    allowed_date_fields.add(name)
+                elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+                    _collect_date_fields(import_fields, field['relation'], name + "/")
+
+        _collect_date_fields(import_fields, self.res_model, "")
         for row_index, row in enumerate(input_file_data):
             for field_name, value in zip(import_fields, row):
                 if not isinstance(value, (datetime.date, datetime.datetime)):
