@@ -387,7 +387,7 @@ class GamificationChallenge(models.Model):
                               {date_clause}
                         """.format(date_clause=date_clause)
                 self.env.cr.execute(query, query_params)
-                user_with_goal_ids = {it for [it] in self.env.cr._obj}
+                user_with_goal_ids = {it for [it] in self.env.cr._obj__}
 
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids

@@ -179,7 +179,7 @@ class SaleReport(models.Model):
 
     def _from_sale(self):
         currency_table = self.env['res.currency']._get_simple_currency_table(self.env.companies)
-        currency_table = self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding)
+        currency_table = self.env.cr.mogrify(currency_table).decode(self.env.cr.encoding)
         return f"""
             sale_order_line l
             LEFT JOIN sale_order s ON s.id=l.order_id
