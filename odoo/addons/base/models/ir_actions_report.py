@@ -1125,6 +1125,9 @@ class IrActionsReport(models.Model):
             return None
         return render_func(report_ref, res_ids, data=data)
 
+    def render(self, report_ref, res_ids, data=None):
+        return self._render(report_ref=report_ref, res_ids=res_ids, data=data)
+
     def report_action(self, docids, data=None, config=True):
         """Return an action of type ir.actions.report.
 
