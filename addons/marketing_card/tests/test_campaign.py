@@ -249,6 +249,15 @@ class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
         self.assertTrue(image_request_headers.get('Content-Length'))
         self.assertTrue(card.image)
         self.assertEqual(card.share_status, 'visited')
+        self.assertEqual(card.active, False, "preview card was updated and is thus considered not valid")
+        self.campaign.flush_recordset()
+        self.assertEqual(self.campaign.card_count, 19)
+        self.assertEqual(self.campaign.card_click_count, 0)
+        self.assertEqual(self.campaign.card_share_count, 0, 'A regular user fetching the card should not count as a share.')
+
+        # recipient opens the card they received
+        card.active = True  # reset as if it were never used as preview
+        image_request_headers = self.url_open(card._get_card_url())
         self.campaign.flush_recordset()
         self.assertEqual(self.campaign.card_count, 20)
         self.assertEqual(self.campaign.card_click_count, 1)
