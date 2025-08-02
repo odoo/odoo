@@ -115,3 +115,18 @@ class Uom(models.Model):
     _inherit = 'uom.uom'
 
     is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable', readonly=False)
+
+
+class ProductPricelist(models.Model):
+    _inherit = 'product.pricelist'
+
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            self._check_active_pos()
+        super().write(vals)
+
+    def _check_active_pos(self):
+        for record in self:
+            pos_configs = self.env['pos.config'].sudo().search([('pricelist_id', '=', record.id)])
+            if pos_configs:
+                raise UserError(_('This pricelist is in use by POS configuration %s.', ",".join(pos.name for pos in pos_configs)))
