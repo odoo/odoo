@@ -14,6 +14,33 @@ export class ForecastedDetails extends Component {
             this.props.docs.lines.length &&
             !this.props.docs.lines.some((line) => line.document_in || line.replenishment_filled);
 
+        // TO Clean, Extend & Simplify : write directly on the line : rowspan = x, skip = true, tot_qty = y, ...
+        // We need to apply rowspan logic on reservedOnHand lines too
+        this.splittedIncomingLines = {};
+        this.reservedOnHand = this.props.docs.lines.filter((line => !line.document_in && !line.reservation && !line.in_transit && line.replenishment_filled && line.document_out));
+        this.reservedOnHandTotalQty = this.reservedOnHand.reduce((sum, line) => sum + line.quantity, 0);
+
+        if (this.multipleProducts) {
+            this.props.docs.lines.sort((a, b) => (a.product.id || 0) - (b.product.id || 0));
+        }
+        let j = 0;
+        for(let i = 0; i < this.props.docs.lines.length-1; i++){
+            const index = i-j;
+            const line = this.props.docs.lines[index];
+            const nextLine = this.props.docs.lines[i + 1];
+            // this.splittedIncomingLines[i]= {tot_qty: (-i-1)*1000};
+            if (line.product.id != nextLine.product.id || !((line.document_in && nextLine.document_in && line.document_in.id === nextLine.document_in.id && line.document_in._name === nextLine.document_in._name) || (this.reservedOnHand.includes(line) && this.reservedOnHand.includes(nextLine)))) {
+                j = 0;
+                continue;
+            }
+            this.splittedIncomingLines[index] = this.splittedIncomingLines[index] || {
+                rowcount: 1,
+                tot_qty: line.quantity,
+            };
+            this.splittedIncomingLines[index].rowcount += 1;
+            this.splittedIncomingLines[index].tot_qty += nextLine.quantity;
+            j++;
+        }
         this._formatFloat = (num) => {
             return formatFloat(num, { digits: this.props.docs.precision });
         };
@@ -52,8 +79,13 @@ export class ForecastedDetails extends Component {
         return line.move_out?.picking_id;
     }
 
-    get futureVirtualAvailable() {
-        return this.props.docs.virtual_available + this.props.docs.qty.in - this.props.docs.qty.out;
+    get multipleProducts() {
+        return this.props.docs.multiple_product;
+    }
+
+    futureVirtualAvailable(line) {
+        const product = this.props.docs.product[line.product.id]
+        return product.virtual_available + product.qty.in - product.qty.out;
     }
 
     get freeStockLabel() {
@@ -66,9 +98,5 @@ export class ForecastedDetails extends Component {
             ||
             (line.in_transit && !line.move_out);
         return greyBackground ? 'bg-200' : '';
-    }
-
-    should_have_grey_bg(line){
-
     }
 }
