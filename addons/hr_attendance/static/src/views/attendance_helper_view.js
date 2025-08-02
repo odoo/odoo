@@ -13,7 +13,7 @@ export class AttendanceActionHelper extends Component {
             hasDemoData: false,
         });
         onWillStart(async () => {
-            this.hasAttendanceRight = await user.hasGroup("hr_attendance.group_hr_attendance_manager");
+            this.hasAttendanceRight = await user.hasGroup("hr_attendance.group_hr_attendance_user");
             if (this.hasAttendanceRight){
                 this.state.hasDemoData = await this.orm.call("hr.attendance", "has_demo_data", []);
             }
