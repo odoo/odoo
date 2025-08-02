@@ -120,7 +120,7 @@ export const uploadService = {
                             // Don't show yet success as backend code only starts now
                             file.progress = 100;
                         });
-                        const attachment = await rpc('/web_editor/attachment/add_data', {
+                        this.addAttachmentRpc = rpc('/web_editor/attachment/add_data', {
                             'name': file.name,
                             'data': dataURL.split(',')[1],
                             'res_id': resId,
@@ -129,6 +129,7 @@ export const uploadService = {
                             'width': 0,
                             'quality': 0,
                         }, {xhr});
+                        const attachment = await this.addAttachmentRpc;
                         if (attachment.error) {
                             file.hasError = true;
                             file.errorMessage = attachment.error;
@@ -166,6 +167,12 @@ export const uploadService = {
                         throw error;
                     }
                 }
+            },
+            destroyUpload: async () => {
+                progressToast.files = {};
+                progressToast.isVisible = false;
+                this.addAttachmentRpc?.abort();
+                this.addAttachmentRpc = null;
             }
         };
     },

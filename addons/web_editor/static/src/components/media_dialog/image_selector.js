@@ -140,7 +140,11 @@ export class ImageSelector extends FileSelector {
     }
 
     async uploadFiles(files) {
-        await this.uploadService.uploadFiles(files, { resModel: this.props.resModel, resId: this.props.resId, isImage: true }, (attachment) => this.onUploaded(attachment));
+        try {
+            await this.uploadService.uploadFiles(files, { resModel: this.props.resModel, resId: this.props.resId, isImage: true }, (attachment) => this.onUploaded(attachment));
+        } catch (error) {
+            console.error("Error in uploading image:", error);
+        }
     }
 
     async uploadUrl(url) {
