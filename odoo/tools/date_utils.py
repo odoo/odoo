@@ -86,7 +86,7 @@ def get_fiscal_year(date: D, day: int = 31, month: int = 12) -> Tuple[D, D]:
     return date_from, date_to
 
 
-def get_timedelta(qty: int, granularity: Literal['hour', 'day', 'week', 'month', 'year']):
+def get_timedelta(qty: int, granularity: Literal['hour', 'day', 'week', 'month', 'quarter', 'year']):
     """ Helper to get a `relativedelta` object for the given quantity and interval unit.
     """
     switch = {
@@ -94,6 +94,7 @@ def get_timedelta(qty: int, granularity: Literal['hour', 'day', 'week', 'month',
         'day': relativedelta(days=qty),
         'week': relativedelta(weeks=qty),
         'month': relativedelta(months=qty),
+        'quarter': relativedelta(months=3 * qty),
         'year': relativedelta(years=qty),
     }
     return switch[granularity]
