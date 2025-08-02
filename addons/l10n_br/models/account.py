@@ -10,7 +10,7 @@ class AccountTax(models.Model):
 
     tax_discount = fields.Boolean(string='Discount this Tax in Price',
                                   help="Mark it for (ICMS, PIS e etc.).")
-    base_reduction = fields.Float(string='Redution', digits=0, required=True,
+    base_reduction = fields.Float(string='Reduction', digits=0, required=True,
                                   help="Um percentual decimal em % entre 0-1.", default=0)
     amount_mva = fields.Float(string='MVA Percent', digits=0, required=True,
                               help="Um percentual decimal em % entre 0-1.", default=0)
