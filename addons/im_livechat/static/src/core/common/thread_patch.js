@@ -29,6 +29,23 @@ patch(Thread.prototype, {
             },
             () => [this.props.thread.livechatVisitorMember?.persona?.im_status]
         );
+        useEffect(
+            (loadNewer, mountedAndLoaded) => {
+                const el = this.scrollableRef.el;
+                if (
+                    el &&
+                    !loadNewer &&
+                    mountedAndLoaded &&
+                    this.props.thread.selfMember &&
+                    !this.props.thread.markedAsUnread &&
+                    this.props.thread.channel_type === "livechat" &&
+                    Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1
+                ) {
+                    this.props.thread.markAsRead({ sync: true });
+                }
+            },
+            () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop]
+        );
     },
     get showVisitorDisconnected() {
         return (
