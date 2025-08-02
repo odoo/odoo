@@ -264,10 +264,14 @@
             display: flex !important;
         }
         .o_quick_create_title {
-            @include o-position-absolute(36px);
+            @include o-position-absolute(map-get($spacers, 4));
             transform-origin: left bottom 0;
             transform: rotate(90deg);
             overflow: visible;
+        }
+
+        .o_quick_create_button {
+            height: map-get($font-sizes, 4) * $line-height-lg;
         }
     }
 
@@ -304,6 +308,7 @@
 
             button.o_column_unfold {
                 padding: 0 .15rem;
+                height: map-get($font-sizes, 4) * $line-height-lg;
 
                 .fa-caret-left {
                     margin-right: 0.2rem;
@@ -319,7 +324,7 @@
             }
 
             .o_column_title {
-                @include o-position-absolute(map-get($spacers, 4));
+                @include o-position-absolute(map-get($spacers, 3));
                 transform-origin: left bottom 0;
                 transform: rotate(90deg);
                 overflow: visible;
