@@ -1212,6 +1212,7 @@ export class HistoryPlugin extends Plugin {
         let applied = false;
         // TODO ABD TODO @phoenix: selection may become obsolete, it should evolve with mutations.
         const selectionToRestore = this.dependencies.selection.preserveSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const extraToRestore = { ...this.currentStep.extraStepInfos };
         return () => {
             if (applied) {
@@ -1219,13 +1220,19 @@ export class HistoryPlugin extends Plugin {
             }
             applied = true;
             const stepIndex = this.steps.findLastIndex((item) => item === step);
-            this.revertStepsUntil(stepIndex);
+            const isSelectionRestored = this.revertStepsUntil(
+                stepIndex,
+                selectionToRestore,
+                selection
+            );
             // Apply draft mutations to recover the same currentStep state
             // as before.
             this.applyMutations(draftMutations, { forNewStep: true });
             this.handleObserverRecords();
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
-            selectionToRestore.restore();
+            if (!isSelectionRestored) {
+                selectionToRestore.restore();
+            }
             this.currentStep.extraStepInfos = extraToRestore;
             this.dispatchTo("restore_savepoint_handlers");
         };
@@ -1335,16 +1342,17 @@ export class HistoryPlugin extends Plugin {
      *
      * @param {Number} stepIndex
      */
-    revertStepsUntil(stepIndex) {
+    revertStepsUntil(stepIndex, selectionToRestore, selection) {
         // Discard current draft.
         this.handleObserverRecords();
         this.revertMutations(this.currentStep.mutations);
         this.observer.takeRecords();
         this.currentStep.mutations = [];
         let lastRevertedStep = this.currentStep;
+        let isSelectionRestored = false;
 
         if (stepIndex === this.steps.length - 1) {
-            return;
+            return isSelectionRestored;
         }
         // Revert all mutations until stepIndex, and consume all reversible
         // steps in the process (typically current peer steps).
@@ -1371,10 +1379,20 @@ export class HistoryPlugin extends Plugin {
         }
         // TODO ABD TODO @phoenix: review selections, this selection could be obsolete
         // depending on the non-reversible steps that were applied.
-        this.setSerializedSelection(lastRevertedStep.selection);
+        if (
+            this.idToNodeMap.get(lastRevertedStep.selection.anchorNodeId) ===
+                selection.anchorNode &&
+            this.idToNodeMap.get(lastRevertedStep.selection.focusNodeId) === selection.focusNode
+        ) {
+            selectionToRestore.restore();
+            isSelectionRestored = true;
+        } else {
+            this.setSerializedSelection(lastRevertedStep.selection);
+        }
         // Register resulting mutations as a new consumed step (prevent undo).
         this.dispatchContentUpdated();
         this.addStep({ stepState: "consumed" });
+        return isSelectionRestored;
     }
 
     setStepExtra(key, value) {
