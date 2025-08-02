@@ -34,7 +34,7 @@ describe.current.tags("interaction_dev");
 
 const testTemplate = /* xml */ `
     <div id="wrapwrap">
-        <section data-snippet="s_dynamic_snippet_carousel" class="s_dynamic_snippet_carousel s_dynamic s_dynamic_empty pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Carousel"
+        <section data-snippet="s_dynamic_snippet_carousel" class="s_dynamic_snippet_carousel s_dynamic pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Carousel"
                 data-filter-id="1"
                 data-template-key="website.dynamic_filter_template_test_item"
                 data-number-of-records="16"

@@ -22,7 +22,7 @@
 
         <!-- Custom Layout -->
         <t t-else="">
-            <div t-attf-class="s_dynamic_snippet_row row #{extraClasses}">
+            <div t-attf-class="#{is_single_record ? 's_dynamic_snippet_row' : ''} row #{extraClasses}">
                 <t t-foreach="data" t-as="data_entry" t-key="data_entry_index">
                     <div t-attf-class="#{columnClasses}">
                         <t t-out="data_entry"/>
