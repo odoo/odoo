@@ -55,9 +55,11 @@
         <field name="model">stock.quant</field>
         <field name="inherit_id" ref="stock.quant_search_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='reserved']" position="after">
+            <xpath expr="//filter[@name='negative']" position="after">
                 <separator/>
-                <filter string="Expiration Alerts" name="expiration_alerts"
+                <filter string="Expired Lots" name="expired_lots"
+                        domain="[('expiration_date', '&lt;', 'today')]"/>
+                <filter string="Alert Lots" name="alert_lots"
                     domain="[('lot_id.alert_date', '&lt;=', 'today')]"/>
             </xpath>
         </field>
