@@ -1721,6 +1721,10 @@ class AccountTax(models.Model):
                 )
                 biggest_total_per_tax['raw_tax_amount_currency'] += delta_raw_tax_amount_currency
                 biggest_total_per_tax['raw_tax_amount'] += delta_raw_tax_amount
+                biggest_total_per_tax['raw_total_amount'] += delta_raw_tax_amount_currency
+                biggest_total_per_tax['raw_total_amount_currency'] += delta_raw_tax_amount
+                base_amounts['raw_total_amount'] += delta_raw_tax_amount_currency
+                base_amounts['raw_total_amount_currency'] += delta_raw_tax_amount
 
         # Dispatch the delta in term of tax amounts across the tax details when dealing with the 'round_globally' method.
         # Suppose 2 lines:
