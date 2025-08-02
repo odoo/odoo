@@ -1649,3 +1649,22 @@ test("toolbar update should be run only once", async () => {
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
     expect(counter).toBe(1);
 });
+
+test("toolbar strikethrough buttons should not be active when checked list is strikethrough using o_checked class", async () => {
+    const { el } = await setupEditor(
+        '<ul class="o_checklist"><li class="o_checked">[test]</li></ul>'
+    );
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveCount(1);
+    expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
+    await contains(".o-we-toolbar .btn[name='strikethrough']").click();
+    await waitFor(".btn[name='strikethrough'].active");
+    expect(getContent(el)).toBe(
+        '<ul class="o_checklist"><li class="o_checked"><s>[test]</s></li></ul>'
+    );
+    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveClass("active");
+    await contains(".o-we-toolbar .btn[name='strikethrough']").click();
+    await waitFor(".btn[name='strikethrough']:not(.active)");
+    expect(getContent(el)).toBe('<ul class="o_checklist"><li class="o_checked">[test]</li></ul>');
+    expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
+});
