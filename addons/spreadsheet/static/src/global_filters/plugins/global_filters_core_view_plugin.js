@@ -167,7 +167,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     getFilterDisplayValue(filterName) {
-        const filter = this.getters.getGlobalFilterLabel(filterName);
+        const filter = this._getGlobalFilterLabel(filterName);
         if (!filter) {
             throw new EvaluationError(
                 _t(`Filter "%(filter_name)s" not found`, { filter_name: filterName })
@@ -280,6 +280,22 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
+
+    /**
+     * Get the global filter with the given name
+     *
+     * @param {string} label Label
+     * @returns {GlobalFilter|undefined}
+     */
+    _getGlobalFilterLabel(label) {
+        return this.getters
+            .getGlobalFilters()
+            .find(
+                (filter) =>
+                    this.getters.dynamicTranslate(filter.label) ===
+                    this.getters.dynamicTranslate(label)
+            );
+    }
 
     _getDateFilterDisplayValue(filter) {
         const { from, to } = getDateRange(this.getGlobalFilterValue(filter.id));

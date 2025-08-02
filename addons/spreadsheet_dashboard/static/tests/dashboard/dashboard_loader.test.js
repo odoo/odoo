@@ -10,7 +10,7 @@ import {
 import {
     DashboardLoader,
     Status,
-} from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader";
+} from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader_service";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
 
@@ -269,18 +269,16 @@ test("Model is in dashboard mode [2]", async () => {
 test("default currency format", async () => {
     onRpc(
         "/spreadsheet/dashboard/data/*",
-        () => {
-            return {
-                data: {},
-                revisions: [],
-                default_currency: {
-                    code: "Odoo",
-                    symbol: "θ",
-                    position: "after",
-                    decimalPlaces: 2,
-                },
-            };
-        },
+        () => ({
+            data: {},
+            revisions: [],
+            default_currency: {
+                code: "Odoo",
+                symbol: "θ",
+                position: "after",
+                decimalPlaces: 2,
+            },
+        }),
         { pure: true }
     );
     const loader = await createDashboardLoader();

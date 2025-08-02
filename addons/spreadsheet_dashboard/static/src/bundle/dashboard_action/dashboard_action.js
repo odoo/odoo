@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { DashboardLoader, Status } from "./dashboard_loader";
+import { Status } from "./dashboard_loader_service";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { useSetupAction } from "@web/search/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
@@ -34,19 +34,11 @@ export class SpreadsheetDashboardAction extends Component {
         this.controlPanelDisplay = {};
         this.orm = useService("orm");
         this.actionService = useService("action");
-        const geoJsonService = useService("geo_json_service");
-        // Use the non-protected orm service (`this.env.services.orm` instead of `useService("orm")`)
-        // because spreadsheets models are preserved across multiple components when navigating
-        // with the breadcrumb
-        // TODO write a test
-        /** @type {DashboardLoader}*/
-        this.loader = useState(
-            new DashboardLoader(this.env, this.env.services.orm, geoJsonService)
-        );
+        this.loader = useService("spreadsheet_dashboard_loader");
         onWillStart(async () => {
             if (this.props.state && this.props.state.dashboardLoader) {
-                const { groups, dashboards } = this.props.state.dashboardLoader;
-                this.loader.restoreFromState(groups, dashboards);
+                const state = this.props.state.dashboardLoader;
+                this.loader.restoreFromState(state);
             } else {
                 await this.loader.load();
             }
@@ -61,7 +53,7 @@ export class SpreadsheetDashboardAction extends Component {
         );
         useEffect(
             () => {
-                const dashboard = this.state.activeDashboard;
+                const dashboard = this.loader.getActiveDashboard();
                 if (dashboard && dashboard.status === Status.Loaded) {
                     const render = () => this.render(true);
                     dashboard.model.on("update", this, render);
@@ -69,19 +61,18 @@ export class SpreadsheetDashboardAction extends Component {
                 }
             },
             () => {
-                const dashboard = this.state.activeDashboard;
+                const dashboard = this.loader.getActiveDashboard();
                 return [dashboard?.model, dashboard?.status];
             }
         );
         useSetupAction({
             getLocalState: () => ({
-                activeDashboardId: this.activeDashboardId,
                 dashboardLoader: this.loader.getState(),
             }),
         });
-        useSpreadsheetPrint(() => this.state.activeDashboard?.model);
-        /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */
-        this.state = useState({ activeDashboard: undefined, sidebarExpanded: true });
+        useSpreadsheetPrint(() => this.loader.getActiveDashboard()?.model);
+        /** @type {{ sidebarExpanded: boolean}} */
+        this.state = useState({ sidebarExpanded: true });
     }
 
     get dashboardButton() {
@@ -92,14 +83,14 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {number | undefined}
      */
     get activeDashboardId() {
-        return this.state.activeDashboard ? this.state.activeDashboard.id : undefined;
+        return this.loader.getActiveDashboard() ? this.loader.getActiveDashboard().id : undefined;
     }
 
     /**
      * @returns {object[]}
      */
     get filters() {
-        const dashboard = this.state.activeDashboard;
+        const dashboard = this.loader.getActiveDashboard();
         if (!dashboard || dashboard.status !== Status.Loaded) {
             return [];
         }
@@ -140,7 +131,7 @@ export class SpreadsheetDashboardAction extends Component {
      * @param {number} dashboardId
      */
     openDashboard(dashboardId) {
-        this.state.activeDashboard = this.loader.getDashboard(dashboardId);
+        this.loader.activateDashboard(dashboardId);
     }
 
     /**
@@ -168,13 +159,13 @@ export class SpreadsheetDashboardAction extends Component {
     }
 
     async toggleFavorite() {
-        if (!this.state.activeDashboard) {
+        if (!this.loader.getActiveDashboard()) {
             return;
         }
 
-        const { id, isFavorite } = this.state.activeDashboard;
+        const { id, isFavorite } = this.loader.getActiveDashboard();
         await this.orm.call("spreadsheet.dashboard", "action_toggle_favorite", [id]);
-        this.state.activeDashboard.isFavorite = !isFavorite;
+        this.loader.getActiveDashboard().isFavorite = !isFavorite;
     }
 
     toggleSidebar() {
