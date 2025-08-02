@@ -9,10 +9,19 @@ from odoo.tools.xml_utils import cleanup_xml_node
 
 class TestXMLTools(common.TransactionCase):
 
+    def check_xml_cleanup_result_is_as_expected(self, original_string, expected_string, **kwargs):
+        result_string = etree.tostring(cleanup_xml_node(original_string, **kwargs)).decode()
+        self.assertEqual(expected_string, result_string)
+        self.assertNotEqual(expected_string, original_string)
+
+
+class TestXMLTools1(TestXMLTools):
+
     def setUp(self):
         super(TestXMLTools, self).setUp()
         self.qweb_poor = self.env()['ir.ui.view'].create({
             'type': 'qweb',
+            'key': 'test_testing_utilities.test_view',
             'arch_db': """
     <h1>
             <h2/>
@@ -73,10 +82,14 @@ _</h1>
         qweb = self.env['ir.qweb']._render(self.qweb_poor.id)
         self.check_xml_cleanup_result_is_as_expected(qweb, expected, remove_blank_nodes=False)
 
+
+class TestXMLTools2(TestXMLTools):
+
     def test_cleanup_xml_t_call_indent(self):
         # Indentation is fixed after t-call (which keeps indentation of called template)
         template_1 = self.env['ir.ui.view'].create({
             'type': 'qweb',
+            'key': 'test_testing_utilities.test_view',
             'arch_db': '''<h1>
     <content>This is content!</content>
 </h1>
@@ -84,6 +97,7 @@ _</h1>
         template_2 = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'test_testing_utilities.test_view2',
             'arch_db': f'''<odoo>
     <data>
         <t t-call="{template_1.id}"/>
@@ -105,6 +119,7 @@ _</h1>
         # Indentation is fixed and empty nodes are removed after conditional rendering
         template_addresses = self.env['ir.ui.view'].create({
             'type': 'qweb',
+            'key': 'test_testing_utilities.test_view',
             'arch_db': '''<t>
     <street t-esc="address.get('street')"/>
     <number t-esc="address.get('number')"/>
@@ -113,6 +128,7 @@ _</h1>
 '''})
         template_main = self.env['ir.ui.view'].create({
             'type': 'qweb',
+            'key': 'test_testing_utilities.test_view2',
             'arch_db': f'''<data>
     <item t-foreach="items" t-as="item" t-esc="item"/>
     <addressSender t-call='{template_addresses.id}'>
@@ -146,8 +162,3 @@ _</h1>
             }
         })
         self.check_xml_cleanup_result_is_as_expected(qweb, expected)
-
-    def check_xml_cleanup_result_is_as_expected(self, original_string, expected_string, **kwargs):
-        result_string = etree.tostring(cleanup_xml_node(original_string, **kwargs)).decode()
-        self.assertEqual(expected_string, result_string)
-        self.assertNotEqual(expected_string, original_string)

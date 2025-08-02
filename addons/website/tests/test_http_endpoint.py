@@ -19,6 +19,7 @@ class TestHttpEndPoint(HttpCase):
         self.env['ir.ui.view'].create({
             'name': 'Add cache clear to Home',
             'type': 'qweb',
+            'key': 'website.test_cache_clear',
             'mode': 'extension',
             'inherit_id': homepage_view.id,
             'arch_db': """

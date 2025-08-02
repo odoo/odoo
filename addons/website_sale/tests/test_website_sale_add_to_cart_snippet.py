@@ -24,6 +24,7 @@ class TestAddToCartSnippet(HttpCase):
         redirect_form = cls.env['ir.ui.view'].create({
             'name': "Dummy Redirect Form",
             'type': 'qweb',
+            'key': 'website.test_dummy',
             'arch': arch,
         })
         cls.dummy_provider = cls.env['payment.provider'].create({

@@ -138,6 +138,7 @@ class TestAutoComplete(TransactionCase):
         cls.env['website.page'].create({
             'name': name,
             'type': 'qweb',
+            'key': f'website.test_{name.replace(" ", "_")}',
             'arch': f'<div>{content}</div>',
             'url': url,
             'is_published': True,
