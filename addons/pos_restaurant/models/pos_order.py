@@ -67,10 +67,10 @@ class PosOrder(models.Model):
         self.ensure_one()
 
         payment_line = self.payment_ids.filtered(lambda line: line.id == payment_line_id)
-        payment_line.write({
-            'amount': payment_line.amount + tip_amount,
-        })
         self.write({
             "is_tipped": True,
             "tip_amount": tip_amount,
+        })
+        payment_line.write({
+            'amount': payment_line.amount + tip_amount,
         })

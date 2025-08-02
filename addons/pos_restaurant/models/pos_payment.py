@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models
 
-
 class PosConfig(models.Model):
     _inherit = 'pos.payment'
 
@@ -13,3 +12,10 @@ class PosConfig(models.Model):
         self.write({
             "amount": self.amount + tip_amount,
         })
+
+    @api.constrains('amount')
+    def _check_amount(self):
+        bypass_check_amount = self.filtered(
+            lambda p: p.pos_order_id.state == 'invoiced' and p.pos_order_id.is_tipped
+        )
+        super(PosConfig, self - bypass_check_amount)._check_amount()
