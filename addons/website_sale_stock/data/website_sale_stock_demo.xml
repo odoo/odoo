@@ -6,4 +6,16 @@
     <record id="stock.product_cable_management_box_product_template" model="product.template">
         <field name="public_categ_ids" eval="[(6,0,[ref('website_sale.public_category_boxes')])]"/>
     </record>
+    <record id="website_sale_stock.limited_product" model="product.product">
+        <field name="type">product</field>
+        <field name="name">Limited Product</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="website_published" eval="True"/>
+        <field name="allow_out_of_stock_order" eval="False"/>
+    </record>
+    <record id="website_sale_stock.limited_product_quant" model="stock.quant">
+        <field name="product_id" ref="website_sale_stock.limited_product"/>
+        <field name="quantity">5.0</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
 </odoo>
