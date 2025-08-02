@@ -9,8 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('uk')
     def _get_uk_template_data(self):
         return {
-            'property_account_receivable_id': '1100',
-            'property_account_payable_id': '2100',
+            'property_account_receivable_id': '110000',
+            'property_account_payable_id': '210000',
             'code_digits': '6',
         }
 
@@ -20,18 +20,18 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.uk',
-                'bank_account_code_prefix': '1200',
-                'cash_account_code_prefix': '1210',
-                'transfer_account_code_prefix': '1220',
-                'account_default_pos_receivable_account_id': '1104',
-                'income_currency_exchange_account_id': '7700',
-                'expense_currency_exchange_account_id': '7700',
+                'bank_account_code_prefix': '120001',
+                'cash_account_code_prefix': '999001',
+                'transfer_account_code_prefix': '122001',
+                'account_default_pos_receivable_account_id': '110400',
+                'income_currency_exchange_account_id': '770000',
+                'expense_currency_exchange_account_id': '770000',
                 'account_sale_tax_id': 'ST11',
                 'account_purchase_tax_id': 'PT_20_G',
-                'expense_account_id': '5000',
-                'income_account_id': '4000',
-                'deferred_expense_account_id': '1103',
-                'deferred_revenue_account_id': '2109',
+                'expense_account_id': '500000',
+                'income_account_id': '400000',
+                'deferred_expense_account_id': '110300',
+                'deferred_revenue_account_id': '210900',
             },
         }
 
