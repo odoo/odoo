@@ -1035,9 +1035,14 @@ class HrExpense(models.Model):
                 for manager, expenses_submitted in expenses_submitted_per_company.grouped('manager_id').items():
                     manager_langs = tuple(lang for lang in manager.partner_id.mapped('lang') if lang)
                     mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
+                    departments = expenses_submitted.department_id
+                    if len(departments) > 1:
+                        url = '/expenses-to-process'
+                    else:
+                        url = f'/departments/{departments.id}/expenses-to-approve'
                     body = self.env['ir.qweb']._render(
                         template='hr_expense.hr_expense_template_submitted_expenses',
-                        values={'manager_name': manager.name, 'url': '/expenses-to-approve'},
+                        values={'manager_name': manager.name, 'url': url},
                         lang=mail_lang,
                     )
                     new_mails.append({
