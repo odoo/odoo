@@ -38,3 +38,11 @@ class TestSparseFields(common.TransactionCase):
         self.assertEqual(len(fields), len(names))
         for field in fields:
             self.assertEqual(field.serialization_field_id.name, 'data')
+
+    def test_sparse_default(self):
+        """ test sparse fields with default values. """
+        record = self.env['sparse_fields.test'].create({})
+        self.assertEqual(record.char_default, 'one')
+        
+        record2 = self.env['sparse_fields.test'].create({'char_default': 'override'})
+        self.assertEqual(record2.char_default, 'override')
