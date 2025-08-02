@@ -23,3 +23,11 @@ class TestUi(HttpCaseGamification):
         demo = self.user_demo
         demo.karma = forum.karma_post + 1
         self.start_tour("/", 'forum_question', login="demo")
+
+    def test_03_multiple_new_tags(self):
+        forum = self.env.ref('website_forum.forum_help')
+        demo = self.user_demo
+        demo.karma = forum.karma_post + 1
+        self.start_tour("/", 'multiple_new_tags', login="demo", step_delay=350)
+        tags = self.env['forum.tag'].search([('name', 'in', ['tag', 'test tag'])])
+        self.assertEqual(len(tags), 2)
