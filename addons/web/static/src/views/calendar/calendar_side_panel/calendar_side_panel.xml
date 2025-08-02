@@ -3,36 +3,7 @@
     <t t-name="web.CalendarSidePanel">
         <div class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
             <div class="o_calendar_sidebar">
-                <div t-if="props.model.hasMultiCreate" class="d-flex flex-column gap-1">
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" t-att-class="{'active': props.mode === MODES.filter}" data-tooltip="Filter"  t-on-click.stop="() => this.props.setMode(MODES.filter)"><i class="fa fa-filter"/></button>
-                        <button class="btn btn-secondary" t-att-class="{'active': props.mode === MODES.add}" data-tooltip="New" t-on-click="() => this.props.setMode(MODES.add)"><i class="fa fa-plus"/></button>
-                        <button class="btn btn-secondary" t-att-class="{'active': props.mode === MODES.delete}" data-tooltip="Clicking on a day or selecting an area will irrevocably delete its content" t-on-click="() => this.props.setMode(MODES.delete)">
-                            <i class="fa fa-trash" t-att-class="{'text-danger': props.mode === MODES.delete}"/>
-                        </button>
-                    </div>
-                    <div t-if="state.isReady and props.mode === MODES.add" class="o_form_view o_xxs_form_view gap-2 mt-2">
-                        <div t-if="props.model.showMultiCreateTimeRange" class="d-flex align-items-baseline gap-2">
-                            <TimePicker
-                                value="this.props.model.data.multiCreate.timeRange.start"
-                                onChange="(time) => this.props.setMultiCreateTimeRange({start: time})"
-                                onInvalid="() => this.props.setMultiCreateTimeRange({start: null})"
-                                showSeconds="false"
-                            />
-                            <i class="fa fa-arrow-right"/>
-                            <TimePicker
-                                value="this.props.model.data.multiCreate.timeRange.end"
-                                onChange="(time) => this.props.setMultiCreateTimeRange({end: time})"
-                                onInvalid="() => this.props.setMultiCreateTimeRange({end: null})"
-                                showSeconds="false"
-                            />
-                        </div>
-                        <Record t-props="multiCreateRecordProps" t-slot-scope="data">
-                            <FormRenderer record="data.record" archInfo="multiCreateArchInfo" class="'p-0'"/>
-                        </Record>
-                    </div>
-                </div>
-                <DatePicker t-if="props.mode === MODES.filter and showDatePicker" t-props="datePickerProps" />
+                <DatePicker t-if="showDatePicker" t-props="datePickerProps" />
                 <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
                     <FilterSection model="props.model" section="section"/>
                 </t>
