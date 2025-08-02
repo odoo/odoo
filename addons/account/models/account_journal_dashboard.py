@@ -203,30 +203,31 @@ class AccountJournal(models.Model):
                 journal.has_unhashed_entries = False
 
     def _compute_has_entries(self):
-        sql_query = SQL(
-            """
-                       SELECT j.id,
-                              has_posted_entries.val,
-                              has_entries.val
-                         FROM account_journal j
-            LEFT JOIN LATERAL (
-                                  SELECT bool(m.id) as val
-                                    FROM account_move m
-                                   WHERE m.journal_id = j.id
-                                     AND m.state = 'posted'
-                                   LIMIT 1
-                              ) AS has_posted_entries ON true
-            LEFT JOIN LATERAL (
-                                  SELECT bool(m.id) as val
-                                    FROM account_move m
-                                   WHERE m.journal_id = j.id
-                                   LIMIT 1
-                              ) AS has_entries ON true
-                        WHERE j.id in %(journal_ids)s
-            """,
-            journal_ids=tuple(self.ids),
-        )
-        self.env.cr.execute(sql_query)
+        if self.ids:
+            sql_query = SQL(
+                """
+                        SELECT j.id,
+                                has_posted_entries.val,
+                                has_entries.val
+                            FROM account_journal j
+                LEFT JOIN LATERAL (
+                                    SELECT bool(m.id) as val
+                                        FROM account_move m
+                                    WHERE m.journal_id = j.id
+                                        AND m.state = 'posted'
+                                    LIMIT 1
+                                ) AS has_posted_entries ON true
+                LEFT JOIN LATERAL (
+                                    SELECT bool(m.id) as val
+                                        FROM account_move m
+                                    WHERE m.journal_id = j.id
+                                    LIMIT 1
+                                ) AS has_entries ON true
+                            WHERE j.id in %(journal_ids)s
+                """,
+                journal_ids=tuple(self.ids),
+            )
+            self.env.cr.execute(sql_query)
         res = {journal_id: (has_posted, has_entries) for journal_id, has_posted, has_entries in self.env.cr.fetchall()}
         for journal in self:
             r = res.get(journal.id, (False, False))
