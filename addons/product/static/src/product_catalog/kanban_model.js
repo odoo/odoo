@@ -19,7 +19,18 @@ export class ProductCatalogKanbanModel extends RelationalModel {
     async _loadData(params) {
         // if orm have isSample field and its value set to be true then we have sample data as there is no product found for selected vendor, show sample data
         const isSample = this.orm.isSample !== undefined ? this.orm.isSample : false;
-        const result = await super._loadData(...arguments);
+        const selectedSection = this.env.searchModel.selectedSection;
+        if (selectedSection.filtered) {
+            params = {
+                ...params,
+                domain: [...(params.domain || []), ['is_in_selected_section_of_order', '=', true]],
+                context: {
+                    ...params.context,
+                    selected_section_id: selectedSection.sectionId,
+                },
+            };
+        }
+        const result = await super._loadData(params);
         if (!params.isMonoRecord) {
             let records;
             if (params.groupBy?.length) {
@@ -57,7 +68,8 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             order_id: params.context.order_id,
             product_ids: productIds,
             res_model: params.context.product_catalog_order_model,
-            child_field: params.context?.child_field,
+            child_field: params.context.child_field,
+            selected_section_id: this.env.searchModel.selectedSection.sectionId,
         }
     }
 

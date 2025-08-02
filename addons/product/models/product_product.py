@@ -111,6 +111,7 @@ class ProductProduct(models.Model):
 
     is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite', readonly=False, store=True)
     _is_favorite_index = models.Index("(is_favorite) WHERE is_favorite IS TRUE")
+    is_in_selected_section_of_order = fields.Boolean(search='_search_is_in_selected_section_of_order')
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
@@ -351,6 +352,22 @@ class ProductProduct(models.Model):
         if Domain.is_negative_operator(operator):
             return NotImplemented
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
+
+    def _search_is_in_selected_section_of_order(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        ctx = self.env.context
+        order_id = ctx.get('order_id')
+        order_model = ctx.get('product_catalog_order_model')
+        line_field = ctx.get('child_field')
+        if not (order_id and order_model and line_field):
+            return []
+
+        product_ids = self.env[order_model].browse(order_id)[line_field].filtered_domain([
+            ('section_line_id', '=', ctx.get('selected_section_id')),
+        ]).mapped('product_id').ids
+
+        return [('id', 'in', product_ids)]
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
