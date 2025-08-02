@@ -37,36 +37,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
     @api.model
-    def _compute_production_capacities(self, bom_qty, bom_data):
-        date_today = self.env.context.get('from_date', fields.Date.today())
-        earliest_capacity = 0
-        lead_time = bom_data['lead_time']
-        res = {}
-        if bom_data.get('producible_qty', 0):
-            # Some quantities are producible today, at the earliest time possible
-            earliest_capacity = bom_data['producible_qty']
-
-        if bom_data['availability_state'] != 'unavailable':
-            availability_delay = bom_data['availability_delay']
-            if lead_time and lead_time == availability_delay:
-                # Means that stock will be resupplied at date_today, so the whole manufacture can start at date_today.
-                earliest_capacity = bom_qty
-            elif (balance := bom_qty - bom_data.get('producible_qty', 0) - bom_data.get('quantity_available', 0)) > 0:
-                res['leftover_capacity'] = balance
-                res['leftover_date'] = format_date(self.env, date_today + timedelta(days=availability_delay))
-
-        if earliest_capacity:
-            if bom_data['route_type'] == 'manufacture':
-                # Simulate planning for 'earliest' capacity at date
-                operations_planning = self._simulate_bom_planning(bom_data['bom'], bom_data['product'], datetime.combine(date_today, time.min), earliest_capacity)
-                days = max(((p['date_finished'].date() - date_today).days for p in operations_planning.values()), default=0)
-                lead_time = max(bom_data['bom'].produce_delay, days)
-            res['earliest_date'] = format_date(self.env, date_today + timedelta(days=lead_time))
-            res['earliest_capacity'] = earliest_capacity
-
-        return res
-
-    @api.model
     def _get_report_values(self, docids, data=None):
         docs = []
         for bom_id in docids:
@@ -124,8 +94,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
         lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=0)
-        production_capacities = self._compute_production_capacities(bom_quantity, lines)
-        lines.update(production_capacities)
         return {
             'lines': lines,
             'variants': bom_product_variants,
@@ -156,15 +124,16 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         product_quantities_info = defaultdict(OrderedDict)
         for line in lines:
             product = line.product_id
+            line_quantity = line_quantities.get(line.id, 0.0)
             quantities_info = self._get_quantities_info(product, line.product_uom_id, product_info, parent_bom, parent_product)
             stock_loc = quantities_info['stock_loc']
-            product_info[product.id]['consumptions'][stock_loc] += line_quantities.get(line.id, 0.0)
+            product_info[product.id]['consumptions'][stock_loc] += line_quantity
             product_quantities_info[product.id][line.id] = product_info[product.id]['consumptions'][stock_loc]
             if (not product.is_storable or
                     product.uom_id.compare(product_info[product.id]['consumptions'][stock_loc], quantities_info['free_qty']) <= 0):
                 # Use date.min as a sentinel value for _get_stock_availability
                 closest_forecasted[product.id][line.id] = date.min
-            elif stock_loc != 'in_stock':
+            elif stock_loc != 'in_stock' or quantities_info['forecasted_qty'] < line_quantity:
                 closest_forecasted[product.id][line.id] = date.max
             else:
                 remaining_products.append(product.id)
@@ -249,6 +218,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'quantity': current_quantity,
             'quantity_available': quantities_info.get('free_qty') or 0,
             'quantity_on_hand': quantities_info.get('on_hand_qty') or 0,
+            'quantity_forecasted': quantities_info.get('forecasted_qty') or 0,
             'free_to_manufacture_qty': quantities_info.get('free_to_manufacture_qty') or 0,
             'base_bom_line_qty': bom_line.product_qty if bom_line else False,  # bom_line isn't defined only for the top-level product
             'name': product.display_name or bom.product_tmpl_id.display_name,
@@ -309,7 +279,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             bom_report_line['bom_cost'] += component['bom_cost']
         for component in components:
             if component['is_storable']:
-                if missing_qty := max(component['quantity'] - component['quantity_available'], 0):
+                if missing_qty := max(component['quantity'] - component['quantity_forecasted'], 0):
                     missing_qty = float_repr(missing_qty, self.env['decimal.precision'].precision_get('Product Unit'))
                     route_name = component['route_name'] or _('Order')
                     component['status'] = _("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
@@ -398,6 +368,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'quantity': line_quantity,
             'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
+            'quantity_forecasted': quantities_info.get('forecasted_qty', 0),
             'free_to_manufacture_qty': quantities_info.get('free_to_manufacture_qty', 0),
             'base_bom_line_qty': bom_line.product_qty,
             'uom': bom_line.product_uom_id,
@@ -424,6 +395,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         quantities_info = {
             'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if product.is_storable else 0,
             'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.is_storable else 0,
+            'forecasted_qty': product.uom_id._compute_quantity(product.virtual_available, bom_uom) if product.is_storable else 0,
             'stock_loc': 'in_stock',
         }
         quantities_info['free_to_manufacture_qty'] = quantities_info['free_qty']
