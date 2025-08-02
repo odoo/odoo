@@ -790,6 +790,22 @@ registry.category("web_tour.tours").add("test_open_default_register_screen_confi
             Chrome.endTour(),
         ].flat(),
 });
+
+registry
+    .category("web_tour.tours")
+    .add("test_fast_payment_validation_from_restaurant_product_screen", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                Dialog.confirm("Open Register"),
+                FloorScreen.clickTable("2"),
+                ProductScreen.clickDisplayedProduct("Coca-Cola"),
+                ProductScreen.clickFastPaymentButton("Bank"),
+                Dialog.discard(),
+                ReceiptScreen.isShown(),
+            ].flat(),
+    });
+
 registry.category("web_tour.tours").add("test_transfering_orders", {
     steps: () =>
         [
