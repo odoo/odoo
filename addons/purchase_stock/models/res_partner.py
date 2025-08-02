@@ -46,5 +46,5 @@ class ResPartner(models.Model):
         for partner, numbers in partner_dict.items():
             seen_partner |= partner
             on_time, ordered = numbers
-            partner.on_time_rate = on_time / ordered * 100 if ordered else -1   # use negative number to indicate no data
+            partner.on_time_rate = min(on_time / ordered, 1.0) * 100 if ordered else -1   # use negative number to indicate no data
         (self - seen_partner).on_time_rate = -1
