@@ -817,7 +817,10 @@ class AccountTax(models.Model):
                 same_batch = (
                     tax.amount_type == batch[0].amount_type
                     and (special_mode or tax.price_include == batch[0].price_include)
-                    and tax.include_base_amount == batch[0].include_base_amount
+                    and (
+                        tax.include_base_amount == batch[0].include_base_amount
+                        or (tax.include_base_amount or batch[0].include_base_amount)
+                    )
                     and (
                         (tax.include_base_amount and not is_base_affected)
                         or not tax.include_base_amount

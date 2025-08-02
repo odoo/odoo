@@ -310,3 +310,50 @@ class TestAccountTax(AccountTestInvoicingCommon):
             {'display_type': 'tax',             'tax_ids': [],          'balance': 15.0,    'account_id': account_2.id},
             {'display_type': 'payment_term',    'tax_ids': [],          'balance': 100.0,   'account_id': self.company_data['default_account_receivable'].id},
         ])
+
+    def test_price_included_chained_taxes(self):
+        """ Test that two price-included taxes — one affecting the base and one not —
+            are computed correctly and batched properly.
+        """
+
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A - 5%',
+            'amount': 5.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include': True,
+            'price_include_override': 'tax_included',
+            'include_base_amount': False,
+        })
+
+        tax_b = self.env['account.tax'].create({
+            'name': 'Tax B - 15%',
+            'amount': 15.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include': True,
+            'price_include_override': 'tax_included',
+            'include_base_amount': True,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2025-07-31',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': [(6, 0, [tax_a.id, tax_b.id])],
+            })]
+        })
+
+        invoice.action_post()
+
+        tax_lines = {line.tax_line_id.name: line.balance for line in invoice.line_ids if line.tax_line_id}
+
+        base_line = next(line for line in invoice.line_ids if not line.tax_line_id)
+
+        self.assertAlmostEqual(tax_lines['Tax A - 5%'], -4.17, places=2, msg="Tax A should be 4.17")
+        self.assertAlmostEqual(tax_lines['Tax B - 15%'], -12.50, places=2, msg="Tax B should be 12.50")
+        self.assertAlmostEqual(base_line.price_subtotal, 83.33, places=2, msg="Base price should be 83.33")
