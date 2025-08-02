@@ -32,6 +32,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
 
         # html_field_history is always silently ignored.
         field_exception = {"html_field_history"}
+        portal_readable_fields, _ = Task._portal_accessible_fields()
 
         cls.read_protected_fields_task = OrderedDict([
             (k, v)
@@ -48,10 +49,10 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             for k, v in Task._fields.items()
             if k in Task.SELF_READABLE_FIELDS and k not in Task.SELF_WRITABLE_FIELDS and k not in field_exception
         ])
-        cls.other_fields_task = OrderedDict([
+        cls.portal_non_readable_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k not in Task.SELF_READABLE_FIELDS and k not in field_exception
+            if k not in portal_readable_fields and k not in field_exception
         ])
 
     def test_mention_suggestions(self):
@@ -95,7 +96,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         task.check_access('read')
         task.read(self.read_protected_fields_task)
 
-        for field in self.other_fields_task:
+        for field in self.portal_non_readable_fields_task:
             task.invalidate_recordset()
             with self.assertRaises(AccessError, msg=f"Field {field} should be inaccessible"):
                 task.read([field])
@@ -138,7 +139,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             with self.assertRaises(AccessError, msg=f"Field {field} should be readonly"):
                 task.write({field: dummy_value(field)})
 
-        for field in self.other_fields_task:
+        for field in self.portal_non_readable_fields_task:
             with self.assertRaises(AccessError, msg=f"Field {field} should be inaccessible"):
                 task.write({field: dummy_value(field)})
 

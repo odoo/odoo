@@ -1012,9 +1012,11 @@ class ProjectTask(models.Model):
     @tools.ormcache()
     def _portal_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
         """Readable and writable fields by portal users."""
-        readable = frozenset(self.SELF_READABLE_FIELDS)
-        writeable = frozenset(self.SELF_WRITABLE_FIELDS)
-        return readable | writeable, writeable
+        readable = set(self.SELF_READABLE_FIELDS)
+        writeable = set(self.SELF_WRITABLE_FIELDS)
+        portal_readable_fields = {'access_token', 'access_url'}
+        readable.update(portal_readable_fields)
+        return frozenset(readable | writeable), frozenset(writeable)
 
     def _has_field_access(self, field, operation):
         if not super()._has_field_access(field, operation):
