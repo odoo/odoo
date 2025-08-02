@@ -2,10 +2,19 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="website.navbarLinkPopover" t-inherit="html_editor.linkPopover">
+        <xpath expr="//div[@data-prevent-closing-overlay]" position="attributes">
+            <attribute name="style"/>
+        </xpath>
+        <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
+            <attribute name="class" add="me-3" separator=" "/>
+        </xpath>
         <xpath expr="//a[@title='Remove Link']" position="replace">
-            <a href="#" class="ms-2 js_edit_menu text-dark" t-on-click="onClickEditMenu" title="Edit Menu">
-                <i class="fa fa-sitemap"></i>
-            </a>
+            <button type="button"
+                    class="js_edit_menu btn btn-sm btn-primary"
+                    style="padding: 0px 6px;"
+                    t-on-click="onClickEditMenu" title="Edit Menu">
+                Edit Menu
+            </button>
         </xpath>
     </t>
 
