@@ -221,8 +221,7 @@ class WebsiteEventController(http.Controller):
             'quantity': count,
         } for tid, count in ticket_order.items() if count]
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
-    def registration_new(self, event, **post):
+    def _prepare_registration_new_values(self, event, **post):
         tickets = self._process_tickets_form(event, post)
         availability_check = True
         if event.seats_limited:
@@ -248,12 +247,18 @@ class WebsiteEventController(http.Controller):
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+
+        return {
             'tickets': tickets,
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
-        })
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        values = self._prepare_registration_new_values(event, **post)
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", values)
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
