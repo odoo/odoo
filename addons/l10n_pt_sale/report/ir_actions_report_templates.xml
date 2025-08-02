@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="l10n_pt_sale_partner_vat">
+        <div t-if="doc.company_id.account_fiscal_country_id.code == 'PT' and not doc.partner_id.vat">
+            <t t-out="'Consumidor final'"/>
+        </div>
+    </template>
+
+    <template id="report_saleorder_document_inherit_pt" inherit_id="sale.report_saleorder_document">
+        <!-- Add tax exemption reason -->
+        <xpath expr="//td[@name='td_taxes']" position="inside">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT'">
+                <t t-set="pt_line_tax_exemption_reasons" t-value="line._l10n_pt_get_line_vat_exemptions_reasons()"/>
+                <span t-out="pt_line_tax_exemption_reasons"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[@t-if='not doc.signature']" position="before">
+            <t t-set="pt_tax_exemption_reasons" t-value="doc._l10n_pt_get_vat_exemptions_reasons()"/>
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT' and pt_tax_exemption_reasons">
+                <div><strong>Motivos de isenção de IVA:</strong></div>
+                <t t-foreach="pt_tax_exemption_reasons" t-as="reason">
+                    <div><t t-out="reason"/></div>
+                </t>
+                <br/>
+            </t>
+        </xpath>
+
+        <!-- If the customer has no VAT, we must show 'Consumidor final' -->
+        <xpath expr="//t[@t-set='information_block']" position="inside">
+            <t t-call="l10n_pt_sale.l10n_pt_sale_partner_vat"/>
+        </xpath>
+
+        <!-- Add Unique Document Number -->
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT'" t-set="layout_document_title">
+                <span t-if="is_proforma">Pro-Forma Invoice # </span>
+                <span t-if="doc.l10n_pt_document_number" t-field="doc.l10n_pt_document_number">NE 2023/0001</span>
+                <span>-</span>
+                <span t-out="dict(doc.fields_get(allfields=['l10n_pt_document_type'])['l10n_pt_document_type']['selection'])[doc.l10n_pt_document_type]"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- QR Code -->
+        <xpath expr="//div[@name='signature']" position="after">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT' and doc.l10n_pt_atcud">
+                <div>
+                    ATCUD: <t t-out="doc.l10n_pt_atcud"/>
+                </div>
+                <img t-if="doc.l10n_pt_qr_code_str"
+                     style="margin: 0.25cm;"
+                     t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', doc.l10n_pt_qr_code_str, 125, 125)"
+                />
+            </t>
+        </xpath>
+
+        <!-- Add document name as internal number -->
+        <xpath expr="//div[@t-if='doc.user_id.name']" position="after">
+            <div class="col" t-if="doc.name and doc.name != '/'" name="internal_number">
+                <strong>Internal Number</strong>
+                <div t-field="doc.name">SO0000</div>
+            </div>
+        </xpath>
+
+        <!-- Add accumulated amount column -->
+        <xpath expr="//th[@name='th_subtotal']" position="after">
+            <th t-if="doc.company_id.account_fiscal_country_id.code == 'PT' and len(lines_to_report) &gt; 5 and report_type == 'pdf'"
+                name="th_subtotal_accumulated"
+                class="text-end">
+                <span>Accumulated</span>
+            </th>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']" position="after">
+            <td t-if="doc.company_id.account_fiscal_country_id.code == 'PT' and len(lines_to_report) &gt; 5 and report_type == 'pdf'"
+                name="th_subtotal_accumulated_tax"
+                class="text-end">
+                <span class="text-nowrap"
+                      t-out="current_subtotal"
+                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                />
+            </td>
+        </xpath>
+
+        <!-- Disable the accumulated amount resetting happening after a line section -->
+        <xpath expr="//tr[hasclass('is-subtotal')]" position="replace">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT'"/>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//t[@id='reset_current_subtotal']" position="replace">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT'"/>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Display l10n_pt_line_discount instead of discount in line -->
+        <xpath expr="//td[@t-if='display_discount']" position="replace">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT'">
+                <td t-if="display_discount" class="text-end">
+                    <span t-field="line.l10n_pt_line_discount">-</span>
+                </td>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <!-- Add global discount -->
+        <xpath expr="//div[@id='total']" position="before">
+            <t t-if="doc.company_id.account_fiscal_country_id.code == 'PT' and doc.l10n_pt_global_discount">
+                <div class="pb-4">
+                    Global Discount: <t t-out="str(doc.l10n_pt_global_discount) + ' %'"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

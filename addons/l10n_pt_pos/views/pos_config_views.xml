@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_inherit_pt" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherit.pt</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='title']" position="after">
+                <div string="Portugal" invisible="country_code != 'PT'">
+                    <label for="l10n_pt_pos_at_series_id" class="col-lg-3 o_light_label"/>
+                    <field name="l10n_pt_pos_at_series_id" domain="l10n_pt_pos_at_series_id_domain"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
