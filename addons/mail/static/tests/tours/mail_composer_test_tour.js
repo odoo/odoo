@@ -152,11 +152,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         // Test the full composer input text is kept on closing
         {
-            content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
-            run: "click",
-        },
-        {
             content: "Open full composer",
             trigger: "button[title='Open Full Composer']",
             run: "click",
@@ -184,11 +179,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Close full composer",
             trigger: ".btn-close",
-            run: "click",
-        },
-        {
-            content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
             run: "click",
         },
         {
@@ -226,11 +216,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Close full composer",
             trigger: ".btn-close",
-            run: "click",
-        },
-        {
-            content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
             run: "click",
         },
         {
