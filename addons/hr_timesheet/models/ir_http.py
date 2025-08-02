@@ -16,6 +16,9 @@ class IrHttp(models.AbstractModel):
             company_ids = self.env.user.company_ids
 
             for company in company_ids:
+                if company.id not in result["user_companies"]["allowed_companies"]:
+                    result["user_companies"]["allowed_companies"][company.id] = {}
+
                 result["user_companies"]["allowed_companies"][company.id].update({
                     "timesheet_uom_id": company.timesheet_encode_uom_id.id,
                     "timesheet_uom_factor": company.project_time_mode_id._compute_quantity(
