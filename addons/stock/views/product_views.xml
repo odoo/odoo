@@ -143,7 +143,6 @@
         <record id="stock_product_search_form_view" model="ir.ui.view">
             <field name="name">product.product.search.stock.form</field>
             <field name="model">product.product</field>
-            <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='inactive']" position="after">
@@ -627,17 +626,9 @@
             </field>
         </record>
 
-        <record id="stock_product_normal_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">list,form,kanban</field>
-            <field name="search_view_id" ref="stock_product_search_form_view"/>
-        </record>
 
         <menuitem id="menu_product_variant_config_stock" name="Products" action="product_template_action_product"
             parent="stock.menu_stock_inventory_control" sequence="1"/>
-        <menuitem id="product_product_menu" name="Product Variants" action="stock_product_normal_action"
-            parent="menu_stock_inventory_control" sequence="2" groups="product.group_product_variant"/>
         <menuitem id="menu_product_stock" name="Stock" action="stock.action_product_stock_view"
         parent="stock.menu_warehouse_report" sequence="5"/>
 

@@ -305,125 +305,13 @@
             </field>
         </record>
 
-        <record id="product_normal_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">list,form,kanban,activity</field>
-            <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="view_id" eval="False"/> <!-- Force empty -->
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new product variant
-              </p><p>
-                You must define a product for everything you sell or purchase,
-                whether it's a storable product, a consumable or a service.
-              </p>
-            </field>
-        </record>
-
-        <record id="product_variant_easy_edit_view" model="ir.ui.view">
-            <field name="name">product.product.view.form.easy</field>
-            <field name="model">product.product</field>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <form string="Variant Information" duplicate="false">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box"/>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <field name="active" invisible="1"/>
-                        <field name="id" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="image_1920" widget="image" class="oe_avatar" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                        <div class="oe_title">
-                            <label for="name" string="Product Name"/>
-                            <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
-                            <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
-                            <p>
-                                <span>All general settings about this product are managed on</span>
-                                <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product ps-0 ms-1 mb-1"/>
-                            </p>
-                        </div>
-                        <group>
-                            <group name="codes" string="Codes">
-                                <field name="default_code"/>
-                                <field name="barcode"/>
-                                <field name="type" invisible="1"/>
-                            </group>
-                            <group name="pricing" string="Pricing">
-                                <field name="product_variant_count" invisible="1"/>
-                                <label for="lst_price" string="Sales Price"/>
-                                <div class="o_row">
-                                    <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" readonly="product_variant_count &gt; 1"/>
-                                </div>
-                                <label for="standard_price"/>
-                                <div class="o_row">
-                                    <field name="standard_price"
-                                        class="oe_inline"
-                                        widget="monetary"
-                                        options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
-                                </div>
-                                <field name="currency_id" invisible='1'/>
-                                <field name="cost_currency_id" invisible="1"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group name="weight" string="Logistics" invisible="type != 'consu'">
-                                <label for="volume"/>
-                                <div class="d-flex">
-                                    <field name="volume" class="oe_inline"/>
-                                    <field name="volume_uom_name"/>
-                                </div>
-                                <label for="weight"/>
-                                <div class="d-flex">
-                                    <field name="weight" class="oe_inline"/>
-                                    <field name="weight_uom_name"/>
-                                </div>
-                            </group>
-                            <group name="sales" string="Sales">
-                                <field
-                                    name="uom_ids"
-                                    widget="many2many_uom_tags"
-                                    options="{'no_quick_create': True, 'edit_tags': True}"
-                                    groups="uom.group_uom"
-                                    force_save="1"
-                                    context="{'product_id': id}"/>
-                                <field name="product_tag_ids" widget="many2many_tags" readonly="1"/>
-                                <field name="additional_product_tag_ids" widget="many2many_tags" context="{'product_variant_id': id}"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="product_variant_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id, 'create': False}</field>
-            <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="view_ids"
-                   eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'list'}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('product_variant_easy_edit_view')}),
-                          (0, 0, {'view_mode': 'kanban'})]"/>
-             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new product variant
-              </p><p>
-                You must define a product for everything you sell or purchase,
-                whether it's a storable product, a consumable or a service.
-                The product form contains information to simplify the sale process:
-                price, notes in the quotation, accounting data, procurement methods, etc.
-              </p>
-            </field>
-        </record>
 
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.list</field>
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Product Variants" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
+                <list string="Product Variants" create="0" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
@@ -490,6 +378,7 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                     <attribute name="duplicate">false</attribute>
+                    <attribute name="create">false</attribute>
                 </form>
                 <xpath expr="//div[@name='standard_price_uom']" position="after">
                     <field name="default_code"/>
@@ -527,6 +416,29 @@
             </field>
         </record>
 
+        <record id="product_variant_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="res_model">product.product</field>
+            <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
+            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'list'}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('product_normal_form_view')}),
+                          (0, 0, {'view_mode': 'kanban'}),
+                          (0, 0, {'view_mode': 'activity'})]"/>
+             <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new product variant
+              </p><p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+                The product form contains information to simplify the sale process:
+                price, notes in the quotation, accounting data, procurement methods, etc.
+              </p>
+            </field>
+        </record>
+
         <record id="product_product_view_form_normalized" model="ir.ui.view">
             <field name="name">product.product.view.form.normalized</field>
             <field name="model">product.product</field>
@@ -556,7 +468,7 @@
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <kanban sample="1" default_order="is_favorite desc, default_code, name, id">
+                <kanban create="0" sample="1" default_order="is_favorite desc, default_code, name, id">
                     <field name="activity_state"/>
                     <field name="color"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -606,24 +518,6 @@
             </field>
         </record>
 
-        <record id="product_normal_action_sell" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">kanban,list,form,activity</field>
-            <field name="context">{"search_default_filter_to_sell":1}</field>
-            <field name="view_id" ref="product_product_tree_view"/>
-            <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new product variant
-              </p><p>
-                You must define a product for everything you sell, whether it's a physical product,
-                a consumable or a service you offer to customers.
-                The product form contains information to simplify the sale process:
-                price, notes in the quotation, accounting data, procurement methods, etc.
-              </p>
-            </field>
-        </record>
 
     <record id="action_product_print_labels" model="ir.actions.server">
         <field name="name">Print Labels</field>
