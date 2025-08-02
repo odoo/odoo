@@ -29,22 +29,8 @@ class Profiling(Controller):
     def speedscope(self, profile=None, action=False, **kwargs):
         if not profile:
             raise request.not_found()
-        profile_str = profile
         profiles = request.env['ir.profile'].browse((int(p) for p in profile.split(',')))
-        if not kwargs and not action:
-            context = {
-                'profile_str': profile_str,
-                'profiles': profiles,
-            }
-            return request.render('web.config_speedscope_index', context)
-        speedscope_result = profiles._generate_speedscope(profiles._parse_params(kwargs))
-        if action == 'download_json':
-            headers = [
-                ('Content-Type', 'application/json'),
-                ('X-Content-Type-Options', 'nosniff'),
-                ('Content-Disposition', content_disposition(f'profile_{profile_str}.json')),
-            ]
-            return request.make_response(speedscope_result, headers)
+        speedscope_result = profiles._generate_speedscope(profiles._parse_params())
         icp = request.env['ir.config_parameter']
         context = {
             'profiles': profiles,
@@ -53,8 +39,54 @@ class Profiling(Controller):
             'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
         }
         response = request.render('web.view_speedscope_index', context)
-        if action == 'download_html':
-            response.headers['Content-Disposition'] = content_disposition(f'profile_{profile_str}.html')
-            response.headers['X-Content-Type-Options'] = 'nosniff'
-            response.headers['Content-Type'] = 'text/html'
         return response
+
+    @route([
+      '/web/profile_config',
+      '/web/profile_config/<profile>',
+    ], type='http', sitemap=False, auth='user', readonly=True)
+    def profile_config(self, profile=None, action=False, **kwargs):
+        if not profile:
+            raise request.not_found()
+        profile_str = profile
+        profile_ids = (int(p) for p in profile.split(','))
+        profiles = request.env['ir.profile'].browse(profile_ids)
+        if not kwargs and not action:
+            context = {
+                'profile_str': profile_str,
+                'profiles': profiles,
+            }
+            return request.render('web.config_speedscope_index', context)
+        
+        if action.startswith("speedscope_"):
+            speedscope_result = profiles._generate_speedscope(profiles._parse_params(kwargs))
+            if 'download_json' in action:
+                headers = [
+                    ('Content-Type', 'application/json'),
+                    ('X-Content-Type-Options', 'nosniff'),
+                    ('Content-Disposition', content_disposition(f'profile_{profile_str}.json')),
+                ]
+                return request.make_response(speedscope_result, headers)
+            
+            icp = request.env['ir.config_parameter']
+            context = {
+                'profiles': profiles,
+                'speedscope_base64': base64.b64encode(speedscope_result).decode('utf-8'),
+                'url_root': request.httprequest.url_root,
+                'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
+            }
+            response = request.render('web.view_speedscope_index', context)
+            if 'download_html' in action:
+                response.headers['Content-Disposition'] = content_disposition(f'profile_{profile_str}.html')
+                response.headers['X-Content-Type-Options'] = 'nosniff'
+                response.headers['Content-Type'] = 'text/html'
+            return response
+
+        if action.startswith("memory"):
+            memory_profile = profiles._generate_memory_profile(profiles._parse_params(kwargs))
+            encoded_memory_profile = json.dumps(memory_profile).encode('utf_8')
+            context = {
+                'profile': profiles,
+                'memory_graph': base64.b64encode(encoded_memory_profile).decode('utf-8')
+                }
+            return request.render('web.view_memory', context)
