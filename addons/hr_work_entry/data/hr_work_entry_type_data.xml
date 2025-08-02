@@ -819,6 +819,40 @@
         <field name="amount_rate">0.8</field>
     </record>
 
+<!-- SA : Saudi Arabia -->
+    <record id="l10n_sa_work_entry_type_sick_leave_100" model="hr.work.entry.type">
+        <field name="name">Sick Leave (100% Paid)</field>
+        <field name="code">SASICKLEAVE100</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+    <record id="l10n_sa_work_entry_type_sick_leave_75" model="hr.work.entry.type">
+        <field name="name">Sick Leave (75% Paid)</field>
+        <field name="code">SASICKLEAVE75</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.sa"/>
+        <field name="amount_rate">0.75</field>
+    </record>
+    <record id="l10n_sa_work_entry_type_sick_leave_0" model="hr.work.entry.type">
+        <field name="name">Sick Leave (Unpaid)</field>
+        <field name="code">SASICKLEAVE0</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.sa"/>
+        <field name="amount_rate">0</field>
+    </record>
+    <record id="l10n_sa_work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="code">SAMATERNITY</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+    <record id="l10n_sa_work_entry_type_emergency" model="hr.work.entry.type">
+        <field name="name">Emergency Leave</field>
+        <field name="code">SAEMERGENCY</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
 <!-- SK : Slovakia -->
     <record id="l10n_sk_work_entry_type_sick_25" model="hr.work.entry.type">
         <field name="name">Sick Time Off Day 1-3 (Paid at 25%)</field>
