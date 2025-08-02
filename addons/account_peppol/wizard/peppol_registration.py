@@ -80,7 +80,7 @@ class PeppolRegistration(models.TransientModel):
                 with contextlib.suppress(phonenumbers.NumberParseException):
                     parsed_phone_number = phonenumbers.parse(
                         wizard.phone_number,
-                        region=wizard.company_id.country_code,
+                        region=wizard.company_id.country_code or None,
                     )
                     wizard.phone_number = phonenumbers.format_number(
                         parsed_phone_number,
