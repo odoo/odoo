@@ -19,6 +19,7 @@ from odoo.tools import (
     frozendict,
     sql,
 )
+from odoo.tools.translate import TRANSLATE_FUNCS
 
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
@@ -382,9 +383,13 @@ def _setup(model_cls: type[BaseModel], env: Environment):
                 field._args__['translate'] for field in reversed(fields_) if 'translate' in field._args__
             ), False)
             if not translate:
+                field_translate = TRANSLATE_FUNCS.get(
+                    model_cls.pool._database_translated_fields[f'{model_cls._name}.{name}'],
+                    True
+                )
                 # patch the field definition by adding an override
                 _logger.debug("Patching %s.%s with translate=True", model_cls._name, name)
-                fields_.append(type(fields_[0])(translate=True))
+                fields_.append(type(fields_[0])(translate=field_translate))
         if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
             model_cls._fields__[name] = fields_[0]
         else:
