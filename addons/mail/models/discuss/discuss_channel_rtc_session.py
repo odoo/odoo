@@ -40,9 +40,7 @@ class DiscussChannelRtcSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rtc_sessions = super().create(vals_list)
-        rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
-        for rtc_session in rtc_sessions:
-            rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
+        rtc_sessions_by_channel = rtc_sessions.grouped('channel_id')
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
             Store(bus_channel=channel).add(
                 channel,

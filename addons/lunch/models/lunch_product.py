@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -63,9 +61,7 @@ class LunchProduct(models.Model):
             ('user_id', '=', self.env.user.id),
             ('product_id', 'in', self.ids),
         ])
-        mapped_orders = defaultdict(lambda: self.env['lunch.order'])
-        for order in all_orders:
-            mapped_orders[order.product_id] |= order
+        mapped_orders = all_orders.grouped('product_id')
         for product in self:
             if not mapped_orders[product]:
                 product.last_order_date = False
