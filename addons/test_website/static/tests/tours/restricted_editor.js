@@ -122,3 +122,19 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     },
     ...wTourUtils.clickOnSave(),
 ]);
+
+wTourUtils.registerWebsitePreviewTour('test_restricted_editor_tester', {
+    test: true,
+    url: '/test_model/1',
+}, () => [
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "Try to select a section from footer ",
+        trigger: "iframe div#footer .container .row div",
+    },
+    {
+        content: "Footer should not be be editable for restricted user",
+        trigger: "iframe #footer:not(.o_editable):not(.o_dirty)",
+    },
+    ...wTourUtils.clickOnSave(),
+]);
