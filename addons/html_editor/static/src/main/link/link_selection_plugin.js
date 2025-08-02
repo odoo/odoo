@@ -66,7 +66,10 @@ export class LinkSelectionPlugin extends Plugin {
             ["append", "lastChild"],
         ]) {
             const candidate = link[relation];
-            const feff = isZwnbsp(candidate) ? candidate : addFeff(position);
+            const feff =
+                isZwnbsp(candidate) && !zwnbspNodes.includes(candidate)
+                    ? candidate
+                    : addFeff(position);
             zwnbspNodes.push(feff);
         }
         return zwnbspNodes;
