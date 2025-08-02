@@ -247,8 +247,19 @@ class Website(models.Model):
             website.language_count = len(website.language_ids)
 
     def _compute_menu(self):
+        # prefetch all accessible menus at once
+        all_menus = self.env['website.menu']
+        all_menus_prefetch = all_menus._fields['website_id'].prefetch
+        all_menus = all_menus.search_fetch(
+            Domain('website_id', 'in', self.ids),
+            [
+                name for name, f in all_menus._fields.items()
+                if f.prefetch == all_menus_prefetch
+                and all_menus._has_field_access(f, 'read')
+            ],
+        )
         for website in self:
-            menus = self.env['website.menu'].browse(website._get_menu_ids())
+            menus = all_menus.filtered(lambda m: m.website_id == website)
 
             # use field parent_id (1 query) to determine field child_id (2 queries by level)"
             children = dict.fromkeys(menus, ())
@@ -297,16 +308,12 @@ class Website(models.Model):
 
     # self.env.uid for ir.rule groups on menu
     @tools.ormcache('self.env.uid', 'self.id', cache='templates')
-    def _get_menu_ids(self):
-        return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
-
-    @tools.ormcache('self.env.uid', 'self.id', cache='templates')
     def is_menu_cache_disabled(self):
         """
         Checks if the website menu contains a record like url.
         :return: True if the menu contains a record like url
         """
-        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(
+        return any(self.env['website.menu'].search_fetch(Domain('website_id', '=', self.id), ['url']).filtered(
             lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url) or menu.group_ids
         ))
 
