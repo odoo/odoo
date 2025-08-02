@@ -224,9 +224,10 @@ class CrmTeam(models.Model):
 
     def write(self, values):
         res = super(CrmTeam, self).write(values)
-        # manually launch company sanity check
-        if values.get('company_id'):
-            self.crm_team_member_ids._check_company(fnames=['crm_team_id'])
+
+        if values.get('company_id'):  # Force re-check of memberships constraint for this team
+            for team in self:
+                team.crm_team_member_ids._constrains_membership()
 
         if values.get('member_ids'):
             self._add_members_to_favorites()
