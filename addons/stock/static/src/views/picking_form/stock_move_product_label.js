@@ -4,11 +4,7 @@ import { many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 export class MoveProductLabelField extends ProductNameAndDescriptionField {
     static template = "stock.MoveProductLabelField";
-
-    setup() {
-        super.setup();
-        this.descriptionColumn = "description_picking";
-    }
+    static descriptionColumn = "description_picking";
 
     get label() {
         const record = this.props.record.data;
@@ -19,10 +15,8 @@ export class MoveProductLabelField extends ProductNameAndDescriptionField {
         }
         return label.trim();
     }
-    updateLabel(value) {
-        this.props.record.update({
-          [this.descriptionColumn]: value,
-        });
+    parseLabel(value) {
+        return value;
     }
 }
 

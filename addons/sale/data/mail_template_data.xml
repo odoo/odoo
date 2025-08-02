@@ -23,7 +23,7 @@
         <br/>
         <t t-set="documents" t-value="object._get_product_documents()"/>
         <t t-if="documents">
-            <br/> 
+            <br/>
             <t t-if="len(documents)>1">
                 Here are some additional documents that may interest you:
             </t>
@@ -111,7 +111,7 @@
         <br/>
         <t t-set="documents" t-value="object._get_product_documents()"/>
         <t t-if="documents">
-            <br/> 
+            <br/>
             <t t-if="len(documents)>1">
                 Here are some additional documents that may interest you:
             </t>
@@ -166,7 +166,7 @@
             <t t-set="current_subtotal" t-value="current_subtotal + line_subtotal"/>
             <t
                 t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (
-                    line.display_type in ['line_section', 'line_note']
+                    line.display_type in ['line_section', 'line_subsection', 'line_note']
                     or line.product_type == 'combo'
                 )"
             >
@@ -175,8 +175,8 @@
                     <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
                         <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" />
                         <td colspan="4">
-                            <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
-                                <span style="font-weight:bold;" t-out="line.name or ''">Taking care of Trees Course</span>
+                            <t t-if="line.display_type in ('line_section', 'line_subsection') or line.product_type == 'combo'">
+                                <span t-att-style="'font-weight:bold;' if line.display_type == 'line_subsection' else 'font-weight:bolder;'" t-out="line.name or ''">Taking care of Trees Course</span>
                                 <t t-set="current_section" t-value="line"/>
                                 <t t-set="current_subtotal" t-value="0"/>
                             </t>
@@ -211,7 +211,7 @@
             <t
                 t-if="current_section and (
                     line_last
-                    or object.order_line[line_index+1].display_type == 'line_section'
+                    or object.order_line[line_index+1].display_type in ('line_section', 'line_subsection')
                     or object.order_line[line_index+1].product_type == 'combo'
                     or (
                         line.combo_item_id

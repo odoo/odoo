@@ -771,7 +771,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         scopes = []
-        for line in self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section')):
+        for line in self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_section', 'line_subsection', 'line_note')):
             tax_ids_with_tax_scope = line.tax_ids.filtered(lambda x: x.tax_scope)
             if tax_ids_with_tax_scope:
                 scopes += tax_ids_with_tax_scope.mapped('tax_scope')
@@ -833,7 +833,7 @@ class AccountMove(models.Model):
         return any(
             professional_fee_tag.id in line.account_id.tag_ids.ids
             for line in self.invoice_line_ids
-            if line.display_type not in ('line_note', 'line_section')
+            if line.display_type not in ('line_section', 'line_subsection', 'line_note')
         )
 
     def _l10n_it_edi_features_for_document_type_selection(self):
