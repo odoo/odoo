@@ -994,14 +994,37 @@ class AccountMove(models.Model):
             move.fiscal_position_id = self.env['account.fiscal.position'].with_company(move.company_id)._get_fiscal_position(
                 move.partner_id, delivery=delivery_partner)
 
-    @api.depends('bank_partner_id')
+    @api.depends('bank_partner_id', 'currency_id', 'preferred_payment_method_line_id')
     def _compute_partner_bank_id(self):
         for move in self:
-            # This will get the bank account from the partner in an order with the trusted first
-            bank_ids = move.bank_partner_id.bank_ids.filtered(
-                lambda bank: not bank.company_id or bank.company_id == move.company_id
-            ).sorted(lambda bank: not bank.allow_out_payment)
-            move.partner_bank_id = bank_ids[:1]
+            partner = move.bank_partner_id
+            partner_bank_id = None
+
+            if (
+                payment_method := (
+                    move.preferred_payment_method_line_id
+                    or (
+                        partner.property_inbound_payment_method_line_id
+                        if move.is_inbound()
+                        else partner.property_outbound_payment_method_line_id
+                    )
+                )
+            ) and payment_method.journal_id:
+                partner_bank_id = payment_method.journal_id.bank_account_id
+
+            if not partner_bank_id:
+                # Fetch all valid bank accounts, ordered with trusted ones first
+                all_banks = partner.bank_ids.filtered(
+                    lambda bank: not bank.company_id or bank.company_id == move.company_id
+                ).sorted(lambda bank: not bank.allow_out_payment)
+
+                partner_bank_id = (
+                    all_banks.filtered(lambda b: b.currency_id == move.currency_id)[:1]
+                    or all_banks.filtered(lambda b: not b.currency_id)[:1]
+                    or all_banks[:1]
+                )
+
+            move.partner_bank_id = partner_bank_id
 
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
