@@ -1,7 +1,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
 import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
@@ -18,7 +18,7 @@ publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
 
     /**
      * Adds the attendees answers on the screen.
-     * This is used for char_box/date and datetime questions.
+     * This is used for char_box/date and time questions.
      *
      * We use some tricks with jQuery for wow effect:
      * - force a width on the external div container, to reserve space for that answer
@@ -26,7 +26,7 @@ publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
      * - set the opacity to 1, and enable a css opacity animation
      *
      * @param {Array} inputLineValues array of survey.user_input.line records in the form
-     *   {id: line.id, value: line.[value_char_box/value_date/value_datetime]}
+     *   {id: line.id, value: line.[value_char_box/value_date/value_time]}
      */
     updateTextAnswers: function (inputLineValues) {
         var self = this;
@@ -40,10 +40,10 @@ publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
                         textValue;
                 } else if (self.questionType === 'date') {
                     textValue = formatDate(DateTime.fromFormat(textValue, "yyyy-MM-dd"));
-                } else if (self.questionType === 'datetime') {
-                    textValue = formatDateTime(
-                        DateTime.fromFormat(textValue, "yyyy-MM-dd HH:mm:ss")
-                    );
+                } else if (self.questionType === 'time') {
+                    const hours = Math.floor(textValue);
+                    const minutes = Math.round((textValue - hours) * 60);
+                    textValue = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
                 }
 
                 var $textAnswer = $(renderToElement('survey.survey_session_text_answer', {
