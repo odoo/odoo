@@ -37,6 +37,7 @@ import {
 import { throttleForAnimation } from "@web/core/utils/timing";
 
 import { Component, markup, useEffect, useRef, useState } from "@odoo/owl";
+import { isVisible } from "@web/core/utils/ui";
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -4170,17 +4171,33 @@ options.registry.TextHighlight = options.Class.extend({
      */
     _onWidgetOpening(ev) {
         const target = ev.target;
-        // Only when there is no highlight SVGs.
-        if (target.getName() === "text_highlight_opt" && !target.el.querySelector("svg")) {
-            const weToggler = target.el.querySelector("we-toggler");
-            weToggler.classList.add("active");
-            [...target.el.querySelectorAll("we-button[data-set-text-highlight] div")].forEach(weBtnEl => {
-                weBtnEl.textContent = "Text";
-                // Get the text highlight linked to each `<we-button/>`
-                // and apply it to its text content.
-                weBtnEl.append(drawTextHighlightSVG(weBtnEl, weBtnEl.parentElement.dataset.setTextHighlight));
+        const awaitVisible = (el, callback) => {
+            if (isVisible(el)) {
+                callback();
+                return;
+            }
+            const observer = new ResizeObserver(() => {
+                if (isVisible(el)) {
+                    observer.disconnect();
+                    callback();
+                }
             });
-        }
+            observer.observe(el);
+        };
+        // Make sure the widget is visible to correctly build the preview.
+        return awaitVisible(target.el, () => {
+            // Only when there is no highlight SVGs.
+            if (target.getName() === "text_highlight_opt" && !target.el.querySelector("svg")) {
+                const weToggler = target.el.querySelector("we-toggler");
+                weToggler.classList.add("active");
+                [...target.el.querySelectorAll("we-button[data-set-text-highlight] div")].forEach(weBtnEl => {
+                    weBtnEl.textContent = "Text";
+                    // Get the text highlight linked to each `<we-button/>`
+                    // and apply it to its text content.
+                    weBtnEl.append(drawTextHighlightSVG(weBtnEl, weBtnEl.parentElement.dataset.setTextHighlight));
+                });
+            }
+        });
     },
 });
 
