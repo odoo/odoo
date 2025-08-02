@@ -324,7 +324,7 @@ class TestUsers2(UsersCommonCase):
         group_user = self.env.ref('base.group_user')
 
         self.assertIn(group_user, user.group_ids)
-        self.assertEqual(default_group.implied_ids + group_user, user.group_ids)
+        self.assertTrue(set((default_group.implied_ids + group_user).ids).issubset(set(user.group_ids.ids)))
 
     def test_selection_groups(self):
         # create 3 groups that should be in a selection

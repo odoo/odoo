@@ -21,6 +21,7 @@
     ],
     'installable': True,
     'application': True,
+    'post_init_hook': '_todo_post_init',
     'assets': {
         'web.assets_backend': [
             'project_todo/static/src/components/**/*',
