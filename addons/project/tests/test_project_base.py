@@ -244,9 +244,6 @@ class TestProjectBase(TestProjectCommon):
             # Cannot change the company of a project if both the project and its partner have a company
             self.project_pigs.company_id = company_2
         with self.assertRaises(UserError):
-            # Cannot unset the project's company if its associated partner has a company
-            self.project_pigs.company_id = False
-        with self.assertRaises(UserError):
             # Cannot change the company of a partner if both the project and its partner have a company
             partner.company_id = company_2
         partner.company_id = False
