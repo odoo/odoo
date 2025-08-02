@@ -133,13 +133,16 @@ class Web_Unsplash(http.Controller):
                 return {'error': 'no_access'}
             return {'error': 'key_not_found'}
         post['client_id'] = access_key
-        response = requests.get('https://api.unsplash.com/search/photos/', params=url_encode(post))
-        if response.status_code == requests.codes.ok:
-            return response.json()
-        else:
-            if not request.env.user._can_manage_unsplash_settings():
-                return {'error': 'no_access'}
-            return {'error': response.status_code}
+        try:
+            response = requests.get('https://api.unsplash.com/search/photos/', params=url_encode(post))
+            if response.status_code == requests.codes.ok:
+                return response.json()
+            else:
+                if not request.env.user._can_manage_unsplash_settings():
+                    return {'error': 'no_access'}
+                return {'error': response.status_code}
+        except requests.exceptions.RequestException as e:
+            return {'error': 'Request failed: ' + str(e)}
 
     @http.route("/web_unsplash/get_app_id", type='json', auth="public")
     def get_unsplash_app_id(self, **post):
