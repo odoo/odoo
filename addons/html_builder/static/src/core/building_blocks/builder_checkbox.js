@@ -29,6 +29,8 @@ export class BuilderCheckbox extends Component {
             };
         });
         this.onChange = operation.commit;
+        this.onMouseenter = operation.preview;
+        this.onMouseleave = operation.revert;
     }
 
     getClassName() {
