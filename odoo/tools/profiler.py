@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 
 # ensure we have a non patched time for profiling times when using freezegun
 real_datetime_now = datetime.now
-real_time = time.time.__call__
+real_time = time.perf_counter.__call__
 
 def _format_frame(frame):
     code = frame.f_code
