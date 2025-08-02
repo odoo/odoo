@@ -1344,6 +1344,7 @@ class AccountMove(models.Model):
             pay_term_lines = move.line_ids\
                 .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
+<<<<<<< fc5abf66295772a6d1670e18c9521d985804e677
             domain = [
                 ('account_id', 'in', pay_term_lines.account_id.ids),
                 ('parent_state', '=', 'posted'),
@@ -1351,6 +1352,38 @@ class AccountMove(models.Model):
                 ('reconciled', '=', False),
                 '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
             ]
+||||||| 7fb0d471fe075f29ac40cf43926e56c1ee3754b7
+            domain = Domain(get_common_domain(move.commercial_partner_id.id)) & Domain([
+                    ('account_id', 'in', pay_term_lines.account_id.ids),
+                    ('balance', '<' if move.is_inbound() else '>', 0.0),
+                    ('reconciled', '=', False),
+                ])
+            bank_domain = Domain(get_common_domain(move.commercial_partner_id.id)) & Domain([
+                    ('account_id.account_type', '=', 'asset_cash'),
+                    ('journal_id', 'in', self.env['account.journal']._search([
+                        *self.env['account.journal']._check_company_domain(move.company_id.id),
+                        ('type', '=', 'bank')
+                    ])),
+                    ('balance', '>' if move.is_inbound() else '<', 0.0),
+                    ('statement_line_id', '!=', False),
+                ])
+=======
+            domain = Domain(get_common_domain(move.commercial_partner_id.id)) & Domain([
+                    ('account_id', 'in', pay_term_lines.account_id.ids),
+                    ('balance', '<' if move.is_inbound() else '>', 0.0),
+                    ('reconciled', '=', False),
+                ])
+            bank_domain = Domain(get_common_domain(move.commercial_partner_id.id)) & Domain([
+                    ('account_id.account_type', '=', 'asset_cash'),
+                    ('journal_id', 'in', self.env['account.journal']._search([
+                        *self.env['account.journal']._check_company_domain(move.company_id.id),
+                        ('type', '=', 'bank')
+                    ])),
+                    ('balance', '>' if move.is_inbound() else '<', 0.0),
+                    ('statement_line_id', '!=', False),
+                    ('move_id.line_ids', 'any', [('account_id', '=', move.company_id.account_journal_suspense_account_id.id)])
+                ])
+>>>>>>> 49edc1c1784b0e05f0de512304cfeff191be828a
 
             payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
 
