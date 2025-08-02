@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_details_fields_shipper" inherit_id="portal.portal_my_details_fields">
+        <xpath expr="//select[@name='state_id']/.." position="after">
+            <div t-attf-class="mb-3 #{error.get('city') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label" for="city_id">City</label>
+                <select name="city_id" t-attf-class="form-select #{error.get('city_id') and 'is-invalid' or ''}">
+                    <option value="">Select a city...</option>
+                    <t t-foreach="cities or []" t-as="city">
+                        <option t-att-value="city.id" t-att-data-state_id="city.state_id.id" t-att-selected="city.id == int(city_id) if city_id else city.id == partner.city_id.id">
+                            <t t-esc="city.name" />
+                        </option>
+                    </t>
+                </select>
+            </div>
+            <div t-attf-class="mb-3 #{error.get('district_id') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label" for="district_id">District</label>
+                <select name="district_id" t-attf-class="form-select #{error.get('district_id') and 'is-invalid' or ''}">
+                    <option value="">Select a district...</option>
+                    <t t-foreach="districts or []" t-as="district">
+                        <option t-att-value="district.id" t-att-data-city_id="district.city_id.id" t-att-selected="district.id == int(district_id) if district_id else district.id == partner.district_id.id">
+                            <t t-esc="district.name" />
+                        </option>
+                    </t>
+                </select>
+            </div>
+            <div t-attf-class="mb-3 #{error.get('area_id') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label" for="area_id">Area</label>
+                <select name="area_id" 
+                    t-att-data-selected-id="partner.area_id.id" 
+                    t-attf-class="form-select #{error.get('area_id') and 'is-invalid' or ''}">
+                    <option value="">Select an area...</option>
+                </select>
+            </div>
+        </xpath>
+    </template>
+</odoo>

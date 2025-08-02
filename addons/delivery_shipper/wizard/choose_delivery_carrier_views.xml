@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="choose_delivery_carrier_view_form_shipper" model="ir.ui.view">
+        <field name="name">choose.delivery.carrier.form.shipper</field>
+        <field name="model">choose.delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.choose_delivery_carrier_view_form"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="is_shipper" invisible="1"/>
+                <field name="is_shipper_3pl" invisible="1"/>
+            </form>
+            <xpath expr="//button[@name='update_price']" position="attributes">
+                <attribute name="invisible">is_shipper and not is_shipper_3pl</attribute>
+            </xpath>
+            <xpath expr="//field[@name='display_price']" position="attributes">
+                <attribute name="invisible">is_shipper and not is_shipper_3pl</attribute>
+            </xpath>
+            <xpath expr="//label[@for='display_price']" position="attributes">
+                <attribute name="invisible">is_shipper and not is_shipper_3pl</attribute>
+            </xpath>
+            <xpath expr="//field[@name='weight_uom_name']" position="after">
+                <button name="update_price_shipper" type="object" invisible="delivery_type in ('fixed', 'base_on_rule') and not is_shipper or is_shipper_3pl">
+                    <i class="oi oi-arrow-right me-1"/>Get shipper rate
+                </button>
+            </xpath>
+            <xpath expr="//form/group" position="after">
+                <field name="rate_line_ids" widget="one2many_list" mode="tree" invisible="not is_shipper or is_shipper_3pl">
+                <tree editable="bottom" delete="false" create="false">
+                    <field name="is_selected"/>
+                    <field name="carrier_name" readonly="True"/>
+                    <field name="service" readonly="True"/>
+                    <field name="final_price" readonly="True"/>
+                    <field name="delivery_time" readonly="True"/>
+                </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>
