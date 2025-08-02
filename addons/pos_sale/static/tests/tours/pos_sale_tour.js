@@ -503,6 +503,7 @@ registry.category("web_tour.tours").add("test_sale_order_fp_different_from_partn
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
+<<<<<<< 576d2ec1ac03b8ceb9589dd5f1115497d2d4dd9d
 
 registry.category("web_tour.tours").add("test_quantity_updated_settle", {
     steps: () =>
@@ -523,3 +524,26 @@ registry.category("web_tour.tours").add("test_quantity_updated_settle", {
             }),
         ].flat(),
 });
+||||||| d380a3a42dc39451fa26f161cc0b955b2f0098fd
+=======
+
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Product", ["1002"]),
+            Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1001"])),
+            ProductScreen.selectedOrderlineHas("Product", "2.00"),
+            ProductScreen.clickOrderline("Product", "1"),
+            PosSale.selectedOrderLinesHasLots("Product", ["1001"]),
+            ProductScreen.selectedOrderlineHas("Product", "1.00"),
+            Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1002"])),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+>>>>>>> a3978e3a552caf5fcfabc9e9dec3b39e92b09200
