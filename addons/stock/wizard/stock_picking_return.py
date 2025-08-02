@@ -105,8 +105,6 @@ class StockReturnPicking(models.TransientModel):
     def _compute_moves_locations(self):
         for wizard in self:
             product_return_moves = [Command.clear()]
-            if not wizard.picking_id._can_return():
-                raise UserError(_("You may only return Done pickings."))
             # In case we want to set specific default values (e.g. 'to_refund'), we must fetch the
             # default values for creation.
             line_fields = list(self.env['stock.return.picking.line']._fields)
