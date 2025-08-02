@@ -11,6 +11,7 @@ declare module "models" {
         hasSomeoneSeen: boolean|undefined;
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean;
         mentionedChannelPromises: Promise<Thread>[];
+        mentionedRolePromises: Promise<ResRole>[];
         threadAsFirstUnread: Thread;
     }
     export interface Persona {
