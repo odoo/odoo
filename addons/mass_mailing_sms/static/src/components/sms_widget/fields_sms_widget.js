@@ -7,7 +7,7 @@ import { SmsWidget } from "@sms/components/sms_widget/fields_sms_widget";
 
 import { onWillStart } from "@odoo/owl";
 
-const TEXT_URL_REGEX = /https?:\/\/[\w@:%.+&~#=/-]+(?:\?\S+)?/g;  // from tools.mail.TEXT_URL_REGEX
+const TEXT_URL_REGEX = /https?:\/\/[\w@:%.,+&~#=/-]+(?:\?\S+)?/g;  // from tools.mail.TEXT_URL_REGEX
 
 /**
  * Patch to provide extra characters count information to
