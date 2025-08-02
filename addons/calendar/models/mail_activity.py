@@ -59,7 +59,7 @@ class MailActivity(models.Model):
         # that updates the related activity note each time the event description is updated),
         # when the activity is written as a note in the chatter in _action_done (leading to duplicate feedback),
         # we call super before updating the description. As self is deleted in super, we load the related events before.
-        messages, activities = super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
+        messages = super()._action_done(feedback=feedback, attachment_ids=attachment_ids)
         if feedback:
             for event in events:
                 description = event.description
@@ -68,7 +68,7 @@ class MailActivity(models.Model):
                     _('Feedback: %(feedback)s', feedback=tools.plaintext2html(feedback)) if feedback else '',
                 )
                 event.write({'description': description})
-        return messages, activities
+        return messages
 
     def unlink_w_meeting(self):
         events = self.mapped('calendar_event_id')
