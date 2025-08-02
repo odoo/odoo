@@ -59,7 +59,12 @@ class PosOrder(models.Model):
         for config in config_ids:
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('login_number', 0))
             config._notify('ORDER_STATE_CHANGED', {})
-    
+
+    def _notify_new_self_order(self):
+        for config in self.config_id:
+            order_ids = self.filtered(lambda o: o.config_id.id == config.id).ids
+            config._notify('NEW_SELF_ORDER', {'order_ids': order_ids})
+
     def action_send_self_order_receipt(self, email, mail_template_id, ticket_image, basic_image):
         self.ensure_one()
         self.email = email

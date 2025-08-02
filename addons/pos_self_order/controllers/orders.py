@@ -55,6 +55,7 @@ class PosSelfOrderController(http.Controller):
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
+        order_ids._notify_new_self_order()
 
         if amount_total == 0:
             order_ids._process_saved_order(False)
