@@ -53,8 +53,8 @@ export class LivechatService {
      *
      * @returns {Promise<import("models").Thread|undefined>}
      */
-    async open() {
-        const thread = await this._createThread({ persist: false });
+    async open(options = {}) {
+        const thread = await this._createThread({ persist: false, options});
         await thread?.openChatWindow({ focus: true });
         return thread;
     }
@@ -110,16 +110,15 @@ export class LivechatService {
      * @param {import("models").Thread} [param0.originThread]
      * @returns {Promise<import("models").Thread>}
      */
-    async _createThread({ originThread, persist = false }) {
+    async _createThread({ originThread, persist = false, options = {} }) {
         const { store_data, channel_id } = await rpc(
             "/im_livechat/get_session",
             {
-                channel_id: this.options.channel_id,
-                chatbot_script_id:
-                    originThread?.chatbot?.script.id ??
-                    this.store.livechat_rule?.chatbot_script_id?.id,
+                channel_id: options.channel_id ?? this.options.channel_id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
-                persisted: persist,
+                chatbot_script_id: originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id,
+                extra_operator_lookup_params: this.getExtraOperatorLookupParams(originThread, options),
+                persisted: options.persist ?? persist,
             },
             { silent: true }
         );
@@ -136,6 +135,10 @@ export class LivechatService {
             ONE_DAY_TTL * 7
         );
         return thread;
+    }
+
+    getExtraOperatorLookupParams(thread, options){
+        return {};
     }
 
     get options() {

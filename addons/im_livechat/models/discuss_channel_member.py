@@ -185,10 +185,14 @@ class DiscussChannelMember(models.Model):
 
     def _get_rtc_invite_members_domain(self, *a, **kw):
         domain = super()._get_rtc_invite_members_domain(*a, **kw)
-        chatbot = self.channel_id.chatbot_current_step_id.chatbot_script_id
-        if self.channel_id.channel_type == "livechat" and chatbot:
-            domain &= Domain("partner_id", "!=", chatbot.operator_partner_id.id)
+        if self.channel_id.channel_type == "livechat":
+            domain &= Domain("partner_id", "not in", self._get_excluded_rtc_members_partner_ids())
         return domain
+
+    def _get_excluded_rtc_members_partner_ids(self):
+        chatbot = self.channel_id.chatbot_current_step_id.chatbot_script_id
+        excluded_partner_ids = [chatbot.operator_partner_id.id] if chatbot else []
+        return excluded_partner_ids
 
     def _get_html_link_title(self):
         if self.channel_id.channel_type == "livechat" and self.partner_id.user_livechat_username:

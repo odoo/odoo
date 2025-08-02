@@ -192,7 +192,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(
             Store().add(channel).get_result(),
             {
-                "discuss.channel": [
+                "discuss.channel": self._filter_channels_fields(
                     {
                         "channel_type": "livechat",
                         "country_id": False,
@@ -218,8 +218,9 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "requested_by_operator": False,
                         "rtc_session_ids": [("ADD", [])],
                         "uuid": channel.uuid,
-                    },
-                ],
+                        'livechat_with_ai_agent': False,
+                    }
+                ),
                 "discuss.channel.member": [
                     {
                         "create_date": fields.Datetime.to_string(operator_member.create_date),
@@ -307,7 +308,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             Store().add(
                 channel.with_user(self.user_public).with_context(guest=guest),
             ).get_result()["discuss.channel"],
-            [
+            self._filter_channels_fields(
                 {
                     "channel_type": "livechat",
                     "country_id": False,
@@ -328,8 +329,9 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "requested_by_operator": False,
                     "rtc_session_ids": [("ADD", [])],
                     "uuid": channel.uuid,
+                    'livechat_with_ai_agent': False,
                 },
-            ],
+            )
         )
 
     def test_livechat_not_available_with_hide_button_rule(self):

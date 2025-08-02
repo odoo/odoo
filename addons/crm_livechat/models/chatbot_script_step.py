@@ -111,7 +111,7 @@ class ChatbotScriptStep(models.Model):
             users = discuss_channel.livechat_channel_id.sudo()._get_available_operators_by_livechat_channel(
                 self.env["res.users"].browse(assignable_user_ids)
             )[discuss_channel.livechat_channel_id]
-        message = self._process_step_forward_operator(discuss_channel, users=users)
+        message = discuss_channel._forward_human_operator(self, users=users)
         if previous_operator != discuss_channel.livechat_operator_id:
             user = next(user for user in users if user.partner_id == discuss_channel.livechat_operator_id)
             lead.user_id = user

@@ -460,10 +460,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         return {
-            "discuss.channel": [
+            "discuss.channel": self._filter_channels_fields(
                 self._expected_result_for_channel(self.channel_chat_1),
                 self._expected_result_for_channel(self.channel_channel_group_1),
-            ],
+            ),
             "discuss.channel.member": [
                 self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
@@ -516,7 +516,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.channel_channel_group_1.call_history_ids.id,
                 },
             ],
-            "discuss.channel": [
+            "discuss.channel": self._filter_channels_fields(
                 self._expected_result_for_channel(self.channel_general),
                 self._expected_result_for_channel(self.channel_channel_public_1),
                 self._expected_result_for_channel(self.channel_channel_public_2),
@@ -529,7 +529,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_channel(self.channel_chat_4),
                 self._expected_result_for_channel(self.channel_livechat_1),
                 self._expected_result_for_channel(self.channel_livechat_2),
-            ],
+            ),
             "discuss.channel.member": [
                 self._res_for_member(self.channel_general, self.users[0].partner_id),
                 self._res_for_member(self.channel_channel_public_1, self.users[0].partner_id),
@@ -879,6 +879,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "requested_by_operator": False,
                 "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
+                'livechat_with_ai_agent': False,
             }
         if channel == self.channel_livechat_2:
             return {
@@ -906,6 +907,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "requested_by_operator": False,
                 "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
+                'livechat_with_ai_agent': False,
             }
         return {}
 
