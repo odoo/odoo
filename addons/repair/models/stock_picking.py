@@ -41,11 +41,6 @@ class StockPickingType(models.Model):
         check_company=True, store=True, readonly=False, precompute=True,
         help="This is the default recycle destination location when you create a repair order with this operation type.")
 
-    is_repairable = fields.Boolean(
-        'Create Repair Orders from Returns',
-        compute='_compute_is_repairable', store=True, readonly=False, default=False,
-        help="If ticked, you will be able to directly create repair orders from a return.")
-    return_type_of_ids = fields.One2many('stock.picking.type', 'return_picking_type_id')
     repair_properties_definition = fields.PropertiesDefinition('Repair Properties')
 
     def _compute_count_repair(self):
@@ -100,12 +95,6 @@ class StockPickingType(models.Model):
             pt.count_repair_confirmed = counts[pt.id].get('confirmed')
             pt.count_repair_under_repair = counts[pt.id].get('under_repair')
             pt.count_repair_late = late_repairs.get(pt.id, 0)
-
-    @api.depends('return_type_of_ids', 'code')
-    def _compute_is_repairable(self):
-        for picking_type in self:
-            if not picking_type.return_type_of_ids:
-                picking_type.is_repairable = False  # Reset the user choice as it's no more available.
 
     def _compute_default_location_src_id(self):
         remaining_picking_type = self.env['stock.picking.type']
@@ -188,14 +177,8 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    is_repairable = fields.Boolean(compute='_compute_is_repairable')
     repair_ids = fields.One2many('repair.order', 'picking_id')
     nbr_repairs = fields.Integer('Number of repairs linked to this picking', compute='_compute_nbr_repairs')
-
-    @api.depends('picking_type_id.is_repairable', 'return_id')
-    def _compute_is_repairable(self):
-        for picking in self:
-            picking.is_repairable = picking.picking_type_id.is_repairable and picking.return_id
 
     @api.depends('repair_ids')
     def _compute_nbr_repairs(self):
@@ -205,10 +188,10 @@ class StockPicking(models.Model):
     def action_repair_return(self):
         self.ensure_one()
         ctx = clean_context(self.env.context.copy())
+        warehouse = self.picking_type_id.warehouse_id or self.env.user._get_default_warehouse_id()
         ctx.update({
-            'default_product_location_src_id': self.location_dest_id.id,
             'default_repair_picking_id': self.id,
-            'default_picking_type_id': self.picking_type_id.warehouse_id.repair_type_id.id,
+            'default_picking_type_id': warehouse.repair_type_id.id,
             'default_partner_id': self.partner_id and self.partner_id.id or False,
         })
         return {
