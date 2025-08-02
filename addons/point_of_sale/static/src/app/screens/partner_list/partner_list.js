@@ -137,6 +137,7 @@ export class PartnerList extends Component {
                 "state_id",
                 "country_id",
                 "vat",
+                "company_registry"
             ];
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
