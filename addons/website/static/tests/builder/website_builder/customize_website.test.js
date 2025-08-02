@@ -11,6 +11,7 @@ import {
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { CustomizeBodyBgTypeAction } from "@website/builder/plugins/customize_website_plugin";
+import { renderToString } from "@web/core/utils/render";
 
 defineWebsiteModels();
 
@@ -473,4 +474,99 @@ test("theme background image is properly set", async () => {
     ).click();
     await animationFrame();
     await expect.verifySteps(["scss_customization", "bundle_reload"]);
+});
+
+test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {
+    renderToString.app.addTemplate("test.template.1", `<div class="template1"></div>`);
+    renderToString.app.addTemplate("test.template.2", `<div class="template2"></div>`);
+    renderToString.app.addTemplate("test.template.3", `<div class="template3"></div>`);
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data");
+        expect(params.enable).toEqual(["test_template_2"]);
+        expect(params.disable).toEqual(["test_template_1", "test_template_3"]);
+    });
+    onRpc("ir.ui.view", "save", () => {
+        expect.step("websiteSave");
+        return true;
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+        <BuilderButtonGroup>
+            <BuilderButton
+                    action="'websiteConfig'"
+                    actionParam="{views: []}"
+            >Item1</BuilderButton>
+            <BuilderButton
+                    action="'templatePreviewableWebsiteConfig'"
+                    actionParam="{
+                        views: ['test_template_1'],
+                        previewClass: 'preview_class_1',
+                        templateId: 'test.template.1',
+                        placeBefore: '.target1',
+                    }"
+            >Item2</BuilderButton>
+            <BuilderButton
+                    action="'templatePreviewableWebsiteConfig'"
+                    actionParam="{
+                        views: ['test_template_2'],
+                        previewClass: 'preview_class_2',
+                        templateId: 'test.template.2',
+                        placeAfter: '.target1',
+                        placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_sidebar',
+                    }"
+            >Item3</BuilderButton>
+            <BuilderButton
+                    action="'templatePreviewableWebsiteConfig'"
+                    actionParam="{
+                        views: ['test_template_3'],
+                        previewClass: 'preview_class_3',
+                        templateId: 'test.template.3',
+                        placeAfter: '.target2',
+                        placeExcludeRootClosest: '.excluded-class',
+                    }"
+            >Item4</BuilderButton>
+        </BuilderButtonGroup>
+            `,
+    });
+
+    await setupWebsiteBuilder(
+        `<div class="test-options-target excluded-class">
+            <div class="target1"></div>
+            <div class="target2"></div>
+        </div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-param*='test_template_1']").hover();
+    expect(":iframe .test-options-target").toHaveClass("preview_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_2");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_3");
+    expect(":iframe .template1 + .target1 + .target2").toHaveCount(1);
+    expect(":iframe .template2").toHaveCount(0);
+    expect(":iframe .template3").toHaveCount(0);
+
+    await contains("[data-action-param*='test_template_2']").hover();
+    expect(":iframe .test-options-target").toHaveClass("preview_class_2");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_3");
+    expect(":iframe .target1 + .template2 + .target2").toHaveCount(1);
+    expect(":iframe .template1").toHaveCount(0);
+    expect(":iframe .template3").toHaveCount(0);
+
+    await contains("[data-action-param*='test_template_3']").hover();
+    expect(":iframe .test-options-target").toHaveClass("preview_class_3");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_2");
+    expect(":iframe .template1").toHaveCount(0);
+    expect(":iframe .template2").toHaveCount(0);
+    expect(":iframe .template3").toHaveCount(0);
+
+    await contains(":iframe .test-options-target").hover();
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_2");
+    expect(":iframe .test-options-target").not.toHaveClass("preview_class_3");
+
+    await contains("[data-action-param*='test_template_2']").click();
+    expect.verifySteps(["theme_customize_data"]);
 });

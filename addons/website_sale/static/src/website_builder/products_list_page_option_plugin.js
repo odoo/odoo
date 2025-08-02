@@ -1,9 +1,9 @@
-import { ProductsListPageOption } from "@website_sale/website_builder/products_list_page_option";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { BuilderAction } from "@html_builder/core/builder_action";
+import { ProductsListPageOption } from "@website_sale/website_builder/products_list_page_option";
 
 class ProductsListPageOptionPlugin extends Plugin {
     static id = "productsListPageOptionPlugin";
@@ -38,7 +38,6 @@ class ProductsListPageOptionPlugin extends Plugin {
         }
     }
 }
-
 export class SetPpgAction extends BuilderAction {
     static id = "setPpg";
     setup() {

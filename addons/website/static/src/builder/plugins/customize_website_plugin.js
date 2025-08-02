@@ -11,6 +11,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { renderToElement } from "@web/core/utils/render";
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
@@ -45,6 +46,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
             PreviewableWebsiteConfigAction,
+            TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
         },
         color_combination_getters: withSequence(5, (el, actionParam) => {
@@ -554,7 +556,7 @@ export class WebsiteConfigAction extends BuilderAction {
     async apply(action) {
         return this._toggleConfig(action, true);
     }
-    clean(action) {
+    async clean(action) {
         return this._toggleConfig(action, false);
     }
 
@@ -609,14 +611,20 @@ export class WebsiteConfigAction extends BuilderAction {
             }
             for (const item of action.selectableContext.items) {
                 for (const a of item.getActions()) {
-                    if (a.actionId === "websiteConfig") {
+                    if (
+                        a.actionId === "websiteConfig" ||
+                        a.actionId === "templatePreviewableWebsiteConfig"
+                    ) {
                         for (const record of a.actionParam[paramName] || []) {
                             // disable all
                             prepareRecord(record, true);
                         }
                     } else if (a.actionId === "composite" || a.actionId === "reloadComposite") {
                         for (const itemAction of a.actionParam.mainParam) {
-                            if (itemAction.action === "websiteConfig") {
+                            if (
+                                itemAction.action === "websiteConfig" ||
+                                a.actionId === "templatePreviewableWebsiteConfig"
+                            ) {
                                 for (const record of itemAction.actionParam[paramName] || []) {
                                     prepareRecord(record, true);
                                 }
@@ -751,6 +759,62 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
                     undoCleanCallback();
                 },
             });
+        }
+    }
+}
+
+class TemplatePreviewableWebsiteConfigAction extends WebsiteConfigAction {
+    static id = "templatePreviewableWebsiteConfig";
+
+    setup() {
+        this.reload = {
+            previewable: true,
+        };
+    }
+
+    async apply(action) {
+        if (!action.isPreviewing) {
+            if (action.params.previewClass) {
+                action.params.previewClass
+                    .split(/\s+/)
+                    .forEach((cls) => action.editingElement.classList.remove(cls));
+            }
+            await super.apply(action);
+        } else {
+            this.renderPreview(action);
+        }
+    }
+
+    async clean(action) {
+        if (!action.isPreviewing) {
+            await super.clean(action);
+        }
+    }
+
+    renderPreview({ editingElement: el, params }) {
+        if (params.templateId && !el.closest(params.placeExcludeRootClosest)) {
+            const renderedEl = renderToElement(params.templateId);
+            const targetEl = el;
+            if (targetEl) {
+                if (params.placeBefore) {
+                    for (const el of targetEl.querySelectorAll(params.placeBefore)) {
+                        el.insertAdjacentElement("beforebegin", renderedEl.cloneNode(true));
+                    }
+                }
+                if (params.placeAfter) {
+                    for (const el of targetEl.querySelectorAll(params.placeAfter)) {
+                        el.insertAdjacentElement("afterend", renderedEl.cloneNode(true));
+                    }
+                }
+            }
+        }
+        if (params.previewClass) {
+            // `requestAnimationFrame` because some of the added classes are
+            // used to trigger a "fade-in" animation, and we want to be sure
+            // that the element is already in the DOM before adding them.
+            requestAnimationFrame(() =>
+                params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls))
+            );
         }
     }
 }

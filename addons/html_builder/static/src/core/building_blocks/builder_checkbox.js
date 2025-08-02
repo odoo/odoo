@@ -28,6 +28,8 @@ export class BuilderCheckbox extends Component {
                 isActive: isApplied(),
             };
         });
+        this.onMouseenter = operation.preview;
+        this.onMouseleave = operation.revert;
         this.onChange = operation.commit;
     }
 
