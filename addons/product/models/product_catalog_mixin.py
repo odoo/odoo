@@ -80,6 +80,7 @@ class ProductCatalogMixin(models.AbstractModel):
             product.id: {
                 'productType': product.type,
                 'uomDisplayName': product.uom_id.display_name,
+                'productUomDisplayName': product.uom_id.display_name,
                 'code': product.code if product.code else '',
             }
             for product in products
