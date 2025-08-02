@@ -7,8 +7,8 @@ import { redirect } from '@web/core/utils/urls';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
 import {
-    ProductComparisonButton
-} from '@website_sale_comparison/js/product_comparison_button/product_comparison_button';
+    ProductComparisonBottomBar
+} from '@website_sale_comparison/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ProductComparison extends Interaction {
     static selector = '.js_sale';
@@ -21,7 +21,23 @@ export class ProductComparison extends Interaction {
 
     setup() {
         this.bus = new EventBus();
-        this.mountComponent(this.el, ProductComparisonButton, { bus: this.bus });
+        this.mountComponent(document.body, ProductComparisonBottomBar, { bus: this.bus });
+        this.position = 0;
+        
+        // Mini sticky comparison elements
+        this.miniStickyEl = null;
+        this.mainScrollEl = null;
+        this.miniScrollEl = null;
+    }
+
+    start() {
+        this._adaptToHeaderChange();
+        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
+        
+        // Initialize mini sticky comparison if on comparison page
+        if (this.el.querySelector('#o_comparelist_table')) {
+            this._initMiniStickyComparison();
+        }
     }
 
     /**
@@ -50,7 +66,7 @@ export class ProductComparison extends Interaction {
         this.bus.dispatchEvent(new CustomEvent('comparison_products_changed', { bubbles: true }));
         this._updateDisabled(el, true);
         await wSaleUtils.animateClone(
-            $('button[name="product_comparison_button"]'),
+            $('.o_comparison_bottom_bar'),
             $(this.el.querySelector('#product_detail_main') ?? form),
             -50,
             10,
@@ -107,6 +123,91 @@ export class ProductComparison extends Interaction {
         }, {
             showQuantity: showQuantity,
         });
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adapt sticky positioning to header height changes.
+     *
+     * @private
+     */
+    _adaptToHeaderChange() {
+        let position = 0;
+        
+        // Calculate total height of fixed elements at top
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            position += el.offsetHeight;
+        }
+
+        if (this.position !== position) {
+            this.position = position;
+            this.updateContent();
+            
+            // Update mini sticky position if it exists
+            if (this.miniStickyEl) {
+                this.miniStickyEl.style.top = `${position}px`;
+            }
+        }
+    }
+
+    /**
+     * Initialize the mini sticky comparison overview.
+     *
+     * @private
+     */
+    _initMiniStickyComparison() {
+        this.miniStickyEl = this.el.querySelector('#miniStickyComparison');
+        const productImagesEl = this.el.querySelector('#o_comparelist_table ul:first-of-type');
+        
+        if (!this.miniStickyEl || !productImagesEl) return;
+        
+        // Set initial position
+        this.miniStickyEl.style.top = `${this.position}px`;
+        
+        // Get scroll containers
+        this.mainScrollEl = this.el.querySelector('.table-comparator').closest('.overflow-x-auto');
+        this.miniScrollEl = this.miniStickyEl.querySelector('.overflow-x-auto');
+        
+        // Handle vertical scroll (show/hide mini sticky)
+        const handleVerticalScroll = () => {
+            const rect = productImagesEl.getBoundingClientRect();
+            const shouldShow = rect.bottom < this.position + 20;
+            
+            this.miniStickyEl.classList.toggle('show', shouldShow);
+            this.miniStickyEl.classList.toggle('d-none', !shouldShow);
+            
+            // Sync horizontal position when showing
+            if (shouldShow && this.mainScrollEl && this.miniScrollEl) {
+                this.miniScrollEl.scrollLeft = this.mainScrollEl.scrollLeft;
+            }
+        };
+        
+        // Handle horizontal scroll sync
+        const syncScroll = (source, target) => {
+            if (!source._syncing) {
+                target._syncing = true;
+                target.scrollLeft = source.scrollLeft;
+                requestAnimationFrame(() => target._syncing = false);
+            }
+        };
+        
+        // Bind events
+        window.addEventListener('scroll', handleVerticalScroll, { passive: true });
+        if (this.mainScrollEl && this.miniScrollEl) {
+            this.mainScrollEl.addEventListener('scroll', () => syncScroll(this.mainScrollEl, this.miniScrollEl), { passive: true });
+            this.miniScrollEl.addEventListener('scroll', () => syncScroll(this.miniScrollEl, this.mainScrollEl), { passive: true });
+        }
+        
+        // Cleanup
+        this.registerCleanup(() => {
+            window.removeEventListener('scroll', handleVerticalScroll);
+        });
+        
+        // Initial check
+        handleVerticalScroll();
     }
 
     /**

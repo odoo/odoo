@@ -27,8 +27,10 @@ function setComparisonProductIds(productIds) {
  * @param {number} productId
  */
 function addComparisonProduct(productId) {
-    const productIds = new Set(getComparisonProductIds());
-    productIds.add(productId);
+    const productIds = getComparisonProductIds();
+    if (!productIds.includes(productId)) {
+        productIds.push(productId); // Add to end (rightmost position)
+    }
     setComparisonProductIds(productIds);
 }
 
@@ -38,8 +40,11 @@ function addComparisonProduct(productId) {
  * @param {number} productId
  */
 function removeComparisonProduct(productId) {
-    const productIds = new Set(getComparisonProductIds());
-    productIds.delete(productId);
+    const productIds = getComparisonProductIds();
+    const index = productIds.indexOf(productId);
+    if (index > -1) {
+        productIds.splice(index, 1); // Remove from array while preserving order
+    }
     setComparisonProductIds(productIds);
 }
 

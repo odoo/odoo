@@ -193,57 +193,102 @@
             <t t-set="additional_title">Shop Comparator</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
-                <div class="container oe_website_sale pt-3">
-                    <section class="container">
-                        <h3>Compare Products</h3>
-                        <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
-                            <t t-set="attrib_categories" t-value="products._prepare_categories_for_display()"/>
-                            <thead>
-                                <tr>
-                                    <td t-if="len(attrib_categories)" class='o_ws_compare_image td-top-left border-bottom-0'/>
-                                    <td t-foreach="products" t-as="product" class="o_ws_compare_image position-relative border-bottom-0">
-                                        <a href="#" t-att-data-product-product-id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
-                                            <strong>x</strong>
-                                        </a>
-                                        <a t-att-href="product.website_url">
-                                            <img t-attf-src="/web/image/product.product/#{product.id}/image_256" class="img img-fluid" style="margin:auto;" alt="Product image"/>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td t-if="len(attrib_categories)" class='td-top-left border-top-0'/>
-                                    <td t-foreach="products" t-as="product" class="border-top-0 align-top">
+                <div t-attf-class="oe_website_sale #{is_view_active('website_sale.shop_fullwidth') and 'container-fluid' or 'container'}">
+                    <h1 class="h4 mt-3 mb-4">Compare Products</h1>
+
+                    <!-- Mini sticky product overview (initially hidden) -->
+                    <div class="o_comparison_mini_sticky d-none fixed-top bg-body" id="miniStickyComparison">
+                        <div t-attf-class="px-3 #{is_view_active('website_sale.shop_fullwidth') and 'container-fluid' or 'container'}">
+                            <div class="overflow-x-auto">
+                            <ul class="list-unstyled d-flex mb-0 align-items-stretch py-2">
+                                <li t-foreach="products" t-as="product" t-attf-class="o_ws_compare_table_column d-flex align-items-center gap-2 #{'' if product_last else 'border-end'}">
+                                    <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                                    <div class="o_mini_product_img_container flex-shrink-0">
+                                        <img t-attf-src="/web/image/product.product/#{product.id}/image_128"
+                                                t-att-class="
+                                                    'img-fluid flex-shrink-0 w-100 h-100 rounded border object-fit-cover ' + (
+                                                    'o_img_ratio_4_3' if is_view_active('website_sale.products_thumb_4_3') else
+                                                    'o_img_ratio_4_5' if is_view_active('website_sale.products_thumb_4_5') else
+                                                    'o_img_ratio_2_3' if is_view_active('website_sale.products_thumb_2_3') else
+                                                    '')"
+                                                t-att-alt="combination_info['display_name']"/>
+                                    </div>
+                                    <div class="d-flex flex-column text-truncate">
+                                        <small class="flex-grow-1 fw-bold text-truncate" t-esc="product._get_line_header()"/>
+                                        <small t-if="not combination_info['prevent_zero_price_sale']" class="text-muted">
+                                            <span t-out="combination_info['price']"
+                                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                            <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
+                                                    class="text-muted ms-1"
+                                                    style="white-space: nowrap;"
+                                                    t-esc="combination_info['compare_list_price']"
+                                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                            <del t-else=""
+                                                    t-attf-class="text-muted ms-1 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                                    style="white-space: nowrap;"
+                                                    t-out="combination_info['list_price']"
+                                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                        </small>
+                                    </div>
+                                </li>
+                            </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="overflow-x-auto">
+                            <div class="table-comparator position-relative" id="o_comparelist_table">
+                                <t t-set="attrib_categories" t-value="products._prepare_categories_for_display()"/>
+                                <ul class="list-unstyled d-flex mb-0">
+                                    <li t-foreach="products" t-as="product" class="o_ws_compare_table_column position-relative d-flex flex-column flex-shrink-0">
                                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
-                                        <div class='product_summary'>
-                                            <a class="o_product_comparison_table" t-att-href="product.website_url">
-                                                <span t-esc="combination_info['display_name']"></span><br/>
+                                        <a t-att-href="product.website_url"
+                                            t-att-class="
+                                                'o_img_ratio_4_3' if is_view_active('website_sale.products_thumb_4_3') else
+                                                'o_img_ratio_4_5' if is_view_active('website_sale.products_thumb_4_5') else
+                                                'o_img_ratio_2_3' if is_view_active('website_sale.products_thumb_2_3') else
+                                                ''
+                                            ">
+                                            <img t-attf-src="/web/image/product.product/#{product.id}/image_256" class="img img-fluid w-100 h-100 object-fit-cover" alt="Product image"/>
+                                        </a>
+                                        <button t-att-data-product-product-id="product.id" t-if="len(products) &gt; 2" class="o_comparelist_remove btn position-absolute top-0 end-0 mx-3 my-2 p-2 rounded-circle bg-white-75 lh-1">
+                                            <i class="oi oi-close"/>
+                                        </button>
+                                    </li>
+                                </ul>
+                                <ul class="list-unstyled d-flex bg-body border-bottom mb-0 py-3">
+                                    <li t-foreach="products" t-as="product" class="o_ws_compare_table_column position-relative d-flex flex-column flex-shrink-0">
+                                        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                                        <div class="product_summary d-flex flex-column align-items-center h-100">
+                                            <a t-att-href="product.website_url">
+                                                <h6 t-esc="product._get_line_header()"/>
                                             </a>
-                                            <span class="o_comparison_price" t-if="not combination_info['prevent_zero_price_sale']">
-                                                <strong>Price:</strong>
+                                            <span t-if="not combination_info['prevent_zero_price_sale']">
                                                 <span t-out="combination_info['price']"
-                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                                 <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                                                     t-attf-class="text-muted mr8"
-                                                     style="white-space: nowrap;"
-                                                     t-esc="combination_info['compare_list_price']"
-                                                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                                        t-attf-class="text-muted mr8"
+                                                        style="white-space: nowrap;"
+                                                        t-esc="combination_info['compare_list_price']"
+                                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                                 <del t-else=""
-                                                     t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                                                     style="white-space: nowrap;"
-                                                     t-out="combination_info['list_price']"
-                                                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                        t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                                        style="white-space: nowrap;"
+                                                        t-out="combination_info['list_price']"
+                                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                                 <small t-if="combination_info.get('base_unit_price')"
-                                                       class="d-block text-muted">
+                                                        class="d-block text-muted">
                                                     <t t-call="website_sale.base_unit_price">
                                                         <t t-set="base_unit_price" t-value="combination_info['base_unit_price']"/>
                                                     </t>
                                                 </small>
                                             </span>
-                                            <div class="text-center">
+                                            <div class="mt-auto pt-3">
                                                 <a t-if="combination_info['prevent_zero_price_sale']"
-                                                   t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
-                                                   class="btn btn-primary btn_cta">
-                                                   Contact Us
+                                                    t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
+                                                    class="btn btn-primary btn_cta">
+                                                    Contact Us
                                                 </a>
                                                 <button
                                                     t-else=""
@@ -253,50 +298,49 @@
                                                     t-att-data-product-template-id="product.product_tmpl_id.id"
                                                     t-att-data-product-product-id="product.id"
                                                 >
-                                                    <i class="fa fa-shopping-cart me-2"/>Add to Cart
+                                                    <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>Add to Cart
                                                 </button>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="attrib_categories" t-as="category">
-                                    <t t-if="len(attrib_categories) &gt; 1">
-                                        <tr class="clickable" data-bs-toggle="collapse" t-att-data-bs-target="'.o_ws_category_%d' % category.id">
-                                            <th class="text-start" t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span t-if="category" t-field="category.name"/><span t-else="">Uncategorized</span></th>
-                                        </tr>
-                                    </t>
-                                    <tr t-foreach="attrib_categories[category]" t-as="attribute" t-att-class="'collapse show o_ws_category_%d' % category.id">
-                                        <td><span t-field="attribute.name"/></td>
-                                        <td t-foreach="attrib_categories[category][attribute]" t-as="product">
-                                            <t t-foreach="attrib_categories[category][attribute][product]" t-as="ptav">
-                                                <span t-field="ptav.name"/><t t-if="not ptav_last">, </t>
-                                            </t>
-                                        </td>
-                                    </tr>
-                                </t>
+                                    </li>
+                                </ul>
+                                <div t-foreach="attrib_categories" t-as="category" class="pt-3">
+                                    <h6 class="d-table position-sticky start-0 mb-0 ps-2">
+                                        <span t-if="category" t-field="category.name"/>
+                                        <t t-else="">Uncategorized</t>
+                                    </h6>
+                                    <div t-foreach="attrib_categories[category]" t-as="attribute">
+                                        <ul t-att-class="'list-unstyled d-flex border-bottom mb-0 py-3 text-center o_ws_category_%d' % category.id">
+                                            <li t-foreach="attrib_categories[category][attribute]" t-as="product" class="o_ws_compare_table_column d-flex flex-column justify-content-center flex-shrink-0">
+                                                <div>
+                                                    <t t-if="attrib_categories[category][attribute][product]">
+                                                        <div class="small text-muted" t-field="attribute.name"/>
+                                                        <t t-foreach="attrib_categories[category][attribute][product]" t-as="ptav">
+                                                            <small t-field="ptav.name"/><t t-if="not ptav_last">, </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <h6 class="small text-muted mb-0">-</h6>
+                                                    </t>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <t t-if="is_view_active('website_sale.product_tags') and any([product.all_product_tag_ids for product in products])">
-                                    <tr class="clickable" data-bs-toggle="collapse" data-bs-target=".o_ws_tags">
-                                        <th class="text-start" t-att-colspan="len(products) + 1">
-                                            <i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span>Tags</span>
-                                        </th>
-                                    </tr>
-                                    <tr class="collapse show o_ws_tags">
-                                        <td><span>Tags</span></td>
-                                        <td t-foreach="products" t-as="product">
-                                            <div class="d-flex justify-content-center">
-                                                <t t-call="website_sale.product_tags">
-                                                    <t t-set="all_product_tags" t-value="product.all_product_tag_ids"/>
-                                                </t>
-                                            </div>
-
-                                        </td>
-                                    </tr>
+                                    <h6 class="d-table position-sticky start-0 mb-0">Tags</h6>
+                                    <ul class="list-unstyled d-flex border-bottom mb-0 py-3">
+                                        <li t-foreach="products" t-as="product" class="o_ws_compare_table_column d-flex flex-column align-items-center flex-shrink-0">
+                                            <div class="small text-muted">Tags</div>
+                                            <t t-call="website_sale.product_tags">
+                                                <t t-set="all_product_tags" t-value="product.all_product_tag_ids"/>
+                                            </t>
+                                        </li>
+                                    </ul>
                                 </t>
-                            </tbody>
-                        </table>
-                    </section>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="oe_structure" id="oe_structure_website_sale_comparison_product_compare_2"/>
             </div>
