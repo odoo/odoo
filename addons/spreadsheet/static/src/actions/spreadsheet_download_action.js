@@ -10,18 +10,35 @@ import { _t } from "@web/core/l10n/translation";
 const { Model } = spreadsheet;
 
 async function downloadSpreadsheet(env, action) {
-    let { orm, name, data, stateUpdateMessages, xlsxData } = action.params;
+    const canExport = await env.services.user.hasGroup("base.group_allow_export");
+    if (!canExport) {
+        env.services.notification.add(
+            env._t("You don't have the rights to export data. Please contact an Administrator."),
+            {
+                title: env._t("Access Error"),
+                type: "danger",
+            }
+        );
+        return;
+    }
+    let { orm, name, data, sources, stateUpdateMessages, xlsxData } = action.params;
     if (!xlsxData) {
         const dataSources = new DataSources(orm);
         const model = new Model(migrate(data), { dataSources }, stateUpdateMessages);
         await waitForDataLoaded(model);
+        sources = model.getters.getLoadedDataSources();
         xlsxData = model.exportXLSX();
     }
     await download({
         url: "/spreadsheet/xlsx",
         data: {
             zip_name: `${name}.xlsx`,
-            files: new Blob([JSON.stringify(xlsxData.files)], { type: "application/json" }),
+            files: new Blob([JSON.stringify(xlsxData.files)], {
+                type: "application/json",
+            }),
+            datasources: new Blob([JSON.stringify(sources)], {
+                type: "application/json",
+            }),
         },
     });
 }
