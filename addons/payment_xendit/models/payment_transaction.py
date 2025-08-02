@@ -133,7 +133,7 @@ class PaymentTransaction(models.Model):
 
         self._xendit_create_charge(self.token_id.provider_ref)
 
-    def _xendit_create_charge(self, token_ref):
+    def _xendit_create_charge(self, token_ref, auth_id=None):
         """ Create a charge on Xendit using the `credit_card_charges` endpoint.
 
         :param str token_ref: The reference of the Xendit token to use to make the payment.
@@ -150,6 +150,15 @@ class PaymentTransaction(models.Model):
             'amount': rounded_amount,
             'currency': self.currency_id.name,
         }
+        if auth_id:
+            payload['authentication_id'] = auth_id
+
+        # if payment goes through tokenization or uses a token, should add `is_recurring`.
+        # `is_recurring` argument is to ensure that after first payment, all next payments will no longer
+        # require authorization, i.e. payment using token
+        if self.token_id or self.tokenize:
+            payload['is_recurring'] = True
+
         charge_notification_data = self.provider_id._xendit_make_request(
             'credit_card_charges', payload=payload
         )
