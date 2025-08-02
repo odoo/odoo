@@ -97,6 +97,8 @@
                                         <field name="alias_name" placeholder="alias"/>@
                                         <field name="alias_domain_id" placeholder="e.g. mycompany.com"
                                             options="{'no_create': True, 'no_open': True}"/>
+                                        <field name="alias_email" widget="EmailAliasCopyClipboardButtonField" class="ms-2"
+                                            options="{'btn_class': 'link'}" string="" invisible="not alias_email"/>
                                     </div>
                                     <!-- the alias contact must appear when the user start typing and it must disappear
                                         when the string is deleted. -->
@@ -333,11 +335,13 @@
                     <div class="row o_settings_container"/>
                     <div name="alias_def" class="mt-2" colspan="2">
                         <label for="alias_name" string="Create tasks by sending an email to"/>
-                        <span>
+                        <span class="d-flex">
                             <field name="alias_id" invisible="1"/>
                             <field name="alias_name" placeholder="e.g. office-party"/>@
-                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                            <field name="alias_domain_id" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
+                            <field name="alias_email" widget="EmailAliasCopyClipboardButtonField" class="ms-2"
+                                options="{'btn_class': 'link'}" string="" invisible="not alias_email"/>
                         </span>
                     </div>
                 </form>
