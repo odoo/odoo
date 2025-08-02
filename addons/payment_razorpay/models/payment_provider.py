@@ -227,6 +227,9 @@ class PaymentProvider(models.Model):
         """
         if is_redirect:
             secret = self.razorpay_key_secret
+            if not secret:
+                _logger.warning("Missing webhook secret; aborting signature calculation.")
+                return None
             signing_string = f'{data["razorpay_order_id"]}|{data["razorpay_payment_id"]}'
             return hmac.new(
                 secret.encode(), msg=signing_string.encode(), digestmod=hashlib.sha256
