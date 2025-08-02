@@ -982,6 +982,38 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertFalse(lead.phone_sanitized)
 
+    def test_contact_creation_from_lead(self):
+        lead = self.env['crm.lead'].create({
+            'name': 'Lead 1',
+            'country_id': self.env.ref('base.us').id,
+            'phone': self.test_phone_data[0],
+            'mobile': self.test_phone_data[0],
+        })
+
+        context = {
+            'inherit_lead_contact_data': True,
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': [lead.id],
+        }
+
+        Partner = self.env['res.partner'].with_context(context)
+        defaults = Partner.default_get(['phone', 'mobile'])
+        self.assertEqual(defaults['phone'], self.test_phone_data[0])
+        self.assertEqual(defaults['mobile'], self.test_phone_data[0])
+
+        context = {
+            'inherit_lead_contact_data': False,
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': [lead.id],
+        }
+
+        Partner = self.env['res.partner'].with_context(context)
+        defaults = Partner.default_get(['phone', 'mobile'])
+        self.assertNotIn('phone', defaults)
+        self.assertNotIn('mobile', defaults)
+
 
 @tagged('lead_internals')
 class TestLeadFormTools(FormatAddressCase):
