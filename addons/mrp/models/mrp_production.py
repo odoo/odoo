@@ -736,6 +736,8 @@ class MrpProduction(models.Model):
             if not production.date_start or production.is_planned or production.state == 'done':
                 continue
             days_delay = production.bom_id.produce_delay
+            factor = production.bom_id.product_qty and production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id, raise_if_failure=False) / production.bom_id.product_qty or 1
+            days_delay = factor * days_delay
             date_finished = production.date_start + relativedelta(days=days_delay)
             if production._should_postpone_date_finished(date_finished):
                 workorder_expected_duration = sum(production.workorder_ids.mapped('duration_expected'))
