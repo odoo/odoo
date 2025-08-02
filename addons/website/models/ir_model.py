@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import ir_http
-from odoo import models
+from odoo import api, models
 
 
 class BaseModel(models.AbstractModel):
@@ -45,3 +45,12 @@ class BaseModel(models.AbstractModel):
         if website:
             return website.default_lang_id.code
         return super()._get_base_lang()
+
+    @api.ondelete(at_uninstall=True)
+    def _unlink_controller_pages(self):
+        pages = self.env['website.controller.page'].search([]).filtered(
+            lambda p: p.model_id.id in self.ids
+        )
+        views_id = pages.record_view_id
+        pages.unlink()
+        views_id.unlink()
