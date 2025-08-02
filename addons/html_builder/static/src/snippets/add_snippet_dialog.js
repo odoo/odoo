@@ -2,7 +2,10 @@ import { Component, onMounted, onWillUnmount, onWillRender, useRef, useState } f
 import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { localization } from "@web/core/l10n/localization";
+import { getFirstAndLastTabableElements } from "@web/core/ui/ui_service";
+import { useChildRef } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 export class AddSnippetDialog extends Component {
@@ -19,6 +22,7 @@ export class AddSnippetDialog extends Component {
 
     setup() {
         this.iframeRef = useRef("iframe");
+        this.modalRef = useChildRef();
         this.state = useState({
             search: "",
             groupSelected: this.props.selectedSnippet.groupName,
@@ -53,6 +57,8 @@ export class AddSnippetDialog extends Component {
             const iframeDocument = this.iframeRef.el.contentDocument;
             iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
             iframeDocument.body.style.setProperty("direction", localization.direction);
+            iframeDocument.body.tabIndex = "-1";
+            iframeDocument.addEventListener("keydown", this.onIframeDocumentKeydown.bind(this));
 
             root = this.__owl__.app.createRoot(SnippetViewer, {
                 props: this.snippetViewerProps,
@@ -106,5 +112,45 @@ export class AddSnippetDialog extends Component {
         this.state.groupSelected = snippetGroup.groupName;
         const iframeDocument = this.iframeRef.el.contentDocument;
         iframeDocument.body.scrollTop = 0;
+    }
+    /**
+     * Handles the tablist navigation.
+     *
+     * @param {KeyboardEvent} ev
+     */
+    onTabKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (!["arrowleft", "arrowright", "arrowdown", "arrowup"].includes(hotkey)) {
+            return;
+        }
+        if (["arrowleft", "arrowup"].includes(hotkey)) {
+            ev.currentTarget.previousElementSibling?.focus();
+        } else {
+            ev.currentTarget.nextElementSibling?.focus();
+        }
+    }
+    /**
+     * The mix of focused elements within the dialog and within the iframe does
+     * not work well with the `useActiveElement` standard focus trap. This
+     * listener ensures the cycle is well supported.
+     *
+     * @param {KeyboardEvent} ev
+     */
+    onIframeDocumentKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (!["tab", "shift+tab"].includes(hotkey)) {
+            return;
+        }
+        const [, lastTabableElInIframe] = getFirstAndLastTabableElements(ev.currentTarget);
+        if (hotkey === "tab" && lastTabableElInIframe === ev.target) {
+            const [firstTabableElInDialog] = getFirstAndLastTabableElements(this.modalRef.el);
+            firstTabableElInDialog.focus();
+            ev.preventDefault();
+            ev.stopPropagation();
+        } else if (hotkey === "shift+tab" && ev.target.tagName === "BODY") {
+            lastTabableElInIframe.focus();
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
     }
 }

@@ -186,7 +186,7 @@ test("open add snippet dialog + switch snippet category", async () => {
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
     ).toHaveCount(2);
     expect(
-        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div").map(
             (el) => el.innerHTML
         )
     ).toEqual(
@@ -199,7 +199,7 @@ test("open add snippet dialog + switch snippet category", async () => {
     await animationFrame();
     expect(".o_add_snippet_dialog aside .list-group .list-group-item.active").toHaveText("B");
     expect(
-        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div").map(
             (el) => el.innerHTML
         )
     ).toEqual(
@@ -252,7 +252,7 @@ test("search snippet in add snippet dialog", async () => {
     expect("aside .list-group .list-group-item").toHaveCount(2);
     const snippetsDescriptionProcessed = snippetsDescription(true);
     expect(
-        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div").map(
             (el) => el.innerHTML
         )
     ).toEqual(
@@ -263,7 +263,7 @@ test("search snippet in add snippet dialog", async () => {
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("Ban");
     expect("aside .list-group .list-group-item").toHaveCount(0);
     expect(
-        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div").map(
             (el) => el.innerHTML
         )
     ).toEqual(
@@ -274,7 +274,7 @@ test("search snippet in add snippet dialog", async () => {
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("gra");
     expect("aside .list-group .list-group-item").toHaveCount(0);
     expect(
-        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div").map(
             (el) => el.innerHTML
         )
     ).toEqual(
@@ -285,7 +285,7 @@ test("search snippet in add snippet dialog", async () => {
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("or");
     expect("aside .list-group .list-group-item").toHaveCount(0);
     expect(
-        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
+        queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div").map(
             (el) => el.innerHTML
         )
     ).toEqual(
@@ -342,20 +342,20 @@ test("search snippet by class", async () => {
     // Search among classes of root node
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("s_bar");
     expect(
-        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap")
+        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div")
             .innerHTML
     ).toEqual(snippetsDescriptionProcessed[2].content);
 
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("s_additional_class");
     expect(
-        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap")
+        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div")
             .innerHTML
     ).toEqual(snippetsDescriptionProcessed[0].content);
 
     // Search among classes of child nodes
     await contains(".o_add_snippet_dialog aside input[type='search']").edit("s_class_on_child");
     expect(
-        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap")
+        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div")
             .innerHTML
     ).toEqual(snippetsDescriptionProcessed[1].content);
 });
@@ -396,7 +396,7 @@ test("add snippet dialog with imagePreview", async () => {
     await waitForSnippetDialog();
     expect(`${previewSnippetIframeSelector}`).toHaveCount(2);
     const snippetsDescriptionProcessed = snippetsDescription(true);
-    expect(`${previewSnippetIframeSelector}:first`).toHaveInnerHTML(
+    expect(`${previewSnippetIframeSelector}:first > div`).toHaveInnerHTML(
         snippetsDescriptionProcessed[0].content
     );
     expect(
