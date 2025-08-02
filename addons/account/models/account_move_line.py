@@ -8,6 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.fields import Command, Domain
 from odoo.tools import frozendict, float_compare, Query, SQL, OrderedSet
+from odoo.tools.query import _sql_from_join
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -245,17 +246,33 @@ class AccountMoveLine(models.Model):
     )
 
     # === Reconciliation fields === #
+    # Technical field used by the search filter to include partial reconciliations up to a date.
+    reconcile_until = fields.Date(
+        store=False,
+        search='_search_reconcile_until',
+    )
+    # TODO: could this be combined with the above - possibly improving the _compute_residual? kept separate for now to avoid breaking the aged report residual_at_date feature
+    reconciled_at_date = fields.Date(store=False, search='_search_reconciled_at_date')
     amount_residual = fields.Monetary(
         string='Residual Amount',
         compute='_compute_amount_residual', store=True,
         currency_field='company_currency_id',
         help="The residual amount on a journal item expressed in the company currency.",
     )
+    amount_residual_at_date = fields.Monetary(
+        compute='_compute_amount_residual_at_date',
+        currency_field='company_currency_id',
+        help="The residual amount at a specific date expressed in the company currency."
+    )
     amount_residual_currency = fields.Monetary(
         string='Residual Amount in Currency',
         compute='_compute_amount_residual', store=True,
         help="The residual amount on a journal item expressed in its currency (possibly not the "
              "company currency).",
+    )
+    amount_residual_currency_at_date = fields.Monetary(
+        compute='_compute_amount_residual_at_date',
+        help="The residual amount at a specific date expressed in its currency.",
     )
     reconciled = fields.Boolean(compute='_compute_amount_residual', store=True)
     full_reconcile_id = fields.Many2one(
@@ -740,9 +757,123 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.cumulated_balance = result[record.id]
 
+    def _search_reconciled_at_date(self, operator, value):
+        """ TODO: check this
+            Include reconciled lines by using 'reconciled_at_date' in the domain with an OR clause
+            eg.
+            ['|', ('reconciled_at_date', '<', later_date), '&', ('date', '<', '2023-12-31'), ('partner_id', '=', 33)]
+            All lines up to the later date, that share a partial (are reconciled) with lines before end 2023, will be included.
+        """
+        sql_operator = {
+            '<': SQL('<'),
+            '<=': SQL('<='),
+        }.get(operator)
+        if not sql_operator:
+            return NotImplemented
+
+        # TODO: format sql
+        # TODO: check recons between mismatched partners
+        domain_without_recon_date = self.env.context.get('domain_without_recon_date', [])
+        exclude_fully_reconciled = self.env.context.get('exclude_fully_reconciled', False)
+
+        def to_sql(model, alias, query):
+            # Create a duplicate of the original query with a different alias
+            match_alias = 'aml_match'
+            aliased_query = Query(self.env, match_alias, self._table_sql)
+            aliased_query.add_where(
+                Domain(domain_without_recon_date)
+                .optimize_full(self)
+                ._to_sql(self, match_alias, aliased_query)
+            )
+
+            # Include lines if they reconcile with items in the original domain
+            partial_table = query.make_alias(alias, 'reconcile_at_date')
+            query.add_join(
+                kind="LEFT JOIN LATERAL",
+                alias=partial_table,
+                table=SQL(
+                    """(
+                        SELECT TRUE AS is_reconciled
+                          FROM account_partial_reconcile AS partial
+                          JOIN account_move_line AS %(match_alias)s
+                            ON %(match_alias)s.id = partial.debit_move_id
+                           AND partial.credit_move_id = %(aml_id)s
+                        %(joins)s
+                         WHERE %(conditions)s
+                           AND %(original_alias)s.date %(sql_operator)s %(recon_date_limit)s
+
+                         UNION ALL
+
+                        SELECT TRUE AS is_reconciled
+                          FROM account_partial_reconcile AS partial
+                          JOIN account_move_line AS %(match_alias)s
+                            ON %(match_alias)s.id = partial.credit_move_id
+                           AND partial.debit_move_id = %(aml_id)s
+                        %(joins)s
+                         WHERE %(conditions)s
+                           AND %(original_alias)s.date %(sql_operator)s %(recon_date_limit)s
+
+                        LIMIT 1
+                    )""",
+                    match_alias=SQL(match_alias),
+                    original_alias=SQL.identifier(alias),
+                    aml_id=SQL.identifier(alias, 'id'),
+                    joins=SQL(" ").join(_sql_from_join(kind, alias, table, condition) for alias, (kind, table, condition) in aliased_query._joins.items()),
+                    conditions=aliased_query.where_clause,
+                    sql_operator=sql_operator,
+                    recon_date_limit=value,
+                ),
+                condition=SQL("TRUE"),
+            )
+
+            if exclude_fully_reconciled:
+                recon_check_alias = query.make_alias(alias, 'exclude_full_recon')
+                query.add_join(
+                    kind="LEFT JOIN LATERAL",
+                    alias=recon_check_alias,
+                    table=SQL(
+                        """
+                        (
+                            SELECT TRUE AS has_future_partial
+                              FROM account_partial_reconcile apr
+                             WHERE apr.full_reconcile_id = %(afr_id)s
+                               AND apr.max_date > %(recon_date_limit)s
+                             LIMIT 1
+                        )
+                        """,
+                        afr_id=SQL.identifier(alias, 'full_reconcile_id'),
+                        recon_date_limit=value,
+                    ),
+                    condition=SQL("TRUE"),
+                )
+                query.add_where(SQL(
+                    """
+                    (%(alias)s.has_future_partial IS NOT NULL OR %(original_alias)s.full_reconcile_id IS NULL)
+                    """,
+                    alias=SQL.identifier(recon_check_alias),
+                    original_alias=SQL.identifier(alias),
+                ))
+            return SQL("%s.is_reconciled", SQL.identifier(partial_table))
+
+        return Domain.custom(to_sql=to_sql)
+
+    def _search_reconcile_until(self, operator, value):
+        # see search_fetch which transforms the value into a context key for use in _compute_amount_residual_at_date
+        if operator not in ('<', '<=', '='):
+            raise NotImplementedError
+        return []
+
     @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'company_id',
                  'matched_debit_ids', 'matched_credit_ids')
     def _compute_amount_residual(self):
+        self._compute_residual()
+
+    @api.depends_context('reconcile_until')
+    def _compute_amount_residual_at_date(self):
+        reconcile_until = self.env.context.get('reconcile_until', fields.Date.context_today(self))  # default to avoid unset computed field
+        self._compute_residual(reconcile_until)
+
+    def _compute_residual(self, reconcile_until=False):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
             for unreconciled lines, and something in-between for partially reconciled lines.
@@ -758,7 +889,10 @@ class AccountMoveLine(models.Model):
             self.env['res.currency'].flush_model(['decimal_places'])
 
             aml_ids = tuple(stored_lines.ids)
-            self.env.cr.execute('''
+            date_clause = SQL("AND part.max_date <= %(reconcile_until)s", reconcile_until=reconcile_until) if reconcile_until else SQL('')
+
+            query = SQL(
+                '''
                 SELECT
                     part.debit_move_id AS line_id,
                     'debit' AS flag,
@@ -766,7 +900,8 @@ class AccountMoveLine(models.Model):
                     ROUND(SUM(part.debit_amount_currency), curr.decimal_places) AS amount_currency
                 FROM account_partial_reconcile part
                 JOIN res_currency curr ON curr.id = part.debit_currency_id
-                WHERE part.debit_move_id IN %s
+                WHERE part.debit_move_id IN %(aml_ids)s
+                %(date_clause)s
                 GROUP BY part.debit_move_id, curr.decimal_places
                 UNION ALL
                 SELECT
@@ -776,9 +911,14 @@ class AccountMoveLine(models.Model):
                     ROUND(SUM(part.credit_amount_currency), curr.decimal_places) AS amount_currency
                 FROM account_partial_reconcile part
                 JOIN res_currency curr ON curr.id = part.credit_currency_id
-                WHERE part.credit_move_id IN %s
+                WHERE part.credit_move_id IN %(aml_ids)s
+                %(date_clause)s
                 GROUP BY part.credit_move_id, curr.decimal_places
-            ''', [aml_ids, aml_ids])
+                ''',
+                aml_ids=aml_ids,
+                date_clause=date_clause,
+            )
+            self.env.cr.execute(query)
             amounts_map = {
                 (line_id, flag): (amount, amount_currency)
                 for line_id, flag, amount, amount_currency in self.env.cr.fetchall()
@@ -791,6 +931,8 @@ class AccountMoveLine(models.Model):
             line.amount_residual = 0.0
             line.amount_residual_currency = 0.0
             line.reconciled = False
+            line.amount_residual_at_date = 0.0
+            line.amount_residual_currency_at_date = 0.0
 
         for line in need_residual_lines:
             # Since this part could be call on 'new' records, 'company_currency_id'/'currency_id' could be not set.
@@ -802,12 +944,19 @@ class AccountMoveLine(models.Model):
             credit_amount, credit_amount_currency = amounts_map.get((line._origin.id, 'credit'), (0.0, 0.0))
 
             # Subtract the values from the account.partial.reconcile to compute the residual amounts.
-            line.amount_residual = comp_curr.round(line.balance - debit_amount + credit_amount)
-            line.amount_residual_currency = foreign_curr.round(line.amount_currency - debit_amount_currency + credit_amount_currency)
-            line.reconciled = (
-                comp_curr.is_zero(line.amount_residual)
-                and foreign_curr.is_zero(line.amount_residual_currency)
-            )
+            residual = comp_curr.round(line.balance - debit_amount + credit_amount)
+            residual_currency = foreign_curr.round(line.amount_currency - debit_amount_currency + credit_amount_currency)
+
+            if reconcile_until:
+                line.amount_residual_at_date = residual
+                line.amount_residual_currency_at_date = residual_currency
+            else:
+                line.amount_residual = residual
+                line.amount_residual_currency = residual_currency
+                line.reconciled = (
+                    comp_curr.is_zero(line.amount_residual)
+                    and foreign_curr.is_zero(line.amount_residual_currency)
+                )
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
     def _compute_allowed_uom_ids(self):
@@ -1460,6 +1609,20 @@ class AccountMoveLine(models.Model):
         return super().invalidate_recordset(fnames, flush)
 
     @api.model
+    def _search(self, domain, *args, **kwargs):
+        # To include lines up to the reconciled_at_date, the _search_reconciled_at_date function needs the original search domain (excluding the reconciled_at_date leaf)
+        # it is included in the context for use by the function _search_reconciled_at_date
+        original_domain = Domain(domain)
+        # TODO: This replacement of the condition (leaf) by Domain.FALSE won't work in all cases. It only works with Domain.OR ie. if the domain is reconciled_at_date_domain | original_domain
+        # should/could we replace with TRUE instead and only allow for inclusion using AND?
+        # It doesn't seem possible because the _search_reconciled_at_date function will result in `AND "account_move_line__reconcile_at_date".is_reconciled` (maybe modify query?)
+        # Benefits: Easier to use with the standard Search Panel search bar filters
+        # Caveats: AND (or TRUE) will return all records when used with OR
+        domain_without_recon_at_date_condition = original_domain.map_conditions(lambda cond: Domain.FALSE if cond.field_expr == 'reconciled_at_date' else cond)
+        contextualized = self.with_context(domain_without_recon_date=domain_without_recon_at_date_condition)
+        return super(AccountMoveLine, contextualized)._search(original_domain, *args, **kwargs)
+
+    @api.model
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         def to_tuple(t):
             return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
@@ -1472,6 +1635,12 @@ class AccountMoveLine(models.Model):
             domain_cumulated_balance=to_tuple(domain or []),
             order_cumulated_balance=order,
         )
+
+        for condition in Domain(domain).iter_conditions():
+            if condition.field_expr == 'reconcile_until':
+                # keep the condition as it will be checked and replaced by _search_reconcile_until
+                contextualized = contextualized.with_context(reconcile_until=condition.value)
+
         return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
 
     @api.model
