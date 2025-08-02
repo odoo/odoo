@@ -136,7 +136,7 @@ class SnailmailLetter(models.Model):
         """
         self.ensure_one()
         obj = self.env[self.model].browse(self.res_id)
-        if not self.attachment_id:
+        if not self.attachment_id and obj.exists():
             report = self.report_template
             if not report:
                 report_name = self.env.context.get('report_name')
