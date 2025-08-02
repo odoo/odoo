@@ -2,8 +2,12 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrder.prototype, {
+    isSACompany() {
+        return this.company.country_id?.code === "SA";
+    },
+
     generateQrcode() {
-        if (this.company.country_id?.code === "SA") {
+        if (this.isSACompany()) {
             if (!this.is_settlement()) {
                 const company = this.company;
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
@@ -21,23 +25,6 @@ patch(PosOrder.prototype, {
             }
         }
         return false;
-    },
-    /**
-     * If the order is empty (there are no products)
-     * and all "pay_later" payments are negative,
-     * we are settling a customer's account.
-     * If the module pos_settle_due is not installed,
-     * the function always returns false (since "pay_later" doesn't exist)
-     * @returns {boolean} true if the current order is a settlement, else false
-     */
-    is_settlement() {
-        return (
-            this.isEmpty() &&
-            !!this.payment_ids.filter(
-                (paymentline) =>
-                    paymentline.payment_method_id.type === "pay_later" && paymentline.amount < 0
-            ).length
-        );
     },
     compute_sa_qr_code(name, vat, date_isostring, amount_total, amount_tax) {
         /* Generate the qr code for Saudi e-invoicing. Specs are available at the following link at page 23

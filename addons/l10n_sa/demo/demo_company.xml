@@ -19,6 +19,17 @@
         <field name="vat">310175397400003</field>
         <field name="partner_id" ref="base.partner_demo_company_sa"/>
         <field name="paperformat_id" ref="l10n_sa.paperformat_l10n_sa_a4"></field>
+        <field name="company_details">
+<![CDATA[
+<p>SA Company<br>
+Al Amir Mohammed Bin Abdul Aziz Street Somewhere close to Mecca<br/>
+المدينة المنورة RUH 42317<br/>
+1234 1234<br/>
+Saudi Arabia<br/><br/>
+VAT Number: 310175397400003<br/>
+Other ID: 3999999999</p>
+]]>
+        </field>
     </record>
 
     <function model="res.company" name="_onchange_country_id">
