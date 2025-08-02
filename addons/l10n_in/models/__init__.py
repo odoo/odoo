@@ -6,6 +6,7 @@ from . import account_payment
 from . import account_tax
 from . import company
 from . import iap_account
+from . import ir_attachment
 from . import product_template
 from . import port_code
 from . import res_config_settings

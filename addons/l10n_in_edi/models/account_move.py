@@ -203,6 +203,14 @@ class AccountMove(models.Model):
                 return partner_validation
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
+        # Storing request data as JSON attachment
+        self.env['ir.attachment'].create_json_attachment(
+            name=self.name,
+            data=generate_json,
+            model=self._name,
+            record_id=self.id,
+            company_id=self.company_id.id,
+        )
         response = self._l10n_in_edi_connect_to_server(
             url_end_point='generate',
             json_payload=generate_json
@@ -317,6 +325,14 @@ class AccountMove(models.Model):
             "CnlRsn": self.l10n_in_edi_cancel_reason,
             "CnlRem": self.l10n_in_edi_cancel_remarks,
         }
+        # Storing cancel request data in JSON attachment
+        self.env['ir.attachment'].create_json_attachment(
+            name=self.name,
+            data=cancel_json,
+            model=self._name,
+            record_id=self.id,
+            company_id=self.company_id.id,
+        )
         response = self._l10n_in_edi_connect_to_server(url_end_point='cancel', json_payload=cancel_json)
         # Creating a lambda function so it fetches the odoobot id only when needed
         _get_odoobot_id = (
