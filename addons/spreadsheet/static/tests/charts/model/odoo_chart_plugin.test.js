@@ -288,6 +288,7 @@ test("Data reloaded strictly upon domain update", async () => {
     expect.verifySteps([]);
 });
 
+<<<<<<< a25a654e1501e73fc0efc3b16d0a83824d3e682c
 test("Data reloaded upon domain update for charts other than pie/bar/line", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_line",
@@ -315,6 +316,51 @@ test("Data reloaded upon domain update for charts other than pie/bar/line", asyn
     expect.verifySteps(["web_read_group"]); // Data re-loaded on domain update
 });
 
+||||||| 74eecadb39e0c260f4cfc1ae9478c84eda815132
+=======
+test("Updating the domain keeps the global filters domain", async () => {
+    let lastReadGroupDomain = undefined;
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_line",
+        mockRPC: async function (route, args) {
+            if (args.method === "web_read_group") {
+                expect.step("web_read_group");
+                lastReadGroupDomain = args.kwargs.domain;
+            }
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+    const definition = model.getters.getChartDefinition(chartId);
+    const filter = {
+        id: "42",
+        type: "relation",
+        label: "filter",
+        modelName: "product",
+        defaultValue: [41],
+    };
+    await addGlobalFilter(model, filter, {
+        chart: { [chartId]: { chain: "product", type: "many2one" } },
+    });
+
+    model.getters.getChartRuntime(chartId); // force runtime computation
+    await waitForDataLoaded(model);
+    expect.verifySteps(["web_read_group"]);
+    expect(lastReadGroupDomain).toEqual([["product", "in", [41]]]);
+
+    const updatedDefinition = {
+        ...definition,
+        searchParams: { ...definition.searchParams, domain: [["1", "=", "1"]] },
+    };
+    model.dispatch("UPDATE_CHART", { definition: updatedDefinition, id: chartId, sheetId });
+
+    model.getters.getChartRuntime(chartId); // force runtime computation
+    await waitForDataLoaded(model);
+    expect.verifySteps(["web_read_group"]);
+    expect(lastReadGroupDomain).toEqual(["&", ["1", "=", "1"], ["product", "in", [41]]]);
+});
+
+>>>>>>> 7afbc969f9912222214aa20a3449e805522ad210
 test("Can import/export an Odoo chart", async () => {
     const { model } = await createModelWithDataSource();
     insertChartInSpreadsheet(model, "odoo_line");
