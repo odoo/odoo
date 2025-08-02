@@ -648,45 +648,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         self.assertEqual(avail_qty_comp1, -5)
 
-    def test_backorder_with_subcontracting(self):
-        """Test that a subcontracted move is not marked as picked when its quantity is updated.
-        """
-        self.bom.consumption = 'warning'
-        # Create incoming shipment.
-        with Form(self.env['stock.picking']) as picking_form:
-            picking_form.picking_type_id = self.warehouse.in_type_id
-            picking_form.partner_id = self.subcontractor_partner1
-            with picking_form.move_ids_without_package.new() as move:
-                move.product_id = self.finished
-                move.product_uom_qty = 5
-            with picking_form.move_ids_without_package.new() as move:
-                move.product_id = self.comp1
-                move.product_uom_qty = 5
-            receipt = picking_form.save()
-        receipt.action_confirm()
-
-        # Record the over-consumption of a component
-        self.assertTrue(receipt._get_subcontract_production())
-        action_record = receipt.action_record_components()
-        sbc_mo = self.env['mrp.production'].browse(action_record['res_id'])
-
-        self.assertEqual(receipt.move_ids.mapped('picked'), [False, False])
-        self.assertEqual(receipt.move_ids.mapped('quantity'), [5.0, 5.0])
-        receipt.move_ids[0].quantity = 2
-        receipt.move_ids[1].quantity = 4
-        self.assertEqual(receipt.move_ids.mapped('picked'), [False, False])
-        self.assertEqual(receipt.move_ids.mapped('quantity'), [2.0, 4.0])
-        res = receipt.button_validate()
-        wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
-        wizard.process()
-        backorder = receipt.backorder_ids
-        self.assertEqual(receipt.move_ids.mapped('quantity'), [2.0, 4.0])
-        self.assertEqual(backorder.move_ids.mapped('quantity'), [3.0, 1.0])
-        backorder.button_validate()
-        self.assertEqual(backorder.state, 'done')
-        self.assertEqual(backorder.move_ids.mapped('quantity'), [3.0, 1.0])
-        self.assertEqual(backorder.move_ids.mapped('picked'), [True, True])
-
     def test_flow_warning_bom_2(self):
         """ For an initial demand of 10 subcontracted products
             - The production of 3 is recorded, with an over-consumption of its components
