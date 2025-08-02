@@ -11,7 +11,8 @@ patch(PosStore.prototype, {
             // notification to invite the local browser to do a safe RPC to
             // the server to check the new state of the order.
             const order = this.models["pos.order"].find((o) => o.id == id);
-            const updatedOrder = await this.data.read("pos.order", [id])[0];
+            const result = await this.data.read("pos.order", [id]);
+            const updatedOrder = result[0];
             if (updatedOrder) {
                 order.state = updatedOrder.state;
             }
