@@ -328,6 +328,18 @@ export class AutoComplete extends Component {
             this.ignoreBlur = false;
             return;
         }
+        if (this.isInWebsiteConfigurator()) {
+            const firstOption = this.sources[0].options[0];
+            if (firstOption != undefined && firstOption) {
+                if (firstOption?.unselectable) {
+                    this.state.activeSourceOption = null;
+                } else {
+                    this.state.activeSourceOption = [0, 0];
+                }
+                this.selectOption(this.activeOption);
+                return;
+            }
+        }
         this.props.onBlur({
             inputValue: this.inputRef.el.value,
         });
@@ -397,6 +409,10 @@ export class AutoComplete extends Component {
                     return;
                 }
                 this.selectOption(this.activeOption);
+                if (this.isInWebsiteConfigurator()) {
+                    this.ignoreBlur = true;
+                    this.inputRef.el.blur();
+                }
                 break;
             case "escape":
                 if (!this.isOpened) {
@@ -405,6 +421,15 @@ export class AutoComplete extends Component {
                 this.cancel();
                 break;
             case "tab":
+                if (this.isInWebsiteConfigurator()) {
+                    if (!this.isOpened || !this.state.activeSourceOption) {
+                        return;
+                    }
+                    this.selectOption(this.activeOption);
+                    this.ignoreBlur = true;
+                    this.inputRef.el.blur();
+                    break;
+                }
             case "shift+tab":
                 if (!this.isOpened) {
                     return;
@@ -457,7 +482,9 @@ export class AutoComplete extends Component {
     }
     onOptionClick(option) {
         this.selectOption(option);
-        this.inputRef.el.focus();
+        if (!this.isInWebsiteConfigurator()) {
+            this.inputRef.el.focus();
+        }
     }
     onOptionPointerDown(option, ev) {
         this.ignoreBlur = true;
@@ -479,5 +506,9 @@ export class AutoComplete extends Component {
         if (isScrollableY(this.listRef.el)) {
             scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
         }
+    }
+
+    isInWebsiteConfigurator() {
+        return document.querySelector(".o_configurator_container") ? true : false;
     }
 }

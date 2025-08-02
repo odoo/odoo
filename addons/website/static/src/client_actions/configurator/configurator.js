@@ -25,6 +25,7 @@ import {
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 
 export const ROUTES = {
     descriptionScreen: 2,
@@ -34,7 +35,7 @@ export const ROUTES = {
 };
 
 export const WEBSITE_TYPES = {
-    1: {id: 1, label: _t("a business website"), name: 'business'},
+    1: {id: 1, label: _t("a website"), name: 'business'},
     2: {id: 2, label: _t("an online store"), name: 'online_store'},
     3: {id: 3, label: _t("a blog"), name: 'blog'},
     4: {id: 4, label: _t("an event website"), name: 'event'},
@@ -157,6 +158,18 @@ export class DescriptionScreen extends Component {
         this.state = useStore();
         this.orm = useService('orm');
 
+        this.splitRegex = /[|\s,\n]+/;
+
+        // Get all words from the industry names and synonymes
+        this.dictionarySet = new Set();
+        for (let industry of this.state.industries) {
+            let industryWords = new Set(industry.label.toLowerCase().split(this.splitRegex));
+            if (industry.synonyms) {
+                industryWords = industryWords.union(new Set(industry.synonyms.toLowerCase().split(this.splitRegex)));
+            }
+            this.dictionarySet = this.dictionarySet.union(industryWords);
+        }
+
         onMounted(() => this.onMounted());
     }
 
@@ -197,33 +210,38 @@ export class DescriptionScreen extends Component {
      * @param {String} term input current value
      */
     _autocompleteSearch(term) {
-        const terms = term.toLowerCase().split(/[|,\n]+/);
+        this.state.selectedIndustry = undefined;
+        let termsSet = new Set(term.toLowerCase().split(this.splitRegex));
+
+        //-------words correction--------
+        // Check and correct all the terms
+        let correctedSet = new Set();
+        termsSet.forEach((term) => {
+            if (this.dictionarySet.has(term)) {
+                correctedSet.add(term);
+                return;
+            }
+            let res = fuzzyLevenshteinLookup(term, this.dictionarySet);
+            if (res[0]) {
+                correctedSet.add(res[0]);
+            } else {
+                correctedSet.add(term);
+            }
+        })
+        let terms = Array.from(correctedSet);
         const limit = 30;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
         let matches = this.state.industries.filter((val, index) => {
-            // To match, every term should be contained in either the label or a
-            // synonym
-            for (const candidate of [val.label, ...(val.synonyms || '').split(/[|,\n]+/)]) {
+            // To match, every term should be contained in the label
+            for (const candidate of [val.label]) {
                 if (terms.every(term => candidate.toLowerCase().includes(term))) {
                     return true;
                 }
             }
         });
-        // Sort the matches by hit_count_total in order to suggest the most used
-        // matches first.
-        // FIXME, we made ffad59a1b7f36a141c6a32162a4254f5bd864a3b (on IAP) but:
-        // 1. hit_count_total seems to be 0 for all industries.
-        // 2. it is defined as the sum of the hit_count of 3 suggested themes
-        //    for that industry but... we can choose any theme with any industry
-        //    so that old field does not make sense anyway.
-        // 3. the order should just be done server-side and kept while matching
-        //    to given terms here client-side.
-        // So:
-        // - Remove this line
-        // - Review hit_count_total server side
-        // - Make sure it is retrieved ordered, and stay ordered
-        matches = matches.sort(match => match['hit_count_total']);
+
+        matches = matches.sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         if (matches.length > limit) {
             // Keep matches with the least number of words so that e.g.
             // "restaurant" remains available even if there are 30 specific
@@ -231,12 +249,119 @@ export class DescriptionScreen extends Component {
             matches = matches.sort((x, y) => x.wordCount - y.wordCount)
                              .slice(0, limit)
                              .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
+        } else {
+            let synonymMatches = this.state.industries.filter((val, index) => {
+                // To match, every term should be contained in the synonym
+                for (const candidate of [...(val.synonyms || '').split(this.splitRegex)]) {
+                    if (terms.every(term => candidate.toLowerCase().includes(term))) {
+                        if (!matches.includes(val)) { //Check if industry label has already matched
+                            return true;
+                        }
+                    }
+                }
+            });
+            synonymMatches = synonymMatches.sort((x, y) => x.hitCountOrder - y.hitCountOrder);
+            matches = matches.concat(synonymMatches);
+            if (matches.length > limit) { 
+                matches = matches.slice(0, limit);
+            }
         }
-        matches = matches.length ? matches : [{ label: term, id: -1 }];
+        if (matches.length === 0) {
+            matches = [{ label: term, id: -1 }];
+            terms = [term];
+        }
         return matches.map((match) => ({
             label: match.label,
+            labelTermOrder: this._getMatchTermOrder(match.label, terms),
             onSelect: () => this._setSelectedIndustry(match.label, match.id),
         }));
+    }
+
+    /**
+     * Splits the string parameter 'label' into bits based on the location
+     * of the 'terms' typed by the user.
+     * 
+     * @param {string} label 
+     * @param {string[]} terms 
+     * @returns {object}
+     * The return object 'matchTermOrder' contains two lists:
+     * - 'labelBits' store all the segments of the split 'label'
+     * - 'searchTermIndexes' keeps the indexes of the bits that matches with the 'terms' 
+     */
+    _getMatchTermOrder(label, terms) {
+        let sortedTerms = terms.sort((a, b) => b.length - a.length);
+        let matchTermOrder = {
+            labelBits: [],
+            searchTermIndexes: [],
+        };
+        if (!label) {
+            return matchTermOrder;
+        }
+
+        // For each terms, slice the label at two locations:
+        // - at the starting character of the matching term
+        // - at the last character of the matching term
+        // so, the label is sliced in three strings, with the matching term in the middle
+        matchTermOrder.labelBits.push(label);
+        for (let term of sortedTerms) {
+            let termStart = label.indexOf(term);
+            matchTermOrder.labelBits = this._sliceInHalfString(matchTermOrder.labelBits, termStart);
+            let termEnd = termStart + term.length;
+            matchTermOrder.labelBits = this._sliceInHalfString(matchTermOrder.labelBits, termEnd);
+        }
+
+        // Saves the indexes of the segments matching the terms
+        let labelBits = [];
+        for (let i in matchTermOrder.labelBits) {
+
+            labelBits.push({
+                bit: matchTermOrder.labelBits[i],
+                id: i,
+            });
+
+            if (sortedTerms.includes(matchTermOrder.labelBits[i])) {
+                matchTermOrder.searchTermIndexes.push(i);
+            }
+        }
+        matchTermOrder.labelBits = labelBits;
+        return matchTermOrder;
+    }
+
+    /**
+     * Splits a string at a specific character index within an array of strings.
+     * 
+     * Example:
+     *   array = ["Mexican Restaurant"], splitIndex = 3
+     *   return: ["Mex", "ican Restaurant"]
+     * 
+     * @param {string[]} array
+     * @param {number} splitIndex
+     * @returns {string[]}
+     */
+    _sliceInHalfString(array, splitIndex) { 
+        if (splitIndex <= 0 || array.length === 0) {
+            return array;
+        }
+        let absoluteIndex = 0;
+        for (let i in array) {
+            if (array[i].length === 0) {
+                continue;
+            }
+            if (array[i].length + absoluteIndex < splitIndex) { // Go next string
+                absoluteIndex += array[i].length;
+                continue;
+            }
+            if (array[i].length + absoluteIndex === splitIndex) { // Already sliced
+                return array;
+            }
+            let relativeIndex = splitIndex - absoluteIndex;
+            let startStr = array[i].slice(0, relativeIndex);
+            let endStr = array[i].slice(relativeIndex);
+            array.splice(i, 1);
+            array.splice(i, 0, startStr, endStr);
+            return array;
+        }
+        return array;
     }
 
     selectWebsiteType(id) {
