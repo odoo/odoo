@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.image.lightbox">
+    <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0"
+        aria-label="Image Lightbox" tabindex="-1">
+        <div class="modal-dialog m-0" role="Image Lightbox" t-attf-style="">
+            <div class="modal-content bg-transparent modal-fullscreen">
+                <main class="modal-body o_slideshow bg-transparent">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close" style="position: absolute; right: 10px; top: 10px;"></button>
+                    <div class="carousel slide" style="margin: 0 12px;">
+                        <div class="carousel-inner" style="padding: 0;">
+                            <div t-attf-class="carousel-item active">
+                                <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')"
+                                    t-att-alt="image.alt" data-name="Image"/>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
