@@ -36,7 +36,7 @@ async function autoHideMenu(el, options) {
         autoClose: () => true,
     }, options || {});
 
-    const isUserNavbar = el.parentElement.classList.contains('o_main_navbar');
+    const isUserNavbar = el.parentElement.classList.contains('o_main_nav');
     const dropdownSubMenuClasses = ['show', 'border-0', 'position-static'];
     const dropdownToggleClasses = ['h-auto', 'py-2', 'text-secondary'];
     const autoMarginLeftRegex = /\bm[sx]?(?:-(?:sm|md|lg|xl|xxl))?-auto\b/; // grep: ms-auto mx-auto
