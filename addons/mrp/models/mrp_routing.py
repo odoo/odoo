@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round, float_is_zero
 
@@ -168,7 +168,10 @@ class MrpRoutingWorkcenter(models.Model):
         if 'bom_id' in self.env.context:
             bom_id = self.env.context.get('bom_id')
             for operation in self:
-                operation.copy({'bom_id': bom_id})
+                vals = {'bom_id': bom_id}
+                if operation.bom_product_template_attribute_value_ids:
+                    vals['bom_product_template_attribute_value_ids'] = [Command.clear()]
+                operation.copy(vals)
             return {
                 'view_mode': 'form',
                 'res_model': 'mrp.bom',
