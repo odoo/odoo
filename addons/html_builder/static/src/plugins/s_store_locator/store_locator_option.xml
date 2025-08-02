@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.storeLocatorOption">
+    <BuilderRow label.translate="Type">
+        <BuilderSelect dataAttributeAction="'mapType'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'road'" title.translate="Road">Road</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'satellite'" title.translate="Satellite">Satellite</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Zoom">
+        <BuilderSelect dataAttributeAction="'mapZoom'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'19'">10 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'18'">20 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'17'">50 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'16'">100 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'15'">200 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'14'">400 m</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'13'">1 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'12'">2 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'11'">4 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'10'">8 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'9'">15 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'8'">30 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'7'">50 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'6'">100 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'5'">200 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'4'">400 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'3'">1000 km</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'2'">2000 km</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderContext action="'storeLocatorDataAttributeToggler'">
+        <BuilderRow label.translate="Display Searchbar" preview="false">
+            <BuilderCheckbox actionParam="'data-map-searchbar'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Display Sidebar" preview="false">
+            <BuilderCheckbox actionParam="'data-map-sidebar'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Hide Offscreen" preview="false">
+            <BuilderCheckbox actionParam="'data-offscreen-locations-hidden'"/>
+        </BuilderRow>
+    </BuilderContext>
+    <BuilderRow label.translate="Sidebar Location">
+        <BuilderSelect dataAttributeAction="'mapSidebarLocation'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'left'" title.translate="Left">Left</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'right'" title.translate="Right">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Details">
+        <BuilderSelect dataAttributeAction="'mapDetails'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'area'" title.translate="Area">Area</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'tooltip'" title.translate="Tooltip">Tooltip</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Store Locations" preview="false">
+        <BuilderMany2Many
+            action="'storeLocatorMapUpdateSrc'"
+            model="'res.partner'"
+            limit="10"
+            dataAttributeAction="'renderListItems'"
+            fields="['commercial_company_name', 'street','city','zip','partner_latitude','partner_longitude','contact_address_complete','phone','email']"
+            displayedField="'contact_address_complete'"
+            domain="[['is_company', '=', true], ['contact_address_complete', 'not in', ['', null]]]"
+        />
+    </BuilderRow>
+    <BuilderRow>
+        <BuilderButton action="'storeLocatorMapUpdateSrc'" actionParam="force" preview="false">Refresh Geolocalizaion</BuilderButton>
+    </BuilderRow>
+</t>
+
+</templates>

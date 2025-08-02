@@ -810,6 +810,9 @@ const ButtonUserValueWidget = UserValueWidget.extend({
      */
     start: function (parent, title, options) {
         if (this.options && this.options.childNodes) {
+            if (this.options.childNodes.length > 1) {
+                this.containerEl.classList.add("lh-lg");
+            }
             this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
         }
 
@@ -2179,6 +2182,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         'blur table input': '_onListItemBlurInput',
         'mousedown': '_onWeListMousedown',
     },
+    configAttributes: ['displayedField'],
 
     /**
      * @override
@@ -2205,6 +2209,7 @@ const ListUserValueWidget = UserValueWidget.extend({
             this.hasDefault = this.el.dataset.hasDefault || 'unique';
             this.selected = this.el.dataset.defaults ? JSON.parse(this.el.dataset.defaults) : [];
         }
+        this.displayedField = this.options.dataAttributes.displayedField ?? "display_name";
         this.listTable = document.createElement('table');
         const tableWrapper = document.createElement('div');
         tableWrapper.classList.add('o_we_table_wrapper');
@@ -2280,9 +2285,10 @@ const ListUserValueWidget = UserValueWidget.extend({
         currentValues.forEach(value => {
             if (typeof value === 'object') {
                 const recordData = value;
-                const { id, display_name } = recordData;
-                delete recordData.id;
-                delete recordData.display_name;
+                const id = recordData["id"];
+                const display_name = recordData[this.displayedField];
+                delete recordData["id"];
+                delete recordData[this.displayedField];
                 this._addItemToTable(id, display_name, recordData);
             } else {
                 this._addItemToTable(value, value);
@@ -2409,11 +2415,12 @@ const ListUserValueWidget = UserValueWidget.extend({
         const trimmed = (str) => str.trim().replace(/\s+/g, " ");
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
             const id = trimmed(isIdModeName ? el.name : el.value);
-            return Object.assign({
+            var objToAssign = {
                 id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
                 name: trimmed(el.value),
-                display_name: trimmed(el.value),
-            }, el.dataset);
+            };
+            objToAssign[this.displayedField] = trimmed(el.value);
+            return Object.assign(objToAssign, el.dataset);
         });
         if (this.hasDefault) {
             const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
@@ -2452,7 +2459,7 @@ const ListUserValueWidget = UserValueWidget.extend({
                 option.dataset.addOption = el.id;
                 option.dataset.noPreview = 'true';
                 const divEl = document.createElement('div');
-                divEl.textContent = el.display_name;
+                divEl.textContent = el[this.displayedField];
                 option.appendChild(divEl);
                 this.selectMenuEl.appendChild(option);
             }
@@ -2568,7 +2575,8 @@ const ListUserValueWidget = UserValueWidget.extend({
             }
             prepare();
             const recordData = JSON.parse(widget.getMethodsParams('addRecord').recordData);
-            const { id, display_name } = recordData;
+            const id = recordData["id"];
+            const display_name = recordData[this.displayedField];
             delete recordData.id;
             delete recordData.display_name;
             this._addItemToTable(id, display_name, recordData);
@@ -2801,7 +2809,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     configAttributes: [
         "model", "fields", "limit", "domain",
         "callWith", "createMethod", "filterInModel", "filterInField", "nullText",
-        "defaultMessage",
+        "defaultMessage", "displayedField", "extraInfoFields"
     ],
 
     /**
@@ -2816,6 +2824,8 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             fields: '[]',
             domain: '[]',
             callWith: 'id',
+            displayedField: "display_name",
+            extraInfoFields: "[]",
         });
         this.configAttributes.forEach(attr => {
             if (dataAttributes.hasOwnProperty(attr)) {
@@ -2825,8 +2835,16 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         });
         options.limit = parseInt(options.limit);
         options.fields = JSON.parse(options.fields);
-        if (!options.fields.includes('display_name')) {
-            options.fields.push('display_name');
+        if (!options.fields.includes(options.displayedField)) {
+            options.fields.push(options.displayedField);
+        }
+        if (options.extraInfoFields) {
+            options.extraInfoFields = JSON.parse(options.extraInfoFields);
+            options.extraInfoFields.forEach(field => {
+                if (!options.fields.includes(field)) {
+                    options.fields.push(field);
+                }
+            })
         }
         options.domain = JSON.parse(options.domain);
         options.domainComponents = {};
@@ -2996,11 +3014,15 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
                 this.options.nullText.toLowerCase().includes(needle.toLowerCase())) {
             // Beware of RPC cache.
             if (!records.length || records[0].id) {
-                records.unshift({id: 0, name: this.options.nullText, display_name: this.options.nullText});
+                const objToUnshift = {};
+                objToUnshift["id"] = 0;
+                objToUnshift["name"] = this.options.nullText;
+                objToUnshift[this.options.displayedField] = this.options.nullText;
+                records.unshift(objToUnshift);
             }
         }
         records.forEach(record => {
-            this.displayNameCache[record.id] = record.display_name;
+            this.displayNameCache[record.id] = record[this.options.displayedField];
         });
 
         await Promise.all(records.slice(0, this.options.limit).map(async record => {
@@ -3013,9 +3035,15 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             });
             // REMARK: this syntax is very similar to React.createComponent, maybe we could
             // write a transformer like there is for JSX?
+            const buttonChildNodes = [document.createTextNode(record[this.options.displayedField])];
+            if (this.options.extraInfoFields) {
+                this.options.extraInfoFields.forEach(field => {
+                    buttonChildNodes.push(document.createElement("br"), document.createTextNode(record[field]));
+                });
+            }
             const buttonWidget = new ButtonUserValueWidget(this, undefined, {
                 dataAttributes: Object.assign({recordData: JSON.stringify(record)}, buttonDataAttributes),
-                childNodes: [document.createTextNode(record.display_name)],
+                childNodes: buttonChildNodes,
             }, this.$target);
             this.registerSubWidget(buttonWidget);
             await buttonWidget.appendTo(this.menuEl);
@@ -3067,7 +3095,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     async _getDisplayName(recordId) {
         if (!this.displayNameCache.hasOwnProperty(recordId)) {
-            this.displayNameCache[recordId] = (await this.orm.read(this.options.model, [recordId], ['display_name']))[0].display_name;
+            this.displayNameCache[recordId] = (await this.orm.read(this.options.model, [recordId], [this.options.displayedField]))[0][this.options.displayedField];
         }
         return this.displayNameCache[recordId];
     },
@@ -3160,7 +3188,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const Many2manyUserValueWidget = UserValueWidget.extend({
-    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'],
+    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn', 'displayedField', "extraInfoFields", "displayVertically"],
 
     /**
      * @override
@@ -3173,6 +3201,9 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
                 delete dataAttributes[attr];
             }
         });
+        if (!options.displayedField) {
+            options.displayedField = "display_name";
+        }
         this.filterIn = options.filterIn !== undefined;
         if (this.filterIn) {
             // Transfer filter-in values to child m2o.
@@ -3203,7 +3234,7 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
         this.m2oModel = modelData[m2oField].relation;
         this.m2oName = modelData[m2oField].field_description; // Use as string attr?
 
-        const selectedRecords = await this.orm.read(this.m2oModel, selectedRecordIds, ['display_name']);
+        const selectedRecords = await this.orm.read(this.m2oModel, selectedRecordIds, [this.options.displayedField]);
         // TODO: reconcile the fact that this widget sets its own initial value
         // instead of it coming through setValue(_computeWidgetState)
         this._value = JSON.stringify(selectedRecords);
@@ -3220,6 +3251,8 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
             ['model', this.m2oModel],
             ['addRecord', ''],
             ['createMethod', this.options.createMethod],
+            ['displayedField', this.options.displayedField],
+            ['extraInfoFields', this.options.extraInfoFields],
         );
         // Don't register this one as a subWidget because it will be a subWidget
         // of the listWidget
@@ -3228,10 +3261,15 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
         }, this.$target);
 
         this.listWidget = registerUserValueWidget('we-list', this, undefined, {
-            dataAttributes: { unsortable: 'true', notEditable: 'true', allowEmpty: 'true' },
+            dataAttributes: { unsortable: 'true', notEditable: 'true', allowEmpty: 'true', displayedField: this.options.displayedField},
             createWidget: this.createWidget,
         }, this.$target);
         await this.listWidget.appendTo(this.containerEl);
+        if (this.options.displayVertically) {
+            this.el.classList.add("flex-column");
+            this.containerEl.classList.add("w-100");
+            this.listWidget.el.classList.add("flex-grow-1");
+        }
 
         // Make this.el the select's offsetParent so the we-selection-items has
         // the correct width

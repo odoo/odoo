@@ -8,7 +8,7 @@
     'website': 'https://www.odoo.com/app/ecommerce',
     'version': '1.1',
     'depends': [
-        'website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery', 'html_builder',
+        'website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery', 'html_builder', 'location_selector'
     ],
     'data': [
         # Security
@@ -128,10 +128,6 @@
             'website_sale/static/src/js/product_list/*',
             'website_sale/static/src/js/product_template_attribute_line/*',
             'website_sale/static/src/js/quantity_buttons/*',
-
-            # Location selector components are defined in `delivery` to share the codebase with the
-            # backend.
-            'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/js/location_selector/**/*',
         ],
         'web._assets_primary_variables': [
@@ -175,7 +171,6 @@
             'website_sale/static/tests/builder/**/*',
         ],
         'web.assets_unit_tests_setup': [
-            'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
             'website_sale/static/src/js/website_sale_utils.js',

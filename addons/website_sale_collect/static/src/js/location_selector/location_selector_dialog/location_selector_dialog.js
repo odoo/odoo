@@ -1,9 +1,7 @@
 import { rpc } from '@web/core/network/rpc';
 import { patch } from '@web/core/utils/patch';
 
-import {
-    LocationSelectorDialog
-} from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+import { LocationSelectorDialog } from "@location_selector/location_selector_dialog/location_selector_dialog";
 
 patch(LocationSelectorDialog, {
     props: {

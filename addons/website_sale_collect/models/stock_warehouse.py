@@ -27,8 +27,8 @@ class StockWarehouse(models.Model):
                 'state': wh_location.state_id.code or '',
                 'zip_code': wh_location.zip or '',
                 'country_code': wh_location.country_code,
-                'latitude': wh_location.partner_latitude,
-                'longitude': wh_location.partner_longitude,
+                'partner_latitude': wh_location.partner_latitude,
+                'partner_longitude': wh_location.partner_longitude,
             }
         except AttributeError:
             return {}

@@ -1,14 +1,12 @@
-import {
-    LocationSchedule
-} from '@delivery/js/location_selector/location_schedule/location_schedule';
-import { Map } from '@delivery/js/location_selector/map/map';
-import { Component, onWillStart, useState } from '@odoo/owl';
-import { AssetsLoadingError, loadCSS, loadJS } from '@web/core/assets';
-import { _t } from '@web/core/l10n/translation';
+import { LocationSchedule } from "@location_selector/location_schedule/location_schedule";
+import { Map } from "@location_selector/map/map";
+import { Component, onWillStart, useState } from "@odoo/owl";
+import { AssetsLoadingError, loadCSS, loadJS } from "@web/core/assets";
+import { _t } from "@web/core/l10n/translation";
 
 export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
-    static template = 'delivery.locationSelector.mapContainer';
+    static template = "location_selector.map_container";
     static props = {
         locations: {
             type: Array,
@@ -27,17 +25,18 @@ export class MapContainer extends Component {
                     },
                     street: String,
                     city: String,
-                    zip_code: String,
-                    state: { type: String, optional: true},
+                    zip: String,
+                    state: { type: String, optional: true },
                     country_code: String,
-                    additional_data: { type: Object, optional: true},
-                    latitude: String,
-                    longitude: String,
-                }
+                    additional_data: { type: Object, optional: true },
+                    partner_latitude: String,
+                    partner_longitude: String,
+                },
             },
         },
-        selectedLocationId: [String, {value: false}],
+        selectedLocationId: [String, { value: false }],
         setSelectedLocation: Function,
+        setHiddenLocations: Function,
         validateSelection: Function,
     };
 
@@ -55,9 +54,9 @@ export class MapContainer extends Component {
              */
             try {
                 await Promise.all([
-                    loadJS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),
-                    loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
-                ])
+                    loadJS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"),
+                    loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"),
+                ]);
                 this.state.shouldLoadMap = true;
             } catch (error) {
                 if (!(error instanceof AssetsLoadingError)) {
@@ -75,7 +74,7 @@ export class MapContainer extends Component {
      * @return {Object} The city and the zip code.
      */
     getCityAndZipCode(selectedLocation) {
-        return `${selectedLocation.zip_code} ${selectedLocation.city}`;
+        return `${selectedLocation.zip} ${selectedLocation.city}`;
     }
 
     /**
@@ -84,7 +83,7 @@ export class MapContainer extends Component {
      * @return {Object} The selected location.
      */
     get selectedLocation() {
-        return this.props.locations.find(l => String(l.id) === this.props.selectedLocationId);
+        return this.props.locations.find((l) => String(l.id) === this.props.selectedLocationId);
     }
 
     get errorMessage() {

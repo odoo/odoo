@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="delivery.locationSelector.mapContainer">
+    <t t-name="location_selector.map_container">
         <div class="d-flex flex-column h-100 w-100">
             <Map
                 t-if="this.state.shouldLoadMap"
                 locations="this.props.locations"
                 selectedLocationId="this.props.selectedLocationId"
                 setSelectedLocation="this.props.setSelectedLocation"
+                setHiddenLocations="this.props.setHiddenLocations"
             />
             <div
                 t-else=""
@@ -20,7 +21,6 @@
                 <div class="col-lg-5 d-flex flex-column justify-content-between">
                     <div class="d-flex gap-2">
                         <strong
-                            t-if="this.props.locations.length !== 1"
                             class="o_location_selector_number flex-shrink-0 h5 fw-bold text-center"
                             t-out="this.props.locations.indexOf(selectedLocation) + 1"
                         />
@@ -32,6 +32,7 @@
                     </div>
                     <!-- large screen and + -->
                     <button
+                        t-if="this.props.validateSelection"
                         type="button"
                         id="submit_location_large"
                         class="btn btn-primary d-none d-lg-block mt-3"
@@ -42,6 +43,7 @@
 
                 <!-- Schedule -->
                 <LocationSchedule
+                    t-if="Object.keys(selectedLocation.opening_hours ?? {}).length > 0"
                     openingHours="selectedLocation.opening_hours"
                     wrapClass="'col-lg-7 flex-grow-1 flex-lg-grow-0 ps-lg-4'"
                 />
@@ -78,14 +80,14 @@
                             <span class="d-block" t-out="this.getCityAndZipCode(selectedLocation)"/>
                         </small>
                     </span>
-                    <span class="d-flex align-items-center gap-1 small fw-bold">
+                    <span class="d-flex align-items-center gap-1 small fw-bold" t-att-class="{'d-none': Object.keys(selectedLocation.opening_hours ?? {}).length === 0}">
                         <i class="fa fa-clock-o" role="img"/>
                         <t t-out="openingHoursLabel"/>
                         <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>
                     </span>
 
                     <!-- Schedule -->
-                    <span class="collapse" id="map_collapseHours">
+                    <span t-if="Object.keys(selectedLocation.opening_hours ?? {}).length > 0" class="collapse" id="map_collapseHours">
                         <LocationSchedule openingHours="selectedLocation.opening_hours"/>
                     </span>
                 </span>
