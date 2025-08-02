@@ -99,7 +99,7 @@ options.registry.Donation = options.Class.extend({
         const donationAmounts = [];
         delete this.$target[0].dataset.donationAmounts;
         valueList.forEach((value) => {
-            donationAmounts.push(value.display_name);
+            donationAmounts.push(value.display_name || '0');
         });
         this.$target[0].dataset.donationAmounts = JSON.stringify(donationAmounts);
         this._rebuildPrefilledOptions();
