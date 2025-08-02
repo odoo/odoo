@@ -54,10 +54,6 @@
             }
         }
 
-        .o_configurator_hide {
-            opacity: 0;
-        }
-
         .o_configurator_show {
             animation: configuratorFadeIn 1s;
         }
@@ -141,6 +137,10 @@
             .dropdown {
                 box-shadow: inset 0 -3px 0 map-get($theme-colors, primary);
 
+                .dropdown-menu button:focus {
+                    outline: unset;
+                }
+
                 &.o_step_todo .fa-angle-down {
                     transform: translateY(-0.26em);
                 }
@@ -153,8 +153,8 @@
                         opacity:0;
                     }
 
-                    &:hover, &.show {
-                        padding-right: 1.3rem!important;
+                    &:hover, &.show, &:has([data-bs-toggle]:focus-visible) {
+                        padding-right: 1.3rem !important;
 
                         .fa-angle-down {
                             transition: all 300ms ease 100ms;
@@ -245,7 +245,7 @@
                     padding-top: 20%;
                 }
 
-                &:hover, &.selected {
+                &:hover, &:focus-visible, &.selected {
                     box-shadow: 0 0 0 1px #FFF, 0 0 0 3px map-get($theme-colors, "primary")
                 }
             }

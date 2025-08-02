@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
         // Description screen
         {
             content: "select a website type",
-            trigger: "a.o_change_website_type",
+            trigger: "button.o_change_website_type",
             run: "click",
         },
         {
@@ -44,13 +44,8 @@ registry.category("web_tour.tours").add("configurator_flow", {
             run: "click",
         },
         {
-            content: "select an objective",
-            trigger: ".o_configurator_purpose_dd a",
-            run: "click",
-        },
-        {
             content: "choose from the objective list",
-            trigger: "a.o_change_website_purpose",
+            trigger: "button.o_change_website_purpose",
             run: "click",
         },
         // Palette screen
@@ -92,13 +87,13 @@ registry.category("web_tour.tours").add("configurator_flow", {
         // Online catalog screen
         {
             content: "Choose a shop page style",
-            trigger: ".o_configurator_screen:contains(online catalog) .theme_preview",
+            trigger: ".o_configurator_screen:contains(online catalog) .button_area",
             run: "click",
         },
         // Product page Screen
         {
             content: "Choose a product page style",
-            trigger: ".o_configurator_screen:contains(product page) .theme_preview",
+            trigger: ".o_configurator_screen:contains(product page) .button_area",
             run: "click",
         },
         {
