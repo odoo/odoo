@@ -13,16 +13,16 @@ export class ProjectTaskListRenderer extends ListRenderer {
      * rendering the list. Indeed, `selection` is a getter which browses all
      * records, so computing it for each cell slows down the rendering a lot on
      * large tables. Moreover, it also prevents from iterating over the selection
-     * to compare tasks' projects.
+     * to compare tasks' projects or partners.
      *
-     * It returns true iff the selected tasks are all in the same project.
+     * Returns true if all selected tasks have the same value for the specified field.
      */
-    areSelectedTasksInSameProject() {
+    haveAllSelectedTasksSameField(field) {
         if (this._areSelectedTasksInSameProject === undefined) {
             const selection = this.props.list.selection;
-            const projectId = selection.length && getRawValue(selection[0], "project_id");
+            const projectId = selection.length && getRawValue(selection[0], field);
             this._areSelectedTasksInSameProject = selection.every(
-                (task) => getRawValue(task, "project_id") === projectId
+                (task) => getRawValue(task, field) === projectId
             );
             Promise.resolve().then(() => {
                 delete this._areSelectedTasksInSameProject;
@@ -33,7 +33,7 @@ export class ProjectTaskListRenderer extends ListRenderer {
     isCellReadonly(column, record) {
         let readonly = false;
         if (column.name === "stage_id") {
-            readonly = !this.areSelectedTasksInSameProject();
+            readonly = !this.haveAllSelectedTasksSameField('project_id');
         }
         return readonly || super.isCellReadonly(column, record);
     }
