@@ -591,7 +591,7 @@ test("replace an image with a caption", async () => {
             await waitFor(".o-we-toolbar button[name='replace_image']");
             await click("button[name='replace_image']");
             await waitFor(".o_select_media_dialog");
-            await click("img.o_we_attachment_highlight");
+            await click(".o_existing_attachment_cell .o_button_area");
             await animationFrame();
             expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
             expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);

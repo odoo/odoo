@@ -124,7 +124,7 @@ registerWebsitePreviewTour('snippet_background_edition', {
 changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 {
     content: "Click on image",
-    trigger: ".o_select_media_dialog img[title='test.png']",
+    trigger: ".o_select_media_dialog .o_button_area[aria-label='test.png']",
     run: "click",
 },
 ...clickOnSave(),
@@ -222,7 +222,7 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 // Now, add an image on top of that color combination + gradient
 changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 {
-    trigger: '.o_existing_attachment_cell img',
+    trigger: '.o_existing_attachment_cell .o_button_area',
     content: "Select an image in the media dialog",
     run: "click",
 },

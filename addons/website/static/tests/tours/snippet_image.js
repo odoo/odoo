@@ -25,7 +25,7 @@ registerWebsitePreviewTour("snippet_image", {
 },
 {
     content: "Click on the image",
-    trigger: ".o_select_media_dialog .o_we_media_dialog_img_wrapper img",
+    trigger: ".o_select_media_dialog .o_existing_attachment_cell .o_button_area",
     run: "click",
 },
 {

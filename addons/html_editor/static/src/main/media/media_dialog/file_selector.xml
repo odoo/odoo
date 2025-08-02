@@ -16,7 +16,7 @@
             </select>
         </div>
         <div class="col justify-content-end flex-nowrap input-group has-validation">
-            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput" t-if="state.showUrlInput"/>
+            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput" t-if="state.showUrlInput" t-ref="urlInput"/>
             <button type="button" class="btn o_upload_media_url_button text-nowrap" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
                     <t t-esc="props.addText"/>
             </button>

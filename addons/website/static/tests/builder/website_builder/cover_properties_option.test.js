@@ -82,7 +82,7 @@ test("Add image as cover", async () => {
     await contains("[data-action-id='setCoverBackground'][data-action-param]").click();
     // We use "click" instead of contains.click because contains wait for the image to be visible.
     // In this test we don't want to wait ~800ms for the image to be visible but we can still click on it
-    await click("img.o_we_attachment_highlight");
+    await click(".o_existing_attachment_cell .o_button_area");
     await animationFrame();
     await waitFor(":iframe .o_record_cover_container.o_record_has_cover .o_record_cover_image");
     expect(":iframe .o_record_cover_image").toHaveStyle({

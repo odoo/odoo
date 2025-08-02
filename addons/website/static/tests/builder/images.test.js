@@ -51,7 +51,7 @@ test("Double click on image and replace it", async () => {
     await animationFrame();
     expect(".modal-content:contains(Select a media) .o_upload_media_button").toHaveCount(1);
     expect("div.o-tooltip").toHaveCount(0);
-    await contains(".o_select_media_dialog img[title='logo']").click();
+    await contains(".o_select_media_dialog .o_button_area[aria-label='logo']").click();
     await waitForNone(".o_select_media_dialog");
     expect(":iframe img").toHaveClass("o_modified_image_to_save");
     expect(".options-container[data-container-title='Image']").toHaveCount(1);
