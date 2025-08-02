@@ -280,6 +280,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             currency=tx_sudo.currency_id,
             provider_name=tx_sudo.provider_id.name,
             tx=tx_sudo, # for the payment.state_header template
+            display_success_msg=kwargs.get('display_success_msg', False),
         )
 
         if tx_sudo.state not in ('authorized', 'done'):

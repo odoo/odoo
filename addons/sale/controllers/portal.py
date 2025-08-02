@@ -192,7 +192,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             history_session_key = 'my_orders_history'
 
         values = self._get_page_view_values(
-            order_sudo, access_token, values, history_session_key, False)
+            order_sudo, access_token, values, history_session_key, False, **kw)
 
         return request.render('sale.sale_order_portal_template', values)
 

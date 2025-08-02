@@ -26,7 +26,9 @@ export class PaymentPostProcessing extends Interaction {
                 // Redirect the user to the landing route if the transaction reached a final state.
                 const { provider_code, state, landing_route } = postProcessingValues;
                 if (PaymentPostProcessing.getFinalStates(provider_code).has(state)) {
-                    window.location = landing_route;
+                    const url = new URL(landing_route, window.location.origin);
+                    url.searchParams.set('display_success_msg', 'True');
+                    window.location = url.toString();
                 } else {
                     this.poll();
                 }
