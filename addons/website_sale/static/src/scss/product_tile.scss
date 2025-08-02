@@ -309,6 +309,8 @@
                 display: var(--o-wsale-card-btn-submit-display, none);
                 order: var(--o-wsale-card-btn-submit-order);
                 flex-grow: var(--o-wsale-card-btn-submit-flex-grow);
+                aspect-ratio: var(--o-wsale-card-btn-submit-aspect-ratio);
+                margin: var(--o-wsale-card-btn-submit-margin);
 
                 .o_label {
                     display: var(--o-wsale-card-btn-submit-label-display,  var(--o-wsale-card-btn-label-display));
@@ -399,6 +401,14 @@
     @include media-breakpoint-down(lg) {
         &.o_wsale_products_opt_actions_onhover .o_wsale_product_btn {
             visibility: hidden;
+        }
+    }
+    .o_wsale_product_btn {
+        @container (max-width: 270px) {
+            --o-wsale-card-btn-submit-label-display: none;
+            --o-wsale-card-btn-submit-flex-grow: 0;
+            --o-wsale-card-btn-submit-aspect-ratio: 1;
+            --o-wsale-card-btn-submit-margin: 0 auto 0 0;
         }
     }
 }
@@ -1137,6 +1147,26 @@ $_wsale_products_roundness_map: (
         &:where(.o_wsale_products_opt_actions_theme) {
             .o_wsale_product_btn .btn:where(:not(.o_wsale_product_btn_primary)) {
                 @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
+            }
+        }
+    }
+}
+
+:where(.o_wsale_products_opt_layout_catalog, .o_wsale_products_opt_layout_list) {
+    &:not(.o_wsale_products_opt_cc) {
+        &:where(.o_wsale_products_opt_actions_subtle) {
+            .o_wsale_product_btn .btn {
+                @include o-wsale-card-btn-design-subtle($body-bg, $body-color);
+            }
+        }
+        &:where(.o_wsale_products_opt_actions_promote) {
+            .o_wsale_product_btn .btn:where(:not(.o_wsale_product_btn_primary)) {
+                @include o-wsale-card-btn-design-subtle($body-bg, $body-color);
+            }
+        }
+        &:where(.o_wsale_products_opt_actions_theme) {
+            .o_wsale_product_btn .btn:where(:not(.o_wsale_product_btn_primary)) {
+                @include button-variant($secondary, $secondary);
             }
         }
     }

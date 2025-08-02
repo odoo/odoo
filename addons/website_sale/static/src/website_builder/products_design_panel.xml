@@ -23,7 +23,7 @@
 
         <t t-set="suggestedClassesCatalogDefaultPromote">
             o_wsale_products_opt_actions_inline o_wsale_products_opt_wishlist_inline
-            o_wsale_products_opt_actions_promote o_wsale_products_opt_cc1
+            o_wsale_products_opt_actions_promote o_wsale_products_opt_cc o_wsale_products_opt_cc1
         </t>
 
         <t t-set="suggestedClassesListDefault">
@@ -76,7 +76,7 @@
                 label: thumbnailsLabel,
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_thumbs',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_thumbs.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
                 gap: 16,
             },
             {
@@ -85,7 +85,7 @@
                 label: cardsLabel,
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_cards',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_cards.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
                 gap: 8,
             },
             {
@@ -94,7 +94,7 @@
                 label: gridLabel,
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_grid',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_grid.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc1 o_wsale_products_opt_name_size_body o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_name_size_body o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
                 gap: 0,
             },
             {
@@ -103,7 +103,7 @@
                 type: 'list',
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_showcase',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_showcase.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_thumb_6_5 o_wsale_products_opt_cc5 o_wsale_products_opt_name_color_regular o_wsale_products_opt_actions_theme',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_thumb_6_5 o_wsale_products_opt_cc o_wsale_products_opt_cc5 o_wsale_products_opt_name_color_regular o_wsale_products_opt_actions_theme',
                 gap: 0,
             },
         ]"/>
@@ -295,13 +295,13 @@
             >
                 <BuilderSelect t-if="!anyThumb">
                     <BuilderSelectItem
-                        classAction="'o_wsale_products_opt_cc1'"
+                        classAction="'.o_wsale_products_opt_cc o_wsale_products_opt_cc1'"
                     >
                         Theme Preset n&#176;1 (default)
                     </BuilderSelectItem>
                     <t t-foreach="[2, 3, 4, 5]" t-as="colorIndex" t-key="colorIndex_index">
                         <BuilderSelectItem
-                            classAction="'o_wsale_products_opt_cc' + colorIndex"
+                            classAction="'o_wsale_products_opt_cc o_wsale_products_opt_cc' + colorIndex"
                         >
                             Theme Preset n&#176;<t t-out="colorIndex"/>
                         </BuilderSelectItem>
