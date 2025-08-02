@@ -699,11 +699,15 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         negative. """
         po_vals = {
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'name': self.product_id_2.name,
-                'product_id': self.product_id_2.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.env['product.product'].create({
+                        'name': 'Conference Chair',
+                        'purchase_method': 'purchase',
+                        'type': 'consu',
+                }).id,
                 'product_qty': -5.0,
-                'product_uom': self.product_id_2.uom_po_id.id,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
                 'price_unit': 250.0,
             })],
         }
