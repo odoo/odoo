@@ -1,8 +1,9 @@
 import os
-import requests
 import sys
 import tempfile
 import zipfile
+
+import requests
 
 from . import Command
 

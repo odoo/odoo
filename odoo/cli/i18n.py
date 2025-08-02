@@ -38,18 +38,21 @@ class I18n(Command):
             description="Imports provided translation files",
             formatter_class=SubcommandHelpFormatter,
         )
+        self.import_parser.set_defaults(func=self._import)
         self.export_parser = subparsers.add_parser(
             'export',
             help="Export i18n files",
             description="Exports language files into the i18n folder of each module",
             formatter_class=SubcommandHelpFormatter,
         )
+        self.export_parser.set_defaults(func=self._export)
         self.loadlang_parser = subparsers.add_parser(
             'loadlang',
             help="Load languages",
             description="Loads languages",
             formatter_class=SubcommandHelpFormatter,
         )
+        self.loadlang_parser.set_defaults(func=self._loadlang)
 
         for parser in (self.import_parser, self.export_parser, self.loadlang_parser):
             parser.add_argument(
@@ -114,16 +117,10 @@ class I18n(Command):
 
         db_names = config['db_name']
         if not db_names or len(db_names) > 1:
-            self.parser.error("Please provide a single database in the config file")
+            self.parser.error("Please provide a single database")
         parsed_args.db_name = db_names[0]
 
-        match parsed_args.subcommand:
-            case 'import':
-                self._import(parsed_args)
-            case 'export':
-                self._export(parsed_args)
-            case 'loadlang':
-                self._loadlang(parsed_args)
+        parsed_args.func(parsed_args)
 
     def _get_languages(self, env, language_codes, active_test=True):
         # We want to log invalid parameters
