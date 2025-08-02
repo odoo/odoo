@@ -102,7 +102,7 @@
         <!-- Day Agenda -->
         <div t-attf-class="{{event_has_complex_day and 'container-fluid' or 'container-xl'}} pe-0">
             <div class="o_we_online_agenda mb-3">
-                <table id="table_search" class="table table-sm border-0 h-100">
+                <table id="table_search" t-attf-class="table table-sm border-0 h-100 {{'table-layout-fixed' if len(locations) == 1 else ''}}">
                     <!--Header-->
                     <tr>
                         <th class="border-0 position-sticky"/>
