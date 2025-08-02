@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates>
+    <t t-name="website_sale_autocomplete.AutocompleteDropDown">
+        <div t-attf-class="dropdown-menu position-relative #{results.length ? 'show' : ''}">
+            <a class="dropdown-item js_autocomplete_result"
+               t-foreach="results" t-as="result" t-key="result_index"
+               t-att-data-google-place-id="result['google_place_id']">
+                <t t-out="result['formatted_address']"/>
+            </a>
+            <img class="ms-auto pe-1" src="/website_sale_autocomplete/static/src/img/powered_by_google_on_white.png" alt="Powered by Google"/>
+        </div>
+    </t>
+</templates>

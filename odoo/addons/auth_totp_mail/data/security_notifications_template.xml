@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Extend the security update template to include 2fa suggestion -->
+        <template id="account_security_setting_update" inherit_id="mail.account_security_setting_update">
+            <xpath expr="//ul[hasclass('o_mail_account_security_suggestions')]/li[1]" position="after">
+                <li t-if="suggest_2fa">
+                    <span>Consider</span>
+                    <a href="https://www.odoo.com/documentation/17.0/applications/general/auth/2fa.html">
+                        activating Two-factor Authentication
+                    </a>
+                </li>
+            </xpath>
+        </template>
+    </data>
+</odoo>

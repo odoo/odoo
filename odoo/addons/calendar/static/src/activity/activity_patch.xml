@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o-mail-Activity-edit')]" position="attributes">
+            <attribute name="t-if">!activity.calendar_event_id</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Activity-edit')]" position="after">
+            <span t-if="activity.calendar_event_id" class="btn btn-link p-0 me-3" t-on-click="onClickReschedule"><i class="fa fa-calendar"/> Reschedule</span>
+        </xpath>
+    </t>
+
+</templates>

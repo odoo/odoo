@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_sinvoice_template" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">l10n_vn_edi_viettel.sinvoice.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a template
+            </p>
+            <p>
+                A SInvoice template is used when sending invoices to SInvoice in order to know which
+                invoice template to use when rendering the invoice.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_sinvoice_symbol" model="ir.actions.act_window">
+        <field name="name">Symbols</field>
+        <field name="res_model">l10n_vn_edi_viettel.sinvoice.symbol</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a symbol
+            </p>
+            <p>
+                A SInvoice symbol is used when sending invoices to SInvoice in order to generate the
+                invoice sequence.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="l10n_vn_edi_sinvoice_menu" name="SInvoice" groups="account.group_account_manager"
+              parent="account.menu_finance_configuration" sequence="99">
+        <menuitem id="l10n_vn_edi_sinvoice_templates" action="action_sinvoice_template"/>
+        <menuitem id="l10n_vn_edi_sinvoice_symbols" action="action_sinvoice_symbol"/>
+    </menuitem>
+</odoo>

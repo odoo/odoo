@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="slide_channel_tag_group_data_other" model="slide.channel.tag.group">
+            <field name="name">Tags</field>
+            <field name="sequence">20</field>
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="slide_channel_tag_group_level" model="slide.channel.tag.group">
+            <field name="name">Your Level</field>
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="slide_channel_tag_level_basic" model="slide.channel.tag">
+            <field name="name">Basic</field>
+            <field name="color">10</field>
+            <field name="group_id" ref="website_slides.slide_channel_tag_group_level"/>
+        </record>
+        <record id="slide_channel_tag_level_intermediate" model="slide.channel.tag">
+            <field name="name">Intermediate</field>
+            <field name="color">3</field>
+            <field name="group_id" ref="website_slides.slide_channel_tag_group_level"/>
+        </record>
+        <record id="slide_channel_tag_level_advanced" model="slide.channel.tag">
+            <field name="name">Advanced</field>
+            <field name="color">1</field>
+            <field name="group_id" ref="website_slides.slide_channel_tag_group_level"/>
+        </record>
+    </data>
+</odoo>

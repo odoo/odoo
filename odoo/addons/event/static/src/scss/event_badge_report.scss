@@ -1,0 +1,57 @@
+/* EVENT BADGE : CARD USED IN ALL FORMATS */
+
+.o_event_badge_report_page_break {
+    page-break-after:always;
+}
+
+.o_event_badge_height {
+    height: 148mm;
+}
+
+.o_event_badge_ticket_wrapper {
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    border: solid 1px #939393;
+    margin: 16px 8px;
+    padding: 10px 0px 0px;
+    font-size: 1.2rem;
+    box-shadow: -3px 3px 9px 0px rgba(0,0,0,0.51);
+    height: 138mm;
+
+    .o_event_badge_font_faded {
+        color: #939393;
+    }
+
+    .o_event_badge_logo {
+        max-height: 116px;
+        max-width: 174px;
+    }
+}
+
+/* EVENT BADGE : A4 FOLDABLE (A4_french_fold) */
+
+.o_event_foldable_badge_container {
+
+    .o_event_foldable_badge_bottom_row {
+        margin-top: 1mm;
+        .o_event_foldable_badge_bottom_quarter {
+            height: 148mm;
+            -moz-transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+            -ms-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+    }
+
+    .o_event_foldable_badge_back {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -moz-transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+}

@@ -1,0 +1,151 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_expense
+# 
+# Translators:
+# Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# aleksandar ivanov, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Igor Sheludko <igor.sheludko@gmail.com>, 2023
+# Martin Trigaux, 2023
+# KeyVillage, 2024
+# Elena Varbanova, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Elena Varbanova, 2024\n"
+"Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
+msgid "# of Expenses"
+msgstr "# на разходите"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
+msgid "Can be reinvoiced"
+msgstr "Може да бъде префактурирано"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
+msgid "Customer to Reinvoice"
+msgstr "Клиент за префактуриране"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense
+msgid "Expense"
+msgstr "Разход"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
+msgid "Expense Policy Tooltip"
+msgstr "Насоки за политиката на разходите"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Разходен отчет"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_split
+msgid "Expense Split"
+msgstr "Разпределяне на разходите"
+
+#. module: sale_expense
+#: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
+msgid "Expenses"
+msgstr "Разходи"
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid "Expenses of this category may not be added to a Sales Order."
+msgstr ""
+"Разходите от тази категория не могат да се добавят към Поръчка за продажба."
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid ""
+"Expenses will be added to the Sales Order at their actual cost when posted."
+msgstr ""
+"Разходите ще бъдат добавени към Поръчката за продажба по тяхната "
+"действителна цена, когато бъдат публикувани."
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid ""
+"Expenses will be added to the Sales Order at their sales price (product "
+"price, pricelist, etc.) when posted."
+msgstr ""
+"Разходите ще бъдат добавени към Поръчката за продажба по тяхната продажна "
+"цена (цена на продукта, ценова листа и т.н.), когато бъдат публикувани."
+
+#. module: sale_expense
+#: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
+msgid ""
+"If the category has an expense policy, it will be reinvoiced on this sales "
+"order"
+msgstr ""
+"Ако категорията има разходна политика, тя ще бъде фактурирана в тази поръчка"
+" за продажбаr"
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
+msgid "Invoicing"
+msgstr "Счетоводно отчитане"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Записи в Дневника"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move_line
+msgid "Journal Item"
+msgstr "Счетоводна Операция"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_product_template
+msgid "Product"
+msgstr "Продукт"
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Reinvoiced Sales Orders"
+msgstr "Префактурирани поръчки за продажба"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
+msgid "Sale Order Count"
+msgstr "Брой поръчки за продажба"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_sale_order
+msgid "Sales Order"
+msgstr "Поръчка"
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
+msgid "Sales Orders"
+msgstr "Поръчки за продажби"

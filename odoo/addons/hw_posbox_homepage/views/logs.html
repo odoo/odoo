@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="pragma" content="no-cache" />
+
+        <title>Odoo's IoT Box Logs</title>
+
+        <script>
+            async function getLogs() {
+                const result = await fetch('/hw_posbox_homepage/iot_logs');
+                const data = await result.json();
+                document.getElementById('logs').innerText = data.logs;
+                document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
+            }
+            document.addEventListener("DOMContentLoaded", function(event) {
+                setInterval(getLogs, 1000);
+            });
+        </script>
+    </head>
+    <body style="width: 100%; background-color: black; color: white;">
+        <pre id="logs"></pre>
+    </body>
+</html>

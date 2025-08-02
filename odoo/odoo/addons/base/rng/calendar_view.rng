@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:include href="common.rng"/>
+    <rng:define name="calendar">
+        <rng:element name="calendar">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional><rng:attribute name="date_start" /></rng:optional>
+            <rng:optional><rng:attribute name="date_stop" /></rng:optional>
+            <rng:optional><rng:attribute name="date_delay" /></rng:optional>
+            <rng:optional><rng:attribute name="all_day" /></rng:optional>
+            <rng:optional><rng:attribute name="form_view_id" /></rng:optional>
+            <rng:optional><rng:attribute name="event_limit" /></rng:optional>
+            <rng:optional><rng:attribute name="create_name_field" /></rng:optional>
+            <rng:optional><rng:attribute name="quick_create" /></rng:optional>
+            <rng:optional><rng:attribute name="quick_create_view_id" /></rng:optional>
+            <rng:optional><rng:attribute name="color" /></rng:optional>
+            <rng:optional><rng:attribute name="event_open_popup" /></rng:optional>
+            <rng:optional><rng:attribute name="show_unusual_days" /></rng:optional>
+            <rng:optional><rng:attribute name="js_class"/></rng:optional>
+            <rng:optional><rng:attribute name="hide_time"/></rng:optional>
+            <rng:optional><rng:attribute name="hide_date"/></rng:optional>
+            <rng:optional><rng:attribute name="create"/></rng:optional>
+            <rng:optional><rng:attribute name="delete"/></rng:optional>
+            <rng:optional><rng:attribute name="scales"/></rng:optional>
+            <rng:optional><rng:attribute name="banner_route"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="mode">
+                    <rng:choice>
+                        <rng:value>year</rng:value>
+                        <rng:value>month</rng:value>
+                        <rng:value>week</rng:value>
+                        <rng:value>day</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+    <rng:start>
+        <rng:choice>
+            <rng:ref name="calendar" />
+        </rng:choice>
+    </rng:start>
+</rng:grammar>

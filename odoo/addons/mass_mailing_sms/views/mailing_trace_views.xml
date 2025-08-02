@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_trace_view_search" model="ir.ui.view">
+        <field name="name">mailing.trace.view.search.inherit.sms</field>
+        <field name="model">mailing.trace</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_view_search"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='email']" position="after">
+                <field name="sms_id_int"/>
+                <field name="sms_id"/>
+                <field name="sms_number"/>
+           </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_trace_view_tree" model="ir.ui.view">
+        <field name="name">mailing.trace.view.tree.inherit.sms</field>
+        <field name="model">mailing.trace</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="before">
+                <field name="trace_type"/>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="sms_number"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_trace_view_tree_sms" model="ir.ui.view">
+        <field name="name">mailing.trace.view.tree.sms</field>
+        <field name="model">mailing.trace</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="SMS Traces" create="0">
+                <field name="mass_mailing_id"/>
+                <field name="sms_number"/>
+                <field name="sent_datetime"/>
+                <field name="links_click_datetime"/>
+                <field name="trace_status" widget="badge"/>
+                <field name="failure_type" optional="show"/>
+                <field name="open_datetime" optional="hide"/>
+                <field name="reply_datetime" optional="hide"/>
+                <button name="action_view_contact" type="object"
+                        string="Open Recipient" icon="fa-user"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_trace_view_form" model="ir.ui.view">
+        <field name="name">mailing.trace.view.form.inherit.sms</field>
+        <field name="model">mailing.trace</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='trace_status']" position="attributes">
+                <attribute name="statusbar_visible">outgoing,pending,sent,error</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="attributes">
+                <attribute name="invisible">trace_type != 'mail'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mail_mail_id_int']" position="attributes">
+                <attribute name="invisible">trace_type != 'mail'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='message_id']" position="attributes">
+                <attribute name="invisible">trace_type != 'mail'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="sms_number" invisible="trace_type != 'sms'"/>
+            </xpath>
+            <xpath expr="//field[@name='message_id']" position="after">
+                <field name="sms_id_int" string="SMS ID"
+                    invisible="trace_type != 'sms'"
+                    groups="base.group_no_one"/>
+                <field name="sms_code" invisible="trace_type != 'sms'"
+                    groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_trace_view_form_sms" model="ir.ui.view">
+        <field name="name">mailing.trace.view.form.sms</field>
+        <field name="model">mailing.trace</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="SMS Trace" create="0" edit="0">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contact"
+                                type="object" icon="fa-user" class="oe_stat_button">
+                            <span widget="statinfo">Open Recipient</span>
+                        </button>
+                    </div>
+                    <div class="alert alert-info text-center"
+                        invisible="trace_status != 'error' or
+                                   failure_type in ('sms_not_delivered', 'sms_not_allowed', 'sms_invalid_destination', 'sms_rejected', 'sms_rejected')"
+                        role="alert">
+                        <strong>This SMS could not be sent.</strong>
+                    </div>
+                    <div class="alert alert-info text-center"
+                        invisible="trace_status != 'error' or
+                                   failure_type not in ('sms_not_delivered', 'sms_not_allowed', 'sms_invalid_destination', 'sms_rejected', 'sms_rejected')"
+                        role="alert">
+                        <strong>This SMS could not be delivered.</strong>
+                    </div>
+                    <div class="alert alert-info text-center" invisible="trace_status != 'bounce'" role="alert">
+                        <strong>This number appears to be invalid.</strong>
+                    </div>
+                    <group>
+                        <group string="Status">
+                            <field name="trace_status"/>
+                            <field name="failure_type" invisible="not failure_type"/>
+                            <field name="sent_datetime" invisible="not sent_datetime"/>
+                            <field name="links_click_datetime" invisible="not links_click_datetime"/>
+                            <field name="open_datetime" invisible="not open_datetime"/>
+                            <field name="reply_datetime" invisible="not reply_datetime"/>
+                        </group>
+                        <group string="Mailing">
+                            <field name="trace_type" invisible="1"/>
+                            <field name="sms_number"/>
+                            <field name="mass_mailing_id"/>
+                            <field name="sms_id_int" string="SMS ID" groups="base.group_no_one"/>
+                            <field name="sms_code" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Marketing">
+                            <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <field name="medium_id"/>
+                            <field name="source_id"/>
+                            <field name="sms_id" groups="base.group_no_one" invisible="not sms_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

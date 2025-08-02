@@ -1,0 +1,62 @@
+// = Main Navbar Variables
+// ============================================================================
+$o-navbar-height: 46px !default;
+$o-navbar-padding-v: 0px !default;
+$o-navbar-font-size: $o-font-size-base !default;
+
+$o-navbar-background: $o-brand-odoo !default;
+$o-navbar-border-bottom: 1px solid darken($o-brand-odoo, 10%) !default;
+
+$o-navbar-entry-margin-h: 0 !default;
+$o-navbar-entry-padding-h: .63em !default;
+$o-navbar-entry-border-radius: 0 !default;
+$o-navbar-entry-color: rgba($o-white, .9) !default;
+$o-navbar-entry-color--hover: $o-white !default;
+$o-navbar-entry-font-size: 1em !default;
+$o-navbar-entry-bg--hover: rgba($o-black, .08) !default;
+
+$o-navbar-entry-color--active: $o-navbar-entry-color--hover !default;
+$o-navbar-entry-bg--active: $o-navbar-entry-bg--hover !default;
+
+$o-navbar-dropdown-menu-border-top: 0 !default;
+$o-navbar-dropdown-menu-border-radius: 0 0 $o-border-radius $o-border-radius !default;
+
+$o-navbar-brand-font-size: 1.2em !default;
+$o-navbar-brand-color: $o-navbar-entry-color !default;
+
+$o-navbar-badge-size: 11px !default;
+$o-navbar-badge-padding: 4px !default;
+$o-navbar-badge-bg: $o-success !default;
+$o-navbar-badge-color: inherit !default;
+$o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
+
+// = % PseudoClasses
+//
+// Regroup and expose rules shared across components
+// --------------------------------------------------------------------------
+%-main-navbar-entry-base {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
+    border-radius: $o-navbar-entry-border-radius;
+    user-select: none;
+    background: transparent;
+    font-size: $o-navbar-entry-font-size;
+
+    @include o-hover-text-color(
+        var(--NavBar-entry-color, #{$o-navbar-entry-color}),
+        var(--NavBar-entry-color--hover, #{$o-navbar-entry-color--hover})
+    );
+}
+
+%-main-navbar-entry-spacing {
+    margin: 0;
+    margin-left: var(--NavBar-entry-margin-left, #{$o-navbar-entry-margin-h});
+    margin-right: var(--NavBar-entry-margin-right, #{$o-navbar-entry-margin-h});
+    padding: 0;
+    padding-left: var(--NavBar-entry-padding-left, #{$o-navbar-entry-padding-h});
+    padding-right: var(--NavBar-entry-padding-right, #{$o-navbar-entry-padding-h});
+    line-height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
+}

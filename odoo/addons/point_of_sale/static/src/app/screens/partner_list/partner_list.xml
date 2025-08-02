@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PartnerListScreen">
+        <div class="partnerlist-screen screen h-100 d-flex flex-column bg-100">
+            <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                <div class="button highlight btn btn-lg btn-primary" t-if="state.detailIsShown" t-on-click="() => this.partnerEditor.save()">
+                    <i t-if="ui.isSmall" class="fa fa-floppy-o"/>
+                    <t t-else="">
+                        <span> Save</span>
+                    </t>
+                </div>
+                <button t-if="!state.detailIsShown" class="button new-customer highlight btn btn-lg btn-primary" role="img" aria-label="Add a customer"
+                        t-on-click="createPartner"
+                        title="Add a customer">
+                    <i t-if="ui.isSmall" class="fa fa-plus"/>
+                    <t t-else=""> Create</t>
+                </button>
+                <div class="button back btn btn-lg btn-secondary mx-2" t-on-click="back">
+                    <i t-if="ui.isSmall" class="fa fa-angle-double-left"/>
+                    <t t-else=""> Discard</t>
+                </div>
+                <div class="top-right-buttons d-flex gap-2 w-100 justify-content-end">
+                    <div t-if="state.detailIsShown and state.editModeProps.partner.id" class="button more-info">
+                        <a t-on-click="goToOrders" class="btn btn-lg btn-outline-secondary" target="_blank"> Orders </a>
+                    </div>
+                    <div t-if="state.detailIsShown &amp;&amp; state.editModeProps.partner.id" class="button more-info">
+                        <a t-att-href="partnerLink" class="btn btn-lg btn-outline-secondary" target="_blank"> More info</a>
+                    </div>
+                    <div class="search-bar-container sb-partner d-flex align-items-center w-100 w-lg-50 h-100 h-100" t-if="!state.detailIsShown">
+                        <div class="input-group h-100">
+                            <div class="pos-search-bar form-control d-flex align-items-center bg-view">
+                                <i class="oi oi-search me-2" t-on-click="_onPressEnterKey"/>
+                                <input class="flex-grow-1 w-auto h-100 border-0 p-2 me-4" type="text" autofocus="autofocus" t-ref="search-word-input-partner" placeholder="Search Customers..." size="1" t-on-keyup="updatePartnerList" />
+                                <i class="fa fa-times position-absolute end-0 me-2 pe-1 cursor-pointer" t-on-click="_clearSearch"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="overflow-auto">
+                <t t-if="state.detailIsShown">
+                    <PartnerDetailsEdit 
+                        t-props="state.editModeProps" 
+                        saveChanges.bind="saveChanges" 
+                        imperativeHandle="partnerEditor" />
+                </t>
+                <t t-else="">
+                    <table class="partner-list table table-striped w-100">
+                        <thead>
+                            <tr>
+                                <th class="py-2">Name</th>
+                                <th class="py-2">Address</th>
+                                <th class="partner-line-email py-2">Contact</th>
+                                <th class="pos-right-align py-2" t-if="isBalanceDisplayed">Balance</th>
+                                <th class="partner-line-details py-2"></th>
+                                <th class="partner-line-last-column-placeholder oe_invisible py-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="partner-list-contents">
+                            <t t-foreach="partners" t-as="partner"
+                                t-key="partner.id">
+                                <PartnerLine partner="partner"
+                                            selectedPartner="state.selectedPartner"
+                                            detailIsShown="state.detailIsShown"
+                                            isBalanceDisplayed="isBalanceDisplayed"
+                                            onClickEdit.bind="editPartner"
+                                            onClickPartner.bind="clickPartner"/>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div t-if="state.query" class="search-more-button d-flex justify-content-center my-2">
+                        <button class="btn btn-lg btn-primary" t-on-click="_onPressEnterKey">Search more</button>
+                    </div>
+                </t>
+            </section>
+        </div>
+    </t>
+
+</templates>

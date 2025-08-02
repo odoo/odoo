@@ -1,0 +1,266 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_mercado_pago
+# 
+# Translators:
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:57+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Access Token"
+msgstr "Token truy cập"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"Call your card issuer to activate your card or use another payment method. "
+"The phone number is on the back of your card."
+msgstr ""
+"Gọi cho đơn vị phát hành thẻ của bạn để kích hoạt thẻ hoặc sử dụng phương "
+"thức thanh toán khác. Số điện thoại nằm ở mặt sau của thẻ."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check expiration date."
+msgstr "Kiểm tra ngày hết hạn."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check the card number."
+msgstr "Kiểm tra số thẻ."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check the card security code."
+msgstr "Kiểm tra mã bảo mật thẻ."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check the data."
+msgstr "Kiểm tra dữ liệu."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
+msgid "Code"
+msgstr "Mã"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Không thể thiết lập kết nối với API."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
+msgid "Mercado Pago"
+msgstr "Mercado Pago"
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
+msgid "Mercado Pago Access Token"
+msgstr "Token truy cập Odoo Mercado Pago"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Không tìm thấy giao dịch nào khớp với mã %s."
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_provider
+msgid "Payment Provider"
+msgstr "Nhà cung cấp dịch vụ thanh toán"
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Giao dịch thanh toán"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Payment was not processed, use another card or contact issuer."
+msgstr ""
+"Thanh toán không được xử lý, hãy sử dụng thẻ khác hoặc liên hệ với đơn vị "
+"phát hành."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid status: %s"
+msgstr "Dữ liệu đã nhận với trạng thái không hợp lệ: %s"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing payment id."
+msgstr "Dữ liệu đã nhận bị thiếu ID thanh toán."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference."
+msgstr "Dữ liệu đã nhận bị thiếu mã."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing status."
+msgstr "Dữ liệu đã nhận bị thiếu trạng thái."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. Mercado Pago gave us the following "
+"information: '%s' (code %s)"
+msgstr ""
+"Giao tiếp với API không thành công. Mercado Pago đã cung cấp cho chúng tôi "
+"thông tin sau: '%s' (mã %s)"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. The response is empty. Please verify "
+"your access token."
+msgstr ""
+"Liên lạc với API không thành công, vì phản hồi rỗng. Vui lòng xác thực token"
+" truy cập của bạn."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Mã kỹ thuật của nhà cung cấp dịch vụ thanh toán này."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "This payment method does not process payments in installments."
+msgstr "Phương thức thanh toán này không hỗ trợ thanh toán trả góp."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"We are processing your payment. Don't worry, in less than 2 business days, "
+"we will notify you by e-mail if your payment has been credited."
+msgstr ""
+"Chúng tôi đang xử lý thanh toán của bạn. Đừng lo lắng, chúng tôi sẽ thông "
+"báo cho bạn qua email trong vòng chưa đầy 2 ngày làm việc nếu thanh toán "
+"thành công."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"We are processing your payment. Don't worry, less than 2 business days we "
+"will notify you by e-mail if your payment has been credited or if we need "
+"more information."
+msgstr ""
+"Chúng tôi đang xử lý thanh toán của bạn. Đừng lo lắng, chúng tôi sẽ thông "
+"báo cho bạn qua email trong vòng chưa đầy 2 ngày làm việc nếu thanh toán "
+"thành công hoặc nếu chúng tôi cần thêm thông tin."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"We were unable to process your payment, please check your card information."
+msgstr ""
+"Chúng tôi không thể xử lý thanh toán của bạn, vui lòng kiểm tra thông tin "
+"thẻ."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "We were unable to process your payment, please use another card."
+msgstr ""
+"Chúng tôi không thể xử lý thanh toán của bạn, vui lòng sử dụng một thẻ khác."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"You have already made a payment for that value. If you need to pay again, "
+"use another card or another payment method."
+msgstr ""
+"Bạn đã tiến hành thanh toán số tiền đó. Nếu bạn cần thanh toán lại, hãy sử "
+"dụng thẻ khác hoặc phương thức thanh toán khác."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"You have reached the limit of allowed attempts. Choose another card or other"
+" means of payment."
+msgstr ""
+"Bạn đã đạt giới hạn số lần thử được phép. Hãy chọn một thẻ khác hoặc phương "
+"thức thanh toán khác."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "You must authorize the payment with this card."
+msgstr "Bạn phải ủy quyền thanh toán bằng thẻ này."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Your card has not enough funds."
+msgstr "Thẻ của bạn không đủ tiền."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"Your payment has been credited. In your summary you will see the charge as a"
+" statement descriptor."
+msgstr ""
+"Thanh toán của bạn đã được xử lý thành công. Bạn sẽ thấy thông tin về khoản "
+"thanh toán này trong phần mô tả của sao kê."

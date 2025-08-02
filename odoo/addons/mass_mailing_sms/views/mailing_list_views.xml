@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_list_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.list.view.kanban.inherit.mass.mailing.sms</field>
+        <field name="model">mailing.list</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_list_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contact_count_email']" position="after">
+                <field name="contact_count_sms"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_mass_mailing_kanban_contact_links')]" position="inside">
+              <a name="action_view_contacts_sms" type="object">
+                  <span >Valid SMS Recipients</span>
+                  <span t-esc="record.contact_count_sms.value" class="ms-3"/>
+              </a>
+            </xpath>
+            <xpath expr="//div[hasclass('o_mailing_list_kanban_stats')]//a" position="after">
+                <a class="me-sm-0 me-3 text-large" tabindex="-1"
+                    name="action_view_contacts_sms" type="object">
+                    <span class="fw-normal">
+                        <field name="contact_count_sms"/>
+                    </span>
+                    <br/>
+                    <span class="text-muted">
+                        <i class="fa fa-phone"/> Contacts
+                    </span>
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_list_view_form" model="ir.ui.view">
+        <field name="name">mailing.list.view.form.inherit.sms</field>
+        <field name="model">mailing.list</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_list_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_send_mailing']" position="after">
+                <button name="action_send_mailing_sms" string="Send SMS"
+                        type="object" class="btn btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_list_action_sms" model="ir.actions.act_window">
+        <field name="name">Mailing Lists</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'mailing_sms': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a Mailing List
+          </p><p>
+            No need to import mailing lists, you can send SMS Text Messages to contacts saved in other Odoo apps.
+          </p>
+        </field>
+    </record>
+</odoo>

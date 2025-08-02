@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_pls_update_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.pls.update.view.form</field>
+        <field name="model">crm.lead.pls.update</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>
+                    The success rate is computed based on the stage, but you can add more fields in the statistical analysis.
+                </p>
+                <p>
+                    <field name="pls_fields" widget="many2many_tags" placeholder="Extra fields..."/>
+                </p>
+                <p>
+                    Consider leads created as of the: <field name="pls_start_date" class="o_field_highlight"/>
+                </p>
+                <footer>
+                    <button name="action_update_crm_lead_probabilities" type="object"
+                        string="Update" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_lead_pls_update_action" model="ir.actions.act_window">
+        <field name="name">Update Probabilities</field>
+        <field name="res_model">crm.lead.pls.update</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="crm_lead_pls_update_view_form"/>
+    </record>
+
+</odoo>

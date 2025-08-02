@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id='ec_ruc' model='l10n_latam.identification.type'>
+            <field name='name'>RUC</field>
+            <field name='description'>Single Taxpayer Registration</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='is_vat' eval='True'/>
+            <field name='sequence'>10</field>
+        </record>
+        <record id='ec_dni' model='l10n_latam.identification.type'>
+            <field name='name'>Citizenship</field>
+            <field name='description'>Citizenship card or Identity Card</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='sequence'>20</field>
+        </record>
+        <!-- TODO: Remove in master -->
+        <record id='ec_passport' model='l10n_latam.identification.type'>
+            <field name='name'>Passport</field>
+            <field name='description'>Passport for foreigners with domicile in the country (Deprecated)</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='active' eval="False"/>
+            <field name='sequence'>20</field>
+        </record>
+        <!-- TODO: Remove in master -->
+        <record id='ec_unknown' model='l10n_latam.identification.type'>
+            <field name='name'>Unknown</field>
+            <field name='description'>To identify, useful for quick sales registration (Deprecated)</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='active' eval="False"/>
+            <field name='sequence'>110</field>
+        </record>
+    </data>
+</odoo>

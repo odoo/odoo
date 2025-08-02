@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_send_form_inherit_l10n_ke_edi_tremol" model="ir.ui.view">
+        <field name="name">account.move.send.form.inherit.l10n_ke_edi_tremol</field>
+        <field name="model">account.move.send</field>
+        <field name="inherit_id" ref="account.account_move_send_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='warnings']" position="inside">
+                <div class="alert alert-warning"
+                    role="alert"
+                    invisible="not l10n_ke_edi_warning_message">
+                    <field name="l10n_ke_edi_warning_message"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

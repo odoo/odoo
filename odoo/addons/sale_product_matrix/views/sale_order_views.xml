@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_order_form_with_variant_grid" model="ir.ui.view">
+        <field name="name">sale.order.line.variant.grid</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <!-- Technical non stored fields for Order Grid Entry -->
+                <field name="grid" invisible="1"/>
+                <field name="grid_product_tmpl_id" invisible="1"/>
+                <field name="grid_update" invisible="1"/>
+            </field>
+            <xpath expr="//tree/field[@name='product_template_id']" position="after">
+                <field name="product_add_mode" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//notebook//group[@name='sales_person']" position="inside">
+                <field name="report_grids" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

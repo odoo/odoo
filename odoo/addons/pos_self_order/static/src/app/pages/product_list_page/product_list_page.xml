@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductListPage">
+        <div class="d-flex flex-column vh-100 overflow-hidden">
+            <!-- Categories selector + Search -->
+            <div class="navbar-container position-relative d-flex flex-nowrap w-100 bg-view border-bottom z-index-1">
+                <nav id="listgroup-categories" class="category-list d-flex flex-grow-1 py-2 px-3 gap-2 gap-md-3 overflow-x-auto" t-ref="categoryList">
+                    <a
+                        t-foreach="Array.from(selfOrder.categoryList)"
+                        t-as="category"
+                        t-key="category.id"
+                        t-ref="category_{{category.id}}"
+                        t-attf-class="nav-link category-item flex-shrink-0 p-0"
+                        t-attf-href="#scrollspy_{{category.id}}">
+                        <div class="ratio ratio-1x1 mb-1">
+                            <div t-att-class="{'placeholder-glow': category.has_image}">
+                                <div class="w-100 h-100 bg-200 rounded d-flex align-items-center justify-content-center" t-att-class="{'placeholder': category.has_image}">
+                                    <small class="d-block fw-bold text-white text-center" t-esc="category.name"/>
+                                </div>
+                            </div>
+                            <img t-if="category.has_image"  class="rounded w-100 h-100"
+                                t-attf-src="/pos-self/get-category-image/{{ category.id }}"
+                                alt="Product image"
+                                loading="lazy"
+                                onerror="this.remove()" />
+                        </div>
+                        <small class="d-block fw-bold text-center category-name" t-esc="category.name"/>
+                    </a>
+                </nav>
+
+                <button class="search-button btn btn-light border-0 border-start rounded-0" t-on-click="focusSearch">
+                    <i class="oi oi-search"/>
+                </button>
+
+                <div t-att-class="{ 'd-none': !this.state.search }" t-attf-class="position-absolute top-0 start-0 w-100 h-100 px-3 pe-4 d-flex align-items-center bg-view">
+                    <input type="text"
+                        t-ref="searchInput"
+                        class="form-control py-3 ps-0 border-0 shadow-none"
+                        placeholder="Search product"
+                        t-model="state.searchInput" />
+                    <button class="btn-close" t-on-click="focusSearch"/>
+                </div>
+            </div>
+
+            <!-- Products list -->
+            <div
+                id="scrollspy-products"
+                class="product-list position-relative flex-grow-1 overflow-y-auto"
+                t-ref="productsList"
+                data-bs-spy="scroll"
+                data-bs-target="#listgroup-categories"
+                data-bs-offset="10"
+                tabindex="0">
+                <t t-set="nbrItem" t-value="0" />
+                <section
+                    t-foreach="Array.from(selfOrder.categoryList)"
+                    t-as="category"
+                    t-key="category.id"
+                    t-attf-id="scrollspy_{{category.id}}"
+                    t-attf-categId="{{category.id}}"
+                    t-ref="productsWithCategory_{{category.id}}"
+                    class="product-list-category d-empty-none bg-view px-3 pb-4">
+                    <t t-set="products" t-value="selfOrder.productsGroupedByCategory[category.id]" />
+                    <t t-set="availableProducts" t-value="!state.searchInput ? products : getFilteredProducts(products)" />
+                    <t t-set="nbrItem" t-value="availableProducts.length + nbrItem" />
+                    <t t-if="availableProducts.length > 0">
+                        <h2 t-esc="category.name" class="pt-4 pb-2 px-3 mb-4 mx-n3 bg-200 display-6 fw-bold"/>
+                        <div class="o-so-products-row">
+                            <t t-foreach="availableProducts" t-as="product" t-key="product.id">
+                                <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard"/>
+                            </t>
+                        </div>
+                    </t>
+                </section>
+                <p t-if="nbrItem === 0" class="mx-auto mt-3 text-center">No products found</p>
+            </div>
+
+            <!-- Page buttons -->
+            <OrderWidget t-if="this.selfOrder.ordering" action.bind="review" />
+        </div>
+    </t>
+</templates>

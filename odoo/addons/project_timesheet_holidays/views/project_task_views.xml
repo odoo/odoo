@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="leave_task_form_view">
+        <field name="name">project.task.leave.form.view</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form" position="inside">
+                <field name="is_timeoff_task" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']" position="attributes">
+                <attribute name="invisible">not analytic_account_active</attribute>
+                <attribute name="readonly">is_timeoff_task</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

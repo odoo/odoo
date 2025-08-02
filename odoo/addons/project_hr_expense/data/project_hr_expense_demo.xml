@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_expense.travel_admin_by_car_expense" model="hr.expense">
+            <field name="analytic_distribution" eval="{ref('project.analytic_office_design'): 100}"/>
+        </record>
+        <record id="hr_expense.travel_demo_by_car_expense" model="hr.expense">
+            <field name="analytic_distribution" eval="{ref('project.analytic_office_design'): 100}"/>
+        </record>
+    </data>
+</odoo>

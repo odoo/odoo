@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="account.AccountMoveFormNotebook" t-inherit="web.Notebook" t-inherit-mode="primary">
+        <xpath expr="//a[@class='nav-link']" position="attributes">
+            <attribute name="t-on-click.prevent">() => this.changeTabTo(navItem[0])</attribute>
+        </xpath>
+    </t>
+</templates>

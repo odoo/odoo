@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelector">
+        <div class="o_domain_selector w-100" aria-atomic="true" t-att-class="props.className">
+            <t t-if="tree">
+                <TreeEditor resModel="props.resModel"
+                    tree="tree" 
+                    update.bind="update"
+                    readonly="props.readonly"
+                    isDebugMode="props.isDebugMode"
+                    defaultCondition="defaultCondition"
+                    defaultConnector="props.defaultConnector"
+                    getOperatorEditorInfo.bind="getOperatorEditorInfo"
+                    getDefaultOperator.bind="getDefaultOperator"
+                    getPathEditorInfo.bind="getPathEditorInfo"
+                >
+                    <CheckBox
+                        t-if="showArchivedCheckbox"
+                        value="includeArchived"
+                        disabled="props.readonly"
+                        className="'form-switch'"
+                        onChange.bind="toggleIncludeArchived"
+                    >
+                        Include archived
+                    </CheckBox>
+                </TreeEditor>
+            </t>
+            <t t-else="">
+                <div class="o_domain_selector_row d-flex align-items-center">
+                    This domain is not supported.
+                    <t t-if="!props.readonly">
+                        <button class="btn btn-sm btn-primary ms-2" t-on-click="() => this.resetDomain()">Reset domain</button>
+                    </t>
+                </div>
+            </t>
+            <t t-if="props.isDebugMode and (!tree or !props.readonly)">
+                <label class="o_domain_selector_debug_container d-block mt-3 border rounded p-3 bg-100 text-muted font-monospace">
+                    <span class="small"># Code editor</span>
+                    <textarea class="pt-2 border-0 bg-transparent text-body" type="text" t-att-readonly="props.readonly" spellcheck="false" t-att-value="props.domain" t-on-change="(ev) => this.onDomainChange(ev.target.value)" />
+                </label>
+            </t>
+        </div>
+    </t>
+
+</templates>

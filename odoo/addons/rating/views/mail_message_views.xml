@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record id="mail_message_view_form" model="ir.ui.view">
+        <field name="name">mail.message.view.form.inherit.rating</field>
+        <field name="model">mail.message</field>
+        <field name="inherit_id" ref="mail.mail_message_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='page_tracking']" position="after">
+                <page string="Ratings" name="page_rating">
+                    <field name="rating_ids"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <menuitem
+        name="Time Off"
+        id="menu_hr_holidays_root"
+        sequence="225"
+        web_icon="hr_holidays,static/description/icon.png"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="menu_hr_holidays_my_leaves"
+        name="My Time"
+        parent="menu_hr_holidays_root"
+        sequence="1"/>
+
+    <menuitem
+        id="hr_leave_menu_new_request"
+        parent="menu_hr_holidays_my_leaves"
+        action="hr_leave_action_new_request"
+        sequence="1"/>
+
+    <menuitem
+        id="hr_leave_menu_my"
+        parent="menu_hr_holidays_my_leaves"
+        action="hr_leave_action_my"
+        sequence="2"/>
+
+    <menuitem
+        id="menu_open_allocation"
+        name="My Allocations"
+        parent="menu_hr_holidays_my_leaves"
+        action="hr_leave_allocation_action_my"
+        sequence="3"/>
+
+    <menuitem
+        id="menu_hr_holidays_dashboard"
+        name="Overview"
+        parent="menu_hr_holidays_root"
+        sequence="2"
+        action="action_hr_holidays_dashboard"/>
+
+    <menuitem
+        id="menu_hr_holidays_management"
+        name="Management"
+        parent="menu_hr_holidays_root"
+        sequence="3"
+        groups="hr_holidays.group_hr_holidays_responsible"/>
+
+    <menuitem
+        id="menu_open_department_leave_approve"
+        name="Time Off"
+        parent="menu_hr_holidays_management"
+        action="hr_leave_action_action_approve_department"
+        sequence="1"/>
+
+    <menuitem
+        id="hr_holidays_menu_manager_approve_allocations"
+        name="Allocations"
+        parent="menu_hr_holidays_management"
+        action="hr_leave_allocation_action_approve_department"
+        sequence="2"
+        groups="hr_holidays.group_hr_holidays_user"/>
+
+    <menuitem
+        id="menu_hr_holidays_report"
+        name="Reporting"
+        parent="menu_hr_holidays_root"
+        groups="hr_holidays.group_hr_holidays_user"
+        sequence="4"/>
+
+    <menuitem
+        id="menu_hr_available_holidays_report_tree"
+        name="by Employee"
+        parent="menu_hr_holidays_report"
+        action="action_hr_available_holidays_report"
+        sequence="1"/>
+
+    <menuitem
+        id="menu_hr_holidays_summary_all"
+        name="by Type"
+        parent="menu_hr_holidays_report"
+        action="act_hr_employee_holiday_type"
+        sequence="3"/>
+
+    <menuitem
+        id="menu_hr_holidays_configuration"
+        name="Configuration"
+        parent="menu_hr_holidays_root"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="5"/>
+
+    <menuitem
+        id="hr_holidays_status_menu_configuration"
+        action="open_view_holiday_status"
+        name="Time Off Types"
+        parent="menu_hr_holidays_configuration"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="1"/>
+
+    <menuitem
+        id="hr_holidays_accrual_menu_configuration"
+        action="open_view_accrual_plans"
+        name="Accrual Plans"
+        parent="menu_hr_holidays_configuration"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="2"/>
+
+    <menuitem
+        id="hr_holidays_public_time_off_menu_configuration"
+        action="open_view_public_holiday"
+        name="Public Holidays"
+        parent="menu_hr_holidays_configuration"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="3"/>
+
+    <menuitem
+        id="hr_holidays_mandatory_day_menu_configuration"
+        action="hr_leave_mandatory_day_action"
+        name="Mandatory Days"
+        parent="menu_hr_holidays_configuration"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="4"/>
+
+    <menuitem id="hr_holidays_menu_config_activity_type"
+        action="mail_activity_type_action_config_hr_holidays"
+        parent="menu_hr_holidays_configuration"
+        groups="base.group_no_one"/>
+
+</odoo>

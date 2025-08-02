@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Event -->
+<template id="layout" name="Event">
+    <t t-call="website.layout">
+        <!-- Options -->
+        <t t-set="opt_events_list_categories" t-value="is_view_active('website_event.opt_events_list_categories')"/>
+        <div id="wrap" t-attf-class="o_wevent_event js_event d-flex flex-column h-100 #{'o_wevent_hide_sponsors' if hide_sponsors else ''}">
+            <t t-if="not hide_submenu" t-call="website_event.navbar"/>
+            <t t-out="0"/>
+            <t t-set="editor_sub_message">Following content will appear on all events.</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_1" t-att-data-editor-sub-message="editor_sub_message"/>
+        </div>
+    </t>
+</template>
+
+<template id="navbar" name="Event Navbar">
+    <div class="container my-3">
+        <a href="/event">
+            <i class="fa fa-chevron-left me-2"/>
+            <span>Back to events</span> 
+        </a>
+    </div>
+    <div class="mb-3">
+        <div class="container d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-center">
+            <t t-set="active_submenu" t-value="event.menu_id.child_id.filtered(lambda sm: sm._is_active())"></t>
+            <h6 t-field="event.name" t-attf-class="flex-grow-1 #{'my-2' if active_submenu else 'mb-0'}"/>
+            <div class="d-flex flex-grow-1 align-items-center justify-content-end gap-2">
+                <nav t-if="active_submenu" class="navbar navbar-light navbar-expand-md p-0 d-md-none">
+                    <div class="container align-items-baseline">
+                        <div id="o_wevent_event_submenu" class="dropdown nav-item">
+                            <button class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown">
+                                <t t-out="active_submenu.name if len(active_submenu) == 1 else ''"/>
+                            </button>
+                            <ul class="dropdown-menu flex-md-wrap w-100 overflow-x-hidden" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                                <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                    <t t-call="website.submenu">
+                                        <t t-set="link_class" t-value="'dropdown-item'"/>
+                                    </t>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <!-- Add Register additional CTA button, in addition to menus -->   
+                <a t-if="event.menu_register_cta and not event.is_participating"
+                    t-att-href="'/event/%s/register' % (slug(event))"
+                    t-attf-class="btn btn-primary #{'d-none' if hide_register_cta else ''}">
+                    Register
+                </a>
+            </div>
+        </div>
+        <nav class="navbar navbar-light navbar-expand-md d-none d-md-block p-0">
+            <div class="container align-items-baseline">
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#o_wevent_event_submenu" aria-controls="o_wevent_event_submenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="o_wevent_event_submenu" class="collapse navbar-collapse">
+                    <ul class="navbar-nav flex-md-wrap w-100" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                        <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+    </div>
+</template>
+
+</odoo>

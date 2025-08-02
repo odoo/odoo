@@ -1,0 +1,34 @@
+.popover .o-discuss-GifPicker {
+    width: 285px;
+    height: 350px;
+}
+
+.o-discuss-GifPicker {
+    --o-gif-picker-active: #{$gray-200};
+    .o-active {
+        background-color: var(--o-gif-picker-active) !important;
+    }
+}
+
+.o-discuss-GifPickerCategory-img {
+    object-fit: cover;
+}
+
+.o-discuss-GifPicker-noFavoritesIcon {
+    color: $yellow;
+    filter: grayscale(0.25);
+}
+
+.o-discuss-Gif {
+    .o-starred {
+        color: $o-main-favorite-color !important;
+    }
+
+    &:hover i {
+        opacity: 1 !important;
+    }
+}
+
+.o-discuss-GifPicker-error {
+    font-size: 5rem;
+}

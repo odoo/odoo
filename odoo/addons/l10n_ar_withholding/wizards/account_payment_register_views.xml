@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="l10n_latam_check.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <group>
+                <group name="withholdings" colspan="2" invisible="country_code != 'AR'">
+                    <field name="l10n_ar_withholding_ids" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
+                        <tree editable="bottom">
+                            <field name="withholding_sequence_id" column_invisible="True"/>
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="tax_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="name" readonly="withholding_sequence_id"/>
+                            <field name="base_amount"/>
+                            <field name="amount"/>
+
+                        </tree>
+                    </field>
+                    <group colspan="2" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
+                        <label for="l10n_ar_net_amount" string="Net Amount" invisible="l10n_latam_check_id"/>
+                        <label for="l10n_ar_net_amount" string="Check amount" invisible="not l10n_latam_check_id"/>
+                        <field name="l10n_ar_net_amount" nolabel="1" />
+                        <field name="l10n_ar_adjustment_warning" invisible="True"/>
+                        <p colspan="2" invisible="not l10n_ar_adjustment_warning" class="alert alert-warning" role="alert">
+                            Adjust total amount or withholdings amount so that the check amount is the correct one.
+                        </p>
+                    </group>
+                    <div colspan="2" class="o_row" invisible="(can_edit_wizard and not can_group_payments) or (can_group_payments and group_payment)">
+                    <p class="alert alert-warning" role="alert">You can't register withholdings when paying invoices of different partners or same partner without grouping</p>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

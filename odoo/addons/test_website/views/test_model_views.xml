@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<odoo>
+
+<!-- test.model views -->
+<record id="test_model_view_kanban" model="ir.ui.view">
+    <field name="name">test.model.kanban</field>
+    <field name="model">test.model</field>
+    <field name="arch" type="xml">
+        <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
+            <field name="name"/>
+            <field name="website_url"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click d-flex flex-column">
+                        <div class="row mb-auto">
+                            <strong class="col-8">
+                                <span class="o_text_overflow" t-esc="record.name.value"/>
+                            </strong>
+                        </div>
+                        <div class="border-top mt-2 pt-2">
+                            <field name="is_published" widget="boolean_toggle"/>
+                            <t t-if="record.is_published.raw_value">Published</t>
+                            <t t-else="">Not Published</t>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+<record id="test_model_view_list" model="ir.ui.view">
+    <field name="name">Test Model Pages Tree</field>
+    <field name="model">test.model</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
+            <field name="name"/>
+            <field name="website_url"/>
+        </tree>
+    </field>
+</record>
+<record id="action_test_model" model="ir.actions.act_window">
+    <field name="name">Test Model Pages</field>
+    <field name="res_model">test.model</field>
+    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('test_model_view_list')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('test_model_view_kanban')}),
+    ]"/>
+</record>
+
+<!-- Backend access to test model -->
+<record id="action_test_website_test_model" model="ir.actions.act_window">
+    <field name="name">Test Model</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">test.model</field>
+    <field name="view_id" eval="False"/>
+</record>
+
+<menuitem name="Test Model"
+    id="menu_test_website_test_model"
+    action="action_test_website_test_model"
+    parent="website.menu_website_global_configuration"
+    sequence="100"
+    groups="base.group_no_one"/>
+
+<record id="view_test_model_form" model="ir.ui.view">
+    <field name="name">test.model.form</field>
+    <field name="model">test.model</field>
+    <field name="arch" type="xml">
+        <form string="Test Model">
+            <sheet>
+                <div name="button_box" position="inside">
+                    <field name="is_published" widget="website_redirect_button"/>
+                </div>
+                <div class="oe_title" name="title">
+                    <label for="name" string="Name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+</odoo>

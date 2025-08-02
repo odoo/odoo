@@ -1,0 +1,446 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_totp
+# 
+# Translators:
+# Hamid Darabi, 2023
+# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Hanna Kheradroosta, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/controllers/home.py:0
+#, python-format
+msgid "%(browser)s on %(platform)s"
+msgstr "%(browser)s در %(platform)s"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_wizard
+msgid "2-Factor Setup Wizard"
+msgstr " راه‌اندازی آسان 2 عاملی"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+#, python-format
+msgid "2-Factor authentication is now enabled."
+msgstr "اکنون اعتبارسنجی 2 عاملی امکان‌پذیر است."
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    Learn More"
+msgstr ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    Learn More"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            Learn More"
+msgstr ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            Learn More"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
+"                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
+msgstr ""
+"<span class=\"d-md-none d-block\">یا یک اپلیکیشن اعتبارسنجی نصب کنید</span>\n"
+"                                        <span class=\"d-none d-md-block\">Install an اپلیکیشن اعتبارسنجی روی تلفن همراه شما</span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
+"                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
+msgstr ""
+"<span class=\"d-none d-md-block\">هنگامی که این درخواست مطرح می‌شود، بارکد زیر را اسکن کنید</span>\n"
+"                                    <span class=\"d-block d-md-none\">When در صورت درخواست، کلید زیر را کپی کنید</span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
+"or the Microsoft Authenticator.</span>"
+msgstr ""
+"<span class=\"text-muted\">موارد رایج عبارتند از اعتبارسنج‌های Authy,   "
+"Google یا نرم‌افزار اعتبارسنجی مایکروسافت. </span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
+"protected!</span>"
+msgstr ""
+"<span invisible=\"not totp_enabled\" class=\"text-muted\"> این حساب حفاظت "
+"شده است!</span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
+"protected!</span>"
+msgstr ""
+"<span invisible=\"not totp_enabled\" class=\"text-muted\"> حساب شما حفاظت "
+"شده است! </span>"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Account Security"
+msgstr "امنیت حساب"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Activate"
+msgstr "فعال"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Added On"
+msgstr "اضافه شده در"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"Are you sure? The user may be asked to enter two-factor codes again on those"
+" devices"
+msgstr ""
+"مطمئن هستید؟ ممکن است از کاربر خواسته شود کد دو عاملی را دوباره در این "
+"دستگاه‌ها وارد کند"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Are you sure? You may be asked to enter two-factor codes again on those "
+"devices"
+msgstr ""
+"مطمئن هستید؟ ممکن است از شما خواسته شود کدهای دو عاملی را در این دستگاه‌ها "
+"وارد کنید"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Authentication Code"
+msgstr "کد اعتبارسنجی"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "دستگاه اعتبارسنجی"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Authenticator App Setup"
+msgstr "راه‌اندازی اپلیکیشن اعتبارسنجی"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Cancel"
+msgstr "لغو"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Cannot scan it?"
+msgstr "نمی‌توانید آن را اسکن کنید؟"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Click on this link to open your authenticator app"
+msgstr "برای باز کردن  اپلیکیشن اعتبارسنجی خود بر روی این لینک کلیک کنید"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
+msgid "Created by"
+msgstr "ایجاد شده توسط"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_date
+msgid "Created on"
+msgstr "ایجادشده در"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__create_date
+msgid "Creation Date"
+msgstr "تاریخ ایجاد"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__name
+msgid "Description"
+msgstr "توصیف"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Device"
+msgstr "دستگاه"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Disable 2FA"
+msgstr "غیرفعال‌سازی 2FA"
+
+#. module: auth_totp
+#: model:ir.actions.server,name:auth_totp.action_disable_totp
+msgid "Disable two-factor authentication"
+msgstr "غیرفعال‌ کردن اعتبارسنجی دو عاملی"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
+msgid "Display Name"
+msgstr "نام نمایش داده شده"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Don't ask again on this device"
+msgstr "دیگر در این دستگاه سؤال نکنید"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Enable 2FA"
+msgstr "فعال‌سازی 2FA"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Enter your six-digit code below"
+msgstr "کد شش رقمی خود را در زیر وارد کنید"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسیریابی HTTP"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/controllers/home.py:0
+#, python-format
+msgid "Invalid authentication code format."
+msgstr "قالب کد اعتبارسنجی نامعتبر است. "
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_uid
+msgid "Last Updated by"
+msgstr "آخرین بروز رسانی توسط"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
+msgid "Last Updated on"
+msgstr "آخرین بروز رسانی در"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Learn More"
+msgstr "بیشتر بدانید"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Log in"
+msgstr "ورود"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Look for an \"Add an account\" button"
+msgstr "دکمه‌ی «افزودن یک حساب» را بیابید"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "On Apple Store"
+msgstr "روی فروشگاه اپل"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "On Google Play"
+msgstr "روی گوگل پلی"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
+msgid "Qrcode"
+msgstr "کد QR"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Revoke"
+msgstr "لغو کردن"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Revoke All"
+msgstr "لغو همه"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
+msgid "Scope"
+msgstr "دامنه"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
+msgid "Secret"
+msgstr "محرمانه"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+#, python-format
+msgid "The verification code should only contain numbers"
+msgstr "کد اعتبارسنجی تنها باید شامل اعداد باشد"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
+"                        <br/>"
+msgstr ""
+"برای ورود، کد اعتبارسنجی شش رقمی ارائه شده در اپلیکیشن اعتبارسنجی خود را "
+"وارد کنید.  <br/>"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
+msgid "Totp Secret"
+msgstr "فوق سری"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Trusted Devices"
+msgstr "دستگاه های قابل اعتماد"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-Factor Authentication Activation"
+msgstr "فعال‌سازی اعتبارسنجی دو عاملی"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Two-factor Authentication"
+msgstr "اعتبارسنجی دو مرحله‌ای"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
+msgstr ""
+"اعتبارسنجی دو عاملی (2FA) یک سیستم اعتبارسنجی دو مرحله‌ای است.\n"
+"مرحله‌ی اول با رمز عبور شما و مرحله‌ی دوم با کدی انجام می‌شود که از یک اپلیکیشن تلفن همراه مختص این کار گرفته می‌شود. \n"
+"چند نمونه از این اپلیکیشن‌ها عبارتند از برنامه اعتبارسنجی Google، Authy یا برنامه‌ی اعتبارسنجی مایکروسافت."
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
+msgstr ""
+"اعتبارسنجی دو. عاملی (2FA) یک سیستم اعتبارسنجی دو مرحله‌ای است. \n"
+"مرحله‌ی اول با رمز عبور شما و مرحله‌ی دوم با کدی که از یک اپلیکیشن تلفن همراه دریافت می‌کنید.\n"
+"چند نمونه‌ی رایج از این نمونه‌ها عبارتند از Authy، برنامه‌ی اعتبارسنجی Google یا برنامه‌ی اعتبارسنجی مایکروسافت."
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
+msgid "Two-factor authentication"
+msgstr "اعتبارسنجی دو عاملی"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Disabled"
+msgstr "اعتبارسنجی دو عاملی غیرفعال شد"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Enabled"
+msgstr "اعتبارسنجی دو عاملی فعال شد"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication already enabled"
+msgstr "اعتبارسنجی دو عاملی از قبل فعال شده است"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication can only be enabled for yourself"
+msgstr "فعال‌سازی اعتبارسنجی دو عاملی تنها برای شما امکان‌پذیر است"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-factor authentication disabled for the following user(s): %s"
+msgstr "اعتبارسنجی دو عاملی برای کاربر‌(های) زیر غیر فعال شد: %s"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
+msgid "Url"
+msgstr "آدرس وب"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_res_users
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__user_id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__user_id
+msgid "User"
+msgstr "کاربر"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Verification Code"
+msgstr "کد تاییدیه"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+#, python-format
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "اعتبارسنجی ناموفق، لطفاً کد 6 رقمی را بازبینی کنید"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "e.g. 123456"
+msgstr "به طور مثال 123456"

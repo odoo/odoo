@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="open_account_charts_modules" model="ir.actions.act_window">
+            <field name="name">Chart Templates</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context" eval="{
+                'search_default_category_id': ref('base.module_category_accounting_localizations_account_charts'),
+                'searchpanel_default_category_id': ref('base.module_category_accounting_localizations_account_charts'),
+            }"/>
+            <field name="search_view_id" ref="view_module_filter_inherit_account"/>
+        </record>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <field name="country_code" invisible="1" groups="account.group_account_manager"/>
+                    <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
+                        <field name="has_chart_of_accounts" invisible="1"/>
+                        <field name="has_accounting_entries" invisible="1"/>
+                        <block title="Fiscal Localization" name="fiscal_localization_setting_container" invisible="not is_root_company">
+                            <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
+                                documentation="/applications/finance/fiscal_localizations.html">
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <div>
+                                            <label for="chart_template" string="Package" class="col-2 o_light_label"/>
+                                            <field name="chart_template" readonly="has_accounting_entries" required="chart_template"/>
+                                        </div>
+                                        <div class="mt16">
+                                            <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
+                                                    title="Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. This action is irreversible."
+                                                    invisible="not has_accounting_entries or not chart_template"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </setting>
+                        </block>
+                        <block title="Taxes" name="default_taxes_setting_container">
+                            <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied to local transactions" title="These taxes are set in any new product created."
+                                documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label string="Sales Tax" for="sale_tax_id" class="col-lg-3 o_light_label"/>
+                                        <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all'))]"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Purchase Tax" for="purchase_tax_id" class="col-lg-3 o_light_label"/>
+                                        <field name="purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all'))]"/>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="rounding_method" company_dependent="1" string="Rounding Method" help="How total tax amount is computed in orders and invoices" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
+                                <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
+                            </setting>
+                            <setting id="taxcloud_settings" string="TaxCloud" help="Compute tax rates based on U.S. ZIP codes"
+                                documentation="/applications/finance/accounting/taxation/taxes/taxcloud.html">
+                                <field name="module_account_taxcloud" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="avatax_settings" string="AvaTax" help="Automatically compute tax rates"
+                                documentation="/applications/finance/accounting/taxation/taxes/avatax.html">
+                                <field name="module_account_avatax" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="eu_service" title="If you sell goods and services to customers in a foreign EU country, you must charge VAT based on the delivery address. This rule applies regardless of where you are located." documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html" help="Apply VAT of the EU country to which goods and services are delivered.">
+                                <field name="module_l10n_eu_oss"/>
+                            </setting>
+                            <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
+                                documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html">
+                                <field name="tax_exigibility"/>
+                                <div class="content-group" invisible="not tax_exigibility" groups="account.group_account_user">
+                                    <div class="row mt16">
+                                        <label for="tax_cash_basis_journal_id" class="col-lg-3 o_light_label"/>
+                                        <field name="tax_cash_basis_journal_id"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label for="account_cash_basis_base_account_id" class="col-lg-3 o_light_label"/>
+                                        <field name="account_cash_basis_base_account_id"/>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="tax_fiscal_country_234" string="Fiscal Country" company_dependent="1" help="Domestic country of your accounting">
+                                <field name="account_fiscal_country_id" options="{'no_create': True, 'no_open': True}"/>
+                            </setting>
+                        </block>
+                        <block title="Currencies" name="main_currency_setting_container">
+                            <setting id="main_currency" string="Main Currency" company_dependent="1" help="Main currency of your company"
+                                documentation="/applications/finance/accounting/others/multi_currency.html">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="currency_id" class="col-lg-3 o_light_label"/>
+                                        <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
+                                        <field name="group_multi_currency" invisible="1"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="oi-arrow-right"/>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="update_exchange_rates" invisible="not group_multi_currency" help="Update exchange rates automatically"
+                                documentation="/applications/finance/accounting/others/multi_currency.html">
+                                <field name="module_currency_rate_live" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
+                        <block title="Customer Invoices" id="invoicing_settings">
+                            <setting id="default_setting_options" string="Default Sending Options" help="Those options will be selected by default when clicking &quot;Send &amp; Print&quot; on invoices">
+                                <div class="mt16">
+                                    <div class="content-group" id="send_default">
+                                        <div>
+                                            <field name="invoice_is_download"/>
+                                            <label for="invoice_is_download"/>
+                                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                        </div>
+                                        <div>
+                                            <field name="invoice_is_email"/>
+                                            <label for="invoice_is_email"/>
+                                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="send_invoices_followups" help="Send invoices and payment follow-ups by post"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/snailmail.html">
+                                <field name="module_snailmail_account"/>
+                            </setting>
+                            <setting id="invoice_delivery_addresses" documentation="/applications/sales/sales/send_quotations/different_addresses.html" help="Select specific invoice and delivery addresses">
+                                <field name="group_sale_delivery_address"/>
+                            </setting>
+                            <setting id="get_invoice_warnings" string="Warnings" help="Get warnings when invoicing specific customers">
+                                <field name="group_warning_account"/>
+                            </setting>
+                            <setting id="smallest_coinage_currency" help="Define the smallest coinage of the currency used to pay by cash"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/cash_rounding.html">
+                                <field name="group_cash_rounding"/>
+                                <div class="mt8">
+                                    <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
+                                            type="action" string="Cash Roundings" class="btn-link"
+                                            invisible="not group_cash_rounding"/>
+                                </div>
+                            </setting>
+                            <setting id="intrastat_statistics" help="Collect information and produce statistics on the trade in goods in Europe with intrastat"
+                                documentation="/applications/finance/accounting/reporting/declarations/intrastat.html">
+                                <field name="module_account_intrastat" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="default_incoterm" string="Default Incoterm" help="Default Incoterm of your company">
+                                <field name="incoterm_id"/>
+                            </setting>
+                            <setting id="show_sale_receipts" help="Activate to create sale receipt">
+                                <field name="group_show_sale_receipts"/>
+                            </setting>
+                            <setting id="use_invoice_terms" company_dependent="1" help="Add your terms &amp; conditions at the bottom of invoices/orders/quotations">
+                                <field name="use_invoice_terms"/>
+                                <div class="content-group" invisible="not use_invoice_terms">
+                                    <div class="mt16">
+                                        <field name="terms_type" class="o_light_label" widget="radio"/>
+                                        <div>
+                                            <field name="invoice_terms"
+                                                    invisible="terms_type == 'html'"
+                                                    class="oe_account_terms mt-5 w-100"
+                                                    placeholder="Insert your terms &amp; conditions here..."/>
+                                        </div>
+                                        <div class="mt8" invisible="terms_type != 'html'">
+                                            <button name="action_update_terms" icon="oi-arrow-right" type="object" string="Update Terms" class="btn-link"/>
+                                        </div>
+                                        <field name="preview_ready" invisible="1"/>
+                                        <div class="mt4 ms-1" invisible="not preview_ready">
+                                            <a class="btn-link" href="/terms" role="button">
+                                                <i class="oi oi-arrow-right"/>
+                                                Preview
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting company_dependent="1"
+                                     help="Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.
+                                     Set a value greater than 0.0 to activate a credit limit check">
+                                <field name="account_use_credit_limit"/>
+                                <div class="content-group mt-2" invisible="not account_use_credit_limit">
+                                    <div class="row">
+                                        <label for="account_default_credit_limit" class="col-lg-4 o_light_label"/>
+                                        <field name="account_default_credit_limit"/>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="total_amount_words" help="Display the total amount of an invoice in letters">
+                                <field name="display_invoice_amount_total_words"/>
+                            </setting>
+                        </block>
+                        <block title="Customer Payments" id="pay_invoice_online_setting_container">
+                            <setting help="Let your customers pay their invoices online"
+                                documentation="/applications/finance/accounting/receivables/customer_payments/online_payment.html">
+                                <field name="module_account_payment"/>
+                            </setting>
+                            <setting id="account_batch_payment" string="Batch Payments" help="Group payments into a single batch to ease the reconciliation process"
+                                documentation="/applications/finance/accounting/receivables/customer_payments/batch.html">
+                                <field name="module_account_batch_payment" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="collect_customer_payment" title="If you check this box, you will be able to collect payments using SEPA Direct Debit mandates." string="SEPA Direct Debit (SDD)" company_dependent="1" help="Collect customer payments in one-click using Euro SEPA Service"
+                                documentation="/applications/finance/accounting/receivables/customer_payments/batch_sdd.html">
+                                <field name="module_account_sepa_direct_debit" class="oe_inline" widget="upgrade_boolean"/>
+                                <div class="content-group" invisible="not module_account_sepa_direct_debit">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="qr_code_invoices" title="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="QR Codes" company_dependent="1" help="Add a payment QR-code to your invoices"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/epc_qr_code.html">
+                                <field name="qr_code" class="oe_inline"/>
+                            </setting>
+                        </block>
+                        <block title="Vendor Bills" id="account_vendor_bills">
+                            <setting id="show_purchase_receipts" help="Activate to create purchase receipt">
+                                <field name="group_show_purchase_receipts"/>
+                            </setting>
+                        </block>
+                        <block title="Vendor Payments" id="print_vendor_checks_setting_container">
+                            <setting id="print_checks" groups="account.group_account_user" string="Checks" company_dependent="1" help="Print checks to pay your vendors"
+                                documentation="/applications/finance/accounting/payables/pay/check.html">
+                                <field name="module_account_check_printing"/>
+                            </setting>
+                            <setting id="sepa_payments" title="If you check this box, you will be able to register your payment using SEPA." company_dependent="1" help="Pay your bills in one-click using Euro SEPA Service"
+                                documentation="/applications/finance/accounting/payables/pay/sepa.html">
+                                <field name="module_account_sepa" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
+
+                        <block title="Digitization" id="account_digitalization">
+                            <setting id="account_ocr_settings" help="Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
+                                documentation="/applications/finance/accounting/payables/supplier_bills/invoice_digitization.html">
+                                <field name="module_account_invoice_extract" widget="upgrade_boolean"/>
+                                <div id="msg_invoice_extract" class="content-group" invisible="not module_account_invoice_extract">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
+                        </block>
+
+                        <t groups="account.group_account_user">
+                            <block title="Default Accounts" id="default_accounts">
+                                <setting invisible="not group_multi_currency" string="Post Exchange difference entries in:">
+                                    <div class="content-group">
+                                        <div class="row mt8">
+                                            <label for="currency_exchange_journal_id" class="col-lg-4 o_light_label" string="Journal" />
+                                            <field name="currency_exchange_journal_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="income_currency_exchange_account_id" string="Gain" class="col-lg-4 o_light_label"/>
+                                            <field name="income_currency_exchange_account_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="expense_currency_exchange_account_id" string="Loss" class="col-lg-4 o_light_label"/>
+                                            <field name="expense_currency_exchange_account_id"/>
+                                        </div>
+                                    </div>
+                                </setting>
+                                <setting id="post_bank_transactions_and_payments_setting" string="Post bank transactions and payments in:">
+                                    <div class="content-group">
+                                        <div class="row mt8">
+                                            <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>
+                                            <field name="account_journal_suspense_account_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="account_journal_payment_debit_account_id" class="col-lg-5 o_light_label"/>
+                                            <field name="account_journal_payment_debit_account_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="account_journal_payment_credit_account_id" class="col-lg-5 o_light_label"/>
+                                            <field name="account_journal_payment_credit_account_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
+                                            <field name="transfer_account_id"/>
+                                        </div>
+                                    </div>
+                                </setting>
+                                <setting string="Separate discount accounts on invoices"
+                                         title="If empty, the discount will be discounted directly on the income/expense account. If set, discount on invoices will be realized in separate accounts.">
+                                    <div class="content-group">
+                                        <div class="row mt8">
+                                            <label for="account_discount_expense_allocation_id" class="col-lg-5 o_light_label" string="Customer Invoices"/>
+                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="account_discount_income_allocation_id" class="col-lg-5 o_light_label" string="Vendor Bills"/>
+                                            <field name="account_discount_income_allocation_id" placeholder="Same Account"/>
+                                        </div>
+                                    </div>
+                                </setting>
+                                <setting string="Post discounts in:">
+                                    <div class="content-group">
+                                        <div class="row mt8">
+                                            <label for="account_journal_early_pay_discount_gain_account_id" class="col-lg-5 o_light_label"/>
+                                            <field name="account_journal_early_pay_discount_gain_account_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="account_journal_early_pay_discount_loss_account_id" class="col-lg-5 o_light_label"/>
+                                            <field name="account_journal_early_pay_discount_loss_account_id"/>
+                                        </div>
+                                    </div>
+                                </setting>
+                            </block>
+                        </t>
+
+                        <t groups="account.group_account_user">
+                            <block title="Bank &amp; Cash" id="bank_cash">
+                                <setting id="import_bank_statements_csv"
+                                         title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard."
+                                         string="CSV, XLS, and XLSX Import"
+                                         help="Import your bank statements in CSV, XLS, and XLSX">
+                                    <field name="module_account_bank_statement_import_csv" widget="upgrade_boolean"/>
+                                </setting>
+                                <setting title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard." string="QIF Import" help="Import your bank statements in QIF">
+                                    <field name="module_account_bank_statement_import_qif" widget="upgrade_boolean"/>
+                                </setting>
+                                <setting title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard." string="OFX Import" help="Import your bank statements in OFX">
+                                    <field name="module_account_bank_statement_import_ofx" widget="upgrade_boolean"/>
+                                </setting>
+                                <setting id="import_bank_statement_camt" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard." string="CAMT Import" help="Import your bank statements in CAMT.053">
+                                    <field name="module_account_bank_statement_import_camt" widget="upgrade_boolean"/>
+                                </setting>
+                            </block>
+                        </t>
+
+                        <t groups="account.group_account_user">
+                            <block title="Fiscal Periods" id="accounting_reports">
+                                <setting id="fiscalyear" invisible="1" groups="account.group_account_user"/>
+                                <setting id="dynamic_report" groups="account.group_account_user" help="Navigate easily through reports and see what is behind the numbers">
+                                    <field name="module_account_reports" widget="upgrade_boolean"/>
+                                </setting>
+                            </block>
+                        </t>
+                        <block title="Analytics" id="analytic">
+                            <setting id="track_costs_revenues" title="Allows you to use the analytic accounting." groups="account.group_account_user" help="Track costs &amp; revenues by project, department, etc"
+                                documentation="/applications/finance/accounting/others/analytic_accounting.html">
+                                <field name="group_analytic_accounting"/>
+                            </setting>
+                            <setting id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." groups="account.group_account_user" help="Use budgets to compare actual with expected revenues and costs"
+                                documentation="/applications/finance/accounting/others/adviser/budget.html">
+                                <field name="module_account_budget" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="monitor_product_margins" string="Margin Analysis" help="Monitor your product margins from invoices">
+                                <field name="module_product_margin"/>
+                            </setting>
+                        </block>
+                        <field name="is_account_peppol_eligible" invisible="1"/>
+                        <block title="PEPPOL Electronic Document Invoicing" id="peppol" invisible="not is_account_peppol_eligible">
+                            <div id="account_peppol_install" class="col-12 col-lg-12 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_peppol" readonly="False"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_peppol" string="Enable PEPPOL"/>
+                                    <div class="text-muted">
+                                        Allow sending and receiving invoices through the PEPPOL network
+                                    </div>
+                                </div>
+                            </div>
+                        </block>
+                        <block title="Storno Accounting" id="storno">
+                            <setting id="enable_storno_accounting" company_dependent="1" help="Use Storno accounting" title="Allows you to use Storno accounting.">
+                                <field name="account_storno"/>
+                            </setting>
+                        </block>
+                        <block title="Accounting Firms mode" id="quick_edit_mode">
+                            <div class="text-muted">
+                                <p style="margin-bottom: 0">Accounting firm mode will change invoice/bill encoding:</p>
+                                <p style="margin-bottom: 0"> - The document's sequence becomes editable on all documents.</p>
+                                <p style="margin-bottom: 0"> - A new field « Total (tax inc.) » to speed up and control the encoding by automating line creation with the right account &amp; tax.</p>
+                                <p style="margin-bottom: 0"> - A default Customer Invoice / Vendor Bill date will be suggested.</p>
+                            </div>
+                            <setting company_dependent="1">
+                                <field name="quick_edit_mode" placeholder="Disabled"/>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_config" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'account', 'bin_size': False}</field>
+        </record>
+
+    </data>
+</odoo>

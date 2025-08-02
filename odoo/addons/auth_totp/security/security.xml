@@ -1,0 +1,39 @@
+<odoo>
+    <record model="ir.model.access" id="access_auth_totp_wizard">
+        <field name="name">auth_totp wizard access rules</field>
+        <field name="model_id" ref="model_auth_totp_wizard"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">1</field>
+        <field name="perm_unlink">1</field>
+    </record>
+    <record model="ir.rule" id="rule_auth_totp_wizard">
+        <field name="name">Users can only access their own wizard</field>
+        <field name="model_id" ref="model_auth_totp_wizard"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+        <!-- rules for API token -->
+        <record id="api_key_public" model="ir.rule">
+            <field name="name">Public users can't interact with keys at all</field>
+            <field name="model_id" ref="model_auth_totp_device"/>
+            <field name="domain_force">[(0, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_public'))]"/>
+        </record>
+        <record id="api_key_user" model="ir.rule">
+            <field name="name">Users can read and delete their own keys</field>
+            <field name="model_id" ref="model_auth_totp_device"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[
+                Command.link(ref('base.group_portal')),
+                Command.link(ref('base.group_user')),
+            ]"/>
+        </record>
+        <record id="api_key_admin" model="ir.rule">
+            <field name="name">Administrators can view user keys to revoke them</field>
+            <field name="model_id" ref="model_auth_totp_device"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+</odoo>

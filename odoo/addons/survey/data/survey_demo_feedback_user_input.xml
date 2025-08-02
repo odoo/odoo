@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+
+    <record id="survey_answer_1" model="survey.user_input">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="email">mark.brown23@example.com</field>
+        <field name="state">done</field>
+    </record>
+    <record id="survey_answer_2" model="survey.user_input">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" ref="base.res_partner_address_7"/>
+        <field name="email">billy.fox45@example.com</field>
+        <field name="state">done</field>
+    </record>
+    <record id="survey_answer_3" model="survey.user_input">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" eval="False"/>
+        <field name="email">Evelyne Gargouillis &lt;evelyne@example.com&gt;</field>
+        <field name="state">done</field>
+    </record>
+    <record id="survey_answer_4" model="survey.user_input">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" eval="False"/>
+        <field name="email">Martin Tamarre &lt;martin@example.com&gt;</field>
+        <field name="state">in_progress</field>
+    </record>
+
+</data></odoo>

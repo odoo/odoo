@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_log_contract_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form.inherit.hr</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchaser_id']" position="after">
+                <field name="purchaser_employee_id" string="Driver" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_contract_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.tree.inherit.hr</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchaser_id']" position="after">
+                <field name="purchaser_employee_id" optional="hide" widget="many2one_avatar_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_contract_view_search_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.search.inherit.hr</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchaser_id']" position="after">
+                <field name="purchaser_employee_id" string="Employee"
+                    filter_domain="[('purchaser_employee_id','child_of', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_services_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form.inherit.hr</field>
+        <field name="model">fleet.vehicle.log.services</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchaser_id']" position="after">
+                <field name="purchaser_employee_id" string="Driver (Employee)" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_services_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.services.tree.inherit.hr</field>
+        <field name="model">fleet.vehicle.log.services</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchaser_id']" position="after">
+                <field name="purchaser_employee_id" readonly="1" widget="many2one_avatar_user" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_services_view_kanban_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.services.kanban.inherit.hr</field>
+        <field name="model">fleet.vehicle.log.services</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div/field[@name='purchaser_id']" position="after">
+                <field name="purchaser_employee_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

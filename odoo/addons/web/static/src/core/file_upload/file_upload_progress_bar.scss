@@ -1,0 +1,19 @@
+.o-file-upload-progress-bar-value {
+    transition: width 0.1s;
+    border-right: 1px solid darken($o-brand-primary, 7.5%);
+    background-color: $o-brand-primary;
+    opacity: 0.5;
+}
+
+.o-file-upload-progress-bar-abort {
+    padding: 4px;
+    color: #963535;
+    font-size: 16px;
+    &:active {
+        opacity: 0.7;
+    }
+}
+
+div:not(:hover) .o-file-upload-progress-bar-abort {
+    display: none;
+}

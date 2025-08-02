@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="nav_online_invoice_xml_3_0">
+        <InvoiceData xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd"
+            xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+            <invoiceNumber t-out="invoice.name"/>
+            <invoiceIssueDate t-out="invoiceIssueDate"/>
+            <completenessIndicator t-out="format_bool(completenessIndicator)"/>
+            <invoiceMain>
+                <invoice>
+                    <invoiceReference t-if="base_invoice">
+                        <originalInvoiceNumber t-out="base_invoice.name"/>
+                        <modifyWithoutMaster t-out="format_bool(modifyWithoutMaster)"/>
+                        <modificationIndex t-out="invoice.l10n_hu_invoice_chain_index"/>
+                    </invoiceReference>
+                    <invoiceHead>
+                        <supplierInfo>
+                            <supplierTaxNumber>
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_tax_number">
+                                    <t t-set="vat" t-value="supplier_vat_data['tax_number']"/>
+                                </t>
+                            </supplierTaxNumber>
+                            <groupMemberTaxNumber t-if="supplier_vat_data.get('group_member_tax_number')">
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_tax_number">
+                                    <t t-set="vat" t-value="supplier_vat_data.get('group_member_tax_number')"/>
+                                </t>
+                            </groupMemberTaxNumber>
+                            <supplierName t-out="supplier.name"/>
+                            <supplierAddress>
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_simple_address">
+                                    <t t-set="partner" t-value="supplier"/>
+                                </t>
+                            </supplierAddress>
+                            <supplierBankAccountNumber t-out="supplierBankAccountNumber"/>
+                            <individualExemption t-out="format_bool(individualExemption)"/>
+                        </supplierInfo>
+                        <customerInfo>
+                            <customerVatStatus t-out="customerVatStatus"/>
+                            <customerVatData t-if="customer.is_company">
+                                <customerTaxNumber t-if="customer_vat_data.get('tax_number')">
+                                    <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_tax_number">
+                                        <t t-set="vat" t-value="customer_vat_data.get('tax_number')"/>
+                                    </t>
+                                    <groupMemberTaxNumber t-if="customer_vat_data.get('group_member_tax_number')">
+                                        <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_tax_number">
+                                            <t t-set="vat" t-value="customer_vat_data.get('group_member_tax_number')"/>
+                                        </t>
+                                    </groupMemberTaxNumber>
+                                </customerTaxNumber>
+                                <communityVatNumber t-out="customer_vat_data.get('community_vat_number')"/>
+                                <thirdStateTaxId t-out="customer_vat_data.get('third_state_tax_id')"/>
+                            </customerVatData>
+                            <customerName t-if="customer.is_company" t-out="customer.name"/>
+                            <customerAddress t-if="customer.is_company">
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_simple_address">
+                                    <t t-set="partner" t-value="customer"/>
+                                </t>
+                            </customerAddress>
+                            <customerBankAccountNumber t-out="customerBankAccountNumber"/>
+                        </customerInfo>
+                        <invoiceDetail>
+                            <invoiceCategory t-translation="off">NORMAL</invoiceCategory>
+                            <invoiceDeliveryDate t-out="invoice.delivery_date or invoice.invoice_date"/>
+                            <smallBusinessIndicator t-out="format_bool(smallBusinessIndicator)"/>
+                            <currencyCode t-out="invoice.currency_id.name"/>
+                            <exchangeRate t-out="float_repr(exchangeRate, 6)"/>
+                            <paymentMethod t-if="invoice.l10n_hu_payment_mode" t-out="invoice.l10n_hu_payment_mode"/>
+                            <paymentDate t-if="invoice.invoice_date_due" t-out="invoice.invoice_date_due"/>
+                            <cashAccountingIndicator t-out="format_bool(cashAccountingIndicator)"/>
+                            <invoiceAppearance t-translation="off">PAPER</invoiceAppearance>
+                        </invoiceDetail>
+                    </invoiceHead>
+                    <invoiceLines>
+                        <mergedItemIndicator t-out="format_bool(mergedItemIndicator)"/>
+                        <line t-foreach="lines_values" t-as="line_values">
+                            <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_line"/>
+                        </line>
+                    </invoiceLines>
+                    <invoiceSummary>
+                        <summaryNormal>
+                            <summaryByVatRate t-foreach="tax_summary" t-as="tax_vals">
+                                <vatRate>
+                                    <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vat_rate">
+                                        <t t-set="tax" t-value="tax_vals['vat_tax']"/>
+                                        <t t-set="vatPercentage" t-value="tax_vals['vatPercentage']"/>
+                                    </t>
+                                </vatRate>
+                                <vatRateNetData>
+                                    <vatRateNetAmount t-out="float_repr(tax_vals['vatRateNetAmount'], 2)"/>
+                                    <vatRateNetAmountHUF t-out="float_repr(tax_vals['vatRateNetAmountHUF'], 2)"/>
+                                </vatRateNetData>
+                                <vatRateVatData>
+                                    <vatRateVatAmount t-out="float_repr(tax_vals['vatRateVatAmount'], 2)"/>
+                                    <vatRateVatAmountHUF t-out="float_repr(tax_vals['vatRateVatAmountHUF'], 2)"/>
+                                </vatRateVatData>
+                            </summaryByVatRate>
+                            <invoiceNetAmount t-out="float_repr(invoiceNetAmount, 2)"/>
+                            <invoiceNetAmountHUF t-out="float_repr(invoiceNetAmountHUF, 2)"/>
+                            <invoiceVatAmount t-out="float_repr(invoiceVatAmount, 2)"/>
+                            <invoiceVatAmountHUF t-out="float_repr(invoiceVatAmountHUF, 2)"/>
+                        </summaryNormal>
+                        <summaryGrossData>
+                            <invoiceGrossAmount t-out="float_repr(invoiceGrossAmount, 2)"/>
+                            <invoiceGrossAmountHUF t-out="float_repr(invoiceGrossAmountHUF, 2)"/>
+                        </summaryGrossData>
+                    </invoiceSummary>
+                </invoice>
+            </invoiceMain>
+        </InvoiceData>
+    </template>
+
+    <template id="nav_online_invoice_xml_3_0_simple_address" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+        <base:simpleAddress>
+            <base:countryCode t-out="partner.country_code"/>
+            <base:region t-if="partner.state_id" t-out="partner.state_id.name"/>
+            <base:postalCode t-out="partner.zip"/>
+            <base:city t-out="partner.city"/>
+            <base:additionalAddressDetail t-out="partner.street"/>
+        </base:simpleAddress>
+    </template>
+
+    <template id="nav_online_invoice_xml_3_0_tax_number" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+        <t t-if="'-' in vat">
+            <base:taxpayerId t-out="vat[:8]"/>
+            <base:vatCode t-out="vat[9:10]"/>
+            <base:countyCode t-out="vat[11:13]"/>
+        </t>
+        <t t-else="else">
+            <base:taxpayerId t-out="vat[:8]"/>
+            <base:vatCode t-out="vat[8:9]"/>
+            <base:countyCode t-out="vat[9:11]"/>
+        </t>
+    </template>
+
+    <template id="nav_online_invoice_xml_3_0_vat_rate">
+        <vatPercentage t-if="tax.l10n_hu_tax_type == 'VAT'" t-out="float_repr(vatPercentage, 4)"/>
+        <vatExemption t-if="tax.l10n_hu_tax_type in ['AAM','TAM','KBAET','KBAUK','EAM','NAM']">
+            <case t-out="tax.l10n_hu_tax_type"/>
+            <reason t-out="tax.l10n_hu_tax_reason"/>
+        </vatExemption>
+        <vatOutOfScope t-if="tax.l10n_hu_tax_type in ['ATK','EUFAD37','EUFADE','EUE','HO']">
+            <case t-out="tax.l10n_hu_tax_type"/>
+            <reason t-out="tax.l10n_hu_tax_reason"/>
+        </vatOutOfScope>
+        <vatDomesticReverseCharge t-if="tax.l10n_hu_tax_type == 'DOMESTIC_REVERSE'" t-translation="off">true</vatDomesticReverseCharge>
+        <marginSchemeIndicator t-if="tax.l10n_hu_tax_type in ['TRAVEL_AGENCY', 'SECOND_HAND', 'ARTWORK', 'ANTIQUES']" t-out="tax.l10n_hu_tax_type"/>
+        <vatAmountMismatch t-if="tax.l10n_hu_tax_type in ['REFUNDABLE_VAT', 'NONREFUNDABLE_VAT']">
+            <vatRate>
+                <vatPercentage t-out="float_repr(vatPercentage, 4)"/>
+            </vatRate>
+        </vatAmountMismatch>
+        <noVatCharge t-if="tax.l10n_hu_tax_type == 'NO_VAT'" t-translation="off">true</noVatCharge>
+    </template>
+    
+    <template id="nav_online_invoice_xml_3_0_line">
+        <t t-set="line" t-value="line_values['line']"/>
+        <lineNumber t-out="line_values['lineNumber']"/>
+        <lineModificationReference t-if="line_values['lineNumberReference']">
+            <lineNumberReference t-out="line_values['lineNumberReference']"/>
+            <lineOperation t-translation="off">CREATE</lineOperation>
+        </lineModificationReference>
+        <advanceData t-if="line_values.get('advanceIndicator')">
+            <advanceIndicator t-translation="off">true</advanceIndicator>
+            <advancePaymentData t-if="line_values.get('advanceOriginalInvoice')">
+                <advanceOriginalInvoice t-out="line_values.get('advanceOriginalInvoice')"/>
+                <advancePaymentDate t-out="line_values.get('advancePaymentDate')"/>
+                <advanceExchangeRate t-out="float_repr(line_values.get('advanceExchangeRate'), 6)"/>
+            </advancePaymentData>
+        </advanceData>
+        <productCodes t-if="line.product_id.l10n_hu_product_code_type or line.product_id.default_code">
+            <productCode t-if="line.product_id.l10n_hu_product_code_type">
+                <productCodeCategory t-out="line.product_id.l10n_hu_product_code_type"/>
+                <productCodeValue t-out="line.product_id.l10n_hu_product_code"/>
+            </productCode>
+            <productCode t-if="line.product_id.default_code">
+                <productCodeCategory t-translation="off">OWN</productCodeCategory>
+                <productCodeOwnValue t-out="line.product_id.default_code"/>
+            </productCode>
+        </productCodes>
+        <lineExpressionIndicator t-out="format_bool(line_values['lineExpressionIndicator'])"/>
+        <lineNatureIndicator t-out="line_values['lineNatureIndicator']"/>
+        <lineDescription t-out="line_values['lineDescription']"/>
+        <t t-if="line_values['lineExpressionIndicator']">
+            <quantity t-out="line_values['quantity']"/>
+            <unitOfMeasure t-out="line.product_uom_id.l10n_hu_edi_code or 'OWN'"/>
+            <unitOfMeasureOwn t-if="not line.product_uom_id.l10n_hu_edi_code" t-out="line.product_uom_id.name"/>
+            <unitPrice t-out="float_repr(line_values['unitPrice'], 6)"/>
+            <unitPriceHUF t-out="float_repr(line_values['unitPriceHUF'], 6)"/>
+        </t>
+        <lineDiscountData t-if="line.discount">
+            <discountValue t-out="float_repr(line_values['discountValue'], 2)"/>
+            <discountRate t-out="float_repr(line_values['discountRate'], 4)"/>
+        </lineDiscountData>
+        <lineAmountsNormal>
+            <lineNetAmountData>
+                <lineNetAmount t-out="float_repr(line_values['lineNetAmount'], 2)"/>
+                <lineNetAmountHUF t-out="float_repr(line_values['lineNetAmountHUF'], 2)"/>
+            </lineNetAmountData>
+            <lineVatRate>
+                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vat_rate">
+                    <t t-set="tax" t-value="line_values['vat_tax']"/>
+                    <t t-set="vatPercentage" t-value="line_values['vatPercentage']"/>
+                </t>
+            </lineVatRate>
+            <lineVatData t-if="line_values['lineVatData']">
+                <lineVatAmount t-out="float_repr(line_values['lineVatAmount'], 2)"/>
+                <lineVatAmountHUF t-out="float_repr(line_values['lineVatAmountHUF'], 2)"/>
+            </lineVatData>
+            <lineGrossAmountData>
+                <lineGrossAmountNormal t-out="float_repr(line_values['lineGrossAmountNormal'], 2)"/>
+                <lineGrossAmountNormalHUF t-out="float_repr(line_values['lineGrossAmountNormalHUF'], 2)"/>
+            </lineGrossAmountData>
+        </lineAmountsNormal>
+    </template>
+</odoo>

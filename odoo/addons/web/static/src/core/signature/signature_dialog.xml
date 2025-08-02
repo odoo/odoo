@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SignatureDialog">
+      <Dialog title="title">
+         <div>
+            <NameAndSignature t-props="nameAndSignatureProps"/>
+            <div class="mt16 small">By clicking Adopt &amp; Sign, I agree that the chosen signature/initials will be a valid electronic representation of my hand-written signature/initials for all purposes when it is used on documents, including legally binding contracts.</div>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary" t-att-disabled="signature.isSignatureEmpty" t-on-click="onClickConfirm" >Adopt &amp; Sign</button>
+          <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+        </t>
+      </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//kanban" position="inside">
+                    <field name="is_peppol_journal" invisible="1"/>
+                    <field name="account_peppol_proxy_state" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//t[@id='account.JournalBodySalePurchase']//div" position="inside">
+                    <t t-if="record.account_peppol_proxy_state.raw_value == 'active'">
+                        <t t-if="journal_type == 'sale'">
+                            <div class="w-100">
+                                <a type="object" name="peppol_get_message_status" groups="account.group_account_invoice">Fetch Peppol invoice status</a>
+                            </div>
+                            <div class="w-100">
+                                <a type="object" name="action_peppol_ready_moves" groups="account.group_account_invoice">Peppol ready invoices</a>
+                            </div>
+                        </t>
+                        <t t-elif="journal_type == 'purchase'">
+                            <t t-if="record.is_peppol_journal.raw_value">
+                                <div class="w-100">
+                                    <a type="object" name="peppol_get_new_documents" groups="account.group_account_invoice">Fetch from Peppol</a>
+                                </div>
+                            </t>
+                        </t>
+                    </t>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

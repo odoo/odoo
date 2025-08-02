@@ -1,0 +1,28 @@
+.o_error_dialog {
+    @include media-breakpoint-up(md) {
+        padding: 1rem;
+
+        .o_error_detail {
+            overflow: auto;
+
+            pre {
+                overflow: initial;
+                max-height: 30vh;
+            }
+        }
+    }
+
+    .modal-header {
+        border: none;
+        padding-bottom: 0;
+        margin-bottom: -1rem;
+        .modal-title {
+            font-size: 1.625rem;
+        }
+    }
+
+    .modal-footer{
+        border: none;
+        padding-top: 0;
+    }
+}

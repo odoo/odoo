@@ -1,0 +1,15 @@
+.o_timesheet_accordion {
+    .card-header {
+        a {
+            text-decoration: none;
+            &:after {
+                content: "\f0d7";
+                font-family: 'FontAwesome';
+            }
+            &.collapsed:after {
+                content: "\f0da";
+                font-family: 'FontAwesome';
+            }
+        }
+    }
+}

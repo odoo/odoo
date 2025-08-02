@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.module.category" id="base.module_category_website_website">
+        <field name="sequence">23</field>
+    </record>
+
+    <record id="group_website_restricted_editor" model="res.groups">
+        <field name="name">Restricted Editor</field>
+        <field name="category_id" ref="base.module_category_website_website"/>
+    </record>
+    <record id="group_website_designer" model="res.groups">
+        <field name="name">Editor and Designer</field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_website_restricted_editor')), (4, ref('base.group_sanitize_override'))]"/>
+        <field name="category_id" ref="base.module_category_website_website"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('group_website_designer'))]"/>
+    </record>
+    <!-- FIXME: groups on existing users should probably be updated when implied_ids is, or existing users don't get the relevant implied groups on module installation... -->
+    <record id="base.user_admin" model="res.users">
+        <field name="groups_id" eval="[(4, ref('website.group_website_designer'))]"/>
+    </record>
+
+    <!-- NOTE: this group implication is needed so that any admin user can do the website onboarding
+        after website app installation. -->
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
+    </record>
+
+    <data noupdate="1">
+
+    <record id="website_designer_edit_qweb" model="ir.rule">
+        <field name="name">website_designer: Manage Website and qWeb view</field>
+        <field name="model_id" ref="base.model_ir_ui_view"/>
+        <field name="domain_force">[('type', '=', 'qweb')]</field>
+        <field name="groups" eval="[(4, ref('group_website_designer'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="website_designer_view" model="ir.rule">
+        <field name="name">website_designer: global view</field>
+        <field name="model_id" ref="base.model_ir_ui_view"/>
+        <field name="domain_force">[('type', '!=', 'qweb')]</field>
+        <field name="groups" eval="[(4, ref('group_website_designer'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="website_group_system_edit_all_views" model="ir.rule">
+        <field name="name">Administration Settings: Manage all views</field>
+        <field name="model_id" ref="base.model_ir_ui_view"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="website_page_rule_public" model="ir.rule">
+        <field name="name">website.page: portal/public: read published pages</field>
+        <field name="model_id" ref="website.model_website_page"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
+    </record>
+
+    <record id="view_rule_visibility_public" model="ir.rule">
+        <field name="name">Website View Visibility Public</field>
+        <field name="model_id" ref="base.model_ir_ui_view"/>
+        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', False))]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="view_rule_visibility_connected" model="ir.rule">
+        <field name="name">Website View Visibility Connected</field>
+        <field name="model_id" ref="base.model_ir_ui_view"/>
+        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', 'connected', False))]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    </data>
+
+    <!-- Website Page Controller: exposing arbitrary models -->
+    <record id="website_page_controller_expose" model="res.groups">
+        <field name="name">Public access to arbitrary exposed model</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_public" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.website_page_controller_expose'))]"/>
+    </record>
+
+    <record id="base.group_portal" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.website_page_controller_expose'))]"/>
+    </record>
+
+    <record id="website_page_controller_rule_public" model="ir.rule">
+        <field name="name">website.controller.page: portal/public: read published pages</field>
+        <field name="model_id" ref="website.model_website_controller_page"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('website.website_page_controller_expose'))]"/>
+    </record>
+
+</odoo>

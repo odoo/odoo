@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Murat Kaplan <muratk@projetgrup.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+"Herhangi bir yeni Genel Kilit Tarihi, bir öncekinin arkasında (veya ona "
+"eşit) olmalıdır."
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for accountants is irreversible and can't be removed."
+msgstr "Muhasebeciler için kilit tarihi geri alınamaz ve kaldırılamaz."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr ""
+"Yeni vergi kilidi tarihi, önceki kilit tarihinden sonraya ayarlanmalıdır."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr "Vergi kilidi tarihi geri alınamaz ve kaldırılamaz."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Henüz bitmemiş bir dönemi kilitleyemezsiniz. Bu nedenle, Genel Kilit Tarihi,"
+" önceki ayın son gününden önce (veya eşit) olmalıdır."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Henüz bitmemiş bir dönemi kilitleyemezsiniz. Bu nedenle, Vergi kilit tarihi "
+"bir önceki ayın son gününden önce (veya eşit) olmalıdır."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot set stricter restrictions on accountants than on users. "
+"Therefore, the All Users Lock Date must be anterior (or equal) to the "
+"Invoice/Bills Lock Date."
+msgstr ""
+"Muhasebeciler için kullanıcılardan daha katı kısıtlamalar belirleyemezsiniz."
+" Bu nedenle, Genel Kilit Tarihi, Müşteri/Tedarikçi Faturaları Kilit "
+"Tarihinden önce (veya eşit) olmalıdır."
