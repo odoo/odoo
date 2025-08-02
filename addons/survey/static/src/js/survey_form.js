@@ -171,7 +171,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         const $target = $(event.currentTarget);
         const $choiceItemGroup = $target.closest('.o_survey_form_choice');
 
-        // Update survey button to "continue" if the current page/question is the last (without accounting for
+        // Update survey button label to next page if the current page/question is the last (without accounting for
         // its own conditional questions) but a selected answer is triggering a conditional question on a next page.
         const surveyLastTriggeringAnswers = this.$('.o_survey_form_content_data').data('surveyLastTriggeringAnswers');
         if (surveyLastTriggeringAnswers) {
@@ -181,9 +181,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             `)).map((input) => parseInt(input.value));
             const submitButton = document.querySelector("button[type=submit]");
             if (currentSelectedAnswers.some((answerId) => surveyLastTriggeringAnswers.includes(answerId))) {
-                // change to continue
-                submitButton.value = "next";
-                submitButton.textContent = _t("Continue");
+                // change to next
+                const firstSubmitted = submitButton.dataset.surveyFirstSubmitted;
+                submitButton.value = firstSubmitted ? "next_skipped" : "next";
+                submitButton.textContent = firstSubmitted ? _t("Next Skipped") : _t("Continue");
                 submitButton.classList.replace("btn-secondary", "btn-primary");
             } else {
                 // change to submit

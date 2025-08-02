@@ -626,14 +626,13 @@ class SurveyUser_Input(models.Model):
         It loops to the first skipped question or page if 'last_displayed_page_id' is the last
         skipped question or page."""
         self.ensure_one()
-        skipped_mandatory_answer_ids = self.user_input_line_ids.filtered(
-            lambda answer: answer.skipped and answer.question_id.constr_mandatory)
+        skipped_questions = self._get_skipped_questions()
 
-        if not skipped_mandatory_answer_ids:
+        if not skipped_questions:
             return self.env['survey.question']
 
-        page_or_question_key = 'page_id' if self.survey_id.questions_layout == 'page_per_section' else 'question_id'
-        page_or_question_ids = skipped_mandatory_answer_ids.mapped(page_or_question_key).sorted()
+        page_or_question_ids = skipped_questions.page_id.sorted() \
+            if self.survey_id.questions_layout == 'page_per_section' else skipped_questions.sorted()
 
         if self.last_displayed_page_id not in page_or_question_ids\
             or self.last_displayed_page_id == page_or_question_ids[-1]:
@@ -645,8 +644,23 @@ class SurveyUser_Input(models.Model):
     def _get_skipped_questions(self):
         self.ensure_one()
 
-        return self.user_input_line_ids.filtered(
+        # Mandatory questions manually skipped by the user.
+        skipped_questions = self.user_input_line_ids.filtered(
             lambda answer: answer.skipped and answer.question_id.constr_mandatory).question_id
+
+        # Mandatory conditional questions that are triggered and waiting for an answer.
+        _, triggered_questions_by_answer, selected_answers = self._get_conditional_values()
+        skipped_questions |= sum(
+            (
+                triggered_question
+                for answer in selected_answers
+                for triggered_question in triggered_questions_by_answer.get(answer, [])
+                if triggered_question.constr_mandatory and triggered_question not in self.user_input_line_ids.question_id
+            ),
+            self.env['survey.question'],
+        )
+
+        return skipped_questions
 
     def _is_last_skipped_page_or_question(self, page_or_question):
         """In case of a submitted survey tells if the question or page is the last
