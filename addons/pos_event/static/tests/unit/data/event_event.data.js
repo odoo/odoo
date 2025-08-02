@@ -23,6 +23,25 @@ export class EventEvent extends models.ServerModel {
             "event_slot_ids",
         ];
     }
+
+    _records = [
+        {
+            id: 1,
+            name: "Odoo Community Days",
+            seats_available: 10,
+            event_ticket_ids: [1],
+            registration_ids: [],
+            seats_limited: true,
+            write_date: "2019-03-10 11:00:00",
+            question_ids: [1, 2, 3, 4],
+            general_question_ids: [],
+            specific_question_ids: [],
+            badge_format: "A6",
+            seats_max: 10,
+            is_multi_slots: true,
+            event_slot_ids: [1],
+        },
+    ];
 }
 
 patch(hootPosModels, [...hootPosModels, EventEvent]);
