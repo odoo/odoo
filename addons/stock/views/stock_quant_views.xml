@@ -30,7 +30,7 @@
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="lot_properties"/>
-                <group string='Filters'>
+                <group>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
@@ -48,7 +48,7 @@
                     <separator/>
                     <filter name="my_count" string="My Counts" domain="[('user_id', '=', uid)]"/>
                 </group>
-                <group string='Group by...'>
+                <group>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
                     <filter string='Product Category' name="productcategorygroup" context="{'group_by': 'product_categ_id'}"/>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
@@ -254,7 +254,7 @@ No Stock On Hand. This analysis gives you an overview of the current stock level
                 <field name="location_id"/>
                 <field name="package_type_id"/>
                 <filter string="In internal locations" name="internal" domain="['|', ('location_id.usage', '=', 'internal'), ('location_id', '=', False)]" groups="stock.group_stock_multi_locations"/>
-                <group string='Group by...'>
+                <group>
                    <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}" groups="stock.group_stock_multi_locations"/>
                    <filter string='Package Type' name="package_type" domain="[]" context="{'group_by' : 'package_type_id'}"/>
                </group>

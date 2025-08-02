@@ -67,7 +67,7 @@
             <search string="Payment Methods">
                 <field name="name"/>
                 <field name="receivable_account_id" groups="account.group_account_readonly" />
-                <group string="Group By">
+                <group>
                     <filter name="group_by_receivable_account" string="Account" domain="[]"  context="{'group_by':'receivable_account_id'}"/>
                     <filter name="group_by_pos_config" string="Point of Sale" domain="[]" context="{'group_by':'config_ids'}"/>
                     <filter name="group_by_method_name" string="Method Name" domain="[]" context="{'group_by':'name'}"/>

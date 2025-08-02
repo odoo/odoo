@@ -256,7 +256,7 @@
                     domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_date_deadline', '&gt;', 'today')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Customer" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>

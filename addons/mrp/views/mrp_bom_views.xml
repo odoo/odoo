@@ -222,7 +222,7 @@
                     <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By...">
+                    <group>
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                         <filter string='BoM Type' name="group_by_type" domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string='Unit' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>

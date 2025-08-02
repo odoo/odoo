@@ -49,7 +49,7 @@
                 <filter string="Restricted" name="restricted_by_audit_trail" domain="[('account_audit_log_restricted', '=', True)]"/>
                 <separator/>
                 <filter name="date" string="Date" date="date"/>
-                <group string="Group By">
+                <group>
                     <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
                     <filter string="Updated Data" name="group_by_res_id" domain="[]" context="{'group_by': 'res_id'}"/>
                 </group>

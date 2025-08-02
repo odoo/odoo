@@ -7,7 +7,7 @@
             <search string="Search Quotation Template">
                 <field name="name"/>
                 <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>
             </search>

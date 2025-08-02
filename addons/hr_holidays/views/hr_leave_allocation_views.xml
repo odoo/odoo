@@ -74,7 +74,7 @@
                 <filter name="approved_state" string="To Approve or Approved Allocations" invisible="1"
                     domain="[('state', 'in', ('confirm', 'validate'))]"/>
                 <separator/>
-                <group string="Group By">
+                <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
                     <filter name="group_allocation_type" string="Allocation Type" context="{'group_by':'allocation_type'}"/>

@@ -45,7 +45,7 @@
                 <field name="field_id"/>
                 <field name="user_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <group string="Group By">
+                <group>
                     <filter string="User" name="groupby_user" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
                 </group>

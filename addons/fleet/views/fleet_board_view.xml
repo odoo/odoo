@@ -12,7 +12,7 @@
                 <filter string="Contract" name="contract" domain="[('cost_type', '=', 'contract')]"/>
                 <separator/>
                 <filter name="filter_date_start" date="date_start" default_period="year"/>
-                <group string="Group By">
+                <group>
                     <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
                     <filter string="Driver" name="driver" context="{'group_by':'driver_id'}"/>
                 </group>

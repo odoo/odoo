@@ -425,7 +425,7 @@
                 <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
-                <group string="Group By">
+                <group>
                     <filter string="Session" name="session" domain="[]" context="{'group_by': 'session_id'}"/>
                     <filter string="User" name="user_id" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string="Point of Sale" name="config_id" domain="[]" context="{'group_by': 'config_id'}"/>

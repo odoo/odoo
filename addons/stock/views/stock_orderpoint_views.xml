@@ -79,7 +79,7 @@
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
                 <separator/>
                 <filter string="Not Snoozed" name="filter_not_snoozed" domain="['|', ('snoozed_until', '=', False), ('snoozed_until', '&lt;=', 'today')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Warehouse" name="groupby_warehouse" domain="[]"  context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
                     <filter string="Location" name="groupby_location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
                     <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_id'}"/>
@@ -107,7 +107,7 @@
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Warehouse" name="warehouse" domain="[]"  context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
                     <filter string="Location" name="location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
                     <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>

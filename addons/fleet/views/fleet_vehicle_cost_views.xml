@@ -148,7 +148,7 @@
                     domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_date_deadline', '&gt;', 'today')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Vehicle" name="vehicle" context="{'group_by': 'vehicle_id'}"/>
                 </group>
             </search>
@@ -348,7 +348,7 @@
                 <field name="description"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Service Type" name="groupby_service_type_id" context="{'group_by': 'service_type_id'}"/>
                     <filter string="Fleet Manager" name="groupby_manager_id" context="{'group_by': 'manager_id'}"/>
                     <filter string="Model" name="groupby_model_id" context="{'group_by': 'model_id'}"/>

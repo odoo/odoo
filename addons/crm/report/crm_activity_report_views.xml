@@ -63,7 +63,7 @@
                     <filter name="filter_date" date="date"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Activity" name="group_by_activity_type" context="{'group_by': 'mail_activity_type_id'}"/>
                         <filter string="Type" name="group_by_subtype" context="{'group_by': 'subtype_id'}"/>
                         <filter string="Assigned To" name="group_by_author_id" context="{'group_by': 'author_id'}"/>

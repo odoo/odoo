@@ -21,7 +21,7 @@
                 <separator/>
                 <filter string="Tests Only" name="test" domain="[('test_entry','=', True)]"/>
                 <filter string="Exclude Tests" name="not_test" domain="[('test_entry','=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                     <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
                     <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -218,7 +218,7 @@
             <search string="Search User input lines">
                 <field name="user_input_id"/>
                 <field name="survey_id"/>
-                <group string="Group By">
+                <group>
                     <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                     <filter name="group_by_lang" string="Language" domain="[]" context="{'group_by':'lang_id'}"/>
                     <filter name="group_by_user_input" string="User Input" domain="[]"  context="{'group_by':'user_input_id'}"/>

@@ -132,7 +132,7 @@
                 <filter name="open_sessions" string="In Progress" domain="[('state', '=', 'opened')]"/>
                 <separator/>
                 <filter string="Opening Date" name="start_date" date="start_at" />
-                <group string="Group By">
+                <group>
                     <filter string="Opened By" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
                     <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>

@@ -108,7 +108,7 @@
                     <field name="partner_id"/>
                     <separator/>
                     <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
-                    <group string="Group By...">
+                    <group>
                         <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>
