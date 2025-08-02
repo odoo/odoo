@@ -1282,6 +1282,7 @@ class SlideSlide(models.Model):
     @api.model
     def _search_get_detail(self, website, order, options):
         with_description = options['displayDescription']
+        with_html_content = options.get('displayHtmlContent')
         search_fields = ['name']
         fetch_fields = ['id', 'name']
         mapping = {
@@ -1294,6 +1295,10 @@ class SlideSlide(models.Model):
             search_fields.append('description')
             fetch_fields.append('description')
             mapping['description'] = {'name': 'description', 'type': 'text', 'html': True, 'match': True}
+        if with_html_content:
+            search_fields.append('html_content')
+            fetch_fields.append('html_content')
+            mapping['html_content'] = {'name': 'html_content', 'type': 'text', 'html': True, 'match': True}
         return {
             'model': 'slide.slide',
             'base_domain': [website.website_domain()],

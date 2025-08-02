@@ -86,6 +86,7 @@ Featuring
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/src/scss/website_slides_profile.scss',
             'website_slides/static/src/scss/slides_slide_fullscreen.scss',
+            'website_slides/static/src/snippets/s_searchbar/000.xml',
             'website_slides/static/src/js/slides_course_page.js',
             'website_slides/static/src/js/slides_course_slides_list.js',
             'website_slides/static/src/js/slides_course_fullscreen_player.js',
