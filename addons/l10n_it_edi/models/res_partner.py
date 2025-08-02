@@ -203,10 +203,7 @@ class ResPartner(models.Model):
         # extends account_edi_ubl_cii
         return super()._peppol_eas_endpoint_depends() + ['l10n_it_codice_fiscale']
 
-    def _get_suggested_invoice_edi_format(self):
-        # EXTENDS 'account'
-        res = super()._get_suggested_invoice_edi_format()
+    def _get_local_invoice_edi_format(self):
         if self.country_code == 'IT':
             return 'it_edi_xml'
-        else:
-            return res
+        return super()._get_local_invoice_edi_format()
