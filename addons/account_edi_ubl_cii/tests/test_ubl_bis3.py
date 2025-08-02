@@ -580,3 +580,37 @@ class TestUblBis3(AccountTestInvoicingCommon):
                 imported_bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment.ids)
                 self.assertTrue(imported_bill)
                 self.assert_same_invoice(invoice, imported_bill, partner_id=self.env.company.partner_id.id)
+
+    # -------------------------------------------------------------------------
+    # BASE DELTA DISTRIBUTION
+    # -------------------------------------------------------------------------
+
+    def test_dispatch_base_lines_delta(self):
+        """ Test that the delta is dispatched evenly on the base lines. """
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 10.04,
+                    'discount': 10,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ] + [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1.04,
+                    'discount': 10,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ] * 10,
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_dispatch_base_lines_delta')
