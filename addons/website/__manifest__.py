@@ -518,6 +518,28 @@
         'pricing': ['s_comparisons'],
         'privacy_policy': ['s_faq_collapse'],
     },
+    'configurator_snippets_addons': {
+        'website_sale': {
+            'homepage': [
+                ('website_sale.s_dynamic_snippet_products', 'after', 's_numbers'),
+            ],
+        },
+        'website_blog': {
+            'homepage': [
+                ('website_blog.s_blog_posts', 'after', 's_cover'),
+            ],
+        },
+        'website_event': {
+            'homepage': [
+                ('website_event.s_events', 'after', 's_cover'),
+            ],
+        },
+        'website_appointment': {
+            'homepage': [
+                ('website_appointment.s_appointments', 'after', 's_cover'),
+            ],
+        },
+    },
     'new_page_templates': {
         'basic': {
             '1': ['s_text_block_h1', 's_text_block', 's_image_text', 's_text_image'],

@@ -66,6 +66,7 @@ _DEFAULT_MANIFEST = {
     'category': 'Uncategorized',
     'cloc_exclude': [],
     'configurator_snippets': {},  # website themes
+    'configurator_snippets_addons': {},  # website themes
     'countries': [],
     'data': [],
     'demo': [],

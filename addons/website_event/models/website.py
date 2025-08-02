@@ -83,6 +83,20 @@ class Website(models.Model):
             return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/event'}
         return cta_data
 
+    def _apply_configurator_snippet_defaults(self, snippet, el):
+        super()._apply_configurator_snippet_defaults(snippet, el)
+        if snippet != 'website_event.s_events':
+            return
+
+        filter_record = self.env.ref('website_event.website_snippet_filter_event_list')
+        el.attrib.update({
+            'data-filter-id': str(filter_record.id),
+            'data-template-key': 'website_event.dynamic_filter_template_event_event_picture',
+            'data-number-of-records': '3',
+            'data-extra-classes': 'g-3',
+            'data-column-classes': 'col-12 col-sm-6 col-lg-4',
+        })
+
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
         if search_type in ['events', 'all']:

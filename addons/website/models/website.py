@@ -485,6 +485,18 @@ class Website(models.Model):
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
+    def _apply_configurator_snippet_defaults(self, snippet, el):
+        """
+        Set Default attribute values for dynamic snippets to completely load via configurator.
+        """
+        pass
+
+    @api.model
+    def _get_snippet_view_key(self, snippet, page_code):
+        if '.' in snippet:
+            return snippet
+        return f'website.configurator_{page_code}_{snippet}'
+
     @api.model
     def get_theme_configurator_snippets(self, theme_name):
         return {
@@ -734,6 +746,29 @@ class Website(models.Model):
         # Generate text for the pages
         requested_pages = set(pages_views.keys()).union({'homepage'})
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
+
+        configurator_snippets_addons = {
+            **get_manifest('website').get('configurator_snippets_addons', {}),
+            **get_manifest(theme_name).get('configurator_snippets_addons', {}),
+        }
+
+        installed_modules = self.env['ir.module.module']._installed()
+
+        for module_name, module_addon in configurator_snippets_addons.items():
+            if module_name not in installed_modules:
+                continue
+            for page, snippets_to_insert in module_addon.items():
+                existing = configurator_snippets.setdefault(page, [])
+                for snippet_name, position, target in snippets_to_insert:
+                    if snippet_name in existing:
+                        continue
+                    try:
+                        target_idx = existing.index(target)
+                        insert_idx = target_idx + (1 if position == 'after' else 0)
+                    except ValueError:
+                        insert_idx = len(existing)
+                    existing.insert(insert_idx, snippet_name)
+
         industry = kwargs['industry_name']
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
@@ -854,9 +889,10 @@ class Website(models.Model):
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
-                render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
-                for placeholder in placeholders:
-                    generated_content[placeholder] = ''
+                if snippet_key := website._get_snippet_view_key(snippet, page_code):
+                    render, placeholders = _render_snippet(snippet_key)
+                    for placeholder in placeholders:
+                        generated_content[placeholder] = ''
         if text_must_be_translated_for_openai:
             nb_terms_translated = len([k for k, v in translated_content.items() if k != v])
             nb_terms_total = len(translated_content)
@@ -948,7 +984,8 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
+                    if snippet_key := website._get_snippet_view_key(snippet, page_code):
+                        render, placeholders = _render_snippet(snippet_key)
                     # Fill rendered block with AI text
                     render = xml_translate(_format_replacement, render)
 
@@ -957,6 +994,8 @@ class Website(models.Model):
                     # Add the data-snippet attribute to identify the snippet
                     # for compatibility code
                     el.attrib['data-snippet'] = snippet
+
+                    website._apply_configurator_snippet_defaults(snippet, el)
 
                     # Remove the previews needed for the snippets dialog
                     dialog_preview_els = el.find_class('s_dialog_preview')
