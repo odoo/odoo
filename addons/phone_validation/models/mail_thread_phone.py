@@ -92,7 +92,7 @@ class PhoneMixin(models.AbstractModel):
             return op([[(phone_field, operator, False)] for phone_field in phone_fields])
 
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
-            raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
+            raise UserError(_('Please enter at least %s characters when searching a Phone/Mobile number.', self._phone_search_min_length))
 
         sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
 
