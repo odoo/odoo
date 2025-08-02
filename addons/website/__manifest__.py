@@ -516,7 +516,6 @@
         'about_us': ['s_text_image', 's_image_text', 's_title', 's_company_team'],
         'our_services': ['s_three_columns', 's_quotes_carousel', 's_references'],
         'pricing': ['s_comparisons'],
-        'privacy_policy': ['s_faq_collapse'],
     },
     'new_page_templates': {
         'basic': {
