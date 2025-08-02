@@ -42,6 +42,13 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
+    setup(vals) {
+        if (this.is_reward_line && !this.reward_id) {
+            this.delete();
+            return;
+        }
+        super.setup(vals);
+    },
     serialize(options = {}) {
         const json = super.serialize(...arguments);
         if (options.orm && json.coupon_id < 0) {

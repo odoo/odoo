@@ -97,6 +97,11 @@ patch(PosOrder.prototype, {
     setupState(vals) {
         super.setupState(...arguments);
         this.uiState.disabledRewards = new Set(vals?.disabledRewards || []);
+        for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
+            if (!this.models["loyalty.program"].get(pe.program_id)) {
+                delete this.uiState.couponPointChanges[key];
+            }
+        }
     },
     serializeState() {
         const state = super.serializeState(...arguments);
