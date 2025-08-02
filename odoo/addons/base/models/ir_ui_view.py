@@ -595,6 +595,12 @@ actual arch.
         if vals.get('active') or 'arch_db' in vals:
             self.filtered('active')._check_xml()
 
+        for view in self:
+            if view.type in ('form', 'list') and view.model_data_id and view.model_data_id.module == 'studio_customization' and view.invalid_locators:
+                filtered = list(filter(lambda loc: loc.get('attrib', {}).get('position') != 'move', view.invalid_locators))
+                if filtered:
+                    raise ValidationError(_("Invalid XPath in Studio view '%(view)s' (line %(line)s).") % {'view': view.name, 'line': filtered[0].get('sourceline')})
+
         return res
 
     def unlink(self):
