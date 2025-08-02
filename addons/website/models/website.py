@@ -304,6 +304,9 @@ class Website(models.Model):
         default_website = self.env.ref('website.default_website', raise_if_not_found=False)
         if default_website and default_website in self:
             raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
+        website = self.search_count([('id', 'not in', self.ids)])
+        if not website:
+            raise UserError(_('You must keep at least one website.'))
 
     def unlink(self):
         self._remove_attachments_on_website_unlink()
