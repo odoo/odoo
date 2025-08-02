@@ -367,7 +367,11 @@ export const editorCommands = {
             ) {
                 convertedList = convertList(nodeToInsert, mode);
             }
-            if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
+            if (
+                currentNode.tagName !== "BR" &&
+                isShrunkBlock(currentNode) &&
+                currentNode.nodeName !== "HR"
+            ) {
                 currentNode.remove();
             }
             currentNode = convertedList || nodeToInsert;

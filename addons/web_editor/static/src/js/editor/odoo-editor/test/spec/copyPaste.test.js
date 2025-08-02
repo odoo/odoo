@@ -3124,5 +3124,14 @@ describe('Paste', () => {
                 contentAfter: '<p>a[]b</p>',
             });
         });
+        it('should paste text with a separator', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><br>[]</p>',
+                stepFunction: async edior => {
+                    await pasteOdooEditorHtml(edior, '<p>abc</p><hr contenteditable="false"><p>def</p>');
+                },
+                contentAfterEdit: '<p><br></p><p>abc</p><hr contenteditable="false"><p>def[]</p>',
+            })
+        });
     });
 });
