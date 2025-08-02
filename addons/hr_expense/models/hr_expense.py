@@ -796,6 +796,20 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+        is_editing_states = 'state' in vals or 'approval_state' in vals
+        valid_states = {'submitted', None}
+        if (
+                is_editing_states
+                and not (self.env.user.has_group('hr_expense.group_hr_expense_manager') or self.env.su)
+                and any(state == 'draft' for state in self.mapped('state'))
+                and (vals.get('state') not in valid_states or vals.get('approval_state') not in valid_states)
+        ):
+            raise UserError(_("You don't have the rights to bypass the validation process of this expense report."))
+        elif vals.get('state') == 'approved' or vals.get('approval_state') == 'approved':
+            self._check_can_approve()
+        elif vals.get('state') == 'refused' or vals.get('approval_state') == 'refused':
+            self._check_can_refuse()
+
         if any(field in vals for field in {'is_editable', 'can_approve', 'can_refuse'}):
             raise UserError(_("You cannot edit the security fields of an expense manually"))
 
