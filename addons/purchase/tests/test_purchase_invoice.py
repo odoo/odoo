@@ -1164,3 +1164,41 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice2 = move_form.save()
         self.assertFalse(invoice2.invoice_user_id)
+
+    def test_create_invoice_from_multiple_purchase_orders(self):
+        """ Test that invoices can be created from purchase orders with different
+        vendors without raising errors and with correct vendor mapping per invoice.
+        """
+        purchase_orders = self.env['purchase.order'].with_context(tracking_disable=True).create([
+            {
+                'partner_id': self.partner_a.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_order.id,
+                        'product_qty': 1.0,
+                        'price_unit': self.product_order.list_price,
+                        'tax_ids': False,
+                    }),
+                ],
+            },
+            {
+                'partner_id': self.partner_b.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_deliver.id,
+                        'product_qty': 2.0,
+                        'price_unit': self.product_deliver.list_price,
+                        'tax_ids': False,
+                    }),
+                ],
+            },
+        ])
+        purchase_orders.button_confirm()
+        purchase_orders.action_create_invoice()
+
+        self.assertEqual(len(purchase_orders.invoice_ids), 2, "Each PO should generate one invoice")
+        self.assertEqual(
+            set(purchase_orders.invoice_ids.partner_id.ids),
+            set(purchase_orders.partner_id.ids),
+            "Each invoice should be linked to the correct vendor"
+        )
