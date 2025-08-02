@@ -10,7 +10,7 @@ export class ForecastedHeader extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
 
-        this._formatFloat = (num) => formatFloat(num, { digits: this.props.docs.precision });
+        this._formatFloat = (num) => formatFloat(num, { digits: [0, this.props.docs.precision] });
     }
 
     async _onClickInventory(){
