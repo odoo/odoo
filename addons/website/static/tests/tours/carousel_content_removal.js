@@ -92,6 +92,22 @@ wTourUtils.registerWebsitePreviewTour("snippet_carousel", {
         trigger: `${carouselInnerSelector} > div.active:nth-child(2)`,
         isCheck: true,
     },
+    // Ensure quickly adding/removing slides doesn’t give a traceback
+    {
+        content: "Add a slide",
+        trigger: ".snippet-option-CarouselItem .o_we_bg_success",
+        run: "click",
+    },
+    {
+        content: "Remove a slide",
+        trigger: ".snippet-option-CarouselItem .o_we_bg_danger",
+        run: "click",
+    },
+    {
+        content: "Add a slide",
+        trigger: ".snippet-option-CarouselItem .o_we_bg_success",
+        run: "click",
+    },
     ...wTourUtils.clickOnSave(),
     // Check that saving always sets the first slide as active.
     {

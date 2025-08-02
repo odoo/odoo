@@ -699,7 +699,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus_delete_parent', login='admin')
 
     def test_snippet_carousel(self):
-        self.start_tour('/', 'snippet_carousel', login='admin')
+        self.start_tour('/', 'snippet_carousel', login='admin', step_delay=360)
 
     def test_media_iframe_video(self):
         self.start_tour("/", "website_media_iframe_video", login="admin")
