@@ -39,17 +39,10 @@ class HrEmployeePublic(models.Model):
     resource_id = fields.Many2one('resource.resource', readonly=True)
     tz = fields.Selection(related='resource_id.tz')
     color = fields.Integer(readonly=True)
-    hr_presence_state = fields.Selection([
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('archive', 'Archived'),
-        ('out_of_working_hour', 'Out of Working hours')], compute='_compute_presence_state', default='out_of_working_hour')
-    hr_icon_display = fields.Selection([
-        ('presence_present', 'Present'),
-        ('presence_out_of_working_hour', 'Out of Working hours'),
-        ('presence_absent', 'Absent'),
-        ('presence_archive', 'Archived'),
-        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
+    hr_presence_state = fields.Selection(selection=lambda self: self.env['hr.employee']._fields['hr_presence_state']._description_selection(self.env),
+        compute='_compute_presence_state', default='out_of_working_hour')
+    hr_icon_display = fields.Selection(selection=lambda self: self.env['hr.employee']._fields['hr_icon_display']._description_selection(self.env),
+        compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")

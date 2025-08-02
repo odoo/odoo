@@ -2,6 +2,8 @@ import { patch } from "@web/core/utils/patch";
 
 import { HrPresenceStatus, hrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
 import { HrPresenceStatusPrivate, hrPresenceStatusPrivate } from "@hr/components/hr_presence_status_private/hr_presence_status_private";
+import { HrPresenceStatusPill, hrPresenceStatusPill } from "@hr/components/hr_presence_status_pill/hr_presence_status_pill";
+import { hrPresenceStatusPrivatePill } from "@hr/components/hr_presence_status_private_pill/hr_presence_status_private_pill";
 import { _t } from "@web/core/l10n/translation";
 
 const patchHrPresenceStatus = () => ({
@@ -46,9 +48,25 @@ const patchHrPresenceStatus = () => ({
     },
 });
 
+const patchHrPresenceStatusPill = () => ({
+    get color() {
+        if (this.location) {
+            let color = "o_hr_presence_status_pill-off-hours";
+            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
+                color = this.props.record.data.hr_presence_state === "present" ? "o_hr_presence_status_pill-present" : "o_hr_presence_status_pill-absent";
+            }
+            return color;
+        }
+        return super.color;
+    },
+})
+
 // for the both components: first applies the common patch and then applies patch for label
 patch(HrPresenceStatus.prototype, patchHrPresenceStatus());
 patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
+
+// Applies patch on one component and the other should be affected also, since it's extended from it.
+patch(HrPresenceStatusPill.prototype, patchHrPresenceStatusPill());
 
 const additionalFieldDependencies = [
     { name: "hr_presence_state", type: "selection" },
@@ -69,5 +87,23 @@ if (typeof hrPresenceStatus.fieldDependencies === "function") {
 }
 hrPresenceStatusPrivate.fieldDependencies = [
     ...(hrPresenceStatusPrivate.fieldDependencies || []),
+    ...additionalFieldDependencies,
+];
+
+if (typeof hrPresenceStatusPill.fieldDependencies === "function") {
+    const oldFieldDependencies = hrPresenceStatusPill.fieldDependencies;
+    hrPresenceStatusPill.fieldDependencies = (widgetInfo) => {
+        const fieldDependencies = oldFieldDependencies(widgetInfo);
+        fieldDependencies.push(...additionalFieldDependencies);
+        return fieldDependencies;
+    }
+} else {
+    hrPresenceStatusPill.fieldDependencies = [
+        ...(hrPresenceStatusPill.fieldDependencies || []),
+        ...additionalFieldDependencies,
+    ];
+}
+hrPresenceStatusPrivatePill.fieldDependencies = [
+    ...(hrPresenceStatusPrivatePill.fieldDependencies || []),
     ...additionalFieldDependencies,
 ];
