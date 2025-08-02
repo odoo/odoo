@@ -2718,7 +2718,7 @@
             <t t-foreach="description_lines" t-as="name_line">
                 <span
                     t-if="name_line"
-                    t-attf-class="o_description_line overflow-hidden #{not name_line_last and 'mb-1'}"
+                    t-attf-class="o_description_line #{not name_line_last and 'mb-1'}"
                     t-out="name_line"
                 />
             </t>
@@ -2969,7 +2969,7 @@
                 <t t-foreach="description_lines" t-as="description_line">
                     <span
                         t-if="description_line"
-                        class="o_description_line overflow-hidden"
+                        class="o_description_line"
                         t-out="description_line"
                     />
                 </t>
