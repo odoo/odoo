@@ -33,7 +33,10 @@ export class ChannelMember extends Record {
     channel_id = fields.One("Thread", { inverse: "channel_member_ids" });
     threadAsSelf = fields.One("Thread", {
         compute() {
-            if (this.store.self?.eq(this.persona)) {
+            if (
+                this.store.self_partner?.eq(this.partner_id) ||
+                this.store.self_guest?.eq(this.guest_id)
+            ) {
                 return this.channel_id;
             }
         },
@@ -98,7 +101,7 @@ export class ChannelMember extends Record {
     typingTimeoutId;
 
     get name() {
-        return this.channel_id.getPersonaName(this.persona);
+        return this.channel_id.getPersonaName(this.partner_id || this.guest_id);
     }
 
     get avatarUrl() {

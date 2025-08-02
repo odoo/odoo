@@ -51,8 +51,8 @@ patch(Thread.prototype, {
         ) {
             return super.displayName;
         }
-        if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
-            return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
+        if (!this.correspondent.partner_id?.is_public && this.correspondent.partner_id?.country) {
+            return `${this.correspondent.name} (${this.correspondent.partner_id.country.name})`;
         }
         if (this.country_id) {
             return `${this.correspondent.name} (${this.country_id.name})`;
