@@ -393,11 +393,13 @@ class IrModuleModule(models.Model):
         #  - all its dependencies are installed or to be installed,
         #  - at least one dependency is 'to install'
         #  - if the module is country specific, at least one company is in one of the countries
+        #    or we have already installed a module from that country
         install_states = frozenset(('installed', 'to install', 'to upgrade'))
         def must_install(module):
             states = {dep.state for dep in module.dependencies_id if dep.auto_install_required}
+            installed_countries = self.search([('state', 'in', list(install_states))]).country_ids
             return states <= install_states and 'to install' in states and (
-                not module.country_ids or module.country_ids & company_countries
+                not module.country_ids or module.country_ids & (company_countries | installed_countries)
             )
 
         modules = self
