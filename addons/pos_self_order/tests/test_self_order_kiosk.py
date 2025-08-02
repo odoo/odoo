@@ -278,3 +278,14 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.assertEqual(len(self.pos_config.self_ordering_image_home_ids), 3)
         # Background images can be fully cleared
         self.assertEqual(len(self.pos_config.self_ordering_image_background_ids), 0)
+
+    def test_kiosk_prepration_receipt(self):
+        self.pos_config.write({
+            'use_presets': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, 'test_kiosk_prepration_receipt')

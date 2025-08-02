@@ -3,6 +3,7 @@ import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
+import * as PreparationReceipt from "@pos_self_order/../tests/tours/utils/preparation_receipt_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
@@ -201,6 +202,36 @@ registry.category("web_tour.tours").add("test_self_order_pricelist", {
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Coca-Cola", "3.45", "3"),
         Utils.clickBtn("Order"),
+        Utils.clickBtn("Close"),
+        Utils.checkIsNoBtn("My Order"),
+    ],
+});
+
+registry.category("web_tour.tours").add("test_kiosk_prepration_receipt", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickCategory("Miscellaneous"),
+        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickProduct("Fanta"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "5.06", "2"),
+        CartPage.checkProduct("Fanta", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        ConfirmationPage.orderNumberShown(),
+        {
+            content: "Check kiosk order preparation receipt",
+            trigger: "body",
+            run: () => {
+                const receipt = PreparationReceipt.generateKioskPreparationReceipt();
+                PreparationReceipt.hasOrderlineInReceipt(receipt, "Coca-Cola", "2");
+                PreparationReceipt.hasOrderlineInReceipt(receipt, "Fanta", "1");
+                if (receipt.innerHTML.includes("[]")) {
+                    throw new Error("printed receipt should not contain '[]'");
+                }
+            },
+        },
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
     ],
