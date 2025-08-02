@@ -12,7 +12,6 @@ TIMESHEET_INVOICE_TYPES = [
     ('billable_milestones', 'Billed on Milestones'),
     ('billable_manual', 'Billed Manually'),
     ('non_billable', 'Non-Billable'),
-    ('timesheet_revenues', 'Timesheet Revenues'),
     ('service_revenues', 'Service Revenues'),
     ('other_revenues', 'Other revenues'),
     ('other_costs', 'Other costs'),
@@ -60,7 +59,7 @@ class AccountAnalyticLine(models.Model):
                 elif timesheet.so_line.product_id.type == 'service':
                     if timesheet.so_line.product_id.invoice_policy == 'delivery':
                         if timesheet.so_line.product_id.service_type == 'timesheet':
-                            invoice_type = 'timesheet_revenues' if timesheet.amount > 0 and timesheet.unit_amount > 0 else 'billable_time'
+                            invoice_type = 'billable_time'
                         else:
                             service_type = timesheet.so_line.product_id.service_type
                             invoice_type = f'billable_{service_type}' if service_type in ['milestones', 'manual'] else 'billable_fixed'
