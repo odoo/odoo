@@ -351,6 +351,50 @@ class TestProcurement(TestMrpCommon):
         move_dest._action_assign()
         self.assertEqual(move_dest.quantity, 10.0)
 
+    def test_mtso_with_empty_bom(self):
+        """Test to ensure that a Manufacturing Order is created in 'draft' state
+        via MTSO route when BoM has no components or operations.
+        """
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        # Set up MTSO route.
+        route_mto = self.warehouse_1.mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = "mts_else_mto"
+
+        # Create a product with a BoM that has no components or operations.
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'route_ids': [Command.link(route_manufacture.id), Command.link(route_mto.id)],
+        })
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+
+        pg = self.env['procurement.group'].create({'name': 'Test-mtso'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product,
+                1.0,
+                product.uom_id,
+                self.warehouse_1.lot_stock_id,
+                'test_mtso',
+                'test_mtso',
+                self.warehouse_1.company_id,
+                {
+                    'warehouse_id': self.warehouse_1,
+                    'group_id': pg,
+                },
+            ),
+        ])
+
+        # Check that the MO is created and remains in 'draft' state.
+        production = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(production), 1, "The manufacturing order was not automatically created.")
+        self.assertFalse(production.move_raw_ids)
+        self.assertFalse(production.workorder_ids)
+        self.assertEqual(production.state, "draft", "MO with empty BoM created via MTSO should remain in draft state.")
+
     def test_auto_assign(self):
         """ When auto reordering rule exists, check for when:
         1. There is not enough of a manufactured product to assign (reserve for) a picking => auto-create 1st MO
