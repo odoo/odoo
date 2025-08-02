@@ -712,6 +712,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 {'journal_id': stock_journal_id,    'balance':  -1.79},
             ],
         )
+<<<<<<< e89ff928d8aedb856a7d155341f2e47ff2c6c05c
 
     def test_exchange_rate_difference_post_bill_prior_to_reception(self):
         """ Billing/invoicing before validating a reception for some product that is valuated which
@@ -762,3 +763,39 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                     {'account_id': stock_valuation_account.id,   'debit': 420.00,   'credit':   0.00},
                 ]
             )
+||||||| aa72462bd8672fe8a2109daa0fc60abeb3814090
+=======
+
+    def test_currency_exchange_and_modified_product_price_precision_valuation_items(self):
+        """ Small price unit diff with sufficiently large quantity -> problematic correction SVL"""
+        euro = self.env.ref('base.EUR')
+        euro.active = True
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 3
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'rate': 0.2710027100271003,
+            'currency_id': euro.id,
+            'company_id': self.env.company.id,
+        })
+        avco_product = self.test_product_delivery
+        avco_product.categ_id.property_cost_method = 'average'
+        avco_product.standard_price = 0.875
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': euro.id,
+            'order_line': [Command.create({
+                'product_id': avco_product.id,
+                'price_unit': 0.237,
+                'product_qty': 5500,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        svls = self.env['stock.valuation.layer'].search([])
+        self.assertRecordValues(svls, [{'value': 4809.92, 'remaining_value': 4809.92, 'unit_cost': 0.875}])
+>>>>>>> 6f9be1e67559ae541912dd8e13a149830bf30d88
