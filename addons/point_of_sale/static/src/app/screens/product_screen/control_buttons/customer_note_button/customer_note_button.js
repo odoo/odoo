@@ -30,7 +30,7 @@ export class OrderlineNoteButton extends Component {
     }
     async addLineNotes() {
         const selectedOrderline = this.pos.get_order().get_selected_orderline();
-        const selectedNote = this.props.getter(selectedOrderline);
+        const selectedNote = this.props.getter(selectedOrderline) || "";
         const oldNote = selectedOrderline.getNote();
         const payload = await this.openTextInput(selectedNote);
 
