@@ -231,9 +231,14 @@ class AccountTax(models.Model):
             domains = []
             for tax in taxes:
                 if tax.type_tax_use != 'none':
+                    domain = []
+                    for lang in self.env['res.lang'].get_installed():
+                        if domain:
+                            domain = ['|'] + domain
+                        domain += [('name@' + lang[0], '=', tax.with_context(lang=lang[0]).name)]
                     domains.append([
                         ('company_id', 'child_of', tax.company_id.root_id.id),
-                        ('name', '=', tax.name),
+                        *domain,
                         ('type_tax_use', '=', tax.type_tax_use),
                         ('tax_scope', '=', tax.tax_scope),
                         ('country_id', '=', tax.country_id.id),
