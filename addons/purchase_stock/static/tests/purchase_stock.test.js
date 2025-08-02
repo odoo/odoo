@@ -13,6 +13,7 @@ class PurchaseOrderSuggest extends models.Model {
     _name = "purchase.order.suggest";
     based_on = fields.Selection({
         selection: [
+            ["actual_demand", "Actual Demand"],
             ["one_week", "Last 7 days"],
             ["one_month", "Last 30 days"],
             ["three_months", "Last 3 months"],
