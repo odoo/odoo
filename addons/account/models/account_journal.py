@@ -568,6 +568,11 @@ class AccountJournal(models.Model):
         self.refund_sequence = self.type in ('sale', 'purchase')
 
     @api.depends('type')
+    def _compute_refund_sequence(self):
+        for journal in self:
+            journal.refund_sequence = journal.type in ('sale', 'purchase')
+
+    @api.depends('type')
     def _compute_payment_sequence(self):
         for journal in self:
             journal.payment_sequence = journal.type in ('bank', 'cash')
