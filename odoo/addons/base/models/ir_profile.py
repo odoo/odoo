@@ -109,7 +109,7 @@ class IrProfile(models.Model):
     @api.depends('speedscope')
     def _compute_speedscope_url(self):
         for profile in self:
-            profile.speedscope_url = f'/web/speedscope/{profile.id}'
+            profile.speedscope_url = f'/web/speedscope/{profile.id}' if profile._origin else False
 
     def _enabled_until(self):
         """
