@@ -6,6 +6,7 @@ import SlideChannelPartnerListController from './slide_channel_partner_list_cont
 export const SlideChannelPartnerListView = {
     ...listView,
     Controller: SlideChannelPartnerListController,
+    buttonTemplate: "website_slides.SlideChannelPartnerListView.Buttons",
 };
 
 registry.category('views').add('slide_channel_partner_enroll_tree', SlideChannelPartnerListView);

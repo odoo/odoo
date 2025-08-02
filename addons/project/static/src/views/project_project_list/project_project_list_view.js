@@ -7,6 +7,7 @@ export const projectProjectListView = {
     ...listView,
     Renderer: ProjectProjectListRenderer,
     Controller: ProjectListController,
+    buttonTemplate: "project.ProjectListView.Buttons",
 };
 
 registry.category("views").add("project_project_list", projectProjectListView);
