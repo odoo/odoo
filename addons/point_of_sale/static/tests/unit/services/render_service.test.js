@@ -4,12 +4,14 @@ import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { htmlToCanvas } from "@point_of_sale/app/services/render_service";
 import { definePosModels } from "../data/generate_model_definitions";
+import { setupPosEnv } from "../utils";
 
 definePosModels();
 odoo.pos_session_id = 1; // Ensure the session ID is set for lazy getters
 
 describe("RenderService", () => {
     test("test the render service", async () => {
+        await setupPosEnv();
         class ComponentToBeRendered extends Component {
             static props = ["name"];
             static template = xml`

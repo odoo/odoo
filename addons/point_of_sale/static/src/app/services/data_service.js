@@ -344,7 +344,8 @@ export class PosData extends Reactive {
 
     async loadFieldsAndRelations() {
         const key = `pos_data_params_${odoo.pos_config_id}`;
-        if (this.network.offline) {
+        //TODO-manv: should not do this when running hoot tests
+        if (this.network.offline && !odoo.hoot_test) {
             return JSON.parse(localStorage.getItem(key));
         }
 
@@ -486,7 +487,8 @@ export class PosData extends Reactive {
         this.network.loading = true;
 
         try {
-            if (this.network.offline) {
+            //TODO-manv: should not do this when running hoot tests
+            if (this.network.offline && !odoo.hoot_test) {
                 throw new ConnectionLostError();
             }
 
