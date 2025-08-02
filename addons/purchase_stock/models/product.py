@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import formatLang
+from math import ceil
 
 
 class ProductCategory(models.Model):
@@ -39,15 +40,48 @@ class ProductProduct(models.Model):
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
+    suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
 
-    @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id')
+    @api.depends("qty_available", "outgoing_qty", "incoming_qty", "monthly_demand")
+    @api.depends_context("suggest_based_on", "suggest_number_days", "suggest_percent", "warehouse_id")
+    def _compute_suggested_quantity(self):
+        ctx = self.env.context
+        for product in self.with_context(ctx):
+            if not ctx.get("suggest_based_on"):
+                product.suggested_qty = 0
+                continue
+            elif ctx.get("suggest_based_on") == "actual_demand":
+                qty = ceil(product.outgoing_qty * ctx.get("suggest_percent", 0) / 100)
+            else:
+                monthly_ratio = ctx.get("suggest_number_days", 0) / (365.25 / 12)  # eg. 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
+                qty = ceil(product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100)
+            qty -= product.qty_available + max(product.incoming_qty, 0)
+            product.suggested_qty = max(qty, 0)
+
+    @api.depends_context('suggest_number_days', 'warehouse_id')
+    def _compute_quantities(self):
+        return super()._compute_quantities()
+
+    def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
+        ctx = self.env.context
+        if ctx.get("suggest_based_on") and "suggest_number_days" in ctx:
+            to_date = fields.Datetime.now() + relativedelta(days=ctx.get("suggest_number_days"))
+        return super()._compute_quantities_dict(
+            lot_id=lot_id,
+            owner_id=owner_id,
+            package_id=package_id,
+            from_date=from_date,
+            to_date=to_date,
+        )
+
+    @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id', 'suggest_based_on')
     def _compute_monthly_demand(self):
         start_date = self.env.context.get('monthly_demand_start_date', fields.Datetime.now() - relativedelta(months=1))
         limit_date = self.env.context.get('monthly_demand_limit_date', fields.Datetime.now())
         warehouse_id = self.env.context.get('warehouse_id')
         move_domain = Domain([
             ('product_id', 'in', self.ids),
-            ('state', '=', 'done'),
+            ('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done']),
             ('date', '>=', start_date),
             ('date', '<', limit_date),
         ])
@@ -62,8 +96,17 @@ class ProductProduct(models.Model):
             ])
         move_qty_by_products = self.env['stock.move']._read_group(move_domain, ['product_id'], ['product_qty:sum'])
         qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
+
+        based_on = self.env.context.get("suggest_based_on", "this_month")
+        factor = 1
+        if based_on == "one_year":
+            factor = 12
+        elif based_on == "three_months" or based_on == "last_year_quarter":
+            factor = 3
+        elif based_on == "one_week":
+            factor = 7 / (365.25 / 12)
         for product in self:
-            product.monthly_demand = qty_by_product.get(product.id, 0)
+            product.monthly_demand = qty_by_product.get(product.id, 0) / factor
 
     @api.model
     def _get_monthly_demand_moves_location_domain(self):
