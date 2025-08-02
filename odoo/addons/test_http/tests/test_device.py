@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -431,3 +432,37 @@ class TestDevice(TestHttpBase):
         # This means that the device logic will not create a session file
         # (because we are not passing in the `_update_device` logic).
         self.assertFalse(session['_trace'])
+
+    # --------------------
+    # GARBAGE COLLECTOR
+    # --------------------
+
+    def test_garbage_collector_device_log(self):
+
+        def count_garbage(session_identifier):
+            count_before_gc = self.DeviceLog.search_count([('session_identifier', '=', session_identifier)])
+            self.DeviceLog._gc_device_log()
+            count_after_gc = self.DeviceLog.search_count([('session_identifier', '=', session_identifier)])
+            return count_before_gc - count_after_gc
+
+        session = self.authenticate(self.user_admin.login, self.user_admin.login)
+        session_identifier = session.sid[:42]
+
+        now = lambda days=0:datetime.now() + timedelta(days=days)
+
+        self.hit(now(days=-40), '/test_http/greeting-public', ip='191.0.1.41', headers={'User-Agent': USER_AGENT_linux_chrome})  # normal GC
+        self.hit(now(days=-30), '/test_http/greeting-public', ip='191.0.1.41', headers={'User-Agent': USER_AGENT_linux_chrome})  # soft GC (25 days)
+        self.assertEqual(count_garbage(session_identifier), 1)
+
+        self.hit(now(days=-35), '/test_http/greeting-public', ip='191.0.1.41', headers={'User-Agent': USER_AGENT_linux_firefox})  # normal GC
+        self.hit(now(days=-31), '/test_http/greeting-public', ip='191.0.1.41', headers={'User-Agent': USER_AGENT_linux_firefox})  # soft GC (25 days)
+        self.hit(now(days=-29), '/test_http/greeting-public', ip='191.0.1.42', headers={'User-Agent': USER_AGENT_linux_firefox})  # hard GC (25 days) because last log
+        self.assertEqual(count_garbage(session_identifier), 1)
+
+        # Soft garbage
+        self.env['ir.config_parameter'].set_param('base.res_device_log_detail_retention_days', 25)
+        self.assertEqual(count_garbage(session_identifier), 2)
+
+        # Hard garbage
+        self.env['ir.config_parameter'].set_param('base.res_device_log_retention_days', 25)
+        self.assertEqual(count_garbage(session_identifier), 1)
