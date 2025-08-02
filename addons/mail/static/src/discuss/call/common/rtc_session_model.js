@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/core/common/record";
 import { Deferred } from "@web/core/utils/concurrency";
+import { assignDefined } from "@mail/utils/common/misc";
 
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
@@ -154,6 +155,41 @@ export class RtcSession extends Record {
     getStream(type) {
         const isActive = type === "camera" ? this.is_camera_on : this.is_screen_sharing_on;
         return isActive && this.videoStreams.get(type);
+    }
+
+    updateInfo(info) {
+        this.updateFocus(info);
+        assignDefined(this, info);
+    }
+
+    updateFocus(info) {
+        if (!this.channel.eq(this.store.rtc?.channel)) {
+            // only makes sense in the current channel
+            return;
+        }
+        if (this.eq(this.store.rtc.selfSession)) {
+            // no autofocus on self
+            return;
+        }
+        if (!this.channel.activeRtcSession) {
+            // if we are not already in focus mode, do not force focus
+            return;
+        }
+        if (!this.is_screen_sharing_on && info.is_screen_sharing_on) {
+            this.channel.updateCallFocusStack(this.id, "add", "screen");
+            return;
+        }
+        if (this.is_screen_sharing_on && !info.is_screen_sharing_on) {
+            this.channel.updateCallFocusStack(this.id, "remove", "screen");
+            return;
+        }
+        if (!this.isTalking && info.isTalking) {
+            this.channel.updateCallFocusStack(this.id, "add", "camera");
+            return;
+        }
+        if (this.isTalking && !info.isTalking) {
+            this.channel.updateCallFocusStack(this.id, "remove", "camera");
+        }
     }
 
     /**

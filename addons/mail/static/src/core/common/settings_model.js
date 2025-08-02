@@ -225,6 +225,16 @@ export class Settings extends Record {
         );
     }
     /**
+     * @param {Boolean} value
+     */
+    setCameraAutoFocus(value) {
+        this.useCallAutoFocus = Boolean(value);
+        browser.localStorage.setItem(
+            "mail_user_setting_use_call_auto_focus",
+            this.useCallAutoFocus
+        );
+    }
+    /**
      * @param {string} value
      */
     setDelayValue(value) {
@@ -350,6 +360,8 @@ export class Settings extends Record {
         this.cameraInputDeviceId = browser.localStorage.getItem(
             "mail_user_setting_camera_input_device_id"
         );
+        this.useCallAutoFocus =
+            browser.localStorage.getItem("mail_user_setting_use_call_auto_focus") === "true";
         this.showOnlyVideo =
             browser.localStorage.getItem("mail_user_setting_show_only_video") === "true";
         this.useBlur = browser.localStorage.getItem("mail_user_setting_use_blur") === "true";
