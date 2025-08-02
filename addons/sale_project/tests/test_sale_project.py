@@ -563,6 +563,11 @@ class TestSaleProject(TestSaleProjectCommon):
         action = sale_order.action_view_project_ids()
         self.assertEqual(len(get_project_ids_from_action_domain(action)), 2, "Domain should contain 2 projects. (one archived, one not)")
 
+        project_A.unlink()
+        self.assertFalse(project_B.active)
+        action = sale_order.action_view_project_ids()
+        self.assertEqual(action['res_id'], project_B.id, "Action should still return Product B, even if it was archived.")
+
     def test_sale_order_line_view_form_editable(self):
         """ Check the behavior of the form view editable of `sale.order.line` introduced in that module
 
