@@ -13,6 +13,49 @@ paymentForm.include({
     // #=== DOM MANIPULATION ===#
 
     /**
+     * Deactivate duplicated PayPal button containers from the DOM.
+     * This is necessary as the PayPal button cannot be rendered twice in the same DOM.
+     */
+    _cleanDuplicatedPaypalContainers() {
+        // Find all PayPal button containers as it might be duplicated in the DOM.
+        const containers = [...document.querySelectorAll('[id^="o_paypal_button_container"]')];
+        let isDomModified = false;
+        let tempContainer;
+
+        // If a PayPal button container is found save it and empty it
+        containers.forEach(container => {
+            if (container.querySelectorAll('[id^="zoid-paypal-buttons"]').length > 0) {
+                tempContainer = container.cloneNode(true);
+            }
+        });
+
+        containers.forEach(container => {
+            const isInvisible = container.offsetParent === null &&
+                !container.classList.contains('d-none');
+            const isInactive = container.id.endsWith('_inactive');
+            if (isInvisible && !isInactive) {
+                container.innerHTML = '';
+                container.id += '_inactive';
+            } else if (!isInvisible && isInactive) {
+                container.id = container.id.replace('_inactive', '');
+                isDomModified = true;
+            }
+        });
+
+        let activeContainer = document.getElementById('o_paypal_button_container');
+        if (isDomModified && tempContainer && activeContainer) {
+            while (activeContainer.firstChild) {
+                activeContainer.removeChild(activeContainer.firstChild);
+            }
+            [...tempContainer.childNodes].forEach((child) => {
+                activeContainer.appendChild(child.cloneNode(true));
+            });
+        }
+
+        return isDomModified;
+    },
+
+    /**
      * Hides paypal button container if the expanded inline form is another provider.
      *
      * @private
@@ -57,6 +100,16 @@ paymentForm.include({
 
         this._hideInputs();
         this._setPaymentFlow('direct');
+        // Necessary for edit mode and some use cases like tablet orientation changes.
+        if (!this._mobileDesktopToggleListener) {
+            window.addEventListener("resize", () => this._prepareInlineForm(...arguments));
+            this._mobileDesktopToggleListener = true;
+        }
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        let isDomModified = false;
+        if (radio && radio.getAttribute('data-provider-code') === providerCode) {
+            isDomModified = this._cleanDuplicatedPaypalContainers();
+        }
         document.getElementById('o_paypal_loading').classList.remove('d-none');
         // Check if instantiation of the component is needed.
         this.paypalData ??= {}; // Store the component of each instantiated payment method.
@@ -73,9 +126,8 @@ paymentForm.include({
             enabledButton.show();
             disabledButton.show();
         }
-        else if (!currentPayPalData) {
+        else if (!currentPayPalData || isDomModified) {
             this.paypalData[paymentOptionId] = {}
-            const radio = document.querySelector('input[name="o_payment_radio"]:checked');
             let inlineFormValues
             let paypalColor = 'blue'
             if (radio) {
@@ -104,7 +156,7 @@ paymentForm.include({
                 onCancel: this._paypalOnCancel.bind(this),
                 onError: this._paypalOnError.bind(this),
             });
-            enabledButton.render('#o_paypal_enabled_button');
+            enabledButton.render('#o_paypal_button_container #o_paypal_enabled_button');
             this.paypalData[paymentOptionId]['enabledButton'] = enabledButton;
 
             const disabledButton = paypal.Buttons({
@@ -117,11 +169,24 @@ paymentForm.include({
                 },
                 onInit: (data, actions) => actions.disable(),  // Permanently disable the button.
             });
-            disabledButton.render('#o_paypal_disabled_button');
+            disabledButton.render('#o_paypal_button_container #o_paypal_disabled_button');
             this.paypalData[paymentOptionId]['disabledButton'] = disabledButton;
         }
+
+        const paymentButton = document.getElementById('o_paypal_button_container');
+        // Remove all rendered PayPal buttons except the last one to avoid duplicates.
+        if (paymentButton && paymentButton.children.length > 0) {
+            [...paymentButton.children].forEach((child) => {
+                const children = [...child.querySelectorAll('[id^="zoid-paypal-buttons-uid"]')]
+                children.forEach((el, index) => {
+                    if (index < children.length - 1) {
+                        el.remove();
+                    }
+                });
+            });
+        }
         document.getElementById('o_paypal_loading').classList.add('d-none');
-        document.getElementById('o_paypal_button_container').classList.remove('d-none');
+        paymentButton.classList.remove('d-none');
         this.selectedOptionId = paymentOptionId;
     },
 
