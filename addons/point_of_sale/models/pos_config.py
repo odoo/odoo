@@ -231,6 +231,8 @@ class PosConfig(models.Model):
         for model, domain in domain.items():
             ids = record_ids[model]
             delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
+            if model == "pos.order":
+                delete_record_ids[model] += [id for id in ids if self.env[model].browse(id).state == "cancel"]
             dynamic_records[model] = self.env[model].search(domain)
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']

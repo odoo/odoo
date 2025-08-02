@@ -469,7 +469,10 @@ export class PosStore extends Reactive {
         }
 
         if (ids.size > 0) {
-            await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            const result = await this.data.callRelated("pos.order", "action_pos_order_cancel", [
+                Array.from(ids),
+            ]);
+            result["pos.order"].forEach((order) => this.removeOrder(order, false));
             return true;
         }
 
