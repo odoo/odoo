@@ -57,11 +57,26 @@
                 <group>
                     <field name="name"/>
                     <field name="dashboard_group_id"/>
-                    <field name="spreadsheet_binary_data"/>
-                    <field name="thumbnail"/>
+                    <field name="company_ids" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
                     <field name="group_ids" widget="many2many_tags"/>
+                    <field name="spreadsheet_binary_data"/>
                 </group>
             </form>
         </field>
     </record>
+
+    <record id="spreadsheet_dashboard_view_kanban" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.kanban</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card" class="d-flex flex-row align-items-center justify-content-between border">
+                        <field name="name"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
 </odoo>
