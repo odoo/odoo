@@ -12,7 +12,7 @@
                                 <a href="/profile/users">Users</a>
                             </li>
                             <li t-if="view_user" class="breadcrumb-item active">
-                                <a><t t-esc="view_user"/></a>
+                                <a><t t-out="view_user"/></a>
                             </li>
                         </ol>
                     </nav>
@@ -39,7 +39,7 @@
                                 <ul class="dropdown-menu">
                                     <a class="dropdown-item" t-att-href="home_url or '/'">Home</a>
                                     <a class="dropdown-item" href="/profile/users">&#9492; Users</a>
-                                    <a t-if="view_user" class="dropdown-item">&#9492; <t t-esc="view_user"/></a>
+                                    <a t-if="view_user" class="dropdown-item">&#9492; <t t-out="view_user"/></a>
                                 </ul>
                             </div>
 
@@ -81,7 +81,7 @@
     <template id="user_profile_header" name="Profile Page Header">
         <div class="o_wprofile_header o_wprofile_gradient position-relative text-white">
             <t t-call="website_profile.user_profile_sub_nav">
-                <t t-set="view_user"><t t-esc="user.name"/></t>
+                <t t-set="view_user"><t t-out="user.name"/></t>
             </t>
 
             <div class="container pb-3 pb-md-0 pt-2 pt-md-5">
@@ -158,7 +158,7 @@
                                     </tr>
                                     <tr t-if="user.badge_ids">
                                         <th><small class="fw-bold">Badges</small></th>
-                                        <td t-esc="len(user.badge_ids.filtered(lambda b: b.badge_id.website_published))"/>
+                                        <td t-out="len(user.badge_ids.filtered(lambda b: b.badge_id.website_published))"/>
                                     </tr>
                                 </tbody>
                             </table>
@@ -304,7 +304,7 @@
                 <nav t-if="request.params.get('url_origin') and request.params.get('name_origin')" aria-label="breadcrumb">
                     <ol class="breadcrumb p-0 bg-white">
                         <li class="breadcrumb-item">
-                            <a t-att-href="(request.website.domain or '') + '/' + request.params.get('url_origin').lstrip('/')" t-esc="request.params.get('name_origin')"/>
+                            <a t-att-href="(request.website.domain or '') + '/' + request.params.get('url_origin').lstrip('/')" t-out="request.params.get('name_origin')"/>
                         </li>
                         <li class="breadcrumb-item">Badges</li>
                     </ol>
@@ -312,7 +312,7 @@
                 <div class="row justify-content-between" t-if="ranks">
                     <div class="col-12 col-md-6 col-lg-5">
                         <h1>Ranks</h1>
-                        <p class="lead mb-4">Keep learning with <t t-esc="website.company_id.name"/>. Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks.</p>
+                        <p class="lead mb-4">Keep learning with <t t-out="website.company_id.name"/>. Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks.</p>
                         <h5>How do I earn badges?</h5>
                         <p>When you finish a course or reach milestones, you're awarded badges.</p>
                         <h5>How do I score more points?</h5>
@@ -363,7 +363,7 @@
                     <span t-field="badge.description"/>
                 </div>
                 <div class="col-3 text-end">
-                    <b t-esc="badge.granted_users_count"/>
+                    <b t-out="badge.granted_users_count"/>
                     <i class="text-muted"> awarded users</i>
                 </div>
             </div>
@@ -461,7 +461,7 @@
                 </table>
             </div>
             <t t-if='search and not users'>
-                <div class='alert alert-warning'>No user found for <strong><t t-esc="search"/></strong>. Try another search.</div>
+                <div class='alert alert-warning'>No user found for <strong><t t-out="search"/></strong>. Try another search.</div>
             </t>
             <div class="d-flex justify-content-center">
                 <t t-call="website_profile.pager_nobox"/>
@@ -478,37 +478,37 @@
                          t-att-src="'/profile/avatar/%s?field=avatar_256%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
-                <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
+                <h3 class="mt-2 mb-0" t-out="user['name']"></h3>
                 <span class="badge text-bg-danger fw-normal" t-if="not user['website_published']">Unpublished</span>
-                <strong class="text-muted" t-esc="user['rank']"/>
+                <strong class="text-muted" t-out="user['rank']"/>
                 <div class="h3 my-2" t-if="user['karma_gain']">
                     <span t-attf-class="badge #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
-                        <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
+                        <t t-if="user['karma_gain'] > 0">+ </t><t t-out="user['karma_gain']"/> XP
                     </span>
                 </div>
             </div>
             <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
-                <div class="col py-3"><b t-esc="user['karma']"/> <span class="text-muted">XP</span></div>
-                <div class="col py-3"><b t-esc="user['badge_count']"/> <span class="text-muted">Badges</span></div>
+                <div class="col py-3"><b t-out="user['karma']"/> <span class="text-muted">XP</span></div>
+                <div class="col py-3"><b t-out="user['badge_count']"/> <span class="text-muted">Badges</span></div>
             </div>
         </div>
     </template>
 
     <template id="all_user_card" name="All User Card">
         <td class="align-middle text-end text-muted" style="width: 0">
-            <span t-esc="user['position']"/>
+            <span t-out="user['position']"/>
         </td>
         <td class="align-middle d-none d-sm-table-cell">
             <img class="object-fit-cover rounded-circle o_wprofile_img_small" width="30" height="30" t-att-src="'/profile/avatar/%s?field=avatar_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
         </td>
         <td class="align-middle w-md-75">
-            <span class="fw-bold" t-esc="user['name']"/><br/>
-            <span class="text-muted fw-bold" t-esc="user['rank']"></span>
+            <span class="fw-bold" t-out="user['name']"/><br/>
+            <span class="text-muted fw-bold" t-out="user['rank']"></span>
         </td>
         <td class="align-middle text-nowrap">
             <t t-if="user['karma_gain']">
                 <span t-attf-class="badge d-inline #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
-                    <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
+                    <t t-if="user['karma_gain'] > 0">+ </t><t t-out="user['karma_gain']"/> XP
                 </span>
                 <span class="text-muted ps-2 pe-3">
                     <t t-if="group_by == 'week'">this week</t>
@@ -521,10 +521,10 @@
             <span t-if="not user['website_published']" class="badge text-bg-danger fw-normal m-1">Unpublished</span>
         </td>
         <td class="align-middle fw-bold text-end text-nowrap">
-            <b t-esc="user['karma']"/> <span class="text-muted small fw-bold">XP</span>
+            <b t-out="user['karma']"/> <span class="text-muted small fw-bold">XP</span>
         </td>
         <td class="align-middle fw-bold text-end pe-3 text-nowrap all_user_badge_count">
-            <b t-esc="user['badge_count']"/> <span class="text-muted small fw-bold">Badges</span>
+            <b t-out="user['badge_count']"/> <span class="text-muted small fw-bold">Badges</span>
         </td>
     </template>
 
@@ -561,7 +561,7 @@
         <div t-elif="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
             <button type="button" class="btn-close validation_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             Your Account has not yet been verified.<br/>
-            Click <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>here</u></a> to receive a verification email<t t-esc="additional_validation_email_message"/>!
+            Click <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>here</u></a> to receive a verification email<t t-out="additional_validation_email_message"/>!
         </div>
         <div t-elif="validation_email_sent and not validation_email_done" t-att-class="done_alert_classes">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -572,7 +572,7 @@
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
             <button type="button" class="btn-close validated_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
-            <span t-esc="additional_validated_email_message"/>
+            <span t-out="additional_validated_email_message"/>
         </div>
     </template>
 

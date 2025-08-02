@@ -130,13 +130,13 @@
             <div class="css_editable_mode_hidden">
                 <!-- real price -->
                 <div t-attf-class="oe_price fw-bold text-nowrap my-2 #{'h4' if len(str(product_info['price'])) > 10 else 'h2'}"
-                     t-esc="product_info['price']"
+                     t-out="product_info['price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
-                <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
-                <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency'].name"/>
+                <span itemprop="price" style="display:none;" t-out="product_info['price']"/>
+                <span itemprop="priceCurrency" style="display:none;" t-out="product_info['currency'].name"/>
                 <!-- original discounted price, if any -->
                 <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
-                     t-esc="product_info['list_price']"
+                     t-out="product_info['list_price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
             </div>
             <div class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
