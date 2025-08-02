@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.SaleOrderDisplayOptions">
+        <BuilderRow label.translate="Confirmed Orders">
+            <BuilderCheckbox dataAttributeAction="'confirmedorders'" dataAttributeActionValue="true"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="View Type">
+            <BuilderSelect dataAttributeAction="'viewchange'">
+                <BuilderSelectItem label.translate="List" t-out="'List'" dataAttributeActionValue="'list'"/>
+                <BuilderSelectItem label.translate="Card" t-out="'Card'" dataAttributeActionValue="'card'"/>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Limit">
+            <BuilderSelect dataAttributeAction="'limitchange'">
+                <BuilderSelectItem label.translate="3" t-out="'3'" dataAttributeActionValue="'3'"/>
+                <BuilderSelectItem label.translate="6" t-out="'6'" dataAttributeActionValue="'6'"/>
+                <BuilderSelectItem label.translate="9" t-out="'9'" dataAttributeActionValue="'9'"/>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+</templates>
