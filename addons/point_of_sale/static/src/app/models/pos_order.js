@@ -505,7 +505,8 @@ export class PosOrder extends Base {
                 }),
                 pricelist,
                 this.models["decimal.precision"].getAll(),
-                this.models["product.template.attribute.value"].getAllBy("id")
+                this.models["product.template.attribute.value"].getAllBy("id"),
+                this.config_id.currency_id
             );
         }
         const combo_children_lines = this.lines.filter(

@@ -772,7 +772,8 @@ export class PosStore extends Reactive {
                 payload,
                 order.pricelist_id,
                 this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id")
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                this.currency
             );
 
             values.combo_line_ids = comboPrices.map((comboItem) => [
