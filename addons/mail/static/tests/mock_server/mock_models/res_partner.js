@@ -24,6 +24,18 @@ export class ResPartner extends webModels.ResPartner {
             </form>`,
     };
 
+    /* override */
+    _compute_display_name() {
+        super._compute_display_name();
+        for (const record of this) {
+            if (record.parent_id && !record.name) {
+                const [parent] = this.env["res.partner"].browse(record.parent_id);
+                const type = this._fields.type.selection.find((item) => item[0] === record.type);
+                record.display_name = `${parent.name}, ${type[1]}`;
+            }
+        }
+    }
+
     /**
      * @param {string} [search]
      * @param {number} [limit]
