@@ -28,11 +28,11 @@ class CorsLivechatController(LivechatController):
 
     @route("/im_livechat/cors/get_session", methods=["POST"], type="jsonrpc", auth="public", cors="*")
     def cors_get_session(
-        self, channel_id, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs
+        self, channel_id, previous_operator_id=None, chatbot_script_id=None, extra_operator_lookup_params=None, persisted=True, **kwargs
     ):
         force_guest_env(kwargs.pop("guest_token", ""), raise_if_not_found=False)
         return self.get_session(
-            channel_id, previous_operator_id, chatbot_script_id, persisted, **kwargs
+            channel_id, previous_operator_id, chatbot_script_id, extra_operator_lookup_params, persisted, **kwargs
         )
 
     @route("/im_livechat/cors/init", type="jsonrpc", auth="public", cors="*")

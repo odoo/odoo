@@ -234,7 +234,7 @@
                         <group>
                             <field name="action" widget="radio"/>
                             <label for="chatbot_script_id" string="Chatbot" invisible="action == 'hide_button'"/>
-                            <div invisible="action == 'hide_button'">
+                            <div name="Chatbot" invisible="action == 'hide_button'">
                                 <field name="chatbot_script_id" class="oe_inline" style="width: 60% !important;"
                                        options="{'no_create': True, 'no_open': True}"/>
                             </div>
