@@ -3,14 +3,22 @@
 from collections import defaultdict
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from babel.dates import format_date, get_date_format
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
-from odoo.tools import format_date
+from odoo.tools import get_lang, babel_locale_parse
 
 import logging
 _logger = logging.getLogger(__name__)
+
+
+def format_date_abbr(env, date):
+    lang = get_lang(env)
+    locale = babel_locale_parse(lang.code)
+    date_format = get_date_format('medium', locale=locale).pattern
+    return format_date(date, date_format, locale=locale)
 
 
 class HrVersion(models.Model):
@@ -242,10 +250,20 @@ class HrVersion(models.Model):
                         'Overlapping contracts for %(employee)s:\n%(overlaps)s',
                         employee=version.employee_id.display_name,
                         overlaps='\n'.join(
+<<<<<<< c2cbe56f6161c06e1733eba8fdf150dcfb17266c
                             [f'Version {format_date(v.env, v.date_version, date_format="MMM d, y")}: '
                              f'from {format_date(v.env, v.contract_date_start, date_format="MMM d, y")} '
                              f'to {format_date(v.env, v.contract_date_end, date_format="MMM d, y") if v.contract_date_end else "Indefinite"}'
                              for v in (versions | version)])))
+||||||| b4966634c403979421d4bfa2a26212be77fd0414
+                            [f'Version ({version.display_name}): {version.contract_date_start} - {version.contract_date_end}'] +
+                            [f'Version ({version.display_name}): {date_start} - {date_end}' for version in versions])))
+=======
+                            [self.env._('Version') + f' ({format_date_abbr(v.env, v.date_version)}): '
+                             f'{format_date_abbr(v.env, v.contract_date_start)} '
+                             f'- {format_date_abbr(v.env, v.contract_date_end) if v.contract_date_end else self.env._("Indefinite")}'
+                             for v in (versions | version)])))
+>>>>>>> 4ee83ca59be5065a40a8a24424b20388cbf107c4
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
 
@@ -338,7 +356,7 @@ class HrVersion(models.Model):
     @api.depends('date_version')
     def _compute_display_name(self):
         for version in self:
-            version.display_name = version.name if not version.employee_id else format_date(version.env, version.date_version, date_format='dd MMM yyyy')
+            version.display_name = version.name if not version.employee_id else format_date_abbr(version.env, version.date_version)
 
     def _compute_is_current(self):
         today = fields.Date.today()
