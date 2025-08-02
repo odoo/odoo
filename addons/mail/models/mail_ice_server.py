@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
 from odoo.addons.mail.tools.discuss import get_twilio_credentials
+from odoo.exceptions import ValidationError
+
 import logging
 import requests
 
@@ -44,7 +46,14 @@ class MailIceServer(models.Model):
             (account_sid, auth_token) = get_twilio_credentials(self.env)
             if account_sid and auth_token:
                 url = f'https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Tokens.json'
-                response = requests.post(url, auth=(account_sid, auth_token), timeout=60)
+                try:
+                    response = requests.post(url, auth=(account_sid, auth_token), timeout=60)
+                except requests.exceptions.ConnectionError:
+                    _logger.warning("Connection error while attempting to reach Twilio API at %s", url)
+                    raise ValidationError(_("Unable to connect to the Twilio service. Please check your network connection or try again later."))
+                except requests.exceptions.Timeout:
+                    _logger.warning("Request to Twilio API timed out at %s", url)
+                    raise ValidationError(_("The request to Twilio timed out. Please try again later."))
                 if response.ok:
                     response_content = response.json()
                     if response_content:
