@@ -670,6 +670,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         ])
         self.env['mrp.bom'].create([
             {
+            'product_tmpl_id': products[1].product_tmpl_id.id,
+            },
+            {
             'product_tmpl_id': products[2].product_tmpl_id.id,
             'product_qty': 1,
             'product_uom_id': products[2].uom_id.id,

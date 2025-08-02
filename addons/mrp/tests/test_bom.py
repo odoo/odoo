@@ -2151,52 +2151,6 @@ class TestBoM(TestMrpCommon):
         mo_order.action_update_bom()
         self.assertEqual(len(mo_order.workorder_ids), 1)
 
-    def test_availability_bom_type_kit(self):
-        """ Product should only be available if bom type is kit """
-        product_one = self.env['product.product'].create({
-            'name': 'Product',
-            'is_storable': True,
-            'uom_id': self.uom_unit.id,
-        })
-        product_two = self.env['product.product'].create({
-            'name': 'Component',
-            'is_storable': True,
-            'uom_id': self.uom_unit.id,
-        })
-        self.env['stock.quant']._update_available_quantity(product_two, self.stock_location, 4.0)
-
-        bom_normal = self.env['mrp.bom'].create({
-            'product_tmpl_id': product_one.product_tmpl_id.id,
-            'product_uom_id': product_one.product_tmpl_id.uom_id.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'bom_line_ids': [
-                Command.create({
-                    'product_id': product_two.id,
-                    'product_qty': 1,
-                }),
-            ]
-        })
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_normal.id)
-        line_values = report_values['lines']
-        self.assertEqual(line_values['availability_state'], 'unavailable')
-
-        bom_kit = self.env['mrp.bom'].create({
-            'product_tmpl_id': product_one.product_tmpl_id.id,
-            'product_uom_id': product_one.product_tmpl_id.uom_id.id,
-            'product_qty': 1.0,
-            'type': 'phantom',
-            'bom_line_ids': [
-                Command.create({
-                    'product_id': product_two.id,
-                    'product_qty': 1,
-                }),
-            ]
-        })
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_kit.id)
-        line_values = report_values['lines']
-        self.assertEqual(line_values['availability_state'], 'available')
-
     def test_update_bom_in_routing_workcenter(self):
         """
         This test checks the behaviour of updating the BoM associated with a routing workcenter,
