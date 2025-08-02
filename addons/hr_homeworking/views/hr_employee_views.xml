@@ -16,8 +16,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='departure']" position="after">
-                <group string="Remote Work">
-                    <span class="text-muted fst-italic oe_inline mb-1" colspan="2">Specify your default work location for each day of the week. This schedule will repeat itself each week.</span>
+                <group string="Usual Work Location">
                     <field name="monday_location_id" placeholder="Unspecified" force_save="1"/>
                     <field name="tuesday_location_id" placeholder="Unspecified" force_save="1"/>
                     <field name="wednesday_location_id" placeholder="Unspecified" force_save="1"/>
