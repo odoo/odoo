@@ -316,6 +316,9 @@ options.registry.SocialMedia = options.Class.extend({
             ['youtube', /^(https?:\/\/)(www\.)?(youtube.com|youtu.be).*$/],
             ['instagram', /^(https?:\/\/)(www\.)?(instagram.com|instagr.am|instagr.com).*$/],
             ['discord', /^(https?:\/\/)(www\.)?(discord.com|discord.gg).*$/],
+            ['bluesky', /^(https?:\/\/)(www\.)?(bsky\.app|bsky\.social).*$/],
+            ['whatsapp', /^(https?:\/\/)(www\.)?(wa\.me).*$/],
+            ['google-play', /^(https?:\/\/)(www\.)?(play\.google\.com).*$/],
         ];
         for (const [socialMedia, regex] of supportedSocialMedia) {
             if (regex.test(url)) {
