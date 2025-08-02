@@ -316,7 +316,7 @@ class Repair(models.Model):
     @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.product_uom.rounding')
     def _compute_has_uncomplete_moves(self):
         for repair in self:
-            repair.has_uncomplete_moves = any(float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in repair.move_ids)
+            repair.has_uncomplete_moves = any(move.product_uom and float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in repair.move_ids)
 
     @api.depends('move_ids', 'state', 'move_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
