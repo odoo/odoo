@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
+from datetime import date, datetime
+
 import pytz
+from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged
 from odoo.fields import Date
+from odoo.tests.common import tagged
+
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
 
@@ -32,13 +34,13 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
 
     def test_time_week_leave_work_entry(self):
         # /!\ this is a week day => it exists an calendar attendance at this time
+        self.leave_type.request_unit = 'hour'
         leave = self.env['hr.leave'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
             'holiday_status_id': self.leave_type.id,
             'request_date_from': date(2015, 11, 2),
             'request_date_to': date(2015, 11, 2),
-            'request_unit_hours': True,
             'request_hour_from': 11,
             'request_hour_to': 17,
         })
@@ -98,7 +100,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         work_entry_type_holiday = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday',
             'is_leave': True,
-            'code': 'LEAVETEST500'
+            'code': 'LEAVETEST500',
         })
         self.env['resource.calendar.leaves'].create({
             'name': 'Public Holiday',

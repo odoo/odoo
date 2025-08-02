@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 from datetime import date, datetime
 
 from odoo.tests import Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
-from odoo.exceptions import ValidationError
 
 
 class TestAutomaticLeaveDates(TestHrHolidaysCommon):
@@ -15,7 +13,6 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             'name': 'Automatic Test',
             'time_type': 'leave',
             'requires_allocation': False,
-            # Required for `request_unit_half` to be visible in the view
             'request_unit': 'half_day',
         })
 
@@ -30,7 +27,6 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
-            leave_form.request_unit_half = True
             leave_form.request_date_from_period = 'am'
 
         leave = leave_form.record
@@ -61,7 +57,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'hour_to': 17,
                                    'day_period': 'afternoon',
                                    'dayofweek': '0',
-                               })]
+                               })],
         })
 
         employee = self.employee_emp
@@ -70,14 +66,16 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 2)
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
             leave_form.save()  # need to be saved to have access to record
             self.assertEqual(leave_form.record.number_of_days, .5)
             self.assertEqual(leave_form.record.number_of_hours, 4)
 
             leave_form.request_date_from_period = 'pm'
+            leave_form.request_date_to_period = 'pm'
 
             leave_form.save()  # need to be saved to have access to record
             self.assertEqual(leave_form.record.number_of_days, .5)
@@ -117,7 +115,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'day_period': 'afternoon',
                                    'dayofweek': '0',
                                    'duration_days': 0.5,
-                               })]
+                               })],
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -125,14 +123,16 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 2)
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
             leave_form.save()  # need to be saved to have access to record
             self.assertEqual(leave_form.record.number_of_days, .5)
             self.assertEqual(leave_form.record.number_of_hours, 4)
 
             leave_form.request_date_from_period = 'pm'
+            leave_form.request_date_to_period = 'pm'
 
             leave_form.save()  # need to be saved to have access to record
             self.assertEqual(leave_form.record.number_of_days, .5)
@@ -155,9 +155,10 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 2)
             # Ask for morning
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
             leave_form.save()  # need to be saved to have access to record
             self.assertEqual(leave_form.record.number_of_days, 1)
@@ -165,6 +166,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
 
             # Ask for afternoon
             leave_form.request_date_from_period = 'pm'
+            leave_form.request_date_to_period = 'pm'
 
             leave_form.save()  # need to be saved to have access to record
             self.assertEqual(leave_form.record.number_of_days, 0)
@@ -181,7 +183,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'hour_to': 12,
                                    'day_period': 'morning',
                                    'dayofweek': '1',
-                               })]
+                               })],
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -190,8 +192,9 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             # does not work on mondays
             leave_form.request_date_from = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 2)
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
         leave = leave_form.record
         self.assertEqual(leave.number_of_days, 0)
@@ -210,7 +213,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'hour_to': 12,
                                    'day_period': 'morning',
                                    'dayofweek': '0',
-                               })]
+                               })],
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -219,8 +222,9 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             # does not work on tuesdays
             leave_form.request_date_from = date(2019, 9, 3)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 3)
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
         leave = leave_form.record
         self.assertEqual(leave.number_of_days, 0)
@@ -250,8 +254,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'day_period': 'morning',
                                    'dayofweek': '0',
                                    'week_type': '1',
-                                   'duration_days': 0.25
-                               })]
+                                   'duration_days': 0.25,
+                               })],
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -260,8 +264,9 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             # even week, works 2 hours
             leave_form.request_date_from = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 2)
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
         leave = leave_form.record
         self.assertEqual(leave.number_of_days, 0.25)
@@ -273,8 +278,9 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             # odd week, works 4 hours
             leave_form.request_date_from = date(2019, 9, 9)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 9)
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
         leave = leave_form.record
         self.assertEqual(leave.number_of_days, 0.5)
@@ -295,7 +301,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'day_period': 'morning',
                                    'dayofweek': '0',
                                    'week_type': '0',
-                               })]
+                               })],
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -304,8 +310,9 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             # even week, does not work
             leave_form.request_date_from = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_date_to = date(2019, 9, 2)
             leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
 
         leave = leave_form.record
         self.assertEqual(leave.number_of_days, 0)

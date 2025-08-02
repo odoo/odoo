@@ -137,7 +137,6 @@ class TestCompanyLeave(TransactionCase):
             'holiday_status_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 7),
-            'request_unit_half': True,
             'request_date_from_period': 'am',
 
         })
