@@ -12,6 +12,8 @@ export class ProjectProject extends models.Model {
     date = fields.Date({ string: "Expiration Date" });
     date_start = fields.Date();
     user_id = fields.Many2one({ relation: "res.users", falsy_value_label: "👤 Unassigned" });
+    account_id = fields.Many2one({ relation: "account.analytic.account" });
+    allow_timesheets = fields.Boolean();
 
     _records = [
         {
@@ -20,6 +22,8 @@ export class ProjectProject extends models.Model {
             stage_id: 1,
             date: "2024-01-09 07:00:00",
             date_start: "2024-01-03 12:00:00",
+            account_id: 101,
+            allow_timesheets: true,
         },
         { id: 2, name: "Project 2", stage_id: 2 },
     ];
@@ -156,6 +160,16 @@ export class ProjectMilestone extends models.Model {
     _records = [{ id: 1, name: "Milestone 1" }];
 }
 
+export class AnalyticAccount extends models.Model {
+    _name = "account.analytic.account";
+
+    name = fields.Char();
+
+    _records = [
+        { id: 101, name: "Test Analytic Account" },
+    ];
+}
+
 export function defineProjectModels() {
     defineMailModels();
     defineModels(projectModels);
@@ -167,4 +181,5 @@ export const projectModels = {
     ProjectTask,
     ProjectTaskType,
     ProjectMilestone,
+    AnalyticAccount,
 };
