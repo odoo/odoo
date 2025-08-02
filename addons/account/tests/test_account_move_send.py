@@ -1124,6 +1124,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         }
         results = wizard._get_sending_settings()
         self.assertDictEqual(results, expected_results)
+<<<<<<< 28a8706573006d09366389c6adcca9bd77bf5233
 
     def test_pdf_report_id(self):
         """
@@ -1172,3 +1173,17 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice3 = self.init_invoice('out_invoice', partner=self.partner_a, post=True, amounts=[300], journal=self.company_data['default_journal_sale'])
         wizard = self.create_send_and_print(invoice3)
         self.assertEqual(second_report, wizard.pdf_report_id)
+||||||| d524109e8a330534336db449441d2dd8778c9bb9
+=======
+
+    def test_invoice_email_subtitle(self):
+        """ Test email notification subtitle for Invoice with and without partner name. """
+        partner = self.env['res.partner'].create({'type': 'invoice', 'parent_id': self.partner_a.id})
+        invoice = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], invoice.name)
+
+        invoice.partner_id.name = "Test Partner"
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], f"{invoice.name} - Test Partner")
+>>>>>>> 7d86f00fd9027f939eea72bfd149059112a1d6ea
