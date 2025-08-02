@@ -5,11 +5,10 @@ import sys
 from inspect import cleandoc
 from pathlib import Path
 
-import odoo.init  # import first for core setup
 import odoo.cli
+import odoo.init  # import first for core setup
 from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
-
 
 COMMAND_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$', re.I)
 PROG_NAME = Path(sys.argv[0]).name
@@ -54,6 +53,29 @@ class Command:
     @classmethod
     def is_valid_name(cls, name):
         return re.match(COMMAND_NAME_RE, name)
+
+    def _handle_config_override(self, overrides):
+        overrides = overrides or []
+        config_args = []
+        log_warnings = []
+        pattern = r"(?:(?P<section>\w+)\.)?(?P<key>[a-zA-Z0-9-_.]+)=(?P<value>.*)"
+        for option in overrides:
+            if match := re.match(pattern, option):
+                section, key, value = (match.group(x)for x in ("section", "key", "value"))
+                if option := config.options_index.get(key):
+                    # only allow override for file_loadable options
+                    if not option.file_loadable:
+                        log_warnings.append(
+                            ('Option %s.%s is not file_loadable, ignored.', section, key),
+                        )
+                        continue
+                    config_args.append(option.get_opt_string())
+                    config_args.append(value)
+                else:
+                    log_warnings.append(
+                        ('Option %s.%s not found in the config file, ignored.', section, key),
+                    )
+        return config_args, log_warnings
 
 
 def load_internal_commands():
