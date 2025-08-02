@@ -119,8 +119,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         self.richard_emp.generate_work_entries(date_from, date_to, True)
         work_entries = self.env['hr.work.entry'].search([
             ('employee_id', '=', self.richard_emp.id),
-            ('date_stop', '>=', date_from),
-            ('date_start', '<=', date_to),
+            ('date', '>=', date_from),
+            ('date', '<=', date_to),
             ('state', '!=', 'validated')])
         leave_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
         self.assertEqual(leave_work_entry.leave_id.id, leave.id, "Leave work entry should have leave_id value")
