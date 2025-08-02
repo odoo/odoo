@@ -442,6 +442,22 @@ class TestIrModelEdition(TransactionCase):
             form.related = 'id'
             self.assertEqual(form.ttype, 'integer')
 
+    def test_ir_model_fields_invalid_domain(self):
+        model = self.env['ir.model'].create({
+            'name': 'Bananas',
+            'model': 'x_bananas',
+        })
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': 'x_krip_field',
+            'field_description': 'my_m2o',
+            'ttype': 'many2one',
+            'relation': 'x_bananas',
+        })
+
+        with self.assertRaises(ValidationError):
+            field.domain = "[('is_company, '=', True)]"  # intentionally broken domain
+
     def test_delete_manual_models_with_base_fields(self):
         model = self.env["ir.model"].create({
             "model": "x_test_base_delete",
