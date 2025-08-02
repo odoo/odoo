@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from lxml import etree
 from markupsafe import Markup
 
@@ -9,6 +10,14 @@ from odoo.addons.website.tools import add_form_signature
 
 class Contact(models.AbstractModel):
     _inherit = 'ir.qweb.field.contact'
+
+    @api.model
+    def attributes(self, record, field_name, options, values=None):
+        field = record._fields[field_name]
+        attrs = super().attributes(record, field_name, options, values)
+        if options['inherit_branding']:
+            attrs['data-oe-many2one-domain'] = json.dumps(field._description_domain(self.env))
+        return attrs
 
     @api.model
     def get_available_options(self):
