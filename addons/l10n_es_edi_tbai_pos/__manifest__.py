@@ -9,6 +9,7 @@
     ],
     'data': [
         'views/pos_order_view.xml',
+        'data/ir_cron_data.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
