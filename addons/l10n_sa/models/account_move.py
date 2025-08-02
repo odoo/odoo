@@ -17,7 +17,7 @@ ADJUSTMENT_REASONS = [
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
+    l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str', compute_sudo=True)
     l10n_sa_show_reason = fields.Boolean(compute="_compute_show_l10n_sa_reason")
     l10n_sa_reason = fields.Selection(string="ZATCA Reason", selection=ADJUSTMENT_REASONS, copy=False)
     l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date',
