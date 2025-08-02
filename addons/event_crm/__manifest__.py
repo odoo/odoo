@@ -18,6 +18,7 @@
         'views/event_registration_views.xml',
         'views/event_lead_rule_views.xml',
         'views/event_event_views.xml',
+        'views/event_question_views.xml',
     ],
     'demo': [
         'data/event_crm_demo.xml',
