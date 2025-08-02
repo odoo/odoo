@@ -16,7 +16,7 @@ const steps = [
     },
     {
         content: "Check that the employee's work phone is displayed",
-        trigger: ".o_avatar_card:contains(987654321)",
+        trigger: ".o_avatar_card:contains(123456789)",
     },
     {
         content: "Check that the employee's holiday status is displayed",
