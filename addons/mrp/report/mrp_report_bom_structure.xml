@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_mrp_bom">
-        <div class="o_mrp_bom_report_page container py-3 py-lg-5 px-0 bg-view">
+        <div class="o_mrp_bom_report_page container py-3 py-lg-5 px-2 bg-view">
             <div t-if="data.get('lines')">
-                <div class="px-3 mb-5">
-                    <h1>BoM Overview</h1>
-                    <h3 t-esc="data['name']"/>
-                    <hr t-if="data['bom_code']"/>
-                    <h6 t-if="data['bom_code']">Reference: <t t-esc="data['bom_code']"/></h6>
-                </div>
                 <t t-set="currency" t-value="data['currency']"/>
                 <table class="o_mrp_bom_expandable table table-borderless">
                     <thead>
@@ -98,8 +92,10 @@
         <t t-foreach="data['lines']" t-as="l">
             <tr t-if="l['visible']">
                 <td name="td_mrp_code">
-                    <span t-attf-style="margin-left: {{ str(l['level'] * 20) }}px"/>
-                    <span t-esc="l['name']"/>
+                    <div class="d-flex">
+                        <div><span t-attf-style="margin-left: {{ str(l['level'] * 20) }}px"/></div>
+                        <div><span t-esc="l['name']"/></div>
+                    </div>
                 </td>
                 <td class="text-end">
                     <t t-if="l['type'] == 'operation'" t-esc="l['quantity']" t-options='{"widget": "float_time"}'/>
