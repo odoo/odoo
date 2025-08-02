@@ -6,6 +6,7 @@ from freezegun import freeze_time
 
 import odoo
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
@@ -2542,3 +2543,28 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'balance': 90.0,
             'account_id': self.bank_payment_move.payment_ids.outstanding_account_id.id,
         }])
+
+    def test_unlink_partner_containing_pos_order(self):
+        """
+        Restrict the user to unlink a partner by raising a User Exception if it contains a PoS Order
+        """
+        self.pos_config.open_ui()
+        self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'qty': 1,
+                    'price_subtotal': 134.38,
+                    'price_subtotal_incl': 134.38,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 134.38,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        with self.assertRaises(UserError):
+            self.partner1.unlink()
