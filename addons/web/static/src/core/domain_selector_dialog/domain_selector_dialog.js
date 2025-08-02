@@ -89,6 +89,7 @@ export class DomainSelectorDialog extends Component {
             isValid = await rpc("/web/domain/validate", {
                 model: this.props.resModel,
                 domain,
+                context: user.context,
             });
         }
         if (!isValid) {
