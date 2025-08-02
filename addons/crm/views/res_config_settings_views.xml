@@ -52,33 +52,36 @@
                                     class="btn-primary"/>
                             </div>
                         </setting>
-                        <setting title="This can be used to automatically assign leads to sales persons based on rules" documentation="/applications/sales/crm/track_leads/lead_scoring.html#assign-leads">
-                            <field name="crm_use_auto_assignment"/>
-                            <div class="text-muted">
-                                <span>Periodically assign leads based on priorities and filters.</span><br />
-                                <span invisible="not crm_use_auto_assignment">
+                        <setting title="This can be used to automatically assign leads to sales persons based on rules" documentation="/applications/sales/crm/track_leads/lead_scoring.html#assign-leads"
+                            string="Automatic Lead Assignment" help="Automatically assign leads to available sales members.">
+                            <div class="text-muted" invisible="crm_auto_assignment_action == 'never'">
+                                <span invisible="crm_auto_assignment_action != 'incoming_emails'">
+                                    Leads received through email will be automatically assigned.
+                                </span>
+                                <span invisible="crm_auto_assignment_action not in ['manual', 'auto']">
+                                    Unassigned leads will be assigned based on priorities and filters.
                                     All sales teams will use this setting by default unless
                                     specified otherwise.
                                 </span>
                             </div>
-                            <div class="row flex-row flex-nowrap mt16" invisible="not crm_use_auto_assignment">
+                            <div class="row flex-row flex-nowrap mt16">
                                 <label string="Running" for="crm_auto_assignment_action" class="col-lg-3 o_light_label"/>
-                                <field name="crm_auto_assignment_action"
-                                    required="crm_use_auto_assignment"/>
-                                <button name="action_crm_assign_leads" type="object" class="btn-link w-auto">
+                                <field name="crm_auto_assignment_action" required="1"/>
+                                <button name="action_crm_assign_leads" type="object" class="btn-link w-auto"
+                                    invisible="crm_auto_assignment_action in ['incoming_emails', 'never']">
                                     <i title="Update now" role="img" aria-label="Update now" class="fa fa-fw fa-refresh"></i>
                                 </button>
                             </div>
-                            <div class="row mt16" invisible="not crm_use_auto_assignment or crm_auto_assignment_action == 'manual'">
-                                <label string="Repeat every" for="crm_auto_assignment_interval_type" class="col-lg-3 o_light_label"/>
+                            <div class="row mt16" invisible="crm_auto_assignment_action != 'auto'">
+                                <label string="Repeat every" for="crm_auto_assignment_interval_type" class="col-lg-3 pe-0 o_light_label"/>
                                 <field name="crm_auto_assignment_interval_number"
-                                    class="oe_inline me-2"
-                                    required="crm_use_auto_assignment and crm_auto_assignment_action == 'auto'"/>
+                                    class="oe_inline me-2" style="width: 25% !important"
+                                    required="crm_auto_assignment_action == 'auto'"/>
                                 <field name="crm_auto_assignment_interval_type"
-                                    class="oe_inline"
-                                    required="crm_use_auto_assignment and crm_auto_assignment_action == 'auto'"/>
+                                    class="oe_inline" style="width: 25% !important"
+                                    required="crm_auto_assignment_action == 'auto'"/>
                             </div>
-                            <div class="row" invisible="not crm_use_auto_assignment or crm_auto_assignment_action == 'manual'">
+                            <div class="row" invisible="crm_auto_assignment_action != 'auto'">
                                 <label string="Next Run" for="crm_auto_assignment_run_datetime" class="col-lg-3 o_light_label"/>
                                 <field name="crm_auto_assignment_run_datetime"/>
                             </div>

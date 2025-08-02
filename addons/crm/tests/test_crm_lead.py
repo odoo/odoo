@@ -9,7 +9,7 @@ from odoo import fields
 from odoo.addons.base.tests.test_format_address_mixin import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
-from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
+from odoo.addons.mail.tests.common_tracking import MailThreadTrackingDurationMixinCase
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, tagged, users
@@ -296,7 +296,7 @@ class TestCRMLead(TestCrmCommon):
         stage_team1_won2 = self.env['crm.stage'].create({
             'name': 'Won2',
             'sequence': 75,
-            'team_id': self.sales_team_1.id,
+            'team_ids': [self.sales_team_1.id],
             'is_won': True,
         })
         won_lead = self.lead_team_1_won.with_env(self.env)
@@ -985,6 +985,155 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertFalse(lead.phone_sanitized)
 
+    @users('user_sales_manager')
+    def test_leads_rotting(self):
+        # create a stage with rotting days = 5
+        [stage_new, stage_proposition] = self.env['crm.stage'].create([
+            {
+                'name': 'New',
+                'sequence': 10,
+                'rotting_threshold_days': 5,
+                'is_won': False,
+            }, {
+                'name': 'Proposition',
+                'sequence': 12,
+                'rotting_threshold_days': 3,
+                'is_won': False,
+            },
+        ])
+
+        rotten_leads = self.env['crm.lead']
+        clean_leads = self.env['crm.lead']
+        close_future = datetime(2025, 1, 24, 12, 0, 0)
+        now = datetime(2025, 1, 20, 12, 0, 0)
+        close_past = datetime(2025, 1, 18, 12, 0, 0)
+        past = datetime(2025, 1, 10, 12, 0, 0)
+        last_year = datetime(2024, 1, 20, 12, 0, 0)
+
+        with self.mock_datetime_and_now(past):
+            rotten_leads += self.env['crm.lead'].create([
+                {
+                    'name': 'Opportunity',
+                    'type': 'opportunity',
+                    'stage_id': stage_new.id,
+                } for x in range(7)
+            ])
+
+        with self.mock_datetime_and_now(close_past):
+            clean_leads += self.env['crm.lead'].create({
+                'name': 'Fresh Opportuniy',
+                'type': 'opportunity',
+                'stage_id': stage_new.id,
+            })
+        with self.mock_datetime_and_now(last_year):
+            clean_leads += self.env['crm.lead'].create({
+                'name': 'Opportuniy in Won Stage',
+                'type': 'opportunity',
+                'stage_id': self.stage_gen_won.id,
+            })
+
+        with self.mock_datetime_and_now(now):
+            for lead in rotten_leads:
+                self.assertTrue(lead.is_rotting)
+            for lead in clean_leads:
+                self.assertFalse(lead.is_rotting)
+
+            rotten_leads_iterator = iter(rotten_leads)
+
+            lead_edited = next(rotten_leads_iterator)
+            lead_edited.write({'name': 'Edited Opportunity'})
+            self.assertFalse(lead_edited.is_rotting, 'Edited leads are no longer rotting')
+
+            lead_send_message = next(rotten_leads_iterator)
+            lead_send_message.message_post(body='Heya', message_type='email_outgoing')
+            self.assertFalse(lead_send_message.is_rotting, 'Sending a message (sent email) removes rotting status')
+
+            lead_comment = next(rotten_leads_iterator)
+            lead_comment.message_post(body='Heya', message_type='comment')
+            self.assertFalse(lead_comment.is_rotting, 'Logging a note removes rotting status')
+
+            lead_done_activity = next(rotten_leads_iterator)
+            act = self.env['mail.activity'].create({
+                'activity_type_id': self.activity_type_1.id,
+                'note': 'note',
+                'res_id': lead_done_activity.id,
+                'res_model_id': self.env.ref('crm.model_crm_lead').id,
+            })
+            act.action_done()
+            self.assertFalse(lead_done_activity.is_rotting, 'Completing an activity disables rotting status')
+
+            lead_email_received = next(rotten_leads_iterator)
+            lead_email_received.message_post(body='Heya', message_type='email')
+            self.assertTrue(lead_email_received.is_rotting, 'Receiving an email should not disable rotting status')
+
+            lead_changed_stage = next(rotten_leads_iterator)
+            lead_changed_stage.stage_id = stage_proposition.id
+            self.assertFalse(lead_changed_stage.is_rotting, 'Changing the stage is a write and disables rotting status')
+
+            lead_changed_rotting_threshold = next(rotten_leads_iterator)
+            old_rotting_threshold = stage_new.rotting_threshold_days
+            stage_new.rotting_threshold_days = 50
+            self.assertTrue(lead_changed_rotting_threshold.is_rotting, 'Changing the rotting threshold to a higher value does not affect rotten leads\' status')
+            stage_new.rotting_threshold_days = old_rotting_threshold  # Revert rotting threshold
+
+        # 4 days later:
+        with self.mock_datetime_and_now(close_future):
+            rotten_leads.invalidate_recordset(['rotting_date', 'is_rotting'])
+            self.assertFalse(lead_done_activity.is_rotting, 'Since this lead remained in its original stage with a higher threshold, it\'s not rotting yet')
+            self.assertTrue(lead_changed_stage.is_rotting, 'As its new stage has a lower rotting threshold, this lead should be rotting 3 days after its last change')
+
+    @users('user_sales_manager')
+    def test_incoming_email_automatic_lead_assignment(self):
+        # create two sales teams with an alias each
+        [team_alice, team_bob] = self.env['crm.team'].create([
+            {
+                'name': 'team_alice',
+                'alias_name': 'team.alice',
+            }, {
+                'name': 'team_bob',
+                'alias_name': 'team.bob',
+            },
+        ])
+
+        # create two users each belonging to one of the teams
+        [sales_alice, sales_bob] = self.env['res.users'].sudo().create([{'name': 'alice', 'login': 'alice'}, {'name': 'bob', 'login': 'bob'}])
+        self.env['crm.team.member'].create([
+            {
+                'user_id': sales_alice.id,
+                'crm_team_id': team_alice.id,
+            }, {
+                'user_id': sales_bob.id,
+                'crm_team_id': team_bob.id,
+            },
+        ])
+
+        # send three emails to both aliases
+        for x in range(3):
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@customerOfAlice{x}.be',
+                team_alice.alias_email,
+                subject=f'OpportunityTeamAlice{x}',
+                target_model='crm.lead',
+            )
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@customerOfBob{x}.be',
+                team_bob.alias_email,
+                subject=f'OpportunityTeamBob{x}',
+                target_model='crm.lead',
+            )
+
+        # each team should receive all three of their new opportunities and none of the others'
+        team1_leads = self.env['crm.lead'].search([('team_id', '=', team_alice.id)])
+        team2_leads = self.env['crm.lead'].search([('team_id', '=', team_bob.id)])
+        for lead in team1_leads:
+            self.assertTrue('source.email@customerOfAlice' in lead.email_from)
+            self.assertTrue(lead.user_id == sales_alice)
+        for lead in team2_leads:
+            self.assertTrue('source.email@customerOfBob' in lead.email_from)
+            self.assertTrue(lead.user_id == sales_bob)
+
 
 @tagged('lead_internals')
 class TestLeadFormTools(FormatAddressCase):
@@ -995,7 +1144,7 @@ class TestLeadFormTools(FormatAddressCase):
 
 
 @tagged('lead_internals', 'is_query_count')
-class TestCrmLeadMailTrackingDuration(MailTrackingDurationMixinCase):
+class TestCrmLeadMailThreadTrackingDuration(MailThreadTrackingDurationMixinCase):
 
     @classmethod
     def setUpClass(cls):

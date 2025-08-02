@@ -111,6 +111,9 @@
                 <filter name="my_tasks" position="before">
                     <field string="Properties" name="task_properties"/>
                 </filter>
+                <filter name="open_tasks" position="after">
+                    <filter string="Rotting" name="filter_rotting" domain="[('is_rotting', '=', True)]"/>
+                </filter>
                 <filter name="closed_on" position="after">
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
@@ -397,6 +400,8 @@
                             <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Task Title..."/>
                         </div>
                         <div class="d-flex justify-content-end o_state_container" invisible="not active or is_template">
+                            <field name="is_rotting" invisible="1"/>
+                            <field name="rotting_days" widget="rotting_form" class="d-flex me-2"/>
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>
                         <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" invisible="active and not is_template">
@@ -696,6 +701,8 @@
                                             <widget name="subtask_counter" class="me-1"/>
                                         </t>
                                         <field name="priority" class="pt-1" widget="priority"/>
+                                        <field name="is_rotting" invisible="1"/>
+                                        <field name="rotting_days" widget="rotting_kanban" class="ms-1 d-flex"/>
                                     </div>
                                     <div class="d-flex ms-auto">
                                         <field name="user_ids" widget="many2many_avatar_user"/>
@@ -749,7 +756,9 @@
                     <field name="date_last_stage_update" optional="hide" column_invisible="context.get('default_is_template', False)"/>
                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" options="{'is_toggle_mode': false}"/>
                     <field name="stage_id_color" column_invisible="1"/>
-                    <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show" widget="selection_badge" options="{'color_field': 'stage_id_color'}"/>
+                    <field name="is_rotting" column_invisible="True"/>
+                    <field name="rotting_days" column_invisible="True"/>
+                    <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show" widget="rotting_badge_list" options="{'color_field': 'stage_id_color'}"/>
                 </list>
             </field>
         </record>

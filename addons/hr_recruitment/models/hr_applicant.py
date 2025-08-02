@@ -30,7 +30,7 @@ class HrApplicant(models.Model):
                'mail.thread.phone',
                'mail.activity.mixin',
                'utm.mixin',
-               'mail.tracking.duration.mixin',
+               'mail.thread.tracking.duration.mixin',
     ]
     _rec_name = "partner_name"
     _mailing_enabled = True
@@ -481,6 +481,15 @@ class HrApplicant(models.Model):
                 applicant.delay_close = applicant.day_close - applicant.day_open
             else:
                 applicant.delay_close = False
+
+    def _get_rotting_depends_fields(self):
+        return super()._get_rotting_depends_fields() + ['application_status', 'date_closed']
+
+    def _get_rotting_domain(self):
+        return super()._get_rotting_domain() + [
+            ('application_status', '=', 'ongoing'),
+            ('date_closed', '=', False),
+        ]
 
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')

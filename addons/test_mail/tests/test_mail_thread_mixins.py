@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
+from odoo.addons.mail.tests.common_tracking import MailThreadTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
 @tagged('mail_thread', 'mail_track', 'is_query_count')
-class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
+class TestMailThreadTrackingDurationMixin(MailThreadTrackingDurationMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -24,6 +25,112 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
 
     def test_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()
+
+
+@tagged('mail_thread', 'mail_track')
+class TestMailThreadRottingMixin(MailThreadTrackingDurationMixinCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass('mail.test.rotting.resource.mixin')
+
+    def test_resource_rotting(self):
+        # create dates for the test
+        jan1 = datetime(2025, 1, 1)
+        jan5 = datetime(2025, 1, 5)
+        jan7 = datetime(2025, 1, 7)
+        jan12 = datetime(2025, 1, 12)
+        jan28 = datetime(2025, 1, 28)
+
+        # create resources for the test, created on jan 1
+        with self.mock_datetime_and_now(jan1):
+            [stage_new, stage_qualification, stage_finished] = self.env['mail.test.rotting.stage.mixin'].create([
+                {
+                    'name': 'stage_new',
+                    'rotting_threshold_days': 3,
+                }, {
+                    'name': 'stage_qualification',
+                    'rotting_threshold_days': 5,
+                }, {
+                    'name': 'stage_finished',
+                    'rotting_threshold_days': 1,
+                    'no_rot': True,
+                }
+            ])
+
+            items = [item1, item2, item3, item_done, item_won] = self.env['mail.test.rotting.resource.mixin'].create([
+                {
+                    'name': 'item1',
+                    'stage_id': stage_new.id,
+                }, {
+                    'name': 'item2',
+                    'stage_id': stage_qualification.id,
+                }, {
+                    'name': 'item3',
+                    'stage_id': stage_new.id,
+                }, {
+                    'name': 'item_done',
+                    'stage_id': stage_qualification.id,
+                    'done': True,
+                }, {
+                    'name': 'item_wonStage',
+                    'stage_id': stage_finished.id,
+                },
+            ])
+
+        with self.mock_datetime_and_now(jan5):
+            # need to invalidate on date change to ensure rotting computations
+            items.invalidate_recordset(['rotting_date', 'is_rotting'])
+            for item in [item1, item3]:
+                self.assertTrue(item.is_rotting, 'on jan 4: it\'s been four days, so only items in stage_new should be rotting')
+            for item in [item2, item_done, item_won]:
+                self.assertFalse(item.is_rotting, 'on jan 4: it\'s been four days, so only items in stage_new should be rotting')
+
+            item3.name = 'item3 edited'
+            self.assertFalse(item3.is_rotting, 'editing the name of an item writes to it, making it not rot anymore')
+
+        with self.mock_datetime_and_now(jan7):
+            items.invalidate_recordset(['rotting_days', 'is_rotting'])
+            self.assertTrue(item2.is_rotting, 'on jan 7: items belonging to stage_qualification should be rotting, except if their state forbids it')
+            self.assertFalse(item_done.is_rotting, 'item_done is marked as done, it should not be able to rot')
+
+            self.assertFalse(item3.is_rotting, 'it hasn\'t been long enough for item3 to start rotting again')
+
+            self.assertTrue(item1.is_rotting)
+            item1.message_post(body='Message received', message_type='email')
+            self.assertTrue(item1.is_rotting, 'Receiving an email should not remove rotting')
+
+            item1.message_post(body='Message sent', message_type='email_outgoing')
+            self.assertFalse(item1.is_rotting, 'However sending an email should remove it')
+
+            self.assertFalse(item_won.is_rotting, 'Items in stage_finished cannot rot')
+            stage_finished.no_rot = False
+            self.assertTrue(item_won.is_rotting, 'However if the stage no longer disallows rotting, then all items in the stage may once more rot')
+
+            stage_finished.no_rot = True
+            self.assertFalse(item_won.is_rotting, 'Disallowing rotting once again should disable rotting once more')
+
+        with self.mock_datetime_and_now(jan12):
+            items.invalidate_recordset(['rotting_days', 'is_rotting'])
+
+            self.assertTrue(item3.is_rotting)
+            stage_new.rotting_threshold_days = 40
+            self.assertTrue(item3.is_rotting, 'Changing the threshold should not directly affect the status (to prevent updating millions of records at once)')
+
+            stage_new.rotting_threshold_days = 1
+
+            item3.stage_id = stage_qualification
+            self.assertFalse(item3.is_rotting, 'Changing stages is a write and always removes rotting')
+
+            stage_qualification.rotting_threshold_days = 0
+            self.assertTrue(item2.is_rotting, 'Setting rotting_threshold_days at 0 on a stage immediately disables rotting for the stage')
+
+        with self.mock_datetime_and_now(jan28):
+            items.invalidate_recordset(['rotting_days', 'is_rotting'])
+            # After a significant amount of time has passed:
+            self.assertTrue(item1.is_rotting, 'Items that are not done or won are rotting')
+            for item in [item2, item3, item_done, item_won]:
+                self.assertFalse(item.is_rotting, 'Items that are not done, won, or in a disabled rotting stage are not rotting')
 
 
 @tagged('mail_thread', 'mail_blacklist')

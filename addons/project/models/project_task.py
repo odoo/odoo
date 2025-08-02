@@ -91,7 +91,7 @@ class ProjectTask(models.Model):
         'mail.thread.cc',
         'mail.activity.mixin',
         'rating.mixin',
-        'mail.tracking.duration.mixin',
+        'mail.thread.tracking.duration.mixin',
         'html.field.history.mixin',
     ]
     _mail_post_access = 'read'
@@ -402,6 +402,14 @@ class ProjectTask(models.Model):
         else:
             return NotImplemented
         return [('state', 'in', searched_states)]
+
+    def _get_rotting_depends_fields(self):
+        return super()._get_rotting_depends_fields() + ['is_closed']
+
+    def _get_rotting_domain(self):
+        return super()._get_rotting_domain() + [
+            ('is_closed', '=', False),
+        ]
 
     @property
     def OPEN_STATES(self):

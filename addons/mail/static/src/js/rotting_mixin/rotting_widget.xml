@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.RottingFieldForm">
+        <div class="badge rounded-pill o_mail_resource_rotting_bg fs-5 d-flex align-items-center" t-if="props.record.data.is_rotting"
+            t-att-title="this.title">
+            <t t-if="env.isSmall" t-out="sentences.shorthand"/>
+            <t t-elif="props.record.data.rotting_days == 1" t-out="sentences.singular"/>
+            <t t-else="" t-out="sentences.plural"/>
+        </div>
+    </t>
+
+    <t t-name="mail.RottingFieldKanban">
+        <div class="badge rounded-pill o_mail_resource_rotting_bg d-flex align-items-center" t-if="props.record.data.is_rotting"
+            t-att-title="this.title">
+            <t t-out="sentences.shorthand"/>
+        </div>
+    </t>
+
+    <t t-name="mail.RottingBadgeFieldList" t-inherit="web.BadgeSelectionField" t-inherit-mode="primary">
+        <t t-else="" position="after">
+            <span class="badge rounded-pill o_mail_resource_rotting_bg ms-2" t-if="props.record.data.is_rotting">
+                <t t-out="sentences.shorthand"/>
+        </span>
+        </t>
+    </t>
+</templates>
