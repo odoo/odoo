@@ -8,6 +8,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { debounce } from "@web/core/utils/timing";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
@@ -96,6 +97,11 @@ export class ListRenderer extends Component {
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
+        this.debouncedOnDeleteRecord = debounce(
+            this.onDeleteRecord.bind(this),
+            50,
+            { immediate: true }
+        );
 
         this.longTouchTimer = null;
         this.touchStartMs = 0;
@@ -1046,13 +1052,9 @@ export class ListRenderer extends Component {
     }
 
     onRemoveCellClicked(record, ev) {
-        const element = ev.target.closest(".o_list_record_remove");
-        if (element.dataset.clicked) {
-            return;
-        }
-        element.dataset.clicked = true;
-
-        this.onDeleteRecord(record, ev);
+        // This method should be removed in future versions. It is rendered
+        // obsolete by debouncing the onDeleteRecord method.
+        this.debouncedOnDeleteRecord(record);
     }
 
     async onDeleteRecord(record) {
