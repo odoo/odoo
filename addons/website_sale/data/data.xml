@@ -155,6 +155,15 @@ DynamicFilter = model.env['website.snippet.filter']
 response = DynamicFilter._get_products('alternative_products', product_template_id=request.params.get('productTemplateId'))
             </field>
         </record>
+        <record id="dynamic_snippet_category_list" model="ir.actions.server">
+            <field name="name">Category List</field>
+            <field name="model_id" ref="model_product_public_category"/>
+            <field name="state">code</field>
+            <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+response = DynamicFilter._prepare_category_list_data(parent_id=request.params.get('parentId'))
+            </field>
+        </record>
         <!-- Dynamic Filter -->
         <record id="dynamic_filter_newest_products" model="website.snippet.filter">
             <field name="filter_id" ref="website_sale.dynamic_snippet_newest_products_filter"/>
@@ -195,6 +204,12 @@ response = DynamicFilter._get_products('alternative_products', product_template_
             <field name="limit" eval="16"/>
             <field name="name">Alternative Products</field>
             <field name="product_cross_selling">True</field>
+        </record>
+        <record id="dynamic_filter_category_list" model="website.snippet.filter">
+            <field name="action_server_id" ref="website_sale.dynamic_snippet_category_list"/>
+            <field name="field_names">id,name,cover_image</field>
+            <field name="name">Category List</field>
+            <field name="limit" eval="10"/>
         </record>
 
         <function model="ir.model.fields" name="formbuilder_whitelist">
