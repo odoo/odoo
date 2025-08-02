@@ -200,6 +200,118 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line[2].qty_invoiced, 1)
         self.assertEqual(sale_order.order_line[3].qty_invoiced, -1)
 
+    def test_00_downpayment_direct_indirect(self):
+        #create a sale order
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': test_partner.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 10,
+                'price_unit': 245,
+                'product_uom': self.product_a.uom_id.id
+            })],
+        })
+        sale_order.action_confirm()
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        payment_params = {
+            'advance_payment_method': 'percentage',
+            'amount': 10,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment.create_invoices()
+
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment.create_invoices()
+
+        payment_params['amount'] = 20
+
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment.create_invoices()
+
+        self.downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'available_in_pos': True,
+            'type': 'service',
+        })
+        self.main_pos_config.write({
+            'down_payment_product_id': self.downpayment_product.id,
+        })
+        sale_order.invoice_ids.action_post()
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': test_partner.id,
+            'lines': [(0, 0, {
+                    'name': "OL/0001",
+                    'product_id': self.downpayment_product.id,
+                    'price_unit': -245,
+                    'discount': 0.0,
+                    'qty': 1.0,
+                    'tax_ids': [],
+                    'price_subtotal': -245,
+                    'price_subtotal_incl': -245,
+                    'sale_order_origin_id': sale_order.id,
+                    'sale_order_line_id': sale_order.order_line[2].id,
+                }),
+                (0, 0, {
+                  'name': "OL/0002",
+                  'product_id': self.downpayment_product.id,
+                  'price_unit': -245,
+                  'discount': 0.0,
+                  'qty': 1.0,
+                  'tax_ids': [],
+                  'price_subtotal': -245,
+                  'price_subtotal_incl': -245,
+                  'sale_order_origin_id': sale_order.id,
+                  'sale_order_line_id': sale_order.order_line[3].id,
+                }),
+                (0, 0, {
+                  'name': "OL/0003",
+                  'product_id': self.downpayment_product.id,
+                  'price_unit': -490,
+                  'discount': 0.0,
+                  'qty': 1.0,
+                  'tax_ids': [],
+                  'price_subtotal': -490,
+                  'price_subtotal_incl': -490,
+                  'sale_order_origin_id': sale_order.id,
+                  'sale_order_line_id': sale_order.order_line[4].id,
+                }),
+              (0, 0, {
+                  'name': "OL/0004",
+                  'product_id': self.product_a.id,
+                  'price_unit': 245,
+                  'discount': 0.0,
+                  'qty': 10,
+                  'tax_ids': [],
+                  'price_subtotal': 2450,
+                  'price_subtotal_incl': 2450,
+                  'sale_order_origin_id': sale_order.id,
+                  'sale_order_line_id': sale_order.order_line[0].id,
+              })
+              ],
+            'amount_total': 1470,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        # Search PoS order and invoice the whole stuff
+
+        order.action_pos_order_invoice()
+        invoice_downproduct_lines = order.account_move.line_ids.filtered(lambda l: l.product_id == self.downpayment_product)
+        for inv_line in invoice_downproduct_lines:
+            orig_downpayment_line = inv_line._get_downpayment_lines()
+            self.assertEqual(orig_downpayment_line.price_subtotal, abs(inv_line.price_subtotal))
+
     def test_settle_order_unreserve_order_lines(self):
         #create a product category that use the closest location for the removal strategy
         self.removal_strategy = self.env['product.removal'].search([('method', '=', 'closest')], limit=1)
