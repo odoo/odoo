@@ -1034,6 +1034,9 @@ class MailComposeMessage(models.TransientModel):
             values.update(
                 email_add_signature=self.email_add_signature,
                 email_layout_xmlid=self.email_layout_xmlid,
+                # Maybe this one is increasing query count in test_mail_composer_w_template_form_attachments?
+                # force_footer=self.template_id.force_footer,
+                # force_header=self.template_id.force_header,
                 force_send=self.force_send,
                 mail_auto_delete=self.auto_delete,
                 model_description=model_description,

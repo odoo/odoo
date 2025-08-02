@@ -53,7 +53,6 @@ class HrApplicant(models.Model):
             default_survey_id=self.survey_id.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            default_email_layout_xmlid='mail.mail_notification_light',
             default_deadline=fields.Datetime.now() + timedelta(days=15)
         )
 
