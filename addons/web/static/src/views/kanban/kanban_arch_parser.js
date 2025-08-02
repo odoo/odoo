@@ -24,6 +24,8 @@ export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
 export const KANBAN_TOOLTIP_ATTRIBUTE = "kanban-tooltip";
 
+const DEFAULT_HANDLE_FIELD = "sequence";
+
 export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {
         const fields = models[modelName];
@@ -156,6 +158,13 @@ export class KanbanArchParser {
 
         const colorEl = xmlDoc.querySelector("templates .oe_kanban_colorpicker[data-field]");
         const colorField = (colorEl && colorEl.getAttribute("data-field")) || "color";
+
+        if (
+            !handleField &&
+            Object.values(fieldNodes).some((node) => node.name === DEFAULT_HANDLE_FIELD)
+        ) {
+            handleField = DEFAULT_HANDLE_FIELD;
+        }
 
         if (!defaultOrder.length && handleField) {
             const handleFieldSort = `${handleField}, id`;
