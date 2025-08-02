@@ -38,6 +38,11 @@ class StockWarehouseOrderpoint(models.Model):
             }
         return super()._get_replenishment_order_notification()
 
+    @api.depends('bom_id', 'bom_id.product_uom_id', 'product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
+    def _compute_qty_to_order_computed(self):
+        """ Extend to add more depends values """
+        super()._compute_qty_to_order_computed()
+
     def _compute_allowed_replenishment_uom_ids(self):
         super()._compute_allowed_replenishment_uom_ids()
         for orderpoint in self:
@@ -78,6 +83,14 @@ class StockWarehouseOrderpoint(models.Model):
                 boms = (orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
                 orderpoint.days_to_order = boms and boms[0].days_to_prepare_mo or 0
         return res
+
+    def _get_replenishment_multiple_alternative(self, qty_to_order):
+        self.ensure_one()
+        routes = self.route_id or self.product_id.route_ids
+        if not any(r.action == 'manufacture' for r in routes.rule_ids):
+            return super()._get_replenishment_multiple_alternative(qty_to_order)
+        bom = self.bom_id or self.env['mrp.bom']._bom_find(self.product_id, picking_type=False, bom_type='normal', company_id=self.company_id.id)[self.product_id]
+        return bom.product_uom_id
 
     def _quantity_in_progress(self):
         bom_kits = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')
