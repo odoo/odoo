@@ -73,5 +73,5 @@ class BaseLanguageInstall(models.TransientModel):
         self.env.user.lang = self.first_lang_id.code
         return {
             'type': 'ir.actions.client',
-            'tag': 'reload_context',
+            'tag': 'hard_reload',
         }

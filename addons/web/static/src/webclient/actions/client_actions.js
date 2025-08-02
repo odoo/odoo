@@ -90,3 +90,14 @@ async function softReload(env, action) {
 }
 
 registry.category("actions").add("soft_reload", softReload);
+
+/**
+ * Client action to refresh the session context (making sure
+ * HTTP requests will have the right one) then reload the
+ * whole interface.
+ */
+async function hardReload(env, action) {
+    await rpc("/web/session/get_session_info");
+    reload(env, action);
+}
+registry.category("actions").add("hard_reload", hardReload);
