@@ -42,7 +42,19 @@ class MimeGuessingCases:
             self.guess_mimetype(contents('xlsx')),
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         )
+<<<<<<< 561b97acc85cd37f5fcc92809353cf5243c8a52c
 
+||||||| d380a3a42dc39451fa26f161cc0b955b2f0098fd
+=======
+
+    def test_xlsx_2025(self):
+        # only work when python-magic is not installed
+        self.assertEqual(
+            guess_mimetype(contents('2025.xlsx')),
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+
+>>>>>>> 276a84ac52a99655f730a911ab46bccb6373cdaa
     def test_odt(self):
         self.assertEqual(
             self.guess_mimetype(contents('odt')),
