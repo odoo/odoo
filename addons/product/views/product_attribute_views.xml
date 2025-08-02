@@ -67,7 +67,7 @@
                                        widget="image"
                                        options="{'size': [70, 70]}"
                                        class="oe_avatar text-start float-none"
-                                       column_invisible="parent.display_type != 'color'"/>
+                                       column_invisible="parent.display_type not in ['color', 'image']"/>
                                 <field name="default_extra_price" width="160px"/>
                                 <button
                                     name="action_add_to_products"
