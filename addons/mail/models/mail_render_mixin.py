@@ -12,7 +12,7 @@ from functools import reduce
 from markupsafe import Markup, escape
 
 from odoo import _, api, fields, models, tools
-from odoo.addons.base.models.ir_qweb import QWebException
+from odoo.addons.base.models.ir_qweb import QWebError
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import urls
 from odoo.tools.mail import is_html_empty, prepend_html_content, html_normalize
@@ -272,10 +272,8 @@ class MailRenderMixin(models.AbstractModel):
             try:
                 node = html.fragment_fromstring(template_src, create_parent='div')
                 self.env["ir.qweb"].with_context(raise_on_forbidden_code_for_model=model)._generate_code(node)
-            except QWebException as e:
-                if isinstance(e.__cause__, PermissionError):
-                    return True
-                raise
+            except PermissionError:
+                return True
         return False
 
     @api.model
@@ -373,7 +371,7 @@ class MailRenderMixin(models.AbstractModel):
                 # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
                 render_result = render_result[5:-6]
             except Exception as e:
-                if isinstance(e, QWebException) and isinstance(e.__cause__, PermissionError):
+                if isinstance(e, QWebError) and isinstance(e.__cause__, PermissionError):
                     group = self.env.ref('mail.group_mail_template_editor')
                     raise AccessError(
                         _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
