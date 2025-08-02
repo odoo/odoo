@@ -609,7 +609,8 @@ actual arch.
         if custom_view:
             custom_view.unlink()
 
-        self.env.registry.clear_cache('templates')
+        if any(self._ids):
+            self.env.registry.clear_cache('templates')
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
@@ -625,7 +626,8 @@ actual arch.
         # if in uninstall mode and has children views, emulate an ondelete cascade
         if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
-        self.env.registry.clear_cache('templates')
+        if self:
+            self.env.registry.clear_cache('templates')
         return super().unlink()
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):

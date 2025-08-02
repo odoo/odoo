@@ -346,10 +346,10 @@ class ResCompany(models.Model):
             vals.get('country_id')
             and self.filtered(lambda company: not company.country_id)
         ) or self.browse()
-        if not invalidation_fields.isdisjoint(vals):
+        if not invalidation_fields.isdisjoint(vals) and any(self._ids):
             self.env.registry.clear_cache()
 
-        if not asset_invalidation_fields.isdisjoint(vals):
+        if not asset_invalidation_fields.isdisjoint(vals) and any(self._ids):
             # this is used in the content of an asset (see asset_styles_company_report)
             # and thus needs to invalidate the assets cache when this is changed
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case

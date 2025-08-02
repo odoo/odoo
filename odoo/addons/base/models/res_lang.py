@@ -363,8 +363,9 @@ class ResLang(models.Model):
                     short_lang.url_code = short_lang.code
                     long_lang.url_code = short_code
 
-        self.env.flush_all()
-        self.env.registry.clear_cache()
+        if any(self._ids):
+            self.env.flush_all()
+            self.env.registry.clear_cache()
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -379,8 +380,9 @@ class ResLang(models.Model):
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
 
     def unlink(self):
+        res = super().unlink()
         self.env.registry.clear_cache()
-        return super().unlink()
+        return res
 
     def copy_data(self, default=None):
         default = dict(default or {})

@@ -2134,11 +2134,13 @@ class IrModelAccess(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        self.call_cache_clearing_methods()
+        if any(self._ids):
+            self.call_cache_clearing_methods()
         return super().write(vals)
 
     def unlink(self):
-        self.call_cache_clearing_methods()
+        if self:
+            self.call_cache_clearing_methods()
         return super().unlink()
 
 
@@ -2254,7 +2256,7 @@ class IrModelData(models.Model):
     def write(self, vals):
         self.env.registry.clear_cache()  # _xmlid_lookup
         res = super().write(vals)
-        if vals.get('model') == 'res.groups':
+        if vals.get('model') == 'res.groups' and any(self._ids):
             self.env.registry.clear_cache('groups')
         return res
 
