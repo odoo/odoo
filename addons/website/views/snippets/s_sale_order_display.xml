@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Snippet Template -->
+    <template id="s_sale_order_display" name="Sale Order Display Snippet">
+        <section class="s_sale_order_display" data-name="Sale Order Display"
+            data-view="list" data-show-confirm="false" data-limit="3"
+            data-interaction-class="sale_order_display">
+            <div class="container">
+                <div class="row sale-order-list">
+                    <div class="border p-2">
+                        <strong>S000001</strong> - Mitchell Admin (<em>sale</em>) </div>
+                </div>
+                <div class="row sale-order-card"></div>
+                <div class="text-center mt-3 load-btn-class">
+                    <button class="btn btn-primary load-more-btn" type="button">Load More</button>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Snippet Options Panel -->
+    <template id="s_sale_order_display_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-js="sale_order_display" data-selector=".s_sale_order_display">
+                <we-checkbox
+                    string="Show Confirmed Orders"
+                    data-display-confirmed="true"
+                />
+
+                <we-select string="View">
+                    <we-button data-display-view="list">List</we-button>
+                    <we-button data-display-view="card">Card</we-button>
+                </we-select>
+
+                <we-select string="Limit">
+                    <we-button data-display-limit="3">3</we-button>
+                    <we-button data-display-limit="6">6</we-button>
+                    <we-button data-display-limit="9">9</we-button>
+                </we-select>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='so_content_addition']" position="attributes">
+            <attribute name="data-selector" add=".s_sale_order_display" separator="," />
+            <attribute name="data-drop-near" add=".s_sale_order_display" separator="," />
+        </xpath>
+    </template>
+
+    <!-- Asset Registrations -->
+    <record id="website.s_sale_order_display_js" model="ir.asset">
+        <field name="name">Sale Order Display JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website/static/src/snippets/s_sale_order_display/sale_order_display.js</field>
+    </record>
+
+    <record id="website.s_sale_order_display_templates" model="ir.asset">
+        <field name="name">Sale Order Display Templates</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website/static/src/snippets/s_sale_order_display/sale_order_display.xml</field>
+    </record>
+
+</odoo>
