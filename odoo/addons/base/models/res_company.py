@@ -250,8 +250,20 @@ class Company(models.Model):
 
         return companies
 
+    def _get_fields_no_cache_clear(self):
+        """
+        Return a set of field names that don't require cache clearing when writing to a company.
+        This is to avoid unnecessary cache clearing, thus optimizing performance.
+        Can be overridden by other modules to add their own fields.
+        """
+        return set()
+
     def write(self, values):
-        self.clear_caches()
+        # Get fields that don't require cache clearing for performance optimization
+        no_cache_clear_fields = self._get_fields_no_cache_clear()
+        if any(key not in no_cache_clear_fields for key in values):
+            self.clear_caches()
+
         # Make sure that the selected currency is enabled
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])
