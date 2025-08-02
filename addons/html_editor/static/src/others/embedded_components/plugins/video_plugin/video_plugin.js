@@ -6,7 +6,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class VideoPlugin extends Plugin {
     static id = "video";
-    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
+    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history", "overlay"];
     resources = {
         user_commands: [
             {
@@ -28,6 +28,7 @@ export class VideoPlugin extends Plugin {
                 commandId: "openVideoSelectorDialog",
             },
         ],
+        mount_component_handlers: this.extendEmbeddedVideoProps.bind(this),
     };
 
     /**
@@ -43,14 +44,33 @@ export class VideoPlugin extends Plugin {
             }),
         });
         this.dependencies.dom.insert(videoBlock);
+        this.dependencies.selection.focusEditable();
         this.dependencies.history.addStep();
+    }
+
+    /**
+     * @param {Object} props
+     */
+    extendEmbeddedVideoProps({ name, props }) {
+        if (name === "video") {
+            Object.assign(props, {
+                createOverlay: (Component, props = {}, options) =>
+                    this.dependencies.overlay.createOverlay(Component, props, options),
+                focusEditable: () => this.dependencies.selection.focusEditable(),
+                addStep: () => this.dependencies.history.addStep(),
+                openVideoSelectorDialog: (save, media) => {
+                    this.openVideoSelectorDialog(save, media);
+                },
+            });
+        }
     }
 
     /**
      * Inserts a dialog allowing the user to insert a video
      * @param {function} save
+     * @param {HTMLIFrameElement} iframe
      */
-    openVideoSelectorDialog(save) {
+    openVideoSelectorDialog(save, iframe) {
         const selection = this.dependencies.selection.getEditableSelection();
         let restoreSelection = () => {
             this.dependencies.selection.setSelection(selection);
@@ -62,6 +82,7 @@ export class VideoPlugin extends Plugin {
                     save(media);
                     restoreSelection = () => {};
                 },
+                ...(iframe && { videoIframe: iframe }),
             },
             {
                 onClose: () => {

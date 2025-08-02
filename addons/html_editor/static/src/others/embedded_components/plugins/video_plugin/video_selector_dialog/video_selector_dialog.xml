@@ -5,7 +5,8 @@
         <Dialog size="'xl'" title.translate="Embed a video" bodyClass="'o_knowledge_video_selector_dialog'">
             <VideoSelector
                 selectMedia.bind="selectMedia"
-                errorMessages.bind="() => {}"/>
+                errorMessages.bind="() => {}"
+                media="props.videoIframe"/>
             <t t-set-slot="footer">
                 <button
                     class="btn btn-primary"
