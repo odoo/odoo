@@ -116,6 +116,50 @@ export class PosOrder extends Base {
         return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
     }
 
+    taxTotalsDocumentSign(currency) {
+        // If each line is negative, we assume it's a refund order.
+        // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
+        // TODO: Properly differentiate refund orders from normal ones.
+        return this.lines.length === 0 ||
+            !this.lines.every((l) => lt(l.qty, 0, { decimals: currency.decimal_places }))
+            ? 1
+            : -1;
+    }
+
+    taxTotalsOrderRemaining(totals, currency, documentSign) {
+        let order_rounding = 0;
+        let remaining = totals.order_total;
+        const validPayments = this.payment_ids.filter((p) => p.is_done() && !p.is_change);
+        for (const [payment, isLast] of validPayments.map((p, i) => [
+            p,
+            i === validPayments.length - 1,
+        ])) {
+            const paymentAmount = documentSign * payment.get_amount();
+            if (isLast) {
+                if (this.config.cash_rounding) {
+                    const roundedRemaining = this.getRoundedRemaining(
+                        this.config.rounding_method,
+                        remaining
+                    );
+                    if (!floatIsZero(paymentAmount - remaining, this.currency.decimal_places)) {
+                        order_rounding = roundedRemaining - remaining;
+                    }
+                }
+            }
+            remaining -= paymentAmount;
+        }
+
+        totals.order_rounding = order_rounding;
+        totals.order_remaining = remaining;
+
+        const remaining_with_rounding = remaining + order_rounding;
+        if (floatIsZero(remaining_with_rounding, currency.decimal_places)) {
+            totals.order_has_zero_remaining = true;
+        } else {
+            totals.order_has_zero_remaining = false;
+        }
+    }
+
     /**
      * Get the details total amounts with and without taxes, the details of taxes per subtotal and per tax group.
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
@@ -125,14 +169,7 @@ export class PosOrder extends Base {
         const company = this.company;
         const orderLines = this.lines;
 
-        // If each line is negative, we assume it's a refund order.
-        // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
-        // TODO: Properly differentiate refund orders from normal ones.
-        const documentSign =
-            this.lines.length === 0 ||
-            !this.lines.every((l) => lt(l.qty, 0, { decimals: currency.decimal_places }))
-                ? 1
-                : -1;
+        const documentSign = this.taxTotalsDocumentSign(currency);
 
         const baseLines = orderLines.map((line) =>
             accountTaxHelpers.prepare_base_line_for_taxes_computation(
@@ -159,37 +196,7 @@ export class PosOrder extends Base {
         taxTotals.order_total =
             taxTotals.total_amount_currency - (taxTotals.cash_rounding_base_amount_currency || 0.0);
 
-        let order_rounding = 0;
-        let remaining = taxTotals.order_total;
-        const validPayments = this.payment_ids.filter((p) => p.is_done() && !p.is_change);
-        for (const [payment, isLast] of validPayments.map((p, i) => [
-            p,
-            i === validPayments.length - 1,
-        ])) {
-            const paymentAmount = documentSign * payment.get_amount();
-            if (isLast) {
-                if (this.config.cash_rounding) {
-                    const roundedRemaining = this.getRoundedRemaining(
-                        this.config.rounding_method,
-                        remaining
-                    );
-                    if (!floatIsZero(paymentAmount - remaining, this.currency.decimal_places)) {
-                        order_rounding = roundedRemaining - remaining;
-                    }
-                }
-            }
-            remaining -= paymentAmount;
-        }
-
-        taxTotals.order_rounding = order_rounding;
-        taxTotals.order_remaining = remaining;
-
-        const remaining_with_rounding = remaining + order_rounding;
-        if (floatIsZero(remaining_with_rounding, currency.decimal_places)) {
-            taxTotals.order_has_zero_remaining = true;
-        } else {
-            taxTotals.order_has_zero_remaining = false;
-        }
+        this.taxTotalsOrderRemaining(taxTotals, currency, documentSign);
 
         return taxTotals;
     }
