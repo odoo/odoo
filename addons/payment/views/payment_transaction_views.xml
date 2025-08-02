@@ -10,6 +10,8 @@
                     <button type="object" name="action_capture" invisible="state != 'authorized'" string="Capture Transaction" class="oe_highlight"/>
                     <button type="object" name="action_void" invisible="state != 'authorized'" string="Void Transaction"
                             confirm="Are you sure you want to void the authorized transaction? This action can't be undone."/>
+                    <button type="object" name="action_post_process" invisible="is_post_processed" string="Post Process" groups="base.group_no_one"
+                            help="Use this button to post-process the transaction if it is stuck in post-processing state. This should only be used if you know what you are doing."/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

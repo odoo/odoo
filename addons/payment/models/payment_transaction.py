@@ -873,6 +873,34 @@ class PaymentTransaction(models.Model):
                 )
                 self.env.cr.rollback()
 
+    def action_post_process(self):
+        """ Trigger the post-processing of the transactions that have not been processed by the cron.
+        Nornally, the post-processing is triggered by the cron job, if it's have any error then user
+        can manually trigger and see the error in UI.
+
+        This method is meant to be called manually, e.g., from a button in the UI.
+
+        :return: A client action to display a notification about the post-processing result.
+        """
+        self.ensure_one()
+        if not self.is_post_processed:
+            self._post_process()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Post-Processing Successful'),
+                    'message': _(
+                        "The post-processing of the transaction with reference '%s' was successful.",
+                        self.reference
+                    ),
+                    'sticky': False,
+                },
+            }
+        raise UserError(_(
+            "This transaction has been already post-processed. Don't try to mess with the system"
+        ))
+
     def _post_process(self):
         """ Post-process the transactions.
 
