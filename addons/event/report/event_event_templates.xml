@@ -385,6 +385,7 @@
     <!-- Small utility template to display "Venue" as:
     fa-map-marker PartnerName
     RestOfAddress -->
+  <div>
     <span t-if="use_map_marker" class="fa fa-map-marker"/>
     <t t-if="event.address_id.contact_address.strip()">
         <t t-set="address_bits" t-value="event.address_id.contact_address.split('\n')"/>
@@ -400,6 +401,7 @@
         </t>
     </t>
     <span t-else="" t-out="event.address_id.name">1000 Brussels</span>
+  </div>
 </template>
 
 </odoo>
