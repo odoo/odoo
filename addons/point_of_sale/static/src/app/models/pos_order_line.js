@@ -204,7 +204,7 @@ export class PosOrderline extends Base {
     // sets the qty of the product. The qty will be rounded according to the
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
-    set_quantity(quantity, keep_price) {
+    set_quantity(quantity, keep_price, qty_by_price = false) {
         this.order_id.assert_editable();
         const quant =
             typeof quantity === "number" ? quantity : parseFloat("" + (quantity ? quantity : 0));
@@ -238,18 +238,14 @@ export class PosOrderline extends Base {
             }
         }
         const unit = this.product_id.uom_id;
-        if (unit) {
-            if (unit.rounding) {
-                const decimals = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit of Measure"
-                ).digits;
-                const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
-                this.qty = roundPrecision(quant, rounding);
-            } else {
-                this.qty = roundPrecision(quant, 1);
-            }
+        if (unit && unit.rounding) {
+            const decimals = this.models["decimal.precision"].find(
+                (dp) => dp.name === "Product Unit of Measure"
+            ).digits;
+            const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
+            this.qty = roundPrecision(quant, rounding, qty_by_price ? "DOWN" : "HALF-UP");
         } else {
-            this.qty = quant;
+            this.qty = roundPrecision(quant, 1);
         }
 
         // just like in sale.order changing the qty will recompute the unit price
