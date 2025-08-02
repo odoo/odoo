@@ -26,7 +26,12 @@
                             <span>Cancelled registration</span>
                         </t>
                         <t t-elif="registrationStatus.value == 'already_registered'">
-                            <span>Ticket already scanned!</span>
+                            <t t-if="!registration.is_date_closed_today">
+                                <span>Ticket was first scanned on <t t-esc="registration.date_closed_formatted"/></span>
+                            </t>
+                            <t t-else="">
+                                <span>Ticket already scanned!</span>
+                            </t>
                         </t>
                         <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="undoRegistration">
                             Undo
@@ -74,7 +79,7 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
+                <button t-att-disabled="!button.enabled" t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
                 <button t-att-disabled="!hasSelectedPrinter()" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
                 <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
             </t>

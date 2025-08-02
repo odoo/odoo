@@ -30,6 +30,7 @@ export class EventRegistrationSummaryDialog extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.continueButtonRef = useRef("continueButton");
+        this.button = useState({enabled: true});
 
         this.registrationStatus = useState({value: this.registration.status});
         const storedPrintSettings = browser.localStorage.getItem(PRINT_SETTINGS_LOCAL_STORAGE_KEY);
@@ -82,8 +83,11 @@ export class EventRegistrationSummaryDialog extends Component {
     }
 
     async onRegistrationConfirm() {
-        await this.orm.call("event.registration", "action_set_done", [this.registration.id]);
-        this.registrationStatus.value = "confirmed_registration";
+        if (this.registrationStatus.value !== "confirmed_registration") {
+            this.button.enabled = false
+            await this.orm.call("event.registration", "action_set_done", [this.registration.id]).catch(() => this.button.enabled = true);
+            this.registrationStatus.value = "confirmed_registration";
+        }
         this.props.close();
         if (this.props.model) {
             this.props.model.load();
