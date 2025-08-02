@@ -62,7 +62,7 @@
                 </div>
                 <t t-if="ui.isSmall">
                     <div class="switchpane d-flex gap-2 p-2 border-top bg-view">
-                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg flex-grow-1" t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg flex-grow-1" t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()" t-att-disabled="this.pos.waitBeforePayment">
                             <span class="d-block">Pay</span>
                             <span t-esc="total" />
                         </button>

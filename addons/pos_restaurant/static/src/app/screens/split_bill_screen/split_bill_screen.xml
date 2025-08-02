@@ -41,7 +41,7 @@
                         <div class="pay-button" t-att-class="{'d-flex flex-row bg-view p-2 gap-2 rounded-3':this.ui.isSmall}">
                             <button class="button btn btn-lg btn-primary py-3 py-lg-5"
                                 t-att-class="(this.ui.isSmall ? 'w-50' : 'w-100')"
-                                t-att-disabled="!this.getNumberOfProducts()"
+                                t-att-disabled="!this.getNumberOfProducts() or this.pos.waitBeforePayment"
                                 t-on-click="createSplittedOrder">
                                 Split Order
                             </button>

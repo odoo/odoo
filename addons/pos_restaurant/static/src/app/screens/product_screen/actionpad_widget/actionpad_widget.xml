@@ -96,6 +96,7 @@
                     t-on-click="() => pos.pay()" 
                     class="button pay-order-button btn btn-lg w-50"
                     t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}" 
+                    t-att-disabled="this.pos.waitBeforePayment"
                 >
                     Payment
                 </button>

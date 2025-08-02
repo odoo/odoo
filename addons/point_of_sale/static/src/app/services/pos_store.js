@@ -131,6 +131,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.selectedPartner = null;
         this.selectedCategory = null;
         this.searchProductWord = "";
+        this.waitBeforePayment = false;
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
