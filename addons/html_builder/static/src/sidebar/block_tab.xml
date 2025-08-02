@@ -8,8 +8,7 @@
          t-att-class="{'o_we_ongoing_insertion': this.state.ongoingInsertion}"
          t-ref="block-tab">
         <div class="o_snippets_container" id="snippet_groups">
-            <div class="o_snippets_container_header"><span>Categories</span></div>
-            <div class="o_snippets_container_body">
+            <div class="o_snippets_container_body o_snippets_container_body--col-2">
                 <t t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"

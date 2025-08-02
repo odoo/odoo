@@ -4,7 +4,14 @@
     font-size: $o-we-sidebar-font-size * 1.4;
 }
 
+.o-hb-select-pager-tab-container {
+    border-top: $o-we-border-width solid $o-we-bg-lighter;
+    border-bottom: $o-we-border-width solid $o-we-bg-lighter;
+}
+
 .o-hb-select-pager-tab {
+    --btn-border-radius: 0;
+
     display: inline-flex;
     flex: 1 1 auto;
     justify-content: center;
@@ -19,6 +26,7 @@
         padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
     }
     &.active > span {
+        background-color: $o-we-sidebar-tabs-active-background-color;
         color: $o-we-sidebar-content-field-colorpicker-dropdown-active-color;
         box-shadow: inset 0 ($o-we-sidebar-tabs-active-border-width * -1) 0 $o-we-sidebar-tabs-active-border-color;
     }
