@@ -398,21 +398,21 @@ export class LinkPlugin extends Plugin {
         if (this.getResource("link_compatible_selection_predicates").some((p) => p())) {
             return true;
         }
-        const linksInSelection = this.dependencies.selection
-            .getTargetedNodes()
-            .filter((n) => n.tagName === "A");
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const linksInSelection = targetedNodes.filter((n) => n.tagName === "A");
+        const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
+        const topMostBlocks = targetedBlocks.filter(
+            (block) => !targetedBlocks.some((other) => other !== block && other.contains(block))
+        );
+        if (topMostBlocks.length > 1) {
+            return false;
+        }
         return (
             linksInSelection.length < 2 &&
-            // Prevent a link across sibling blocks:
-            !targetedNodes.some((node) => {
-                const next = node.nextSibling;
-                const previous = node.previousSibling;
-                return (
-                    (next && targetedNodes.includes(next) && isBlock(next)) ||
-                    (previous && targetedNodes.includes(previous) && isBlock(previous))
-                );
-            })
+            (!topMostBlocks.length ||
+                ![topMostBlocks[0], ...descendants(topMostBlocks[0])].some(
+                    (node) => isElement(node) && [...node.children].filter(isBlock).length > 1
+                ))
         );
     }
 
@@ -767,9 +767,8 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            const isLinkEditable = this.delegateTo(
-                "is_link_editable_predicates",
-                closestLinkElement) || false;
+            const isLinkEditable =
+                this.delegateTo("is_link_editable_predicates", closestLinkElement) || false;
             if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkTools(closestLinkElement);
