@@ -1,0 +1,93 @@
+<odoo>
+    <!-- Define the server action for releasing quotations -->
+    <record id="action_release_quotations" model="ir.actions.server">
+        <field name="name">Release Orders</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_release_quotations()</field>
+    </record>
+    
+    <!-- Adding the action to the form view as a button -->
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="%(action_release_quotations)d" string="Release Orders" type="action" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <field name="is_released"/>
+                    <!-- Adding the pick_status field to the form view -->
+                    <field name="pick_status"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding the action to the list view (tree view) and making is_released and pick_status visible -->
+    <record id="view_order_tree_inherit" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="is_released"/>
+                <!-- Adding the pick_status field to the tree view -->
+                <field name="pick_status"/>
+                <button name="%(action_release_quotations)d" string="Release Orders" type="action" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_inherit_is_released" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.is_released</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="is_released" optional="show"/>
+                <field name="pick_status" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding consignment information to the form view -->
+    <record id="view_order_form_inherit_consignment_info" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.consignment.info</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Consignment Information">
+                    <field name="consignment_number"/>
+                    <field name="carrier"/>
+                    <field name="status"/>
+                    <field name="tracking_url"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Define filters and group by for pick_status field -->
+   <record id="view_order_search_inherit" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <!-- Update inherit_id with the correct view ID -->
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <!-- Adding a filter for pick_status -->
+                <filter string="Pick Status" name="filter_pick_status_picked" domain="[('pick_status', '=', 'picked')]"/>
+                <filter string="Pack Status" name="filter_pick_status_packed" domain="[('pick_status', '=', 'packed')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <!-- Adding a group by option for pick_status -->
+                <filter string="Pick Status" name="group_by_pick_status" context="{'group_by': 'pick_status'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

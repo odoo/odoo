@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_shipping_integration_log_tree" model="ir.ui.view">
+        <field name="name">shipping.integration.log.tree</field>
+        <field name="model">shipping.integration.log</field>
+        <field name="arch" type="xml">
+            <tree string="Shipping Logs">
+                <field name="create_date"/>
+                <field name="picking_id"/>
+                <field name="sale_order_id"/>
+                <field name="carrier"/>
+                <field name="status"/>
+                <field name="consignment_number"/>
+                <field name="tracking_url"/>
+                <field name="label_url"/>
+<!--                <field name="retry_count"/>-->
+<!--                <field name="error_message"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_shipping_integration_log_form" model="ir.ui.view">
+        <field name="name">shipping.integration.log.form</field>
+        <field name="model">shipping.integration.log</field>
+        <field name="arch" type="xml">
+            <form string="Shipping Integration Log">
+                <group>
+                    <group>
+                        <field name="sale_order_id"/>
+                        <field name="carrier"/>
+                        <field name="status"/>
+                        <field name="consignment_number"/>
+                        <field name="is_synced"/>
+                        <field name="items"/>
+                    </group>
+                    <group>
+                        <field name="picking_id"/>
+                        <field name="tracking_url"/>
+                        <field name="label_url"/>
+                        <field name="retry_count"/>
+                        <field name="attempted_at"/>
+                        <field name="origin"/>
+                        <field name="shipmentid"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Payload">
+                        <field name="payload_json"/>
+                    </page>
+                    <page string="Response">
+                        <field name="response_json"/>
+                        <field name="error_message"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shipping_integration_log" model="ir.actions.act_window">
+        <field name="name">Shipping Integration Logs</field>
+        <field name="res_model">shipping.integration.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

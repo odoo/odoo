@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_crate_container_configuration_form" model="ir.ui.view">
+        <field name="name">crate.container.configuration.form</field>
+        <field name="model">crate.container.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Crate Container Configuration">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="crate_container_partition"/>
+                        <field name="crate_code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_crate_container_configuration_tree" model="ir.ui.view">
+        <field name="name">crate.container.configuration.tree</field>
+        <field name="model">crate.container.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="crate_container_partition"/>
+                <field name="crate_code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_crate_container_configuration" model="ir.actions.act_window">
+        <field name="name">Crate Container Configuration</field>
+        <field name="res_model">crate.container.configuration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_crate_container_configuration_tree"/>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Inherit the stock.route form view to add the Process Type field -->
+<odoo>
+    <record id="view_stock_route_form_inherit_routes_process_types" model="ir.ui.view">
+        <field name="name">stock.route.form.inherit.process.type</field>
+        <field name="model">stock.route</field>
+        <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_selectable']" position="after">
+                <field name="routes_process_selection_types"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

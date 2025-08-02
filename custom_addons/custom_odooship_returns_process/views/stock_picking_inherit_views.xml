@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing form view to add configuration fields Tenant code and Site code-->
+        <record id="view_picking_inherit_returns_scrap" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//header/button[@name='%(stock.act_stock_return_picking)d']" position="attributes">-->
+<!--                    <attribute name="invisible">not (state == 'assigned' or state == 'done')</attribute>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='quantity']"
+                       position="after">
+                    <field name="product_grade" optional="hide"/>
+                    <field name="summary" optional="hide"/>
+                    <field name="line_number" optional="hide"/>
+                </xpath>
+                <xpath expr="//form/header" position="inside">
+                    <button name="action_open_returns_scan_wizard"
+                            string="Returns"
+                            type="object"
+                            invisible="not (operation_process_type == 'returns' and state == 'assigned')"
+                            class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
