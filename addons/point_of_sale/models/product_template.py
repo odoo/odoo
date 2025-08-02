@@ -49,8 +49,8 @@ class ProductTemplate(models.Model):
             ('sale_ok', '=', True),
         ]
         limited_categories = data['pos.config'][0]['limit_categories']
-        if limited_categories:
-            available_category_ids = data['pos.config'][0]['iface_available_categ_ids']
+        available_category_ids = data['pos.config'][0]['iface_available_categ_ids']
+        if limited_categories and available_category_ids:
             category_ids = self.env['pos.category'].browse(available_category_ids)._get_descendants().ids
             domain += [('pos_categ_ids', 'in', category_ids)]
         return domain
