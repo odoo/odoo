@@ -438,7 +438,9 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileHeader(el, params) {
-        const statusBar = createElement("div");
+        const statusBar = createElement("div", {
+            "t-att-class": "{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }",
+        });
         statusBar.className = "o_form_statusbar d-flex justify-content-between py-2";
         const buttons = [];
         const others = [];
@@ -644,7 +646,9 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileSheet(el, params) {
-        const sheetBG = createElement("div");
+        const sheetBG = createElement("div", {
+            "t-on-scroll": "__comp__.onScrollThrottled",
+        });
         sheetBG.className = "o_form_sheet_bg";
 
         const sheetFG = createElement("div");
