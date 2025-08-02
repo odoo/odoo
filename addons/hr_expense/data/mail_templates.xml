@@ -41,6 +41,13 @@
             <a t-att-href="'/odoo/expenses-to-process'" class="o_expense_button_mail">View expenses</a>
         </template>
 
+        <template id="hr_expense_template_posted_expenses">
+            <p>
+                Journal entry created:
+                <a href="#" t-att-data-oe-model="move._name" t-att-data-oe-id="move.id"><t t-esc="move.name"/></a>
+            </p>
+        </template>
+
         <template id="hr_expense_template_register_no_user">
             <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
                 <table style="width:600px;margin:5px auto;" t-if="not expense.employee_id.company_id.uses_default_logo">
