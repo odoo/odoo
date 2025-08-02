@@ -42,7 +42,7 @@ class HrApplicant(models.Model):
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
 
     partner_id = fields.Many2one('res.partner', "Contact", copy=False, index='btree_not_null')
-    partner_name = fields.Char("Applicant's Name")
+    partner_name = fields.Char("Applicant's Name", required=True)
     email_from = fields.Char(
         string="Email",
         size=128,
