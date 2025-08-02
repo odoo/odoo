@@ -72,11 +72,13 @@ class TestMailMail(MailCommon):
             ],
         })
 
-        def _patched_check(self, *args, **kwargs):
-            if self.env.is_superuser():
-                return
-            if any(attachment.name in ('file 2', 'file 4') for attachment in self):
-                raise AccessError('No access')
+        def _patched_check_access(self, *args, **kwargs):
+            if self.env.su:
+                return None
+            inaccessible = self.filtered(lambda att: att.name in ('file 2', 'file 4'))
+            if inaccessible:
+                return inaccessible, lambda: AccessError(self.env._("No access"))
+            return None
 
         mail.invalidate_recordset()
 
@@ -85,7 +87,7 @@ class TestMailMail(MailCommon):
             'datas': 'c2VjcmV0',
         })
 
-        with patch.object(type(self.env['ir.attachment']), 'check', _patched_check):
+        with patch.object(self.env.registry['ir.attachment'], '_check_access', _patched_check_access):
             # Sanity check
             self.assertEqual(mail.restricted_attachment_count, 2)
             self.assertEqual(len(mail.unrestricted_attachment_ids), 2)
