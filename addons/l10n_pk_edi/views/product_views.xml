@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id='product_product_form_view_inherit_l10n_pk_edi' model='ir.ui.view'>
+        <field name='name'>product.template.form.inherit.l10n_pk_edi</field>
+        <field name='model'>product.template</field>
+        <field name='inherit_id' ref='product.product_template_form_view'/>
+        <field name='arch' type='xml'>
+            <xpath expr='//notebook' position='inside'>
+                <page name='group_fbr' string="FBR (PK)" invisible='"PK" not in fiscal_country_codes' >
+                    <group>
+                        <group>
+                            <field name='l10n_pk_edi_hs_code' string="HS Code"/>
+                        </group>
+                        <group>
+                            <field
+                                name='l10n_pk_edi_sale_type'
+                                string="Sale Type"
+                                options='{"no_create": True}'
+                            />
+                            <field
+                                name='l10n_pk_edi_schedule_code'
+                                string="Schedule Code"
+                                options='{"no_create": True}'
+                            />
+                        </group>
+                    </group>
+                </page>
+            </xpath>        
+        </field>
+    </record>
+
+</odoo>
