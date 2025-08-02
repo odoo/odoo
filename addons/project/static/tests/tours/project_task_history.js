@@ -27,6 +27,34 @@ function changeDescriptionContentAndSave(newContent) {
     ];
 }
 
+function insertEditorContentAndSave(newContent) {
+    return [
+        {
+            // force focus on editable so editor will create initial p (if not yet done)
+            trigger: "div.note-editable.odoo-editor-editable",
+            run: "click",
+        },
+        {
+            // We change content to make field dirty
+            trigger: `div.note-editable[spellcheck='true'].odoo-editor-editable`,
+            run: `editor ${newContent}`,
+        },
+        {
+            trigger: `div.note-editable[spellcheck='true'].odoo-editor-editable`,
+            run: function () {
+                // We re-update the field here because `editor` command make the editable content as string
+                // Instead of having it inside `o-paragraph`, so we manually add the content as valid html
+                // Otherwise the versioning mechanism won't work properly.
+                const div = document.createElement("div");
+                div.appendChild(document.createTextNode(newContent));
+                this.anchor.removeChild(this.anchor.firstChild);
+                this.anchor.appendChild(div);
+            },
+        },
+        ...stepUtils.saveForm(),
+    ];
+}
+
 registry.category("web_tour.tours").add("project_task_history_tour", {
     url: "/odoo",
     steps: () => [stepUtils.showAppsMenuItem(), {
@@ -181,3 +209,48 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: 'button.o_switch_view.o_kanban.active',
     }
 ]});
+
+registry.category("web_tour.tours").add("project_task_last_history_steps_tour", {
+    url: "/odoo",
+    steps: () => [stepUtils.showAppsMenuItem(), {
+        content: "Open the project app",
+        trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
+        run: "click",
+    },
+    {
+        content: "Open Test History Project",
+        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Project)",
+        run: "click",
+    },
+    {
+        content: "Open Test History Task",
+        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Task)",
+        run: "click",
+    },
+    ...insertEditorContentAndSave("0"),
+    {
+        content: "Open History Dialog",
+        trigger: ".o_cp_action_menus i.fa-cog",
+        run: "click",
+    }, {
+        trigger: ".dropdown-menu",
+    }, {
+        content: "Open History Dialog",
+        trigger: ".o_menu_item i.fa-history",
+        run: "click",
+    },
+    {
+        content: "Open History Dialog",
+        trigger: ".revision-list a:first-child",
+        run: "click",
+    },
+    {
+        trigger: 'button:contains("/^Restore history$/")',
+        run: "click",
+    }, {
+        trigger: '.modal button.btn-primary:contains(/^Restore$/)',
+        run: "click",
+    },
+    ...insertEditorContentAndSave("2")
+    ],
+});
