@@ -5,7 +5,7 @@
         <div class="o-discuss-CallActionList d-flex flex-column justify-content-center" t-attf-class="{{ className }}" t-ref="root">
             <div class="o-discuss-CallActionList-bar d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
                 <t t-if="isOfActiveCall and rtc.selfSession">
-                    <t t-foreach="callActions.actions.slice(0, isMobileOS ? 3 : 4)" t-as="action" t-key="action_index">
+                    <t t-foreach="callActions.actions.slice(0, 4)" t-as="action" t-key="action_index">
                         <CallActionButton action="action" isSmall="isSmall" isActive="action.isActive"/>
                     </t>
                     <CallPopover position="'top-end'" clickToClose="true" contentClass="'o-discuss-CallActionList-dropdown p-1'">
@@ -17,7 +17,7 @@
                         </button>
                         <t t-set-slot="content">
                             <div class="d-flex flex-column py-0">
-                                <span t-foreach="callActions.actions.slice(isMobileOS ? 3 : 4)" t-as="action" t-key="action_index" class="o-discuss-CallActionList-dropdownItem cursor-pointer rounded-1 d-flex align-items-center px-2 py-2 m-0" t-att-title="action.name" t-on-click="action.select">
+                                <span t-foreach="callActions.actions.slice(4)" t-as="action" t-key="action_index" class="o-discuss-CallActionList-dropdownItem cursor-pointer rounded-1 d-flex align-items-center px-2 py-2 m-0" t-att-title="action.name" t-on-click="action.select">
                                     <i t-att-class="{
                                         'fa fa-fw': (action.isActive or !action.inactiveIcon ? action.icon : action.inactiveIcon).includes('fa-'), 
                                         'oi oi-fw': (action.isActive or !action.inactiveIcon ? action.icon : action.inactiveIcon).includes('oi-'),
