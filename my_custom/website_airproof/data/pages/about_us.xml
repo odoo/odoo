@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+
+    <record id="page_about_us" model="website.page">
+      <field name="name">About us</field>
+      <field name="is_published" eval="True" />
+      <field name="key">website_airproof.page_about_us</field>
+      <field name="url">/about-us</field>
+      <field name="website_id" eval="1" />
+      <field name="type">qweb</field>
+      <field name="header_overlay" eval="True" />
+      <field name="arch" type="xml">
+        <t t-name="website_airproof.page_about_us">
+          <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+              <!-- Content -->
+            </div>
+          </t>
+        </t>
+      </field>
+
+    </record>
+
+  </data>
+
+</odoo>

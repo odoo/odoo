@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="website.template_header_default" model="ir.ui.view">
+      <field name="active" eval="False" />
+   </record>
+
+   <record id="website.template_header_search" model="ir.ui.view">
+      <field name="active" eval="False" />
+   </record>
+
+   <record id="website.footer_custom" model="ir.ui.view">
+      <field name="active" eval="False" />
+   </record>
+
+   <record id="website.template_footer_links" model="ir.ui.view">
+      <field name="active" eval="True" />
+   </record>
+   
+   <template id="snippet_options" inherit_id="website.snippet_options"
+      name="Airproof - Mega Menu Options">
+      <xpath expr="//*[@data-name='mega_menu_template_opt']/*" position="before">
+         <t t-set="_label">Airproof</t>
+         <we-button t-att-data-select-label="_label"
+            data-select-template="website_airproof.s_mega_menu_airproof"
+            t-out="_label" />
+      </xpath>
+   </template>
+</odoo>

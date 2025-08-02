@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Custom header -->
+  <template id="airproof_custom_header" name="Airproof Customm Header" inherit_id="website.layout">
+    <xpath expr="//header" position="replace">
+      <t t-call="website_airproof.header_navbar" />
+      
+    </xpath>
+  </template>
+
+  <template id="custom_brand_logo" inherit_id="website.placeholder_header_brand">
+  <xpath expr="//a" position="replace">
+    <a t-attf-href="/">
+      <!-- <img src="web/image/website_airproof.img_hhe" alt="Airproof" class="img img-fluid"/> -->
+    </a>
+  </xpath>
+</template>
+
+  <!-- Custom footer -->
+  <!-- <template id="airproof_custom_footer" name="Airproof Customm Footer"
+  inherit_id="website.layout">
+
+  </template> -->
+
+  <!-- Header -->
+
+  <!-- Template là mọt đoạn HTML/QWeb được định danh và có thể tái sử dụng, không nhất thiết là phải
+  kế thừa
+  với key là tên toàn cục có có thể được t-call gọi ở bất cứ đâu-->
+  <!-- Thêm custom header vào Website Builder -->
+  <!-- Đây là tùy chọn được hiển thị trong Website Builder khi chọn header -->
+  <!-- Khi click "airproof", sẽ:
+     - Gán header-template = 'airproof'
+     - Tự động kích hoạt view website_airproof.header -->
+  <template id="template_header_opt" name="Header Template - Option"
+    inherit_id="website.snippet_options">
+    <!-- Ở đây, attr data-variable (thường là ở trong we-select) là footer-template, tức sau này có
+    thể dùng nó như 1 điều kiện để hiển thị một giao diện được set trong we-btn -->
+    <!-- còn data-customize-website-variable là airproof tức đang set cho variable footer-template
+    giá trị là 'airproof' -->
+    <!-- sau này sẽ dùng kiểu
+    <t t-if="footer_template == 'modern'">
+    ...
+    </t>
+ -->
+    <xpath expr="//we-select[@data-variable='header-template']" position="inside">
+      <we-button title="airproof"
+        data-customize-website-views="website_airproof.header"
+        data-customize-website-variable="'airproof'"
+        data-img="/website_airproof/static/src/img/wbuilder/hhe.svg"
+      />
+    </xpath>
+  </template>
+
+  <!-- header navbar -->
+  <template id="website_airproof.header_navbar" name="Airproof Custom Header">
+    <header>
+      <nav class="navbar navbar-expand navbar-light bg-light">
+        <div class="container">
+          <t t-call="website.placeholder_header_brand">
+            <t t-set="_link_class" t-value="'navbar-brand me-lg-5'" />
+          </t>
+
+          <t
+            t-foreach="website.menu_id.child_id" t-as="submenu">
+            <t t-call="website.submenu">
+              <t t-set="item_class" t-valuef="nav-item" />
+              <t t-set="link_class" t-valuef="nav-link" />
+            </t>
+          </t>
+
+          <!-- Template hiển tị Sign in/ Sign up nếu như người dùng chưa đăng nhập -->
+          <t
+            t-call="portal.placeholder_user_sign_in">
+            <t t-set="_item_class" t-valuef="nav-item" />
+            <t t-set="_link_class" t-valuef="nav-link" />
+          </t>
+
+          <!-- Template xử lí dropdown menu nếu như đã đăng nhập -->
+          <t
+            t-call="portal.user_dropdown">
+            <t t-set="_user_name" t-value="true" />
+            <t t-set="_icon" t-value="false" />
+            <t t-set="_avatar" t-value="true" />
+            <t t-set="_item_class" t-valuef="nav-item dropdown" />
+            <t t-set="_link_class" t-valuef="nav-link" />
+            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end" />
+          </t>
+
+          <!-- Language selector -->
+          <t
+            t-call="website.placeholder_header_language_selector">
+            <t t-set="_div_classes" t-valuef="..." />
+          </t>
+
+          <!-- Action contact -->
+          <t t-call="website.placeholder_header_call_to_action">
+            <t t-set="_div_classes" t-valuef="..." />
+          </t>
+
+          <t t-call="website.navbar_toggler">
+            <t t-set="_toggler_class" t-valuef="..." />
+          </t>
+        </div>
+      </nav>
+    </header>
+  </template>
+
+
+  <!-- Mobile -->
+  <template id="website_airproof.template_header_mobile" inherit_id="website.template_header_mobile"
+    name="Airproof - Template Header Mobile">
+    <!-- Xpaths -->
+  </template>
+
+  <!-- Footer -->
+  <template id="website_airproof.custom_footer" name="Airproof Custom Footer">
+    <div id="footer">
+      This is footer
+    </div>
+  </template>
+
+
+  <!-- Copy Right -->
+  <template id="website_airproof.copyright" inherit_id="website.layout">
+    <xpath expr="//div[hasclass('o_footer_copyright')]" position="replace">
+      <div class="o_footer_copyright" data-name="Copyright">
+        <h3>Bản quyền thuộc về Trần Đức Thắng</h3>
+      </div>
+    </xpath>
+  </template>
+
+  <!-- custom mega menu -->
+  <template id="website_airproof.s_mega_menu_airproof" name="Airproof" groups="base.group_user">
+      <section class="s_mega_menu_multi_menus py-4 o_colored_level o_cc">
+        <div class="container">
+          <div class="row">
+            <!-- Cột 1: Có Icon -->
+            <div class="col-12 col-md-4 text-center">
+              <i class="fa fa-laptop fa-2x mb-2 text-primary"></i>
+              <h5 class="mb-2">Laptop</h5>
+              <a href="/shop/laptop" class="btn btn-sm btn-outline-primary">Xem ngay</a>
+            </div>
+
+            <!-- Cột 2: Hình ảnh -->
+            <div class="col-12 col-md-4 text-center">
+              <img src="/web/image/website/1/logo" alt="Banner" style="max-height: 100px;"
+                class="mb-2" />
+              <h5 class="mb-2">Khuyến mãi hot</h5>
+              <a href="/promo" class="btn btn-sm btn-danger">Xem ưu đãi</a>
+            </div>
+
+            <!-- Cột 3: Text + danh sách link -->
+            <div class="col-12 col-md-4 text-center">
+              <h5 class="mb-2">Danh mục</h5>
+              <nav class="nav flex-column">
+                <a href="/shop/phones" class="nav-link">Điện thoại</a>
+                <a href="/shop/tablets" class="nav-link">Máy tính bảng</a>
+                <a href="/shop/accessories" class="nav-link">Phụ kiện</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </section>
+</template>
+</odoo>

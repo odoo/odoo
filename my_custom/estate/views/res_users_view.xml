@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="res_users_list_view" model="ir.ui.view">
+      <field name="name">res.users.list.view</field>
+      <field name="model">res.users</field>
+      <!-- res.users là một model thuộc base -->
+      <field name="inherit_id" ref="base.view_users_form" />
+      <field name="arch" type="xml">
+        <xpath expr="//notebook" position="inside">
+          <page string="Real Estate Properties">
+            <!-- property_ids vừa mới khai báo ở phần inheritance -->
+            <field name="property_ids">
+              <list>
+                <field name="name" string="Title" />
+                <field name="property_type_id" string="Property Type" />
+                <field name="postcode" string="Postcode" />
+                <field name="tag_ids" string="Tags" />
+                <field name="bedrooms" string="Bedrooms" />
+                <field name="living_area"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability" optional="hidden"/>
+              </list>
+            </field>
+          </page>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

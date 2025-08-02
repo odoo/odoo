@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="rule_seller_see_own_property" model="ir.rule">
+        <field name="name">Seller see own property</field>
+        <field name="model_id" ref="model_estate_property"/>
+        <field name="domain_force">[('salesperson_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('estate.group_estate_property_seller'))]"/>
+    </record>
+
+    <record id="rule_buyer_see_available_property" model="ir.rule">
+        <field name="name">Buyer see available property</field>
+        <field name="model_id" ref="model_estate_property"/>
+        <field name="domain_force">[('status', '=', 'available')]</field>
+        <field name="groups" eval="[(4, ref('estate.group_estate_property_buyer'))]"/>
+    </record>
+</odoo>

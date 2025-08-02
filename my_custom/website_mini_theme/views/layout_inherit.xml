@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="layout_inherit" inherit_id="website.layout"> 
+  <!-- Không cần thay đổi gì nếu chỉ muốn chèn SCSS
+  Odoo sẽ tự load assets trong manifest -->
+    <xpath expr="//header" position="before">
+      <div class="custom-welcome-message o-container">
+        Xin chào mọi người đã đến với trang web của Thắng!
+      </div>
+    </xpath>
+  </template>
+</odoo>

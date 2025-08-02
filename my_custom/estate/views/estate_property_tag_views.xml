@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Action -->
+  <record id="estate_property_tag_action" model="ir.actions.act_window">
+    <field name="name">Property Tags</field> <!--Hiển
+    thị tên của action trên UI, DB-->
+    <field name="res_model">estate.property.tag</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- list -->
+  <record id="estate_property_tag_list_view" model="ir.ui.view">
+    <field name="name">estate.property.tag.list.view</field>
+    <field name="model">estate.property.tag</field>
+    <field name="arch" type="xml">
+      <list editable="bottom">
+        <field name="sequence" widget="handle" />
+        <field name="name" />
+      </list>
+    </field>
+  </record>
+
+  <!-- Search & Filter -->
+  <record id="estate_property_tag_view_search_filter" model="ir.ui.view">
+    <field name="name">estate.property.tag.view.search.filter</field> <!-- Không ảnh hưởng tới ui,
+    DB-->
+    <field name="model">estate.property.tag</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="name" />
+      </search>
+    </field>
+  </record>
+</odoo>
