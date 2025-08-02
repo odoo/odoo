@@ -1001,7 +1001,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         fields = [
-            'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
+            'product_id', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
             'package_level_id', 'propagate_cancel', 'description_picking',
             'product_packaging_id',
@@ -1083,6 +1083,13 @@ Please change the quantity done or the rounding precision of your unit of measur
             candidate_moves = candidate_moves.filtered(lambda m: m.state not in ('done', 'cancel', 'draft')) - neg_qty_moves
             for __, g in groupby(candidate_moves, key=self._merge_move_itemgetter(distinct_fields)):
                 moves = self.env['stock.move'].concat(*g)
+
+                first_move = fields.first(moves)
+                currency_prec = first_move.product_id.currency_id.decimal_places
+                rounding = min(currency_prec, price_unit_prec)
+
+                moves = moves.filtered(lambda _move: float_compare(_move.price_unit, first_move.price_unit, precision_digits=rounding) == 0)
+
                 # Merge all positive moves together
                 if len(moves) > 1:
                     # link all move lines to record 0 (the one we will keep).
