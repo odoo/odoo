@@ -39,3 +39,13 @@ class TestItAccountMoveDocumentType(TestItEdi):
         reversal_wizard.modify_moves()
         credit_note_y = invoice_y.reversal_move_ids[0]
         self.assertEqual(credit_note_y.l10n_it_document_type, dt_credit_note)
+
+    def test_td01_assigned_on_posted_in_invoice(self):
+        """Test that TD01 is correctly assigned to an in_invoice after posting."""
+        dt_invoice = self.env.ref('l10n_it_edi.l10n_it_document_type_01')
+
+        invoice_x = self.init_invoice("in_invoice", amounts=[1000])
+        self.assertFalse(invoice_x.l10n_it_document_type)
+
+        invoice_x.action_post()
+        self.assertEqual(invoice_x.l10n_it_document_type, dt_invoice)
