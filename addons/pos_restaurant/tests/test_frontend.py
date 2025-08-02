@@ -575,6 +575,10 @@ class TestFrontend(TestFrontendCommon):
             'resource_calendar_id': resource_calendar
         })
         self.start_pos_tour('test_preset_timing_restaurant')
+        # remove time slot for this preset
+        self.preset_takeaway.resource_calendar_id = False
+        self.main_pos_config.available_preset_ids = [(6, 0, [self.preset_takeaway.id])]
+        self.start_pos_tour('test_preset_timing_restaurant_dialog')
 
     def test_restaurant_preset_takeout_tour(self):
         self.pos_config.write({
