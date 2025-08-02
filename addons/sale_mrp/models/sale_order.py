@@ -23,8 +23,19 @@ class SaleOrder(models.Model):
         data = self.env['procurement.group']._read_group([('sale_id', 'in', self.ids)], ['sale_id'], ['id:recordset'])
         production_order_by_sale_line = self.env['mrp.production']._read_group([('sale_line_id', 'in', self.order_line.ids)], ['sale_line_id'], ['id:recordset'])
         mrp_productions = defaultdict(self.env['mrp.production'].browse)
+
+        all_sale_related_stock_moves = self.env['stock.move']
+        for sale, procurement_groups in data:
+            all_sale_related_stock_moves |= procurement_groups.mapped('stock_move_ids')
+        child_moves_grouped_by_destination = dict(self.env['stock.move']._read_group(
+            [('move_dest_ids', 'in', all_sale_related_stock_moves.ids)],
+            ['move_dest_ids'], ['id:recordset'])
+        )
+
         for sale, procurement_groups in data:
             mrp_productions[sale.id] |= procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
+            for move in procurement_groups.mapped('stock_move_ids'):
+                mrp_productions[sale.id] |= child_moves_grouped_by_destination.get(move, self.env['stock.move']).mapped('production_id')
         for sale_line, production_id in production_order_by_sale_line:
             mrp_productions[sale_line.order_id.id] |= production_id
         for sale in self:
