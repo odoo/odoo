@@ -271,6 +271,12 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: ':iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child',
         run: "click",
     },
+    {
+        trigger: [
+            ":iframe .o_edit_menu_popover .o_we_url_link:contains('Home | My Website')",
+            ":iframe .oe_overlay .o_move_handle",
+        ].join(",")
+    },
     changeOption("MegaMenuLayout", "we-toggler"),
     {
         content: "Select Big Icons Subtitles mega menu",
