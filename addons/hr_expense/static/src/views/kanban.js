@@ -1,7 +1,6 @@
 import { registry } from '@web/core/registry';
 
 import { ExpenseDashboard } from '../components/expense_dashboard';
-import { ExpenseMobileQRCode } from '../mixins/qrcode';
 import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/document_upload';
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
@@ -12,9 +11,7 @@ export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanControl
     static template = "hr_expense.KanbanView";
 }
 
-export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(
-    ExpenseMobileQRCode(KanbanRenderer)
-) {
+export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(KanbanRenderer) {
     static template = "hr_expense.KanbanRenderer";
 }
 
