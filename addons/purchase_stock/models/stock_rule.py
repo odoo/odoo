@@ -8,7 +8,7 @@ from odoo.tools import float_compare
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
-from odoo.tools import groupby
+from odoo.tools import groupby, frozendict
 
 
 class StockRule(models.Model):
@@ -155,34 +155,50 @@ class StockRule(models.Model):
                         po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
+    @api.model
+    def _get_lead_days_for_combinations(self, combinations):
+        """ Batched version of _get_lead_days for a sequence of
+        triples (rules, product, values_dict)
+        """
+        combinations = {(rules, product, frozendict(value_dict)) for rules, product, value_dict in combinations}
+        lead_days_delays = super()._get_lead_days_for_combinations(combinations)
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
+        ignore_vendor_lead_time = self.env.context.get('ignore_vendor_lead_time')
+        seen_buy_rule = {}
+        for rules, product, value_dict in combinations:
+            if rules not in seen_buy_rule:
+                seen_buy_rule[rules] = rules.filtered(lambda r: r.action == 'buy')
+            buy_rule = seen_buy_rule[rules]
+            seller = (
+                "supplierinfo" in value_dict and value_dict["supplierinfo"]
+            ) or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
+            if not buy_rule or not seller:
+                continue
+            buy_rule.ensure_one()
+            delays, delay_description = lead_days_delays[rules, product, value_dict]
+            if not ignore_vendor_lead_time:
+                supplier_delay = seller[0].delay
+                delays['total_delay'] += supplier_delay
+                delays['purchase_delay'] += supplier_delay
+                if not bypass_delay_description:
+                    delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
+            security_delay = buy_rule.picking_type_id.company_id.po_lead
+            delays['total_delay'] += security_delay
+            delays['security_lead_days'] += security_delay
+            if not bypass_delay_description:
+                delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
+            days_to_order = buy_rule.company_id.days_to_purchase
+            delays['total_delay'] += days_to_order
+            if not bypass_delay_description:
+                delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_order)))
+        return lead_days_delays
+
     def _get_lead_days(self, product, **values):
         """Add the company security lead time and the supplier delay to the cumulative delay
         and cumulative description. The company lead time is always displayed for onboarding
         purpose in order to indicate that those options are available.
         """
-        delays, delay_description = super()._get_lead_days(product, **values)
-        bypass_delay_description = self.env.context.get('bypass_delay_description')
-        buy_rule = self.filtered(lambda r: r.action == 'buy')
-        seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
-        if not buy_rule or not seller:
-            return delays, delay_description
-        buy_rule.ensure_one()
-        if not self.env.context.get('ignore_vendor_lead_time'):
-            supplier_delay = seller[0].delay
-            delays['total_delay'] += supplier_delay
-            delays['purchase_delay'] += supplier_delay
-            if not bypass_delay_description:
-                delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
-        security_delay = buy_rule.picking_type_id.company_id.po_lead
-        delays['total_delay'] += security_delay
-        delays['security_lead_days'] += security_delay
-        if not bypass_delay_description:
-            delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
-        days_to_order = buy_rule.company_id.days_to_purchase
-        delays['total_delay'] += days_to_order
-        if not bypass_delay_description:
-            delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_order)))
-        return delays, delay_description
+        return super()._get_lead_days(product, **values)
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
