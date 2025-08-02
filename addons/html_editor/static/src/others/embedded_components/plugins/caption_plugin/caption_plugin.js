@@ -4,7 +4,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { renderToElement } from "@web/core/utils/render";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
+import { EDITABLE_MEDIA_CLASS, isShrunkBlock } from "@html_editor/utils/dom_info";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -142,11 +142,15 @@ export class CaptionPlugin extends Plugin {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             block.before(baseContainer);
             fillEmpty(baseContainer);
+        } else if (isShrunkBlock(block.previousSibling)) {
+            fillEmpty(block.previousSibling);
         }
         if (!block.nextSibling) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             block.after(baseContainer);
             fillEmpty(baseContainer);
+        } else if (isShrunkBlock(block.nextSibling)) {
+            fillEmpty(block.nextSibling);
         }
         // Add the caption component.
         // => <p><figure><img/><figcaption>...</figcaption></figure></p>
@@ -251,11 +255,11 @@ export class CaptionPlugin extends Plugin {
     onImageReplaced(media) {
         const figure = closestElement(media, "figure");
         if (media.nodeName === "IMG" && figure) {
-            const caption = figure.querySelector("[data-embedded='caption'] input")?.value;
-            if (caption) {
-                media.setAttribute("data-caption", caption);
-            }
             const [anchorNode, anchorOffset] = rightPos(figure);
+            const caption = figure.querySelector("[data-embedded='caption'] input")?.value;
+            figure.before(media);
+            figure.remove();
+            this.addImageCaption(media, caption, false);
             this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         }
     }
