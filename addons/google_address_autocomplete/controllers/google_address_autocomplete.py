@@ -78,7 +78,7 @@ class AutoCompleteController(http.Controller):
 
     def _perform_place_search(self, partial_address, api_key=None, session_id=None, language_code=None, country_code=None):
         minimal_input_size = int(request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.minimal_partial_address_size', '5'))
-        if len(partial_address) <= minimal_input_size:
+        if not api_key or len(partial_address) <= minimal_input_size:
             return {
                 'results': [],
                 'session_id': session_id
@@ -184,11 +184,7 @@ class AutoCompleteController(http.Controller):
             api_key = self._get_api_key(use_employees_key)
         except AssertionError:
             api_key = None
-        if not api_key:
-            return {
-                'results': [],
-                'session_id': session_id
-            }
+
         return self._perform_place_search(partial_address, session_id=session_id, api_key=api_key)
 
     @http.route('/autocomplete/address_full', methods=['POST'], type='jsonrpc', auth='public', website=True)
