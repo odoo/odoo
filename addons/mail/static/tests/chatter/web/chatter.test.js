@@ -28,7 +28,7 @@ import {
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
-import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web/chatter_patch";
 import { queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
