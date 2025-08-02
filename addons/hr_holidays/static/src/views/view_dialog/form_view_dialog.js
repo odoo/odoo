@@ -33,7 +33,7 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     get hasNoWarning() {
-        return this.record.data.dashboard_warning_message == "";
+        return !this.record.data.dashboard_warning_message;
     }
 
     get canSave() {
