@@ -2163,6 +2163,10 @@ options.registry.Parallax = options.Class.extend({
         this.$target.toggleClass('parallax', isParallax);
         this.$target.toggleClass('s_parallax_is_fixed', widgetValue === '1');
         this.$target.toggleClass('s_parallax_no_overflow_hidden', (widgetValue === '0' || widgetValue === '1'));
+        // Remove repeat class and background-size when switching to parallax.
+        // Prevents gradient repeat in multi-background (gradient + image) setup
+        this.$target[0].classList.remove("o_bg_img_opt_repeat");
+        this.$target[0].style.backgroundSize = "";
         if (isParallax) {
             if (!this.parallaxEl) {
                 this.parallaxEl = document.createElement('span');
