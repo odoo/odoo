@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.misc import clean_context
 
 
 class StockMoveLine(models.Model):
@@ -82,6 +83,8 @@ class StockMoveLine(models.Model):
     is_inventory = fields.Boolean(related='move_id.is_inventory')
     is_locked = fields.Boolean(related='move_id.is_locked', readonly=True)
     is_scrap = fields.Boolean(related='move_id.scrapped')
+    scrap_reason_tag_ids = fields.Many2many('stock.scrap.reason.tag', string='Scrap Reason')
+    should_replenish_scrapped = fields.Boolean('Should Replenish')
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id')
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id')
     reference = fields.Char(related='move_id.reference', readonly=False)
@@ -359,7 +362,7 @@ class StockMoveLine(models.Model):
         # If this picking is already done we should generate an
         # associated done move.
         for move_line in mls:
-            if move_line.move_id or not move_line.picking_id:
+            if move_line.move_id or (not move_line.picking_id and not move_line.env.context.get('is_scrap')):
                 continue
             if move_line.picking_id.state != 'done':
                 moves = move_line._get_linkable_moves()
@@ -618,7 +621,7 @@ class StockMoveLine(models.Model):
                 if ml.product_id.tracking == 'none':
                     continue
                 picking_type_id = ml.move_id.picking_type_id
-                if not picking_type_id and not ml.is_inventory and not ml.lot_id and not ml.move_id.scrap_id:
+                if not picking_type_id and not ml.is_inventory and not ml.lot_id and not ml.move_id.scrapped:
                     ml_ids_tracked_without_lot.add(ml.id)
                     continue
                 if not picking_type_id or ml.lot_id or (not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots):
@@ -955,14 +958,14 @@ class StockMoveLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom_qty': 0 if self.picking_id and self.picking_id.state != 'done' else self.quantity,
             'product_uom': self.product_uom_id.id,
-            'location_id': self.picking_id.location_id.id,
-            'location_dest_id': self.picking_id.location_dest_id.id,
+            'location_id': self.location_id.id if self.env.context.get('is_scrap') else self.picking_id.location_id.id,
+            'location_dest_id': self.location_dest_id.id if self.env.context.get('is_scrap') else self.picking_id.location_dest_id.id,
             'picked': self.picked,
             'picking_id': self.picking_id.id,
             'state': self.picking_id.state,
             'picking_type_id': self.picking_id.picking_type_id.id,
             'restrict_partner_id': self.picking_id.owner_id.id,
-            'company_id': self.picking_id.company_id.id,
+            'company_id': self.picking_id.company_id.id or self.company_id.id,
             'partner_id': self.picking_id.partner_id.id,
             'package_level_id': self.package_level_id.id,
         }
@@ -1127,5 +1130,80 @@ class StockMoveLine(models.Model):
 
     def _get_linkable_moves(self):
         self.ensure_one()
-        moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id)
+        moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id and (x.scrapped if self.env.context.get('is_scrap') else True))
         return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+
+    def _should_check_available_qty(self):
+        self.ensure_one()
+        return self.product_id.is_storable
+
+    def check_available_qty(self):
+        if not self._should_check_available_qty():
+            return True
+
+        available_qty = self.with_context(
+            location=self.location_id.id,
+            lot_id=self.lot_id.id,
+            package_id=self.package_id.id,
+            owner_id=self.owner_id.id,
+            strict=True,
+        ).product_id.qty_available
+        scrap_qty = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
+        return float_compare(available_qty, scrap_qty, precision_rounding=self.product_id.uom_id.rounding) >= 0
+
+    def do_replenish(self, values=False):
+        self.ensure_one()
+        values = values or {}
+        self.with_context(clean_context(self.env.context)).env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            self.product_id,
+            self.quantity,
+            self.product_uom_id,
+            self.location_id,
+            self.origin,
+            self.origin,
+            self.company_id,
+            values
+        )])
+
+    def _prepare_scrap_move_vals(self):
+        self.ensure_one()
+        return {
+            'picked': True,
+            'scrapped': True,
+            'scrap_reason_tag_ids': [Command.set(self.scrap_reason_tag_ids.ids)],
+        }
+
+    def do_scrap(self):
+        self._check_company()
+        self.picked = True
+        self.move_id.with_context(is_scrap=True).write(self._prepare_scrap_move_vals())
+        self.move_id.with_context(is_scrap=True)._action_done()
+        for line in self:
+            if line.should_replenish_scrapped:
+                line.do_replenish()
+        return True
+
+    def action_scrap(self):
+        self.ensure_one()
+        if self.product_uom_id.is_zero(self.quantity):
+            raise UserError(_("You can only enter positive quantities."))
+        if self.check_available_qty():
+            return self.do_scrap()
+        else:
+            ctx = dict(self.env.context)
+            ctx.update({
+                'default_product_id': self.product_id.id,
+                'default_location_id': self.location_id.id,
+                'default_scrap_move_line_id': self.id,
+                'default_quantity': self.quantity,
+                'default_product_uom_name': self.product_id.uom_name,
+            })
+            return {
+                'name': self.env._('%(product)s: Insufficient Quantity To Scrap', product=self.product_id.display_name),
+                'view_mode': 'form',
+                'res_model': 'stock.warn.insufficient.qty.scrap',
+                'view_id': self.env.ref('stock.stock_warn_insufficient_qty_scrap_form_view').id,
+                'type': 'ir.actions.act_window',
+                'context': ctx,
+                'target': 'new'
+            }

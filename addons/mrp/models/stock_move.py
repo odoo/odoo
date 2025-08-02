@@ -81,6 +81,8 @@ class StockMove(models.Model):
     def _compute_location_dest_id(self):
         ids_to_super = set()
         for move in self:
+            if self.env.context.get('is_scrap'):
+                continue
             if move.production_id:
                 move.location_dest_id = move.production_id.location_dest_id
             elif move.raw_material_production_id:

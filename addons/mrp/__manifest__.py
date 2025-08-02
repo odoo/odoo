@@ -39,7 +39,6 @@
         'views/stock_rule_views.xml',
         'views/mrp_unbuild_views.xml',
         'views/res_config_settings_views.xml',
-        'views/stock_scrap_views.xml',
         'report/report_deliveryslip.xml',
         'report/mrp_report_views_main.xml',
         'report/mrp_report_bom_structure.xml',

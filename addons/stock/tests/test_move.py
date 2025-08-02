@@ -4329,11 +4329,11 @@ class TestStockMove(TestStockCommon):
         })
         picking.action_confirm()
         picking.action_assign()
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].create({
             'picking_id': picking.id,
             'product_id': self.productA.id,
             'product_uom_id': self.uom_unit.id,
-            'scrap_qty': 5.0,
+            'quantity': 5.0,
         })
         scrap.do_scrap()
 
@@ -4472,34 +4472,33 @@ class TestStockMove(TestStockCommon):
         storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
-        scrap_form = Form(self.env['stock.scrap'])
+        scrap_form = Form(self.env['stock.move.line'].with_context(is_scrap=True), view='stock.view_scrap_move_line_form2')
         scrap_form.product_id = self.productA
         scrap_form.location_id = self.stock_location
-        scrap_form.scrap_qty = 1
+        scrap_form.location_dest_id = self.scrap_location
+        scrap_form.quantity = 1
+        scrap_form.company_id = self.env.company
         scrap = scrap_form.save()
         scrap.do_scrap()
-        self.assertEqual(scrap.state, 'done')
-        move = scrap.move_ids[0]
+        move = self.env['stock.move'].search([('product_id', '=', self.productA.id), ('scrapped', '=', True)])
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity, 1)
-        self.assertEqual(move.scrapped, True)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 0)
 
     def test_scrap_2(self):
         """ Check the created stock move and the impact on quants when we scrap a
         consumable product.
         """
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
             'product_id': self.product_consu.id,
-            'product_uom_id':self.product_consu.uom_id.id,
+            'product_uom_id': self.product_consu.uom_id.id,
             'location_id': self.stock_location.id,
-            'scrap_qty': 1,
+            'location_dest_id': self.scrap_location.id,
+            'quantity': 1,
+            'company_id': self.env.company.id,
         })
-        self.assertEqual(scrap.name, 'New', 'Name should be New in draft state')
         scrap.do_scrap()
-        self.assertTrue(scrap.name.startswith('SP/'), 'Sequence should be Changed after do_scrap')
-        self.assertEqual(scrap.state, 'done')
-        move = scrap.move_ids[0]
+        move = self.env['stock.move'].search([('product_id', '=', self.product_consu.id), ('scrapped', '=', True)])
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity, 1)
         self.assertEqual(move.scrapped, True)
@@ -4522,11 +4521,13 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
             'product_id': self.productA.id,
             'product_uom_id': self.productA.uom_id.id,
+            'quantity': 1,
             'location_id': self.stock_location.id,
-            'scrap_qty': 1,
+            'location_dest_id': self.scrap_location.id,
+            'company_id': self.env.company.id,
         })
         scrap.do_scrap()
         self.assertEqual(move1.state, 'confirmed')
@@ -4558,22 +4559,20 @@ class TestStockMove(TestStockCommon):
         move1._action_assign()
 
         self.assertEqual(move1.state, 'assigned')
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
             'product_id': self.productA.id,
             'product_uom_id': self.productA.uom_id.id,
-            'scrap_qty': 5,
+            'quantity': 5,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.scrap_location.id,
             'picking_id': picking.id,
+            'company_id': self.env.company.id,
         })
-
-        scrap.action_validate()
+        scrap.do_scrap()
         self.assertEqual(len(picking.move_ids), 2)
         scrapped_move = picking.move_ids.filtered(lambda m: m.state == 'done')
         self.assertTrue(scrapped_move, 'No scrapped move created.')
-        self.assertEqual(scrapped_move.scrap_id.id, scrap.id, 'Wrong scrap linked to the move.')
-        self.assertEqual(scrap.scrap_qty, 5, 'Scrap quantity has been modified and is not correct anymore.')
-
-        scrapped_move.quantity = 8
-        self.assertEqual(scrap.scrap_qty, 8, 'Scrap quantity is not updated.')
+        self.assertEqual(scrap.quantity, 5, 'Scrap quantity has been modified and is not correct anymore.')
 
     def test_scrap_5(self):
         """ Scrap the product of a reserved move line where the product is reserved in another
@@ -4604,14 +4603,16 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move1.quantity, 0.33)
 
         # scrap a unit
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
             'product_id': self.productA.id,
             'product_uom_id': self.productA.uom_id.id,
+            'quantity': 1,
             'location_id': self.stock_location.id,
-            'scrap_qty': 1,
+            'location_dest_id': self.scrap_location.id,
             'picking_id': picking.id,
+            'company_id': self.env.company.id,
         })
-        scrap.action_validate()
+        scrap.do_scrap()
 
         self.assertEqual(scrap.state, 'done')
         self.assertEqual(move1.quantity, 0.25)
@@ -4619,21 +4620,24 @@ class TestStockMove(TestStockCommon):
     def test_scrap_6(self):
         """ Check that scrap correctly handle UoM. """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
             'product_id': self.productA.id,
             'product_uom_id': self.uom_dozen.id,
+            'quantity': 1,
             'location_id': self.stock_location.id,
-            'scrap_qty': 1,
+            'location_dest_id': self.scrap_location.id,
+            'company_id': self.env.company.id,
         })
-        warning_message = scrap.action_validate()
+        warning_message = scrap.action_scrap()
         self.assertEqual(warning_message.get('res_model', 'Wrong Model'), 'stock.warn.insufficient.qty.scrap')
         insufficient_qty_wizard = self.env['stock.warn.insufficient.qty.scrap']\
             .with_context(warning_message['context']).create({})
         insufficient_qty_wizard.action_done()
+        move = self.env['stock.move'].search([('product_id', '=', self.productA.id), ('scrapped', '=', True)])
         self.assertEqual(self.env['stock.quant']._gather(self.productA, self.stock_location).quantity, -11)
-        self.assertEqual(scrap.scrap_qty, 1)
-        self.assertEqual(scrap.product_uom_id, self.uom_dozen)
-        self.assertEqual(scrap.state, 'done')
+        self.assertEqual(move.quantity, 1)
+        self.assertEqual(move.product_uom, self.uom_dozen)
+        self.assertEqual(move.state, 'done')
 
     def test_scrap_7_sn_warning(self):
         """ Check serial numbers are correctly double checked """
@@ -4645,11 +4649,13 @@ class TestStockMove(TestStockCommon):
 
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.shelf_1, 1, lot_id=lot1)
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
             'product_id': self.product_serial.id,
             'product_uom_id': self.uom_unit.id,
             'location_id': self.shelf_2.id,
-            'lot_id': lot1.id
+            'location_dest_id': self.scrap_location.id,
+            'lot_id': lot1.id,
+            'company_id': self.env.company.id,
         })
 
         warning = False
@@ -4745,13 +4751,14 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move1.quantity, 9)
 
         # scrap a unit
-        scrap = self.env['stock.scrap'].create({
-            'product_id': self.productA.id,
-            'product_uom_id': self.productA.uom_id.id,
-            'scrap_qty': 1,
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
+            'product_id': self.product.id,
+            'product_uom_id': self.product.uom_id.id,
+            'quantity': 1,
             'picking_id': picking.id,
+            'company_id': self.env.company.id,
         })
-        scrap.action_validate()
+        scrap.action_scrap()
 
         self.assertEqual(scrap.state, 'done')
         picking.button_validate()
@@ -4825,13 +4832,15 @@ class TestStockMove(TestStockCommon):
         # 10 units are available in Stock/Shelf, none in Stock directly
         self.env['stock.quant']._update_available_quantity(self.productA, self.shelf_1, 10)
 
-        with Form(self.env['stock.scrap']) as scrap_form:
+        with Form(self.env['stock.move.line'].with_context(is_scrap=True), view='stock.view_scrap_move_line_form2') as scrap_form:
             scrap_form.product_id = self.productA
-            scrap_form.scrap_qty = 5
+            scrap_form.quantity = 5
             scrap_form.location_id = self.stock_location
+            scrap_form.location_dest_id = self.scrap_location
+            scrap_form.company_id = self.env.company
             scrap = scrap_form.save()
 
-        warning = scrap.action_validate()
+        warning = scrap.action_scrap()
         self.assertEqual(warning.get('res_model'), 'stock.warn.insufficient.qty.scrap', "Should trigger the warning as no qty in location")
 
     def test_in_date_1(self):
@@ -6279,12 +6288,13 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move_2.state, 'assigned')
 
         # Create a scrap order, that will remove some on the available quantity
-        with Form(self.env['stock.scrap']) as scrap_form:
+        with Form(self.env['stock.move']) as scrap_form:
             scrap_form.product_id = self.productA
-            scrap_form.scrap_qty = 2
+            scrap_form.product_uom_qty = 2
             scrap_form.location_id = self.stock_location
+            scrap_form.location_dest_id = self.scrap_location
             scrap = scrap_form.save()
-        scrap.action_validate()
+        scrap.action_scrap()
 
         # Since both moves have the same date, ensure that the reservation is changed on the latest created
         self.assertEqual(move_1.state, 'assigned')

@@ -9,6 +9,10 @@ class StockMoveLine(models.Model):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True, index='btree_not_null')
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
+    scrap_kit_id = fields.Many2one('mrp.bom', 'Kit',
+        domain="[('type', '=', 'phantom'), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_template)]",
+        check_company=True
+    )
 
     @api.depends('production_id')
     def _compute_picking_type_id(self):
@@ -124,3 +128,38 @@ class StockMoveLine(models.Model):
             return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
         else:
             return super()._get_linkable_moves()
+
+    def do_replenish(self, values=False):
+        self.ensure_one()
+        values = values or {}
+        if self.production_id and self.production_id.procurement_group_id:
+            values.update({
+                'group_id': self.production_id.procurement_group_id,
+            })
+        super().do_replenish(values)
+
+    def _should_check_available_qty(self):
+        return super()._should_check_available_qty() or self.product_id.is_kits
+
+    def _prepare_scrap_move_vals(self):
+        self.ensure_one()
+        res = super()._prepare_scrap_move_vals()
+        res.update({
+            'production_id': False,
+            'raw_material_production_id': False,
+        })
+        if self.product_id in self.production_id.move_finished_ids.product_id:
+            res['production_id'] = self.production_id.id
+        else:
+            res['raw_material_production_id'] = self.production_id.id
+        return res
+
+    def _compute_quantity(self):
+        kit_scrapped_lines = self.filtered(lambda line: line.scrap_kit_id)
+        for line in kit_scrapped_lines:
+            filters = {
+                'incoming_moves': lambda m: True,
+                'outgoing_moves': lambda m: False
+            }
+            line.quantity = line.move_id._compute_kit_quantities(line.product_id, line.quantity, line.scrap_kit_id, filters)
+        return super(StockMoveLine, self - kit_scrapped_lines)._compute_quantity()

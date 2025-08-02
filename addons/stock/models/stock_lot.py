@@ -4,7 +4,7 @@ import operator as py_operator
 from collections.abc import Iterable
 from re import findall as regex_findall, split as regex_split
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -344,3 +344,51 @@ class StockLot(models.Model):
 
             delivery_by_lot[lot.id] = list(delivery_ids)
         return delivery_by_lot
+
+    def _prepare_scrap_move_values(self):
+        vals = []
+        default_scrap_location = self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', '=', self.company_id.id or self.env.company.id)], limit=1)
+        for lot in self:
+            vals.append({
+                'product_id': lot.product_id.id,
+                'product_uom': lot.product_id.uom_id.id,
+                'reference': f'Scrap {lot.name}',
+                'state': 'draft',
+                'product_uom_qty': lot.product_qty,
+                'location_id': lot.location_id.id,
+                'location_dest_id': default_scrap_location.id,
+                'scrapped': True,
+                'picked': True,
+                'move_line_ids': [Command.create({
+                    'product_id': lot.product_id.id,
+                    'product_uom_id': lot.product_id.uom_id.id,
+                    'lot_id': lot.id,
+                    'quantity': lot.product_qty,
+                    'location_id': lot.location_id.id,
+                    'location_dest_id': default_scrap_location.id,
+                })],
+            })
+        return vals
+
+    def button_scrap(self):
+        lots_with_single_location = self.filtered(lambda l: l.location_id)
+        scrap_move_vals = lots_with_single_location._prepare_scrap_move_values()
+        scrap_moves = self.env['stock.move'].create(scrap_move_vals)
+        scrap_moves.with_context(is_scrap=True)._action_done()
+        notification_message = ''
+        notification_type = 'success'
+        if lots_with_single_location:
+            notification_message = _("Lot(s): %(lot_names)s are successfully scrapped.", lot_names=', '.join(lots_with_single_location.mapped('name')))
+        if self - lots_with_single_location:
+            notification_message += _("\nLot(s): %(lot_names)s are not in a single location and cannot be scrapped.", lot_names=', '.join((self - lots_with_single_location).mapped('name')))
+            notification_type = 'warning'
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': notification_type,
+                'sticky': True,
+                'message': notification_message,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }

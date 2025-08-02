@@ -147,12 +147,6 @@
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
-    <record model="ir.rule" id="stock_scrap_company_rule">
-        <field name="name">stock_scrap_company multi-company</field>
-        <field name="model_id" ref="model_stock_scrap"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
     <record model="ir.rule" id="report_stock_quantity_flow_comp_rule">
         <field name="name">report_stock_quantity_flow multi-company</field>
         <field name="model_id" ref="model_report_stock_quantity"/>

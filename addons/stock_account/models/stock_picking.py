@@ -13,8 +13,8 @@ class StockPicking(models.Model):
 
     def action_view_stock_valuation_layers(self):
         self.ensure_one()
-        scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
-        domain = [('id', 'in', (self.move_ids + scraps.move_ids).stock_valuation_layer_ids.ids)]
+        scraps = self.env['stock.move'].search([('picking_id', '=', self.id), ('scrapped', '=', True)])
+        domain = [('id', 'in', (self.move_ids + scraps).stock_valuation_layer_ids.ids)]
         action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
         context = literal_eval(action['context'])
         context.update(self.env.context)
