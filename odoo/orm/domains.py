@@ -1293,7 +1293,7 @@ def _optimize_any_domain(condition, model):
     """Make sure the value is an optimized domain (or Query or SQL)"""
     value = condition.value
     if isinstance(value, ANY_TYPES) and not isinstance(value, Domain):
-        if '!' not in condition.operator:
+        if condition.operator in ('any', 'not any'):
             # update operator to 'any!'
             return DomainCondition(condition.field_expr, condition.operator + '!', condition.value)
         return condition
@@ -1303,16 +1303,6 @@ def _optimize_any_domain(condition, model):
         # id ANY domain  <=>  domain
         # id NOT ANY domain  <=>  ~domain
         return domain if condition.operator in ('any', 'any!') else ~domain
-    # get the model to optimize with
-    try:
-        comodel = model.env[field.comodel_name]
-    except KeyError:
-        condition._raise("Cannot determine the comodel relation")
-    domain = domain._optimize(comodel, OptimizationLevel.BASIC)
-    # const if the domain is empty, the result is a constant
-    # if the domain is True, we keep it as is
-    if domain.is_false():
-        return _FALSE_DOMAIN if condition.operator in ('any', 'any!') else _TRUE_DOMAIN
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
@@ -1329,13 +1319,17 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
     domain = domain._optimize(comodel, level)
+    # const if the domain is empty, the result is a constant
+    # if the domain is True, we keep it as is
+    if domain.is_false():
+        return _FALSE_DOMAIN if condition.operator in ('any', 'any!') else _TRUE_DOMAIN
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
 [
     operator_optimization(('any', 'not any', 'any!', 'not any!'), level)(functools.partial(_optimize_any_domain_at_level, level))
     for level in OptimizationLevel
-    if level > OptimizationLevel.BASIC
+    if level > OptimizationLevel.NONE
 ]
 
 
@@ -1735,6 +1729,47 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
             parent_ids.update(comodel._ids)
             comodel = comodel[parent].filtered(lambda p: p.id not in parent_ids)
     return parent_ids
+
+
+@operator_optimization(['any', 'not any'], level=OptimizationLevel.FULL)
+def _optimize_any_with_rights(condition, model):
+    if model.env.su or condition._field(model).bypass_search_access:
+        return DomainCondition(condition.field_expr, condition.operator + '!', condition.value)
+    return condition
+
+
+@field_type_optimization(['many2one'], level=OptimizationLevel.FULL)
+def _optimize_m2o_bypass_comodel_id_lookup(condition, model):
+    """Avoid comodel's subquery, if it can be compared with the field directly"""
+    operator = condition.operator
+    if (
+        operator in ('any!', 'not any!')
+        and isinstance(subdomain := condition.value, DomainCondition)
+        and subdomain.field_expr == 'id'
+        and (op := subdomain.operator) in ('in', 'not in', 'any!', 'not any!')
+    ):
+        # We are bypassing permissions, we can transform:
+        #  a ANY (id IN X)  =>  A IN X
+        #  a ANY (id ANY X)  => A ANY X  (if X is not a Domain)
+        val = subdomain.value
+        match operator, op:
+            case 'not any!', 'in' | 'not in':
+                # Since we're inverting the op, we need to toggle the presence of the Empty Set {False}.
+                op = _INVERSE_OPERATOR[op]
+                val = val ^ {False}
+            case _, 'any!':
+                # Use the initial operator
+                op = operator
+            case _, 'not any!':
+                # We need to inverse the initial operator and handle the presence of the Empty Set {False}.
+                # Build domain for operator='any!' and inverse if needed.
+                domain = DomainCondition(condition.field_expr, '!=', False) \
+                    & DomainCondition(condition.field_expr, 'not any!', val)
+                if operator == 'not any!':
+                    domain = ~domain
+                return domain
+        return DomainCondition(condition.field_expr, op, val)
+    return condition
 
 
 # --------------------------------------------------

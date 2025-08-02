@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from itertools import combinations
 
 from odoo.fields import Command, Domain
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, users
 from odoo.tools import SQL, OrderedSet
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
@@ -772,6 +772,22 @@ class TestDomainOptimize(TransactionCase):
             self.number_domain,
         )
 
+    def test_sudo_optimize(self):
+        model = self.env['test_orm.discussion'].with_user(self.env.ref('base.public_user'))
+        self.assertEqual(
+            Domain('moderator', 'any', Domain('login', 'like', 'one')).optimize_full(model),
+            Domain('moderator', 'any', Domain('login', 'like', 'one')),
+        )
+        self.assertEqual(
+            Domain('moderator', 'any', Domain('login', 'like', 'one')).optimize_full(model.sudo()),
+            Domain('moderator', 'any!', Domain('login', 'like', 'one')),
+        )
+        query = model.moderator._search(Domain.TRUE)
+        self.assertEqual(
+            Domain('moderator', 'any', query).optimize(model),
+            Domain('moderator', 'any!', query),
+        )
+
     def test_nary_build(self):
         self.assertEqual(
             ~(self.number_domain & self.number_domain),
@@ -906,37 +922,37 @@ class TestDomainOptimize(TransactionCase):
         ]:
             field_type = model._fields[field_name].type
             m2o = field_type == 'many2one'
-            left = left.optimize_full(model[field_name])
-            right = right.optimize_full(model[field_name])
+            left = left.optimize(model[field_name])
+            right = right.optimize(model[field_name])
 
             with self.subTest(field_type=field_type):
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', right)).optimize(model),
                     Domain(field_name, 'any', left | right),
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) & Domain(field_name, 'any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) & Domain(field_name, 'any', right)).optimize(model),
                     Domain(field_name, 'any', left & right) if m2o
                     else Domain(field_name, 'any', left) & Domain(field_name, 'any', right),
                 )
                 query = model[field_name]._search([])
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right)).optimize(model),
                     Domain(field_name, 'any', left | right) | Domain(field_name, 'any!', query),
                     "Don't merge query with domains",
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right)).optimize_full(model),
+                    (Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right)).optimize(model),
                     Domain(field_name, 'not any', left & right) if m2o
                     else Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right),
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'not any', left) & Domain(field_name, 'not any', right)).optimize_full(model),
+                    (Domain(field_name, 'not any', left) & Domain(field_name, 'not any', right)).optimize(model),
                     Domain(field_name, 'not any', left | right),
                 )
 
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)).optimize(model),
                     (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)),
                     "Do not merge any and not any",
                 )
@@ -958,3 +974,16 @@ class TestDomainOptimize(TransactionCase):
         domain = Domain('foo', '=', 4) | Domain('foo', '=', 5)
         domain = domain.optimize_full(bar)
         self.assertEqual(domain, Domain('name', 'in', OrderedSet(['(4, 5)'])))
+
+    @users('admin')  # just so it's not SUPERUSER to be able to de-escalate su.
+    def test_bypass_comodel_id_lookup(self):
+        model = self.env['test_orm.mixed']
+        base_domain = Domain('currency_id.id', '=', 2)
+        self.assertEqual(  # without sudo
+            list(base_domain.optimize_full(model)),
+            [('currency_id', 'any', [('id', 'in', [2])])],
+        )
+        self.assertEqual(  # with sudo
+            list(base_domain.optimize_full(model.sudo())),
+            [('currency_id', 'in', [2])],
+        )

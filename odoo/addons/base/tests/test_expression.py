@@ -1756,7 +1756,7 @@ class TestQueries(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users"."active" IS TRUE
-            AND ("res_users"."id" IN %s AND "res_users__partner_id"."id" IN %s)
+            AND ("res_users"."id" IN %s AND "res_users"."partner_id" IN %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             Model.search([])
@@ -1778,12 +1778,10 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
+            LEFT JOIN "res_partner" AS "res_partner__commercial_partner_id"
+            ON ("res_partner"."commercial_partner_id" = "res_partner__commercial_partner_id"."id")
             WHERE "res_partner"."active" IS TRUE AND (
-            "res_partner"."commercial_partner_id" IN (
-                SELECT "res_partner"."id"
-                FROM "res_partner"
-                WHERE "res_partner"."name" IN %s
-            )
+            ("res_partner"."commercial_partner_id" IS NOT NULL AND "res_partner__commercial_partner_id"."name" IN %s)
             AND EXISTS(SELECT FROM (
                 SELECT "res_users"."partner_id" AS __inverse
                 FROM "res_users"
@@ -1871,11 +1869,9 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE "res_partner"."company_id" IN (
-                SELECT "res_company"."id"
-                FROM "res_company"
-                WHERE "res_company"."name" LIKE %s
-            )
+            LEFT JOIN "res_company" AS "res_partner__company_id"
+            ON ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -1883,15 +1879,11 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE "res_partner"."company_id" IN (
-                SELECT "res_company"."id"
-                FROM "res_company"
-                WHERE "res_company"."partner_id" IN (
-                    SELECT "res_partner"."id"
-                    FROM "res_partner"
-                    WHERE "res_partner"."name" LIKE %s
-                )
-            )
+            LEFT JOIN "res_company" AS "res_partner__company_id"
+            ON ("res_partner"."company_id" = "res_partner__company_id"."id")
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id"
+            ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -1899,15 +1891,14 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE ("res_partner"."company_id" IN (
-                SELECT "res_company"."id"
-                FROM "res_company"
-                WHERE "res_company"."name" LIKE %s
-            ) OR "res_partner"."country_id" IN (
-                SELECT "res_country"."id"
-                FROM "res_country"
-                WHERE "res_country"."code" LIKE %s
-            ))
+            LEFT JOIN "res_company" AS "res_partner__company_id"
+            ON ("res_partner"."company_id" = "res_partner__company_id"."id")
+            LEFT JOIN "res_country" AS "res_partner__country_id"
+            ON ("res_partner"."country_id" = "res_partner__country_id"."id")
+            WHERE (
+                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+                OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
+            )
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([
@@ -1921,11 +1912,11 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE ("res_partner"."company_id" NOT IN (
+            WHERE ("res_partner"."company_id" IS NULL OR "res_partner"."company_id" NOT IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
                 WHERE "res_company"."name" LIKE %s
-            ) OR "res_partner"."company_id" IS NULL)
+            ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search(['!', ('company_id.name', 'like', self.company.name)])
@@ -2029,11 +2020,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."partner_id" IN (
-                SELECT "res_partner"."id"
-                FROM "res_partner"
-                WHERE "res_partner"."name" LIKE %s
-            ))
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
+                ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2056,13 +2045,11 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE "res_partner"."company_id" IN (
-                SELECT "res_company"."id"
-                FROM "res_company"
-                LEFT JOIN "res_partner" AS "res_company__partner_id" ON
-                    ("res_company"."partner_id" = "res_company__partner_id"."id")
-                WHERE "res_company__partner_id"."name" LIKE %s
-            )
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
+                ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2118,11 +2105,9 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE "res_partner"."company_id" IN (
-                SELECT "res_company"."id"
-                FROM "res_company"
-                WHERE "res_company"."name" LIKE %s
-            )
+            LEFT JOIN "res_company" AS "res_partner__company_id"
+            ON ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id', 'like', self.company.name)])
@@ -2130,11 +2115,11 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE ("res_partner"."company_id" NOT IN (
+            WHERE ("res_partner"."company_id" IS NULL OR "res_partner"."company_id" NOT IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
                 WHERE "res_company"."name" LIKE %s
-            ) OR "res_partner"."company_id" IS NULL)
+            ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id', 'not like', "blablabla")])
