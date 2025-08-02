@@ -10,6 +10,8 @@ import {
     setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
 import { Plugin } from "@html_editor/plugin";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
 
@@ -101,4 +103,22 @@ test("Set contenteditable to false on elements that have the o_not_editable clas
 test("Set contenteditable to false on empty arch field", async () => {
     await setupWebsiteBuilder("");
     expect(":iframe #wrap").toHaveAttribute("contenteditable", "false");
+});
+
+test("feff on links are cleaned up", async () => {
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect(args[1]).not.toMatch(/\u{FEFF}/u); // to catch the un-escaped ones
+        expect(args[1]).not.toMatch(/FEFF/); // to catch the escaped ones
+        expect.step("save");
+        return true;
+    });
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section><a href="http://test.test">test</a></section>`
+    );
+    const link = queryOne(":iframe a");
+    setSelection({ anchorNode: link, anchorOffset: 3 });
+    insertText(getEditor(), "x");
+    expect(link.innerText).toMatch(/\u{FEFF}/u);
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect.verifySteps(["save"]);
 });
