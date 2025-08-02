@@ -117,17 +117,6 @@ class ProductReplenish(models.TransientModel):
         except UserError as error:
             raise UserError(error)
 
-    # TODO: to remove in master
-    def _prepare_orderpoint_values(self):
-        values = {
-            'location_id': self.warehouse_id.lot_stock_id.id,
-            'product_id': self.product_id.id,
-            'qty_to_order': self.quantity,
-        }
-        if self.route_id:
-            values['route_id'] = self.route_id.id
-        return values
-
     def _prepare_run_values(self):
         replenishment = self.env['procurement.group'].create({})
         values = {
