@@ -5,7 +5,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { scrollTo } from "@web/core/utils/scrolling";
 
-import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
+import { preloadBackground } from "@survey/js/survey_preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {
@@ -21,7 +21,7 @@ const { DateTime } = luxon;
 
 var isMac = navigator.platform.toUpperCase().includes('MAC');
 
-publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
+publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
     events: {
         'change .o_survey_lang_selector': '_onChangeLanguage',
@@ -504,7 +504,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.nextScreenResult = result;
             // once we have the next question, wait for the preload of the background
             if (this.options.refreshBackground && result.background_image_url) {
-                return this._preloadBackground(result.background_image_url);
+                return preloadBackground(result.background_image_url);
             } else {
                 return Promise.resolve();
             }
