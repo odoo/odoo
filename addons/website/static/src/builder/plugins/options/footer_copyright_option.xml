@@ -4,6 +4,7 @@
 <t t-name="website.FooterCopyrightOption">
     <BuilderRow label.translate="Colors">
         <BuilderColorPicker
+            t-if="hasSomeViews(['website.footer_custom', 'website.template_footer_centered', 'website.template_footer_call_to_action', 'website.template_footer_headline', 'website.template_footer_mega','website.template_footer_mega_columns', 'website.template_footer_mega_links'])"
             enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
             defaultColor="''"
@@ -12,6 +13,30 @@
                 mainParam: 'copyright-custom',
                 gradientColor: 'copyright-gradient',
                 combinationColor: 'copyright',
+                nullValue: 'NULL',
+            }"/>
+        <BuilderColorPicker
+            t-if="hasSomeViews(['website.template_footer_descriptive', 'website.template_footer_minimalist'])"
+            enabledTabs="['theme', 'custom', 'gradient']"
+            preview="false"
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'copyright-dark-custom',
+                gradientColor: 'copyright-dark-gradient',
+                combinationColor: 'copyright-dark',
+                nullValue: 'NULL',
+            }"/>
+        <BuilderColorPicker
+            t-if="hasSomeViews(['website.template_footer_links', 'website.template_footer_contact', 'website.template_footer_mega_cards'])"
+            enabledTabs="['theme', 'custom', 'gradient']"
+            preview="false"
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'copyright-bright-custom',
+                gradientColor: 'copyright-bright-gradient',
+                combinationColor: 'copyright-bright',
                 nullValue: 'NULL',
             }"/>
     </BuilderRow>

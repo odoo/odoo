@@ -700,9 +700,9 @@ class Website(models.Model):
         # through module overrides of `configurator_get_footer_links`.
         footer_links = website.configurator_get_footer_links()
         footer_ids = [
-            'website.template_footer_contact', 'website.template_footer_headline',
+            'website.template_footer_contact',
             'website.footer_custom', 'website.template_footer_links',
-            'website.template_footer_minimalist',
+            'website.template_footer_minimalist', 'website.template_footer_mega', 'website.template_footer_mega_columns', 'website.template_footer_mega_links',
         ]
         for footer_id in footer_ids:
             view_id = self.env['website'].viewref(footer_id)

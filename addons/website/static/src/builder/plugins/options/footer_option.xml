@@ -6,43 +6,75 @@
         <BuilderSelect action="'websiteConfigFooter'">
             <BuilderSelectItem title.translate="Default"
                 actionParam="{ view: 'website.footer_custom', vars: { 'footer-template': 'default' } }"
+                id="'footer_default_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_default.svg'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title.translate="Descriptive"
                 actionParam="{ view: 'website.template_footer_descriptive', vars: { 'footer-template': 'descriptive' } }"
+                id="'footer_descriptive_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_descriptive.svg'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title.translate="Centered"
                 actionParam="{ view: 'website.template_footer_centered', vars: { 'footer-template': 'centered' } }"
+                id="'footer_centered_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_centered.svg'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title.translate="Links"
                 actionParam="{ view: 'website.template_footer_links', vars: { 'footer-template': 'links' } }"
+                id="'footer_links_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_links.svg'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title.translate="Minimalist"
                 actionParam="{ view: 'website.template_footer_minimalist', vars: { 'footer-template': 'minimalist' } }"
+                id="'footer_minimalist_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_minimalist.svg'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title.translate="Contact"
                 actionParam="{ view: 'website.template_footer_contact', vars: { 'footer-template': 'contact' } }"
+                id="'footer_contact_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_contact.svg'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title.translate="Call-to-action"
                 actionParam="{ view: 'website.template_footer_call_to_action', vars: { 'footer-template': 'call_to_action' } }"
+                id="'footer_call_to_action_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_call_to_action.svg'"/>
             </BuilderSelectItem>
             <BuilderSelectItem title.translate="Headline"
                 actionParam="{ view: 'website.template_footer_headline', vars: { 'footer-template': 'headline' } }"
+                id="'footer_headline_opt'"
             >
                 <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_headline.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Mega"
+                actionParam="{ view: 'website.template_footer_mega', vars: { 'footer-template': 'mega' } }"
+                id="'footer_mega_opt'"
+            >
+                <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Mega Columns"
+                actionParam="{ view: 'website.template_footer_mega_columns', vars: { 'footer-template': 'mega_columns' } }"
+                id="'footer_mega_columns_opt'"
+            >
+                <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega_columns.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Mega Links"
+                actionParam="{ view: 'website.template_footer_mega_links', vars: { 'footer-template': 'mega_links' } }"
+                id="'footer_mega_links_opt'"
+            >
+                <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega_links.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Mega Cards"
+                actionParam="{ view: 'website.template_footer_mega_cards', vars: { 'footer-template': 'mega_cards' } }"
+                id="'footer_mega_cards_opt'"
+            >
+                <Img attrs="{ style: 'width: 100%;' }" src="'/website/static/src/img/snippets_options/footer_template_mega_cards.svg'"/>
             </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
@@ -66,6 +98,7 @@
 
 <t t-name="website.FooterColorsOption">
     <BuilderRow label.translate="Background">
+            <!-- t-if="isActiveItem('footer_default_opt') || isActiveItem('footer_centered_opt') || isActiveItem('footer_links_opt') || isActiveItem('footer_call_to_action_opt') || isActiveItem('footer_headline_opt')" -->
         <BuilderColorPicker
             enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
@@ -77,6 +110,30 @@
                 combinationColor: 'footer',
                 nullValue: 'NULL',
             }"/>
+        <!-- <BuilderColorPicker
+            t-if="isActiveItem('footer_descriptive_opt') || isActiveItem('footer_contact_opt') || isActiveItem('footer_mega_opt') || isActiveItem('footer_mega_columns_opt') || isActiveItem('footer_mega_links_opt') || isActiveItem('footer_mega_cards_opt')"
+            enabledTabs="['theme', 'custom', 'gradient']"
+            preview="false"
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'footer-bright-custom',
+                gradientColor: 'footer-bright-gradient',
+                combinationColor: 'footer-bright',
+                nullValue: 'NULL',
+            }"/>
+        <BuilderColorPicker
+            t-if="isActiveItem('footer_minimalist_opt')"
+            enabledTabs="['theme', 'custom', 'gradient']"
+            preview="false"
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'footer-light-custom',
+                gradientColor: 'footer-light-gradient',
+                combinationColor: 'footer-light',
+                nullValue: 'NULL',
+            }"/> -->
     </BuilderRow>
 </t>
 
