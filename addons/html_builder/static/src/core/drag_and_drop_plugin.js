@@ -107,7 +107,9 @@ export class DragAndDropPlugin extends Plugin {
             this.document.defaultView !== window ? this.document.defaultView : false;
 
         const scrollingElement = () =>
-            this.dependencies.dropzone.getDropRootElement() || getScrollingElement(this.document);
+            this.dependencies.dropzone.getDropRootElement() ||
+            this.config.getExternalScrollableAncestor?.() ||
+            getScrollingElement(this.document);
 
         const dragAndDropOptions = {
             ref: { el: element },

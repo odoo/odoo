@@ -1,0 +1,24 @@
+html:has(body:not(.o_mass_mailing_iframe_fullscreen)) {
+    height: auto !important;
+}
+
+body:not(.o_mass_mailing_iframe_fullscreen) {
+    height: auto !important;
+    .note-editable {
+        overflow: visible;
+        height: auto;
+        .o_layout {
+            min-height: 0 !important;
+        }
+    }
+}
+
+body {
+    &.o_mass_mailing_with_builder {
+        background-color: #F7F8FA;
+    }
+    .note-editable {
+        padding: 0;
+        border: none;
+    }
+}

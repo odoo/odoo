@@ -1,4 +1,4 @@
-import { applyFunDependOnSelectorAndExclude } from "@website/builder/plugins/utils";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -22,4 +22,4 @@ class BackgroundOptionPlugin extends Plugin {
         editingEl.classList.add("o_colored_level");
     }
 }
-registry.category("website-plugins").add(BackgroundOptionPlugin.id, BackgroundOptionPlugin);
+registry.category("builder-plugins").add(BackgroundOptionPlugin.id, BackgroundOptionPlugin);

@@ -14,6 +14,7 @@ export class ShapeSelector extends BaseOptionComponent {
         buttonWrapperClassName: { type: String, optional: true },
         imgThroughDiv: { type: Boolean, optional: true },
         getShapeUrl: { type: Function, optional: true },
+        withoutAnimatedShapes: { type: Boolean, optional: true },
     };
     static components = { ImgGroup };
 

@@ -27,7 +27,7 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         },
         {
             content: 'Pick the basic theme',
-            trigger: ":iframe #basic",
+            trigger: ".o_mailing_template_preview_wrapper [data-name='basic']",
             run: "click",
         },
         {

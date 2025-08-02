@@ -33,8 +33,8 @@ export class WebsiteUrlPicker extends BuilderUrlPicker {
     }
 }
 
-class UrlPickerPlugin extends Plugin {
-    static id = "urlPickerPlugin";
+class WebsiteUrlPickerPlugin extends Plugin {
+    static id = "websiteUrlPickerPlugin";
 
     resources = {
         builder_components: {
@@ -43,4 +43,4 @@ class UrlPickerPlugin extends Plugin {
     };
 }
 
-registry.category("website-plugins").add(UrlPickerPlugin.id, UrlPickerPlugin);
+registry.category("website-plugins").add(WebsiteUrlPickerPlugin.id, WebsiteUrlPickerPlugin);

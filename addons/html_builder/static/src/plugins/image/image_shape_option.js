@@ -5,7 +5,9 @@ import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
-    static props = {};
+    static props = {
+        withoutAnimatedShapes: { type: Boolean, optional: true },
+    };
     setup() {
         super.setup();
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
@@ -48,6 +50,7 @@ export class ImageShapeOption extends BaseOptionComponent {
                 buttonWrapperClassName: "o-hb-img-shape-btn",
                 selectorTitle: _t("Shapes"),
                 shapeGroups: this.imageShapeOption.getImageShapeGroups(),
+                withoutAnimatedShapes: this.props.withoutAnimatedShapes,
             }
         );
     }

@@ -72,7 +72,7 @@ class BuilderContainer extends Component {
             </div>
         </div>`;
     static components = { Builder, LocalOverlayContainer };
-    static props = { content: String, Plugins: Array };
+    static props = { content: String, Plugins: Array, editableSelector: String };
 
     setup() {
         this.state = useState({ isMobile: false, isEditing: false, showSidebar: true });
@@ -108,6 +108,7 @@ class BuilderContainer extends Component {
                 this.state.isMobile = !this.state.isMobile;
             },
             overlayRef: () => {},
+            editableSelector: this.props.editableSelector,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
             Plugins: this.props.Plugins,
@@ -124,7 +125,9 @@ class IrUiView extends models.Model {
 
 export async function setupHTMLBuilder(
     content = "",
-    { snippetContent, dropzoneSelectors, styleContent } = {}
+    { snippetContent, dropzoneSelectors, styleContent, editableSelector } = {
+        editableSelector: "#wrapwrap",
+    }
 ) {
     defineMailModels(); // fuck this shit
 
@@ -188,7 +191,9 @@ export async function setupHTMLBuilder(
             _resolve();
         },
     });
-    const comp = await mountWithCleanup(BuilderContainer, { props: { content, Plugins } });
+    const comp = await mountWithCleanup(BuilderContainer, {
+        props: { content, Plugins, editableSelector },
+    });
     await comp.iframeLoaded;
     if (styleContent) {
         const iframeDocument = queryOne(":iframe");

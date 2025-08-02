@@ -19,4 +19,4 @@ class SeparatorOptionPlugin extends Plugin {
         is_movable_selector: { selector: ".s_hr", direction: "vertical" },
     };
 }
-registry.category("website-plugins").add(SeparatorOptionPlugin.id, SeparatorOptionPlugin);
+registry.category("builder-plugins").add(SeparatorOptionPlugin.id, SeparatorOptionPlugin);

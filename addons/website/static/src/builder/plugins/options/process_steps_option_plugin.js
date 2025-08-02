@@ -1,6 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
-import { applyFunDependOnSelectorAndExclude } from "@website/builder/plugins/utils";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { connectorOptionParams, ProcessStepsOption } from "./process_steps_option";

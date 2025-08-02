@@ -4930,6 +4930,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'marketing_automation_sms',
             'mass_mailing',
             'mass_mailing_crm',
+            'mass_mailing_egg',
             'mass_mailing_event',
             'mass_mailing_slides',
             'mass_mailing_sms',

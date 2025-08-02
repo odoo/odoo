@@ -8,6 +8,7 @@ export class SetupEditorPlugin extends Plugin {
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: withSequence(0, this.setContenteditable.bind(this)),
+        o_editable_selectors: "[data-oe-model]",
     };
 
     setup() {
@@ -20,7 +21,9 @@ export class SetupEditorPlugin extends Plugin {
             return;
         }
         // Add the `o_editable` class on the editable elements
-        let editableEls = this.getEditableElements("[data-oe-model]")
+        let editableEls = this.getEditableElements(
+            this.getResource("o_editable_selectors").join(", ")
+        )
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
             .filter(

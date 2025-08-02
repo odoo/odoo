@@ -9,7 +9,7 @@ import { BuilderFontSizeSelector } from "./font_size_selector";
 export class BuilderFontPlugin extends Plugin {
     static id = "builderFont";
     static shared = ["getFontsCache", "getFontsData"];
-    static dependencies = ["savePlugin", "toolbar"];
+    static dependencies = ["toolbar"];
     resources = {
         // Lists CSS variables that will be reset when a font is deleted if
         // they refer to that font.
@@ -139,4 +139,4 @@ export class BuilderFontPlugin extends Plugin {
         };
     }
 }
-registry.category("website-plugins").add(BuilderFontPlugin.id, BuilderFontPlugin);
+registry.category("builder-plugins").add(BuilderFontPlugin.id, BuilderFontPlugin);

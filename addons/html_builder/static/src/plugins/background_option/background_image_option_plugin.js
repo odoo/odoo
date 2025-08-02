@@ -223,5 +223,5 @@ export class DynamicColorAction extends BuilderAction {
 }
 
 registry
-    .category("website-plugins")
+    .category("builder-plugins")
     .add(BackgroundImageOptionPlugin.id, BackgroundImageOptionPlugin);

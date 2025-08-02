@@ -460,5 +460,5 @@ class BackgroundShapeColorAction extends BaseAnimationAction {
 }
 
 registry
-    .category("website-plugins")
+    .category("builder-plugins")
     .add(BackgroundShapeOptionPlugin.id, BackgroundShapeOptionPlugin);

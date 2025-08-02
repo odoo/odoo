@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: 'Select item from dropdown',
             run: 'click',
         }, {
-            trigger: 'div[name="body_arch"] :iframe #default',
+            trigger: 'div[name="body_arch"] .o_mailing_template_preview_wrapper [data-name="default"]',
             content: markup('Choose this <b>theme</b>.'),
             run: 'click',
         }, {
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: markup('Click here to switch to <b>code view</b>'),
             run: 'click'
         }, {
-            trigger: ':iframe .o_codeview',
+            trigger: 'textarea.o_codeview',
             content: ('Remove all content from codeview'),
             run: function () {
                 const iframe = document.querySelector('.wysiwyg_iframe');
