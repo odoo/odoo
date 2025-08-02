@@ -1633,6 +1633,7 @@ def to_re(pattern):
     """ cut down version of TimeRE converting strptime patterns to regex
     """
     pattern = re.sub(r'\s+', r'\\s+', pattern)
+    pattern = re.sub(r'\.', r'\\.', pattern)
     pattern = re.sub('%([a-z])', _replacer, pattern, flags=re.IGNORECASE)
     pattern = '^' + pattern + '$'
     return re.compile(pattern, re.IGNORECASE)
