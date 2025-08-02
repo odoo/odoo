@@ -6,7 +6,6 @@ from collections import defaultdict
 from collections.abc import Mapping, Collection
 from decorator import decorator
 from inspect import signature, Parameter
-from itertools import chain
 import logging
 import signal
 import sys
@@ -24,11 +23,12 @@ if typing.TYPE_CHECKING:
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
+_logger_state = ''
 
 
 class ormcache_counter:
     """ Statistic counters for cache entries. """
-    __slots__ = ['hit', 'miss', 'err', 'gen_time', 'cache_name']
+    __slots__ = ['cache_name', 'err', 'gen_time', 'hit', 'miss', 'tx_err', 'tx_hit', 'tx_miss']
 
     def __init__(self):
         self.hit: int = 0
@@ -36,14 +36,25 @@ class ormcache_counter:
         self.err: int = 0
         self.gen_time: float = 0.0
         self.cache_name: str = ''
+        self.tx_hit: int = 0
+        self.tx_miss: int = 0
+        self.tx_err: int = 0
 
     @property
     def ratio(self) -> float:
         return 100.0 * self.hit / (self.hit + self.miss or 1)
 
+    @property
+    def tx_ratio(self) -> float:
+        return 100.0 * self.tx_hit / (self.tx_hit + self.tx_miss or 1)
 
-STAT: defaultdict[tuple[str, str, Callable], ormcache_counter] = defaultdict(ormcache_counter)
-"""statistic counters dictionary, maps (dbname, modelname, method) to counter"""
+    @property
+    def tx_calls(self) -> int:
+        return self.tx_hit + self.tx_miss
+
+
+_COUNTERS: defaultdict[tuple[str, Callable], ormcache_counter] = defaultdict(ormcache_counter)
+"""statistic counters dictionary, maps (dbname, method) to counter"""
 
 
 class ormcache:
@@ -85,45 +96,53 @@ class ormcache:
         return lookup
 
     def add_value(self, *args, cache_value=None, **kwargs) -> None:
-        model = args[0]
-        d, key0, counter = self.lru(model)
-        counter.cache_name = self.cache_name
-        key = key0 + self.key(*args, **kwargs)
+        model: BaseModel = args[0]
+        d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
+        key = self.key(*args, **kwargs)
         d[key] = cache_value
 
     def determine_key(self) -> None:
         """ Determine the function that computes a cache key from arguments. """
-        if self.skiparg is None:
-            # build a string that represents function code and evaluate it
-            args = ', '.join(
-                # remove annotations because lambdas can't be type-annotated,
-                # and defaults because they are redundant (defaults are present
-                # in the wrapper function itself)
-                str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
-                for params in signature(self.method).parameters.values()
-            )
-            code = f"lambda {args}: ({''.join(a for arg in self.args for a in (arg, ','))})"
-            self.key = unsafe_eval(code)
-        else:
+        assert self.method is not None
+        if self.skiparg is not None:
             # backward-compatible function that uses self.skiparg
-            self.key = lambda *args, **kwargs: args[self.skiparg:]
-
-    def lru(self, model: BaseModel) -> tuple[LRU, tuple, ormcache_counter]:
-        model_name = model._name or ''
-        counter = STAT[model.pool.db_name, model_name, self.method]
-        cache: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
-        return cache, (model_name, self.method), counter
+            self.key = lambda *args, **kwargs: (args[0]._name, self.method, *args[self.skiparg:])
+            return
+        # build a string that represents function code and evaluate it
+        args = ', '.join(
+            # remove annotations because lambdas can't be type-annotated,
+            # and defaults because they are redundant (defaults are present
+            # in the wrapper function itself)
+            str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
+            for params in signature(self.method).parameters.values()
+        )
+        values = ['self._name', 'method', *self.args]
+        code = f"lambda {args}: ({''.join(a for arg in values for a in (arg, ','))})"
+        self.key = unsafe_eval(code, {'method': self.method})
 
     def lookup(self, method, *args, **kwargs):
-        d, key0, counter = self.lru(args[0])
-        key = key0 + self.key(*args, **kwargs)
+        model: BaseModel = args[0]
+        d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
+        key = self.key(*args, **kwargs)
+        counter = _COUNTERS[model.pool.db_name, self.method]
+
+        tx_calls = set()
+        if not isinstance(model, type):  # skip classmethods
+            tx_calls = model.env.cr.cache.setdefault('_orm_cache_called', tx_calls)
+        is_tx = key not in tx_calls
+        if is_tx:
+            counter.cache_name = self.cache_name
+            tx_calls.add(key)
+        del tx_calls
+
         try:
             r = d[key]
             counter.hit += 1
+            counter.tx_hit += is_tx
             return r
         except KeyError:
             counter.miss += 1
-            counter.cache_name = self.cache_name
+            counter.tx_miss += is_tx
             start = time.monotonic()
             value = self.method(*args, **kwargs)
             counter.gen_time += time.monotonic() - start
@@ -132,6 +151,7 @@ class ormcache:
         except TypeError:
             _logger.warning("cache lookup error on %r", key, exc_info=True)
             counter.err += 1
+            counter.tx_err += is_tx
             return self.method(*args, **kwargs)
 
 
@@ -145,53 +165,90 @@ class ormcache_context(ormcache):
         assert skiparg is None, "ormcache_context() no longer supports skiparg"
         warnings.warn("Since 19.0, use ormcache directly, context values are available as `self.env.context.get`", DeprecationWarning)
         super().__init__(*args, **kwargs)
-        self.keys = keys
 
     def determine_key(self) -> None:
-        """ Determine the function that computes a cache key from arguments. """
-        # build a string that represents function code and evaluate it
+        assert self.method is not None
         sign = signature(self.method)
-        args = ', '.join(
-            str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
-            for params in sign.parameters.values()
-        )
         cont_expr = "(context or {})" if 'context' in sign.parameters else "self.env.context"
         keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
-        if self.args:
-            code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
-        else:
-            code = "lambda %s: (%s,)" % (args, keys_expr)
-        self.key = unsafe_eval(code)
+        self.args += (keys_expr,)
+        super().determine_key()
 
 
-class OrmCacheStatsLogger:
-    loggings = set()
-    stop_time = 0.0
+def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are there for signals)
+    # collect and log data in a separate thread to avoid blocking the main thread
+    # and avoid using logging module directly in the signal handler
+    # https://docs.python.org/3/library/logging.html#thread-safety
+    global _logger_state  # noqa: PLW0603
+    if _logger_state:
+        # send the signal again to stop the logging thread
+        _logger_state = 'abort'
+        return
+    _logger_state = 'run'
 
-    def __init__(self, start_time):
-        self.start_time = start_time
-
-    def check_continue_logging(self):
-        if self.start_time > self.stop_time:
+    def check_continue_logging():
+        if _logger_state != 'abort':
             return True
         _logger.info('Stopping logging ORM cache stats')
         return False
 
-    def log_ormcache_stats(self, size=False):
+    class StatsLine:
+        def __init__(self, method, counter: ormcache_counter):
+            self.sz_entries_sum: int = 0
+            self.sz_entries_max: int = 0
+            self.nb_entries: int = 0
+            self.counter = counter
+            self.method = method
+
+    def _log_ormcache_stats():
         """ Log statistics of ormcache usage by database, model, and method. """
         from odoo.modules.registry import Registry  # noqa: PLC0415
         try:
-            self.loggings.add(self)
-            log_msgs = ['Caches stats:']
-            # {dbname: sz_entries_all}
-            db_size = defaultdict(lambda: 0)
-            # {dbname: {(model, method): [sz_entries_sum, sz_entries_max, nb_entries, stat]}}
-            cache_stats = defaultdict(lambda: defaultdict(lambda: [0, 0, 0, None]))
+            # {dbname: {method: StatsLine}}
+            cache_stats: defaultdict[str, dict[Callable, StatsLine]] = defaultdict(dict)
+            # {dbname: (cache_name, entries, count, total_size)}
+            cache_fill: defaultdict[str, list[tuple[str, int, int, int]]] = defaultdict(list)
 
+            # browse the values in cache
+            registries = Registry.registries.snapshot
+            for i, (dbname, registry) in enumerate(registries.items(), start=1):
+                if not check_continue_logging():
+                    return
+                _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
+                db_cache_stats = cache_stats[dbname]
+                db_cache_fill = cache_fill[dbname]
+                for cache_name, cache in registry._Registry__caches.items():
+                    cache_total_size = 0
+                    for cache_key, cache_value in cache.snapshot.items():
+                        method = cache_key[1]
+                        stats = db_cache_stats.get(method)
+                        if stats is None:
+                            stats = db_cache_stats[method] = StatsLine(method, _COUNTERS[dbname, method])
+                        stats.nb_entries += 1
+                        if not show_size:
+                            continue
+                        size = get_cache_size(cache_value, cache_info=method.__qualname__)
+                        cache_total_size += size
+                        stats.sz_entries_sum += size
+                        stats.sz_entries_max = max(stats.sz_entries_max, size)
+                    db_cache_fill.append((cache_name, len(cache), cache.count, cache_total_size))
+
+            # add counters that have no values in cache
+            for (dbname, method), counter in _COUNTERS.copy().items():  # copy to avoid concurrent modification
+                if not check_continue_logging():
+                    return
+                db_cache_stats = cache_stats[dbname]
+                stats = db_cache_stats.get(method)
+                if stats is None:
+                    db_cache_stats[method] = StatsLine(method, counter)
+
+            # Output the stats
+            log_msgs = ['Caches stats:']
             size_column_info = (
-                f"{'Memory SUM [Bytes]':>20},"
-                f"{'Memory MAX [Bytes]':>20},"
-            ) if size else ''
+                f"{'Memory %':>10},"
+                f"{'Memory SUM':>12},"
+                f"{'Memory MAX':>12},"
+            ) if show_size else ''
             column_info = (
                 f"{'Cache Name':>25},"
                 f"{'Entry':>7},"
@@ -199,92 +256,70 @@ class OrmCacheStatsLogger:
                 f"{'Hit':>6},"
                 f"{'Miss':>6},"
                 f"{'Err':>6},"
-                f"{'Gen Time [s]':>14},"
-                f"{'Hit Ratio':>11},"
-                f"{'Model.Method':>15}"
+                f"{'Gen Time [s]':>13},"
+                f"{'Hit Ratio':>10},"
+                f"{'TX Hit Ratio':>13},"
+                f"{'TX Calls':>8},"
+                "  Method"
             )
 
-            registries = Registry.registries.snapshot
-            for i, (dbname, registry) in enumerate(registries.items(), start=1):
-                if not self.check_continue_logging():
-                    return
-                _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
-                db_cache_stats = cache_stats[dbname]
-                sz_entries_all = 0
-                for cache in registry._Registry__caches.values():
-                    for cache_key, cache_value in cache.snapshot.items():
-                        model_name, method = cache_key[:2]
-                        stats = db_cache_stats[model_name, method]
-                        stats[2] += 1  # nb_entries
-                        if not size:
-                            continue
-                        cache_info = f'{model_name}.{method.__name__}'
-                        size = get_cache_size(cache_value, cache_info=cache_info)
-                        sz_entries_all += size
-                        stats[0] += size  # sz_entries_sum
-                        stats[1] = max(stats[1], size)  # sz_entries_max
-                db_size[dbname] = sz_entries_all
-
-            for (dbname, model_name, method), stat in STAT.copy().items():  # copy to avoid concurrent modification
-                if not self.check_continue_logging():
-                    return
-                cache_stats[dbname][model_name, method][3] = stat
-
             for dbname, db_cache_stats in sorted(cache_stats.items(), key=lambda k: k[0] or '~'):
-                if not self.check_continue_logging():
+                if not check_continue_logging():
                     return
-                sz_entries_all = db_size[dbname]
                 log_msgs.append(f'Database {dbname or "<no_db>"}:')
-                log_msgs.append(column_info)
+                log_msgs.extend(
+                    f" * {cache_name}: {entries}/{count}{' (' if cache_total_size else ''}{cache_total_size}{' bytes)' if cache_total_size else ''}"
+                    for cache_name, entries, count, cache_total_size in db_cache_fill
+                )
+                log_msgs.append('Details:')
 
-                # sort by -sz_entries_sum, model and method_name
-                db_cache_stat = sorted(db_cache_stats.items(), key=lambda k: (-k[1][0], k[0][0], k[0][1].__name__))
-                for (model_name, method), (sz_entries_sum, sz_entries_max, nb_entries, stat) in db_cache_stat:
+                # sort by -sz_entries_sum and method_name
+                db_cache_stat = sorted(db_cache_stats.items(), key=lambda k: (-k[1].sz_entries_sum, k[0].__name__))
+                sz_entries_all = sum(stat.sz_entries_sum for _, stat in db_cache_stat)
+                log_msgs.append(column_info)
+                for method, stat in db_cache_stat:
                     size_data = (
-                        f'{sz_entries_sum:11d} ({sz_entries_sum / (sz_entries_all or 1) * 100:5.1f}%),'
-                        f'{sz_entries_max:20d},'
-                    ) if size else ''
+                        f'{stat.sz_entries_sum / (sz_entries_all or 1) * 100:9.1f}%,'
+                        f'{stat.sz_entries_sum:12d},'
+                        f'{stat.sz_entries_max:12d},'
+                    ) if show_size else ''
                     log_msgs.append(
-                        f'{stat.cache_name:>25},'
-                        f'{nb_entries:7d},'
+                        f'{stat.counter.cache_name:>25},'
+                        f'{stat.nb_entries:7d},'
                         f'{size_data}'
-                        f'{stat.hit:6d},'
-                        f'{stat.miss:6d},'
-                        f'{stat.err:6d},'
-                        f'{stat.gen_time:14.3f},'
-                        f'{stat.ratio:10.1f}%,'
-                        f'   {model_name}.{method.__name__}'
+                        f'{stat.counter.hit:6d},'
+                        f'{stat.counter.miss:6d},'
+                        f'{stat.counter.err:6d},'
+                        f'{stat.counter.gen_time:13.3f},'
+                        f'{stat.counter.ratio:9.1f}%,'
+                        f'{stat.counter.tx_ratio:12.1f}%,'
+                        f'{stat.counter.tx_calls:8d},'
+                        f'  {method.__qualname__}'
                     )
             _logger.info('\n'.join(log_msgs))
-        except Exception as e:  # noqa: BLE001
-            _logger.error(e)
+        except Exception:  # noqa: BLE001
+            _logger.exception()
         finally:
-            self.loggings.remove(self)
+            global _logger_state  # noqa: PLW0603
+            _logger_state = ''
 
-
-def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are there for signals)
-    # collect and log data in a separate thread to avoid blocking the main thread
-    # and avoid using logging module directly in the signal handler
-    # https://docs.python.org/3/library/logging.html#thread-safety
-    cur_time = time.monotonic()
-    if OrmCacheStatsLogger.loggings:
-        # send the signal again to stop the logging thread
-        OrmCacheStatsLogger.stop_time = cur_time
-        return
+    show_size = False
     if sig == signal.SIGUSR1:
-        threading.Thread(target=OrmCacheStatsLogger(cur_time).log_ormcache_stats,
+        threading.Thread(target=_log_ormcache_stats,
                          name="odoo.signal.log_ormcache_stats").start()
     elif sig == signal.SIGUSR2:
-        threading.Thread(target=OrmCacheStatsLogger(cur_time).log_ormcache_stats, args=(True,),
+        show_size = True
+        threading.Thread(target=_log_ormcache_stats,
                          name="odoo.signal.log_ormcache_stats_with_size").start()
 
 
-def get_cache_key_counter(bound_method: Callable, *args, **kwargs):
+def get_cache_key_counter(bound_method: Callable, *args, **kwargs) -> tuple[LRU, tuple, ormcache_counter]:
     """ Return the cache, key and stat counter for the given call. """
     model: BaseModel = bound_method.__self__  # type: ignore
     ormcache_instance: ormcache = bound_method.__cache__  # type: ignore
-    cache, key0, counter = ormcache_instance.lru(model)
-    key = key0 + ormcache_instance.key(model, *args, **kwargs)
+    cache: LRU = model.pool._Registry__caches[ormcache_instance.cache_name]  # type: ignore
+    key = ormcache_instance.key(model, *args, **kwargs)
+    counter = _COUNTERS[model.pool.db_name, ormcache_instance.method]
     return cache, key, counter
 
 
@@ -293,16 +328,17 @@ def get_cache_size(
         *,
         cache_info: str = '',
         seen_ids: set[int] | None = None,
-        class_slots: dict[type, Iterable[str]] | None = None
+        class_slots: dict[type, Iterable[str]] | None = {}  # by default, memoize slots
     ) -> int:
     """ A non-thread-safe recursive object size estimator """
     from odoo.models import BaseModel  # noqa: PLC0415
     from odoo.api import Environment  # noqa: PLC0415
 
     if seen_ids is None:
-        seen_ids = set()
+        # count internal constants as 0 bytes
+        seen_ids = set(map(id, (None, False, True)))
     if class_slots is None:
-        class_slots = {}  # {class_name: combined_slots}
+        class_slots = {}  # {class_id: combined_slots}
     total_size = 0
     objects = [obj]
 
@@ -320,12 +356,14 @@ def get_cache_size(
 
         if hasattr(cur_obj, '__slots__'):
             cur_obj_cls = type(cur_obj)
-            if cur_obj_cls not in class_slots:
-                class_slots[cur_obj_cls] = tuple(set(chain.from_iterable(
-                    getattr(cls, '__slots__', ())
+            attributes = class_slots.get(id(cur_obj_cls))
+            if attributes is None:
+                class_slots[id(cur_obj_cls)] = attributes = tuple({
+                    f'_{cls.__name__}{attr}' if attr.startswith('__') else attr
                     for cls in cur_obj_cls.mro()
-                )))
-            objects.extend(getattr(cur_obj, s) for s in class_slots[cur_obj_cls] if hasattr(cur_obj, s))
+                    for attr in getattr(cls, '__slots__', ())
+                })
+            objects.extend(getattr(cur_obj, attr, None) for attr in attributes)
         if hasattr(cur_obj, '__dict__'):
             objects.append(object.__dict__)
 
