@@ -467,6 +467,7 @@ export class Message extends Record {
             mentionedChannels,
             mentionedPartners,
         });
+        const hadLink = this.hasLink;
         const data = await rpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .concat(this.attachment_ids)
@@ -480,7 +481,7 @@ export class Message extends Record {
             ...this.thread.rpcParams,
         });
         this.store.insert(data, { html: true });
-        if (this.hasLink && this.store.hasLinkPreviewFeature) {
+        if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
     }

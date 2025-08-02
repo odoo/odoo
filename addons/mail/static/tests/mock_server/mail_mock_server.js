@@ -553,13 +553,45 @@ async function mail_link_preview(request) {
 
     const { message_id } = await parseRequestParams(request);
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
-    if (message.body.includes("https://make-link-preview.com")) {
+    const doc = new DOMParser().parseFromString(message.body, "text/html");
+    const currentUrls = Array.from(doc.querySelectorAll("a:not([data-oe-model])"))
+        .map(a => a.getAttribute("href"))
+        .filter(Boolean);
+    const existingPreviews = MailLinkPreview.browse(message.link_preview_ids || []);
+    const previewsToDelete = [];
+    for (const linkPreview of existingPreviews) {
+        const linkExist = currentUrls.includes(linkPreview.source_url);
+        if (!linkExist) {
+            previewsToDelete.push(linkPreview);
+        }
+    }
+    if (previewsToDelete.length) {
+        for (const preview of previewsToDelete) {
+            BusBus._sendone(
+                MailMessage._bus_notification_target(preview.message_id),
+                "mail.record/insert",
+                new mailDataHelpers.Store(MailMessage.browse(preview.message_id), {
+                    linkPreviews: mailDataHelpers.Store.many(
+                        MailLinkPreview.browse(preview.id),
+                        "DELETE",
+                        makeKwArgs({ only_id: true })
+                    ),
+                }).get_result()
+            );
+        }
+        MailLinkPreview.unlink(previewsToDelete.map(p => p.id));
+    }
+    const previewUrlToCreate = "https://make-link-preview.com";
+    const previewAlreadyExist = existingPreviews.some(
+        preview => preview.source_url === previewUrlToCreate
+    );
+    if (message.body.includes(previewUrlToCreate) && !previewAlreadyExist) {
         const linkPreviewId = MailLinkPreview.create({
             message_id: message.id,
             og_description: "test description",
             og_title: "Article title",
             og_type: "article",
-            source_url: "https://make-link-preview.com",
+            source_url: previewUrlToCreate,
         });
         BusBus._sendone(
             MailMessage._bus_notification_target(message_id),
