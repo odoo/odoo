@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import convert
+from odoo.tools import convert, SQL
 
 
 class HrEmployee(models.Model):
@@ -37,21 +37,7 @@ class HrEmployee(models.Model):
             vals_emp_skill = vals.pop('current_employee_skill_ids', [])\
                 + vals.pop('certification_ids', []) + vals.get('employee_skill_ids', [])
             vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(vals_emp_skill, self)
-        res = super().create(vals_list)
-        if self.env.context.get('salary_simulation'):
-            return res
-        resume_lines_values = []
-        for employee in res:
-            line_type = self.env.ref('hr_skills.resume_type_experience', raise_if_not_found=False)
-            resume_lines_values.append({
-                'employee_id': employee.id,
-                'name': employee.company_id.name or '',
-                'date_start': employee.create_date.date(),
-                'description': employee.job_title or '',
-                'line_type_id': line_type and line_type.id,
-            })
-        self.env['hr.resume.line'].create(resume_lines_values)
-        return res
+        return super().create(vals_list)
 
     def write(self, vals):
         if 'current_employee_skill_ids' in vals or 'certification_ids' in vals or 'employee_skill_ids' in vals:
@@ -67,3 +53,34 @@ class HrEmployee(models.Model):
             return
         convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init')
         convert.convert_file(self.env, 'hr_skills', 'data/scenarios/hr_skills_scenario.xml', None, mode='init')
+
+    @api.model
+    def get_internal_resume_lines(self, res_id, res_model):
+        if not res_id:
+            return []
+        if res_model == 'res.users':
+            res_id = self.env['res.users'].browse(res_id).employee_id.id
+        self.env.cr.execute(SQL(
+            '''
+                WITH relevant_records AS (
+                    SELECT date_version AS date_start, job_title,
+                           job_title IS DISTINCT FROM (LAG(job_title) OVER (ORDER BY date_version)) AS is_changed
+                      FROM hr_version
+                     WHERE employee_id=%s
+                )
+                SELECT job_title, date_start,
+                       (LEAD(date_start) OVER (ORDER BY date_start) - INTERVAL '1 day')::DATE date_end
+                  FROM relevant_records
+                 WHERE is_changed
+                 ORDER BY date_start DESC
+            ''', res_id)
+        )
+        query_result = self.env.cr.fetchall()
+        res = []
+        for rec in query_result:
+            res.append({
+                'job_title': rec[0],
+                'date_start': rec[1],
+                'date_end': rec[2]
+            })
+        return res

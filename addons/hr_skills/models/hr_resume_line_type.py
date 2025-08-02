@@ -11,3 +11,5 @@ class HrResumeLineType(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
+    is_course = fields.Boolean('Course', default=False)
+    resume_line_type_properties_definition = fields.PropertiesDefinition('Sections Properties')
