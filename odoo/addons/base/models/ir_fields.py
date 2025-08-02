@@ -381,23 +381,7 @@ class IrFieldsConverter(models.AbstractModel):
 
     @api.model
     def _input_tz(self):
-        # if there's a tz in context, try to use that
-        if self.env.context.get('tz'):
-            try:
-                return pytz.timezone(self.env.context['tz'])
-            except pytz.UnknownTimeZoneError:
-                pass
-
-        # if the current user has a tz set, try to use that
-        user = self.env.user
-        if user.tz:
-            try:
-                return pytz.timezone(user.tz)
-            except pytz.UnknownTimeZoneError:
-                pass
-
-        # fallback if no tz in context or on user: UTC
-        return pytz.UTC
+        return self.env.tz
 
     @api.model
     def _str_to_datetime(self, model, field, value, savepoint):
