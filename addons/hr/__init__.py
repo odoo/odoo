@@ -14,3 +14,19 @@ def _install_hr_localization(env):
         ])
         if l10n_mx:
             l10n_mx.button_install()
+
+
+def _set_administrator_email_for_empty_db(env):
+    admin_user = env.ref('base.user_admin', raise_if_not_found=False)
+    if not admin_user:
+        return
+
+    if env['res.users'].search_count([]) == 1:
+        employee = env['hr.employee'].search([('user_id', '=', admin_user.id)], limit=1)
+        if employee and not employee.work_email:
+            employee.work_email = 'admin@example.com'
+
+
+def _post_init_hook(env):
+    _install_hr_localization(env)
+    _set_administrator_email_for_empty_db(env)
