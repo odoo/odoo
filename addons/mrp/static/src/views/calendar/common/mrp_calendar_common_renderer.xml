@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="mrp.CalendarCommonRenderer.event" t-inherit="web.CalendarCommonRenderer.event" t-inherit-mode="primary">
+    <xpath expr="//div[hasclass('o_event_title')]" position="after">
+      <t t-if="product_id">
+        <span class="d-block">
+          <t t-out="product_id"/>
+          <t t-if="product_qty">
+            <span> (<t t-out="product_qty"/> <t t-out="product_uom"/>)</span>
+          </t>
+        </span>
+      </t>
+    </xpath>
+  </t>
+
+</templates>
