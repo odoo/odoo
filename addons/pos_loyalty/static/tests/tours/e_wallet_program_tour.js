@@ -172,3 +172,39 @@ registry.category("web_tour.tours").add("EWalletLoyaltyHistory", {
             PosLoyalty.finalizeOrder("Cash", "0"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_editable_ewallet_reward_line", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Topup 100$ for E wallet Partner
+            ProductScreen.addOrderline("Top-up eWallet", "1", "100"),
+            PosLoyalty.orderTotalIs("100.00"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartner("E wallet Partner"),
+            PosLoyalty.finalizeOrder("Cash", "100"),
+
+            // Use eWallet for 50$ payment
+            ProductScreen.clickDisplayedProduct("Test Product A"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartner("E wallet Partner"),
+            PosLoyalty.eWalletButtonState({
+                highlighted: true,
+                text: getEWalletText("Pay"),
+                click: true,
+            }),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.clickLine("eWallet"),
+            ProductScreen.clickNumpad("Qty"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.selectedOrderlineHasDirect("eWallet", "0", "0.0"),
+            PosLoyalty.orderTotalIs("100.00"),
+            ProductScreen.clickNumpad("Price"),
+            ProductScreen.clickNumpad("5"),
+            ProductScreen.clickNumpad("0"),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+        ].flat(),
+});

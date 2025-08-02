@@ -10,12 +10,6 @@ class LoyaltyReward(models.Model):
     _name = 'loyalty.reward'
     _inherit = ['loyalty.reward', 'pos.load.mixin']
 
-    def _get_discount_product_values(self):
-        res = super()._get_discount_product_values()
-        for vals in res:
-            vals.update({'taxes_id': False})
-        return res
-
     @api.model
     def _load_pos_data_domain(self, data, config):
         return [('program_id', 'in', config._get_program_ids().ids)]
