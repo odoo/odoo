@@ -10,7 +10,13 @@ $o-bus-ConnectionAlert-color: mix($white, $warning, 60%);
     width: fit-content;
     animation: o-bus-ConnectionAlert-failureAnimation ease-in-out .5s forwards;
     padding: map-get($spacers, 1);
-    padding-bottom: map-get($spacers, 1) - 2px;
+
+    &.o-inChatWindow {
+        padding-top: map-get($spacers, 1) - 2px;
+    }
+    &:not(.o-inChatWindow) {
+        padding-bottom: map-get($spacers, 1) - 2px;
+    }
 }
 
 .o-bus-ConnectionAlert-icon {
