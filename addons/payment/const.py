@@ -295,4 +295,5 @@ REPORT_REASONS_MAPPING = {
     'provider_not_available': _lt("no supported provider available"),
     'tokenization_not_supported': _lt("tokenization not supported"),
     'validation_not_supported': _lt("tokenization without payment no supported"),
+    'require_delivery_address': _lt("require delivery address"),
 }
