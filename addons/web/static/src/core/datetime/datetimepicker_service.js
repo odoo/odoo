@@ -242,15 +242,21 @@ export const datetimePickerService = {
 
                     if (!popover.isOpen) {
                         const popoverTarget = getPopoverTarget();
+                        const rect = popoverTarget.getBoundingClientRect();
+                        const spaceBelow = window.innerHeight - rect.bottom;
+                        const requiredHeight = 300;
+                        const shouldOpenUpward = spaceBelow < requiredHeight;
                         if (env.isSmall) {
                             const { marginBottom } = popoverTarget.style;
-                            // Adds enough space for the popover to be displayed below the target
-                            // even on small screens.
-                            popoverTarget.style.marginBottom = `100vh`;
-                            popoverTarget.scrollIntoView(true);
-                            restoreTargetMargin = async () => {
-                                popoverTarget.style.marginBottom = marginBottom;
-                            };
+                            popoverTarget.scrollIntoView({ behavior: "smooth", block: "center" });
+                            if (!shouldOpenUpward) {
+                                // Adds enough space for the popover to be displayed below the target
+                                // even on small screens.
+                                popoverTarget.style.marginBottom = `100%`;
+                                restoreTargetMargin = async () => {
+                                    popoverTarget.style.marginBottom = marginBottom;
+                                };
+                            }
                         }
                         popover.open(popoverTarget, { pickerProps });
                     }
