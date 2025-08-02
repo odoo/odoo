@@ -36,9 +36,6 @@ class WebsiteSaleWishlist(Controller):
     def get_wishlist(self, **kw):
         wishes = request.env['product.wishlist'].with_context(display_default_code=False).current()
 
-        if not wishes:
-            return request.redirect('/shop')
-
         return request.render(
             'website_sale_wishlist.product_wishlist',
             {

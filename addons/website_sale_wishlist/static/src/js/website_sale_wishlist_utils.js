@@ -48,12 +48,15 @@ function removeWishlistProduct(productId) {
 function updateWishlistNavBar() {
     const wishlistProductIds = getWishlistProductIds();
     const wishButton = document.querySelector('.o_wsale_my_wish');
-    if (wishButton.classList.contains('o_wsale_my_wish_hide_empty')) {
-        wishButton.classList.toggle('d-none', !wishlistProductIds.length);
-    }
     wishButton.querySelector('.my_wish_quantity').textContent = `${wishlistProductIds.length}`;
-    const wishlistQuantity = document.querySelector('.my_wish_quantity');
-    wishlistQuantity.classList.toggle('d-none', !wishlistProductIds.length);
+}
+
+function updateWishlistView() {
+    const wishlistProductIDs = getWishlistProductIds();
+    const wishlistEmpty = document.querySelector('#empty-wishlist-message');
+
+    wishlistEmpty.classList.toggle('d-none', wishlistProductIDs.length > 0);
+    wishlistEmpty.classList.toggle('d-flex', wishlistProductIDs.length === 0);
 }
 
 /**
@@ -74,4 +77,5 @@ export default {
     removeWishlistProduct: removeWishlistProduct,
     updateWishlistNavBar: updateWishlistNavBar,
     updateDisabled: updateDisabled,
+    updateWishlistView: updateWishlistView,
 };
