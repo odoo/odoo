@@ -1,6 +1,10 @@
 .oe_seo_configuration {
     --seo__preview-title-color: #1a0dab; // Google Search color
 
+    > .modal-body {
+        padding-top: 0;
+    }
+
     #language-box {
         padding-right: 25px;
         background-color: white;
@@ -82,40 +86,49 @@
         list-style: none;
         font-family: arial, sans-serif;
 
-        .r {
+        .o_seo_preview_r {
             cursor: pointer;
             color:var(--seo__preview-title-color);
-            font-size: 18px;
+            font-size: 20px;
+            line-height: 32px;
             overflow: hidden;
             text-overflow: ellipsis;
             -webkit-text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        .s {
-            font-size: 13px;
-            line-height: 18px;
-            color: #545454;
-            .kv {
-                display: block;
-                max-width: 300px;
+        .o_seo_preview_s {
+            font-size: 14px;
+            line-height: 22px;
+            .o_seo_preview_kv {
                 font-size: 12px;
-                line-height: 18px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis !important;
+                line-height: 14px;
             }
         }
 
-        .i {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
+        .o_seo_preview_q {
+            flex: 1 1 auto;
+            min-width: 0;
         }
 
-        .l {
-            height: 26px;
-            width: 26px;
+        .o_seo_preview_g {
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            width: 92px;
+            height: 92px;
+
+            .o_seo_preview_i {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .o_seo_preview_l {
+            height: 28px;
+            width: 28px;
+            margin-right: 12px;
         }
     }
 
@@ -123,8 +136,8 @@
         cursor: pointer;
     }
 
-    .oe_seo_checks {
-        .i {
+    .o_seo_images_check {
+        .o_seo_keyword_i {
             height: 100%;
             width: 100%;
             object-fit: cover;
@@ -143,7 +156,6 @@
         width: 70px;
         height: 70px;
         object-fit: cover;
-        margin: 15px;
-        border: 2px solid #ced4da;
+        border: 1px solid map-get($grays, '300');
     }
 }
