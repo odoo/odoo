@@ -82,11 +82,11 @@ export class ComboConfiguratorPopup extends Component {
 
     async onClickProduct({ product, combo_item }, ev) {
         const productTmpl = product.product_tmpl_id;
-        if (
-            productTmpl.isConfigurable() &&
-            product.product_template_variant_value_ids.length === 0
-        ) {
-            const payload = await this.pos.openConfigurator(product.product_tmpl_id);
+        if (productTmpl.needToConfigure()) {
+            const payload = await this.pos.openConfigurator(product.product_tmpl_id, {
+                hideAlwaysVariants: true,
+                forceVariantValue: product.product_template_variant_value_ids,
+            });
             if (payload) {
                 this.state.configuration[combo_item.id] = payload;
             } else {

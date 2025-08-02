@@ -153,7 +153,7 @@
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
                     <span>This option or combination of options is not available</span>
                 </div>
-                <div t-foreach="this.attributes" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
+                <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
                     <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.attribute_id.name"/>
                     <RadioProductAttribute t-if="attribute.attribute_id.display_type === 'radio'" attribute="attribute" 
                         selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)" 
