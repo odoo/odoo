@@ -49,6 +49,8 @@
                 <separator/>
                 <filter domain="[('state', '=', 'confirm')]" string="First Approval" name="approve"/>
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
+                <filter string="Upcoming Approved" domain="[('state', '=', 'validate'), ('date_to', '&gt;=', context_today().strftime('%Y-%m-%d'))]" name="upcoming_approved"/>
+                <separator/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <filter name="cancelled_leaves" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
