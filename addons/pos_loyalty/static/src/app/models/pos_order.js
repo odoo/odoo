@@ -895,8 +895,18 @@ patch(PosOrder.prototype, {
      */
     processGiftCard(newGiftCardCode, points, expirationDate) {
         const partner_id = this.partner_id?.id || false;
+<<<<<<< 576d2ec1ac03b8ceb9589dd5f1115497d2d4dd9d:addons/pos_loyalty/static/src/app/models/pos_order.js
         const product_id = this.getSelectedOrderline().product_id.id;
         const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
+||||||| 4cd24dc73d46b714cd5a764ed3f003e9507b0777:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+        const product_id = this.get_selected_orderline().product_id.id;
+        const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
+=======
+        const product_id = this.get_selected_orderline().product_id.id;
+        const program =
+            this.get_selected_orderline()._e_wallet_program_id ||
+            this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
+>>>>>>> b51772f1b28e3f9dcb14d220f2cba7b68c253931:addons/pos_loyalty/static/src/overrides/models/pos_order.js
 
         let couponId;
         const couponData = {
