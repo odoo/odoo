@@ -684,6 +684,51 @@ class StockQuant(TransactionCase):
         # Default removal strategy is 'Closest location', so lot2 should be received as it was put in a closer location. (stock_location/subloc2 < stock_location/subloc3)
         self.assertEqual(picking.move_ids.lot_ids.id, lot2.id)
 
+    def test_sn_duplicated(self):
+        """ This test check if the SN number isn't considered as duplicated after an internal transfer
+        """
+        # Enable multi-locations to be able to set an origin location for delivery
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'group_ids': [Command.link(grp_multi_loc.id)]})
+
+        lot1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_serial.id,
+        })
+
+        location_copy = self.stock_location.copy()
+
+        picking_in = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids_without_package': [
+                Command.create({
+                    'product_id': self.product_serial.id,
+                    'product_uom_qty': 1,
+                    'lot_ids': [lot1.id]
+                })
+            ]
+        })
+        picking_in.button_validate()
+
+        picking_internal = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': location_copy.id,
+            'move_ids_without_package': [
+                Command.create({
+                    'product_id': self.product_serial.id,
+                    'product_uom_qty': 1,
+                })
+            ]
+        })
+        picking_internal.button_validate()
+
+        self.env['stock.quant'].action_view_inventory()
+
+        product_quant_ids = self.product_serial.stock_quant_ids.filtered(lambda p: p.location_id.usage in ['internal', 'transit'])
+        self.assertEqual(product_quant_ids[0].with_context(inventory_mode=True).sn_duplicated, False)
+
     def test_closest_removal_strategy_untracked(self):
         """ Check that the Closest location strategy correctly applies when you have multiple products received
         at different locations for untracked products."""
