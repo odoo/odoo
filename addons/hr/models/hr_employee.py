@@ -342,6 +342,27 @@ class HrEmployeePrivate(models.Model):
                 values = [(value.copy() if value else None) for value in values]
             self.env.cache.update_raw(self, self._fields[fname], values)
 
+    def _work_permit_task_user(self):
+        self.ensure_one()
+        return self.parent_id.user_id.id
+
+    def _work_permit_task_values(self, responsible_user_id):
+        self.ensure_one()
+        lang = self.env['res.users'].browse(responsible_user_id).lang
+        formated_date = format_date(
+            self.env,
+            self.work_permit_expiration_date,
+            date_format="dd MMMM y",
+            lang_code=lang
+        )
+        return {
+            "note": _('The work permit of %(employee)s expires at %(date)s.',
+                employee=self.name,
+                date=formated_date
+            ),
+            "user_id": responsible_user_id,
+        }
+
     @api.model
     def _cron_check_work_permit_validity(self):
         # Called by a cron
@@ -349,18 +370,13 @@ class HrEmployeePrivate(models.Model):
         outdated_days = fields.Date.today() + relativedelta(months=+1)
         nearly_expired_work_permits = self.search([('work_permit_scheduled_activity', '=', False), ('work_permit_expiration_date', '<', outdated_days)])
         employees_scheduled = self.env['hr.employee']
-        for employee in nearly_expired_work_permits.filtered(lambda employee: employee.parent_id):
-            responsible_user_id = employee.parent_id.user_id.id
-            if responsible_user_id:
-                employees_scheduled |= employee
-                lang = self.env['res.users'].browse(responsible_user_id).lang
-                formated_date = format_date(employee.env, employee.work_permit_expiration_date, date_format="dd MMMM y", lang_code=lang)
-                employee.activity_schedule(
-                    'mail.mail_activity_data_todo',
-                    note=_('The work permit of %(employee)s expires at %(date)s.',
-                        employee=employee.name,
-                        date=formated_date),
-                    user_id=responsible_user_id)
+        for employee in nearly_expired_work_permits.filtered(lambda employee: employee._work_permit_task_user()):
+            employee_user_id = employee._work_permit_task_user()
+            employees_scheduled |= employee
+            employee.activity_schedule(
+                'mail.mail_activity_data_todo',
+                **employee._work_permit_task_values(employee_user_id),
+            )
         employees_scheduled.write({'work_permit_scheduled_activity': True})
 
     @api.model
