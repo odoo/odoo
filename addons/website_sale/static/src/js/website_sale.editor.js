@@ -458,10 +458,24 @@ class AttachmentMediaDialog extends MediaDialog {
      * @override
      */
     async save() {
-        await super.save();
         const selectedMedia = this.selectedMedia[this.state.activeTab];
-        if (selectedMedia.length) {
-            await this.props.extraImageSave(selectedMedia);
+        const toSave = Object.fromEntries(
+            selectedMedia.filter(media => media.mediaType === 'libraryMedia').map(media => [
+            media.id, {
+                query: media.query || '',
+                is_dynamic_svg: !!media.isDynamicSVG,
+                dynamic_colors: media.dynamicColors,
+            }]
+        ));
+        let savedMedia = [];
+        if (Object.keys(toSave).length !== 0) {
+            savedMedia = await this.rpc('/web_editor/save_library_media', { media: toSave });
+        }
+        const otherMedia = selectedMedia.filter(media => media.mediaType !== 'libraryMedia');
+        this.selectedMedia[this.state.activeTab] = otherMedia;
+        await super.save();
+        if (otherMedia.length || savedMedia.length) {
+            await this.props.extraImageSave(otherMedia, savedMedia);
         }
         this.props.close();
     }
@@ -589,7 +603,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             save: async (imgEls) => {
                 extraImageEls = imgEls;
             },
-            extraImageSave: async (attachments) => {
+            extraImageSave: async (attachments, libraryAttachments) => {
                 for (const index in attachments) {
                     const attachment = attachments[index];
                     if (attachment.mimetype.startsWith("image/")) {
@@ -599,6 +613,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                         await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
                     }
                 }
+                attachments.push(...libraryAttachments);
                 this.rpc(`/shop/product/extra-images`, {
                     images: attachments,
                     product_product_id: this.productProductID,
