@@ -532,7 +532,10 @@ GROUP BY fol.id%s%s""" % (
         for follower in self:
             data = follower._read_format(
                 [field for field in fields if field not in ["partner", "thread"]], load=False
-            )[0]
+            )
+            if not data:
+                continue
+            data = data[0]
             if "partner" in fields:
                 # sudo: res.partner - can read partners of found followers, in particular allows
                 # by-passing multi-company ACL for portal partners
