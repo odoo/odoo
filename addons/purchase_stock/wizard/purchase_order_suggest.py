@@ -65,9 +65,11 @@ class PurchaseOrderSuggest(models.TransientModel):
             for product in products:
                 if self.based_on == 'actual_demand':
                     quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
+                    reserved_qty = suggest._get_reserved_qty(product)
+                    qty_to_deduce = max(reserved_qty, 0) + max(product.free_qty, 0) + max(product.incoming_qty, 0)
                 else:
                     quantity = ceil(product.monthly_demand * self.multiplier)
-                qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
+                    qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
                 quantity -= qty_to_deduce
                 if quantity <= 0:
                     continue
@@ -124,9 +126,11 @@ class PurchaseOrderSuggest(models.TransientModel):
 
             if self.based_on == 'actual_demand':
                 quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
+                reserved_qty = self._get_reserved_qty(product)
+                qty_to_deduce = max(reserved_qty, 0) + max(product.free_qty, 0) + max(product.incoming_qty, 0)
             else:
                 quantity = ceil(product.monthly_demand * self.multiplier)
-            qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
+                qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
             quantity -= qty_to_deduce
             if quantity <= 0:
                 # If there is no quantity for a filtered product and there is an
@@ -168,7 +172,7 @@ class PurchaseOrderSuggest(models.TransientModel):
         self.ensure_one()
         if self.based_on == 'actual_demand':
             context = {
-                'from_date': fields.Datetime.now(),
+                'from_date': datetime(1970, 1, 1),
                 'to_date': fields.Datetime.now() + relativedelta(days=self.number_of_days),
             }
         else:
@@ -214,3 +218,21 @@ class PurchaseOrderSuggest(models.TransientModel):
         condition = f'partner_id={self.partner_id.id}'
         for field in ['based_on', 'number_of_days', 'percent_factor']:
             self.env['ir.default'].set('purchase.order.suggest', field, self[field], company_id=cid, condition=condition)
+
+    def _get_reserved_qty(self, product):
+        """ Get the reserved quantity for a product in the same date range of
+        outgoing_qty (1970 -> date of Rep for). """
+        context = self._get_suggested_products_context()
+        domain = [
+            ('product_id', '=', product.id),
+            ('state', 'in', ['confirmed', 'partially_available', 'assigned']),
+            ('date', '>=', context['from_date']),
+            ('date', '<=', context['to_date']),
+        ]
+
+        if self.warehouse_id and not self.hide_warehouse:
+            delivery_type = self.warehouse_id.out_type_id
+            domain += [('location_id', '=', delivery_type.default_location_src_id.id),
+            ('location_dest_id', '=', delivery_type.default_location_dest_id.id)]
+
+        return sum(self.env['stock.move'].search(domain).mapped('quantity'))
