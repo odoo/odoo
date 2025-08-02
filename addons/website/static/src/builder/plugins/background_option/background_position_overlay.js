@@ -13,6 +13,7 @@ export class BackgroundPositionOverlay extends Component {
     };
 
     setup() {
+        this.iframe = this.props.editable.ownerDocument.defaultView.frameElement;
         this.parentBgDraggerRef = useRef("parentBgDragger");
         this.backgroundOverlayRef = useRef("backgroundOverlay");
         this.overlayContentRef = useRef("overlayContent");
@@ -50,7 +51,8 @@ export class BackgroundPositionOverlay extends Component {
             this.bgDraggerEl.style.backgroundAttachment = getComputedStyle(
                 this.props.editingElement
             ).backgroundAttachment;
-            window.addEventListener("resize", this._dimensionOverlay);
+            this.iframe.contentWindow.addEventListener("resize", this._dimensionOverlay);
+            this.iframe.contentWindow.addEventListener("scroll", this._dimensionOverlay);
         });
 
         useEffect(() => {
@@ -62,7 +64,8 @@ export class BackgroundPositionOverlay extends Component {
         });
 
         onWillUnmount(() => {
-            window.removeEventListener("resize", this._dimensionOverlay);
+            this.iframe.contentWindow.removeEventListener("resize", this._dimensionOverlay);
+            this.iframe.contentWindow.removeEventListener("scroll", this._dimensionOverlay);
             this.tooltip.dispose();
         });
     }
@@ -123,14 +126,32 @@ export class BackgroundPositionOverlay extends Component {
     }
 
     dimensionOverlay() {
+        const iframeRect = this.iframe.getBoundingClientRect();
+        const targetRect = this.props.editingElement.getBoundingClientRect();
+
         // Sets the overlay in the right place so that the draggable
         // background sizes the background item like the editing element.
-        this.backgroundOverlayRef.el.style.width = `${this.props.editable.clientWidth}px`;
-        this.backgroundOverlayRef.el.style.height = `${this.props.editable.clientHeight}px`;
+        Object.assign(this.backgroundOverlayRef.el.style, {
+            left: `${iframeRect.left}px`,
+            top: `${iframeRect.top}px`,
+            height: `${iframeRect.height}px`,
+            width: `${this.props.editable.clientWidth}px`,
+            pointerEvents: "none", // Allow scrolling in iframe
+        });
 
-        const overlayContentEl = this.overlayContentRef.el;
-        const targetRect = this.props.editingElement.getBoundingClientRect();
-        overlayContentEl.style.left = `${targetRect.left + window.scrollX}px`;
+        Object.assign(this.overlayContentRef.el.style, {
+            left: `${targetRect.left}px`,
+            top: `${targetRect.top}px`,
+            clipPath: `
+            inset(
+                ${Math.floor(Math.max(0, -targetRect.top))}px 0 
+                ${targetRect.bottom - iframeRect.height}px 0
+            )
+            `,
+            pointerEvents: "auto", // Enable interaction for overlay content
+        });
+        const overlayButtonsEl = this.overlayContentRef.el.querySelector(".o_we_overlay_buttons");
+        overlayButtonsEl.style.top = `${Math.max(0, -targetRect.top)}px`;
 
         this.bgDraggerEl.style.setProperty(
             "width",
@@ -143,12 +164,10 @@ export class BackgroundPositionOverlay extends Component {
             "important"
         );
 
-        const topPos = Math.max(
-            0,
-            window.scrollY -
-                (this.props.editingElement.getBoundingClientRect().top + window.scrollY)
-        );
-        overlayContentEl.querySelector(".o_we_overlay_buttons").style.top = `${topPos}px`;
+        // Refresh tooltip position after overlay reposition
+        if (this.tooltip) {
+            this.tooltip.update();
+        }
     }
 
     /**
