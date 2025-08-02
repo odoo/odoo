@@ -16,7 +16,6 @@ export class BomOverviewTable extends Component {
             shape: {
                 mode: String,
                 uom: Boolean,
-                attachments: Boolean,
             },
         },
         uomName: { type: String, optional: true },
@@ -68,9 +67,5 @@ export class BomOverviewTable extends Component {
 
     get showUom() {
         return this.props.showOptions.uom;
-    }
-
-    get showAttachments() {
-        return this.props.showOptions.attachments;
     }
 }
