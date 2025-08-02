@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="hr_leave_view_kanban" model="ir.ui.view">
+        <field name="name">hr.leave.view.kanban</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <field name="before_linked_sandwich_leave_id"/>
+                <field name="after_linked_sandwich_leave_id"/>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="t-if">record.can_refuse.raw_value &amp;&amp; (!record.after_linked_sandwich_leave_id.raw_value &amp;&amp; !record.before_linked_sandwich_leave_id.raw_value)</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="after">
+                <button
+                    name="action_warning_refuse" type="object" class="btn btn-secondary"
+                    t-if="record.can_refuse.raw_value &amp;&amp; (record.after_linked_sandwich_leave_id.raw_value || record.before_linked_sandwich_leave_id.raw_value)">
+                    Refuse
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_tree" model="ir.ui.view">
+        <field name="name">hr.holidays.view.list</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">not can_refuse or (after_linked_sandwich_leave_id or before_linked_sandwich_leave_id)</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="after">
+                <button string="Refuse" name="action_warning_refuse" type="object"
+                    icon="fa-times"
+                    invisible="not can_refuse or (not after_linked_sandwich_leave_id and not before_linked_sandwich_leave_id)"/>
+            </xpath>
+        </field>
+    </record>
 
     <record id="hr_leave_view_form_inherit" model="ir.ui.view">
         <field name="name">hr.leave.view.form.inherit</field>
         <field name="model">hr.leave</field>
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='duration_display']" position="after">
-                <div name="l10n_in_contains_sandwich_leaves" invisible="not l10n_in_contains_sandwich_leaves" colspan="2" class="w-md-75 float-end ps-3 alert alert-warning" role="alert">
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">not can_refuse or not id or (after_linked_sandwich_leave_id or before_linked_sandwich_leave_id)</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="after">
+                <button string="Refuse" name="action_warning_refuse" type="object" groups="base.group_user"
+                    invisible="not can_refuse or not id or (not after_linked_sandwich_leave_id and not before_linked_sandwich_leave_id)"/>
+            </xpath>
+            <xpath expr="//div[@id='full_date']" position="after">
+                <div name="l10n_in_contains_sandwich_leaves" invisible="not l10n_in_contains_sandwich_leaves" colspan="2" class="ps-3 alert alert-warning" role="alert">
                     The requested time considers the sandwich leave policy.
                 </div>
             </xpath>
