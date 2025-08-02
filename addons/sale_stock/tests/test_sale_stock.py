@@ -654,9 +654,23 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_ids.write({'quantity': 10, 'picked': True})
+        # Add a new product that will be added on the so
+        return_picking.move_ids = [Command.create({
+            'name': 'additional product',
+            'product_id': self.new_product.id,
+            'product_uom': self.new_product.uom_id.id,
+            'product_uom_qty': 10,
+            'location_id': self.env.ref('stock.stock_location_customers').id,
+            'quantity': 10,
+            'picked': True,
+        })]
         return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')
+        self.assertEqual(len(sale_order.order_line), 2)
         # Checks the delivery amount (must be 0).
-        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
+        self.assertEqual(sale_order.order_line[1].qty_delivered, -10)
+        self.assertEqual(sale_order.order_line[1].product_uom_qty, 0)
 
     def test_12_return_without_refund(self):
         """ Do the exact thing than in `test_11_return_with_refund` except we
