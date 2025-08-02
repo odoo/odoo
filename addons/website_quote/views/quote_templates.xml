@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_my_quote" name="My Quote Page">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h1 class="text-center">Quote of the Day</h1>
+                <p class="lead text-center" t-esc="quote" />
+            </div>
+        </t>
+    </template>
+
+    <template id="footer_inherit_quote" inherit_id="website.footer_custom">
+        <xpath expr="//div[@id='connect']" position="inside">
+            <div>
+                <a href="/my_quote">Quote of the Day</a>
+            </div>
+        </xpath>
+    </template>
+</odoo>
