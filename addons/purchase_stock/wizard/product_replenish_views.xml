@@ -9,7 +9,8 @@
                 <label for="supplier_id" invisible="not show_vendor"/>
                 <div class="o_row">
                     <field name="show_vendor" invisible="1"/>
-                    <field name="supplier_id" invisible="not show_vendor" required="show_vendor" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_open': 1, 'no_create': 1}"/>
+                    <field name="supplier_id" invisible="not show_vendor" required="show_vendor" domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                        widget="replenish_many2one" options="{'no_quick_create': True}" />
                 </div>
             </xpath>
         </field>
