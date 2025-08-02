@@ -621,7 +621,8 @@ class ResPartner(models.Model):
     property_outbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', '=', self.env.company.id)],
+        domain=lambda self: [('payment_type', '=', 'outbound'),
+                             ('company_id', 'in', self.env.company.parent_ids.ids)],
         help="Preferred payment method when buying from this vendor. This will be set by default on all"
              " outgoing payments created for this vendor",
     )
@@ -629,7 +630,8 @@ class ResPartner(models.Model):
     property_inbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', '=', self.env.company.id)],
+        domain=lambda self: [('payment_type', '=', 'inbound'),
+                             ('company_id', 'in', self.env.company.parent_ids.ids)],
         help="Preferred payment method when selling to this customer. This will be set by default on all"
              " incoming payments created for this customer",
     )
