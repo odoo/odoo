@@ -3,8 +3,8 @@
 import lxml.html
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
-from odoo.fields import Command
 from odoo.tests.common import users, tagged
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tools import mute_logger
 
 
@@ -31,6 +31,13 @@ class TestMailingTest(TestMassMailCommon):
             'preview': 'Preview {{ object.name }}',
             'subject': 'Subject {{ object.name }}',
         })
+        cls.user_not_admin = mail_new_test_user(
+            cls.env,
+            groups='mass_mailing.group_mass_mailing_user, base.group_user',
+            login='user_not_admin',
+            password='test1234',
+            name='User Without Admin Rights',
+        )
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
@@ -113,6 +120,43 @@ class TestMailingTest(TestMassMailCommon):
         self.assertIn(f'/mailing/{mailing.id}/view', body_html)  # Is replaced
         self.assertIn('/unsubscribe_from_list', body_html)  # Isn't replaced
         self.assertIn('http://www.example.com/view', body_html)  # Isn't replaced
+
+    @users('user_not_admin')
+    def test_mailing_test_correct_model(self):
+        """ Testing that an internal user without being an admin is able to delete attachments
+        after sending a test email. """
+        mailing = self.test_mailing_bl.with_env(self.env)
+        attachment = self.env['ir.attachment'].create({
+                'name': 'attachment_test',
+                'res_name': 'test',
+                'datas': 'IA==',  # a non-empty base64 content.
+            })
+        mailing['attachment_ids'] = [attachment.id]
+        attachment['access_token'] = attachment._generate_access_token()
+
+        self.authenticate(user='user_not_admin', password='test1234')
+        mailing_test = self.env['mailing.mailing.test'].create({
+            'email_to': 'test@test.com',
+            'mass_mailing_id': mailing.id,
+        })
+
+        mailing.write({
+            'body_html': "<p> Hello </p>",
+            'preview': "Preview {{ object.name }}",
+            'subject': "Subject {{ object.name }}",
+        })
+
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        self.make_jsonrpc_request(
+            route='/mail/attachment/delete',
+            params={
+                'attachment_id': attachment['id'],
+                'access_token': attachment['access_token'],
+            },
+        )
+        self.assertFalse(attachment.exists())
 
     def test_mailing_test_equals_reality(self):
         """ Check that both test and real emails will format the qweb and inline
