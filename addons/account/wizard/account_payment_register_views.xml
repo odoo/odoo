@@ -130,6 +130,11 @@
                             <field name="qr_code"/>
                         </div>
                     </group>
+                    <group>
+                        <!-- To be used in localizations requiring to add a page -->
+                        <notebook name="payment_notebook" colspan="2" invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
+                    |</group>
+
                     <footer>
                         <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount == 1"/>
                         <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount != 1"/>
