@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Indian - Stock Report(GST)',
+    'name': 'Indian - Stock',
     'version': '1.0',
-    'description': """GST Stock Report""",
+    'description': """Indian - Stock""",
     'category': 'Accounting/Localizations',
     'depends': [
         'l10n_in',
