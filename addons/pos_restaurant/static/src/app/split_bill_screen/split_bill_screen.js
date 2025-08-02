@@ -3,6 +3,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { useTrackedFinalizedOrder } from "@point_of_sale/app/hooks/use_tracked_finalized_order";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
@@ -13,6 +14,8 @@ export class SplitBillScreen extends Component {
         this.pos = usePos();
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
+
+        useTrackedFinalizedOrder(this.currentOrder.uuid, this.pos.firstScreen, false, () => false);
     }
 
     get currentOrder() {
