@@ -1203,3 +1203,55 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertRecordValues(line, [
             {'amount_currency': 10.00, 'balance': 10.00},
         ])
+
+    def test_tax_total_unchanged_after_changing_price_include_on_posted_bill(self):
+        """
+        Tests that if a tax's 'price_include' property is changed,
+        the tax total on a posted vendor bill using that tax remains unchanged.
+        """
+        # 1. SETUP: Create a new tax with price_include = True
+        tax_price_included = self.env['account.tax'].create({
+            'name': '10% Price-Included Purchase Tax',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+        })
+
+        # 2. CREATE BILL: Create a vendor bill with one line using the created tax.
+        # The price_unit of 110.0 should result in a base of 100.0 and a tax of 10.0.
+        vendor_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Test Product with Included Tax',
+                    'quantity': 1,
+                    'price_unit': 110.0,
+                    'tax_ids': [Command.set(tax_price_included.ids)],
+                }),
+            ],
+        })
+
+        # Pre-validation: Check amounts are correct before posting.
+        self.assertAlmostEqual(vendor_bill.amount_untaxed, 100.0, "Pre-check: Untaxed amount should be 100.")
+        self.assertAlmostEqual(vendor_bill.amount_tax, 10.0, "Pre-check: Tax amount should be 10.")
+        self.assertAlmostEqual(vendor_bill.amount_total, 110.0, "Pre-check: Total amount should be 110.")
+
+        # 3. POST: Post the vendor bill to lock the journal entry.
+        vendor_bill.action_post()
+        self.assertEqual(vendor_bill.state, 'posted')
+        tax_totals_before_modification = vendor_bill.tax_totals
+
+        # 4. MODIFY TAX: Change the 'price_include' setting on the tax.
+        # This action should NOT affect the already posted bill.
+        tax_price_included.price_include = False
+
+        # 5. ASSERT: Verify that the tax total on the posted bill has NOT changed.
+        vendor_bill.invalidate_recordset()
+        tax_totals_after_modification = vendor_bill.tax_totals
+        self.assertEqual(
+            tax_totals_before_modification['amount_total'],
+            tax_totals_after_modification['amount_total'],
+        )
