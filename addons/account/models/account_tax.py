@@ -1092,12 +1092,19 @@ class AccountTax(models.Model):
             'total_excluded':           The total without tax.
             'total_included':           The total with tax.
         """
-        def add_tax_amount_to_results(tax, tax_amount):
+        def add_tax_amount_to_results(tax, tax_amount, original_tax_amount):
             taxes_data[tax.id]['tax_amount'] = tax_amount
+            taxes_data[tax.id]['original_tax_amount'] = original_tax_amount
             if rounding_method == 'round_per_line':
                 taxes_data[tax.id]['tax_amount'] = float_round(taxes_data[tax.id]['tax_amount'], precision_rounding=precision_rounding)
+                if original_tax_amount is not None:
+                    taxes_data[tax.id]['original_tax_amount'] = float_round(taxes_data[tax.id]['original_tax_amount'], precision_rounding=precision_rounding)
             if tax.has_negative_factor:
                 reverse_charge_taxes_data[tax.id]['tax_amount'] = -taxes_data[tax.id]['tax_amount']
+                if original_tax_amount is None:
+                    reverse_charge_taxes_data[tax.id]['original_tax_amount'] = None
+                else:
+                    reverse_charge_taxes_data[tax.id]['original_tax_amount'] = -taxes_data[tax.id]['original_tax_amount']
             sorted_taxes._propagate_extra_taxes_base(tax, taxes_data, special_mode=special_mode)
 
         def eval_tax_amount(tax_amount_function, tax):
@@ -1105,16 +1112,15 @@ class AccountTax(models.Model):
             if is_already_computed:
                 return
 
+            original_tax_amount = tax_amount = tax_amount_function(
+                taxes_data[tax.id]['batch'],
+                raw_base + taxes_data[tax.id]['extra_base_for_tax'],
+                evaluation_context,
+            )
             if manual_tax_amounts and str(tax.id) in manual_tax_amounts:
                 tax_amount = manual_tax_amounts[str(tax.id)]['tax_amount_currency']
-            else:
-                tax_amount = tax_amount_function(
-                    taxes_data[tax.id]['batch'],
-                    raw_base + taxes_data[tax.id]['extra_base_for_tax'],
-                    evaluation_context,
-                )
             if tax_amount is not None:
-                add_tax_amount_to_results(tax, tax_amount)
+                add_tax_amount_to_results(tax, tax_amount, original_tax_amount)
 
         def prepare_tax_extra_data(tax, **kwargs):
             if special_mode == 'total_included':
@@ -1244,6 +1250,7 @@ class AccountTax(models.Model):
                     'group': batching_results['group_per_tax'].get(tax_data['tax'].id) or self.env['account.tax'],
                     'batch': batching_results['batch_per_tax'][tax_data['tax'].id],
                     'tax_amount': tax_data['tax_amount'],
+                    'original_tax_amount': tax_data['original_tax_amount'],
                     'base_amount': tax_data['base'],
                     'is_reverse_charge': tax_data.get('is_reverse_charge', False),
                 }
@@ -1581,6 +1588,10 @@ class AccountTax(models.Model):
             tax_details['raw_total_included'] = company.currency_id.round(tax_details['raw_total_included'])
         for tax_data in taxes_computation['taxes_data']:
             tax_amount = tax_data['tax_amount'] / rate if rate else 0.0
+            if tax_data['original_tax_amount'] is None:
+                original_tax_amount = None
+            else:
+                original_tax_amount = tax_data['original_tax_amount'] / rate if rate else 0.0
             base_amount = tax_data['base_amount'] / rate if rate else 0.0
             if rounding_method == 'round_per_line':
                 tax_amount = company.currency_id.round(tax_amount)
@@ -1589,6 +1600,8 @@ class AccountTax(models.Model):
                 **tax_data,
                 'raw_tax_amount_currency': tax_data['tax_amount'],
                 'raw_tax_amount': tax_amount,
+                'original_tax_amount_currency': tax_data['original_tax_amount'],
+                'original_tax_amount': original_tax_amount,
                 'raw_base_amount_currency': tax_data['base_amount'],
                 'raw_base_amount': base_amount,
             })
@@ -1781,6 +1794,11 @@ class AccountTax(models.Model):
                     base_amounts['raw_total_amount'] += tax_data['raw_base_amount']
                     if not base_line['special_type']:
                         base_amounts['base_lines'].append(base_line)
+
+                if tax_data['original_tax_amount_currency'] is not None:
+                    tax_data['raw_tax_amount_currency'] = tax_data['original_tax_amount_currency']
+                if tax_data['original_tax_amount'] is not None:
+                    tax_data['raw_tax_amount'] = tax_data['original_tax_amount']
 
             # If not, just account the base amounts.
             if not taxes_data:

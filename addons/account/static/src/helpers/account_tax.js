@@ -226,16 +226,31 @@ export const accountTaxHelpers = {
     ) {
         const self = this;
 
-        function add_tax_amount_to_results(tax, tax_amount) {
+        function add_tax_amount_to_results(tax, tax_amount, original_tax_amount) {
             taxes_data[tax.id].tax_amount = tax_amount;
+            taxes_data[tax.id].original_tax_amount = original_tax_amount;
             if (rounding_method === "round_per_line") {
                 taxes_data[tax.id].tax_amount = roundPrecision(
                     taxes_data[tax.id].tax_amount,
                     precision_rounding
                 );
+                if (original_tax_amount !== null) {
+                    taxes_data[tax.id].original_tax_amount = roundPrecision(
+                        taxes_data[tax.id].original_tax_amount,
+                        precision_rounding
+                    );
+                }
             }
             if (tax.has_negative_factor) {
                 reverse_charge_taxes_data[tax.id].tax_amount = -taxes_data[tax.id].tax_amount;
+                if (original_tax_amount === null) {
+                    reverse_charge_taxes_data[tax.id].original_tax_amount = null;
+                } else {
+                    reverse_charge_taxes_data[tax.id].original_tax_amount = -roundPrecision(
+                        taxes_data[tax.id].original_tax_amount,
+                        precision_rounding
+                    );
+                }
             }
 
             self.propagate_extra_taxes_base(sorted_taxes, tax, taxes_data, {
@@ -249,19 +264,18 @@ export const accountTaxHelpers = {
                 return;
             }
 
-            let tax_amount = null;
+            const original_tax_amount = tax_amount_function(
+                tax,
+                taxes_data[tax.id].batch,
+                raw_base + taxes_data[tax.id].extra_base_for_tax,
+                evaluation_context
+            );
+            let tax_amount = original_tax_amount;
             if (manual_tax_amounts && tax.id in manual_tax_amounts) {
                 tax_amount = manual_tax_amounts[tax.id].tax_amount_currency;
-            } else {
-                tax_amount = tax_amount_function(
-                    tax,
-                    taxes_data[tax.id].batch,
-                    raw_base + taxes_data[tax.id].extra_base_for_tax,
-                    evaluation_context
-                );
             }
             if (tax_amount !== null) {
-                add_tax_amount_to_results(tax, tax_amount);
+                add_tax_amount_to_results(tax, tax_amount, original_tax_amount);
             }
         }
 
@@ -427,6 +441,7 @@ export const accountTaxHelpers = {
                         group: batching_results.group_per_tax[tax_data.tax.id],
                         batch: batching_results.batch_per_tax[tax_data.tax.id],
                         tax_amount: tax_data.tax_amount,
+                        original_tax_amount: tax_data.original_tax_amount,
                         base_amount: tax_data.base,
                         is_reverse_charge: tax_data.is_reverse_charge || false,
                     }
@@ -637,6 +652,10 @@ export const accountTaxHelpers = {
 
         for (const tax_data of taxes_computation.taxes_data) {
             let tax_amount = rate ? tax_data.tax_amount / rate : 0.0;
+            let original_tax_amount = null;
+            if (tax_data.original_tax_amount !== null) {
+                original_tax_amount = rate ? tax_data.original_tax_amount / rate : 0.0;
+            }
             let base_amount = rate ? tax_data.base_amount / rate : 0.0;
 
             if (rounding_method === "round_per_line") {
@@ -648,6 +667,8 @@ export const accountTaxHelpers = {
                 ...tax_data,
                 raw_tax_amount_currency: tax_data.tax_amount,
                 raw_tax_amount: tax_amount,
+                original_tax_amount_currency: tax_data.original_tax_amount,
+                original_tax_amount: original_tax_amount,
                 raw_base_amount_currency: tax_data.base_amount,
                 raw_base_amount: base_amount,
             });
@@ -812,6 +833,13 @@ export const accountTaxHelpers = {
                     if (!base_line.special_type) {
                         base_amounts.base_lines.push(base_line);
                     }
+                }
+
+                if (tax_data.original_tax_amount_currency !== null) {
+                    tax_data.raw_tax_amount_currency = tax_data.original_tax_amount_currency;
+                }
+                if (tax_data.original_tax_amount !== null) {
+                    tax_data.raw_tax_amount = tax_data.original_tax_amount;
                 }
 
                 index++;
