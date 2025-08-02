@@ -12,10 +12,17 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { reactive } from "@odoo/owl";
+import { ImageAlignSelector } from "./image_align_selector";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
 }
+
+const IMAGE_ALIGNMENT = [
+    { name: "oi-text-inline", value: "", title: "In line" },
+    { name: "oi-text-wrap", value: "me-auto float-start", title: "Wrap text" },
+    { name: "oi-text-break", value: "d-block", title: "Break text" },
+];
 
 export const IMAGE_SHAPES = ["rounded", "rounded-circle", "shadow", "img-thumbnail"];
 
@@ -102,8 +109,8 @@ export class ImagePlugin extends Plugin {
             withSequence(23, { id: "image_preview", namespaces: ["image"] }),
             withSequence(24, { id: "image_description", namespaces: ["image"] }),
             withSequence(25, { id: "image_shape", namespaces: ["image"] }),
-            withSequence(26, { id: "image_padding", namespaces: ["image"] }),
             withSequence(26, { id: "image_size", namespaces: ["image"] }),
+            withSequence(26, { id: "image_padding", namespaces: ["image"] }),
             withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
             withSequence(32, { id: "image_delete", namespaces: ["image"] }),
         ],
@@ -120,6 +127,20 @@ export class ImagePlugin extends Plugin {
                 Component: ImageDescription,
                 props: {
                     openImageDescriptionPopover: this.openImageDescriptionPopover.bind(this),
+                },
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "setImageAlignment",
+                description: _t("Set image alignment"),
+                groupId: "image_shape",
+                Component: ImageAlignSelector,
+                props: {
+                    items: IMAGE_ALIGNMENT,
+                    getDisplay: () => this.imageAlignment,
+                    onSelected: (item) => {
+                        this.setImageAlignment(item.value);
+                    },
                 },
                 isAvailable: isHtmlContentSupported,
             },
@@ -204,6 +225,7 @@ export class ImagePlugin extends Plugin {
 
     setup() {
         this.imageSize = reactive({ displayName: "Default" });
+        this.imageAlignment = reactive({ displayIcon: "oi-text-inline" });
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
@@ -231,7 +253,36 @@ export class ImagePlugin extends Plugin {
         if (!targetedImg) {
             return "Default";
         }
-        return targetedImg.style.width || "Default";
+        return targetedImg.style.width || `${targetedImg.naturalWidth}px`;
+    }
+
+    get imageAlignmentIcon() {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
+            return "oi-text-inline";
+        }
+        const alignmentClass = targetedImg.classList.value.match(/(me-auto float-start|d-block)/);
+        if (alignmentClass) {
+            return IMAGE_ALIGNMENT.find((item) => item.value === alignmentClass[0]).name;
+        }
+        return "oi-text-inline";
+    }
+
+    setImageAlignment(alignment) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
+            return;
+        }
+        targetedImg.classList.remove("me-auto", "float-start", "d-block");
+        if (alignment) {
+            alignment.split(" ").forEach((cls) => {
+                targetedImg.classList.add(cls);
+            });
+        }
+        this.imageAlignment.displayIcon = IMAGE_ALIGNMENT.find(
+            (item) => item.value === alignment
+        ).name;
+        this.dependencies.history.addStep();
     }
 
     setImagePadding({ size } = {}) {
@@ -399,6 +450,7 @@ export class ImagePlugin extends Plugin {
 
     updateImageParams() {
         this.imageSize.displayName = this.imageSizeName;
+        this.imageAlignment.displayIcon = this.imageAlignmentIcon;
     }
 
     openImageDescriptionPopover() {

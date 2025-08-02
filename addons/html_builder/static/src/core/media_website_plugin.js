@@ -58,12 +58,20 @@ export class MediaWebsitePlugin extends Plugin {
 
         this.popover = this.services.popover;
         this.removeCurrentTooltip = () => {};
+        this.currentSelectedEl = null;
         this.addDomListener(this.editable, "click", (ev) => {
             const targetEl = ev.target.closest(mediaSelector);
+            this.currentSelectedEl = targetEl;
             if (!targetEl) {
                 return;
             }
             if (this.isReplaceableMedia(targetEl)) {
+                this.openImageTooltip(targetEl);
+            }
+        });
+        this.addDomListener(this.editable, "mouseover", (ev) => {
+            const targetEl = ev.target.closest(mediaSelector);
+            if (targetEl && targetEl === this.currentSelectedEl) {
                 this.openImageTooltip(targetEl);
             }
         });
@@ -136,6 +144,6 @@ export class MediaWebsitePlugin extends Plugin {
         this.removeCurrentTooltip = this.popover.add(mediaEl, Tooltip, {
             tooltip: _t("Double-click to edit"),
         });
-        setTimeout(this.removeCurrentTooltip, 1500);
+        setTimeout(this.removeCurrentTooltip, 3000);
     }
 }

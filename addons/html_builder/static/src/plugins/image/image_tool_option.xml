@@ -17,19 +17,23 @@
             placeholder.translate="Title tag" />
     </BuilderRow>
     <BuilderRow label.translate="Transform" preview="false">
-        <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
-        <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')">Reset</BuilderButton>
+        <div class="btn-group o-hb-button-group">
+            <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
+            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
+        </div>
         <ImageTransformOption t-if="!state.isImageAnimated" />
     </BuilderRow>
     <ImageFilterOption />
-    <BuilderRow label.translate="Size">
-        <BuilderButtonGroup styleAction="'width'">
-            <BuilderButton styleActionValue="''" title.translate="Resize Default">Default</BuilderButton>
-            <BuilderButton styleActionValue="'25%'" title.translate="Resize Quarter">25%</BuilderButton>
-            <BuilderButton styleActionValue="'50%'" title.translate="Resize Half">50%</BuilderButton>
-            <BuilderButton styleActionValue="'100%'" title.translate="Resize Full">100%</BuilderButton>
-        </BuilderButtonGroup>
-    </BuilderRow>
+    <t t-if="state.showSize">
+        <BuilderRow label.translate="Size">
+            <BuilderSelect>
+                <BuilderSelectItem styleAction="'width'" styleActionValue="''" title.translate="Resize Default">Default</BuilderSelectItem>
+                <BuilderSelectItem styleAction="'width'" styleActionValue="'25%'" title.translate="Resize Quarter">25%</BuilderSelectItem>
+                <BuilderSelectItem styleAction="'width'" styleActionValue="'50%'" title.translate="Resize Half">50%</BuilderSelectItem>
+                <BuilderSelectItem styleAction="'width'" styleActionValue="'100%'" title.translate="Resize Full">100%</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
     <ImageFormatOption />
 </t>
 

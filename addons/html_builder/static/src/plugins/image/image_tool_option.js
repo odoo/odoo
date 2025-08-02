@@ -17,6 +17,7 @@ export class ImageToolOption extends BaseOptionComponent {
         super.setup();
         this.state = useDomState((editingElement) => ({
             isImageAnimated: editingElement.classList.contains("o_animate"),
+            showSize: !editingElement.closest(".o_grid_mode"),
         }));
     }
 }

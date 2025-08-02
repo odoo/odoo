@@ -13,8 +13,7 @@
         </t>
     </xpath>
     <!-- TODO: change position of the xpath when snippet_options_image_optimization_widgets is converted -->
-    <xpath expr="//BackgroundShapeOption" position="before">
-        <ParallaxOption/>
+    <xpath expr="//BackgroundImageOption" position="before">
         <t t-call="website.BackgroundVideoOption"/>
     </xpath>
     <xpath expr="//BackgroundImageOption" position="replace">
@@ -39,6 +38,9 @@
         <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
             <BackgroundPositionOption/>
         </BuilderContext>
+    </xpath>
+    <xpath expr="." position="inside">
+        <ParallaxOption/>
     </xpath>
     <!-- TODO: the same for BackgroundOptimize-->
 </t>
