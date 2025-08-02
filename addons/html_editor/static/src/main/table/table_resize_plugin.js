@@ -6,6 +6,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { getColumnIndex } from "@html_editor/utils/table";
 import { BORDER_SENSITIVITY } from "@html_editor/main/table/table_plugin";
+import { isTableCell } from "@html_editor/utils/dom_info";
 
 export class TableResizePlugin extends Plugin {
     static id = "tableResize";
@@ -28,7 +29,7 @@ export class TableResizePlugin extends Plugin {
      */
     isHoveringTdBorder(ev) {
         const target = /** @type {HTMLElement} */ (ev.target);
-        if (ev.target && target.nodeName === "TD" && target.isContentEditable) {
+        if (ev.target && isTableCell(target) && target.isContentEditable) {
             const targetRect = target.getBoundingClientRect();
             if (ev.clientX <= targetRect.x + BORDER_SENSITIVITY) {
                 return "left";
@@ -98,11 +99,11 @@ export class TableResizePlugin extends Plugin {
         // TD widths should only be applied in the first row. Change targets and
         // clean the rest.
         if (direction === "col") {
-            let hostCell = closestElement(table, "td");
+            let hostCell = closestElement(table, isTableCell);
             const hostCells = [];
             while (hostCell) {
                 hostCells.push(hostCell);
-                hostCell = closestElement(hostCell.parentElement, "td");
+                hostCell = closestElement(hostCell.parentElement, isTableCell);
             }
             const nthColumn = getColumnIndex(item);
             const firstRow = [...table.querySelector("tr").children];
@@ -141,7 +142,7 @@ export class TableResizePlugin extends Plugin {
                 if (newMargin >= 0 && newSize > MIN_SIZE) {
                     const tableRect = table.getBoundingClientRect();
                     // Check if a nested table would overflow its parent cell.
-                    const hostCell = closestElement(table.parentElement, "td");
+                    const hostCell = closestElement(table.parentElement, isTableCell);
                     const childTable = item.querySelector("table");
                     const endProp = isRTL ? "left" : "right";
                     if (
@@ -221,7 +222,7 @@ export class TableResizePlugin extends Plugin {
                 if ((newSize >= 0 || direction === "row") && newSize > MIN_SIZE) {
                     const tableRect = table.getBoundingClientRect();
                     // Check if a nested table would overflow its parent cell.
-                    const hostCell = closestElement(table.parentElement, "td");
+                    const hostCell = closestElement(table.parentElement, isTableCell);
                     const childTable = item.querySelector("table");
                     const endProp = isRTL ? "left" : "right";
                     if (
@@ -262,7 +263,7 @@ export class TableResizePlugin extends Plugin {
             const table = closestElement(cell, "table");
             const currentColumnIndex = getColumnIndex(cell);
             const currentColumnCells = table.querySelectorAll(
-                `tr td:nth-of-type(${currentColumnIndex + 1})`
+                `tr :is(td, th):nth-of-type(${currentColumnIndex + 1})`
             );
             this.dependencies.table.resetColumnWidth(currentColumnCells[0]);
             const isLeftSideClick = isHoveringTdBorder === "left";
@@ -274,7 +275,7 @@ export class TableResizePlugin extends Plugin {
                     ? currentColumnIndex - 1
                     : currentColumnIndex + 1;
                 const siblingColumnCells = table.querySelectorAll(
-                    `tr td:nth-of-type(${siblingColumnIndex + 1})`
+                    `tr :is(td, th):nth-of-type(${siblingColumnIndex + 1})`
                 );
                 this.dependencies.table.resetColumnWidth(siblingColumnCells[0]);
             }
@@ -308,15 +309,11 @@ export class TableResizePlugin extends Plugin {
                 target2 = closestElement(ev.target, "tr");
             } else if (isHoveringTdBorder === "right") {
                 if (isRTL) {
-                    target1 = getAdjacentPreviousSiblings(ev.target).find(
-                        (node) => node.nodeName === "TD"
-                    );
+                    target1 = getAdjacentPreviousSiblings(ev.target).find(isTableCell);
                     target2 = ev.target;
                 } else {
                     target1 = ev.target;
-                    target2 = getAdjacentNextSiblings(ev.target).find(
-                        (node) => node.nodeName === "TD"
-                    );
+                    target2 = getAdjacentNextSiblings(ev.target).find(isTableCell);
                 }
             } else if (isHoveringTdBorder === "bottom" && column) {
                 target1 = closestElement(ev.target, "tr");
@@ -324,13 +321,9 @@ export class TableResizePlugin extends Plugin {
             } else if (isHoveringTdBorder === "left") {
                 if (isRTL) {
                     target1 = ev.target;
-                    target2 = getAdjacentNextSiblings(ev.target).find(
-                        (node) => node.nodeName === "TD"
-                    );
+                    target2 = getAdjacentNextSiblings(ev.target).find(isTableCell);
                 } else {
-                    target1 = getAdjacentPreviousSiblings(ev.target).find(
-                        (node) => node.nodeName === "TD"
-                    );
+                    target1 = getAdjacentPreviousSiblings(ev.target).find(isTableCell);
                     target2 = ev.target;
                 }
             }
