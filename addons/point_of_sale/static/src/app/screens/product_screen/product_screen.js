@@ -304,10 +304,9 @@ export class ProductScreen extends Component {
         this.numberBuffer.reset();
     }
     displayAllControlPopup() {
-        this.dialog.add(ControlButtonsPopup);
-    }
-    get selectedOrderlineQuantity() {
-        return this.currentOrder.getSelectedOrderline()?.getQuantityStr();
+        this.dialog.add(ControlButtonsPopup, {
+            order: this.currentOrder,
+        });
     }
     get selectedOrderlineDisplayName() {
         return this.currentOrder.getSelectedOrderline()?.getFullProductName();

@@ -29,4 +29,10 @@ patch(PosOrderline.prototype, {
         }
         return super.canBeMergedWith(orderline);
     },
+    getGroup() {
+        if (!this.config?.module_pos_restaurant || !this.course_id) {
+            return super.getGroup();
+        }
+        return { index: this.course_id.index, name: this.course_id.name };
+    },
 });
