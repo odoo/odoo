@@ -271,6 +271,7 @@ class MailRenderMixin(models.AbstractModel):
             'is_html_empty': is_html_empty,
             'slug': self.env['ir.http']._slug,
             'user': self.env.user,
+            'env': self.env,
         }
         render_context.update(copy.copy(template_env_globals))
         return render_context
