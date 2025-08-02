@@ -528,13 +528,16 @@ class TestProjectSharing(TestProjectSharingCommon):
             if a email template is set in `rating_template_id` field in the new stage.
         """
         self.project_portal.write({
-            'rating_active': True,
-            'rating_status': 'stage',
             'collaborator_ids': [
                 Command.create({'partner_id': self.user_portal.partner_id.id}),
             ],
         })
-        self.task_portal.with_user(self.user_portal).write({'stage_id': self.project_portal.type_ids[-1].id})
+        stage = self.project_portal.type_ids[-1]
+        stage.write({
+            'rating_active': True,
+            'rating_status': 'stage',
+        })
+        self.task_portal.with_user(self.user_portal).write({'stage_id': stage.id})
 
     def test_orm_method_with_true_false_domain(self):
         """ Test orm method overriden in project for project sharing works

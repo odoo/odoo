@@ -171,6 +171,22 @@ export class ControlPanel extends Component {
             };
         });
 
+        useEffect(
+            (el, showEmbedded) => {
+                const timer = setTimeout(() => {
+                    const hasOneVisibleEmbeddedAction =
+                        this.state.embeddedInfos.embeddedActions.filter(
+                            (a) => a.id in this.state.embeddedInfos.visibleEmbeddedActions
+                        ).length === 1;
+                    if (showEmbedded && hasOneVisibleEmbeddedAction) {
+                        el.querySelector(".btn[name='openEmbeddedActions']")?.click();
+                    }
+                }, 100);
+                return () => clearTimeout(timer);
+            },
+            () => [this.root.el, this.state.embeddedInfos.showEmbedded]
+        );
+
         onMounted(async () => {
             if (this.state.embeddedInfos.embeddedActions?.length > 0) {
                 // If there is no visible embedded actions, the current action (if it exists) is put by default

@@ -10,9 +10,7 @@ class TestSaleProjectCommon(TestSaleCommon):
         super().setUpClass()
         cls.env.user.group_ids += cls.quick_ref('project.group_project_manager')
 
-        cls.env['res.config.settings'] \
-            .create({'group_project_milestone': True}) \
-            .execute()
+        cls.env.user.group_ids |= cls.env.ref('project.group_project_milestone')
 
         cls.uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.account_sale = cls.company_data['default_account_revenue']
@@ -163,8 +161,3 @@ class TestSaleProjectCommon(TestSaleCommon):
             {**product_milestone_vals, 'name': 'Milestone Product', 'list_price': 20},
             {**product_milestone_vals, 'name': 'Milestone Product 2', 'list_price': 15},
         ])
-
-    def set_project_milestone_feature(self, value):
-        self.env['res.config.settings'] \
-            .create({'group_project_milestone': value}) \
-            .execute()

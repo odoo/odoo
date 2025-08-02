@@ -25,6 +25,7 @@ class ProjectMilestone(models.Model):
     is_reached = fields.Boolean(string="Reached", default=False, copy=False)
     reached_date = fields.Date(compute='_compute_reached_date', store=True, export_string_translation=False)
     task_ids = fields.One2many('project.task', 'milestone_id', 'Tasks', export_string_translation=False)
+    project_allow_milestones = fields.Boolean(related='project_id.allow_milestones', export_string_translation=False)
 
     # computed non-stored fields
     is_deadline_exceeded = fields.Boolean(compute="_compute_is_deadline_exceeded", export_string_translation=False)
