@@ -2,6 +2,7 @@
 
 import base64
 
+from odoo import Command
 from odoo.fields import Domain
 from odoo.tests import tagged, TransactionCase, Form
 
@@ -11,6 +12,13 @@ class TestRecruitment(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.company = cls.env['res.company'].create({
+            'name': 'Company Test',
+            'country_id': cls.env.ref('base.us').id,
+        })
+        cls.env.user.company_id = cls.company
+        cls.env.user.company_ids = [Command.set(cls.company.ids)]
 
         cls.TEXT = base64.b64encode(bytes("hr_recruitment", 'utf-8'))
         cls.Attachment = cls.env['ir.attachment']
@@ -164,9 +172,6 @@ class TestRecruitment(TransactionCase):
         to a pool (through pool_applicant_id or talents_pool_ids) or shares a phone number,
         email or linkedin with another directly linked application.
         """
-        # As the tests are run with demo data by default and currently all demo
-        # applicants are not in a talent pool and will appear in the out_of_pool_applications
-        demo_applicants = self.env["hr.applicant"].search(Domain.TRUE)
         talent_pool = self.env["hr.talent.pool"].create({"name": "Cool Pool"})
         job = self.env["hr.job"].create(
             {
@@ -245,10 +250,10 @@ class TestRecruitment(TransactionCase):
         #       is not tested first which is why these two tests are in one test.
         applicant = self.env["hr.applicant"]
         in_pool_domain = applicant._search_is_applicant_in_pool("in", [True])
-        in_pool_applicants = applicant.search(Domain(in_pool_domain))
-        out_of_pool_applicants = applicant.search(~Domain(in_pool_domain))
+        in_pool_applicants = applicant.search(Domain.AND([in_pool_domain, [("company_id", "=", self.env.company.id)]]))
+        out_of_pool_applicants = applicant.search(Domain.AND([~Domain(in_pool_domain), [("company_id", "=", self.env.company.id)]]))
         self.assertCountEqual(in_pool_applicants, A | B | C | D | E | G | H)
-        self.assertCountEqual(out_of_pool_applicants, demo_applicants | F)
+        self.assertCountEqual(out_of_pool_applicants, F)
 
     def test_application_no_partner_duplicate(self):
         """ Test that when applying, the existing partner
