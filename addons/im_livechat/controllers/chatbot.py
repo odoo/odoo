@@ -80,7 +80,7 @@ class LivechatChatbotScriptController(http.Controller):
             "ChatbotStep",
             {
                 "id": (next_step.id, posted_message.id),
-                "isLast": next_step._is_last_step(discuss_channel),
+                "isLast": discuss_channel.chatbot_current_step_is_last,
                 "message": posted_message.id,
                 "operatorFound": next_step.is_forward_operator
                 and discuss_channel.livechat_operator_id != chatbot.operator_partner_id,

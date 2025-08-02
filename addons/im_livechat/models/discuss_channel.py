@@ -154,6 +154,7 @@ class DiscussChannel(models.Model):
 
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
+    chatbot_current_step_is_last = fields.Boolean(compute="_compute_chatbot_current_step_is_last")
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
     livechat_failure = fields.Selection(
         selection=[
@@ -327,6 +328,22 @@ class DiscussChannel(models.Model):
                 if channel.livechat_is_escalated
                 else None
             )
+
+    @api.depends("chatbot_current_step_id", "chatbot_current_step_id.step_type", "chatbot_message_ids.user_script_answer_id")
+    def _compute_chatbot_current_step_is_last(self):
+        for channel in self:
+            if not channel.chatbot_current_step_id:
+                channel.chatbot_current_step_is_last = False
+            else:
+                # sudo: visitors can access the current step of the script and the chatbot messages
+                channel_sudo = channel.sudo()
+                next_step = channel_sudo.chatbot_current_step_id._fetch_next_step(
+                    channel_sudo.chatbot_message_ids.user_script_answer_id
+                )
+                channel.chatbot_current_step_is_last = (
+                    channel_sudo.chatbot_current_step_id.step_type != "question_selection"
+                    and not next_step
+                )
 
     @api.depends("livechat_agent_history_ids")
     def _compute_livechat_agent_providing_help_history(self):
