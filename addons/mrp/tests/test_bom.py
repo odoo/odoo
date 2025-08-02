@@ -1219,6 +1219,17 @@ class TestBoM(TestMrpCommon):
         line_values = report_values['lines']['components'][0]
         self.assertEqual(line_values['availability_state'], 'unavailable', 'The merged components should be unavailable')
 
+    def test_report_bom_structure_with_archived_warehouse(self):
+        """
+        Test bom structure report with all warehouses are archived.
+        """
+        if self.env['mrp.production'].search([]):
+            self.skipTest("Cannot run this test with data in 'mrp.production'.")
+        self.env['stock.warehouse'].search([]).action_archive()
+        bom = self.bom_4
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        self.assertIn('lines', report_values)
+
     def test_report_data_bom_with_0_qty(self):
         """
         Test that a bom with a child-bom set with a zero qty will still have have 0 qty for the child-bom on the report.
