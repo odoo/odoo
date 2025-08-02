@@ -6888,3 +6888,32 @@ class StockMove(TransactionCase):
             {'quantity': 149.97, 'quantity_product_uom': 5.29},
             {'quantity': 0.03, 'quantity_product_uom': 0},
         ])
+
+    def test_delivery_order_validation_without_template(self):
+        """Check that a delivery order can be validated without a delivery confirmation template."""
+        self.env.ref('stock.mail_template_data_delivery_confirmation', raise_if_not_found=False).unlink()
+        self.env.company.stock_move_email_validation = True
+        owner = self.env['res.partner'].create({'name': 'Jean'})
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'partner_id': owner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+        })
+        self.env['stock.move'].create({
+            'name': 'test_edit_moveline_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_id': picking.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        picking.move_ids.picked = True
+        picking._action_done()
+
+        qty = self.env['stock.quant']._get_available_quantity(self.product, self.stock_location)
+        self.assertEqual(qty, 10.0)
