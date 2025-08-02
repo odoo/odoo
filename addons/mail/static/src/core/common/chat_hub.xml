@@ -10,7 +10,7 @@
         </t>
         <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues, 'o-mobile': isMobileOS }" t-ref="bubbles">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
-                <Dropdown t-if="(chatHub.showConversations and !chatHub.compact) or position.dragged" state="options" position="'top-end'" menuClass="'d-flex flex-column bg-100 shadow-sm m-0 p-0 mb-1 border-secondary'">
+                <Dropdown t-if="(chatHub.showConversations and !chatHub.compact) or position.dragged" state="options" position="'top-end'" menuClass="'d-flex flex-column o-discuss-dropdownMenu m-0 mb-1 border-secondary'">
                     <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn bg-100 mt-1 fs-3" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'o-bubblesHover': (bubblesHover.isHover or position.dragged) and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"><i class="oi oi-ellipsis-h"/></button>
                     <t t-set-slot="content">
                         <DiscussActions dropdown="true" group="[optionActions]"/>
@@ -44,7 +44,7 @@
 </t>
 
 <t t-name="mail.ChatHub.hiddenButton">
-    <Dropdown t-if="chatHub.folded.length > chatHub.maxFolded" state="more" position="'left-middle'" menuClass="'o-mail-ChatHub-hiddenMenu bg-100 border border-secondary shadow-sm p-0 m-0'" manual="true">
+    <Dropdown t-if="chatHub.folded.length > chatHub.maxFolded" state="more" position="'left-middle'" menuClass="'o-mail-ChatHub-hiddenMenu o-discuss-dropdownMenu border-secondary m-0'" manual="true">
         <div class="o-mail-ChatBubble o-mail-ChatHub-hiddenBtn justify-content-center" t-att-class="{ 'o-active': more.isOpen }" t-on-click="() => store.chatHub.compact = true" t-ref="more-button">
             <div t-if="hiddenCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="hiddenCounter"/>

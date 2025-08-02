@@ -42,7 +42,7 @@
                 </FileUploader>
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
                 <div class="o-mail-Followers d-flex me-1">
-                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown d-flex flex-column bg-100 border-secondary'" state="followerListDropdown">
+                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown d-flex flex-column o-discuss-dropdownMenu border-secondary'" state="followerListDropdown">
                         <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (props.compactHeight ? '' : 'my-2') + ' ' + (state.thread.selfFollower ? 'active' : '')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
                             <i class="fa fa-fw" role="img" t-attf-class="{{ state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
                             <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
