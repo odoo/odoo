@@ -12,6 +12,10 @@
     @include media-breakpoint-down(sm) {
         grid-template-columns: repeat(3, 1fr);
     }
+
+    :where(:not(:has(.hasImage)) .product) {
+        aspect-ratio: 4 / 3;
+    }
 }
 
 .button-no-demo {
