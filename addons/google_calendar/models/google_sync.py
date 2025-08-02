@@ -150,6 +150,8 @@ class GoogleCalendarSync(models.AbstractModel):
                 if record.google_id and record.need_sync:
                     record.with_user(record._get_event_user())._google_delete(google_service, record.google_id)
             for record in new_records:
+                if record._is_google_insertion_blocked(sender_user=self.env.user):
+                    continue
                 record.with_user(record._get_event_user())._google_insert(google_service, record._google_values())
             for record in updated_records:
                 record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values())
@@ -401,5 +403,14 @@ class GoogleCalendarSync(models.AbstractModel):
         It's possible that a user creates an event and sets another user as the organizer. Using self.env.user will
         cause some issues, and It might not be possible to use this user for sending the request, so this method gets
         the appropriate user accordingly.
+        """
+        raise NotImplementedError()
+
+    def _is_google_insertion_blocked(self, sender_user):
+        """
+        Returns True if the record insertion to Google should be blocked.
+        This is a necessary step for ensuring data match between Odoo and Google,
+        as it avoids that events have permanently the wrong organizer in Google
+        by not synchronizing records through owner and not through the attendees.
         """
         raise NotImplementedError()
