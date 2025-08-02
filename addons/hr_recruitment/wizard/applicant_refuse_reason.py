@@ -97,11 +97,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
             'subject': 'subject',
         }
         for wizard in self:
-            if wizard.template_id:
-                for wizard_field_name, template_field_name in fields_to_copy_name_mapping.items():
+            for wizard_field_name, template_field_name in fields_to_copy_name_mapping.items():
+                if wizard.template_id:
                     wizard[wizard_field_name] = wizard.template_id[template_field_name]
-            else:
-                wizard[wizard_field_name] = False
+                else:
+                    wizard[wizard_field_name] = False
 
     def action_refuse_reason_apply(self):
         if self.send_mail:
