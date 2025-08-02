@@ -1,7 +1,15 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.FontSelector">
+<<<<<<< 9df334c0aca8a57dcbed4c87b43b18403f3a7c6e
         <Dropdown menuClass="'o_font_selector_menu'">
             <button class="btn btn-light" t-att-title="props.title" name="font">
+||||||| b8c55ff9da25ccfc84d0e588aa790d0080cc8a55
+        <Dropdown menuClass="'o_font_selector_menu'">
+            <button class="btn btn-light" t-att-title="props.title">
+=======
+        <Dropdown menuClass="'o_font_selector_menu'" menuRef="menuRef">
+            <button class="btn btn-light" t-att-title="props.title">
+>>>>>>> 2bdeb18cf3cc3744a382fb402229e58ac9dd0059
                 <span class="px-1" t-esc="state.displayName"/>
             </button>
             <t t-set-slot="content">

@@ -35,6 +35,8 @@ export const DEFAULT_THEME_COLOR_VARS = [
     "o-color-5",
 ];
 
+const DEFAULT_COLOR = "#FF0000";
+
 export class ColorPicker extends Component {
     static template = "web.ColorPicker";
     static components = { CustomColorPicker, GradientPicker };
@@ -54,18 +56,145 @@ export class ColorPicker extends Component {
         close: { type: Function, optional: true },
     };
     static defaultProps = {
+<<<<<<< 9df334c0aca8a57dcbed4c87b43b18403f3a7c6e
         close: () => {},
+||||||| b8c55ff9da25ccfc84d0e588aa790d0080cc8a55
+        document: window.document,
+        defaultColor: "#FF0000",
+        noTransparency: false,
+        stopClickPropagation: false,
+        onColorSelect: () => {},
+        onColorPreview: () => {},
+        onInputEnter: () => {},
+=======
+        document: window.document,
+        defaultColor: DEFAULT_COLOR,
+        noTransparency: false,
+        stopClickPropagation: false,
+        onColorSelect: () => {},
+        onColorPreview: () => {},
+        onInputEnter: () => {},
+>>>>>>> 2bdeb18cf3cc3744a382fb402229e58ac9dd0059
     };
 
     setup() {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
 
+<<<<<<< 9df334c0aca8a57dcbed4c87b43b18403f3a7c6e
         this.defaultColor = this.props.state.selectedColor;
         this.state = useState({
             activeTab: this.props.state.defaultTab,
             currentCustomColor: this.props.state.selectedColor,
             showGradientPicker: false,
+||||||| b8c55ff9da25ccfc84d0e588aa790d0080cc8a55
+        this.debouncedOnChangeInputs = debounce(this.onChangeInputs.bind(this), 10, true);
+
+        this.elRef = useRef("el");
+        this.colorPickerAreaRef = useRef("colorPickerArea");
+        this.colorPickerPointerRef = useRef("colorPickerPointer");
+        this.colorSliderRef = useRef("colorSlider");
+        this.colorSliderPointerRef = useRef("colorSliderPointer");
+        this.opacitySliderRef = useRef("opacitySlider");
+        this.opacitySliderPointerRef = useRef("opacitySliderPointer");
+
+        // Need to be bound on all documents to work in all possible cases (we
+        // have to be able to start dragging/moving from the colorpicker to
+        // anywhere on the screen, crossing iframes).
+        const documents = [
+            window.top,
+            ...Array.from(window.top.frames).filter((frame) => {
+                try {
+                    const document = frame.document;
+                    return !!document;
+                } catch {
+                    // We cannot access the document (cross origin).
+                    return false;
+                }
+            }),
+        ].map((w) => w.document);
+        this.throttleOnMouseMove = useThrottleForAnimation((ev) => {
+            this.onMouseMovePicker(ev);
+            this.onMouseMoveSlider(ev);
+            this.onMouseMoveOpacitySlider(ev);
+        });
+
+        for (const doc of documents) {
+            useExternalListener(doc, "mousemove", this.throttleOnMouseMove);
+            useExternalListener(doc, "mouseup", this.onMouseUp.bind(this));
+        }
+        onMounted(async () => {
+            const defaultCssColor = this.props.selectedColor
+                ? this.props.selectedColor
+                : this.props.defaultColor;
+            const rgba = convertCSSColorToRgba(defaultCssColor);
+            if (rgba) {
+                this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
+            }
+
+            this.previewActive = true;
+            this._updateUI();
+        });
+        onWillUpdateProps((newProps) => {
+            const newSelectedColor = newProps.selectedColor
+                ? newProps.selectedColor
+                : newProps.defaultColor;
+            this.setSelectedColor(newSelectedColor);
+=======
+        this.debouncedOnChangeInputs = debounce(this.onChangeInputs.bind(this), 10, true);
+
+        this.elRef = useRef("el");
+        this.colorPickerAreaRef = useRef("colorPickerArea");
+        this.colorPickerPointerRef = useRef("colorPickerPointer");
+        this.colorSliderRef = useRef("colorSlider");
+        this.colorSliderPointerRef = useRef("colorSliderPointer");
+        this.opacitySliderRef = useRef("opacitySlider");
+        this.opacitySliderPointerRef = useRef("opacitySliderPointer");
+
+        // Need to be bound on all documents to work in all possible cases (we
+        // have to be able to start dragging/moving from the colorpicker to
+        // anywhere on the screen, crossing iframes).
+        const documents = [
+            window.top,
+            ...Array.from(window.top.frames).filter((frame) => {
+                try {
+                    const document = frame.document;
+                    return !!document;
+                } catch {
+                    // We cannot access the document (cross origin).
+                    return false;
+                }
+            }),
+        ].map((w) => w.document);
+        this.throttleOnMouseMove = useThrottleForAnimation((ev) => {
+            this.onMouseMovePicker(ev);
+            this.onMouseMoveSlider(ev);
+            this.onMouseMoveOpacitySlider(ev);
+        });
+
+        for (const doc of documents) {
+            useExternalListener(doc, "mousemove", this.throttleOnMouseMove);
+            useExternalListener(doc, "mouseup", this.onMouseUp.bind(this));
+        }
+        onMounted(async () => {
+            const defaultCssColor = this.props.selectedColor
+                ? this.props.selectedColor
+                : this.props.defaultColor;
+            const rgba =
+                convertCSSColorToRgba(defaultCssColor) || convertCSSColorToRgba(DEFAULT_COLOR);
+            if (rgba) {
+                this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
+            }
+
+            this.previewActive = true;
+            this._updateUI();
+        });
+        onWillUpdateProps((newProps) => {
+            const newSelectedColor = newProps.selectedColor
+                ? newProps.selectedColor
+                : newProps.defaultColor;
+            this.setSelectedColor(newSelectedColor);
+>>>>>>> 2bdeb18cf3cc3744a382fb402229e58ac9dd0059
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
     }
