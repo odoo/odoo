@@ -863,10 +863,12 @@ test("Embed video by pasting video URL", async () => {
             txt: "<p><br></p>",
         },
     ];
+    const videoId = "qxb74CMR748";
+    const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
 
     onRpc("/html_editor/video_url/data", async () => ({
         platform: "youtube",
-        embed_url: "//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
+        video_id: videoId,
     }));
 
     await mountView({
@@ -882,9 +884,9 @@ test("Embed video by pasting video URL", async () => {
     const anchorNode = setSelectionInHtmlField();
 
     // Paste a video URL.
-    pasteText(htmlEditor, "https://www.youtube.com/watch?v=qxb74CMR748");
+    pasteText(htmlEditor, videoURL);
     await animationFrame();
-    expect(anchorNode.outerHTML).toBe("<p>https://www.youtube.com/watch?v=qxb74CMR748</p>");
+    expect(anchorNode.outerHTML).toBe(`<p>${videoURL}</p>`);
     await expectElementCount(".o-we-powerbox", 1);
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Embed Youtube Video", "Paste as URL"]);
 
@@ -896,7 +898,7 @@ test("Embed video by pasting video URL", async () => {
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p>`
     );
     expect(
-        'div.media_iframe_video iframe[src="//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0"]'
+        `div.media_iframe_video iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
     ).toHaveCount(1);
 });
 
@@ -1031,22 +1033,6 @@ test("html field with a placeholder", async () => {
     );
 });
 
-test("'Video Link' command is available", async () => {
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="txt" widget="html"/>
-            </form>`,
-    });
-    setSelectionInHtmlField();
-    await insertText(htmlEditor, "/video");
-    await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
-});
-
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     await mountView({
         type: "form",
@@ -1072,14 +1058,14 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     ]);
 });
 
-test("MediaDialog does not contain 'Videos' tab in html field when 'allowMediaDialogVideo' = false", async () => {
+test("MediaDialog does not contain 'Videos' tab in html field when 'allowVideo' = false", async () => {
     await mountView({
         type: "form",
         resId: 1,
         resModel: "partner",
         arch: `
             <form>
-            <field name="txt" widget="html" options="{'allowMediaDialogVideo': False}"/>
+            <field name="txt" widget="html" options="{'allowVideo': False}"/>
             </form>`,
     });
 
@@ -1097,7 +1083,7 @@ test("MediaDialog does not contain 'Videos' tab in html field when 'allowMediaDi
     ]);
 });
 
-test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () => {
+test("MediaDialog does not contain 'Videos' tab when sanitize = true and embedded_components = false", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
 
@@ -1112,7 +1098,7 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
         resModel: "sanitize.partner",
         arch: `
             <form>
-                <field name="txt" widget="html"/>
+                <field name="txt" widget="html" options="{'embedded_components': False}"/>
             </form>`,
     });
     setSelectionInHtmlField();
@@ -1129,7 +1115,7 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
     ]);
 });
 
-test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowMediaDialogVideo' = true", async () => {
+test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowVideo' = true", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
 
@@ -1144,7 +1130,7 @@ test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowMedi
         resModel: "sanitize.partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{'allowMediaDialogVideo': True}"/>
+                <field name="txt" widget="html" options="{'allowVideo': True}"/>
             </form>`,
     });
     setSelectionInHtmlField();
@@ -2300,10 +2286,10 @@ describe("codeview enabled", () => {
         setSelection({ anchorNode, anchorOffset: 0 });
         await insertText(htmlEditor, "/code");
         await waitFor(".o-we-powerbox");
-        expect(queryAllTexts(".o-we-command-name")).toEqual(["Code"]);
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Code");
     });
 
-    test("Video command should be available when codeview enabled", async () => {
+    test("Video tab in media dialog should be available when codeview enabled", async () => {
         await mountView({
             type: "form",
             resId: 1,
@@ -2317,6 +2303,8 @@ describe("codeview enabled", () => {
         setSelection({ anchorNode, anchorOffset: 0 });
         await insertText(htmlEditor, "/video");
         await waitFor(".o-we-powerbox");
-        expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+        await click(".o-we-powerbox .o-we-command-name:contains('Media')");
+        await waitFor(".o_select_media_dialog");
+        expect(".o_select_media_dialog .nav-link:contains('Videos')").toHaveCount(1);
     });
 });

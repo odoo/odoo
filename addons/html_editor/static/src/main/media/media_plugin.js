@@ -16,15 +16,17 @@ import {
 } from "@html_editor/utils/image";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { MediaDialog } from "./media_dialog/media_dialog";
+import { MediaDialog, TABS } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { fuzzyLookup } from "@web/core/utils/search";
 
 /**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['savePendingImages'] } savePendingImages
+ * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
  */
 
 export class MediaPlugin extends Plugin {
@@ -33,7 +35,6 @@ export class MediaPlugin extends Plugin {
     static shared = ["savePendingImages", "openMediaDialog"];
     static defaultConfig = {
         allowImage: true,
-        allowMediaDialogVideo: true,
         allowMediaDocuments: true,
     };
     resources = {
@@ -48,10 +49,12 @@ export class MediaPlugin extends Plugin {
             {
                 id: "insertMedia",
                 title: _t("Media"),
-                description: _t("Insert image or icon"),
-                keywords: [_t("Image"), _t("Icon")],
+                description: this.config.allowVideo
+                    ? _t("Insert image, icon or video")
+                    : _t("Insert image or icon"),
                 icon: "fa-file-image-o",
-                run: this.openMediaDialog.bind(this),
+                run: (params, context = {}) =>
+                    this.openMediaDialog({ activeTab: this.getActiveTab(context.searchTerm) }),
                 isAvailable: isHtmlContentSupported,
             },
         ],
@@ -64,9 +67,9 @@ export class MediaPlugin extends Plugin {
             },
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
-        powerbox_items: [
-            ...(this.config.allowImage ? [{ categoryId: "media", commandId: "insertMedia" }] : []),
-        ],
+        ...(this.config.allowImage && {
+            powerbox_items: this.getInsertMediaPowerboxItem(),
+        }),
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
@@ -84,6 +87,25 @@ export class MediaPlugin extends Plugin {
             `:is(${paragraphRelatedElementsSelector}) :is(${ICON_SELECTOR})`,
         before_save_handlers: this.savePendingImages.bind(this),
     };
+
+    setup() {
+        this.availableTabs = [
+            ...Object.values(TABS),
+            ...this.getResource("media_dialog_extra_tabs"),
+        ];
+    }
+
+    getInsertMediaPowerboxItem() {
+        const self = this;
+        return {
+            categoryId: "media",
+            commandId: "insertMedia",
+            // Evaluation is deferred because this.availableTabs is only ready after setup.
+            get keywords() {
+                return self.availableTabs.map((tab) => tab.title);
+            },
+        };
+    }
 
     getRecordInfo(editableEl = null) {
         return this.config.getRecordInfo ? this.config.getRecordInfo(editableEl) : {};
@@ -198,11 +220,8 @@ export class MediaPlugin extends Plugin {
             ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
             media: params.node,
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-            noVideos: !this.config.allowMediaDialogVideo,
             noImages: !this.config.allowImage,
-            extraTabs: this.getResource("media_dialog_extra_tabs").filter(
-                (tab) => !(tab.id === "DOCUMENTS" && params.noDocuments)
-            ),
+            extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,
             ...params,
         });
@@ -376,5 +395,20 @@ export class MediaPlugin extends Plugin {
         if (isCollapsed && closestElement(anchorNode, isIconElement)) {
             this.dependencies.selection.selectAroundNonEditable();
         }
+    }
+
+    /**
+     * @param {string} searchTerm
+     * @returns {string|undefined}
+     */
+    getActiveTab(searchTerm) {
+        if (!searchTerm) {
+            return undefined;
+        }
+        const matchedTabs = fuzzyLookup(searchTerm, this.availableTabs, (tab) => tab.title);
+        if (!matchedTabs.length) {
+            return undefined;
+        }
+        return matchedTabs[0].id;
     }
 }

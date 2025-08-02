@@ -44,9 +44,7 @@ export class CustomIconAction extends BuilderAction {
                 ? getActiveCustomIcons(editingElement)
                 : getInactiveCustomIcons(editingElement);
             const mediaDialogParams = {
-                noImages: true,
-                noDocuments: true,
-                noVideos: true,
+                visibleTabs: ["ICONS"],
                 media,
                 save: (icon) => {
                     resolve(icon);

@@ -2,6 +2,8 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { _t } from "@web/core/l10n/translation";
+import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 
 function getBgVideoOrParallax(editingElement) {
     // Make sure parallax and video element are considered to be below the
@@ -40,24 +42,31 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
     loadReplaceBackgroundVideo() {
         return new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
-                noIcons: true,
-                noImages: true,
-                noDocuments: true,
-                isForBgVideo: true,
-                vimeoPreviewIds: [
-                    "528686125",
-                    "430330731",
-                    "509869821",
-                    "397142251",
-                    "763851966",
-                    "486931161",
-                    "499761556",
-                    "1092009120",
-                    "728584384",
-                    "865314310",
-                    "511727912",
-                    "466830211",
+                extraTabs: [
+                    {
+                        id: "VIDEO_BACKGROUND",
+                        title: _t("Videos"),
+                        Component: VideoSelector,
+                        props: {
+                            isForBgVideo: true,
+                            vimeoPreviewIds: [
+                                "528686125",
+                                "430330731",
+                                "509869821",
+                                "397142251",
+                                "763851966",
+                                "486931161",
+                                "499761556",
+                                "1092009120",
+                                "728584384",
+                                "865314310",
+                                "511727912",
+                                "466830211",
+                            ],
+                        },
+                    },
                 ],
+                visibleTabs: ["VIDEO_BACKGROUND"],
                 save: (media) => {
                     resolve(media.querySelector("iframe").src);
                 },

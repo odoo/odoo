@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { Tooltip } from "@web/core/tooltip/tooltip";
@@ -12,27 +11,6 @@ export class MediaWebsitePlugin extends Plugin {
     static shared = ["replaceMedia"];
 
     resources = {
-        user_commands: [
-            {
-                id: "websiteVideo",
-                title: _t("Video"),
-                description: _t("Insert a video"),
-                icon: "fa-file-video-o",
-                run: this.dependencies.media.openMediaDialog.bind(this, {
-                    noVideos: false,
-                    noImages: true,
-                    noIcons: true,
-                    extraTabs: false,
-                }),
-                isAvailable: isHtmlContentSupported,
-            },
-        ],
-        powerbox_items: [
-            {
-                categoryId: "media",
-                commandId: "websiteVideo",
-            },
-        ],
         on_replaced_media_handlers: ({ newMediaEl }) =>
             // Activate the new media options.
             this.dependencies.builderOptions.setNextTarget(newMediaEl),
