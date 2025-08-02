@@ -2185,6 +2185,19 @@
     </xpath>
 </template>
 
+<!-- Privacy Policy Footer Link -->
+<template id="footer_privacy_policy_link" inherit_id="website.layout" name="Privacy Policy Footer Link" active="False">
+    <xpath expr="//footer//div[hasclass('o_footer_copyright')]" position="after">
+        <section class="container">
+            <div class="row text-center">
+                <div class="col-lg-12 text-sm-start pb-3">
+                    <a href="/privacy">Privacy Policy</a>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
 <!-- Scroll to Top option -->
 <template id="option_footer_scrolltop" inherit_id="website.layout" active="False">
     <xpath expr="//div[@id='footer']" position="after">

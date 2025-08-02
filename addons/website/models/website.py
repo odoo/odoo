@@ -322,6 +322,9 @@ class Website(models.Model):
         websites.company_id._compute_website_id()
         for website in websites:
             website._bootstrap_homepage()
+            # Creates a privacy_policy page if the company is based in an EU country
+            if self._is_company_based_in_europe(website.company_id):
+                website._bootstrap_privacy_policy_page()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -505,7 +508,10 @@ class Website(models.Model):
         r = dict()
         current_website = self.get_current_website()
         company = current_website.company_id
-        configurator_features = self.env['website.configurator.feature'].search([])
+        domain = []
+        if self._is_company_based_in_europe(company):
+            domain.append(("iap_page_code", "!=", "privacy_policy"))
+        configurator_features = self.env["website.configurator.feature"].search(domain)
         r['features'] = [{
             'id': feature.id,
             'name': feature.name,
@@ -1137,6 +1143,34 @@ class Website(models.Model):
         self.copy_menu_hierarchy(default_menu)
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
         home_menu.page_id = homepage_page
+
+    def _bootstrap_privacy_policy_page(self):
+        privacy_page_exists = self.env["website.page"].search_count([
+            ("website_id", "=", self.id),
+            ("url", "=", "/privacy"),
+        ])
+        if not privacy_page_exists:
+            privacy_view_template = self.env.ref("website.privacy_policy", raise_if_not_found=False)
+            if privacy_view_template:
+                privacy_view_template.with_context(website_id=self.id).write({"website_id": self.id})
+                specific_privacy_view = self.with_context(website_id=self.id).viewref("website.privacy_policy")
+                self.env["website.page"].create({
+                    "is_published": True,
+                    "website_indexed": True,
+                    "url": "/privacy",
+                    "website_id": self.id,
+                    "view_id": specific_privacy_view.id,
+                })
+
+        # Activate the privacy policy link in the footer
+        footer_privacy_link = self.env.ref("website.footer_privacy_policy_link", raise_if_not_found=False)
+        if footer_privacy_link:
+            footer_privacy_link.with_context(website_id=self.id).write({"active": True})
+
+    # check if the current company is in a Europe
+    def _is_company_based_in_europe(self, company):
+        eu_countries = self.env.ref("base.europe").country_ids
+        return company.country_id in eu_countries if company.country_id else False
 
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
