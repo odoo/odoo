@@ -22,10 +22,12 @@ class HomeworkLocationWizard(models.TransientModel):
     @api.depends('date')
     def _compute_day_week_string(self):
         for record in self:
-            record.day_week_string = record.date.strftime("%A")
+            record.day_week_string = record.date.strftime("%A") if record.date else ''
 
     def set_employee_location(self):
         self.ensure_one()
+        if not self.date:
+            return
         default_employee_id = self.env.context.get('default_employee_id') or self.env.user.employee_id.id
         employee_id = self.env['hr.employee'].browse(self.employee_id.id or default_employee_id)
         employee_location = self.env['hr.employee.location'].search([
