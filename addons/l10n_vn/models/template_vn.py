@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('vn')
     def _get_vn_template_data(self):
         return {
-            'code_digits': '4',
+            'code_digits': '3',
             'property_account_receivable_id': 'chart131',
             'property_account_payable_id': 'chart331',
             'property_account_expense_categ_id': 'chart1561',
