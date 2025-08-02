@@ -340,6 +340,7 @@ test("only show new message separator in its thread", async () => {
     // when a message acts as the reference for displaying new message separator,
     // this should applies only when vieweing the message in its thread.
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const demoPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageIds = pyEnv["mail.message"].create([

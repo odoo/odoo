@@ -373,6 +373,7 @@ test('subject should not be shown when subject differs from thread name only by 
 
 test("inbox: mark all messages as read", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -594,6 +595,7 @@ test("error notifications should not be shown in Inbox", async () => {
 
 test("emptying inbox displays rainbow man in inbox", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId1 = pyEnv["mail.message"].create({
         body: "not empty",
@@ -617,6 +619,7 @@ test("emptying inbox displays rainbow man in inbox", async () => {
 
 test("emptying inbox doesn't display rainbow man in another thread", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({

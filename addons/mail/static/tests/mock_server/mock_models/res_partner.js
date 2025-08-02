@@ -289,7 +289,7 @@ export class ResPartner extends webModels.ResPartner {
             if (fields.includes("user")) {
                 data.main_user_id = partner.main_user_id;
                 if (partner.main_user_id) {
-                    store._add_record_fields(ResUsers.browse(partner.main_user_id), ["share"]);
+                    store._add_record_fields(ResUsers.browse(partner.main_user_id), ["share", "notification_type"]);
                 }
                 if (partner.main_user_id && fields.includes("is_admin")) {
                     const users = ResUsers.search([["login", "=", "admin"]]);

@@ -427,6 +427,7 @@ test("Can reply to history message", async () => {
 
 test("receive new needaction messages", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     await start();
     await openDiscuss();
@@ -488,6 +489,7 @@ test("receive new needaction messages", async () => {
 
 test("receive a message that is not linked to thread", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     await start();
     await openDiscuss();
@@ -530,8 +532,7 @@ test("basic rendering", async () => {
 test("basic rendering: sidebar", async () => {
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebar button", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebar button", { text: "Starred" });
+    await contains(".o-mail-DiscussSidebar button", { text: "Starred messages" });
     await contains(".o-mail-DiscussSidebar button", { text: "History" });
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
@@ -539,25 +540,30 @@ test("basic rendering: sidebar", async () => {
 });
 
 test("sidebar: Inbox should have icon", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     await start();
     await openDiscuss();
     await contains("button", { text: "Inbox", contains: [".fa-inbox"] });
 });
 
 test("sidebar: default active inbox", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     await start();
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
 });
 
 test("sidebar: change active", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
-    await contains("button:not(.o-active)", { text: "Starred" });
-    await click("button", { text: "Starred" });
+    await contains("button:not(.o-active)", { text: "Starred messages" });
+    await click("button", { text: "Starred messages" });
     await contains("button:not(.o-active)", { text: "Inbox" });
-    await contains("button.o-active", { text: "Starred" });
+    await contains("button.o-active", { text: "Starred messages" });
 });
 
 test("sidebar: basic channel rendering", async () => {
@@ -645,7 +651,7 @@ test("initially load messages from inbox", async () => {
 test("default active id on mailbox", async () => {
     await start();
     await openDiscuss("mail.box_starred");
-    await contains("button.o-active", { text: "Starred" });
+    await contains("button.o-active", { text: "Starred messages" });
 });
 
 test("basic top bar rendering", async () => {
@@ -655,9 +661,9 @@ test("basic top bar rendering", async () => {
     await openDiscuss();
     await contains("button:disabled", { text: "Mark all read" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await click("button", { text: "Starred" });
+    await click("button", { text: "Starred messages" });
     await contains("button:disabled", { text: "Unstar all" });
-    await contains(".o-mail-Discuss-threadName", { value: "Starred" });
+    await contains(".o-mail-Discuss-threadName", { value: "Starred messages" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await contains(".o-mail-Discuss-header button", { count: 9 });
@@ -759,6 +765,7 @@ test("Unfollow message", async function () {
 
 test('messages marked as read move to "History" mailbox', async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "other-disco" });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -792,11 +799,11 @@ test('messages marked as read move to "History" mailbox', async () => {
     await contains(".o-mail-Thread h4", { text: "No history messages" });
     await click("button", { text: "Inbox" });
     await contains("button.o-active", { text: "Inbox" });
-    await contains(".o-mail-Thread h4", { count: 0, text: "Your inbox is empty" });
+    await contains(".o-mail-Thread h4", { count: 0, text: "Congratulations, your inbox is empty" });
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
     await click("button", { text: "Mark all read" });
     await contains("button.o-active", { text: "Inbox" });
-    await contains(".o-mail-Thread h4", { text: "Your inbox is empty" });
+    await contains(".o-mail-Thread h4", { text: "Congratulations, your inbox is empty" });
     await click("button", { text: "History" });
     await contains("button.o-active", { text: "History" });
     await contains(".o-mail-Thread h4", { count: 0, text: "No history messages" });
@@ -805,6 +812,7 @@ test('messages marked as read move to "History" mailbox', async () => {
 
 test('mark a single message as read should only move this message to "History" mailbox', async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             body: "not empty 1",
@@ -977,9 +985,9 @@ test("starred: unstar all", async () => {
     await start();
     await openDiscuss("mail.box_starred");
     await contains(".o-mail-Message", { count: 2 });
-    await contains("button", { text: "Starred", contains: [".badge", { text: "2" }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { text: "2" }] });
     await click("button:enabled", { text: "Unstar all" });
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:disabled", { text: "Unstar all" });
 });
@@ -987,6 +995,7 @@ test("starred: unstar all", async () => {
 test.tags("focus required");
 test("auto-focus composer on opening thread", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
     pyEnv["discuss.channel"].create([
         { name: "General" },
@@ -1719,19 +1728,21 @@ test("select another mailbox", async () => {
     await openDiscuss();
     await contains(".o-mail-Discuss");
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await click("button", { text: "Starred" });
+    await click("button", { text: "Starred messages" });
     await contains("button:disabled", { text: "Unstar all" });
-    await contains(".o-mail-Discuss-threadName", { value: "Starred" });
+    await contains(".o-mail-Discuss-threadName", { value: "Starred messages" });
 });
 
 test('auto-select "Inbox nav bar" when discuss had inbox as active thread', async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
     await contains(".o-mail-MessagingMenu-navbar button.fw-bold", { text: "Mailboxes" });
     await contains("button.active.o-active", { text: "Inbox" });
-    await contains("h4", { text: "Your inbox is empty" });
+    await contains("h4", { text: "Congratulations, your inbox is empty" });
 });
 
 test("composer should be focused automatically after clicking on the send button", async () => {
