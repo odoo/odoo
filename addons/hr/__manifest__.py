@@ -45,6 +45,7 @@
         'views/discuss_channel_views.xml',
         'views/res_users.xml',
         'views/hr_templates.xml',
+        'views/mail_compose_message.xml',
         'data/hr_data.xml',
     ],
     'demo': [
