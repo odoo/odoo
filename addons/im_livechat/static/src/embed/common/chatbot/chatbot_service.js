@@ -412,7 +412,7 @@ export class ChatBotService {
     }
 
     get isRestoringSavedState() {
-        return this.savedState?._chatbotCurrentStep.id > this.currentStep?.id;
+        return this.savedState?._chatbotCurrentStep.sequence > this.currentStep?.sequence;
     }
 }
 
