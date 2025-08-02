@@ -39,7 +39,7 @@ function removeOptionalProduct(productName) {
         content: `Remove ${productName}`,
         trigger: `
             ${productSelector(productName)}
-            td.o_sale_product_configurator_qty
+            td.o_sale_product_configurator_price
             a:contains("Remove")
         `,
         run: 'click',
@@ -162,7 +162,7 @@ function assertPriceTotal(total) {
     return {
         content: `Assert that the total is ${total}`,
         trigger:
-            `table.o_sale_product_configurator_table tr>td[colspan="4"] span:contains("${total}")`,
+            `h6[name="sale_product_configurator_list_total"]:contains("${total}")`,
     };
 }
 
@@ -171,7 +171,7 @@ function assertProductPrice(productName, price) {
         content: `Assert that ${productName} costs ${price}`,
         trigger: `
             ${productSelector(productName)}
-            td.o_sale_product_configurator_price
+            td.o_sale_product_configurator_qty
             span:contains("${price}")
         `,
     };
@@ -182,7 +182,7 @@ function assertOptionalProductPrice(productName, price) {
         content: `Assert that ${productName} costs ${price}`,
         trigger: `
             ${optionalProductSelector(productName)}
-            td.o_sale_product_configurator_qty
+            td.o_sale_product_configurator_price
             span:contains("${price}")
         `,
     };
@@ -193,7 +193,7 @@ function assertProductPriceInfo(productName, priceInfo) {
         content: `Assert that the price info of ${productName} is ${priceInfo}`,
         trigger: `
             ${productSelector(productName)}
-            td.o_sale_product_configurator_price
+            td.o_sale_product_configurator_qty
             div:contains("${priceInfo}")
         `,
     };
@@ -204,7 +204,7 @@ function assertOptionalProductPriceInfo(productName, priceInfo) {
         content: `Assert that the price info of ${productName} is ${priceInfo}`,
         trigger: `
             ${optionalProductSelector(productName)}
-            td.o_sale_product_configurator_qty
+            td.o_sale_product_configurator_price
             div:contains("${priceInfo}")
         `,
     };

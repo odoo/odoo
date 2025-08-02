@@ -31,7 +31,7 @@ registry.category('web_tour.tours').add('shop_update_cart', {
         },
         {
             content: "click in modal on 'Proceed to checkout' button",
-            trigger: 'button:contains("Proceed to Checkout")',
+            trigger: 'button:contains("Checkout")',
             run: "click",
             expectUnloadPage: true,
         },
