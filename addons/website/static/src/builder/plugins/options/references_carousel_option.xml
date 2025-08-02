@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ReferencesCarouselOption">
+    <BuilderRow label.translate="Speed">
+        <BuilderRange
+            id="'references_carousel_speed'"
+            applyTo="'.slider'"
+            styleAction="'--duration'"
+            min="10"
+            max="1"
+            displayRangeValue="true"
+            unit="'s'"/>
+    </BuilderRow>
+    <ReferencesCarouselImagesOption/>
+</t>
+
+<t t-name="website.ReferencesCarouselImagesOption">
+    <style>
+        .o_carousel_thumbnail:hover {
+            border-color: #01bad2 !important;
+        }
+        .o_carousel_thumbnail:focus-within {
+            border-color: #01bad2 !important;
+            outline: none;
+        }
+    </style>
+    <div class="p-1 px-2 ps-3">
+        <table t-ref="root" class="o_references_carousel_images_list">
+            <tbody>
+                <tr t-foreach="this.computeItems()" t-as="item" t-key="item.fabricatedKey" t-att-data-id="item.id">
+                    <td>
+                        <button class="btn o_drag_handle ps-0">
+                            <i class="oi oi-draggable"/>
+                        </button>
+                    </td>
+                    <td width="100%">
+                        <div class="d-flex align-items-center">
+                            <div class="me-2 o_carousel_thumbnail" style="background-image: url('/web/static/img/transparent.png'); width: 50%; height: 40px; cursor: pointer; border: 2px solid transparent; border-radius: 4px; transition: all 0.2s ease;" 
+                                 t-on-click="() => this.selectImage(item.position)"
+                                 title="Access the image options"
+                                 tabindex="0">
+                                <img t-att-src="item.src" alt="" class="w-100 h-100 object-fit-contain"/>
+                            </div>
+                            <BuilderButton
+                                action="'replaceMedia'"
+                                applyTo="`li.item:nth-of-type(${item.position}) img`"
+                                className="'btn-secondary btn-sm'"
+                                title.translate="Change Image"
+                                preview="false">
+                                Change Image
+                            </BuilderButton>
+                        </div>
+                    </td>
+                    <td style="'min-width: 2.5em'">
+                        <BuilderButton
+                            type="'danger'"
+                            className="'fa fa-fw fa-trash-o'"
+                            title.translate="Remove image"
+                            action="'removeReferencesCarouselImage'"
+                            applyTo="`li.item:nth-of-type(${item.position})`"
+                            preview="false"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="p-1 px-2 ps-3">
+        <BuilderButton action="'addReferencesCarouselImage'" preview="false">Add New Image</BuilderButton>
+    </div>
+</t>
+
+</templates>
