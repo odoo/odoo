@@ -611,12 +611,15 @@ class CrmTeam(models.Model):
             ['id:array_agg'],
         ))
 
-        def _assign_lead(lead, members, member_leads, members_quota, assign_lst, optional_lst=None):
+        def _assign_lead(lead, members_to_assign, leads_per_member, preferred_leads_per_member, quota_per_member):
             """ Find relevant member whose domain(s) accept the lead. If found convert
             and update internal structures accordingly. """
-            member_found = next((member for member in members if lead in member_leads[member]), False)
+            member_found = next((member for member in members_to_assign if lead in preferred_leads_per_member.get(member, [])), False)
             if not member_found:
-                return
+                member_found = next((member for member in members_to_assign if lead in leads_per_member.get(member, [])), False)
+                if not member_found:
+                    return
+
             lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
                 lead.partner_id,
                 user_ids=member_found.user_id.ids
@@ -624,14 +627,10 @@ class CrmTeam(models.Model):
             result_data[member_found]['assigned'] += lead
 
             # if member still has quota, move at end of list; otherwise just remove
-            assign_lst.remove(member_found)
-            if optional_lst is not None:
-                optional_lst.remove(member_found)
-            members_quota[member_found] -= 1
-            if members_quota[member_found] > 0:
-                assign_lst.append(member_found)
-                if optional_lst is not None:
-                    optional_lst.append(member_found)
+            members_to_assign.remove(member_found)
+            quota_per_member[member_found] -= 1
+            if quota_per_member[member_found] > 0:
+                members_to_assign.append(member_found)
             return member_found
 
         for team, leads_to_assign_ids in leads_per_team.items():
@@ -648,6 +647,10 @@ class CrmTeam(models.Model):
             # Previous iteration has committed the change, records may have been deleted in the meanwhile
             to_assign = self.env['crm.lead'].browse(leads_to_assign_ids).exists()
 
+            leads_per_member = {
+                member: to_assign.filtered_domain(literal_eval(member.assignment_domain or '[]'))
+                for member in members_to_assign
+            }
             members_to_assign_wpref = [
                 m for m in members_to_assign
                 if m.assignment_domain_preferred and literal_eval(m.assignment_domain_preferred or '')
@@ -660,30 +663,12 @@ class CrmTeam(models.Model):
                     ])
                 ) for member in members_to_assign_wpref
             }
-            preferred_leads = self.env['crm.lead'].concat(*[lead for lead in preferred_leads_per_member.values()])
-            assigned_preferred_leads = self.env['crm.lead']
 
-            # first assign loop: preferred leads, always priority
-            for lead in preferred_leads.sorted(lambda lead: (-lead.probability, id)):
-                counter += 1
-                member_found = _assign_lead(lead, members_to_assign_wpref, preferred_leads_per_member, quota_per_member, members_to_assign, members_to_assign_wpref)
-                if not member_found:
-                    continue
-                assigned_preferred_leads += lead
-                if auto_commit and counter % commit_bundle_size == 0:
-                    self.env.cr.commit()
-
-            # second assign loop: fill up with other leads
-            to_assign = to_assign - assigned_preferred_leads
-            leads_per_member = {
-                member: to_assign.filtered_domain(literal_eval(member.assignment_domain or '[]'))
-                for member in members_to_assign
-            }
             for lead in to_assign.sorted(lambda lead: (-lead.probability, id)):
-                counter += 1
-                member_found = _assign_lead(lead, members_to_assign, leads_per_member, quota_per_member, members_to_assign)
+                member_found = _assign_lead(lead, members_to_assign, leads_per_member, preferred_leads_per_member, quota_per_member)
                 if not member_found:
                     continue
+                counter += 1
                 if auto_commit and counter % commit_bundle_size == 0:
                     self.env.cr.commit()
 
@@ -693,10 +678,6 @@ class CrmTeam(models.Model):
             # Once we are done with a team we don't need to keep the leads in memory
             # Try to avoid to explode memory usage
             self.env.invalidate_all()
-            _logger.info(
-                'Team %s: Assigned %s leads based on preference, on a potential of %s (limited by quota)',
-                team.name, len(assigned_preferred_leads), len(preferred_leads)
-            )
         _logger.info(
             'Assigned %s leads to %s salesmen',
             sum(len(r['assigned']) for r in result_data.values()), len(result_data)
