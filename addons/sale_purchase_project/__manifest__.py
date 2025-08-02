@@ -8,5 +8,8 @@
     'license': 'LGPL-3',
     'category': 'Sales',
     'depends': ['sale_purchase', 'project_purchase', 'sale_project'],
+    'data': [
+        'views/purchase_order_views.xml',
+    ],
     'auto_install': True,
 }
