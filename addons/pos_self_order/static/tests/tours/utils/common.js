@@ -1,3 +1,5 @@
+/* global posmodel */
+
 export function clickBtn(buttonName) {
     return {
         content: `Click on button '${buttonName}'`,
@@ -89,4 +91,20 @@ export function increaseComboItemQty(productName, qty) {
     }
 
     return steps;
+}
+
+export function setProductAvailability(productName, value) {
+    return {
+        content: `Set 'self_order_available' of product '${productName}' to ${value}`,
+        trigger: "body",
+        run: async function () {
+            const product = posmodel.data.models["product.template"].find(
+                (p) => p.name === productName
+            );
+            if (!product) {
+                throw new Error(`Product '${productName}' not found.`);
+            }
+            product.self_order_available = value;
+        },
+    };
 }

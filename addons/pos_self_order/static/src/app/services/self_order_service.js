@@ -13,6 +13,7 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
+import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
 import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import {
@@ -75,7 +76,15 @@ export class SelfOrder extends Reactive {
 
         this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
         this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
+            const productTemplateIds = payload["product.template"].map((tmpl) => tmpl.id);
+            const existingProductIds = this.models["product.template"].filter((tmpl) =>
+                productTemplateIds.includes(tmpl.id)
+            );
+            const hasNewProducts = productTemplateIds.length !== existingProductIds.length;
             this.models.connectNewData(payload);
+            if (hasNewProducts) {
+                this.initProducts();
+            }
         });
         if (this.config.self_ordering_mode === "kiosk") {
             this.data.connectWebSocket("STATUS", ({ status }) => {
@@ -387,7 +396,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    initData() {
+    initProducts() {
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
 
@@ -415,6 +424,10 @@ export class SelfOrder extends Reactive {
             });
             this.productByCategIds["0"] = productWoCat;
         }
+    }
+
+    initData() {
+        this.initProducts();
         this._initLanguages();
 
         for (const printerConfig of this.models["pos.printer"].getAll()) {
@@ -754,6 +767,8 @@ export class SelfOrder extends Reactive {
 
     verifyCart() {
         let result = true;
+        const unavailableProducts = new Set();
+
         for (const line of this.currentOrder.unsentLines) {
             if (line.combo_parent_id?.uuid) {
                 continue;
@@ -771,19 +786,35 @@ export class SelfOrder extends Reactive {
                     line.customer_note = alreadySent.customer_note;
                     line.selected_attributes = alreadySent.selected_attributes;
                 } else {
+                    const productName = !line.product_id?.self_order_available
+                        ? line.product_id?.name
+                        : wrongChild?.product_id?.name;
+
+                    if (productName) {
+                        unavailableProducts.add(productName);
+                    }
+                    // Remove all children and parent if any product is unavailable
+                    line.combo_line_ids.forEach((childLine) => {
+                        childLine.delete();
+                    });
                     line.delete();
                 }
-                this.notification.add(
-                    _t(
-                        "%s is not available anymore, it has thus been removed from your order. Please review your order and validate it again.",
-                        line.full_product_name
-                    ),
-                    { type: "danger" }
-                );
                 result = false;
             }
         }
 
+        if (unavailableProducts.size) {
+            const productNames = Array.from(unavailableProducts);
+            const goBackIfCartEmpty = () => {
+                if (!this.currentOrder.unsentLines.length) {
+                    this.router.back();
+                }
+            };
+            this.dialog.add(UnavailableProductsDialog, {
+                productNames: productNames,
+                onClose: goBackIfCartEmpty,
+            });
+        }
         return result;
     }
 
