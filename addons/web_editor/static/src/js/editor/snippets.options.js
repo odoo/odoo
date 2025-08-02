@@ -5891,7 +5891,12 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 case "prev": {
                     // Consider only visible elements.
                     let prevEl = this.$target[0].previousElementSibling;
-                    while (prevEl && window.getComputedStyle(prevEl).display === "none") {
+                    while (
+                        prevEl &&
+                        (window.getComputedStyle(prevEl).display === "none" ||
+                         prevEl.classList.contains('s_popup') ||
+                         prevEl.classList.contains('s_popup_close'))
+                    ){
                         prevEl = prevEl.previousElementSibling;
                     }
                     prevEl?.insertAdjacentElement("beforebegin", this.$target[0]);
@@ -5903,7 +5908,12 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 case "next": {
                     // Consider only visible elements.
                     let nextEl = this.$target[0].nextElementSibling;
-                    while (nextEl && window.getComputedStyle(nextEl).display === "none") {
+                    while (
+                        nextEl &&
+                        (window.getComputedStyle(nextEl).display === "none" ||
+                         nextEl.classList.contains('s_popup') ||
+                         nextEl.classList.contains('s_popup_close'))
+                    ) {
                         nextEl = nextEl.nextElementSibling;
                     }
                     nextEl?.insertAdjacentElement("afterend", this.$target[0]);
@@ -5986,7 +5996,12 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             // Consider only visible elements.
             const direction = moveUpOrLeft ? "previousElementSibling" : "nextElementSibling";
             let siblingEl = this.$target[0][direction];
-            while (siblingEl && window.getComputedStyle(siblingEl).display === "none") {
+            while (
+                siblingEl &&
+                (window.getComputedStyle(siblingEl).display === "none" ||
+                 siblingEl.classList.contains('s_popup') ||
+                 siblingEl.classList.contains('s_popup_close'))
+            ) {
                 siblingEl = siblingEl[direction];
             }
             return !!siblingEl;

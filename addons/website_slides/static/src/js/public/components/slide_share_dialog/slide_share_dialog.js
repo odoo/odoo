@@ -4,7 +4,7 @@ import { CopyButton } from "@web/core/copy_button/copy_button";
 import { Dialog } from "@web/core/dialog/dialog";
 import { EmailSharingInput } from "./email_sharing_input";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useRef, onMounted, onWillUnmount} from "@odoo/owl";
 
 export class SlideShareDialog extends Component {
     static template = "website_slides.SlideShareDialog";
@@ -27,6 +27,18 @@ export class SlideShareDialog extends Component {
         this.copyUrlText = _t("Copy Link");
         this.copyEmbedCodeText = _t("Copy Embed Code");
         this.successText = _t("Copied");
+        this.onOutsideClick = (event) => {
+            const isInsideDialog = event.target.closest(".modal-content");
+            if (!isInsideDialog) {
+                this.props.close();
+            }
+        };
+        onMounted(() => {
+            document.addEventListener("click", this.onOutsideClick);
+        });
+        onWillUnmount(() => {
+            document.removeEventListener("click", this.onOutsideClick);
+        });
     }
 
     onSocialShareClick(url) {
