@@ -7,7 +7,7 @@
             <tree edit="0" create="0">
                 <field name="date"/>
                 <field name="employee_id"/>
-                <field name="duration" widget="float_time"/>
+                <field name="duration_real" widget="float_time"/>
             </tree>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="employee_id"/>
-                <field name="duration" filter_domain="[('duration', '>=', self)]"/>
+                <field name="duration_real" filter_domain="[('duration_real', '>=', self)]"/>
             </search>
         </field>
     </record>
