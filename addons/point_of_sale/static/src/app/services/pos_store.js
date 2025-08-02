@@ -2056,7 +2056,17 @@ export class PosStore extends WithLazyGetterTrap {
                         });
                     },
                 },
+                ...(product && {
+                    additionalContext: {
+                        taxes_readonly: this.orderContainsProduct(product),
+                    },
+                }),
             }
+        );
+    }
+    orderContainsProduct(product) {
+        return this.getOrder()?.lines.some(
+            (line) => line.product_id?.product_tmpl_id.id == product.id
         );
     }
     async loadSampleData() {
