@@ -42,6 +42,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
 import { cleanHints, dispatchCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "./_helpers/placeholder_block";
 
 function getConfig(components) {
     return {
@@ -386,6 +387,7 @@ describe("Mount and Destroy embedded components", () => {
         expect.verifySteps(["mount 1", "mount 2", "mount 3"]);
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
                     <div>
                         <div class="click count-2">Count:2</div>
@@ -439,6 +441,7 @@ describe("Mount and Destroy embedded components", () => {
         // outermost host.
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
                 <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
             `)
@@ -580,6 +583,7 @@ describe("Selection after embedded component insertion", () => {
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
                 <p>[]<br></p>`)
         );
@@ -609,6 +613,7 @@ describe("Selection after embedded component insertion", () => {
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
                 <p>[]a</p>`)
         );
@@ -1049,6 +1054,7 @@ describe("editable descendants", () => {
         await animationFrame();
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                 <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="deep">
                         <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">

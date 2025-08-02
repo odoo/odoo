@@ -6,6 +6,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { nodeSize } from "@html_editor/utils/position";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "./_helpers/placeholder_block";
 
 function columnsContainer(contents) {
     return `<div class="container o_text_columns o-contenteditable-false"><div class="row">${contents}</div></div>`;
@@ -39,10 +40,12 @@ describe("2 columns", () => {
                     column(6, "<p><br></p>")
                 ),
             contentAfterEdit:
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(6, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`) +
                     columnDuringEdit(6, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
-                ),
+                ) +
+                PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             /* eslint-enable */
         });
     });
@@ -56,10 +59,12 @@ describe("2 columns", () => {
                     column(6, "<p><br></p>")
                 ),
             contentAfterEdit:
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(6, `<table><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
                     columnDuringEdit(6, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
-                ),
+                ) +
+                PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             /* eslint-enable */
         });
     });
@@ -82,6 +87,7 @@ describe("2 columns", () => {
             stepFunction: columnize(2),
             contentAfterEdit:
             /* eslint-disable */
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(6, "<p>[]abcd</p>") +
                     columnDuringEdit(6, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
@@ -134,7 +140,8 @@ describe("2 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-6 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-6 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            PLACEHOLDER_BLOCK_CONTAINER("top") +
+                `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-6 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-6 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -154,11 +161,13 @@ describe("3 columns", () => {
             ),
             /* eslint-disable */
             contentBeforeEdit:
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(4, "<p>abcd</p>") +
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`)
-                ),
+                ) +
+                PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             /* eslint-enable */
             stepFunction: columnize(3),
             contentAfter: columnsContainer(
@@ -173,6 +182,7 @@ describe("3 columns", () => {
             stepFunction: columnize(3),
             /* eslint-disable */
             contentAfterEdit:
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(4, "<p>ab[]cd</p>") +
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
@@ -227,7 +237,8 @@ describe("3 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-4 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-4 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-4 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            PLACEHOLDER_BLOCK_CONTAINER("top") +
+                `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-4 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-4 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-4 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -313,7 +324,8 @@ describe("4 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-3 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            PLACEHOLDER_BLOCK_CONTAINER("top") +
+                `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-3 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -383,7 +395,8 @@ describe("remove columns", () => {
         // add 2 columns
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-6 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-6 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            PLACEHOLDER_BLOCK_CONTAINER("top") +
+                `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-6 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-6 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/removecolumns");
@@ -513,11 +526,13 @@ describe("helper hint", () => {
                     column(4, "<p><br></p>")
                 ),
             contentAfterEdit:
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`) +
                     columnDuringEdit(4, `<h1 o-we-hint-text="Heading 1" class="o-we-hint"><br></h1>` + "<h2><br></h2>") +
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
-                ),
+                ) +
+                PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             /* eslint-enable */
         });
     });
@@ -532,11 +547,13 @@ describe("helper hint", () => {
                     column(4, "<p><br></p>")
                 ),
             contentAfterEdit:
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
                     columnDuringEdit(4, "<h1><br></h1>" + `<h2 o-we-hint-text="Heading 2" class="o-we-hint">[]<br></h2>`) +
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
-                ),
+                ) +
+                PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             /* eslint-enable */
         });
     });
@@ -551,11 +568,13 @@ describe("helper hint", () => {
                     column(4, "<p><br></p>")
                 ),
             contentAfterEdit:
+                PLACEHOLDER_BLOCK_CONTAINER("top") +
                 columsDuringEditContainer(
                     columnDuringEdit(4, "<p><br></p>" + `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`) +
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
-                ),
+                ) +
+                PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             /* eslint-enable */
         });
     });

@@ -55,6 +55,7 @@ import { TextDirectionPlugin } from "./main/text_direction_plugin";
 import { ToolbarPlugin } from "./main/toolbar/toolbar_plugin";
 import { YoutubePlugin } from "./main/youtube_plugin";
 import { PlaceholderPlugin } from "./main/placeholder_plugin";
+import { PlaceholderBlockPlugin } from "./main/placeholder_block_plugin";
 import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
 import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
 import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/collaboration_selection_avatar_plugin";
@@ -172,6 +173,7 @@ export const MAIN_PLUGINS = [
     InlineCodePlugin,
     TableResizePlugin,
     PlaceholderPlugin,
+    PlaceholderBlockPlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [

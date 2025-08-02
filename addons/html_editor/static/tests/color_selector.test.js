@@ -20,6 +20,8 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
 import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { unformat } from "./_helpers/format";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "./_helpers/placeholder_block";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -939,7 +941,9 @@ describe("color preview", () => {
         await animationFrame();
         // Hover a color
         await hover(queryOne("button[data-color='#CE0000']"));
-        expect(getContent(el)).toBe(`
+        expect(unformat(getContent(el))).toBe(
+            unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -954,11 +958,15 @@ describe("color preview", () => {
                     </tr>
                 </tbody>
             </table>
-        `);
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}
+        `)
+        );
         // Hover out
         await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
         await animationFrame();
-        expect(getContent(el)).toBe(`
+        expect(unformat(getContent(el))).toBe(
+            unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -973,8 +981,10 @@ describe("color preview", () => {
                     </tr>
                 </tbody>
             </table>
-        `);
-        await expectElementCount(".o-we-toolbar", 1);
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}
+        `)
+        );
+        await expectElementCount(".o-we-toolbar", 1); // toolbar still open
     });
 
     test("should preview color in table on hover in custom tab", async () => {
@@ -1007,7 +1017,9 @@ describe("color preview", () => {
         await animationFrame();
         // Hover a color
         await hover(queryOne("button[data-color='black']"));
-        expect(getContent(el)).toBe(`
+        expect(unformat(getContent(el))).toBe(
+            unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -1022,11 +1034,15 @@ describe("color preview", () => {
                     </tr>
                 </tbody>
             </table>
-        `);
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}
+        `)
+        );
         // Hover out
         await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
         await animationFrame();
-        expect(getContent(el)).toBe(`
+        expect(unformat(getContent(el))).toBe(
+            unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -1041,8 +1057,10 @@ describe("color preview", () => {
                     </tr>
                 </tbody>
             </table>
-        `);
-        await expectElementCount(".o-we-toolbar", 1);
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}
+        `)
+        );
+        await expectElementCount(".o-we-toolbar", 1); // toolbar still open
     });
 
     test("should preview selected text color when tabbing", async () => {

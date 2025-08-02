@@ -273,13 +273,13 @@ describe("selection", () => {
 describe("step", () => {
     test('should allow insertion of nested contenteditable="true"', async () => {
         await testEditor({
-            contentBefore: `<div contenteditable="false"></div>`,
+            contentBefore: `<div id="target" contenteditable="false"></div>`,
             stepFunction: async (editor) => {
                 const editable = '<div contenteditable="true">abc</div>';
-                editor.editable.querySelector("div").innerHTML = editable;
+                editor.editable.querySelector("div#target").innerHTML = editable;
                 editor.shared.history.addStep();
             },
-            contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
+            contentAfter: `<div id="target" contenteditable="false"><div contenteditable="true">abc</div></div>`,
         });
     });
 });

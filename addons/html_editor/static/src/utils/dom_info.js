@@ -241,6 +241,19 @@ export function isSelfClosingElement(node) {
     return node && selfClosingElementTags.includes(node.nodeName);
 }
 
+export function hasHeight(node) {
+    if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.ownerDocument.defaultView.getComputedStyle(node).height?.replace(/[^\d]*/g, "") === "0"
+    ) {
+        return false;
+    } else if (node.parentElement) {
+        return hasHeight(node.parentElement);
+    } else {
+        return true;
+    }
+}
+
 /**
  * Returns whether removing the given node from the DOM will have a visible
  * effect or not.
@@ -252,14 +265,15 @@ export function isSelfClosingElement(node) {
  * @param {Node} node
  * @returns {boolean}
  */
+// TODO: the changes here break the test "should select the table when clicked on a hook"
 export function isVisible(node) {
     return (
         !!node &&
         ((node.nodeType === Node.TEXT_NODE && isVisibleTextNode(node)) ||
-            isSelfClosingElement(node) ||
             // @todo: handle it in resources?
-            isMediaElement(node) ||
-            hasVisibleContent(node) ||
+            (hasHeight(node.parentElement) &&
+                (isSelfClosingElement(node) || isMediaElement(node))) ||
+            (hasHeight(node) && hasVisibleContent(node)) ||
             isProtecting(node) ||
             isEmbeddedComponent(node))
     );

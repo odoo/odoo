@@ -5,6 +5,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { undo } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 function addRow(position) {
     return (editor) => {
@@ -537,6 +538,7 @@ describe("tab", () => {
         await press("Tab");
 
         const expectedContent = unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table><tbody>
                 <tr style="height: 20px;">
                     <td style="width: 20px;">ab</td>
@@ -548,13 +550,18 @@ describe("tab", () => {
                     <td><p><br></p></td>
                     <td><p><br></p></td>
                 </tr>
-            </tbody></table>`);
+            </tbody></table>
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`);
 
         expect(getContent(el)).toBe(expectedContent);
 
         // Check that it was registed as a history step.
         undo(editor);
-        expect(getContent(el)).toBe(contentBefore);
+        expect(getContent(el)).toBe(
+            PLACEHOLDER_BLOCK_CONTAINER("top") +
+                contentBefore +
+                PLACEHOLDER_BLOCK_CONTAINER("bottom")
+        );
     });
 
     test("should not select whole text of the next cell", async () => {

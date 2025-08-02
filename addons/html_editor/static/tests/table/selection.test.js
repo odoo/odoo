@@ -6,6 +6,7 @@ import { getContent, setSelection } from "../_helpers/selection";
 import { press, queryAll, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
@@ -27,6 +28,7 @@ describe("custom selection", () => {
         );
         expect(getContent(el)).toBe(
             unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="o_selected_table">
                 <tbody>
                     <tr>
@@ -35,7 +37,8 @@ describe("custom selection", () => {
                         <td class="o_selected_td">e]f</td>
                     </tr>
                 </tbody>
-            </table>`)
+            </table>
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`)
         );
         const overlayColorTDs = queryAll("table td").map(
             (td) => getComputedStyle(td)["box-shadow"]
@@ -60,7 +63,8 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef]</td>' +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -69,6 +73,7 @@ describe("select a full table on cross over", () => {
                 contentBefore:
                     "<table><tbody><tr><td>ab</td><td>cd</td><td>e[f</td></tr></tbody></table><p>a]bc</p>",
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
@@ -100,7 +105,8 @@ describe("select a full table on cross over", () => {
                     '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef]</td></tr></tbody></table>',
+                    '<td class="o_selected_td">ef]</td></tr></tbody></table>' +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -137,7 +143,8 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -151,6 +158,7 @@ describe("select a full table on cross over", () => {
                     "</tr></tbody></table><p>a]bc</p>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
@@ -210,7 +218,8 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -287,7 +296,8 @@ describe("select a full table on cross over", () => {
                                 </td>
                             </tr>
                         </tbody>
-                    </table>`),
+                    </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
             });
         });
 
@@ -301,6 +311,7 @@ describe("select a full table on cross over", () => {
                     "</tr></tbody></table><p>a]bc</p>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -407,7 +418,8 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef]</font>
                             </td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
             });
         });
 
@@ -472,11 +484,13 @@ describe("select columns on cross over", () => {
                 contentBefore:
                     "<table><tbody><tr><td>a[b</td><td>c]d</td><td>ef</td></tr></tbody></table>",
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">c]d</td>' +
                     "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -485,11 +499,13 @@ describe("select columns on cross over", () => {
                 contentBefore:
                     "<table><tbody><tr><td>a[b</td><td>cd</td><td>e]f</td></tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">e]f</td>' +
-                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -502,6 +518,7 @@ describe("select columns on cross over", () => {
                     "<tr><td>a]b</td><td>cd</td><td>ef</td></tr>" +
                     "</tbody></table>",
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
@@ -518,7 +535,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -531,6 +549,7 @@ describe("select columns on cross over", () => {
                     "<tr><td>ab</td><td>cd</td><td>ef</td></tr>" +
                     "</tbody></table>",
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
@@ -547,7 +566,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -560,6 +580,7 @@ describe("select columns on cross over", () => {
                     "<tr><td>ab</td><td>cd</td><td>e]f</td></tr>" +
                     "</tbody></table>",
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
@@ -576,7 +597,8 @@ describe("select columns on cross over", () => {
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">e]f</td>' +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
     });
@@ -592,11 +614,13 @@ describe("select columns on cross over", () => {
                     "</tr></tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd]</strong></td>' +
                     "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -610,11 +634,13 @@ describe("select columns on cross over", () => {
                     "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -640,6 +666,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
@@ -656,7 +683,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -682,6 +710,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
@@ -698,7 +727,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
 
@@ -724,6 +754,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    PLACEHOLDER_BLOCK_CONTAINER("top") +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
@@ -740,7 +771,8 @@ describe("select columns on cross over", () => {
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    PLACEHOLDER_BLOCK_CONTAINER("bottom"),
             });
         });
     });
@@ -910,6 +942,7 @@ describe("select columns on cross over", () => {
                     "</tr></tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -920,7 +953,8 @@ describe("select columns on cross over", () => {
                             </td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
             });
         });
 
@@ -934,6 +968,7 @@ describe("select columns on cross over", () => {
                     "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -951,7 +986,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
             });
         });
 
@@ -977,6 +1013,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -999,7 +1036,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
             });
         });
 
@@ -1025,6 +1063,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -1049,7 +1088,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
             });
         });
 
@@ -1075,6 +1115,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -1109,7 +1150,8 @@ describe("select columns on cross over", () => {
                                 <font style="color: aquamarine;">e]f</font>
                             </td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
             });
         });
     });
@@ -1532,12 +1574,14 @@ describe("symmetrical selection", () => {
         // Select single empty cell
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
 
         press(["Shift", "ArrowRight"]);
@@ -1546,12 +1590,14 @@ describe("symmetrical selection", () => {
         // Select two cells consecutively
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
 
         press(["Shift", "ArrowDown"]);
@@ -1560,12 +1606,14 @@ describe("symmetrical selection", () => {
         // Extend selection from two cells to four cells
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
 
         press(["Shift", "ArrowLeft"]);
@@ -1574,12 +1622,14 @@ describe("symmetrical selection", () => {
         // Shrink selection from four cells to two cells
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
 
         press(["Shift", "ArrowUp"]);
@@ -1588,12 +1638,14 @@ describe("symmetrical selection", () => {
         // Shrink selection from two cells to single cell
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
     });
 
@@ -1613,12 +1665,12 @@ describe("symmetrical selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER("top")}<table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>ab[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
         const firstTd = el.querySelector("td");
         setSelection({
@@ -1633,12 +1685,14 @@ describe("symmetrical selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[ab<br>]</td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
     });
 });
@@ -1676,12 +1730,14 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
     });
 
@@ -1717,12 +1773,14 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[abc]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
     });
 
@@ -1747,12 +1805,12 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER("top")}<table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
     });
 
@@ -1778,12 +1836,12 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table">
+            `${PLACEHOLDER_BLOCK_CONTAINER("top")}<table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
     });
 });
@@ -1810,7 +1868,7 @@ describe("deselecting table", () => {
                         <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                         <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                     </tbody>
-                </table>`
+                </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
 
         press(["Shift", "ArrowUp"]);
@@ -1824,7 +1882,7 @@ describe("deselecting table", () => {
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
         );
     });
 });

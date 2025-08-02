@@ -35,6 +35,7 @@ import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/use
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "./_helpers/placeholder_block";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -613,10 +614,18 @@ test("edit a html field with `o-contenteditable-true` or `o-contenteditable-fals
             </form>`,
     });
     expect.verifySteps(["setup_wysiwyg"]);
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("inside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        PLACEHOLDER_BLOCK_CONTAINER("top", "div") +
+            getTxtValue("inside", true) +
+            PLACEHOLDER_BLOCK_CONTAINER("bottom", "div")
+    );
     setSelectionInHtmlField();
     pasteOdooEditorHtml(htmlEditor, "addon");
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("addoninside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        PLACEHOLDER_BLOCK_CONTAINER("top", "div") +
+            getTxtValue("addoninside", true) +
+            PLACEHOLDER_BLOCK_CONTAINER("bottom", "div")
+    );
     await clickSave();
     expect.verifySteps(["update_value", "web_save"]);
 });

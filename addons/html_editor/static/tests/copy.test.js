@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 
 describe("range collapsed", () => {
@@ -45,6 +45,7 @@ describe("range not collapsed", () => {
         await setupEditor(
             `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`
         );
+        await animationFrame();
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });
         expect(clipboardData.getData("text/plain")).toBe("a");

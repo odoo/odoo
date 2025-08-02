@@ -10,6 +10,7 @@ import {
     simulateArrowKeyPress,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 test("should make a few characters strikeThrough", async () => {
     await testEditor({
@@ -228,6 +229,7 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
             </table>`),
         stepFunction: strikeThrough,
         contentAfterEdit: unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -246,7 +248,8 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`),
+            </table>
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
     });
 });
 

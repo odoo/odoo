@@ -1,10 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { tick } from "@odoo/hoot-mock";
-import { press } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 const keyPress = (keys) => async (editor) => {
     await simulateArrowKeyPress(editor, keys);
@@ -477,18 +478,44 @@ describe("Selection correction when it lands at the editable root", () => {
         });
     });
 
-    test("should keep cursor at the same position (avoid reaching the editable root) (1)", async () => {
+    test("should move cursor to placeholder paragraph (avoid reaching the editable root) (1)", async () => {
         await testEditor({
             contentBefore: "<table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>",
-            stepFunction: keyPress("ArrowRight"),
-            contentAfter: "<table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>",
+            contentBeforeEdit: unformat(
+                `${PLACEHOLDER_BLOCK_CONTAINER("top")}
+                <table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>
+                ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
+            ),
+            stepFunction: async (editor) => {
+                await keyPress("ArrowRight")(editor);
+                await animationFrame();
+            },
+            contentAfterEdit: unformat(
+                `${PLACEHOLDER_BLOCK_CONTAINER("top")}
+                <table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>
+                <p class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
+            ),
+            contentAfter: `<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table><p>[]<br></p>`,
         });
     });
-    test("should keep cursor at the same position (avoid reaching the editable root) (2)", async () => {
+    test("should move cursor to placeholder paragraph (avoid reaching the editable root) (2)", async () => {
         await testEditor({
             contentBefore: "<table><tbody><tr><td><p>[]a</p><p>b</p></td></tr></tbody></table>",
-            stepFunction: keyPress("ArrowLeft"),
-            contentAfter: "<table><tbody><tr><td><p>[]a</p><p>b</p></td></tr></tbody></table>",
+            contentBeforeEdit: unformat(
+                `${PLACEHOLDER_BLOCK_CONTAINER("top")}
+                <table><tbody><tr><td><p>[]a</p><p>b</p></td></tr></tbody></table>
+                ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
+            ),
+            stepFunction: async (editor) => {
+                await keyPress("ArrowLeft")(editor);
+                await animationFrame();
+            },
+            contentAfterEdit: unformat(
+                `<p class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
+                <table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>
+                ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
+            ),
+            contentAfter: `<p>[]<br></p><table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>`,
         });
     });
 

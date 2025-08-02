@@ -1,10 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { closestBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { renderToElement } from "@web/core/utils/render";
-import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
+import { unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
+import { EDITABLE_MEDIA_CLASS, isVisible } from "@html_editor/utils/dom_info";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -117,7 +117,13 @@ export class CaptionPlugin extends Plugin {
             closestBlock(image) !== this.editable
         ) {
             // <p>wx<img/>yz</p> => <p>wx</p><p><img/></p><p>yz</p>
-            this.dependencies.split.splitAroundUntil(image, closestBlock(image));
+            const block = this.dependencies.split.splitAroundUntil(image, closestBlock(image));
+            if (isBlock(block.previousSibling) && !isVisible(block.previousSibling)) {
+                block.previousSibling.remove();
+            }
+            if (isBlock(block.nextSibling) && !isVisible(block.nextSibling)) {
+                block.nextSibling.remove();
+            }
         }
         // => <p><figure><img/></figure></p>
         // or <p><a><figure><img/></figure></a></p>
@@ -136,18 +142,6 @@ export class CaptionPlugin extends Plugin {
         // Ensure it's not possible to write inside the figure.
         figure.setAttribute("contenteditable", "false");
         image.classList.add(EDITABLE_MEDIA_CLASS);
-        // Ensure it's possible to write before and after the figure.
-        const block = closestBlock(link || image);
-        if (!block.previousSibling) {
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            block.before(baseContainer);
-            fillEmpty(baseContainer);
-        }
-        if (!block.nextSibling) {
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            block.after(baseContainer);
-            fillEmpty(baseContainer);
-        }
         // Add the caption component.
         // => <p><figure><img/><figcaption>...</figcaption></figure></p>
         // or <p><a><figure><img/><figcaption>...</figcaption></figure></a></p>

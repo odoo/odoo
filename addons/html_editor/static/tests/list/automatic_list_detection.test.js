@@ -6,6 +6,7 @@ import { getContent } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 test("typing '1. ' should create number list", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
@@ -95,6 +96,7 @@ test("creating list directly inside table column (td)", async () => {
     await insertText(editor, "A. ");
     expect(getContent(el)).toBe(
         unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table">
                 <tbody>
                     <tr>
