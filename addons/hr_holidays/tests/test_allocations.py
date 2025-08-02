@@ -490,3 +490,59 @@ class TestAllocations(TestHrHolidaysCommon):
                 allocation_form.number_of_hours_display = 10
                 allocation_form.employee_id = self.env["hr.employee"]
             allocation_form.save()
+
+    def test_allocation_for_duration_count(self):
+        """
+        Test Case:
+        This test verifies the behavior of leave allocations based on the
+        'duration_count' configuration in leave type — 'calendar' vs 'working'.
+        """
+        self.leave_type.write({
+            'duration_count': 'calendar'
+        })
+
+        employee_allocation = self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'allocation_type': 'regular',
+            'date_from': date(2025, 1, 1),
+            'number_of_days': 10,
+        })
+
+        self.assertEqual(self.employee.allocations_count, 1, "Only one leave allocation should exist for the employee")
+        self.assertEqual(self.employee.allocation_count, 10, "10 leaves should be allocated to the employee")
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': date(2025, 2, 1),
+            'request_date_to': date(2025, 2, 7)
+        })
+        leave.action_approve()
+
+        self.assertEqual(leave.number_of_days, 7, "Leave duration should be 7 calendar days")
+        self.assertEqual(employee_allocation.leaves_taken, 7, "7 leaves should be deducted from allocation")
+        self.assertEqual(employee_allocation.virtual_remaining_leaves, 3, "Remaining leaves should be 3")
+
+        # Cancel the leave and assert restoration
+        self.env['hr.holidays.cancel.leave'].with_context(default_leave_id=leave.id) \
+            .new({'reason': 'Test calendar count allocation'}) \
+            .action_cancel_leave()
+
+        self.assertEqual(employee_allocation.leaves_taken, 0, "Leaves taken should reset after cancellation")
+        self.assertEqual(employee_allocation.virtual_remaining_leaves, 10, "All leaves should be restored after cancellation")
+
+        self.leave_type.write({
+            'duration_count': 'working'
+        })
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': date(2025, 3, 1),
+            'request_date_to': date(2025, 3, 7)
+        })
+        leave.action_approve()
+
+        self.assertEqual(leave.number_of_days, 5, "Leave duration should count only 5 working days")
+        self.assertEqual(employee_allocation.leaves_taken, 5, "5 leaves should be deducted from allocation")
