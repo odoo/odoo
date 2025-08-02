@@ -435,3 +435,20 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add('test_receipt_move_state_after_generate', {
+    test: true,
+    steps: () => [
+        { trigger: ".o_list_view.o_field_x2many .o_data_row button[name='Open Move']" },
+        { trigger: ".modal-content", isCheck: true },
+        { trigger: ".o_widget_generate_serials button" },
+        {
+            trigger: 'div[name=next_serial] input',
+            run: 'text sn_01',
+        },
+        { trigger: "button:contains('Generate')" },
+        { trigger: '.modal-footer .o_form_button_save' },
+        { trigger: '.o_form_button_save' },
+        { trigger: ".o_form_renderer.o_form_saved", isCheck: true },
+    ]
+});
