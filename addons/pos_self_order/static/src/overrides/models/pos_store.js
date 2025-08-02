@@ -18,6 +18,17 @@ patch(Order.prototype, {
         if (this.name.startsWith('Self-Order')) {
             this.trackingNumber = "S" + this.trackingNumber
         }
+        if (arguments[1]?.json?.table_stand_number) {
+            this.table_stand_number = arguments[1].json.table_stand_number;
+        }
+    },
+
+    export_as_JSON() {
+        var json = super.export_as_JSON();
+        if (this.table_stand_number) {
+            json['table_stand_number'] = this.table_stand_number;
+        }
+        return json;
     },
 
     defaultTableNeeded(options) {
