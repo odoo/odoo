@@ -3060,6 +3060,25 @@ we-select.o_grid we-toggler {
                 visibility: visible;
                 animation-name: none;
             }
+
+            .o_snippet_preview_wrap_selected {
+                outline: 6px solid $o-we-handles-accent-color;
+                &[data-number]:not([data-number=""])::before {
+                    content: attr(data-number);
+                    position: absolute;
+                    top: 5;
+                    left: 5;
+                    z-index: 5;
+                    transform-origin: top left;
+                    transform: scale(3);
+                    font-family: $o-we-font-family;
+                    font-size: $o-we-sidebar-font-size;
+                    background-color: $o-brand-primary;
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                }
+            }
         }
         .o_custom_snippet_wrap {
             margin-bottom: 96px !important;

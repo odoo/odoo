@@ -5,7 +5,7 @@
     <Dialog
         title.translate="Insert a block"
         contentClass="'o_add_snippet_dialog h-100'"
-        footer="false"
+        footer="true"
         size="'xl'">
         <div class="overflow-hidden w-100">
             <div class="d-flex w-100 h-100 vertical flex-row">
@@ -19,10 +19,11 @@
                     </div>
                     <div t-if="!state.search" class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
                         <t t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.name">
-                            <button class="list-group-item list-group-item-light list-group-item-action p-3" role="tab"
+                            <button class="list-group-item list-group-item-light list-group-item-action p-3 d-flex justify-content-between align-items-center" role="tab"
                                 t-att-class="{ 'active': this.state.groupSelected === snippetGroup.name}"
                                 t-on-click="() => this.state.groupSelected = snippetGroup.name">
-                                <t t-out="snippetGroup.displayName"/>
+                                <span><t t-out="snippetGroup.displayName"/></span>
+                                <span t-if="snippetGroup.count > 0" class="badge bg-secondary rounded"><t t-out="snippetGroup.count"/></span>
                             </button>
                         </t>
                     </div>
@@ -47,6 +48,10 @@
                 </div>
             </div>
         </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="onInsertClick">Insert</button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()">Close</button>
+        </t>
     </Dialog>
 </t>
 

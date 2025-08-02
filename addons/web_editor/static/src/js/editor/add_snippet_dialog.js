@@ -54,7 +54,7 @@ export class AddSnippetDialog extends Component {
 
     setup() {
         this.iframeRef = useRef("iframe");
-        this.snippetGroups = this.getSnippetGroups();
+        this.snippetGroups = useState(this.getSnippetGroups());
 
         this.dialog = useService("dialog");
 
@@ -64,7 +64,9 @@ export class AddSnippetDialog extends Component {
             hasNoSearchResults: false,
             isIframeContentLoaded: false,
         });
-
+        this.selectedSnippets = new Map();
+        // this.snippetGroupCount = new Map();
+        this.sequence = 0;
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
             if (isFirefox) {
@@ -110,6 +112,7 @@ export class AddSnippetDialog extends Component {
                 displayName: snippet.displayName,
                 name: snippet.snippetGroup,
                 selected: snippet.snippetGroup === this.props.groupSelected,
+                count: 0,
             }));
     }
     /**
@@ -365,6 +368,13 @@ export class AddSnippetDialog extends Component {
             ]) {
                 for (const el of colItemEls) {
                     colEl.appendChild(el);
+                    if (this.selectedSnippets.has(parseInt(el.dataset.snippetKey))) {
+                        const selectedSnippetEl = el.querySelector("[data-name]");
+                        selectedSnippetEl.classList.add("o_snippet_preview_wrap_selected");
+                        selectedSnippetEl.dataset.number = this.selectedSnippets.get(
+                            parseInt(el.dataset.snippetKey)
+                        );
+                    }
                     el.classList.remove("invisible");
                     this.state.isIframeContentLoaded = true;
                 }
@@ -408,8 +418,22 @@ export class AddSnippetDialog extends Component {
     }
 
     _onSnippetPreviewClick(ev) {
-        let selectedSnippetEl = ev.currentTarget.querySelector("[data-name]");
+        const isShift = ev.shiftKey;
         const snippetKey = parseInt(ev.currentTarget.dataset.snippetKey);
+        let selectedSnippetEl = ev.currentTarget.querySelector("[data-name]");
+        if (isShift) {
+            if (this.selectedSnippets.has(snippetKey)) {
+                this.selectedSnippets.delete(snippetKey);
+                selectedSnippetEl.classList.remove("o_snippet_preview_wrap_selected");
+                this.snippetGroups.find((group) => group.name === this.props.snippets.get(snippetKey).group).count--;
+            } else {
+                this.selectedSnippets.set(snippetKey, ++this.sequence);
+                selectedSnippetEl.dataset.number = this.sequence;
+                selectedSnippetEl.classList.add("o_snippet_preview_wrap_selected");
+                this.snippetGroups.find((group) => group.name === this.props.snippets.get(snippetKey).group).count++;
+            }
+            return;
+        }
         const moduleId = parseInt(selectedSnippetEl?.dataset.moduleId);
         if (moduleId) {
             this.props.installModule(moduleId, selectedSnippetEl.dataset.moduleDisplayName);
@@ -426,6 +450,22 @@ export class AddSnippetDialog extends Component {
             this._updateSnippetContent(selectedSnippetEl);
             this.props.close();
         }
+    }
+
+    onInsertClick() {
+        const wrapper = document.createElement("div");
+        for (const snippetKey of this.selectedSnippets.keys()) {
+            let selectedSnippetEl = this.props.snippets.get(snippetKey);
+            selectedSnippetEl = selectedSnippetEl.baseBody.cloneNode(true);
+            selectedSnippetEl.classList.remove("oe_snippet_body");
+            const snippetDialogPreviews = selectedSnippetEl.querySelectorAll(".s_dialog_preview");
+            for (const snippetDialogPreview of snippetDialogPreviews) {
+                snippetDialogPreview.remove();
+            }
+            wrapper.appendChild(selectedSnippetEl);
+        }
+        this.props.addSnippet(wrapper);
+        this.props.close();
     }
 
     _onRenameCustomBtnClick(ev) {
