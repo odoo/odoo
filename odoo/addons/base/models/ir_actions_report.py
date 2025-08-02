@@ -16,6 +16,7 @@ import logging
 import os
 import lxml.html
 import tempfile
+import multiprocessing
 import subprocess
 import re
 import json
@@ -25,7 +26,7 @@ from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 from PyPDF2 import PdfFileWriter, PdfFileReader
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 from collections.abc import Iterable
 from PIL import Image, ImageFile
 # Allow truncated images
@@ -56,6 +57,16 @@ try:
     createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1, fontName=_DEFAULT_BARCODE_FONT).asString('png')
 except Exception:
     pass
+
+# A deadlock occurs when the server is started in prefork-mode, and all workers are busy waiting
+# for Wkhtmltopdf to finish, while Wkhtmltopdf is waiting for a worker to respond to its HTTP GET
+# request to download linked assets, so we need to keep at least one worker available at all times.
+Semaphore = multiprocessing.Semaphore if config['workers'] else namedtuple(  # noqa: PYI024
+    'Semaphony',
+    ('value', 'acquire', 'release'),
+    defaults=(1, lambda block=True, timeout=None: True, lambda: None),
+)
+_wkhtmltopdf_sem = Semaphore(config['workers'] - 1)
 
 
 def _get_wkhtmltopdf_bin():
@@ -491,6 +502,11 @@ class IrActionsReport(models.Model):
         os.close(pdf_report_fd)
         temporary_files.append(pdf_report_path)
 
+        # To avoid deadlock, we need 1 worker available to handle GET requests for wkhtmltopdf
+        if not _wkhtmltopdf_sem.acquire(False):
+            raise RuntimeError(_(
+                "We're short on system resources right now, please try again in a few seconds."
+            ))
         try:
             wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
             process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -510,6 +526,8 @@ class IrActionsReport(models.Model):
                     _logger.warning('wkhtmltopdf: %s' % err)
         except:
             raise
+        finally:
+            _wkhtmltopdf_sem.release()
 
         with open(pdf_report_path, 'rb') as pdf_document:
             pdf_content = pdf_document.read()
