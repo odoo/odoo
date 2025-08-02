@@ -55,6 +55,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.disable_documents_sync()
 
         cls.maxDiff = None
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)
@@ -202,9 +203,20 @@ class AccountTestInvoicingCommon(ProductCommon):
             )
 
     @classmethod
+    def disable_documents_sync(cls):
+        """Disable documents synchronization if documents_account is installed.
+        The goal is to avoid errors/warnings in tests created before the enabling by default of the synchronization.
+        (ex.: html documents with pdf mimetype triggers warning in document)"""
+        if 'documents_account' not in cls.env['ir.module.module']._installed():
+            return
+        cls.env['documents.account.folder.setting'].sudo().search([]).unlink()
+        cls.env['res.company'].sudo().search([]).account_folder_id = False
+
+    @classmethod
     def setup_other_company(cls, **kwargs):
         # OVERRIDE
         company = cls._create_company(**{'name': 'company_2'} | kwargs)
+        cls.disable_documents_sync()
         data = cls.collect_company_accounting_data(company)
         cls.product_category.with_company(company).write({
             'property_account_income_categ_id': data['default_account_revenue'].id,

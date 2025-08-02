@@ -799,6 +799,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 Command.create({'company_id': other_company.id, 'code': '180001'}),
             ],
         }])
+        self.disable_documents_sync()
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=True)

@@ -16,7 +16,6 @@ class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
         super().setUpClass()
         cls.document_installed = 'documents_account' in cls.env['ir.module.module']._installed()
         if cls.document_installed:
-            cls.env.user.company_id.documents_account_settings = True
             folder_test = cls.env['documents.document'].create({
                 'name': 'folder_test',
                 'type': 'folder',
