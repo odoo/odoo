@@ -38,6 +38,7 @@
                             <field name="token_id" invisible="not token_id"/>
                             <field name="create_date"/>
                             <field name="last_state_change"/>
+                            <field name="is_live"/>
                             <field name="is_post_processed" groups="base.group_no_one"/>
                         </group>
                         <group name="transaction_partner">
@@ -80,6 +81,7 @@
                 <field name="currency_id" column_invisible="True"/>
                 <field name="amount"/>
                 <field name="state"/>
+                <field name="is_live" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </list>
         </field>
@@ -117,8 +119,10 @@
                     <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
                     <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
                     <filter string="Status" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Is Live" name="is_live" context="{'group_by': 'is_live'}"/>
                     <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>
+                <filter string="Live Transactions" name="live_transactions" domain="[('is_live', '=', True)]"/>
             </search>
         </field>
     </record>
