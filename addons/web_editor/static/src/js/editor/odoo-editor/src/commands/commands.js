@@ -375,7 +375,7 @@ export const editorCommands = {
 
         currentNode = lastChildNode || currentNode;
         if (
-            !isUnbreakable(currentNode) &&
+            (currentNode.tagName === 'T' || !isUnbreakable(currentNode)) &&
             currentNode.nodeName !== 'BR' &&
             currentNode.nextSibling &&
             currentNode.nextSibling.nodeName === 'BR' &&
