@@ -9,10 +9,25 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
+// Opens a selection popup to choose an employee (e.g., cashier). This method is overridden in the `pos_planning` module to support
+// shift-based employee filtering using planning data.
+export class employeeSelector {
+    constructor() {
+        this.dialog = useService("dialog");
+    }
+    async showEmployeeSelectionPopup(resourceList, pin, allEmployees) {
+        return await makeAwaitable(this.dialog, SelectionPopup, {
+            title: _t("Change Cashier"),
+            list: allEmployees,
+        });
+    }
+}
+
 export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, exclusive: false }) {
     const pos = usePos();
     const dialog = useService("dialog");
     const notification = useService("notification");
+    const selector = new employeeSelector();
     useBarcodeReader(
         {
             async cashier(code) {
@@ -60,7 +75,12 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
     /**
      * Select a cashier, the returning value will either be an object or nothing (undefined)
      */
-    return async function selectCashier(pin = false, login = false, list = false) {
+    return async function selectCashier(
+        pin = false,
+        login = false,
+        list = false,
+        resourceList = []
+    ) {
         if (!pos.config.module_pos_hr) {
             return;
         }
@@ -100,10 +120,11 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         }
 
         if (pinMatchEmployees.length > 1 || list) {
-            employee = await makeAwaitable(dialog, SelectionPopup, {
-                title: _t("Change Cashier"),
-                list: prepareList(allEmployees),
-            });
+            employee = await selector.showEmployeeSelectionPopup(
+                resourceList,
+                pin,
+                prepareList(allEmployees)
+            );
 
             if (!employee) {
                 return;
