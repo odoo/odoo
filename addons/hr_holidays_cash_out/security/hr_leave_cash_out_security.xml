@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <data noupdate="1">
+    <!-- A normal user can read his cash out requests only -->
+    <record id="hr_leave_cash_out_rule_employee_read" model="ir.rule">
+        <field name="name">Cash Out base.group_user read</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <!-- A normal user can write his cash out requests only and only if they are not in validate/validate1 state -->
+    <record id="hr_leave_cash_out_rule_employee_write" model="ir.rule">
+        <field name="name">Cash Out base.group_user write</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[
+            ('employee_id.user_id', '=', user.id),
+            ('state', 'not in', ['validate', 'validate1']),
+        ]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <!-- A normal user can create his cash out requests only and only if they are in confirm state -->
+    <record id="hr_leave_cash_out_rule_employee_create" model="ir.rule">
+        <field name="name">Cash Out base.group_user create</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[
+            ('employee_id.user_id', '=', user.id),
+            ('state', '=', 'confirm'),
+        ]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <!-- A normal user can unlink his cash out requests only and only if they are in confirm/validate1 state -->
+    <record id="hr_leave_cash_out_rule_employee_unlink" model="ir.rule">
+        <field name="name">Cash Out base.group_user update/create</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[
+            ('employee_id.user_id', '=', user.id),
+            ('state', 'in', ['confirm', 'validate1']),
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <!-- A time off responsible can read/write cash out requests for the employees he manages -->
+    <record id="hr_leave_cash_out_rule_responsible_read_write" model="ir.rule">
+        <field name="name">Time Off Responsible read/write</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[
+                ('employee_id.leave_manager_id', '=', user.id),
+        ]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('hr_holidays.group_hr_holidays_responsible'))]"/>
+    </record>
+
+    <!-- A time off responsible can create cash out requests for the employees he manages only if they are in confirm state -->
+    <record id="hr_leave_cash_out_rule_responsible_create" model="ir.rule">
+        <field name="name">Time Off Responsible create</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[
+            ('employee_id.leave_manager_id', '=', user.id),
+            ('state', '=', 'confirm'),
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('hr_holidays.group_hr_holidays_responsible'))]"/>
+    </record>
+
+    <!-- A time off responsible can unlink cash out requests for the employees he manages only if they are in confirm/validate1 state -->
+    <record id="hr_leave_cash_out_rule_responsible_unlink" model="ir.rule">
+        <field name="name">Time Off Responsible unlink</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[
+            ('employee_id.leave_manager_id', '=', user.id),
+            ('state', 'in', ['confirm', 'validate1']),
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('hr_holidays.group_hr_holidays_responsible'))]"/>
+    </record>
+
+    <!-- A time off officer can read cash out requests for all employees -->
+    <record id="hr_leave_cash_out_rule_user_read" model="ir.rule">
+        <field name="name">Time Off All Officer read</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('hr_holidays.group_hr_holidays_user'))]"/>
+    </record>
+
+    <!-- A time off officer can create/write cash out request for all employees
+        but he can neither approve nor validate his own requests -->
+    <record id="hr_leave_cash_out_rule_officer_create_write" model="ir.rule">
+        <field name="name">Time Off All Officer create/write</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[
+            '|',
+                '&amp;',
+                    ('employee_id.user_id', '=', user.id),
+                    ('state', 'not in', ['validate', 'validate1']),
+                    ('employee_id.user_id', '!=', user.id),
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('hr_holidays.group_hr_holidays_user'))]"/>
+    </record>
+
+    <!-- A time off administrator has all kinds of permissions -->
+    <record id="hr_leave_cash_out_rule_manager" model="ir.rule">
+        <field name="name">Time Off Administrator</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('hr_holidays.group_hr_holidays_manager'))]"/>
+    </record>
+
+    <record id="hr_leave_cash_out_rule_multicompany" model="ir.rule">
+        <field name="name">Time Off: multi company global rule</field>
+        <field name="model_id" ref="model_hr_leave_cash_out"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    </data>
+</odoo>
