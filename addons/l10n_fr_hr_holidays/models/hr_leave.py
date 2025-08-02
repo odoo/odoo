@@ -19,7 +19,8 @@ class HrLeave(models.Model):
         return self.employee_id and \
                self.company_id.country_id.code == 'FR' and \
                self.resource_calendar_id != self.company_id.resource_calendar_id and \
-               self.holiday_status_id == self.company_id._get_fr_reference_leave_type()
+               self.holiday_status_id == self.company_id._get_fr_reference_leave_type() and \
+               self.is_part_time(self.employee_id)
 
     def _get_fr_date_from_to(self, date_from, date_to):
         self.ensure_one()
@@ -115,3 +116,7 @@ class HrLeave(models.Model):
             return super()._get_duration(resource_calendar=(resource_calendar or self.company_id.resource_calendar_id))
         else:
             return super()._get_duration(resource_calendar)
+
+    def is_part_time(self, employee):
+        return (employee.resource_calendar_id.hours_per_day < employee.company_id.resource_calendar_id.hours_per_day or
+                len(employee.resource_calendar_id.attendance_ids) < len(employee.company_id.resource_calendar_id.attendance_ids))
