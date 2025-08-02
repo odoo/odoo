@@ -253,3 +253,14 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    def get_lognote_pickings(self):
+        """ Helper method for use in delivery_* modules. Intended to allow for consistent behavior
+        regarding which related picking records are given a shipping label across shipping connectors.
+        """
+        lognote_pickings = next_picking = self
+        while next_picking:
+            next_picking = next_picking._get_next_transfers()
+            if next_picking and next_picking.state not in ('done', 'cancel'):
+                lognote_pickings |= next_picking
+        return lognote_pickings
