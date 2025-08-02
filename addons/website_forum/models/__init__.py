@@ -10,3 +10,4 @@ from . import gamification_karma_tracking
 from . import ir_attachment
 from . import res_users
 from . import website
+from . import website_menu
