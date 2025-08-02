@@ -1605,6 +1605,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_ship'
+        (self.product_a + self.product_b).write({'type': 'consu'})
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
