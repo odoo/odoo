@@ -161,7 +161,10 @@ class TestSoLineMilestones(TestSaleCommon):
         self.milestone1.quantity_percentage = 1.0
         self.assertEqual(self.milestone1.quantity_percentage / self.milestone1.product_uom_qty, ratio, "The ratio should be the same as before")
         self.milestone1.product_uom_qty = 25
-        self.assertEqual(self.milestone1.quantity_percentage / self.milestone1.product_uom_qty, ratio, "The ratio should be the same as before")
+        self.assertNotEqual(self.milestone1.quantity_percentage / self.milestone1.product_uom_qty, ratio, "The ratio shouldn't be the same as before, the quantity shouldn't change")
+        self.milestone1.quantity_percentage = 0
+        self.milestone1.product_uom_qty = self.milestone1.sale_line_id.product_uom_qty
+        self.assertEqual(self.milestone1.quantity_percentage, self.milestone1.product_uom_qty / self.milestone1.sale_line_id.product_uom_qty, "The quantity percentage should be evenly distributed when the quantity is set to 0 initially")
 
     def test_create_milestone_on_project_set_on_sales_order(self):
         """
