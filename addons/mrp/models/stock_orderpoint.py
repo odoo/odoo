@@ -134,7 +134,7 @@ class StockWarehouseOrderpoint(models.Model):
         for prod in in_progress_productions:
             date_start, date_finished, orderpoint = prod.date_start, prod.date_finished, prod.orderpoint_id
             lead_days_date = datetime.combine(orderpoint.lead_days_date, time.max)
-            if date_start <= lead_days_date < date_finished:
+            if date_start <= lead_days_date < date_finished and orderpoint.id in res:
                 res[orderpoint.id] += prod.product_uom_id._compute_quantity(
                         prod.product_qty, orderpoint.product_uom, round=False)
         return res
