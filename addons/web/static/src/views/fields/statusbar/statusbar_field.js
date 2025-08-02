@@ -336,7 +336,7 @@ export const statusBarField = {
             label: _t("Clickable"),
             name: "clickable",
             type: "boolean",
-            default: true,
+            default: false,
         },
         {
             label: _t("Fold field"),
