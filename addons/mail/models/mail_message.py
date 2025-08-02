@@ -903,7 +903,7 @@ class MailMessage(models.Model):
         return Store().add(self, {"starred": self.starred}).get_result()
 
     @api.model
-    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, res_id=None, res_model=None, search_term=None, search_type=None, before=None, after=None, around=None, limit=30):
         res = {}
         domain = Domain(domain)
         if search_term:
@@ -916,6 +916,20 @@ class MailMessage(models.Model):
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])
+            if res_id and res_model and search_type in ["all", "tracked_changes"]:
+                tracking_value_domain = Domain.AND([
+                    [("mail_message_id.res_id", "=", int(res_id))],
+                    [("mail_message_id.model", "=", res_model)],
+                    self._get_tracking_values_domain(search_term),
+                ])
+                found_tracking_value_ids = self.env["mail.tracking.value"].sudo().search(tracking_value_domain)._filter_has_field_access(self.env).ids
+                # sudo: mail.message - searching allowed tracking values
+                tracking_message_ids = self.sudo().search(Domain("tracking_value_ids", "in", found_tracking_value_ids)).ids
+                domain |= Domain("id", "in", tracking_message_ids)
+                if search_type == "tracked_changes":
+                    domain &= Domain("message_type", "in", ["user_notification", "notification"])
+            else:
+                domain &= Domain("message_type", "not in", ["user_notification", "notification"])
             res["count"] = self.search_count(domain)
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
@@ -929,6 +943,31 @@ class MailMessage(models.Model):
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
+
+    def _get_tracking_values_domain(self, search_term):
+        """ Get the domain to search for tracking values. """
+        numeric_term = None
+        # try to convert the search term to a number
+        with contextlib.suppress(ValueError, TypeError):
+            numeric_term = float(search_term)
+        domain = Domain.OR([
+            [("old_value_char", "ilike", search_term)],
+            [("new_value_char", "ilike", search_term)],
+            [("old_value_text", "ilike", search_term)],
+            [("new_value_text", "ilike", search_term)],
+            [("old_value_datetime", "ilike", search_term)],
+            [("new_value_datetime", "ilike", search_term)],
+            [("field_id.name", "ilike", search_term)],
+            [("field_id.field_description", "ilike", search_term)],
+        ])
+        if numeric_term:
+            domain |= Domain.OR([
+                [("old_value_integer", "=", numeric_term)],
+                [("new_value_integer", "=", numeric_term)],
+                [("old_value_float", "=", numeric_term)],
+                [("new_value_float", "=", numeric_term)],
+            ])
+        return domain
 
     def _message_reaction(self, content, action, partner, guest, store: Store = None):
         self.ensure_one()
