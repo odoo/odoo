@@ -22,6 +22,14 @@ export class Popup extends Interaction {
         "_window": {
             "t-on-hashchange": this.onHashChange,
         },
+        ".modal": {
+            // Here, bootstrap's data-bs-backdrop attribute isn't used
+            // and instead we use a custom click handler to dismiss the
+            // popup on click outside as we don't use bootstrap native backdrop.
+            // (see comment above .modal-backdrop in
+            // addons/web/static/src/scss/bootstrap_review.scss).
+            "t-on-click": this.dismissPopupOnClickOutside,
+        },
     };
 
     setup() {
@@ -30,6 +38,25 @@ export class Popup extends Interaction {
         /** @type {import("bootstrap").Modal} */
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
         this.registerCleanup(() => { this.bsModal.dispose() });
+
+        const selectedUrls =
+            this.modalEl.dataset.showOnSpecificPages === "true"
+                ? JSON.parse(this.modalEl.dataset.selectedUrls)
+                : [];
+        if (selectedUrls && selectedUrls.length) {
+            // If the popup is only shown on specific URLs, we check if the
+            // current URL matches one of the selected URLs.
+            const currentUrl = browser.location.pathname;
+            if (!selectedUrls.includes(currentUrl)) {
+                const whereEl = document.querySelector("#o_shared_blocks");
+                const popupEl = this.el;
+                if (whereEl && popupEl && whereEl.contains(popupEl)) {
+                    this.bsModal.dispose();
+                    popupEl.remove();
+                    return;
+                }
+            }
+        }
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
@@ -45,6 +72,12 @@ export class Popup extends Interaction {
     }
 
     start() {
+        if (!this.bsModal._element) {
+            // If the modal element has been removed from the DOM, we do not
+            // need to bind the popup.
+            return;
+        }
+
         // Check if every child element of the popup is conditionally hidden,
         // and if so, never show an empty popup.
         // config.device.isMobile is true if the device is <= SM, but the device
@@ -214,6 +247,20 @@ export class Popup extends Interaction {
             // TODO : it should not have been a hash at all for ecommerce, but a
             // query string parameter
             this.showPopupOnClick(new URL(ev.newURL).hash);
+        }
+    }
+
+    /**
+     * Handles clicks outside the popup to dismiss it.
+     *
+     * @param {MouseEvent} ev
+     */
+    dismissPopupOnClickOutside(ev) {
+        const modalContent = this.el.querySelector(".modal-content");
+        const isClickOutside =
+            ev.target === this.modalEl || (modalContent && !modalContent.contains(ev.target));
+        if (isClickOutside) {
+            this.hidePopup();
         }
     }
 }

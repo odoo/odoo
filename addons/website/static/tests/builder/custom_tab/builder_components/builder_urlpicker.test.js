@@ -1,7 +1,12 @@
 import { after, before, expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    mockGetSuggestedLinks,
+    setupWebsiteBuilder,
+} from "../../website_helpers";
 
 defineWebsiteModels();
 
@@ -14,44 +19,6 @@ function mockWindowOpen() {
 }
 function unmockWindowOpen() {
     window.open = originalWindowOpen;
-}
-function mockGetSuggestedLinks(callback = undefined) {
-    onRpc("/website/get_suggested_links", () => {
-        callback?.();
-        return {
-            matching_pages: [
-                {
-                    value: "/page1",
-                    label: "/page1 (Page 1)",
-                },
-                {
-                    value: "/page2",
-                    label: "/page2 (Page 2)",
-                },
-            ],
-            others: [
-                {
-                    title: "Last modified pages",
-                    values: [
-                        {
-                            value: "/page3",
-                            label: "/page3 (Page 3)",
-                        },
-                    ],
-                },
-                {
-                    title: "Apps url",
-                    values: [
-                        {
-                            value: "/app1",
-                            label: "/app1 (App 1)",
-                            icon: "app1_icon",
-                        },
-                    ],
-                },
-            ],
-        };
-    });
 }
 
 before(() => {
