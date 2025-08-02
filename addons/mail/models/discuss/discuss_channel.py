@@ -329,6 +329,10 @@ class Channel(models.Model):
                     diff[key] = value
             if diff:
                 channel._bus_send_store(channel, diff)
+            if not vals.get("active", True):
+                for sub_channel in channel.sub_channel_ids:
+                    sub_channel.active = False
+                channel._bus_send("discuss.channel/delete", {"id": channel.id})
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
