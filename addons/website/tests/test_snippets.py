@@ -38,6 +38,7 @@ class TestSnippets(HttpCase):
             's_map',  # avoid call to maps.google.com
             's_instagram_page',  # avoid call to instagram.com
             's_image',  # Avoid specific case where the media dialog opens on drop
+            's_icon',  # Avoid specific case where the media dialog opens on drop
             's_snippet_group',  # Snippet groups are not snippets
             's_inline_text',
         ]
@@ -152,3 +153,6 @@ class TestSnippets(HttpCase):
 
     def test_tabs_snippet(self):
         self.start_tour(self.env["website"].get_client_action_url("/"), "snippet_tabs", login="admin")
+
+    def test_snippet_icon(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), 'snippet_icon', login='admin')
