@@ -304,19 +304,18 @@ class TestOldRules(TestStockCommon):
         moveB.picked = True
         picking.action_put_in_pack()
         picking.button_validate()
-        delivery_type.show_entire_packs = True
         picking, _, _ = create_picking(delivery_type, delivery_type.default_location_src_id, customer_location)
-        packB = picking.package_level_ids[1]
-        picking.package_level_ids_details[0].is_done = True
+        packB = picking.move_ids[1].move_line_ids.package_id
+        picking.move_ids[0].picked = True
 
         action_data = picking.button_validate()
         backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action_data['context'])).save()
         backorder_wizard.process()
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
 
-        self.assertNotIn(packB, picking.package_level_ids)
-        self.assertEqual(packB, bo.package_level_ids)
-        self.assertEqual(bo.package_level_ids.state, 'assigned')
+        self.assertNotIn(packB, picking.move_line_ids.package_id)
+        self.assertEqual(packB, bo.move_line_ids.package_id)
+        self.assertEqual(bo.move_ids.state, 'assigned')
 
     def test_pack_delivery_three_step_propagate_package_consumable_old(self):
         """ Checks all works right in the following case:
@@ -529,7 +528,7 @@ class TestOldRules(TestStockCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = warehouse.in_type_id
-        with receipt_form.move_ids_without_package.new() as move_line:
+        with receipt_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 15
         receipt = receipt_form.save()

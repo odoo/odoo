@@ -72,11 +72,11 @@ class TestPacking(TestPackingCommon):
         pack_action_model = pack_action['res_model']
 
         # We make sure the correct action was returned
-        self.assertEqual(pack_action_model, 'choose.delivery.package')
+        self.assertEqual(pack_action_model, 'stock.put.in.pack')
 
         # We instanciate the wizard with the context of the action and check that the
         # default weight was set.
-        pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
+        pack_wiz = self.env['stock.put.in.pack'].with_context(pack_action_ctx).create({})
         self.assertEqual(pack_wiz.shipping_weight, 13.5)
 
         # unpick the move lines and check that the weight is correctly updated
@@ -85,9 +85,9 @@ class TestPacking(TestPackingCommon):
         pack_action = picking_ship.action_put_in_pack()
         pack_action_ctx = pack_action['context']
         pack_action_model = pack_action['res_model']
-        self.assertEqual(pack_action_model, 'choose.delivery.package')
+        self.assertEqual(pack_action_model, 'stock.put.in.pack')
 
-        pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
+        pack_wiz = self.env['stock.put.in.pack'].with_context(pack_action_ctx).create({})
         self.assertEqual(pack_wiz.shipping_weight, 1.5)
 
     def test_send_to_shipper_without_sale_order(self):
@@ -228,17 +228,20 @@ class TestPacking(TestPackingCommon):
             'delivery_steps': 'pick_pack_ship',
             'company_id': company_b.id,
         })
-
-        reusable_box = self.env['stock.quant.package'].create({
-            'name': 'Reusable Box',
+        reusable_type = self.env['stock.package.type'].create({
+            'name': 'Reusable',
             'package_use': 'reusable',
+        })
+        reusable_box = self.env['stock.package'].create({
+            'name': 'Reusable Box',
+            'package_type_id': reusable_type.id,
         })
 
         delivery_company_a = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.out_type_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
-            'move_ids_without_package': [Command.create({
+            'move_ids': [Command.create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.stock_location.id,
@@ -263,7 +266,7 @@ class TestPacking(TestPackingCommon):
             'picking_type_id': wh_b.int_type_id.id,
             'location_id': wh_b.lot_stock_id.id,
             'location_dest_id': wh_b.lot_stock_id.id,
-            'move_ids_without_package': [Command.create({
+            'move_ids': [Command.create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 3.0,
                 'location_id': wh_b.lot_stock_id.id,

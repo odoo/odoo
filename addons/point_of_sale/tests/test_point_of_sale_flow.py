@@ -1010,7 +1010,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
 
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-        order_lot_id = order.picking_ids.move_line_ids_without_package.lot_id
+        order_lot_id = order.picking_ids.move_line_ids.lot_id
         self.assertEqual(order_lot_id.name, '1001')
         self.assertTrue(all(
             quant.lot_id == order_lot_id

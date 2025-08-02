@@ -62,6 +62,7 @@
         'wizard/stock_label_type.xml',
         'wizard/stock_lot_label_layout.xml',
         'wizard/stock_quant_relocate.xml',
+        'wizard/stock_put_in_pack_views.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
@@ -81,8 +82,9 @@
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
         'views/stock_rule_views.xml',
-        'views/stock_package_level_views.xml',
+        'views/stock_package_history_views.xml',
         'views/stock_package_type_view.xml',
+        'views/stock_package_views.xml',
         'views/stock_forecasted.xml',
         'views/uom_uom_views.xml',
     ],

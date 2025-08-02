@@ -93,50 +93,35 @@ class StockMoveLine(models.Model):
             aggregated_move_lines[aggregated_move_line]['hs_code'] = hs_code
         return aggregated_move_lines
 
-    def _set_delivery_package_type(self):
-        """ This method returns an action allowing to set the package type and the shipping weight
-        on the stock.quant.package.
-        """
-        view_id = self.env.ref('stock_delivery.choose_delivery_package_view_form').id
-        context = dict(
-            self.env.context,
-            current_package_carrier_type=self.carrier_id.delivery_type,
-            default_move_line_ids=self.ids,
-        )
+    def _pre_put_in_pack_hook(self, all_lines=False, package_id=False, package_type_id=False, package_name=False, from_package_wizard=False):
+        res = super()._pre_put_in_pack_hook(all_lines, package_id, package_type_id, package_name, from_package_wizard)
+        if res and not from_package_wizard and self.carrier_id:
+            context = res.get('context', {})
+            context['default_package_carrier_type'] = self._get_package_carrier_type_for_pack()
+            res['context'] = context
+        return res
+
+    def _post_put_in_pack_hook(self, package):
+        weight = self.env.context.get('weight')
+        if weight:
+            package.shipping_weight = weight
+        return super()._post_put_in_pack_hook(package)
+
+    def _get_package_carrier_type_for_pack(self):
+        if len(self.carrier_id) > 1 or any(not ml.carrier_id for ml in self):
+            # avoid (duplicate) costs for products
+            raise UserError(self.env._("You cannot pack products into the same package when they have different carriers (i.e. check that all of their transfers have a carrier assigned and are using the same carrier)."))
+
         # As we pass the `delivery_type` ('fixed' or 'base_on_rule' by default) in a key that
         # corresponds to the `package_carrier_type` (defaults to 'none'), we do a conversion.
         # No need to convert for other carriers as the `delivery_type` and
         # `package_carrier_type` will be the same in these cases.
-        if context['current_package_carrier_type'] in ['fixed', 'base_on_rule']:
-            context['current_package_carrier_type'] = 'none'
-        return {
-            'name': _('Package Details'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'choose.delivery.package',
-            'view_id': view_id,
-            'views': [(view_id, 'form')],
-            'target': 'new',
-            'context': context,
-        }
+        package_carrier_type = self.carrier_id.delivery_type
+        if package_carrier_type in ['fixed', 'base_on_rule']:
+            package_carrier_type = 'none'
+        return package_carrier_type
 
-    def _pre_put_in_pack_hook(self, **kwargs):
-        res = super()._pre_put_in_pack_hook()
-        from_package_wizard = kwargs.get('from_package_wizard')
-        if not res and not from_package_wizard:
-            if self.carrier_id:
-                if len(self.carrier_id) > 1 or any(not ml.carrier_id for ml in self):
-                    # avoid (duplicate) costs for products
-                    raise UserError(_("You cannot pack products into the same package when they have different carriers (i.e. check that all of their transfers have a carrier assigned and are using the same carrier)."))
-                return self._set_delivery_package_type()
-        else:
-            return res
-
-    def _post_put_in_pack_hook(self, package, **kwargs):
-        weight = kwargs.get('weight')
-        package_type = kwargs.get('package_type')
-        if weight:
-            package.shipping_weight = weight
-        if package_type:
-            package.package_type_id = package_type
-        return super()._post_put_in_pack_hook(package, **kwargs)
+    def _should_set_package(self):
+        if self.carrier_id:
+            return True
+        return super()._should_set_package()

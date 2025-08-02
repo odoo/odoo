@@ -2154,16 +2154,16 @@ class TestSinglePicking(TestStockCommon):
     def test_unlink_move_1(self):
         picking = Form(self.env['stock.picking'])
         picking.picking_type_id = self.picking_type_out
-        with picking.move_ids_without_package.new() as move:
+        with picking.move_ids.new() as move:
             move.product_id = self.productA
             move.quantity = 10
         picking = picking.save()
         self.assertEqual(picking.state, 'assigned')
 
         picking = Form(picking)
-        picking.move_ids_without_package.remove(0)
+        picking.move_ids.remove(0)
         picking = picking.save()
-        self.assertEqual(len(picking.move_ids_without_package), 0)
+        self.assertEqual(len(picking.move_ids), 0)
 
     def test_additional_move_1(self):
         """ On a planned trasfer, add a stock move when the picking is already ready. Check that
@@ -2222,7 +2222,7 @@ class TestSinglePicking(TestStockCommon):
 
         # Add a unit of productB, the check_availability button should appear.
         delivery_order = Form(delivery_order)
-        with delivery_order.move_ids_without_package.new() as move:
+        with delivery_order.move_ids.new() as move:
             move.product_id = self.productB
             move.product_uom_qty = 10
         delivery_order = delivery_order.save()
@@ -2247,7 +2247,7 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out.id,
-            'move_ids_without_package': [Command.create({
+            'move_ids': [Command.create({
                 'product_id': self.productA.id,
                 'product_uom': self.productA.uom_id.id,
                 'location_id': self.stock_location.id,
@@ -2259,7 +2259,7 @@ class TestSinglePicking(TestStockCommon):
 
         # Add a unit of productB, the check_availability button should not appear.
         delivery_order = Form(delivery_order)
-        with delivery_order.move_ids_without_package.new() as move:
+        with delivery_order.move_ids.new() as move:
             move.product_id = self.productB
         delivery_order = delivery_order.save()
 
@@ -2326,7 +2326,7 @@ class TestSinglePicking(TestStockCommon):
         receipt_form.location_dest_id = self.stock_location
         receipt = receipt_form.save()
 
-        with receipt_form.move_ids_without_package.new() as move:
+        with receipt_form.move_ids.new() as move:
             move.product_id = self.productA
             move.quantity = 1.0
 
@@ -2520,7 +2520,7 @@ class TestSinglePicking(TestStockCommon):
         ])
         # Decrease the quantity to 45 units
         with Form(delivery) as delivery_form:
-            with delivery_form.move_ids_without_package.edit(0) as move:
+            with delivery_form.move_ids.edit(0) as move:
                 move.quantity = 45
         self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
             ('Shell 1', 'LOT005', 10.0),
@@ -2531,7 +2531,7 @@ class TestSinglePicking(TestStockCommon):
         ])
         # Decrease the quantity to 25 units
         with Form(delivery) as delivery_form:
-            with delivery_form.move_ids_without_package.edit(0) as move:
+            with delivery_form.move_ids.edit(0) as move:
                 move.quantity = 25
         self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
             ('Shell 1', 'LOT005', 10.0),
@@ -2540,7 +2540,7 @@ class TestSinglePicking(TestStockCommon):
         ])
         # Decrease the quantity to 12 units
         with Form(delivery) as delivery_form:
-            with delivery_form.move_ids_without_package.edit(0) as move:
+            with delivery_form.move_ids.edit(0) as move:
                 move.quantity = 12
         self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
             ('Shell 1', 'LOT005', 10.0),
@@ -2565,7 +2565,7 @@ class TestSinglePicking(TestStockCommon):
             }
         ])
         with Form(self.env['stock.picking'].with_context(restricted_picking_type_code='internal')) as picking_form:
-            with picking_form.move_ids_without_package.new() as new_move:
+            with picking_form.move_ids.new() as new_move:
                 new_move.product_id = self.product
                 new_move.product_uom_qty = 3.0
             picking_form.location_id = new_location
@@ -3166,31 +3166,31 @@ class TestAutoAssign(TestStockCommon):
 
         # create their associated moves (needs to be in form view so compute functions properly trigger)
         customer_picking1 = Form(customer_picking1)
-        with customer_picking1.move_ids_without_package.new() as move:
+        with customer_picking1.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 10
         customer_picking1 = customer_picking1.save()
 
         customer_picking2 = Form(customer_picking2)
-        with customer_picking2.move_ids_without_package.new() as move:
+        with customer_picking2.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 10
         customer_picking2 = customer_picking2.save()
 
         customer_picking3 = Form(customer_picking3)
-        with customer_picking3.move_ids_without_package.new() as move:
+        with customer_picking3.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 10
         customer_picking3 = customer_picking3.save()
 
         customer_picking4 = Form(customer_picking4)
-        with customer_picking4.move_ids_without_package.new() as move:
+        with customer_picking4.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 10
         customer_picking4 = customer_picking4.save()
 
         customer_picking5 = Form(customer_picking5)
-        with customer_picking5.move_ids_without_package.new() as move:
+        with customer_picking5.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 10
         customer_picking5 = customer_picking5.save()

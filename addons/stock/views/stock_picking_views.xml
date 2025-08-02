@@ -146,7 +146,18 @@
                             invisible="not has_scrap_move"/>
                         <button name="action_see_packages" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
-                            invisible="not has_packages"/>
+                            invisible="state == 'done'" groups="stock.group_tracking_lot">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Packages</span>
+                            </div>
+                        </button>
+                        <button name="action_see_package_histories" type="object"
+                            class="oe_stat_button" icon="fa-cubes"
+                            invisible="state != 'done'" groups="stock.group_tracking_lot">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Packages</span>
+                            </div>
+                        </button>
                         <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" type="action" invisible="state != 'done' or not has_tracking" groups="stock.group_production_lot">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Traceability</span>
@@ -251,12 +262,15 @@
                     <field name="picking_properties" columns="2"/>
                     <notebook>
                         <page string="Operations" name="operations">
-                            <field name="move_ids_without_package" mode="list,kanban"
+                            <field name="move_ids" mode="list,kanban"
                                 widget="stock_move_one2many"
                                 readonly="state == 'done' and is_locked"
-                                context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}"
-                                add-label="Add a Product">
+                                context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}">
                                 <list decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
+                                    <control>
+                                        <create string="Add a Product"/>
+                                        <button name="action_add_packages" invisible="not parent.picking_type_entire_packs" context="{'picking_id': parent.id, 'show_src_package': 1}" string="Move a Pack" type="object" class="px-4 btn-link" groups="stock.group_tracking_lot"/>
+                                    </control>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="state" readonly="0" column_invisible="True"/>
                                     <field name="picking_type_id" column_invisible="True"/>
@@ -286,7 +300,8 @@
                                     <field name="show_lots_m2o" column_invisible="True"/>
                                     <field name="is_initial_demand_editable" column_invisible="True"/>
                                     <field name="display_import_lot" column_invisible="True"/>
-                                    <field name="picking_type_entire_packs" column_invisible="True"/>
+                                    <field name="has_lines_without_result_package" column_invisible="True"/>
+                                    <field name="package_ids" optional="show" widget="package_m2m" groups="stock.group_tracking_lot" width="200px" readonly="1"/>
                                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
@@ -307,7 +322,6 @@
                                 </list>
                             </field>
                             <field name="id" invisible="1"/>
-                            <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}" invisible="not picking_type_entire_packs" readonly="state == 'done'" />
                             <button class="btn-secondary float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
                         </page>
                         <page string="Additional Info" name="extra">

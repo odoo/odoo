@@ -150,7 +150,7 @@ class TestMrpStockReports(TestReportsCommon):
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
         pick.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         pick_form = Form(pick)
-        with Form(pick.move_ids_without_package, view='stock.view_stock_move_operations') as form:
+        with Form(pick.move_ids, view='stock.view_stock_move_operations') as form:
             with form.move_line_ids.edit(0) as move_line:
                 move_line.quantity = 20
         pick = pick_form.save()
@@ -246,7 +246,7 @@ class TestMrpStockReports(TestReportsCommon):
             picking_form = Form(self.env['stock.picking'])
             picking_form.picking_type_id = self.picking_type_in
             picking_form.partner_id = self.partner
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = superkit
                 move.product_uom_qty = 4
             picking = picking_form.save()
@@ -300,16 +300,16 @@ class TestMrpStockReports(TestReportsCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.picking_type_out
         picking_form.partner_id = self.partner
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = superkit
             move.product_uom_qty = 1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = subkit
             move.product_uom_qty = 1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = compo01
             move.product_uom_qty = 1
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = compo02
             move.product_uom_qty = 1
         picking = picking_form.save()
@@ -317,7 +317,7 @@ class TestMrpStockReports(TestReportsCommon):
 
         picking.move_ids.write({'quantity': 1, 'picked': True})
         move = picking.move_ids.filtered(lambda m: m.description_picking == "Super Kit" and m.product_id == compo03)
-        move.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'name': 'Package0001'})
+        move.move_line_ids.result_package_id = self.env['stock.package'].create({'name': 'Package0001'})
         picking.button_validate()
 
         html_report = self.env['ir.actions.report']._render_qweb_html(
@@ -486,7 +486,7 @@ class TestMrpStockReports(TestReportsCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'move_type': 'one',
-            'move_ids_without_package': [Command.create({
+            'move_ids': [Command.create({
                     'product_id': part.id,
                     'product_uom_qty': 20,
                     'location_id': self.env.ref('stock.stock_location_suppliers').id,

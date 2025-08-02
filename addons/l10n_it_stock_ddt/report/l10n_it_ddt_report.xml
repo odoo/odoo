@@ -3,9 +3,9 @@
     <template id="report_ddt_view">
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
-            <t t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.location_dest_id.usage == 'customer' and o.location_id.usage == 'supplier'">
+            <t t-if="o.move_ids and o.move_ids[0].partner_id and o.location_dest_id.usage == 'customer' and o.location_id.usage == 'supplier'">
               <t t-set="delivery_from" t-value="o.partner_id"/>
-              <t t-set="delivery_to" t-value="o.move_ids_without_package[0].partner_id"/>
+              <t t-set="delivery_to" t-value="o.move_ids[0].partner_id"/>
             </t>
             <t t-elif="o.picking_type_id.warehouse_id.partner_id">
               <t t-set="delivery_from" t-value="o.picking_type_id.warehouse_id.partner_id"/>

@@ -107,7 +107,7 @@ class TestRobustness(TransactionCase):
         """ Unpack a package that contains quants with a reservation
         should also remove the package on the reserved move lines.
         """
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'name': 'Shell Helix HX7 10W30',
         })
 
@@ -131,7 +131,7 @@ class TestRobustness(TransactionCase):
 
         self.assertEqual(move1.move_line_ids.package_id, package)
         package.unpack()
-        self.assertEqual(move1.move_line_ids.package_id, self.env['stock.quant.package'])
+        self.assertEqual(move1.move_line_ids.package_id, self.env['stock.package'])
 
         # unreserve
         move1._do_unreserve()

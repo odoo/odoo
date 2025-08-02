@@ -278,7 +278,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_type': 'one',
-            'move_ids_without_package': [
+            'move_ids': [
                 Command.create({
                     'product_id': productA.id,
                     'product_uom': self.uom_unit.id,
@@ -940,7 +940,7 @@ class TestStockMove(TestStockCommon):
             'name': 'Super Package Type',
         })
 
-        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        package = self.env['stock.package'].create({'package_type_id': package_type.id})
 
         self.env['stock.putaway.rule'].create({
             'product_id': self.productA.id,
@@ -978,7 +978,7 @@ class TestStockMove(TestStockCommon):
             'name': 'Super Package Type',
         })
 
-        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        package = self.env['stock.package'].create({'package_type_id': package_type.id})
 
         self.env['stock.putaway.rule'].create({
             'product_id': self.productA.id,
@@ -1043,7 +1043,7 @@ class TestStockMove(TestStockCommon):
         package_type = self.env['stock.package.type'].create({
             'name': 'Super Package Type',
         })
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'package_type_id': package_type.id,
         })
 
@@ -1332,7 +1332,7 @@ class TestStockMove(TestStockCommon):
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'name': 'package',
             'package_type_id': package_type.id,
         })
@@ -1395,7 +1395,7 @@ class TestStockMove(TestStockCommon):
         })
 
         # first package
-        package1 = self.env['stock.quant.package'].create({
+        package1 = self.env['stock.package'].create({
             'name': 'package 1',
             'package_type_id': package_type.id,
         })
@@ -1423,7 +1423,7 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(package1.location_id.id, self.shelf_2.id)
 
         # second package
-        package2 = self.env['stock.quant.package'].create({
+        package2 = self.env['stock.package'].create({
             'name': 'package 2',
             'package_type_id': package_type.id,
         })
@@ -1490,7 +1490,7 @@ class TestStockMove(TestStockCommon):
         })
 
         # first package
-        package1 = self.env['stock.quant.package'].create({
+        package1 = self.env['stock.package'].create({
             'name': 'package 1',
             'package_type_id': package_type.id,
         })
@@ -1518,7 +1518,7 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(package1.location_id.id, self.shelf_2.id)
 
         # second package
-        package2 = self.env['stock.quant.package'].create({
+        package2 = self.env['stock.package'].create({
             'name': 'package 2',
             'package_type_id': package_type.id,
         })
@@ -1584,7 +1584,7 @@ class TestStockMove(TestStockCommon):
         })
 
         # first package
-        package1 = self.env['stock.quant.package'].create({
+        package1 = self.env['stock.package'].create({
             'name': 'package 1',
             'package_type_id': package_type.id,
         })
@@ -1612,7 +1612,7 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(package1.location_id.id, self.shelf_2.id)
 
         # second package
-        package2 = self.env['stock.quant.package'].create({
+        package2 = self.env['stock.package'].create({
             'name': 'package 2',
             'package_type_id': package_type.id,
         })
@@ -2110,7 +2110,7 @@ class TestStockMove(TestStockCommon):
         """ Check that unreserving a stock move sets the products reserved as available and
         set the state back to confirmed even if they are in a pack.
         """
-        package1 = self.env['stock.quant.package'].create({'name': 'test_unreserve_2_pack'})
+        package1 = self.env['stock.package'].create({'name': 'test_unreserve_2_pack'})
 
         # make some stock
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 150.0, package_id=package1)
@@ -3264,8 +3264,8 @@ class TestStockMove(TestStockCommon):
         """ Test that editing a stock move line linked to a packed product correctly and directly
         adapts the reservation. In this case, we edit the package to another available one.
         """
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
-        package2 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package2 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, package_id=package2)
@@ -3338,7 +3338,7 @@ class TestStockMove(TestStockCommon):
             'name': 'lot2',
             'product_id': self.productA.id,
         })
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_5'})
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, lot_id=lot1, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, lot_id=lot2)
@@ -3622,8 +3622,8 @@ class TestStockMove(TestStockCommon):
         """ Test that editing a done stock move line linked to a packed product correctly and directly
         adapts the transfer. In this case, we edit the package to another available one.
         """
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
-        package2 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package2 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, package_id=package2)
@@ -3700,7 +3700,7 @@ class TestStockMove(TestStockCommon):
             'name': 'lot2',
             'product_id': self.productA.id,
         })
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_5'})
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, lot_id=lot1, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, lot_id=lot2)
@@ -3961,7 +3961,7 @@ class TestStockMove(TestStockCommon):
             'name': 'lot2',
             'product_id': self.product_lot.id,
         })
-        self.env['stock.quant.package'].create({'name': 'test_edit_done_move_line_12'})
+        self.env['stock.package'].create({'name': 'test_edit_done_move_line_12'})
         move1 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -3994,7 +3994,7 @@ class TestStockMove(TestStockCommon):
             'name': 'lot2',
             'product_id': self.product_lot.id,
         })
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_5'})
 
         move1 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
@@ -4392,10 +4392,10 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_in.id,
         })
         picking_form = Form(receipt_transfer)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_serial
             move.product_uom_qty = 4
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_lot
             move.product_uom_qty = 20
         receipt = picking_form.save()
@@ -4422,7 +4422,7 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_int.id,
             })
         picking_form = Form(internal_transfer)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_lot
             move.product_uom_qty = 4
         internal_transfer = picking_form.save()
@@ -5481,18 +5481,18 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_out.id,
         })
         delivery_form = Form(delivery_form)
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 10
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = product2
             move.product_uom_qty = 10
             move.description_picking = f"{product2.name}\nDescription2"
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = product3
             move.product_uom_qty = 10
             move.description_picking = f"{product3.display_name}\nDescription3"
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = product4
             move.product_uom_qty = 10
         delivery = delivery_form.save()
@@ -5720,6 +5720,7 @@ class TestStockMove(TestStockCommon):
         unpacked_ml = picking.move_line_ids.filtered(lambda ml: not ml.result_package_id)
         self.assertEqual(unpacked_ml.quantity_product_uom, 10)
         unpacked_ml.quantity = 10
+
         picking.action_put_in_pack()  # Create a second package
         self.assertEqual(len(picking.move_line_ids), 2)
 
@@ -5898,12 +5899,12 @@ class TestStockMove(TestStockCommon):
 
         picking.action_confirm()
 
-        with Form(picking.move_ids_without_package, view='stock.view_stock_move_operations') as form:
+        with Form(picking.move_ids, view='stock.view_stock_move_operations') as form:
             with form.move_line_ids.edit(0) as line:
                 line.location_dest_id = self.stock_location.child_ids[0]
                 line.quantity = 1
 
-        self.assertEqual(picking.move_line_ids_without_package.location_dest_id, self.stock_location.child_ids[0])
+        self.assertEqual(picking.move_line_ids.location_dest_id, self.stock_location.child_ids[0])
 
     def test_inter_wh_and_forecast_availability(self):
         dest_wh = self.env['stock.warehouse'].create({
@@ -6003,14 +6004,14 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_in.id,
         })
         picking_form = Form(internal_transfer)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.product_serial
             move.product_uom_qty = 1
         receipt = picking_form.save()
         receipt.action_confirm()
 
         receipt_form = Form(receipt)
-        with receipt_form.move_ids_without_package.edit(0) as move:
+        with receipt_form.move_ids.edit(0) as move:
             move.lot_ids.add(sn)
         receipt = receipt_form.save()
         receipt.move_ids.picked = True
@@ -6060,11 +6061,11 @@ class TestStockMove(TestStockCommon):
         today = fields.Datetime.today()
         with Form(self.env['stock.picking']) as picking_form:
             picking_form.picking_type_id = self.picking_type_out
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = self.productA
                 move.product_uom_qty = 1
                 move.date = today + relativedelta(day=5)
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = self.product_consu
                 move.product_uom_qty = 1
                 move.date = today + relativedelta(day=10)
@@ -6098,7 +6099,7 @@ class TestStockMove(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=sn01)
         with Form(self.env['stock.picking']) as picking_form:
             picking_form.picking_type_id = self.picking_type_int
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = self.product_serial
                 move.product_uom_qty = 1
             picking = picking_form.save()
@@ -6107,10 +6108,10 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(picking.state, 'assigned')
 
         with Form(picking) as picking_form:
-            with picking_form.move_ids_without_package.edit(0) as line_form:
+            with picking_form.move_ids.edit(0) as line_form:
                 line_form.lot_ids.add(sn01)
             picking = picking_form.save()
-        self.assertEqual(picking.move_ids_without_package.lot_ids, sn01)
+        self.assertEqual(picking.move_ids.lot_ids, sn01)
 
     def test_change_move_line_uom(self):
         """Check the reserved_quantity of the quant is correctly updated when changing the UOM in the move line"""
@@ -6350,7 +6351,7 @@ class TestStockMove(TestStockCommon):
             'product_id': self.product_serial.id,
         } for name in ['sn01', 'sn02', 'sn03']])
 
-        pack = self.env['stock.quant.package'].create({
+        pack = self.env['stock.package'].create({
             'name': 'Pack A',
         })
 
@@ -6377,25 +6378,25 @@ class TestStockMove(TestStockCommon):
 
     def test_change_dest_loc_after_sm_creation(self):
         form = Form(self.env['stock.picking'].with_context(restricted_picking_type_code="incoming"))
-        with form.move_ids_without_package.new() as move:
+        with form.move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 1
         form.location_dest_id = self.customer_location
-        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.customer_location)
+        self.assertEqual(form.move_ids.edit(0).location_dest_id, self.customer_location)
 
         picking = form.save()
-        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.customer_location)
+        self.assertEqual(picking.move_ids.location_dest_id, self.customer_location)
 
         form = Form(picking)
-        with form.move_ids_without_package.new() as move:
+        with form.move_ids.new() as move:
             move.product_id = self.product_consu
             move.product_uom_qty = 1
         form.location_dest_id = self.stock_location
-        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.stock_location)
-        self.assertEqual(form.move_ids_without_package.edit(1).location_dest_id, self.stock_location)
+        self.assertEqual(form.move_ids.edit(0).location_dest_id, self.stock_location)
+        self.assertEqual(form.move_ids.edit(1).location_dest_id, self.stock_location)
 
         picking = form.save()
-        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.stock_location)
+        self.assertEqual(picking.move_ids.location_dest_id, self.stock_location)
 
     def test_set_quantity_done_with_rounding_issues(self):
         """Imperial UoM can sometime create a discrepancy between the demand and the actual quantity moved,

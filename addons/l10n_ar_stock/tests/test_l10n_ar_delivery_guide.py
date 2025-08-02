@@ -51,7 +51,7 @@ class TestArDeliveryGuide(TestAr, MailCommon):
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type.id,
             'partner_id': self.partner_ri.id,
-            'move_ids_without_package': move_lines_args or self._get_stock_picking_move_line_vals(),
+            'move_ids': move_lines_args or self._get_stock_picking_move_line_vals(),
         }
 
     def get_stock_picking(self, stock_picking_args=None, move_lines_args=None):
