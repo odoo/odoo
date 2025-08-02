@@ -1,0 +1,17 @@
+<templates>
+    <t t-name="sale.SectionListRenderer.Row" t-inherit="web.SectionListRenderer.Row" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SectionListRenderer.SectionRow']" position="replace">
+            <t t-call="sale.SectionListRenderer.SectionRow"/>
+        </xpath>
+    </t>
+
+    <t t-name="sale.SectionListRenderer.SectionRow" t-inherit="web.SectionListRenderer.SectionRow" t-inherit-mode="primary">
+        <xpath expr="//td[hasclass('o_list_section_options')]//t[@t-set-slot='content']" position="inside">
+            <t t-foreach="this.getDropDownItems(hierarchyItem)" t-as="action" t-key="action.id">
+                <DropdownItem onSelected="action.onSelected">
+                    <i t-att-class="'me-1 fa fa-fw ' + action.icon"/><span><t t-esc="action.label"/></span>
+                </DropdownItem>
+            </t>
+        </xpath>
+    </t>
+</templates>
