@@ -709,21 +709,23 @@ body:not(.editor_enable) #category_header {
             bottom: 10px;
         }
 
+        --_livechat-bubble-width: calc(#{$o-mail-ChatHub-bubblesWidth} + #{$o-mail-ChatHub-bubblesMargin} + #{$o-mail-ChatHub-bubblesStart});
+
         @include media-breakpoint-down(sm) {
             #o_wsale_floating_bar.o_wsale_has_pricelist {
                 bottom: calc(10px + 70px);
             }
 
             &:not(:has(#o_wsale_floating_bar.o_wsale_has_pricelist)) {
-                right: calc(px + 70px);
+                // bubble + o-mobile gap (see chat_hub.scss)
+                right: calc(var(--_livechat-bubble-width) + #{$o-mail-ChatHub-bubblesMargin + 5px} + #{map-get($spacers, 2)});
             }
         }
 
         @include media-breakpoint-up(sm) {
             --_offset: calc(calc(100vw - 100%) * .5);
-            --_livechat-gap: calc(3vw + 80px);
 
-            right: calc(0px - calc(var(--_offset) - var(--_livechat-gap)));
+            right: calc(0px - calc(var(--_offset) - (3vw + var(--_livechat-bubble-width))));
         }
     }
 }
