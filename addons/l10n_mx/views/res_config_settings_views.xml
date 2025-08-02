@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account.mx</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='account_discount_income_allocation']" position="after">
+                    <div class="row mt8" invisible="company_country_code != 'MX'">
+                        <label for="l10n_mx_account_income_return_discount_id" class="col-lg-5 o_light_label" string="Credit notes"/>
+                        <field name="l10n_mx_account_income_return_discount_id" placeholder="Returns and discounts"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
