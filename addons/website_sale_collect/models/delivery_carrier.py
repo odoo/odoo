@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools.misc import format_duration
 
@@ -14,7 +14,11 @@ class DeliveryCarrier(models.Model):
     delivery_type = fields.Selection(
         selection_add=[('in_store', "Pick up in store")], ondelete={'in_store': 'set default'}
     )
-    warehouse_ids = fields.Many2many(string="Stores", comodel_name='stock.warehouse')
+    warehouse_ids = fields.Many2many(
+        string="Stores",
+        comodel_name='stock.warehouse',
+        check_company=True,
+    )
 
     @api.constrains('delivery_type', 'is_published', 'warehouse_ids')
     def _check_in_store_dm_has_warehouses_when_published(self):
@@ -29,13 +33,14 @@ class DeliveryCarrier(models.Model):
 
     @api.constrains('delivery_type', 'company_id', 'warehouse_ids')
     def _check_warehouses_have_same_company(self):
-        for dm in self:
-            if dm.delivery_type == 'in_store' and dm.company_id and any(
-                wh.company_id and dm.company_id != wh.company_id for wh in dm.warehouse_ids
-            ):
-                raise ValidationError(
-                    _("The delivery method and a warehouse must share the same company")
-                )
+        try:
+            self.filtered(
+                lambda dm: dm.company_id and dm.delivery_type == 'in_store',
+            )._check_company(['warehouse_ids'])
+        except UserError:
+            raise ValidationError(
+                _("The delivery method and a warehouse must share the same company"),
+            )
 
     @api.model_create_multi
     def create(self, vals_list):

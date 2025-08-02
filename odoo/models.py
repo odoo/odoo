@@ -222,6 +222,20 @@ def check_companies_domain_parent_of(self, companies):
     ])]
 
 
+def check_company_domain_child_of(self, companies):
+    """ A `_check_company_domain` function that lets a record be used if either:
+        - record.company_id = False (which implies that it is shared between all companies), or
+        - record.company_id is a child of any of the given companies.
+    """
+    if isinstance(companies, str):
+        company_ids = companies
+    else:
+        company_ids = [id for id in to_company_ids(companies) if id]
+    if not company_ids:
+        return [('company_id', '=', False)]
+    return ['|', ('company_id', '=', False), ('company_id', 'child_of', company_ids)]
+
+
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
