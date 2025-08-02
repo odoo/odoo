@@ -160,7 +160,7 @@
         <div class="dropdown d-none d-lg-block">
             <button role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Date" aria-label="Filter by date" aria-expanded="false">
                 <t t-if="current_date" t-out="current_date"/>
-                <t t-else="">Upcoming</t>
+                <t t-else="">Scheduled Events</t>
             </button>
             <div class="dropdown-menu">
                 <t t-foreach="dates" t-as="date">
