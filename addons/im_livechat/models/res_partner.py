@@ -95,7 +95,10 @@ class ResPartner(models.Model):
             super()._compute_display_name()
             return
         for partner in self:
-            partner.display_name = partner.name
+            if partner.partner_share:
+                super()._compute_display_name()
+            else:
+                partner.display_name = partner.name
 
     def action_view_livechat_sessions(self):
         action = self.env["ir.actions.act_window"]._for_xml_id("im_livechat.discuss_channel_action")
