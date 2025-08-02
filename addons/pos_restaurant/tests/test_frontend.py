@@ -536,3 +536,12 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_book_and_release_table', login="pos_user")
         order = self.env['pos.order'].search([], limit=1, order='id desc')
         self.assertEqual(order.state, "cancel", "The order should be in cancel state after releasing the table")
+
+    def test_combo_synchronisation(self):
+        """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.
+           if this is not the case, the combo lines would lose their link to the parent combo line and appear as
+           normal line"""
+        setup_product_combo_items(self)
+        self.pos_config.is_order_printer = False
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_synchronisation')
