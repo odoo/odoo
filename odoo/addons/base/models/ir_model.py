@@ -316,7 +316,7 @@ class IrModel(models.Model):
         model_id = self._get_id(name) if name else False
         return self.sudo().browse(model_id)
 
-    @tools.ormcache('name')
+    @tools.ormcache('name', cache='stable')
     def _get_id(self, name):
         self.env.cr.execute("SELECT id FROM ir_model WHERE model=%s", (name,))
         result = self.env.cr.fetchone()
@@ -820,7 +820,7 @@ class IrModelFields(models.Model):
         field_id = model_name and name and self._get_ids(model_name).get(name)
         return self.sudo().browse(field_id)
 
-    @tools.ormcache('model_name')
+    @tools.ormcache('model_name', cache='stable')
     def _get_ids(self, model_name):
         cr = self.env.cr
         cr.execute("SELECT name, id FROM ir_model_fields WHERE model=%s", [model_name])
@@ -997,9 +997,9 @@ class IrModelFields(models.Model):
                 vals['model'] = IrModel.browse(vals['model_id']).model
 
         # for self._get_ids() in _update_selection()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
 
-        res = super(IrModelFields, self).create(vals_list)
+        res = super().create(vals_list)
         models = OrderedSet(res.mapped('model'))
 
         for vals in vals_list:
@@ -1219,7 +1219,7 @@ class IrModelFields(models.Model):
                 data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
 
-    @tools.ormcache()
+    @tools.ormcache(cache='stable')
     def _all_manual_field_data(self):
         cr = self.env.cr
         # we cannot use self._fields to determine translated fields, as it has not been set up yet
@@ -1347,7 +1347,7 @@ class IrModelFields(models.Model):
         return self._get_fields_cached(model_name).get(field_name, {}).get('selection', [])
 
     @api.model
-    @tools.ormcache('model_name', 'self.env.lang')
+    @tools.ormcache('model_name', 'self.env.lang', cache='stable')
     def _get_fields_cached(self, model_name):
         """ Return the translated information of all model field's in the context's language.
         Note that the result contains the available translations only.
@@ -2034,23 +2034,38 @@ class IrModelAccess(models.Model):
         return [('%s/%s' % x) if x[0] else x[1] for x in self.env.cr.fetchall()]
 
     @api.model
-    @tools.ormcache('model_name', 'access_mode')
+    @tools.ormcache(cache='stable')
+    def _get_all_access_groups(self):
+        """ Return all active access rules.
+
+        :return: Dict {mode: {model_name: [group_ids]}}
+        """
+        modes = ('read', 'write', 'create', 'unlink')
+        all_access = self.sudo().search_fetch(
+            [('active', '=', True)],
+            ['model_id', 'group_id', *(f'perm_{mode}' for mode in modes)],
+        )
+        return frozendict({
+            mode: frozendict({
+                model.model: frozenset(a.group_id.id for a in accesses)
+                for model, accesses in all_access.filtered(f'perm_{mode}').grouped('model_id').items()
+            })
+            for mode in modes
+        })
+
+    @api.model
+    @tools.ormcache('model_name', 'access_mode', cache='stable')
     def _get_access_groups(self, model_name, access_mode='read'):
         """ Return the group expression object that represents the users who
         have ``access_mode`` to the model ``model_name``.
         """
-        assert access_mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-        model = self.env['ir.model']._get(model_name)
-        accesses = self.sudo().search([
-            (f'perm_{access_mode}', '=', True), ('model_id', '=', model.id),
-        ])
-
+        accesses = self._get_all_access_groups()[access_mode].get(model_name, ())
         group_definitions = self.env['res.groups']._get_group_definitions()
         if not accesses:
             return group_definitions.empty
-        if not all(access.group_id for access in accesses):  # there is some global access
+        if False in accesses:  # there is some global access
             return group_definitions.universe
-        return group_definitions.from_ids(accesses.group_id.ids)
+        return group_definitions.from_ids(accesses)
 
     # The context parameter is useful when the method translates error messages.
     # But as the method raises an exception in that case,  the key 'lang' might
@@ -2059,24 +2074,13 @@ class IrModelAccess(models.Model):
 
     @tools.ormcache('self.env.uid', 'mode')
     def _get_allowed_models(self, mode='read'):
-        assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-
-        group_ids = self.env.user._get_group_ids()
-        self.flush_model()
-        rows = self.env.execute_query(SQL("""
-            SELECT m.model
-              FROM ir_model_access a
-              JOIN ir_model m ON (m.id = a.model_id)
-             WHERE a.perm_%s
-               AND a.active
-               AND (
-                    a.group_id IS NULL OR
-                    a.group_id IN %s
-                )
-            GROUP BY m.model
-        """, SQL(mode), tuple(group_ids) or (None,)))
-
-        return frozenset(v[0] for v in rows)
+        access_by_model = self._get_all_access_groups()[mode]
+        group_ids = set(self.env.user._get_group_ids())
+        group_ids.add(False)  # global access rules
+        return frozenset(
+            model for model, accesses in access_by_model.items()
+            if not group_ids.isdisjoint(accesses)
+        )
 
     @api.model
     def check(self, model, mode='read', raise_exception=True):
@@ -2116,7 +2120,7 @@ class IrModelAccess(models.Model):
     @api.model
     def call_cache_clearing_methods(self):
         self.env.invalidate_all()
-        self.env.registry.clear_cache()  # mainly _get_allowed_models
+        self.env.registry.clear_cache('stable')  # mainly _get_allowed_models
 
     #
     # Check rights on actions
