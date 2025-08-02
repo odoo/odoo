@@ -388,7 +388,7 @@ test("should apply background color whithout interrupting gradient text color on
             '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfter:
-            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-image: none; background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
     });
 });
 test("should apply background color whithout interrupting gradient background color on selected text", async () => {
@@ -523,6 +523,30 @@ test("should merge adjacent font with the same text color when mutations common 
     await setColor("rgb(255, 0, 0)", "color")(editor);
     const expected = '<p><font style="color: rgb(255, 0, 0);">first [second]</font></p>';
     expect(getContent(el)).toBe(expected);
+});
+
+test("should keep font element on top of underline/strike (1)", async () => {
+    await testEditor({
+        contentBefore: "<p><u>[abc]</u></p>",
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)",
+            "color"
+        ),
+        contentAfter:
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);"><u>[abc]</u></font></p>',
+    });
+});
+
+test("should keep font element on top of underline/strike (2)", async () => {
+    await testEditor({
+        contentBefore: "<p><u><s>[abc]</s></u></p>",
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)",
+            "color"
+        ),
+        contentAfter:
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);"><u><s>[abc]</s></u></font></p>',
+    });
 });
 
 describe("colorElement", () => {
