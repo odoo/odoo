@@ -101,7 +101,7 @@ class AccountEdiProxyClientUser(models.Model):
         '''
         return False
 
-    def _make_request(self, url, params=False):
+    def _make_request(self, url, params=False, request_timeout=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
         '''
         payload = {
@@ -110,7 +110,7 @@ class AccountEdiProxyClientUser(models.Model):
             'params': params or {},
             'id': uuid.uuid4().hex,
         }
-
+        timeout = request_timeout or TIMEOUT
         # Last barrier : in case the demo mode is not handled by the caller, we block access.
         if self.edi_mode == 'demo':
             raise AccountEdiProxyError("block_demo_mode", "Can't access the proxy in demo mode")
@@ -119,7 +119,7 @@ class AccountEdiProxyClientUser(models.Model):
             response = requests.post(
                 url,
                 json=payload,
-                timeout=TIMEOUT,
+                timeout=timeout,
                 headers={'content-type': 'application/json'},
                 auth=OdooEdiProxyAuth(user=self)).json()
         except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
