@@ -111,7 +111,7 @@
                                             <t t-out="doc.partner_bill_from_id.name"/><br/>
                                             <t t-out="doc.partner_bill_from_id.state_id.name"/><br/>
                                             <br/>
-                                            ::Dispatch From:: <br/><br/>
+                                            Dispatch From <br/><br/>
                                             <span t-field="doc.partner_ship_from_id"
                                                   t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'
                                             />
@@ -122,7 +122,7 @@
                                             <t t-out="doc.partner_bill_to_id.name"/><br/>
                                             <t t-out="doc.partner_bill_to_id.state_id.name"/><br/>
                                             <br/>
-                                            ::Ship To:: <br/><br/>
+                                            Ship To <br/><br/>
                                             <span t-field="doc.partner_ship_to_id"
                                                   t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
                                         </td>
@@ -144,7 +144,7 @@
                                 </thead>
                                 <tbody>
                                     <t t-set="items" t-value="generate_json['itemList']"/>
-                                    <tr t-foreach="items" t-as="item" class="border-bottom border-dark">
+                                    <tr t-foreach="items" t-as="item" class="border-bottom border-dark text-center">
                                         <td>
                                             <t t-out="item['hsnCode']"/>
                                         </td>
@@ -233,7 +233,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr class="text-center">
                                             <td>
                                                 <t t-out="dict(doc._fields['mode']._description_selection
                                                 (doc.env)).get(doc.mode, '')"/>
