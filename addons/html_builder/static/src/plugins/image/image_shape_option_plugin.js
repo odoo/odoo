@@ -96,11 +96,8 @@ export class ImageShapeOptionPlugin extends Plugin {
             if (img.naturalWidth) {
                 return img.naturalWidth;
             }
-            await new Promise((resolve, reject) => {
-                img.addEventListener("load", () => resolve(img), { once: true });
-                img.addEventListener("error", reject, { once: true });
-            });
-            return img.naturalWidth;
+            const loadedImgEl = await loadImage(img.getAttribute("src"));
+            return loadedImgEl.naturalWidth;
         };
         const svgWidth = getData("resizeWidth") || getData("width") || (await getNaturalWidth());
 
