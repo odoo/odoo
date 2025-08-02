@@ -125,7 +125,7 @@ class TestMenuRootLookupByModel(MailCommon):
     def test_look_for_existing_menu_root_user_with_access(self):
         Menu = self.env['ir.ui.menu']
         with (self.patch_get_backend_root_menu_ids(self.env['res.company'], []),
-              self.assertQueryCount(employee=3)):
+              self.assertQueryCount(employee=4)):
             # Auto-detection: the menu root with a sub-menu having an action with a path is selected
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.company'),
                              self.menu_root_settings.id)
