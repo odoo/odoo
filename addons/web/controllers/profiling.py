@@ -31,6 +31,8 @@ class Profiling(Controller):
             raise request.not_found()
         profile_str = profile
         profiles = request.env['ir.profile'].browse((int(p) for p in profile.split(',')))
+        if any(not profile._enabled_until() for profile in profiles):
+                raise request.not_found()
         if not kwargs and not action:
             context = {
                 'profile_str': profile_str,
