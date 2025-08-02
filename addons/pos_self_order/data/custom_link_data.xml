@@ -6,5 +6,10 @@
          <field name="pos_config_ids" eval="[(4, ref('pos_restaurant.pos_config_main_restaurant'))]"/>
          <field name="url" model="pos.config" eval="'/pos-self/' + str(obj().env.ref('pos_restaurant.pos_config_main_restaurant').id) + '/products'" />
       </record>
+      <record id="default_custom_link" model="pos_self_order.custom_link">
+         <field name="name">Order Now</field>
+         <field name="pos_config_ids" eval="[(4, ref('point_of_sale.pos_config_main'))]"/>
+         <field name="url" model="pos.config" eval="'/pos-self/' + str(obj().env.ref('point_of_sale.pos_config_main').id) + '/products'" />
+      </record>
    </data>
 </odoo>
