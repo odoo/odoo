@@ -776,6 +776,30 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_barcode_search_attributes_preset", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.searchProduct("12341357"),
+            ProductScreen.clickDisplayedProduct("Product with Attributes"),
+            ProductScreen.selectedOrderlineHas(
+                "Product with Attributes (Value 1, Value 3, Value 5, Value 7)",
+                "1.0"
+            ),
+
+            ProductScreen.searchProduct("12342468"),
+            ProductScreen.clickDisplayedProduct("Product with Attributes"),
+            ProductScreen.selectedOrderlineHas(
+                "Product with Attributes (Value 2, Value 4, Value 6, Value 8)",
+                "1.0"
+            ),
+
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_remove_archived_product_from_cache", {
     steps: () =>
         [
