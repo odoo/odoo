@@ -19,6 +19,7 @@ export class FontSizeSelector extends Component {
         onFontSizeInput: Function,
         onSelected: Function,
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
+        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         ...toolbarButtonProps,
     };
     static components = { Dropdown, DropdownItem };
@@ -107,7 +108,14 @@ export class FontSizeSelector extends Component {
             () => {
                 if (this.fontSizeInput) {
                     // Focus input on dropdown open, blur on close.
-                    this.dropdown.isOpen ? this.fontSizeInput.select() : this.fontSizeInput.blur();
+                    if (this.dropdown.isOpen) {
+                        this.fontSizeInput.select();
+                    } else {
+                        this.fontSizeInput.blur();
+                        if (this.iframeContentRef.el?.contains(this.props.document.activeElement)) {
+                            this.props.editable.focus();
+                        }
+                    }
                 }
             },
             () => [this.dropdown.isOpen]
