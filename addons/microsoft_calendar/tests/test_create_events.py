@@ -50,14 +50,16 @@ class TestCreateEvents(TestCommon):
         with self.assertRaises(ValidationError):
             record._sync_odoo2microsoft()
 
+    @patch.object(ResUsers, '_has_any_active_synchronization')
     @patch.object(MicrosoftCalendarService, 'get_events')
-    def test_create_simple_event_from_outlook_organizer_calendar(self, mock_get_events):
+    def test_create_simple_event_from_outlook_organizer_calendar(self, mock_get_events, mock_has_active_sync):
         """
         An event has been created in Outlook and synced in the Odoo organizer calendar.
         """
 
         # arrange
         mock_get_events.return_value = (MicrosoftEvent([self.simple_event_from_outlook_organizer]), None)
+        mock_has_active_sync.return_value = True
         existing_records = self.env["calendar.event"].search([])
 
         # act
