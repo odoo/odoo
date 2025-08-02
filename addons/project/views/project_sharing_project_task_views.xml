@@ -79,6 +79,8 @@
             <list position="attributes">
                 <attribute name="delete">0</attribute>
                 <attribute name="import">0</attribute>
+                <attribute name="group_create">0</attribute>
+                <attribute name="default_group_by">stage_id</attribute>
             </list>
             <xpath expr="//field[@widget='res_partner_many2one']" position="attributes">
                 <attribute name="widget">many2one</attribute>
@@ -348,12 +350,14 @@
     </record>
 
     <record id="project_sharing_kanban_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
         <field name="view_mode">kanban</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_kanban"/>
     </record>
 
     <record id="project_sharing_tree_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
         <field name="view_mode">list</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
