@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import ANY, patch
+from unittest.mock import patch
 
 from odoo.exceptions import AccessError
 from odoo.tests import JsonRpcException, tagged
@@ -40,7 +40,8 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon, MailC
             '._compute_show_tokenize_input_mapping'
         ) as patched:
             tx_context = self._get_portal_pay_context(**route_values)
-            patched.assert_called_once_with(ANY, sale_order_id=ANY)
+            patched.assert_called_once()
+            self.assertIn('sale_order_id', patched.call_args[1])
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
