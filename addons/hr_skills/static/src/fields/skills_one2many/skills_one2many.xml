@@ -8,9 +8,9 @@
             <attribute name="style">visibility: collapse;</attribute>
         </xpath>
         <xpath expr="//table" position="before">
-            <div name="skills_header" class="text-uppercase fw-bolder small ms-3" style="margin-top: 2rem; box-shadow: 0 1px 0 #e6e6e6">
+            <div name="skills_header" class="text-uppercase fw-bolder small" style="margin-top: 2rem; box-shadow: 0 1px 0 #e6e6e6">
                 Skills
-                <a t-if="!isEmpty &amp;&amp; showTimeline" t-on-click="openSkillsReport" class="float-end me-3 cursor-pointer">
+                <a t-if="!isEmpty &amp;&amp; showTimeline" t-on-click="openSkillsReport" class="float-end cursor-pointer">
                     <span class="fa fa-line-chart me-1"/>
                     Timeline
                 </a>

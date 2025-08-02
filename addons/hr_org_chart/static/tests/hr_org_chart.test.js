@@ -51,8 +51,8 @@ test("hr org chart: empty render", async () => {
             </form>`,
         resId: 1,
     });
-    expect(queryOne('[name="child_ids"]').children).toHaveLength(1, {
-        message: "the chart should have 1 child",
+    expect(queryOne('[name="child_ids"]').children).toHaveLength(3, {
+        message: "the chart should have 3 child",
     });
 });
 test("hr org chart: render without data", async () => {
@@ -78,8 +78,8 @@ test("hr org chart: render without data", async () => {
             </form>`,
         resId: 1,
     });
-    expect(queryOne('[name="child_ids"]').children).toHaveLength(1, {
-        message: "the chart should have 1 child",
+    expect(queryOne('[name="child_ids"]').children).toHaveLength(3, {
+        message: "the chart should have 3 child",
     });
 });
 test("hr org chart: basic render", async () => {

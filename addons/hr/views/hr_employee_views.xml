@@ -149,7 +149,7 @@
                         <notebook>
                             <page name="work_information" string="Work">
                                 <div class="row" id="o_hr_work_information_container">
-                                    <div id="o_work_information" class="col-lg-7 d-flex flex-column">
+                                    <div id="o_work_information" class="o_hr_column col-lg-7 d-flex flex-column">
                                         <group string="work">
                                             <field name="company_id" groups="base.group_multi_company" domain="[('id', 'in', allowed_company_ids)]"/>
                                             <field name="department_id"/>
@@ -174,13 +174,13 @@
                                             <field name="additional_note" placeholder="Provide additional information about this version..." colspan="2" nolabel="1"/>
                                         </group>
                                     </div>
-                                    <div id="o_employee_org_chart" class="col-lg-5"></div>
+                                    <div id="o_employee_org_chart" class="o_hr_column col-lg-5"></div>
                                 </div>
                             </page>
                             <page name="resume" string="Resume">
                                 <div class="row" id="o_hr_skills_resume_container">
-                                    <div id="o_employee_left" class="o_hr_skills_editable o_hr_skills_group o_group_resume col-lg-7 d-flex flex-column"></div>
-                                    <div id="o_work_information_right" class="o_hr_skills_editable o_hr_skills_group o_group_skills col-lg-5 px-0 ps-lg-5 pe-lg-0"></div>
+                                    <div id="o_employee_left" class="o_hr_skills_editable o_hr_skills_group o_hr_column o_group_resume col-lg-7 d-flex flex-column"></div>
+                                    <div id="o_work_information_right" class="o_hr_skills_editable o_hr_skills_group o_hr_column o_group_skills col-lg-5"></div>
                                 </div>
                             </page>
                             <page name="personal_information" string="Personal" groups="hr.group_hr_user">
