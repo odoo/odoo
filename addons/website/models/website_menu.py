@@ -292,6 +292,14 @@ class Menu(models.Model):
                         menu_id.page_id = None
                     except werkzeug.exceptions.NotFound:
                         menu_id.page_id.write({'url': menu['url']})
+            if menu.get('parent_id') is False:
+                # If no parent_id is defined, create the default top menu
+                top_menu = self.env['website.menu'].create({
+                    'name': _('Top Menu for Website %s', website_id),
+                    'url': '/default-main-menu',
+                    'website_id': website_id,
+                })
+                menu['parent_id'] = top_menu.id
             menu_id.write(menu)
 
         return True
