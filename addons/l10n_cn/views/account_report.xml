@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="paperformat_tax_invoice" model="report.paperformat">
+            <field name="name">Tax Invoice Paperformat</field>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="disable_shrinking" eval="True" />
+            <field name="dpi">96</field>
+        </record>
         <!-- QWeb Reports -->
         <record id="account_voucher_cn" model="ir.actions.report">
             <field name="name">Voucher</field>
@@ -10,7 +23,18 @@
             <field name="report_file">l10n_cn.report_voucher</field>
             <field name="print_report_name">'Voucher_%s' % (object.name)</field>
             <field name="binding_view_types">form</field>
-            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_model_id" ref="model_account_move" />
+        </record>
+        <record id="account_tax_invoice_cn" model="ir.actions.report">
+            <field name="name">Tax Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_cn.report_tax_invoice</field>
+            <field name="report_file">l10n_cn.report_tax_invoice</field>
+            <field name="print_report_name">'Tax_Invoice_%s' % (object.name)</field>
+            <field name="paperformat_id" ref="l10n_cn.paperformat_tax_invoice" />
+            <field name="binding_view_types">form</field>
+            <field name="binding_model_id" ref="model_account_move" />
         </record>
     </data>
 </odoo>
