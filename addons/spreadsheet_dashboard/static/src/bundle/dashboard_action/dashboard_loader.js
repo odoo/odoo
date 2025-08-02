@@ -21,7 +21,7 @@ export const Status = {
 /**
  * @typedef Dashboard
  * @property {number} id
- * @property {string} displayName
+ * @property {Object} data
  * @property {string} status
  * @property {Model} [model]
  * @property {Error} [error]
@@ -90,9 +90,8 @@ export class DashboardLoader {
         for (const dashboard of dashboards) {
             this.dashboards[dashboard.id] = {
                 id: dashboard.id,
-                displayName: dashboard.name,
+                data: dashboard,
                 status: Status.NotLoaded,
-                isFavorite: dashboard.is_favorite,
             };
         }
     }
@@ -119,7 +118,7 @@ export class DashboardLoader {
             name: section.name,
             dashboards: section.dashboards.map((dashboard) => ({
                 id: dashboard.id,
-                displayName: dashboard.name,
+                data: dashboard,
                 status: this._getDashboard(dashboard.id).status,
             })),
         }));
@@ -140,14 +139,16 @@ export class DashboardLoader {
         const groups = await this.orm.webSearchRead(
             "spreadsheet.dashboard.group",
             [["published_dashboard_ids", "!=", false]],
-            {
-                specification: {
-                    name: {},
-                    published_dashboard_ids: { fields: { name: {}, is_favorite: {} } },
-                },
-            }
+            { specification: this._getFetchGroupsSpecification() }
         );
         return groups.records;
+    }
+
+    _getFetchGroupsSpecification() {
+        return {
+            name: {},
+            published_dashboard_ids: { fields: { name: {}, is_favorite: {} } },
+        };
     }
 
     /**
@@ -160,12 +161,8 @@ export class DashboardLoader {
             .flatMap((group) => group.dashboards)
             .forEach((dashboard) => {
                 const dashboardData = this._getDashboard(dashboard.id);
-                if (dashboardData.isFavorite) {
-                    favoriteDashboards.push({
-                        id: dashboard.id,
-                        displayName: dashboard.name,
-                        status: dashboardData.status,
-                    });
+                if (dashboardData.data.is_favorite) {
+                    favoriteDashboards.push(dashboardData);
                 }
             });
 
@@ -179,7 +176,7 @@ export class DashboardLoader {
      */
     _getDashboard(id) {
         if (!this.dashboards[id]) {
-            this.dashboards[id] = { status: Status.NotLoaded, id, displayName: "" };
+            this.dashboards[id] = { status: Status.NotLoaded, id, data: {} };
         }
         return this.dashboards[id];
     }

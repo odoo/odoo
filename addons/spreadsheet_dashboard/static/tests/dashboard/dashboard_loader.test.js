@@ -49,12 +49,20 @@ test("load all dashboards of all containers", async () => {
             dashboards: [
                 {
                     id: 1,
-                    displayName: "Dashboard CRM 1",
+                    data: {
+                        id: 1,
+                        name: "Dashboard CRM 1",
+                        is_favorite: false,
+                    },
                     status: Status.NotLoaded,
                 },
                 {
                     id: 2,
-                    displayName: "Dashboard CRM 2",
+                    data: {
+                        id: 2,
+                        name: "Dashboard CRM 2",
+                        is_favorite: false,
+                    },
                     status: Status.NotLoaded,
                 },
             ],
@@ -65,7 +73,11 @@ test("load all dashboards of all containers", async () => {
             dashboards: [
                 {
                     id: 3,
-                    displayName: "Dashboard Accounting 1",
+                    data: {
+                        id: 3,
+                        name: "Dashboard Accounting 1",
+                        is_favorite: false,
+                    },
                     status: Status.NotLoaded,
                 },
             ],
@@ -76,12 +88,12 @@ test("load all dashboards of all containers", async () => {
 test("load twice does not duplicate spreadsheets", async () => {
     const loader = await createDashboardLoader();
     await loader.load();
-    expect(loader.getDashboardGroups()[1].dashboards).toEqual([
-        { id: 3, displayName: "Dashboard Accounting 1", status: Status.NotLoaded },
+    expect(loader.getDashboardGroups()[1].dashboards).toMatchObject([
+        { id: 3, status: Status.NotLoaded },
     ]);
     await loader.load();
-    expect(loader.getDashboardGroups()[1].dashboards).toEqual([
-        { id: 3, displayName: "Dashboard Accounting 1", status: Status.NotLoaded },
+    expect(loader.getDashboardGroups()[1].dashboards).toMatchObject([
+        { id: 3, status: Status.NotLoaded },
     ]);
 });
 
@@ -146,7 +158,7 @@ test("don't return empty dashboard group", async () => {
             dashboards: [
                 {
                     id: 1,
-                    displayName: "Dashboard CRM 1",
+                    data: { id: 1, name: "Dashboard CRM 1" },
                     status: Status.NotLoaded,
                 },
             ],
@@ -269,18 +281,16 @@ test("Model is in dashboard mode [2]", async () => {
 test("default currency format", async () => {
     onRpc(
         "/spreadsheet/dashboard/data/*",
-        () => {
-            return {
-                data: {},
-                revisions: [],
-                default_currency: {
-                    code: "Odoo",
-                    symbol: "θ",
-                    position: "after",
-                    decimalPlaces: 2,
-                },
-            };
-        },
+        () => ({
+            data: {},
+            revisions: [],
+            default_currency: {
+                code: "Odoo",
+                symbol: "θ",
+                position: "after",
+                decimalPlaces: 2,
+            },
+        }),
         { pure: true }
     );
     const loader = await createDashboardLoader();
