@@ -87,6 +87,10 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     isComboItem(record) {
         return !!record.data.combo_item_id;
     }
+
+    shouldDuplicateSectionItem(record) {
+        return !this.isCombo(record) && !this.isComboItem(record);
+    }
 }
 
 export class SaleOrderLineOne2Many extends ProductLabelSectionAndNoteOne2Many {

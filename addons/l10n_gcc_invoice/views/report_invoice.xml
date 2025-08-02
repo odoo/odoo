@@ -255,8 +255,12 @@
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
                             <t t-set="current_total" t-value="current_subtotal + line.price_total" t-if="o.tax_calculation_rounding_method == 'round_per_line'"/>
 
-                            <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-                                <t t-if="line.display_type not in ('line_note', 'line_section')" name="account_invoice_line_accountable">
+                            <tr t-att-class="{
+                                'fw-bolder': line.display_type == 'line_section',
+                                'fw-bold': line.display_type == 'line_subsection',
+                                'fst-italic': line.display_type == 'line_note',
+                            }" >
+                                <t t-if="line.display_type not in ('line_section', 'line_subsection', 'line_note')" name="account_invoice_line_accountable">
                                     <td class="text-end o_price_total">
                                         <span class="text-nowrap" t-field="line.price_total"/>
                                     </td>
@@ -293,7 +297,7 @@
                                     </td>
 
                                 </t>
-                                <t t-if="line.display_type == 'line_section'">
+                                <t t-if="line.display_type in ('line_section', 'line_subsection')">
                                     <td colspan="99">
                                         <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                     </td>
@@ -306,8 +310,7 @@
                                     </td>
                                 </t>
                             </tr>
-
-                            <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
+                            <t t-if="current_section and (line_last or lines[line_index+1].display_type in ('line_section', 'line_subsection'))">
                                 <tr class="is-subtotal text-end">
                                     <td colspan="99">
                                         <strong class="mr16" style="display: inline-block">Subtotal/الإجمالي الفرعي</strong>
@@ -560,7 +563,7 @@
                         </div>
                     </div>
                 </p>
-                
+
                 <p name="incoterm" t-if="0"></p>
                 <div class="row" t-if="o.invoice_incoterm_id" name="incoterm">
                     <div class="col-2 offset-6">

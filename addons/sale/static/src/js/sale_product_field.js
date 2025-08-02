@@ -154,16 +154,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data.translated_product_name;
     }
 
-    updateLabel(value) {
+    parseLabel(value) {
         if (!this.translatedProductName) {
-            return super.updateLabel(value);
+            return super.parseLabel(value);
         }
-        this.props.record.update({
-            name: (
-                value && this.translatedProductName.concat("\n", value)
-                || this.translatedProductName
-            ),
-        });
+        return value && this.translatedProductName.concat("\n", value) || this.translatedProductName;
     }
 
     get m2oProps() {
