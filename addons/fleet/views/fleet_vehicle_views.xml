@@ -106,7 +106,7 @@
                                 <field class="o_fleet_odometer_unit" name="odometer_unit"/>
                                 <button name="action_open_odometer_report" type="object" class="fa fa-line-chart me-1" title="Odometer Report"/>
                             </div>
-                            <field name="manager_id" domain="[('share', '=', False), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
+                            <field name="manager_id" widget="many2one_avatar_user"/>
                             <field name="location"/>
                             <label string="Make Vehicle Available" for="plan_to_change_car" class="text-nowrap" invisible="vehicle_type != 'car'"/>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager" invisible="vehicle_type != 'car'" nolabel="1"
