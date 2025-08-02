@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { DashboardLoader, Status } from "./dashboard_loader";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
@@ -16,6 +17,17 @@ import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 
 export const dashboardActionRegistry = new Registry();
+
+const LAST_OPENED_DASHBOARD_ID_KEY = "spreadsheet_dashboard.last_opened_dashboard_id";
+
+function saveLastDashboardIdToLocalStorage(dashboardId) {
+    browser.localStorage.setItem(LAST_OPENED_DASHBOARD_ID_KEY, String(dashboardId));
+}
+
+function getLastDashboardIdFromLocalStorage() {
+    const val = browser.localStorage.getItem(LAST_OPENED_DASHBOARD_ID_KEY);
+    return val ? parseInt(val, 10) : undefined;
+}
 
 export class SpreadsheetDashboardAction extends Component {
     static template = "spreadsheet_dashboard.DashboardAction";
@@ -126,7 +138,18 @@ export class SpreadsheetDashboardAction extends Component {
         if (params && params.dashboard_id) {
             return params.dashboard_id;
         }
-        const [firstSection] = this.getDashboardGroups();
+
+        // Prefer last dashboard ID from storage, if still available
+        const lastId = getLastDashboardIdFromLocalStorage();
+        const dashboardGroups = this.getDashboardGroups();
+        if (
+            lastId &&
+            dashboardGroups.some((group) => group.dashboards.some((d) => d.data.id === lastId))
+        ) {
+            return lastId;
+        }
+
+        const [firstSection] = dashboardGroups;
         if (firstSection && firstSection.dashboards.length) {
             return firstSection.dashboards[0].data.id;
         }
@@ -141,6 +164,7 @@ export class SpreadsheetDashboardAction extends Component {
      */
     openDashboard(dashboardId) {
         this.state.activeDashboard = this.loader.getDashboard(dashboardId);
+        saveLastDashboardIdToLocalStorage(dashboardId);
     }
 
     /**

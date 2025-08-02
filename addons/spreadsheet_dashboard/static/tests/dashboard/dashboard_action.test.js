@@ -117,6 +117,35 @@ test("can switch spreadsheet", async () => {
     expect(spreadsheets[2]).not.toHaveClass("active");
 });
 
+test("Opens the first dashboard by default if localStorage key is missing", async () => {
+    await createSpreadsheetDashboard();
+
+    const dashboards = queryAll(".o_search_panel li");
+    expect(dashboards[0]).toHaveClass("active");
+    expect(dashboards[0].textContent.trim()).toBe("Dashboard CRM 1");
+});
+
+test("Restores the last opened dashboard from localStorage if key is present", async () => {
+    browser.localStorage.setItem("spreadsheet_dashboard.last_opened_dashboard_id", "3");
+    await createSpreadsheetDashboard();
+
+    const dashboards = queryAll(".o_search_panel li");
+    const active = Array.from(dashboards).find((el) => el.classList.contains("active"));
+    expect(active.textContent.trim()).toBe("Dashboard Accounting 1");
+});
+
+test("Selecting a dashboard updates localStorage with its ID", async () => {
+    await createSpreadsheetDashboard();
+
+    const dashboards = queryAll(".o_search_panel li");
+    await contains(dashboards[1]).click();
+
+    expect(dashboards[1]).toHaveClass("active");
+    expect(browser.localStorage.getItem("spreadsheet_dashboard.last_opened_dashboard_id")).toBe(
+        "2"
+    );
+});
+
 test("display no dashboard message", async () => {
     await createSpreadsheetDashboard({
         mockRPC: function (route, { model, method, args }) {
