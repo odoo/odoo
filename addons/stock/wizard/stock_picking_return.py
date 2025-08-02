@@ -104,6 +104,8 @@ class StockReturnPicking(models.TransientModel):
     @api.depends('picking_id')
     def _compute_moves_locations(self):
         for wizard in self:
+            if not wizard.picking_id:
+                continue
             product_return_moves = [Command.clear()]
             if not wizard.picking_id._can_return():
                 raise UserError(_("You may only return Done pickings."))
@@ -119,10 +121,9 @@ class StockReturnPicking(models.TransientModel):
                 product_return_moves_data = dict(product_return_moves_data_tmpl)
                 product_return_moves_data.update(wizard._prepare_stock_return_picking_line_vals_from_move(move))
                 product_return_moves.append(Command.create(product_return_moves_data))
-            if wizard.picking_id and not product_return_moves:
+            if not product_return_moves:
                 raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
-            if wizard.picking_id:
-                wizard.product_return_moves = product_return_moves
+            wizard.product_return_moves = product_return_moves
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
