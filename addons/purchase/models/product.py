@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
                 product.purchase_method = default_purchase_method
 
     def _compute_purchased_product_qty(self):
-        for template in self:
+        for template in self.with_context(active_test=False):
             template.purchased_product_qty = template.uom_id.round(sum(p.purchased_product_qty for p in template.product_variant_ids))
 
     def _get_backend_root_menu_ids(self):
@@ -47,7 +47,10 @@ class ProductTemplate(models.Model):
 
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
-        action['domain'] = ['&', ('state', '=', 'purchase'), ('product_id', 'in', self.product_variant_ids.ids)]
+        action['domain'] = ['&',
+            ('state', '=', 'purchase'),
+            ('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids)
+        ]
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 
