@@ -10,8 +10,8 @@
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="list_price"/>
-                    <field name="taxes_id" widget="many2many_tags"/>
-                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                    <field name="taxes_id" widget="many2many_tags" context="{'append_fields': ['company_id']}"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags" context="{'append_fields': ['company_id']}"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </list>
             </field>
@@ -85,6 +85,7 @@
                                 'search_default_sale': 1,
                                 'search_default_service': type == 'service',
                                 'search_default_goods': type == 'consu',
+                                'append_fields': ['company_id'],
                             }"
                         />
                         <field name="tax_string" class="oe_inline"/>
@@ -99,6 +100,7 @@
                             'search_default_purchase': 1,
                             'search_default_service': type == 'service',
                             'search_default_goods': type == 'consu',
+                            'append_fields': ['company_id'],
                         }"
                     />
                 </div>
