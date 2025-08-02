@@ -7,7 +7,7 @@ import time
 
 from odoo.addons.iot_drivers.main import iot_devices, manager
 from odoo.addons.iot_drivers.tools import helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST
 
 _logger = logging.getLogger(__name__)
 
@@ -111,4 +111,5 @@ class ConnectionManager(Thread):
 
 
 connection_manager = ConnectionManager()
-connection_manager.start()
+if not IS_TEST:
+    connection_manager.start()
