@@ -34,14 +34,26 @@
 }
 
 .o_gradient_color_button {
-  border-width: 0px;
+    border-width: 0px;
+    background: unset;
+
+    &:hover, &:focus {
+        background: unset;
+    }
+}
+
+.o_custom_gradient_button[style*="background-image"] {
+    background: unset;
 }
 
 .o_custom_gradient_button,
 .o_color_button {
+    @extend %o-preview-alpha-background;
+
     &:focus,
     &:hover {
         outline: solid $o-enterprise-action-color;
+        z-index: 1;
         transition: transform 0.1s ease-out;
     }
 }

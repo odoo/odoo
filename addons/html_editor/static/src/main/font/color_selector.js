@@ -20,6 +20,7 @@ export class ColorSelector extends Component {
         applyColorPreview: Function,
         applyColorResetPreview: Function,
         getUsedCustomColors: Function,
+        getTargetedElements: Function,
         colorPrefix: { type: String },
         themeColorPrefix: { type: String, optional: true },
         onClose: Function,
@@ -46,6 +47,8 @@ export class ColorSelector extends Component {
                 this.state.defaultTab = this.getCorrespondingColorTab(
                     selectedColors[this.props.mode]
                 );
+                this.state.getTargetedElements = this.props.getTargetedElements;
+                this.state.mode = this.props.mode;
             },
             [this.props.getSelectedColors()]
         );
