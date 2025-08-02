@@ -1,7 +1,7 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, Deferred, press, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
@@ -103,6 +103,35 @@ test("disable discard button when clicking on save", async () => {
     expect(".o-snippets-top-actions button[data-action='cancel']").toHaveAttribute("disabled", "");
 });
 
+test("save shortcut does not close the editor", async () => {
+    const resultSave = setupSaveAndReloadIframe();
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    await modifyText(getEditor(), getEditableContent());
+    expect(".o-snippets-top-actions button[data-action='cancel']").not.toHaveAttribute(
+        "disabled",
+        ""
+    );
+
+    await press(["alt", "s"]);
+    expect(".o-snippets-top-actions button[data-action='cancel']").toHaveAttribute("disabled", "");
+    expect(resultSave.length).toBe(1);
+    expect(resultSave.at(-1)).toBe(
+        '<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">H1ello</h1></div>'
+    );
+    expect(":iframe #wrap").toHaveClass("o_editable");
+    expect(":iframe #wrap .title:contains('H1ello')").toHaveCount(1);
+    await animationFrame();
+
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(resultSave.length).toBe(2);
+    expect(resultSave.at(-1)).toBe(
+        '<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">H1ello</h1></div>'
+    );
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap .title:contains('H1ello')").toHaveCount(1);
+});
+
 test("content is escaped twice", async () => {
     const { getEditor } = await setupWebsiteBuilder(`<div class="my_content">hey</div>`);
     const editor = getEditor();
@@ -190,7 +219,7 @@ test("reload save with target, then discard and edit again should not reselect t
     deferred.resolve();
     expect.verifySteps(["save"]);
     await animationFrame();
-    // NOTE: the goal of the following assertion is to ensure that the relaod is
+    // NOTE: the goal of the following assertion is to ensure that the reload is
     // completed. This relies on the "save" mocked for this test that does
     // nothing to save anything and the reload (mocked in `setupWebsiteBuilder`)
     // resets to initial content

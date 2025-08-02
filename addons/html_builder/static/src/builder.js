@@ -60,6 +60,7 @@ export class Builder extends Component {
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
+        useHotkey("alt+s", () => this.save({ closeAfterSave: false }));
         this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
@@ -214,7 +215,7 @@ export class Builder extends Component {
     }
 
     discard() {
-        if (this.state.canUndo) {
+        if (this.editor.shared.history.canUndo()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
                 body: _t(
@@ -236,11 +237,13 @@ export class Builder extends Component {
         }`;
     }
 
-    async save() {
-        this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
+    async save({ closeAfterSave = true } = {}) {
+        this.editor.shared.operation.next(this._save.bind(this, closeAfterSave), {
+            withLoadingEffect: false,
+        });
     }
 
-    async _save() {
+    async _save(closeAfterSave) {
         this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
         const snippetMenuEl = this.builder_sidebarRef.el;
@@ -252,16 +255,23 @@ export class Builder extends Component {
         for (const actionButtonEl of actionButtonEls) {
             actionButtonEl.disabled = true;
         }
+        let editorIsOpened = true;
         try {
             await this.editor.shared.savePlugin.save();
-            this.props.closeEditor();
-        } catch (error) {
-            for (const actionButtonEl of actionButtonEls) {
-                actionButtonEl.removeAttribute("disabled");
+            if (closeAfterSave) {
+                this.props.closeEditor();
+                editorIsOpened = false;
+            } else {
+                this.editor.config.onChange({ isPreviewing: false });
             }
-            removeLoadingEffect();
-            this.editor.shared.edit_interaction.restartInteractions();
-            throw error;
+        } finally {
+            if (editorIsOpened) {
+                for (const actionButtonEl of actionButtonEls) {
+                    actionButtonEl.removeAttribute("disabled");
+                }
+                removeLoadingEffect();
+                this.editor.shared.edit_interaction.restartInteractions();
+            }
         }
     }
 
@@ -296,14 +306,14 @@ export class Builder extends Component {
     }
 
     onBeforeUnload(event) {
-        if (!this.isSaving && this.state.canUndo) {
+        if (!this.isSaving && this.editor.shared.history.canUndo()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
     }
 
     async onBeforeLeave() {
-        if (this.state.canUndo && !this.editor.shared.savePlugin.isAlreadySaved()) {
+        if (this.editor.shared.history.canUndo()) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
