@@ -160,6 +160,13 @@ export class Builder extends Component {
             };
             this.editor.attachTo(this.editableEl);
             this.editableEl.addEventListener("dragstart", this.onDragStart);
+
+            // Remove the web.assets_frontend link from the iframe document,
+            // as its content is already included in website.inside_builder_style
+            const assetsFrontendLink = iframeEl.contentDocument.querySelector(
+                `link[type="text/css"][href*="assets_frontend"]`
+            );
+            assetsFrontendLink.remove();
         });
 
         useSubEnv({

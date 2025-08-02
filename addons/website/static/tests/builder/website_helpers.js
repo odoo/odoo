@@ -158,6 +158,7 @@ export async function setupWebsiteBuilder(
             if (loadIframeBundles) {
                 await loadBundle("website.inside_builder_style", {
                     targetDoc: queryOne("iframe[data-src^='/website/force/1']").contentDocument,
+                    js: false,
                 });
             }
             await resolveEditAssetsLoaded();
