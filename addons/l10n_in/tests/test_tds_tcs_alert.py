@@ -45,15 +45,21 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         cls.tax_206c1g_r = ChartTemplate.ref('tcs_5_us_206c_1g_som')
         cls.tax_206c1g_r.write({'l10n_in_section_id': cls.env.ref('l10n_in.tcs_section_206c1g_r').id})
 
+        # ==== PAN Entity ====
+        pan_entity_a = cls.env['l10n_in.pan.entity'].create({
+            'name': 'ABCPM8965E',
+            'type': 'p',
+        })
+
         country_in_id = cls.env.ref("base.in").id
 
         # ==== Partners ====
         cls.partner_a.write({
-            'l10n_in_pan': 'ABCPM8965E'
+            'l10n_in_pan_entity_id': pan_entity_a.id,
         })
         cls.partner_b.write({
             'vat': '27ABCPM8965E1ZE',
-            'l10n_in_pan': 'ABCPM8965E'
+            'l10n_in_pan_entity_id': pan_entity_a.id,
         })
         cls.partner_foreign_2 = cls.partner_foreign.copy()
 

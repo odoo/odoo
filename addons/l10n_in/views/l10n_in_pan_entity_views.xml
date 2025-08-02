@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_pan_entity_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.pan.entity.view.form</field>
+        <field name="model">l10n_in.pan.entity</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="name" decoration-danger="invalid"/>
+                        <field name="type"/>
+                        <field name="partner_ids" widget="many2many_tags_avatar" options="{'no_create': True}"/>
+                        <field name="tds_deduction" required="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_pan_entity_view_tree" model="ir.ui.view">
+        <field name="name">l10n_in.pan.entity.view.tree</field>
+        <field name="model">l10n_in.pan.entity</field>
+        <field name="arch" type="xml">
+            <list string="">
+                <field name="name" decoration-danger="invalid"/>
+                <field name="type"/>
+                <field name="partner_ids" widget="many2many_tags_avatar" options="{'no_create': True}"/>
+                <field name="type"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_in_pan_entity_action" model="ir.actions.act_window">
+        <field name="name">PAN Entity</field>
+        <field name="res_model">l10n_in.pan.entity</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_in_pan_entity"
+        name="PAN Entity"
+        parent="contacts.menu_localisation"
+        action="l10n_in_pan_entity_action"
+    />
+
+</odoo>
