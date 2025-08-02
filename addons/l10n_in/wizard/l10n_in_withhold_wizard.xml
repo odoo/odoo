@@ -23,7 +23,7 @@
                         <group id="header_left_group">
                             <field name="date" string="Entry Date"/>
                             <field name="base" widget="monetary" options="{'currency_field': 'currency_id'}" required="True"/>
-                            <field name="tax_id" domain="[('l10n_in_tds_tax_type', '=', l10n_in_tds_tax_type)]" required="True"/>
+                            <field name="tax_id" domain="[('l10n_in_tax_type', '=', l10n_in_tds_tax_type)]" required="True"/>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="currency_id" invisible="1"/> <!-- used to display the currency symbol -->
                             <field name="related_move_id" invisible="1"/> <!-- used to compute the l10n_in_tds_tax_type -->
