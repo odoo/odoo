@@ -18,7 +18,7 @@ class AccountMoveSend(models.TransientModel):
     enable_peppol = fields.Boolean(compute='_compute_enable_peppol')
     # technical field needed for computing a warning text about the peppol configuration
     peppol_warning = fields.Char(
-        string="Warning",
+        string="Peppol Warning",
         compute="_compute_peppol_warning",
     )
     account_peppol_edi_mode_info = fields.Char(compute='_compute_account_peppol_edi_mode_info')

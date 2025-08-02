@@ -7,7 +7,6 @@
 E-invoice implementation for the Denmark
     """,
     'summary': "E-Invoicing, Offentlig Information Online Universal Business Language",
-    'countries': ['dk'],
     'depends': [
         'account_edi_ubl_cii',
         'l10n_dk',
