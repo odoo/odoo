@@ -48,7 +48,7 @@ class PropertiesBaseDefinition(models.Model):
     def _get_definition_for_property_field(self, model_name, field_name):
         return self.browse(self._get_definition_id_for_property_field(model_name, field_name))
 
-    @ormcache("model_name", "field_name")
+    @ormcache("model_name", "field_name", cache='stable')
     def _get_definition_id_for_property_field(self, model_name, field_name):
         definition_record = self.sudo().search(
             [
