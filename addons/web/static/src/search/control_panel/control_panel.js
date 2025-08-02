@@ -68,7 +68,6 @@ export class ControlPanel extends Component {
 
         this.root = useRef("root");
         this.newActionNameRef = useRef("newActionNameRef");
-        this.isEmbeddedActionsOrderModifiable = false;
         this.defaultEmbeddedActions = this.env.config.embeddedActions;
         if (this.env.config.embeddedActions?.length > 0 && !this.env.config.parentActionId) {
             const { parent_res_model, parent_action_id } = this.env.config.embeddedActions[0];
@@ -93,38 +92,29 @@ export class ControlPanel extends Component {
          * and the currrent userId. Each key contains a dict. The keys of the latter are the id of the visible embedded
          * actions.
          */
-        const parentActionId =
+        this.parentActionId =
             this.env.config.parentActionId ||
             this.env.config.embeddedActions?.[0]?.parent_action_id[0] ||
             this.env.config.embeddedActions?.[0]?.parent_action_id ||
             "";
-        this.embeddedActionsVisibilityKey = `visibleEmbeddedActions${parentActionId}+${
+        this.resId = this.env.searchModel?.globalContext.active_id;
+        this.embeddedActionsKey = `${this.parentActionId}+${
             this.env.searchModel?.globalContext.active_id || ""
-        }+${user.userId}`;
-
-        this.embeddedVisibilityKey = `visibleEmbedded${parentActionId}+${
-            this.env.searchModel?.globalContext.active_id || ""
-        }+${user.userId}`;
-
-        this.embeddedOrderKey = `orderEmbedded${parentActionId}+${
-            this.env.searchModel?.globalContext.active_id || ""
-        }+${user.userId}`;
+        }`;
+        this.embeddedActionsConfig =
+            JSON.parse(user.settings?.embedded_actions_config || "null") || {};
 
         this.state = useState({
             embeddedInfos: {
                 showEmbedded:
                     this.env.config.embeddedActions?.length > 0 &&
-                    ((!!this.env.config.parentActionId &&
-                        !!JSON.parse(browser.localStorage.getItem("showEmbeddedActions"))) ||
-                        !!JSON.parse(browser.localStorage.getItem(this.embeddedVisibilityKey))),
+                    !!this._getEmbeddedActionsConfig("embeddedVisibility"),
                 embeddedActions: this.defaultEmbeddedActions || [],
                 newActionIsShared: false,
                 newActionName: this.newActionNameGetter,
                 visibleEmbeddedActions:
                     (this.env.config.embeddedActions?.length > 0 &&
-                        JSON.parse(
-                            browser.localStorage.getItem(this.embeddedActionsVisibilityKey)
-                        )) ||
+                        this._getEmbeddedActionsConfig("embeddedActionsVisibility")) ||
                     {},
                 currentEmbeddedAction: this.currentEmbeddedAction,
             },
@@ -173,21 +163,10 @@ export class ControlPanel extends Component {
 
         onMounted(async () => {
             if (this.state.embeddedInfos.embeddedActions?.length > 0) {
-                // If there is no visible embedded actions, the current action (if it exists) is put by default
-                const embeddedActionKey =
-                    this.state.embeddedInfos.currentEmbeddedAction?.id || false;
-                if (
-                    !Object.keys(this.state.embeddedInfos.visibleEmbeddedActions).includes(
-                        embeddedActionKey.toString()
-                    )
-                ) {
-                    this._setVisibility(embeddedActionKey);
-                }
-                const embeddedOrderLocalStorageKey = browser.localStorage.getItem(
-                    this.embeddedOrderKey
-                );
+                const embeddedOrderLocalStorageKey =
+                    this._getEmbeddedActionsConfig("embeddedActionsOrder");
                 if (embeddedOrderLocalStorageKey) {
-                    this._sortEmbeddedActions(JSON.parse(embeddedOrderLocalStorageKey));
+                    this._sortEmbeddedActions(embeddedOrderLocalStorageKey);
                 }
             }
             if (
@@ -268,12 +247,44 @@ export class ControlPanel extends Component {
 
     onClickShowEmbedded() {
         if (this.state.embeddedInfos.showEmbedded) {
-            browser.localStorage.removeItem(this.embeddedVisibilityKey);
+            this._setEmbeddedActionsConfig({ embeddedVisibility: false });
         } else {
-            browser.localStorage.setItem(this.embeddedVisibilityKey, true);
+            if (this.resId && this.parentActionId) {
+                // Store the embedded actions config if not already done
+                if (!(this.embeddedActionsKey in this.embeddedActionsConfig)) {
+                    const config = {
+                        embeddedActionsVisibility: {},
+                        embeddedVisibility: true,
+                        embeddedActionsOrder: [],
+                    };
+                    // If there is no visible embedded actions, the current action (if it exists) is put by default
+                    if (this.state.embeddedInfos.embeddedActions?.length > 0) {
+                        const embeddedActionKey =
+                            this.state.embeddedInfos.currentEmbeddedAction?.id || false;
+                        const embeddedActionKeyStr = embeddedActionKey.toString();
+                        if (
+                            !Object.keys(this.state.embeddedInfos.visibleEmbeddedActions).includes(
+                                embeddedActionKey.toString()
+                            )
+                        ) {
+                            this.state.embeddedInfos.visibleEmbeddedActions[
+                                embeddedActionKeyStr
+                            ] = true;
+                            config.embeddedActionsVisibility =
+                                this.state.embeddedInfos.visibleEmbeddedActions;
+                        }
+                    }
+                    this.embeddedActionsConfig[this.embeddedActionsKey] = config;
+                    user.setUserSettings(
+                        "embedded_actions_config",
+                        JSON.stringify(this.embeddedActionsConfig)
+                    );
+                } else {
+                    this._setEmbeddedActionsConfig({ embeddedVisibility: true });
+                }
+            }
         }
         this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
-        browser.localStorage.setItem("showEmbeddedActions", this.state.embeddedInfos.showEmbedded);
     }
 
     /**
@@ -368,10 +379,9 @@ export class ControlPanel extends Component {
         } else {
             this.state.embeddedInfos.visibleEmbeddedActions[actionIdStr] = true;
         }
-        browser.localStorage.setItem(
-            this.embeddedActionsVisibilityKey,
-            JSON.stringify(this.state.embeddedInfos.visibleEmbeddedActions)
-        );
+        this._setEmbeddedActionsConfig({
+            embeddedActionsVisibility: this.state.embeddedInfos.visibleEmbeddedActions,
+        });
     }
 
     _onShareCheckboxChange() {
@@ -454,11 +464,10 @@ export class ControlPanel extends Component {
         const embeddedActionIdStr = embeddedActionId[0].toString();
         visibleEmbeddedActions[embeddedActionIdStr] = true;
         const order = this.state.embeddedInfos.embeddedActions.map((el) => el.id);
-        browser.localStorage.setItem(
-            this.embeddedActionsVisibilityKey,
-            JSON.stringify(visibleEmbeddedActions)
-        );
-        browser.localStorage.setItem(this.embeddedOrderKey, JSON.stringify(order));
+        this._setEmbeddedActionsConfig({
+            embeddedActionsVisibility: visibleEmbeddedActions,
+            embeddedActionsOrder: order,
+        });
         this.env.config.setCurrentEmbeddedAction(embeddedActionId);
         this.state.embeddedInfos.currentEmbeddedAction = enrichedNewEmbeddedAction;
         this.state.embeddedInfos.newActionName = `${newActionName} Custom`;
@@ -490,13 +499,14 @@ export class ControlPanel extends Component {
         if (visibleEmbeddedActions[actionIdStr]) {
             delete visibleEmbeddedActions[actionIdStr];
         }
-        browser.localStorage.setItem(
-            this.embeddedActionsVisibilityKey,
-            JSON.stringify(visibleEmbeddedActions)
-        );
         this.state.embeddedInfos.embeddedActions = embeddedActions.filter(
             ({ id }) => id !== action.id
         );
+        const order = this.state.embeddedInfos.embeddedActions.map((el) => el.id);
+        this._setEmbeddedActionsConfig({
+            embeddedActionsVisibility: visibleEmbeddedActions,
+            embeddedActionsOrder: order,
+        });
         await this.orm.unlink("ir.embedded.actions", [action.id]);
         if (action.id === currentEmbeddedAction?.id) {
             const { active_id, active_model } = this.env.searchModel.globalContext;
@@ -586,7 +596,7 @@ export class ControlPanel extends Component {
             order.splice(0, 0, elementId);
         }
         this._sortEmbeddedActions(order);
-        browser.localStorage.setItem(this.embeddedOrderKey, JSON.stringify(order));
+        this._setEmbeddedActionsConfig({ embeddedActionsOrder: order });
     }
 
     dropdownifyButtons() {
@@ -613,5 +623,25 @@ export class ControlPanel extends Component {
             }
         }
         return boxed;
+    }
+
+    _setEmbeddedActionsConfig(config) {
+        if (this.resId && this.parentActionId) {
+            if (this.embeddedActionsKey in this.embeddedActionsConfig) {
+                for (const [key, value] of Object.entries(config)) {
+                    this.embeddedActionsConfig[this.embeddedActionsKey][key] = value;
+                }
+                user.setUserSettings(
+                    "embedded_actions_config",
+                    JSON.stringify(this.embeddedActionsConfig)
+                );
+            }
+        }
+    }
+
+    _getEmbeddedActionsConfig(key) {
+        if (this.resId && this.parentActionId) {
+            return this.embeddedActionsConfig?.[this.embeddedActionsKey]?.[key];
+        }
     }
 }
