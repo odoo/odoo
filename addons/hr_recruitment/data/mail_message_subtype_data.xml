@@ -21,6 +21,14 @@
         <field name="default" eval="True"/>
     </record>
 
+    <!-- Talent-related subtypes for messaging / Chatter -->
+    <record id="mt_talent_new" model="mail.message.subtype">
+        <field name="name">New Talent</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
+        <field name="description">Talent created</field>
+    </record>
+
     <!-- Job-related subtypes for messaging / Chatter -->
     <record id="mt_job_new" model="mail.message.subtype">
         <field name="name">Job Position created</field>
