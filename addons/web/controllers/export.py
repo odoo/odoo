@@ -90,6 +90,8 @@ class GroupsTreeNode:
         return aggregate_func((child.aggregated_values.get(field_name) for child in self.children.values()))
 
     def _get_avg_aggregate(self, field_name, data):
+        if not self.count:
+            return 0
         aggregate_func = OPERATOR_MAPPING.get('sum')
         if self.data:
             return aggregate_func(data) / self.count
