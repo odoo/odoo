@@ -11,7 +11,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.customer = cls.env['res.partner'].create({'name': 'abc'})
-        cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
         cls.warehouse = cls.env.ref('stock.warehouse0')
         cls.cust_location = cls.env.ref('stock.stock_location_customers')
         product = cls.env['product.product'].create({
@@ -27,7 +26,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
             'location_id': cls.picking_type_out.default_location_src_id.id,
             'location_dest_id': cls.customer_location.id,
             'partner_id': cls.customer.id,
-            'group_id': cls.group.id,
             'picking_type_id': cls.picking_type_out.id,
         })
         cls.move = cls.env['stock.move'].create({
@@ -35,7 +33,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
             'product_uom_qty': 10,
             'product_uom': product.uom_id.id,
             'picking_id': cls.picking_out.id,
-            'group_id': cls.group.id,
             'location_id': cls.picking_type_out.default_location_src_id.id,
             'location_dest_id': cls.customer_location.id,
             'procure_method': 'make_to_order',

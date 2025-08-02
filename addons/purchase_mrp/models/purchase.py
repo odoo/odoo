@@ -15,17 +15,13 @@ class PurchaseOrder(models.Model):
         compute='_compute_mrp_production_count',
         groups='mrp.group_mrp_user')
 
-    @api.depends('order_line.move_dest_ids.group_id.mrp_production_ids')
+    @api.depends('reference_ids', 'reference_ids.production_ids')
     def _compute_mrp_production_count(self):
         for purchase in self:
             purchase.mrp_production_count = len(purchase._get_mrp_productions())
 
     def _get_mrp_productions(self, **kwargs):
-        linked_mo = self.order_line.move_dest_ids.group_id.mrp_production_ids \
-                  | self.env['stock.move'].browse(self.order_line.move_ids._rollup_move_dests()).group_id.mrp_production_ids
-        group_mo = self.order_line.group_id.mrp_production_ids
-
-        return linked_mo | group_mo
+        return self.reference_ids.production_ids
 
     def action_view_mrp_productions(self):
         self.ensure_one()
@@ -76,6 +72,13 @@ class PurchaseOrderLine(models.Model):
                 line.qty_received = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
                 kit_lines += line
         super(PurchaseOrderLine, self - kit_lines)._compute_qty_received()
+
+    def _prepare_stock_moves(self, picking):
+        res = super()._prepare_stock_moves(picking)
+        if self.order_id.reference_ids.move_ids.production_group_id:
+            for re in res:
+                re['production_group_id'] = self.order_id.reference_ids.move_ids.production_group_id.id
+        return res
 
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]

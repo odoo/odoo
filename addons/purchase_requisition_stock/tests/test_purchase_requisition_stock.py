@@ -267,7 +267,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'product_max_qty': 10,
         })
         # Run scheduler to create internal transfer from Input -> Stock and generate the Purchase Order
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         # The internal move (Input -> Stock) shouldn't have been generated yet
         int_move = self.env['stock.move'].search([('product_id', '=', product.id)])
         self.assertFalse(int_move)
@@ -303,10 +303,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
 
     def test_group_id_alternative_po(self):
         """ Check that the group_id is propagated in the alternative PO"""
-        pg1 = self.env['procurement.group'].create({})
         orig_po = self.env['purchase.order'].create({
             'partner_id': self.res_partner_1.id,
-            'group_id': pg1.id
         })
         # Creates an alternative PO
         action = orig_po.action_create_alternative()
@@ -316,4 +314,4 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         alt_po_wizard = alt_po_wizard_form.save()
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
-        self.assertEqual(alt_po.group_id, orig_po.group_id)
+        self.assertEqual(alt_po.reference_ids, orig_po.reference_ids)

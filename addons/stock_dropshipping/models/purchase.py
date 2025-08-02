@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
+from odoo.fields import Command
 
 
 class PurchaseOrder(models.Model):
@@ -23,9 +24,9 @@ class PurchaseOrder(models.Model):
     def action_view_dropship(self):
         return self._get_action_view_picking(self.picking_ids.filtered(lambda p: p.is_dropship))
 
-    def _prepare_group_vals(self):
-        res = super()._prepare_group_vals()
+    def _prepare_reference_vals(self):
+        res = super()._prepare_reference_vals()
         sale_orders = self.order_line.sale_order_id
         if len(sale_orders) == 1:
-            res['sale_id'] = sale_orders.id
+            res['sale_ids'] = [Command.link(sale_orders.id)]
         return res
