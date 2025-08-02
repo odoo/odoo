@@ -2,9 +2,9 @@
     position: absolute;
     border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
     border-width: 0 0 $o-we-border-width $o-we-border-width;
-    height: 100%;
+    height: calc(100% + #{$o-hb-row-spacing * 3});
     pointer-events: none;
-    transform: translate($_level-left - $o-we-border-width, ($o-hb-row-min-height * -0.5) - $o-we-border-width);
+    transform: translate($_level-left - $o-we-border-width, ($o-hb-row-min-height * -0.65) - $o-we-border-width);
     content: "";
 }
 
@@ -109,7 +109,7 @@
     }
 
     // ==== Sublevels
-    &.hb-row-sublevel:after {
+    &.hb-row-sublevel > .hb-row-label::after {
         @include sublevel-line;
     }
 
@@ -120,7 +120,7 @@
         $_level-left: $_level-padding - $_level-width - $o-we-border-width;
 
         &.hb-row-sublevel-#{$_level} {
-            .hb-row-label, &:after {
+            .hb-row-label, & > .hb-row-label::after {
                 z-index: $_z-index - $_level;
             }
 
@@ -128,13 +128,13 @@
                 padding-left: $_level-padding;
             }
 
-            &:after {
+            & > .hb-row-label::after {
                 width: $_level-width;
                 left: $_level-left;
             }
         }
 
-        &[data-label=" "]:not(.hb-row-sublevel):has(+ .hb-row-sublevel-#{$_level}):after {
+        &[data-label=" "]:not(.hb-row-sublevel):has(+ .hb-row-sublevel-#{$_level})::after {
             @include sublevel-line($_level-left);
             z-index: $_z-index - $_level;
         }
