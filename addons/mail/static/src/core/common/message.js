@@ -259,10 +259,7 @@ export class Message extends Component {
     }
 
     get authorName() {
-        if (this.message.author) {
-            return this.message.getPersonaName(this.message.author);
-        }
-        return this.message.email_from;
+        return this.message.authorName;
     }
 
     get authorAvatarUrl() {
