@@ -26,11 +26,20 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
             run: "click",
         },
         {
+<<<<<<< ddd9ed6c73ebc49a65216b0316fc79b1638de587
             content: "Add Experience",
             trigger: ".nav-link:contains('Resume')",
             run: "click",
         },
         {
+||||||| 74eecadb39e0c260f4cfc1ae9478c84eda815132
+=======
+        content: "Open the Resume tab",
+        trigger: ".o_notebook_headers a.nav-link[name='skills_resume']",
+        run: "click",
+        },
+        {
+>>>>>>> 3146750e9e0b23aab8a88aa72e9934c3b1647d22
             content: "Add a new Resume experience",
             trigger: ".o_field_resume_one2many tr.o_resume_group_header button.btn-secondary",
             run: "click",
