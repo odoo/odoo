@@ -124,7 +124,12 @@ registerWebsitePreviewTour("snippet_carousel_autoplay", {
     },
     {
         content: "Enable the autoplay option",
-        trigger: "div[data-label='Autoplay'] input",
+        trigger: "div[data-label='Autoplay'] button",
+        run: 'click',
+    },
+        {
+        content: "Open the autoplay dropdown",
+        trigger: ".dropdown-item:contains('Always')",
         run: 'click',
     },
     ...clickOnSave(),
