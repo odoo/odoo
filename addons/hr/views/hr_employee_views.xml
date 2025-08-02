@@ -102,19 +102,19 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group>
-                                <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com"/>
-                                <field name="work_phone" widget="phone"/>
                                 <field name="mobile_phone" widget="phone"/>
+                                <field name="work_phone" widget="phone"/>
+                                <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com"/>
                                 <field name="category_ids" widget="many2many_tags"
                                     options="{'color_field': 'color', 'no_create_edit': True}"
                                     placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="company_country_id" invisible="1"/>
-                                <field name="company_country_code" invisible="1"/>
                             </group>
                             <group>
                                 <field name="department_id"/>
                                 <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_country_id" invisible="1"/>
+                                <field name="company_country_code" invisible="1"/>
                                 <field name="parent_id" widget="many2one_avatar_employee"/>
                                 <field name="coach_id" widget="many2one_avatar_employee"/>
                             </group>
