@@ -1474,9 +1474,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate = throttleForAnimation(this._onScrollWebsiteAnimate.bind(this));
         this.$scrollingTarget[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
-        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
+        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', (ev) => {
             this.windowsHeight = $(window).height();
-            this._scrollWebsiteAnimate(this.$scrollingElement[0]);
+            const data = ev?.detail?.el || null;
+            this._scrollWebsiteAnimate(this.$scrollingElement[0], data);
         }).trigger("resize");
 
         return this._super(...arguments);
@@ -1582,8 +1583,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @private
      * @param {Element} el
      */
-    _scrollWebsiteAnimate(el) {
-        this.$('.o_animate:not(.o_animate_in_dropdown)').toArray().forEach((el) => {
+    _scrollWebsiteAnimate(el, data) {
+        const Els = data ? [data] : this.$(".o_animate:not(.o_animate_in_dropdown)").toArray();
+        Els.forEach((el) => {
             const $el = $(el);
             const elHeight = el.offsetHeight;
             const animateOnScroll = el.classList.contains('o_animate_on_scroll');
