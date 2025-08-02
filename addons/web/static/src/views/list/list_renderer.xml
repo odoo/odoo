@@ -41,7 +41,11 @@
                                           t-on-pointerdown.stop.prevent="onStartResize"/>
                                 </t>
                             </th>
-                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
+                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}">
+                                <t t-if="column.type === 'widget' and column.label">
+                                    <span class="d-block min-w-0 text-truncate" t-esc="column.label"/>
+                                </t>
+                            </th>
                         </t>
                         <th t-if="props.onOpenFormView" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view"/>
                         <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header position-sticky end-0">
