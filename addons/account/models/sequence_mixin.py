@@ -349,6 +349,9 @@ class SequenceMixin(models.AbstractModel):
         )
         return format, format_values
 
+    def _get_fnames_to_flush_for_locked_increment(self):
+        return [self._sequence_field]
+
     def _locked_increment(self, format_string, format_values):
         """Increment the sequence for the given format, returning the new value.
 
@@ -374,7 +377,7 @@ class SequenceMixin(models.AbstractModel):
             cache[cache_key] += 1
             return format_string.format(**format_values, seq=cache[cache_key])
 
-        self.flush_recordset()
+        self.flush_recordset(self._get_fnames_to_flush_for_locked_increment())
         with self.env.cr.savepoint(flush=False) as sp:
             # By updating a row covered by the sequence's UNIQUE constraint,
             # the transaction acquires an exclusive lock on the corresponding
