@@ -25,7 +25,7 @@ class TestUBLNL(TestUBLCommon):
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57'})],
             'peppol_eas': '0106',
-            'peppol_endpoint': '77777677',
+            'peppol_endpoint': '77777677777776776',
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'nlcius',
         })

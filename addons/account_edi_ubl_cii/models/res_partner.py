@@ -6,6 +6,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
+from odoo.addons.account_edi_ubl_cii.tools.utils import validate_eas_endpoint_format
 
 
 PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
@@ -263,16 +264,13 @@ class ResPartner(models.Model):
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""
-        if eas == '0208' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 0239843188")
-        if eas == '0009' and not siret.is_valid(endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 73282932000074")
-        if eas == '0007' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. "
-                     "It should contain exactly 10 digits (Company Registry number)."
-                     "The expected format is: 1234567890")
-        if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
-            return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
+        validation = validate_eas_endpoint_format(self.env, eas, endpoint)
+        if not validation['valid']:
+            return _(
+                "The peppol endpoint is not valid. The expected format is: %s", validation['examples']
+            ) if validation['examples'] else _(
+                "The peppol endpoint is not valid. Please check the spelling."
+            )
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):
