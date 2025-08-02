@@ -708,6 +708,19 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
+    def test_no_overwrite(self):
+        po_a = self.init_purchase(confirm=True, partner=self.partner_a, products=[self.product_order])
+        po_b = self.init_purchase(confirm=True, partner=self.partner_a, products=[self.product_order])
+        po_b.order_line.qty_received = 1
+        po_b.action_create_invoice()
+        bill = po_b.invoice_ids
+
+        bill._find_and_set_purchase_orders(
+            [], bill.partner_id.id, bill.amount_total)
+
+        self.assertTrue(bill.id in po_b.invoice_ids.ids)
+        self.assertFalse(bill.id in po_a.invoice_ids.ids)
+
     def test_total_match_via_partner(self):
         po = self.init_purchase(confirm=True, partner=self.partner_a, products=[self.product_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
