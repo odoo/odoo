@@ -194,7 +194,7 @@ class HrJob(models.Model):
     def _compute_employee_count(self):
         res = {
             job.id: count
-            for job, count in self.env['hr.employee']._read_group(
+            for job, count in self.env['hr.employee'].sudo()._read_group(
                 domain=[
                     ('job_id', 'in', self.ids),
                 ],
