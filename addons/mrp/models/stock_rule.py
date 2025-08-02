@@ -37,7 +37,9 @@ class StockRule(models.Model):
         super(StockRule, remaining)._compute_picking_type_code_domain()
 
     def _should_auto_confirm_procurement_mo(self, p):
-        return (not p.orderpoint_id and p.move_raw_ids) or (p.move_dest_ids.procure_method != 'make_to_order' and not p.move_raw_ids and not p.workorder_ids)
+        if not p.move_raw_ids:
+            return (not p.workorder_ids and (p.orderpoint_id or p.move_dest_ids.procure_method == 'make_to_stock'))
+        return not p.orderpoint_id
 
     @api.model
     def _run_manufacture(self, procurements):
