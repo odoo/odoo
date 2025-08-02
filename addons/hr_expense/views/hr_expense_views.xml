@@ -7,7 +7,8 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='managers']" position="inside">
-                    <field name="expense_manager_id" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
+                    <field name="expense_approver_ids" invisible="1"/>
+                    <field name="expense_manager_id" domain="[('id', 'in', expense_approver_ids)]" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
                 </xpath>
                  <xpath expr="//group[@name='managers']" position="attributes">
                     <attribute name="invisible">0</attribute>
@@ -21,6 +22,7 @@
             <field name="inherit_id" ref="hr.view_employee_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='work_location_id']" position="after">
+                    <field name="expense_approver_ids" invisible="1"/>
                     <field name="expense_manager_id" optional="hide" string="Expense Approver" widget="many2one_avatar_user"/>
                 </xpath>
             </field>
@@ -32,7 +34,8 @@
             <field name="inherit_id" ref="hr.res_users_view_form_profile" />
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='managers']" position="inside">
-                    <field name="expense_manager_id" readonly="not can_edit" context="{'default_company_id': company_id}"/>
+                    <field name="expense_approver_ids" invisible="1"/>
+                    <field name="expense_manager_id" readonly="not can_edit" domain="[('id', 'in', expense_approver_ids)]" context="{'default_company_id': company_id}"/>
                 </xpath>
                  <xpath expr="//group[@name='managers']" position="attributes">
                     <attribute name="invisible">0</attribute>
