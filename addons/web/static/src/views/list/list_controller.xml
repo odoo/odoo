@@ -116,4 +116,62 @@
         </div>
     </t>
 
+<<<<<<< 4f320ea0640774d11915fee3cd88c383916449b0
+||||||| b30905c585890772e99f0e113004ad3efef04f20
+    <t t-name="web.ListView.Selection">
+        <div class="o_list_selection_box list-group flex-row w-auto" t-att-class="{'m-1 gap-1': env.isSmall}" role="alert">
+            <span class="list-group-item active d-flex align-items-center pe-0 py-0 rounded-1 gap-1 flex-grow-1" t-att-class="{'shadow': env.isSmall}">
+                <span t-if="isDomainSelected">All <b t-esc="nbTotal"/> selected</span>
+                <t t-else="">
+                    <b t-esc="nbSelected"/> selected
+                    <button t-if="!env.isSmall and isPageSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+                        class="o_list_select_domain btn btn-sm btn-info p-1 ms-2 me-n2 border-0 fw-normal"
+                        title="Select all records matching the search"
+                        t-on-click="onSelectDomain">
+                        <i class="oi oi-fw oi-arrow-right"/>
+                        Select all <span t-if="model.root.isRecordCountTrustable" t-esc="nbTotal"/>
+                    </button>
+                </t>
+                <button title="Unselect All" class="o_list_unselect_all btn btn-link ms-auto border-0" t-on-click="onUnselectAll">
+                    <i class="oi oi-close"/>
+                </button>
+            </span>
+            <button t-if="env.isSmall and !isDomainSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+                class="o_list_select_domain btn btn-info shadow"
+                title="Select all records matching the search"
+                t-on-click="onSelectDomain">
+                All
+            </button>
+        </div>
+    </t>
+
+=======
+    <t t-name="web.ListView.Selection">
+        <div class="o_list_selection_box list-group flex-row w-auto" t-att-class="{'m-1 gap-1': env.isSmall}" role="alert">
+            <span class="list-group-item active d-flex align-items-center pe-0 py-0 rounded-1 gap-1 flex-grow-1" t-att-class="{'shadow': env.isSmall}">
+                <span t-if="isDomainSelected">All <b><t t-esc="nbTotal"/><t t-if="model.root.hasLimitedCount">+</t></b> selected</span>
+                <t t-else="">
+                    <b t-esc="nbSelected"/> selected
+                    <button t-if="!env.isSmall and isPageSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+                        class="o_list_select_domain btn btn-sm btn-info p-1 ms-2 me-n2 border-0 fw-normal"
+                        title="Select all records matching the search"
+                        t-on-click="onSelectDomain">
+                        <i class="oi oi-fw oi-arrow-right"/>
+                        Select all <span t-if="model.root.isRecordCountTrustable"><t t-esc="nbTotal"/><t t-if="model.root.hasLimitedCount">+</t></span>
+                    </button>
+                </t>
+                <button title="Unselect All" class="o_list_unselect_all btn btn-link ms-auto border-0" t-on-click="onUnselectAll">
+                    <i class="oi oi-close"/>
+                </button>
+            </span>
+            <button t-if="env.isSmall and !isDomainSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+                class="o_list_select_domain btn btn-info shadow"
+                title="Select all records matching the search"
+                t-on-click="onSelectDomain">
+                All
+            </button>
+        </div>
+    </t>
+
+>>>>>>> 25c79563f8ab76f6b6ae5b102d39851ea447a5da
 </templates>
