@@ -80,6 +80,10 @@ class PosPaymentMethod(models.Model):
         auth = requests.auth.HTTPBasicAuth(viva_wallet_merchant_id, viva_wallet_api_key)
         try:
             resp = requests.get(f"{endpoint}/api/messages/config/token", auth=auth, timeout=TIMEOUT)
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 404:
+                _logger.exception('could not be found https://%s/api/messages/config/token ', endpoint)
         except requests.exceptions.RequestException:
             _logger.exception('Failed to call https://%s/api/messages/config/token endpoint', endpoint)
         return resp.json().get('Key')
