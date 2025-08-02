@@ -810,13 +810,15 @@ class MrpProduction(models.Model):
                 or (not production.move_raw_ids and production.workorder_ids)
             )
 
-    @api.depends('state', 'product_qty', 'qty_producing')
+    @api.depends('state', 'product_qty', 'qty_producing', 'lot_producing_id')
     def _compute_show_produce(self):
         for production in self:
             state_ok = production.state in ('confirmed', 'progress', 'to_close')
             qty_none_or_all = production.qty_producing in (0, production.product_qty)
-            production.show_produce_all = state_ok and qty_none_or_all
-            production.show_produce = state_ok and not qty_none_or_all
+            is_serial = production.product_tracking == 'serial'
+            has_producing_lot = production.lot_producing_id
+            production.show_produce_all = state_ok and qty_none_or_all and not (is_serial and has_producing_lot)
+            production.show_produce = state_ok and (not qty_none_or_all or (is_serial and has_producing_lot))
 
     def _search_is_delayed(self, operator, value):
         if operator not in ('in', 'not in'):
@@ -847,13 +849,12 @@ class MrpProduction(models.Model):
             for date in dates
         )
 
-    @api.onchange('qty_producing', 'lot_producing_id')
+    @api.onchange('qty_producing')
     def _onchange_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
             return
-        productions_bypass_qty_producting = self.filtered(lambda p: p.lot_producing_id and p.product_tracking == 'lot' and p._origin and p._origin.qty_producing == p.qty_producing)
         # sudo needed for portal users
-        (self - productions_bypass_qty_producting).sudo()._set_qty_producing(False)
+        self.sudo()._set_qty_producing(False)
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
@@ -1460,8 +1461,6 @@ class MrpProduction(models.Model):
     def action_generate_serial(self):
         self.ensure_one()
         self._set_lot_producing()
-        if self.product_id.tracking == 'serial':
-            self._set_qty_producing(False)
         if self.picking_type_id.auto_print_generated_mrp_lot:
             return self._autoprint_generated_lot(self.lot_producing_id)
 
@@ -2182,6 +2181,8 @@ class MrpProduction(models.Model):
                 continue
             if production._auto_production_checks():
                 production_auto_ids.add(production.id)
+            elif production.lot_producing_id:
+                production._set_quantities()
             else:
                 return production.action_mass_produce()
 

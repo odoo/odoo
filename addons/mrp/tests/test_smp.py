@@ -252,6 +252,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(comp1, mo.warehouse_id.lot_stock_id, 5)
         # Generate an SN using the action_generate_serial
         mo.action_generate_serial()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo = mo_form.save()
         # In the end mass produce the SN's
         action = mo.action_mass_produce()
         wizard = Form(self.env['mrp.batch.produce'].with_context(**action['context']))

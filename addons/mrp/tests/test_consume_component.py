@@ -211,6 +211,9 @@ class TestConsumeComponentCommon(common.TransactionCase):
         i = 1
         if isSerial:
             mrp_productions[i].action_generate_serial()
+            mo_form = Form(mrp_productions[i])
+            mo_form.qty_producing = 1.0
+            mo_form.save()
             i += 1
 
         if isAvailable:
@@ -324,6 +327,9 @@ class TestConsumeComponent(TestConsumeComponentCommon):
                 mo = mo_form.save()
             elif serialTrigger == 2:
                 mo.action_generate_serial()
+                mo_form = Form(mo)
+                mo_form.qty_producing = 1.0
+                mo = mo_form.save()
 
             for mov in mo.move_raw_ids:
                 if mov.has_tracking == "none":
@@ -476,7 +482,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         with Form(mo) as mo_form:
             mo_form.lot_producing_id = self.env['stock.lot']
         self.assertRecordValues(mo.move_raw_ids, [
-            {'quantity': 0.0, 'picked': False},
-            {'quantity': 0.0, 'picked': False},
-            {'quantity': 0.0, 'picked': False},
+            {'quantity': 3.0, 'picked': False},
+            {'quantity': 2.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
         ])
