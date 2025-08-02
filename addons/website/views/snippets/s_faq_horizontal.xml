@@ -70,23 +70,4 @@
     </section>
 </template>
 
-<template id="s_faq_horizontal_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
-        <div data-js="faqHorizontalMultipleItems" data-selector=".s_faq_horizontal">
-            <we-row string="Topics">
-                <we-button data-add-item=""
-                        data-item=".s_faq_horizontal_entry:last"
-                        data-select-item="true"
-                        data-apply-to="> :has(.s_faq_horizontal_entry)"
-                        data-no-preview="true"
-                        class="o_we_bg_success">
-                    Add New
-                </we-button>
-            </we-row>
-        </div>
-
-        <div data-js="sizing_y" data-selector=".s_faq_horizontal .s_faq_horizontal_entry"/>
-    </xpath>
-</template>
-
 </odoo>

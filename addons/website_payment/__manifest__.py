@@ -24,16 +24,11 @@ This is a bridge module that adds multi-website support for payment providers.
     ],
     'auto_install': True,
     'assets': {
-        'website.assets_wysiwyg': [
-            'website_payment/static/src/snippets/s_donation/options.js',
-            'website_payment/static/src/snippets/s_donation/options.xml',
-        ],
         'web.assets_frontend': [
             'website_payment/static/src/js/*',
             'website_payment/static/src/interactions/*',
             'website_payment/static/src/snippets/**/*.js',
             ('remove', 'website_payment/static/src/snippets/**/*.edit.js'),
-            ('remove', 'website_payment/static/src/snippets/**/options.js'),
         ],
         'website.assets_edit_frontend': [
             'website_payment/static/src/**/*.edit.js',

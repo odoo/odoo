@@ -73,54 +73,6 @@
     </li>
 </template>
 
-
-<template id="s_pricelist_cafe_add_product_widget">
-    <we-row string="Product">
-        <we-button data-add-item="" data-item=".s_pricelist_cafe_item:last" data-select-item="" t-att-data-apply-to="apply_to" data-no-preview="true" class="o_we_bg_brand_primary">
-            Add Product
-        </we-button>
-    </we-row>
-</template>
-
-<template id="s_pricelist_cafe_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
-        <!-- Vertical Alignment -->
-        <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_pricelist_cafe" data-target=".row:has(.s_pricelist_cafe_col)">
-            <t t-call="website.vertical_alignment_option"/>
-        </div>
-        <!-- Add products -->
-        <div data-js="MultipleItems" data-selector=".s_pricelist_cafe">
-            <t t-call="website.s_pricelist_cafe_add_product_widget">
-                <t t-set="apply_to" t-valuef="> :has(.s_pricelist_cafe_item):not(:has(.row > div:has(.s_pricelist_cafe_item)))"/>
-            </t>
-        </div>
-        <div data-js="MultipleItems" data-selector=".s_pricelist_cafe .row > div">
-            <t t-call="website.s_pricelist_cafe_add_product_widget">
-                <t t-set="apply_to" t-valuef="> :has(.s_pricelist_cafe_item)"/>
-            </t>
-        </div>
-    </xpath>
-    <!-- Toggle descriptions -->
-    <xpath expr="." position="inside">
-        <div data-js="Pricelist" data-selector=".s_pricelist_cafe">
-            <we-checkbox string="Descriptions" data-toggle-description="true" data-items-class="s_pricelist_cafe_item" data-description-class="s_pricelist_cafe_item_description" data-no-preview="true"/>
-            <t t-call="website.snippet_options_border_line_widgets">
-                <t t-set="label">Separator</t>
-                <t t-set="direction" t-value="'top'"/>
-                <t t-set="apply_to" t-value="'.s_pricelist_cafe_item_line'"/>
-            </t>
-        </div>
-        
-        <div data-selector=".s_pricelist_cafe_item" data-drop-near=".s_pricelist_cafe_item"/>
-    </xpath>
-
-
-
-    <xpath expr="//div[@data-js='SnippetMove']" position="attributes">
-        <attribute name="data-selector" add=".s_pricelist_cafe_item" separator=","/>
-    </xpath>
-</template>
-
 <!-- Assets -->
 <record id="website.s_pricelist_cafe_000_scss" model="ir.asset">
     <field name="name">Pricelist Cafe 000 SCSS</field>

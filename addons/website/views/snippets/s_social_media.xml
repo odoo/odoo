@@ -35,19 +35,6 @@ title stay editable after a save (see SOCIAL_MEDIA_TITLE_CONTENTEDITABLE).
     </div>
 </template>
 
-<template id="s_social_media_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-js="SocialMedia" data-selector=".s_social_media">
-            <we-list string="Social Networks"
-                data-add-item-title.translate="Add New Social Network"
-                data-render-list-items="" data-has-default="multiple" data-name="social_media_list"
-                data-default-value="https://www.example.com" data-id-mode="name"
-                data-new-elements-not-toggleable="true" data-no-preview="true"
-                data-render-on-input-blur="true"/>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_social_media_000_scss" model="ir.asset">
     <field name="name">SocialMedia 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

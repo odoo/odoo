@@ -24,7 +24,6 @@
         'views/event_exhibitor_templates_page.xml',
         'views/event_type_views.xml',
         'views/event_menus.xml',
-        'views/snippets.xml',
     ],
     'demo': [
         'data/event_demo.xml',
