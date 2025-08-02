@@ -101,7 +101,7 @@ export class ColorPlugin extends Plugin {
     }
 
     updateSelectedColor() {
-        const nodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
+        const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
         }
@@ -176,7 +176,7 @@ export class ColorPlugin extends Plugin {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
                     const nodes = this.dependencies.selection
-                        .getTraversedNodes()
+                        .getTargetedNodes()
                         .filter(
                             (n) =>
                                 isTextNode(n) ||
@@ -218,7 +218,7 @@ export class ColorPlugin extends Plugin {
             color += HEX_OPACITY;
         }
         let selection = this.dependencies.selection.getEditableSelection();
-        let selectionNodes;
+        let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
             let zws;
@@ -237,25 +237,25 @@ export class ColorPlugin extends Plugin {
                 },
                 { normalize: false }
             );
-            selectionNodes = [zws];
+            targetedNodes = [zws];
         } else {
             selection = this.dependencies.split.splitSelection();
-            selectionNodes = this.dependencies.selection
-                .getSelectedNodes()
+            targetedNodes = this.dependencies.selection
+                .getTargetedNodes()
                 .filter((node) => isContentEditable(node) && node.nodeName !== "T");
             if (isEmptyBlock(selection.endContainer)) {
-                selectionNodes.push(selection.endContainer, ...descendants(selection.endContainer));
+                targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }
         }
 
         const selectedNodes =
             mode === "backgroundColor" && color
-                ? selectionNodes.filter((node) => !closestElement(node, "table.o_selected_table"))
-                : selectionNodes;
+                ? targetedNodes.filter((node) => !closestElement(node, "table.o_selected_table"))
+                : targetedNodes;
 
-        const selectedFieldNodes = new Set(
+        const targetedFieldNodes = new Set(
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean)
         );
@@ -372,7 +372,7 @@ export class ColorPlugin extends Plugin {
             });
         };
 
-        for (const fieldNode of selectedFieldNodes) {
+        for (const fieldNode of targetedFieldNodes) {
             this.colorElement(fieldNode, color, mode);
         }
 
