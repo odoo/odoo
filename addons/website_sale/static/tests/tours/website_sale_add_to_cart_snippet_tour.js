@@ -24,6 +24,13 @@ function checkQuanityInCart(quantity) {
     };
 }
 
+function exceptDisabledButton() {
+    return {
+        content: "Check if the button is disabled",
+        trigger: ":iframe .s_add_to_cart_btn.disabled",
+    }
+}
+
 registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         url: '/',
         edition: true,
@@ -36,6 +43,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant", true),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
+        exceptDisabledButton(),
         checkQuanityInCart("1"),
 
         // Product with 2 variants with visitor choice (will open modal)
@@ -43,6 +51,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 1", true),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
+        exceptDisabledButton(),
         clickOnElement("continue shopping", ":iframe .modal button:contains(Continue Shopping)"),
         checkQuanityInCart("2"),
 
@@ -56,6 +65,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         // The variant set on the modal used the default variants attributes (so will not correspond to the selected variant)
         // TODO: fix this misbahvior by setting the variant attributes based on the chosen variant 
         // https://github.com/odoo/odoo/pull/201217#issuecomment-2721871718
+        exceptDisabledButton(),
         {
             content: "Check if the red variant is selected",
             trigger: ":iframe .modal li:contains(Red) input:checked",
