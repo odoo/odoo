@@ -1,6 +1,10 @@
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { back as utilsBack, inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import {
+    back as utilsBack,
+    inLeftSide,
+    selectButton,
+} from "@point_of_sale/../tests/tours/utils/common";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
 import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
@@ -163,7 +167,12 @@ export function clickPartnerButton() {
     ];
 }
 export function clickCustomer(name) {
-    return [PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
+    return [
+        ...inputCustomerSearchbar(name),
+        ...[selectButton("Search more")],
+        ...[PartnerList.clickPartner(name)],
+        { ...back(), isActive: ["mobile"] },
+    ];
 }
 export function customerIsSelected(name) {
     return [

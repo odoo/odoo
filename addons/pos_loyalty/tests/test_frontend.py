@@ -2866,7 +2866,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_scan_loyalty_card_select_customer(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.test_partner = self.env['res.partner'].create({'name': 'AA Test Partner'})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
