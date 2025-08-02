@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale_wishlist.WishlistPageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Layout">
+            <BuilderButtonGroup action="'websiteConfig'">
+                <BuilderButton
+                    title.translate="Grid of wishlist products"
+                    actionParam="{ views: ['website_sale_wishlist.wishlist_product_grid_view_option'] }"
+                    icon="'oi-apps'"
+                />
+                <BuilderButton
+                    title.translate="List of wishlist products"
+                    actionParam="{views: []}"
+                    icon="'oi-view-list'"
+                />
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Style" level="1">
+            <BuilderSelect applyTo="'.o_wsale_wishlist'">
+                <BuilderSelectItem actionParam="{ views: ['website_sale_wishlist.wishlist_product_card_style_option'] }">Card</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{ views: [] }">Default</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

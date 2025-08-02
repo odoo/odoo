@@ -64,6 +64,13 @@ class ProductWishlist(models.Model):
         session_wishes.write({"partner_id": self.env.user.partner_id.id})
         request.session.pop('wishlist_ids')
 
+    # TODO VCR / VFE check this, maybe worth to move to product model?
+    def _get_combination_name(self):
+        return self.product_id.product_template_attribute_value_ids._get_combination_name()
+
+    def _get_line_header(self):
+        return self.product_id.name
+
     @api.autovacuum
     def _gc_sessions(self, *args, **kwargs):
         """Remove wishlists for unexisting sessions."""

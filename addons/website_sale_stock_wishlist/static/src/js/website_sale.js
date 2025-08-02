@@ -12,7 +12,7 @@ WebsiteSale.include({
     },
 
     _onClickSubmitWishlistStockNotificationForm(ev) {
-        const productId = ev.currentTarget.closest('tr').dataset.productId;
+        const productId = ev.currentTarget.closest('.o_wish_list_item').dataset.productId;
         this._handleClickSubmitStockNotificationForm(ev, productId);
     },
 });

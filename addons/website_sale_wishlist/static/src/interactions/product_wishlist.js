@@ -44,7 +44,7 @@ export class ProductWishlist extends Interaction {
             showQuantity: showQuantity,
         }));
 
-        if (quantity > 0 && !document.getElementById('b2b_wish').checked) {
+        if (quantity > 0) {
             await this._removeProduct(button, '/shop/cart');
         }
     }
@@ -56,12 +56,12 @@ export class ProductWishlist extends Interaction {
      * @param {String} emptyRedirectUrl The URL to redirect to if the wishlist is empty.
      */
     async _removeProduct(button, emptyRedirectUrl) {
-        const tr = button.closest('tr');
-        const wish = tr.dataset.wishId;
-        const productId = parseInt(tr.dataset.productId);
+        const wishItemEl = button.closest('.o_wish_list_item');
+        const wishId = wishItemEl.dataset.wishId;
+        const productId = parseInt(wishItemEl.dataset.productId);
 
-        await this.waitFor(rpc(`/shop/wishlist/remove/${wish}`));
-        tr.style.display = 'none';
+        await this.waitFor(rpc(`/shop/wishlist/remove/${wishId}`));
+        wishItemEl.classList.add('d-none');
 
         wishlistUtils.removeWishlistProduct(productId);
         if (!wishlistUtils.getWishlistProductIds().length) {
