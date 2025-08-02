@@ -44,7 +44,7 @@ class SaleOrderLine(models.Model):
                 sale_order = None
                 so_create_values = {
                     'partner_id': partner_id,
-                    'company_id': self.env.context.get('default_company_id') or self.env.company.id,
+                    'company_id': self.env.context.get('company_id') or self.env.company.id,
                 }
                 if project_id:
                     try:
