@@ -1,0 +1,20 @@
+{
+    'name': 'Estate Test',
+    'version': '1.0',
+    'category': 'Real Estate',
+    'summary': 'A module to manage real estate properties.',
+    'author': 'Demba Dev',
+    'website': 'https://www.yourwebsite.com',
+    'depends': ['base'],  # Le module de base est la slue dépendance nécessaire pour commencer
+    'data': ['security/ir.model.access.csv',
+             'views/estate_property_views.xml',
+             'views/estate_menus.xml',
+             'views/estate_property_offer_views.xml',
+             'views/estate_property_type_views.xml',
+             'views/estate_property_tag_views.xml',
+             'views/users_view.xml',
+             'views/estate_property_kanban.xml',],
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}
