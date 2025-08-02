@@ -469,6 +469,14 @@ class WebsiteEventController(http.Controller):
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
+    @http.route(['/event/get_live_event'], type='jsonrpc', auth='public', website=True, readonly=True)
+    def get_live_event(self):
+        return request.env['event.event'].sudo().search_read([('is_ongoing', '=', True)], [], limit=1)
+
+    @http.route(['/event/<model("event.event"):event>/get_live_event_track'], type='http', auth="public", website=True, sitemap=False, readonly=True)
+    def live_event_redirect(self, event):
+        return request.redirect(event.website_url)
+
     # ------------------------------------------------------------
     # TOOLS (HELPERS)
     # ------------------------------------------------------------
