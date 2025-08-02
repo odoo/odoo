@@ -1951,6 +1951,16 @@ class MailCommon(MailCase):
             }
         })
 
+    def _filter_channels_fields(self, /, *channels_data):
+        """ Remove store channel data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        for data in channels_data:
+            # if 'ai_livechat' module is not installed
+            if not ('ai.agent' in self.env and 'im_livechat.channel' in self.env):
+                data.pop("livechat_with_ai_agent", None)
+        return list(channels_data)
+
     def _filter_messages_fields(self, /, *messages_data):
         """ Remove store message data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.

@@ -398,7 +398,8 @@ class ResUsers(models.Model):
                 settings=settings._res_users_settings_format(),
             )
         if guest := self.env["mail.guest"]._get_guest_from_context():
-            store.add_global_values(self_guest=Store.One(guest, ["avatar_128", "name"]))
+            # sudo() => adding current guest data is acceptable
+            store.add_global_values(self_guest=Store.One(guest.sudo(), ["avatar_128", "name"]))
 
     def _init_messaging(self, store: Store):
         self.ensure_one()

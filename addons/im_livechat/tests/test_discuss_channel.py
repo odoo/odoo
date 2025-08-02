@@ -52,11 +52,11 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertTrue(chat.chatbot_current_step_id)  # assert there is a chatbot
         self.assertEqual(chat.livechat_failure, "no_failure")
         self.livechat_channel.user_ids = False  # remove operators so forwarding will fail
-        chat.chatbot_current_step_id._process_step_forward_operator(chat)
+        chat._forward_human_operator(chat.chatbot_current_step_id)
         self.assertEqual(chat.livechat_failure, "no_agent")
         self.livechat_channel.user_ids += bob_operator
         self.assertTrue(self.livechat_channel.available_operator_ids)
-        chat.chatbot_current_step_id._process_step_forward_operator(chat)
+        chat._forward_human_operator(chat.chatbot_current_step_id)
         self.assertEqual(chat.livechat_operator_id, bob_operator.partner_id)
         self.assertEqual(chat.livechat_failure, "no_answer")
         chat.with_user(bob_operator).message_post(
