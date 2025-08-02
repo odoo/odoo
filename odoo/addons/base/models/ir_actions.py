@@ -790,7 +790,8 @@ class IrActionsServer(models.Model):
         multi = True
         t = self.env.registry[self._name]
         fn = getattr(t, f'_run_action_{self.state}_multi', None)\
-          or getattr(t, f'run_action_{self.state}_multi', None)
+          or getattr(t, f'run_action_{self.state}_multi', None)\
+          or (self.state == 'multi' and getattr(t, f'_run_action_{self.state}', None) )
         if not fn:
             multi = False
             fn = getattr(t, f'_run_action_{self.state}', None)\
