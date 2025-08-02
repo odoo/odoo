@@ -792,6 +792,7 @@ class AccountMoveLine(models.Model):
         sql_operator = {
             '<': SQL('<'),
             '<=': SQL('<='),
+            '=': SQL('<='),
         }.get(operator)
         if not sql_operator:
             return NotImplemented
@@ -818,7 +819,7 @@ class AccountMoveLine(models.Model):
                 alias=partial_table,
                 table=SQL(
                     """(
-                        SELECT TRUE AS is_reconciled
+                        SELECT TRUE AS is_recon_line
                           FROM account_partial_reconcile AS partial
                           JOIN account_move_line AS %(match_alias)s
                             ON %(match_alias)s.id = partial.debit_move_id
@@ -826,10 +827,11 @@ class AccountMoveLine(models.Model):
                         %(joins)s
                          WHERE %(conditions)s
                            AND %(original_alias)s.date %(sql_operator)s %(recon_date_limit)s
+                           AND %(original_alias)s.date >= %(match_alias)s.date  -- Ensure that the recon line is posterior to the original line (should we? - I add this because of the initial balances on reports, which already include those lines, but is it correct)
 
                          UNION ALL
 
-                        SELECT TRUE AS is_reconciled
+                        SELECT TRUE AS is_recon_line
                           FROM account_partial_reconcile AS partial
                           JOIN account_move_line AS %(match_alias)s
                             ON %(match_alias)s.id = partial.credit_move_id
@@ -837,6 +839,7 @@ class AccountMoveLine(models.Model):
                         %(joins)s
                          WHERE %(conditions)s
                            AND %(original_alias)s.date %(sql_operator)s %(recon_date_limit)s
+                           AND %(original_alias)s.date >= %(match_alias)s.date  -- Ensure that the recon line is posterior to the original line (should we? - I add this because of the initial balances on reports, which already include those lines, but is it correct)
 
                         LIMIT 1
                     )""",
@@ -878,7 +881,7 @@ class AccountMoveLine(models.Model):
                     alias=SQL.identifier(recon_check_alias),
                     original_alias=SQL.identifier(alias),
                 ))
-            return SQL("%s.is_reconciled", SQL.identifier(partial_table))
+            return SQL("%s.is_recon_line", SQL.identifier(partial_table))
 
         return Domain.custom(to_sql=to_sql)
 
