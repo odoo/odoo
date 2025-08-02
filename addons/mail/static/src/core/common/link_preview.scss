@@ -1,19 +1,34 @@
 .o-mail-LinkPreviewCard {
-    max-width: $o-mail-LinkPreview-width;
-
+    max-width: 220px;
+    min-height: auto;
     .row {
         min-height: $o-mail-LinkPreviewCard-height;
     }
 }
 
-.o-mail-LinkPreviewCard-description {
+.o-mail-LinkPreviewCard-title {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
 
-.o-mail-LinkPreviewCard-imageLinkWrap {
-    border-right: 1px solid $card-border-color;
+.o-mail-LinkPreviewCard-title a:hover {
+    text-decoration: underline;
+}
+
+.o-mail-LinkPreviewCard-image {
+    max-height: 100px;
+}
+
+.o-mail-LinkPreviewCard-noImage {
+    min-height: 80px;
+}
+
+.o-mail-LinkPreviewCard-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    font-size: 0.75rem;
 }
 
 .o-mail-LinkPreviewImage img {
