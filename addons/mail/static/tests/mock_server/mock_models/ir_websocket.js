@@ -20,7 +20,7 @@ export class IrWebSocket extends busModels.IrWebSocket {
 
         channels = [...super._build_bus_channel_list(channels)];
         const guest = MailGuest._get_guest_from_context();
-        const authenticatedUserId = this.env.cookie.get("authenticated_user_sid");
+        const authenticatedUserId = this.env.cookie.get("authenticated_user_sid") ?? this.env.uid;
         const [authenticatedPartner] = authenticatedUserId
             ? ResPartner.search_read(
                   [["user_ids", "in", [authenticatedUserId]]],

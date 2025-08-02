@@ -6,6 +6,8 @@ import { session } from "@web/session";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { EventBus, reactive } from "@odoo/owl";
 import { user } from "@web/core/user";
+import { rpc } from "@web/core/network/rpc";
+import { uuid } from "@web/core/utils/strings";
 
 // List of worker events that should not be broadcasted.
 const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification", "provide_logs"]);
@@ -91,6 +93,10 @@ export const busService = {
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(env, id, type, payload);
+                        if (type === "bus.rpc/end") {
+                            const bus_rpc_uuid = payload;
+                            state.busTokenToProms.get(bus_rpc_uuid)?.resolve();
+                        }
                     }
                     break;
                 }
@@ -239,6 +245,17 @@ export const busService = {
                 send("start");
                 state.isActive = true;
             },
+            async busRpc(url, params = {}, ...args) {
+                const bus_rpc_uuid = uuid();
+                const bus_rpc_def = new Deferred();
+                state.busTokenToProms.set(bus_rpc_uuid, bus_rpc_def);
+                params.context = Object.assign(params.context || {}, { bus_rpc_uuid });
+                const res = await rpc(url, params, ...args);
+                await bus_rpc_def;
+                state.busTokenToProms.delete(bus_rpc_uuid);
+                return res;
+            },
+            busTokenToProms: new Map(),
             deleteChannel: (channel) => {
                 send("delete_channel", channel);
             },
