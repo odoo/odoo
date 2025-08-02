@@ -168,3 +168,5 @@ class ReSequenceWizard(models.TransientModel):
                     move_id.name = new_values[str(move_id.id)]['new_by_name']
                 else:
                     move_id.name = new_values[str(move_id.id)]['new_by_date']
+            if move_id.move_type == 'out_invoice' and move_id.state == 'posted':
+                move_id.payment_reference = move_id._get_invoice_computed_reference()
