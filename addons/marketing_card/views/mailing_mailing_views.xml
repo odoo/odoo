@@ -22,6 +22,7 @@
                 <attribute name="readonly" separator=" or " add="card_campaign_id"/>
             </xpath>
             <xpath expr="//label[@for='mailing_model_id']" position="before">
+                <field name="card_lang" invisible="not card_campaign_id"/>
                 <field name="card_campaign_id" invisible="not card_campaign_id" readonly="1"/>
             </xpath>
         </field>

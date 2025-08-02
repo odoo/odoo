@@ -1,0 +1,16 @@
+<odoo>
+    <record id="mailing_mailing_view_form_event_send_card" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.event.send.card</field>
+        <field name="mode">primary</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <field name="card_campaign_id" position="attributes">
+                <attribute name="domain">[('res_model', 'like', 'event.%')]</attribute>
+                <attribute name="invisible">0</attribute>
+                <attribute name="readonly">0</attribute>
+                <attribute name="required">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

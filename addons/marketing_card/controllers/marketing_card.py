@@ -68,13 +68,17 @@ class MarketingCardController(Controller):
     def card_campaign_preview(self, card_id=None, card_slug=None):
         """Route for users to preview their card and share it on their social platforms."""
         card = _get_card_from_url(card_id, card_slug)
+        card = card.with_context(lang=card.lang)
         if not card.share_status:
             card.sudo().share_status = 'visited'
 
         campaign_sudo = card.sudo().campaign_id
+        request.update_context(lang=card.lang)
         return request.render('marketing_card.card_campaign_preview', {
-            'card': card,
             'campaign': campaign_sudo,
+            'card': card,
+            'edit_in_backend': True,
+            'main_object': campaign_sudo,
             'quote': quote,
         })
 
@@ -100,7 +104,10 @@ class MarketingCardController(Controller):
         card = _get_card_from_url(card_id, card_slug)
 
         campaign_sudo = card.sudo().campaign_id
-        redirect_url = campaign_sudo.link_tracker_id.short_url or campaign_sudo.target_url or campaign_sudo.get_base_url()
+        # don't count clicks from preview
+        redirect_url = campaign_sudo.target_url or campaign_sudo.get_base_url()
+        if card.active:
+            redirect_url = campaign_sudo.link_tracker_id.short_url or redirect_url
 
         if _is_crawler(request):
             return request.render('marketing_card.card_campaign_crawler', {
