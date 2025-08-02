@@ -701,9 +701,9 @@ class AccountMoveLine(models.Model):
     @api.depends('currency_rate', 'balance')
     def _compute_amount_currency(self):
         for line in self:
-            if line.amount_currency is False:
+            if line.currency_id != line.company_id.currency_id:
                 line.amount_currency = line.currency_id.round(line.balance * line.currency_rate)
-            if line.currency_id == line.company_id.currency_id:
+            else:
                 line.amount_currency = line.balance
 
     @api.depends_context('order_cumulated_balance', 'domain_cumulated_balance')
