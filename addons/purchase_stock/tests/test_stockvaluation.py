@@ -3707,6 +3707,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill.invoice_date = fields.Date.today()
         bill.action_post()
         self.assertEqual(avco_prod.standard_price, pre_bill_cost)
+<<<<<<< 8d4e6df0c0ac5ebc6362f3578ae8cc8edf4a76f7
 
     def test_manual_non_standard_cost_bill_post(self):
         """ With manual valuation (+ continental accounting), receiving some product with a
@@ -3752,3 +3753,27 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 {'account_id': account_payable_account.id,   'debit': 0.0,      'credit': 1380.0},
             ]
         )
+||||||| 2ff1bcd74cbf1722d6398a9b2601ea7fdf4bbd55
+=======
+
+    def test_100_percent_discount(self):
+        product = self.product_a
+        product.categ_id.write({'property_cost_method': 'average', 'property_valuation': 'real_time'})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 2,
+                'discount': 100,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        svls = self.env['stock.valuation.layer'].search([])
+        self.assertRecordValues(svls, [{'value': 0, 'quantity': 2}])
+>>>>>>> 0126620c68b55cd80762023f415570f78249b5ba
