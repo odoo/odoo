@@ -1244,7 +1244,7 @@ class StockPicking(models.Model):
         """
         self._check_company()
 
-        todo_moves = self.move_ids.filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
+        todo_moves = self.move_ids.filtered(lambda mv: mv.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         for picking in self:
             if picking.owner_id:
                 picking.move_ids.write({'restrict_partner_id': picking.owner_id.id})
