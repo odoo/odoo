@@ -23,20 +23,7 @@ class Web_Unsplash(http.Controller):
         return request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
 
     def _notify_download(self, url):
-        ''' Notifies Unsplash from an image download. (API requirement)
-            :param url: the download_url of the image to be notified
-
-            This method won't return anything. This endpoint should just be
-            pinged with a simple GET request for Unsplash to increment the image
-            view counter.
-        '''
-        try:
-            if not url.startswith('https://api.unsplash.com/photos/') and not request.env.registry.in_test_mode():
-                raise Exception(_("ERROR: Unknown Unsplash notify URL!"))
-            access_key = self._get_access_key()
-            requests.get(url, params=url_encode({'client_id': access_key}))
-        except Exception as e:
-            logger.exception("Unsplash download notification failed: " + str(e))
+        return
 
     # ------------------------------------------------------
     # add unsplash image url
@@ -81,7 +68,7 @@ class Web_Unsplash(http.Controller):
         for key, value in unsplashurls.items():
             url = value.get('url')
             try:
-                if not url.startswith(('https://images.unsplash.com/', 'https://plus.unsplash.com/')) and not request.env.registry.in_test_mode():
+                if not url.startswith(('https://images.pexels.com/')) and not request.env.registry.in_test_mode():
                     logger.exception("ERROR: Unknown Unsplash URL!: " + url)
                     raise Exception(_("ERROR: Unknown Unsplash URL!"))
 
@@ -126,14 +113,13 @@ class Web_Unsplash(http.Controller):
 
     @http.route("/web_unsplash/fetch_images", type='json', auth="user")
     def fetch_unsplash_images(self, **post):
-        access_key = self._get_access_key()
-        app_id = self.get_unsplash_app_id()
-        if not access_key or not app_id:
+        FREE_RUNBOT_KEY = "mr7HMMx0VWphcxPhsQPnYtXsywW3o1JUvqsdB0RAgm3gKoDqdjiCOCZZ"
+        access_key = self._get_access_key() or FREE_RUNBOT_KEY
+        if not access_key:
             if not request.env.user._can_manage_unsplash_settings():
                 return {'error': 'no_access'}
             return {'error': 'key_not_found'}
-        post['client_id'] = access_key
-        response = requests.get('https://api.unsplash.com/search/photos/', params=url_encode(post))
+        response = requests.get('https://api.pexels.com/v1/search/', params=url_encode(post), headers={"Authorization": access_key})
         if response.status_code == requests.codes.ok:
             return response.json()
         else:
@@ -141,14 +127,9 @@ class Web_Unsplash(http.Controller):
                 return {'error': 'no_access'}
             return {'error': response.status_code}
 
-    @http.route("/web_unsplash/get_app_id", type='json', auth="public")
-    def get_unsplash_app_id(self, **post):
-        return request.env['ir.config_parameter'].sudo().get_param('unsplash.app_id')
-
     @http.route("/web_unsplash/save_unsplash", type='json', auth="user")
     def save_unsplash(self, **post):
         if request.env.user._can_manage_unsplash_settings():
-            request.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', post.get('appId'))
             request.env['ir.config_parameter'].sudo().set_param('unsplash.access_key', post.get('key'))
             return True
         raise werkzeug.exceptions.NotFound()

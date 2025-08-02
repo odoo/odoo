@@ -24,12 +24,12 @@ export const unsplashService = {
                 try {
                     const urls = {};
                     for (const record of records) {
-                        const _1920Url = new URL(record.urls.regular);
+                        const _1920Url = new URL(record.src.large);
                         _1920Url.searchParams.set("w", "1920");
                         urls[record.id] = {
-                            url: _1920Url.href,
-                            download_url: record.links.download_location,
-                            description: record.alt_description,
+                            url: _1920Url,
+                            download_url: record.url,
+                            description: record.alt,
                         };
                     }
 
@@ -99,7 +99,6 @@ export const unsplashService = {
                 if (!_cache[key]) {
                     _cache[key] = {
                         images: [],
-                        maxPages: 0,
                         totalImages: 0,
                         pageCached: 0,
                     };
@@ -118,9 +117,8 @@ export const unsplashService = {
                     return Promise.reject(result.error);
                 }
                 cachedData.pageCached++;
-                cachedData.images.push(...result.results);
-                cachedData.maxPages = result.total_pages;
-                cachedData.totalImages = result.total;
+                cachedData.images.push(...result.photos);
+                cachedData.totalImages = result.total_results;
                 return cachedData;
             },
         };
