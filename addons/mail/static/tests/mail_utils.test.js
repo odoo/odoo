@@ -1,4 +1,4 @@
-import { addLink, parseAndTransform } from "@mail/utils/common/format";
+import { addLink, parseAndTransform, parseEmail } from "@mail/utils/common/format";
 import { useSequential } from "@mail/utils/common/hooks";
 import {
     click,
@@ -203,6 +203,22 @@ test("url with number in subdomain", async () => {
     await contains(
         ".o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/odoo)"
     );
+});
+
+test("parseEmail utility function", async () => {
+    const attackPayloads = [
+        '"'.repeat(20) + "<".repeat(100000) + "@example.com>",
+        " <" + "@".repeat(100000) + "@",
+        "<@".repeat(100000) + "@",
+    ];
+
+    for (const [i, attack] of attackPayloads.entries()) {
+        const start = performance.now();
+        const result = parseEmail(attack);
+
+        expect(duration < 5000).toBe(true);
+        expect(!!result).toBe(true);
+    }
 });
 
 test("isSequential doesn't execute intermediate call.", async () => {
