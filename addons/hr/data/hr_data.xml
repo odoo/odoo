@@ -82,57 +82,62 @@
 
         <record id="contract_type_permanent" model="hr.contract.type">
             <field name="name">Permanent</field>
-            <field name="sequence">1</field>
+            <field name="sequence">1001</field>
         </record>
 
         <record id="contract_type_temporary" model="hr.contract.type">
             <field name="name">Temporary</field>
-            <field name="sequence">2</field>
+            <field name="sequence">1002</field>
+        </record>
+
+        <record id="contract_type_interim" model="hr.contract.type" forcecreate="1">
+            <field name="name">Interim</field>
+            <field name="sequence">1003</field>
         </record>
 
         <record id="contract_type_seasonal" model="hr.contract.type">
             <field name="name">Seasonal</field>
-            <field name="sequence">3</field>
+            <field name="sequence">1004</field>
         </record>
 
         <record id="contract_type_full_time" model="hr.contract.type">
             <field name="name">Full-Time</field>
-            <field name="sequence">4</field>
+            <field name="sequence">1005</field>
         </record>
 
         <record id="contract_type_part_time" model="hr.contract.type">
             <field name="name">Part-Time</field>
-            <field name="sequence">5</field>
+            <field name="sequence">1006</field>
         </record>
 
         <record id="contract_type_intern" model="hr.contract.type">
             <field name="name">Intern</field>
-            <field name="sequence">6</field>
+            <field name="sequence">1007</field>
         </record>
 
         <record id="contract_type_student" model="hr.contract.type">
             <field name="name">Student</field>
-            <field name="sequence">7</field>
+            <field name="sequence">1008</field>
         </record>
 
         <record id="contract_type_apprenticeship" model="hr.contract.type">
             <field name="name">Apprenticeship</field>
-            <field name="sequence">8</field>
+            <field name="sequence">1009</field>
         </record>
 
         <record id="contract_type_thesis" model="hr.contract.type">
             <field name="name">Thesis</field>
-            <field name="sequence">9</field>
+            <field name="sequence">1010</field>
         </record>
 
-        <record id="contract_type_statutaire" model="hr.contract.type">
+        <record id="contract_type_statutory" model="hr.contract.type">
             <field name="name">Statutory</field>
-            <field name="sequence">10</field>
+            <field name="sequence">1011</field>
         </record>
 
         <record id="contract_type_employee" model="hr.contract.type">
             <field name="name">Employee</field>
-            <field name="sequence">11</field>
+            <field name="sequence">1012</field>
         </record>
 
         <record id="home_work_location" model="hr.work.location">
