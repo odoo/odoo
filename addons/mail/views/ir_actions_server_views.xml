@@ -10,7 +10,7 @@
                 <xpath expr="//form" position="inside">
                     <chatter/>
                 </xpath>
-                <xpath expr="//t[@name='action_content']" position="inside">
+                <xpath expr="//t[@name='action_content']//notebook" position="before">
                     <!-- Create next activity -->
                     <group invisible="state != 'next_activity'">
                         <group>
