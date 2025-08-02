@@ -583,7 +583,7 @@ class HolidaysAllocation(models.Model):
             holiday.message_subscribe(partner_ids=tuple(partners_to_subscribe))
             if not self._context.get('import_file'):
                 holiday.activity_update()
-            if holiday.validation_type == 'no' and holiday.state == 'draft':
+            if (holiday.validation_type == 'no' or holiday.holiday_status_id.employee_requests == 'yes') and holiday.state == 'draft':
                 holiday.action_confirm()
         return holidays
 
