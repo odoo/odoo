@@ -271,7 +271,6 @@ class AccountTestInvoicingCommon(ProductCommon):
                 ('name', 'in', (
                     # TODO: Progressively remove groups from this list, hopefully no groups share the same name.
                     # This is a consequence of moving groups from data to demo data: https://github.com/odoo/odoo/pull/198078
-                    'group_hr_manager', # hr
                     'group_mrp_manager', # mrp
                     'group_purchase_manager', # purchase
                     'group_stock_manager', # stock
