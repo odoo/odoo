@@ -71,6 +71,10 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai' or invoice.country_code != 'ES':
             return errors
 
+        if invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_sii'
+                                                       and d.edi_state == 'to_send' and d.error):
+            errors.append(_("Make sure SII does not give errors before sending to TicketBai. "))
+
         if invoice.is_purchase_document() and not invoice.ref:
             errors.append(_("You need to fill in the Reference field as the invoice number from your vendor."))
 
