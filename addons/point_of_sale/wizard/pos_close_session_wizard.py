@@ -8,8 +8,9 @@ class PosCloseSessionWizard(models.TransientModel):
     _name = 'pos.close.session.wizard'
     _description = "Close Session Wizard"
 
-    amount_to_balance = fields.Float("Amount to balance")
+    amount_to_balance = fields.Monetary("Amount to balance")
     account_id = fields.Many2one("account.account", "Destination account")
+    currency_id = fields.Many2one('res.currency', related='account_id.currency_id', string="Currency", store=True, precompute=True)
     account_readonly = fields.Boolean("Destination account is readonly")
     message = fields.Text("Information message")
 
