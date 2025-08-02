@@ -11,10 +11,15 @@
                         <field name="product_ids" invisible="1"/>
                         <field name="product_tmpl_ids" invisible="1"/>
                         <field name="custom_quantity"/>
+                        <field name="uom_id"
+                               string="Packaging"
+                               groups="uom.group_uom"
+                               invisible="hide_uom_id"
+                               options="{'no_create': 1, 'no_open': 1}"/>
                         <field name="print_format" widget="radio"/>
                     </group>
                     <group>
-                        <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                        <field name="pricelist_id" invisible="hide_pricelist" groups="product.group_product_pricelist"/>
                         <field name="extra_html" invisible="print_format != '2x7xprice'"/>
                     </group>
                 </group>
