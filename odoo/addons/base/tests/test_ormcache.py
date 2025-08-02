@@ -187,7 +187,7 @@ class TestOrmCache(TransactionCase):
             registry.check_signaling()
         self.assertEqual(
             logs.output,
-            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'default', 'templates.cached_values']"],
+            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'default', 'default.short', 'templates.cached_values']"],
         )
 
     def test_signaling_gc(self):

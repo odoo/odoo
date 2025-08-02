@@ -476,7 +476,7 @@ class IrModuleModule(models.Model):
             raise UserError(_('Connection to %s failed The list of industry modules cannot be fetched') % APPS_URL)
 
     @api.model
-    @ormcache('payload')
+    @ormcache('payload', cache='default.short')
     def _call_apps(self, payload):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         import requests  # noqa: PLC0415

@@ -51,7 +51,8 @@ _schema = logging.getLogger('odoo.schema')
 
 
 _REGISTRY_CACHES = {
-    'default': 8192,
+    'default': 4096,
+    'default.short': 4096,
     'assets': 512, # arbitrary
     'templates': 1024, # arbitrary
     'routing': 1024,  # 2 entries per website
@@ -63,7 +64,7 @@ _REGISTRY_CACHES = {
 # cache invalidation dependencies, as follows:
 # { 'cache_key': ('cache_container_1', 'cache_container_3', ...) }
 _CACHES_BY_KEY = {
-    'default': ('default', 'templates.cached_values'),
+    'default': ('default', 'default.short', 'templates.cached_values'),
     'assets': ('assets', 'templates.cached_values'),
     'templates': ('templates', 'templates.cached_values'),
     'routing': ('routing', 'routing.rewrites', 'templates.cached_values'),

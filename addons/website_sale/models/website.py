@@ -380,6 +380,7 @@ class Website(models.Model):
     # This method is cached, must not return records! See also #8795
     @ormcache(
         'country_code', 'show_visible', 'current_pl_id', 'website_pricelist_ids', 'partner_pl_id',
+        cache='default.short'
     )
     def _get_pl_partner_order(
         self, country_code, show_visible, current_pl_id, website_pricelist_ids, partner_pl_id=False
