@@ -8,6 +8,7 @@ import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { CashierSelectionPopup } from "@pos_hr/app/components/popups/cashier_selection_popup/cashier_selection_popup";
 
 export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, exclusive: false }) {
     const pos = usePos();
@@ -70,6 +71,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
                 id: employee.id,
                 item: employee,
                 label: employee.name,
+                image: `/web/image/hr.employee.public/${employee.id}/avatar_128`,
                 isSelected: false,
             }));
 
@@ -98,10 +100,18 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
             wrongPinNotification();
             return;
         }
-
-        if (pinMatchEmployees.length > 1 || list) {
+        if (list && !pin && pos.getCashier()) {
+            employee = await makeAwaitable(dialog, CashierSelectionPopup, {
+                currentCashier: pos.getCashier(),
+                employees: allEmployees,
+            });
+            if (!employee) {
+                return;
+            }
+        } else if (pinMatchEmployees.length > 1 || list) {
             employee = await makeAwaitable(dialog, SelectionPopup, {
                 title: _t("Change Cashier"),
+                size: "md",
                 list: prepareList(allEmployees),
             });
 
