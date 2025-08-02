@@ -52,7 +52,7 @@ messageActionsRegistry
                 date: datetime,
                 email,
                 message,
-                name: name || email,
+                name: message.author?.name || name || email,
             });
             const context = {
                 default_body: body,

@@ -134,8 +134,8 @@ patch(Message.prototype, {
             iconellipsisEl.className = "oi oi-ellipsis-h oi-large";
             ellipsisbtnEl.append(iconellipsisEl);
             group[0].parentNode.insertBefore(ellipsisbtnEl, group[0]);
-            // Toggle All next nodes
-            if (!this.state.isReadMoreByIndex.has(index)) {
+            // Toggle all nodes except reply nodes
+            if (!this.state.isReadMoreByIndex.has(index) && !group[0].querySelector('.o_mail_reply_content')) {
                 this.state.isReadMoreByIndex.set(index, true);
             }
             const updateFromState = () => {
