@@ -6,6 +6,7 @@ import odoo
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests.common import Form
 from odoo import fields, Command
+from datetime import timedelta
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSale(TestPointOfSaleHttpCommon):
@@ -1258,3 +1259,31 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order_id = self.env['pos.order'].create_from_ui([pos_order])[0]['id']
         pos_order = self.env['pos.order'].browse(pos_order_id)
         self.assertFalse(pos_order.account_move.invoice_payment_term_id)
+
+    def test_pos_sale_order_search_by_date(self):
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%a, %Y.eko %bren %da'})
+        product_z = self.env['product.product'].create({
+            'name': 'Product Z',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10.0,
+            'taxes_id': [],
+        })
+
+        for i in range(10):
+            self.env['sale.order'].create({
+                'date_order': fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=int((2 * i) ** 0.5))),
+                'partner_id': self.env['res.partner'].create({'name': f'Test Partner Z{i}'}).id,
+                'order_line': [(0, 0, {
+                    'product_id': product_z.id,
+                    'name': product_z.name,
+                    'product_uom_qty': 3.5,
+                    'product_uom': product_z.uom_id.id,
+                    'price_unit': 8 * i,
+                    'discount': 10,
+                })],
+            })
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour('/pos/ui?config_id=%d' % self.main_pos_config.id, 'PosSaleOrderSearchByDate', login='pos_admin')
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': 'MM/dd/yyyy'})
