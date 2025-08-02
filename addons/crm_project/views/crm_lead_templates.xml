@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="project_creation">
+        <p>
+            <a href="#" t-att-data-oe-model="created_record._name" t-att-data-oe-id="created_record.id" class="pe-1">
+                <t t-out="created_record.display_name" />
+            </a>
+            <t t-out="message" />
+        </p>
+    </template>
+</odoo>
