@@ -7,7 +7,7 @@ from odoo.http import request
 from odoo.tools import consteq, float_round
 from odoo.tools.misc import hmac as hmac_tool
 
-from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
+from odoo.addons.payment.const import CURRENCY_4217_MAPPING, CURRENCY_MINOR_UNITS
 
 
 # Access token management
@@ -167,6 +167,17 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     return int(
         float_round(major_amount * (10**decimal_number), precision_digits=0, rounding_method='DOWN')
     )
+
+
+def get_currency_alphabetic_code_from_numeric_code(currency_numeric_code):
+    """ Get the currency alphabetic code from the numeric code.
+
+    :param str currency_numeric_code: The currency in ISO 4217 numeric code.
+    :return: The currency in ISO 4217 alphabetic code.
+    :rtype: str
+    """
+    num_to_alpha_mapping = {v: k for k, v in CURRENCY_4217_MAPPING.items()}
+    return num_to_alpha_mapping.get(currency_numeric_code)
 
 
 # Partner values formatting
