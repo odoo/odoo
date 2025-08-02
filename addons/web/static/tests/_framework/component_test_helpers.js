@@ -1,7 +1,7 @@
 import { after, destroy, getFixture } from "@odoo/hoot";
 import { queryFirst, queryOne } from "@odoo/hoot-dom";
 import { App, Component, xml } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { getTemplate as defaultGetTemplate } from "@web/core/templates";
@@ -126,7 +126,7 @@ export async function mountWithCleanup(ComponentClass, options) {
         target,
         templates,
         translatableAttributes,
-        translateFn = _t,
+        translateFn = appTranslateFn,
     } = options || {};
 
     // Common component configuration

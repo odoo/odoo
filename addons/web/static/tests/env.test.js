@@ -1,7 +1,7 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { clearRegistry, makeMockEnv, patchTranslations } from "@web/../tests/web_test_helpers";
+import { clearRegistry, makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
 import { makeEnv, mountComponent, startServices } from "@web/env";
@@ -180,7 +180,7 @@ test(`startServices: waits for all synchronous code before attempting to start s
 });
 
 test(`mountComponent creates an env and sets the application as root when no env is provided`, async () => {
-    patchTranslations();
+    allowTranslations();
     registerService("my_service", [], () => "a");
 
     class Root extends Component {
@@ -198,7 +198,7 @@ test(`mountComponent creates an env and sets the application as root when no env
 });
 
 test(`mountComponent uses the env when provided and doesn't start the services`, async () => {
-    patchTranslations();
+    allowTranslations();
     registerService("my_service", [], () => {
         expect.step("starting myService");
         return "a";
