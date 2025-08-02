@@ -47,6 +47,10 @@ export class MailCoreWeb {
             if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
                 message.thread.message_needaction_counter++;
             }
+            if (message.thread) {
+                // Notification is sent from mail.thread using res.users model
+                message.thread.model = "mail.thread";
+            }
             this.store.env.services["mail.out_of_focus"].notify(message);
         });
         this.busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {
