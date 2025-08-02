@@ -81,6 +81,36 @@ registry.category("web_tour.tours").add('configurator_translation', {
             }
         }
     },
+    // Verify configurator page templates exist in landing pages category.
+    {
+        content: "Open create content menu",
+        trigger: ".o_new_content_container button",
+        run: "click",
+    }, {
+        content: "Create a new page",
+        trigger: "button[title='New Page']",
+        run: "click",
+    }, {
+        content: "Click on landing pages category",
+        trigger: "[data-id='landing']",
+        run: "click",
+    }, {
+        content: "Verify landing page templates",
+        trigger: "[data-id='landing'].o_website_page_templates_pane",
+        run() {
+            const templateCount = this.anchor.querySelectorAll(".o_page_template").length;
+            // 6 default templates in landing pages category
+            if (templateCount === 6) {
+                console.error(
+                    "Landing Pages category does not include configurator page templates and should contain more than six templates."
+                );
+            }
+        },
+    }, {
+        content: "Exit dialog",
+        trigger: ".modal-header .btn-close",
+        run: "click",
+    },
     ...clickOnEditAndWaitEditMode(),
     {
         // Check the content of the save button to make sure the website is in
