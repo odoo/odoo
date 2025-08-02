@@ -11,6 +11,7 @@ class CookiesBarOptionPlugin extends Plugin {
                 template: "website.CookiesBarOption",
                 selector: "#website_cookies_bar",
                 applyTo: ".modal",
+                reloadTarget: true,
             },
         ],
         builder_actions: {

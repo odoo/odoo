@@ -12,6 +12,7 @@ class FooterCopyrightOptionPlugin extends Plugin {
                 selector: ".o_footer_copyright",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
+                reloadTarget: true,
             },
         ],
     };
