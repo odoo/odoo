@@ -214,6 +214,53 @@ class AccountAnalyticLine(models.Model):
         [('other', 'Other')],
         default='other',
     )
+    analytic_distribution = fields.Json(
+        'Analytic Distribution',
+        compute="_compute_analytic_distribution",
+        inverse='_inverse_analytic_distribution',
+    )
+    analytic_precision = fields.Integer(
+        store=False,
+        default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
+    )
+
+    def _compute_analytic_distribution(self):
+        for line in self:
+            line.analytic_distribution = {line._get_distribution_key(): 100}
+
+    def _inverse_analytic_distribution(self):
+        project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
+        account_fnames = [
+            plan._column_name()
+            for plan in project_plan + other_plans
+        ]
+        empty_account = dict.fromkeys(account_fnames, False)
+        to_create_vals = []
+        for line in self:
+            final_distribution = self.env['analytic.mixin']._merge_distribution(
+                {line._get_distribution_key(): 100},
+                line.analytic_distribution or {},
+            )
+            amount_fname = line._split_amount_fname()
+            vals_list = [
+                {amount_fname: line[amount_fname] * percent / 100} | empty_account | {
+                    self.env['account.analytic.account'].browse(int(account_id)).plan_id._column_name(): int(account_id)
+                    for account_id in account_ids.split(',')
+                }
+                for account_ids, percent in final_distribution.items()
+            ]
+
+            line.write(vals_list[0])
+            to_create_vals += [line.copy_data(vals)[0] for vals in vals_list[1:]]
+        if to_create_vals:
+            self.create(to_create_vals)
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                'type': 'success',
+                'message': self.env._("%s analytic lines created", len(to_create_vals)),
+            })
+
+    def _split_amount_fname(self):
+        return 'amount'
 
     def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
         if fname == 'date' and value == 'fiscal_start_year':
