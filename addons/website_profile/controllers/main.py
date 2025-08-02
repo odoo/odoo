@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urlsplit
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.urls
@@ -91,14 +92,28 @@ class WebsiteProfile(http.Controller):
             field_name=field, width=int(width), height=int(height), crop=crop
         ).get_response()
 
+    def _prepare_url_from(self):
+        url_from = request.httprequest.headers.get('Referer')
+        no_url = {'url_from_label': None, 'url_from': None}
+        if url_from and ((url_from_parsed := urlsplit(url_from)).netloc == urlsplit(request.httprequest.url).netloc):
+            path = url_from_parsed.path
+            return next(({'url_from_label': label, 'url_from': url_from}
+                         for prefix, label in (('forum', _('Forum')), ('slides', _('All Courses')))
+                         if path == f'/{prefix}' or path.startswith(f'/{prefix}/')),
+                        no_url)
+        return no_url
+
     @http.route('/profile/user/<int:user_id>', type='http', auth='public', website=True, readonly=True)
     def view_user_profile(self, user_id, **post):
         user_sudo, denial_reason = self._check_user_profile_access(user_id)
         if denial_reason:
             return request.render('website_profile.profile_access_denied', {'denial_reason': denial_reason})
-        values = self._prepare_user_values(**post)
         params = self._prepare_user_profile_parameters(**post)
-        values.update(self._prepare_user_profile_values(user_sudo, **params))
+        values = {
+            **self._prepare_user_values(**post),
+            **self._prepare_user_profile_values(user_sudo, **params),
+            **self._prepare_url_from(),
+        }
         return request.render("website_profile.user_profile_main", values)
 
     # Edit Profile
@@ -162,7 +177,10 @@ class WebsiteProfile(http.Controller):
 
     @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True, readonly=True)
     def view_ranks_badges(self, **kwargs):
-        values = self._prepare_ranks_badges_values(**kwargs)
+        values = {
+            **self._prepare_ranks_badges_values(**kwargs),
+            **self._prepare_url_from(),
+        }
         return request.render("website_profile.rank_badge_main", values)
 
     # All Users Page
@@ -238,6 +256,7 @@ class WebsiteProfile(http.Controller):
             'users': user_values,
             'my_user': current_user_values,
             'pager': pager,
+            **self._prepare_url_from(),
         })
         return request.render("website_profile.users_page_main", render_values)
 
