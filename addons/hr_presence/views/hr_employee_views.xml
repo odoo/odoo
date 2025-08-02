@@ -15,17 +15,6 @@
         </field>
     </record>
 
-    <record id="hr_employee_view_tree" model="ir.ui.view">
-        <field name="name">hr.employee.view.tree</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_tree"/>
-        <field name="arch" type="xml">
-            <field name="work_email" position="after">
-                <field name="hr_presence_state_display" string="Presence" optional="hide"/>
-            </field>
-        </field>
-    </record>
-
     <record id="action_hr_employee_presence_present" model="ir.actions.server">
         <field name="name">Set Present</field>
         <field name="value">presence_group_1</field>
