@@ -12,7 +12,9 @@ import { scrollTo } from "@html_builder/utils/scrolling";
 export function getVisibleSibling(target, direction) {
     const siblingEls = [...target.parentNode.children];
     const visibleSiblingEls = siblingEls.filter(
-        (el) => window.getComputedStyle(el).display !== "none"
+        (el) =>
+            !el.classList.contains("o_we_no_overlay") &&
+            window.getComputedStyle(el).display !== "none"
     );
     const targetMobileOrder = target.style.order;
     // On mobile, if the target has a mobile order (which is independent
