@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { delay } from '@odoo/hoot-dom';
+import { registry } from "@web/core/registry";
 import {
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
@@ -10,6 +11,65 @@ import {
     openLinkPopup,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+
+registry.category("web_tour.tours").add("parent_child_menu", {
+    url: "/odoo/action-website.action_website_menu",
+    steps: () => [
+        {
+            content: "Open Menu Form View",
+            trigger: ".o_list_button_add",
+            run: "click",
+        },
+        {
+            content: "Insert Menu Name",
+            trigger: "input[id='name_0']",
+            run: "edit Parent",
+        },
+        {
+            content: "Insert Menu URL",
+            trigger: "input[id='url_0']",
+            run: "edit /parent",
+        },
+        {
+            content: "Click on Save Button",
+            trigger: ".o_form_button_save",
+            run: "click",
+        },
+        {
+            content: "Click on Add a line button",
+            trigger: "div[name='child_id'] td.o_field_x2many_list_row_add a",
+            run: "click",
+        },
+        {
+            content: "Insert Child Menu Name",
+            trigger: ".o_dialog input[id='name_0']",
+            run: "edit Child",
+        },
+        {
+            content: "Insert Child Menu URL",
+            trigger: ".o_dialog input[id='url_0']",
+            run: "edit /child",
+        },
+        {
+            content: "Click on Save & Close Button",
+            trigger: "button:contains(Save & Close)",
+            run: "click",
+        },
+        {
+            content: "Click on Save Button",
+            trigger: ".o_form_button_save",
+            run: "click",
+        },
+        {
+            content: "Check the Parent's URL",
+            trigger: "div[name='url']:contains('#')",
+        },
+        {
+            content: "Check the Child's URL",
+            trigger: "td[name='url']:contains('/child')",
+        },
+    ],
+});
 
 registerWebsitePreviewTour('edit_menus', {
     url: '/',
