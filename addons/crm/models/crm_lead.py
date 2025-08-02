@@ -785,6 +785,8 @@ class CrmLead(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            if not vals.get('type') and not vals.get('team_id') and (self.env.user._is_portal() or self.env.user._is_public()):
+                vals['type'] = 'lead' if self.env['res.groups']._is_feature_enabled('crm.group_use_lead') else 'opportunity'
             if vals.get('website'):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super().create(vals_list)
