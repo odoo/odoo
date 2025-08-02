@@ -30,7 +30,6 @@ setup(
         'cbor2',
         'chardet',
         'cryptography',
-        'decorator',
         'docutils',
         'geoip2',
         'gevent',

@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import warnings
+import functools
 from collections import defaultdict, OrderedDict
-from decorator import decorator
 from textwrap import dedent
 import logging
 import os
@@ -51,13 +50,14 @@ def backup(path, raise_exception=True):
         cnt += 1
 
 
-def assert_log_admin_access(method):
+def assert_log_admin_access(method, /):
     """Decorator checking that the calling user is an administrator, and logging the call.
 
     Raises an AccessDenied error if the user does not have administrator privileges, according
     to `user._is_admin()`.
     """
-    def check_and_log(method, self, *args, **kwargs):
+    @functools.wraps(method)
+    def check_and_log(self, *args, **kwargs):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
         log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user.id, origin)
@@ -66,7 +66,7 @@ def assert_log_admin_access(method):
             raise AccessDenied()
         _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
         return method(self, *args, **kwargs)
-    return decorator(check_and_log, method)
+    return check_and_log
 
 
 class IrModuleCategory(models.Model):
