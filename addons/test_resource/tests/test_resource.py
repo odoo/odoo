@@ -103,13 +103,13 @@ class TestResource(TestResourceCommon):
             [],
             'Europe/Brussels',
         )
-        resource_attendance = self.env['resource.calendar.attendance'].create({
+        self.env['resource.calendar.attendance'].create({
             'name': 'test',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_id': resource.id,
             'hour_from': 0,
             'hour_to': 0,
         })
-        resource_hour = resource._get_hours_per_day(resource_attendance)
+        resource_hour = resource._get_hours_per_day()
         self.assertEqual(resource_hour, 0.0)
 
     def test_resource_without_calendar(self):
