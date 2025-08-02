@@ -57,6 +57,7 @@ export class VideoSelector extends Component {
             dailymotion: "dailymotion",
             vimeo: "vimeo",
             youku: "youku",
+            instagram: "instagram",
         };
 
         this.OPTIONS = {
@@ -101,6 +102,11 @@ export class VideoSelector extends Component {
                 platforms: [this.PLATFORMS.dailymotion],
                 urlParameter: "sharing-enable=0",
             },
+            is_vertical: {
+                label: _t("Vertical"),
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.instagram],
+                urlParameter: "isVertical=0",
+            },
         };
 
         this.state = useState({
@@ -110,6 +116,7 @@ export class VideoSelector extends Component {
             platform: null,
             vimeoPreviews: [],
             errorMessage: "",
+            isVertical: this.props.media.dataset.isVertical,
         });
         this.urlInputRef = useRef("url-input");
 
@@ -127,9 +134,11 @@ export class VideoSelector extends Component {
                         this.state.urlInput = "https:" + this.state.urlInput;
                     }
                     await this.updateVideo();
-
                     this.state.options = this.state.options.map((option) => {
                         const { urlParameter } = this.OPTIONS[option.id];
+                        if (option.id == "is_vertical") {
+                            return { ...option, value: this.state.isVertical };
+                        }
                         return { ...option, value: src.indexOf(urlParameter) >= 0 };
                     });
                 }
@@ -154,6 +163,11 @@ export class VideoSelector extends Component {
 
     async onChangeOption(optionId) {
         this.state.options = this.state.options.map((option) => {
+            if (option.id === "is_vertical") {
+                this.state.isVertical = !this.state.isVertical;
+                this.props.media.dataset.isVertical = this.state.isVertical;
+                return { ...option, value: this.state.isVertical };
+            }
             if (option.id === optionId) {
                 return { ...option, value: !option.value };
             }
@@ -227,6 +241,7 @@ export class VideoSelector extends Component {
             });
         }
 
+        params["isVertical"] = this.state.isVertical;
         this.state.src = src;
         this.props.selectMedia({
             id: src,
@@ -258,10 +273,12 @@ export class VideoSelector extends Component {
         return selectedMedia.map((video) => {
             const div = document.createElement("div");
             div.dataset.oeExpression = video.src;
-            div.innerHTML =
-                '<div class="css_editable_mode_display"></div>' +
-                '<div class="media_iframe_video_size" contenteditable="false"></div>' +
-                '<iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>';
+            div.dataset.isVertical = video.params.isVertical;
+            div.innerHTML = `
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
+            `;
 
             div.querySelector("iframe").src = video.src;
             return div;
