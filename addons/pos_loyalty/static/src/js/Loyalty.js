@@ -872,6 +872,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 continue;
             }
             for (const program of programs) {
+                if (line.ignoreLoyaltyPoints({ program })) {
+                    continue;
+                }
                 // Skip lines for the current program's discounts.
                 if (isDiscount && rewardProgram.id === program.id) {
                     continue;
