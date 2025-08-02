@@ -8,36 +8,25 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_open_last_month_attendances"
                         class="oe_stat_button"
-                        icon="fa-calendar"
+                        icon="fa-clock-o"
                         type="object"
                         groups="base.group_user"
                         help="Worked hours this month"
                         invisible="not is_user">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="hours_last_month" widget="float_time"/> Hours
-                        </span>
-                        <span class="o_stat_text">
-                            This Month
-                        </span>
-                    </div>
-                </button>
-                <field name="display_extra_hours" invisible="1"/>
-                <button name="action_open_last_month_overtime"
-                        class="oe_stat_button"
-                        icon="fa-history"
-                        type="object"
-                        invisible="not is_user or total_overtime == 0.0 or not display_extra_hours"
-                        help="Amount of extra hours">
-                    <div class="o_stat_info">
-                        <span class="o_stat_value text-success" invisible="total_overtime &lt; 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_value text-danger" invisible="total_overtime &gt;= 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_text">Extra Hours</span>
-                    </div>
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="hours_last_month" widget="float_time"/>
+                                <span class="o_stat_value text-success" invisible="hours_last_month_overtime &lt;= 0 or not display_extra_hours">
+                                    (+<field name="hours_last_month_overtime" widget="float_time"/>)
+                                </span>
+                                <span class="o_stat_value text-danger" invisible="hours_last_month_overtime &gt;= 0 or not display_extra_hours">
+                                    (<field name="hours_last_month_overtime" widget="float_time"/>)
+                                </span>
+                            </span>
+                            <span class="o_stat_text">
+                                Monthly Hours
+                            </span>
+                        </div>
                 </button>
             </xpath>
         </field>

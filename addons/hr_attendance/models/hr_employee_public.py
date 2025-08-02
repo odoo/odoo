@@ -13,6 +13,7 @@ class HrEmployeePublic(models.Model):
     hours_today = fields.Float(related='employee_id.hours_today', readonly=True,
         groups="hr_attendance.group_hr_attendance_officer")
     hours_last_month = fields.Float(related='employee_id.hours_last_month')
+    hours_last_month_overtime = fields.Float(related='employee_id.hours_last_month_overtime')
     last_attendance_id = fields.Many2one(related='employee_id.last_attendance_id', readonly=True,
         groups="hr_attendance.group_hr_attendance_officer")
     total_overtime = fields.Float(related='employee_id.total_overtime', readonly=True)
@@ -28,8 +29,3 @@ class HrEmployeePublic(models.Model):
         self.ensure_one()
         if self.is_user:
             return self.employee_id.action_open_last_month_attendances()
-
-    def action_open_last_month_overtime(self):
-        self.ensure_one()
-        if self.is_user:
-            return self.employee_id.action_open_last_month_overtime()
