@@ -14,7 +14,7 @@ from io import BytesIO
 from os.path import join as opj
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import adapt_version, MANIFEST_NAMES
 from odoo.osv.expression import is_leaf
@@ -267,55 +267,58 @@ class IrModule(models.Model):
             raise UserError(_('Only zip files are supported.'))
 
         module_names = []
-        with zipfile.ZipFile(module_file, "r") as z:
-            for zf in z.filelist:
-                if zf.file_size > MAX_FILE_SIZE:
-                    raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
+        try:
+            with zipfile.ZipFile(module_file, "r") as z:
+                for zf in z.filelist:
+                    if zf.file_size > MAX_FILE_SIZE:
+                        raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
 
-            with file_open_temporary_directory(self.env) as module_dir:
-                manifest_files = [
-                    file
-                    for file in z.filelist
-                    if file.filename.count('/') == 1
-                    and file.filename.split('/')[1] in MANIFEST_NAMES
-                ]
-                module_data_files = defaultdict(list)
-                for manifest in manifest_files:
-                    manifest_path = z.extract(manifest, module_dir)
-                    mod_name = manifest.filename.split('/')[0]
-                    try:
-                        with file_open(manifest_path, 'rb', env=self.env) as f:
-                            terp = ast.literal_eval(f.read().decode())
-                    except Exception:
-                        continue
-                    files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
-                    if with_demo:
-                        files_to_import += terp.get('demo', [])
-                    for filename in files_to_import:
-                        if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
+                with file_open_temporary_directory(self.env) as module_dir:
+                    manifest_files = [
+                        file
+                        for file in z.filelist
+                        if file.filename.count('/') == 1
+                        and file.filename.split('/')[1] in MANIFEST_NAMES
+                    ]
+                    module_data_files = defaultdict(list)
+                    for manifest in manifest_files:
+                        manifest_path = z.extract(manifest, module_dir)
+                        mod_name = manifest.filename.split('/')[0]
+                        try:
+                            with file_open(manifest_path, 'rb', env=self.env) as f:
+                                terp = ast.literal_eval(f.read().decode())
+                        except Exception:
                             continue
-                        module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
-                for file in z.filelist:
-                    filename = file.filename
-                    mod_name = filename.split('/')[0]
-                    is_data_file = filename in module_data_files[mod_name]
-                    is_static = filename.startswith('%s/static' % mod_name)
-                    is_translation = filename.startswith('%s/i18n' % mod_name) and filename.endswith('.po')
-                    if is_data_file or is_static or is_translation:
-                        z.extract(file, module_dir)
+                        files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
+                        if with_demo:
+                            files_to_import += terp.get('demo', [])
+                        for filename in files_to_import:
+                            if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
+                                continue
+                            module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
+                    for file in z.filelist:
+                        filename = file.filename
+                        mod_name = filename.split('/')[0]
+                        is_data_file = filename in module_data_files[mod_name]
+                        is_static = filename.startswith('%s/static' % mod_name)
+                        is_translation = filename.startswith('%s/i18n' % mod_name) and filename.endswith('.po')
+                        if is_data_file or is_static or is_translation:
+                            z.extract(file, module_dir)
 
-                dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
-                for mod_name in dirs:
-                    module_names.append(mod_name)
-                    try:
-                        # assert mod_name.startswith('theme_')
-                        path = opj(module_dir, mod_name)
-                        self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
-                    except Exception as e:
-                        raise UserError(_(
-                            "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
-                            module=mod_name, error_message=exception_to_unicode(e),
-                        ))
+                    dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
+                    for mod_name in dirs:
+                        module_names.append(mod_name)
+                        try:
+                            # assert mod_name.startswith('theme_')
+                            path = opj(module_dir, mod_name)
+                            self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
+                        except Exception as e:
+                            raise UserError(_(
+                                "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
+                                module=mod_name, error_message=exception_to_unicode(e),
+                            ))
+        except zipfile.BadZipFile:
+            raise ValidationError(_("File is not a valid ZIP or is corrupted."))
         return "", module_names
 
     def module_uninstall(self):
@@ -499,26 +502,29 @@ class IrModule(models.Model):
         known_mods = self.search([('to_buy', '=', False)])
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
         not_found_modules = set()
-        with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
-            manifest_files = [
-                file
-                for file in z.filelist
-                if file.filename.count('/') == 1
-                and file.filename.split('/')[1] in MANIFEST_NAMES
-            ]
-            for manifest_file in manifest_files:
-                if manifest_file.file_size > MAX_FILE_SIZE:
-                    raise UserError(_("File '%s' exceed maximum allowed file size", manifest_file.filename))
-                try:
-                    with z.open(manifest_file) as manifest:
-                        terp = ast.literal_eval(manifest.read().decode())
-                except Exception:
-                    continue
-                unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
-                dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
-                not_found_modules |= set(
-                    mod for mod in unmet_dependencies if mod not in dependencies_to_install.mapped('name')
-                )
+        try:
+            with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
+                manifest_files = [
+                    file
+                    for file in z.filelist
+                    if file.filename.count('/') == 1
+                    and file.filename.split('/')[1] in MANIFEST_NAMES
+                ]
+                for manifest_file in manifest_files:
+                    if manifest_file.file_size > MAX_FILE_SIZE:
+                        raise UserError(_("File '%s' exceed maximum allowed file size", manifest_file.filename))
+                    try:
+                        with z.open(manifest_file) as manifest:
+                            terp = ast.literal_eval(manifest.read().decode())
+                    except Exception:
+                        continue
+                    unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
+                    dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
+                    not_found_modules |= set(
+                        mod for mod in unmet_dependencies if mod not in dependencies_to_install.mapped('name')
+                    )
+        except zipfile.BadZipFile:
+            raise ValidationError(_("File is not a valid ZIP or is corrupted."))
         return dependencies_to_install, not_found_modules
 
     @api.model
