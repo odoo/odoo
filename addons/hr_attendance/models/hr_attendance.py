@@ -78,8 +78,25 @@ class HrAttendance(models.Model):
 
     @api.depends("worked_hours", "overtime_hours")
     def _compute_expected_hours(self):
-        for attendance in self:
-            attendance.expected_hours = attendance.worked_hours - attendance.overtime_hours
+        if not self:
+            return
+        weekly_limit = self[0].employee_id.resource_calendar_id.full_time_required_hours or 0.0
+        weeks_to_process = {att.check_in.date() - timedelta(days=att.check_in.weekday()) for att in self}
+        for week_start in weeks_to_process:
+            week_end = week_start + timedelta(days=7)
+            all_attendances = self.env["hr.attendance"].search([
+                ("employee_id", "=", self[0].employee_id.id),
+                ("check_in", ">=", week_start),
+                ("check_in", "<", week_end),
+            ]).sorted("check_in")
+            weekly_total = 0.0
+            for att in all_attendances:
+                calculated = att.worked_hours - att.overtime_hours
+                if weekly_total + calculated <= weekly_limit:
+                    att.expected_hours = calculated
+                    weekly_total += calculated
+                else:
+                    att.expected_hours = 0.0
 
     def _compute_color(self):
         for attendance in self:
@@ -98,17 +115,23 @@ class HrAttendance(models.Model):
             self.env.cr.execute('''
                 WITH employee_time_zones AS (
                     SELECT employee.id AS employee_id,
-                           calendar.tz AS timezone
+                           calendar.tz AS timezone,
+                           calendar.flexible_hours,
+                           calendar.full_time_required_hours AS required_hours
                       FROM hr_employee employee
                 INNER JOIN resource_calendar calendar
                         ON calendar.id = employee.resource_calendar_id
                 )
                 SELECT att.id AS att_id,
+                       att.employee_id,
                        att.worked_hours AS att_wh,
                        ot.id AS ot_id,
                        ot.duration AS ot_d,
                        ot.date AS od,
-                       att.check_in AS ad
+                       att.check_in AS ad,
+                       att.check_in AT TIME ZONE 'UTC' AT TIME ZONE etz.timezone AS local_check_in,
+                       etz.required_hours,
+                       etz.flexible_hours
                   FROM hr_attendance att
             INNER JOIN employee_time_zones etz
                     ON att.employee_id = etz.employee_id
@@ -125,12 +148,42 @@ class HrAttendance(models.Model):
             ''', (tuple(self.employee_id.ids),))
             a = self.env.cr.dictfetchall()
             grouped_dict = dict()
+            flexible_weekly_data = defaultdict(lambda: {
+                'attendances': [],
+                'total_hours': 0.0,
+                'required_hours': 0.0,
+            })
             for row in a:
-                if row['ot_id'] and row['att_wh']:
-                    if row['ot_id'] not in grouped_dict:
-                        grouped_dict[row['ot_id']] = {'attendances': [(row['att_id'], row['att_wh'])], 'overtime_duration': row['ot_d']}
+                if row['flexible_hours']:
+                    week_key = (
+                        row['employee_id'],
+                        row['local_check_in'].isocalendar()[0],
+                        row['local_check_in'].isocalendar()[1],
+                    )
+                    flexible_weekly_data[week_key]['attendances'].append(row)
+                    flexible_weekly_data[week_key]['total_hours'] += row['att_wh']
+                    flexible_weekly_data[week_key]['required_hours'] = row['required_hours']
+                else:
+                    if row['ot_id'] and row['att_wh']:
+                        if row['ot_id'] not in grouped_dict:
+                            grouped_dict[row['ot_id']] = {'attendances': [(row['att_id'], row['att_wh'])], 'overtime_duration': row['ot_d']}
+                        else:
+                            grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
+
+            for week_info in flexible_weekly_data.values():
+                overtime_reservoir = max(0, week_info['total_hours'] - week_info['required_hours'])
+                for att in week_info['attendances']:
+                    att_id = att['att_id']
+                    worked = att['att_wh']
+
+                    if overtime_reservoir <= 0:
+                        att_progress_values[att_id] = 100
+                    elif worked <= overtime_reservoir:
+                        att_progress_values[att_id] = 0
+                        overtime_reservoir -= worked
                     else:
-                        grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
+                        att_progress_values[att_id] = ((worked - overtime_reservoir) / worked) * 100
+                        overtime_reservoir = 0
 
             for overtime in grouped_dict:
                 overtime_reservoir = grouped_dict[overtime]['overtime_duration']
