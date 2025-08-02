@@ -254,6 +254,28 @@ class DiscussChannel(models.Model):
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 
+    @api.autovacuum
+    def _gc_bot_only_ongoing_sessions(self):
+        """Garbage collect bot-only livechat sessions with no activity for over 1 day."""
+        limit_date = fields.Datetime.subtract(fields.Datetime.now(), days=1)
+        stale_sessions = self.search([
+            ('channel_type', '=', 'livechat'),
+            ('livechat_active', '=', True),
+            ('last_interest_dt', '<', limit_date),
+        ])
+        if not stale_sessions:
+            return
+
+        bot_only_sessions = stale_sessions.filtered(
+            lambda session: (
+                not session.livechat_agent_history_ids and
+                session.livechat_bot_history_ids
+            )
+        )
+
+        for session in bot_only_sessions:
+            session._close_livechat_session()
+
     def execute_command_history(self, **kwargs):
         self._bus_send(
             "im_livechat.history_command",
