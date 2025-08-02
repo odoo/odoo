@@ -11,11 +11,12 @@ class CalendarController(http.Controller):
 
     # YTI Note: Keep id and kwargs only for retrocompatibility purpose
     @http.route('/calendar/meeting/accept', type='http', auth="calendar")
-    def accept_meeting(self, token, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([
-            ('access_token', '=', token),
-            ('state', '!=', 'accepted')])
-        attendee.do_accept()
+    def accept_meeting(self, token, id, confirm_needed=None, **kwargs):
+        if not confirm_needed:
+            attendee = request.env['calendar.attendee'].sudo().search([
+                ('access_token', '=', token),
+                ('state', '!=', 'accepted')])
+            attendee.do_accept()
         return self.view_meeting(token, id)
 
     @http.route('/calendar/recurrence/accept', type='http', auth="calendar")
@@ -33,11 +34,12 @@ class CalendarController(http.Controller):
         return self.view_meeting(token, id)
 
     @http.route('/calendar/meeting/decline', type='http', auth="calendar")
-    def decline_meeting(self, token, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([
-            ('access_token', '=', token),
-            ('state', '!=', 'declined')])
-        attendee.do_decline()
+    def decline_meeting(self, token, id, confirm_needed=None, **kwargs):
+        if not confirm_needed:
+            attendee = request.env['calendar.attendee'].sudo().search([
+                ('access_token', '=', token),
+                ('state', '!=', 'declined')])
+            attendee.do_decline()
         return self.view_meeting(token, id)
 
     @http.route('/calendar/recurrence/decline', type='http', auth="calendar")
