@@ -472,7 +472,25 @@ patch(PosStore.prototype, {
         ) {
             this.removeOrder(order);
         }
+<<<<<<< 73b4a730148521fae0cd8da530bd3e25821c76ee
         super.navigate(routeName, routeParams);
+||||||| dea3c068dfb25f56d54d90a1129995a324f82e2a
+        super.showScreen(...arguments);
+    },
+    closeScreen() {
+        if (this.config.module_pos_restaurant && !this.getOrder()) {
+            return this.showScreen("FloorScreen");
+        }
+        return super.closeScreen(...arguments);
+=======
+        return super.showScreen(...arguments);
+    },
+    closeScreen() {
+        if (this.config.module_pos_restaurant && !this.getOrder()) {
+            return this.showScreen("FloorScreen");
+        }
+        return super.closeScreen(...arguments);
+>>>>>>> 698db60754ef036f79389237fa0a1ec13c32bdae
     },
     showDefault() {
         const page = this.defaultPage;

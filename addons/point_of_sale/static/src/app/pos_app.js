@@ -25,8 +25,15 @@ export class Chrome extends Component {
             if (stopEventPropagation.includes(ev.type)) {
                 ev.stopPropagation();
             }
+<<<<<<< 73b4a730148521fae0cd8da530bd3e25821c76ee
             const page = this.pos.firstPage;
             this.pos.navigate(page.page, page.params);
+||||||| dea3c068dfb25f56d54d90a1129995a324f82e2a
+            this.pos.showScreen(this.pos.firstScreen);
+=======
+            this.pos.showScreen(this.pos.firstScreen);
+            return false;
+>>>>>>> 698db60754ef036f79389237fa0a1ec13c32bdae
         });
 
         const reactivePos = reactive(this.pos);
