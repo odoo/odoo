@@ -152,5 +152,12 @@ const StorePatch = {
     },
     /** @param {import("models").Thread} fromThread */
     onLinkFollowed(fromThread) {},
+    get inboxTabThreads() {
+        return [
+            ...new Set(
+                [...this.inbox.messages, ...this.history.messages].map((message) => message.thread)
+            ),
+        ];
+    },
 };
 patch(Store.prototype, StorePatch);

@@ -160,13 +160,18 @@ export class Store extends BaseStore {
         compute() {
             /** @type {import("models").Thread[]} */
             const searchTerm = cleanTerm(this.discuss.searchTerm);
+            const tab = this.discuss.activeTab;
+            if (tab === "inbox") {
+                return this.inboxTabThreads.filter((thread) =>
+                    cleanTerm(thread.displayName).includes(searchTerm)
+                );
+            }
             let threads = Object.values(this.Thread.records).filter(
                 (thread) =>
                     (thread.displayToSelf ||
                         (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
                     cleanTerm(thread.displayName).includes(searchTerm)
             );
-            const tab = this.discuss.activeTab;
             if (tab !== "main") {
                 threads = threads.filter(({ channel_type }) =>
                     this.tabToThreadType(tab).includes(channel_type)
@@ -194,6 +199,10 @@ export class Store extends BaseStore {
             return thread2.localId > thread1.localId ? 1 : -1;
         },
     });
+
+    get inboxTabThreads() {
+        return [];
+    }
 
     /**
      * @param {Object} params post message data

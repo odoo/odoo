@@ -1,5 +1,5 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { onExternalClick, useVisible } from "@mail/utils/common/hooks";
 import { useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -18,6 +18,8 @@ patch(MessagingMenu.prototype, {
         Object.assign(this.state, {
             searchOpen: false,
         });
+        this.store.history.loadOlder = true;
+        this.store.inbox.loadOlder = true;
 
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
         useEffect(
@@ -44,6 +46,11 @@ patch(MessagingMenu.prototype, {
             },
             () => [this.dropdown.isOpen]
         );
+        useVisible("messaging-menu-load-more", (isVisible) => {
+            if (isVisible) {
+                this.loadMoreInboxTabData();
+            }
+        });
     },
     beforeOpen() {
         this.state.searchOpen = false;
@@ -105,6 +112,15 @@ patch(MessagingMenu.prototype, {
                 label: this.env.inDiscussApp ? _t("Mailboxes") : _t("All"),
             },
             ...super.tabs,
+            ...(this.store.self.main_user_id?.notification_type === "inbox"
+                ? [
+                      {
+                          icon: "fa fa-inbox",
+                          id: "inbox",
+                          label: _t("Inbox"),
+                      },
+                  ]
+                : []),
         ];
     },
     /** @param {import("models").Failure} failure */
@@ -175,5 +191,29 @@ patch(MessagingMenu.prototype, {
             return _t("Email Failure: %(modelName)s", { modelName: failure.modelName });
         }
         return _t("Failure: %(modelName)s", { modelName: failure.modelName });
+    },
+    get notificationItems() {
+        return Array.from(super.notificationItems).filter((el) =>
+            el.classList.contains("o-mail-NotificationItem")
+        );
+    },
+    async loadMoreInboxTabData() {
+        if (this.store.discuss.activeTab !== "inbox") {
+            return;
+        }
+        const { inbox, history } = this.store;
+        if (inbox.loadOlder) {
+            await inbox.fetchMoreMessages();
+            if (this.store.menuThreads.length < 15) {
+                this.loadMoreInboxTabData();
+            }
+            return;
+        }
+        if (history.loadOlder) {
+            await history.fetchMoreMessages();
+            if (this.store.menuThreads.length < 15) {
+                this.loadMoreInboxTabData();
+            }
+        }
     },
 });
