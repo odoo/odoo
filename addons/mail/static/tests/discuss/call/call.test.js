@@ -253,7 +253,7 @@ test("Camera video stream stays in focus when on/off", async () => {
 test("Create a direct message channel when clicking on start a meeting", async () => {
     await start();
     await openDiscuss();
-    await click("button", { text: "Start a meeting" });
+    await click("button[title='Start a meeting']");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
     await contains(".o-discuss-ChannelInvitation");

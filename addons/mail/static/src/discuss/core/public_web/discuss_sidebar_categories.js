@@ -249,21 +249,6 @@ export class DiscussSidebarCategories extends Component {
         this.store = useService("mail.store");
         this.discusscorePublicWebService = useService("discuss.core.public.web");
         this.orm = useService("orm");
-        this.ui = useService("ui");
-        this.command = useService("command");
-        this.searchHover = useHover(["search-btn", "search-floating"], {
-            onHover: () => {
-                if (this.store.discuss.isSidebarCompact) {
-                    this.searchFloating.isOpen = true;
-                }
-            },
-            onAway: () => {
-                if (this.store.discuss.isSidebarCompact) {
-                    this.searchFloating.isOpen = false;
-                }
-            },
-        });
-        this.searchFloating = useDropdownState();
         useSubEnv({
             filteredThreads: (threads) => this.filteredThreads(threads),
         });
@@ -271,10 +256,6 @@ export class DiscussSidebarCategories extends Component {
 
     filteredThreads(threads) {
         return threads.filter((thread) => thread.displayInSidebar);
-    }
-
-    onClickFindOrStartConversation() {
-        this.command.openMainPalette({ searchValue: "@" });
     }
 }
 
