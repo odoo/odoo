@@ -149,7 +149,9 @@ export class DiscussCommandPalette {
 
     async fetch() {
         await this.store.channels.fetch(); // FIXME: needed to search group chats without explicit name
-        await this.store.searchConversations(this.cleanedTerm);
+        if (this.cleanedTerm) {
+            await this.store.searchConversations(this.cleanedTerm);
+        }
     }
 
     /** @param {Record[]} [filtered] persona or thread to filters, e.g. being build already in a category in a patch such as MENTIONS or RECENT */

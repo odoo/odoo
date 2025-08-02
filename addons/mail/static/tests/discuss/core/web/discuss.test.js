@@ -49,7 +49,7 @@ test("can create a new channel", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "abc");
-    await waitForSteps([`/discuss/search - {"term":""}`, `/discuss/search - {"term":"abc"}`]);
+    await waitForSteps([`/discuss/search - {"term":"abc"}`]);
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-DiscussSidebar-item", { text: "abc" });
     await contains(".o-mail-Message", { count: 0 });
@@ -117,7 +117,7 @@ test("can make a DM chat", async () => {
                 fetch_params: { limit: 60, around: 0 },
             })}`,
         ],
-        stepsBefore: [`/discuss/search - {"term":""}`, `/discuss/search - {"term":"mario"}`],
+        stepsBefore: [`/discuss/search - {"term":"mario"}`],
     });
 });
 
