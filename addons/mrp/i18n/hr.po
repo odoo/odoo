@@ -25,6 +25,7 @@
 # Zvonimir Galic, 2025
 # Goran Kliska <gkliska@gmail.com>, 2025
 # Ivica Dimjašević, 2025
+# Jurica Pomper, 2025
 # Luka Carević <luka@uvid.hr>, 2025
 # 
 msgid ""
@@ -745,7 +746,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
 msgid "Allocation Report for Manufacturing Orders"
-msgstr ""
+msgstr "Izvještaj o alokaciji za proizvodne naloge"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1139,6 +1140,9 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"Sastavnice omogućuju definiranje popisa potrebnih sirovina koje se koriste "
+"za izradu gotovog proizvoda – putem proizvodne narudžbe ili paketa "
+"proizvoda."
 
 #. module: mrp
 #. odoo-javascript
@@ -1629,7 +1633,7 @@ msgstr "Kopiraj obilježene operacije"
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Cost Breakdown of Products"
-msgstr ""
+msgstr "Analiza troškova proizvoda"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
@@ -2470,7 +2474,7 @@ msgstr "Određuje redoslijed stavaka u prikazu."
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__worksheet_type__google_slide
 msgid "Google Slide"
-msgstr ""
+msgstr "Google prezentacija"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2538,7 +2542,7 @@ msgstr "Skriveno"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 msgid "Highlight Consumption"
-msgstr ""
+msgstr "Istakni utrošak"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -2772,7 +2776,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_locked
 msgid "Is Locked"
-msgstr "Je Zaključano"
+msgstr "Je zaključano"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__manual
@@ -3564,7 +3568,7 @@ msgstr "Još nema podataka!"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "No manufacturing order found. Let's create one."
-msgstr ""
+msgstr "Nijedna proizvodna narudžba nije pronađena. Kreirajmo jednu."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -3791,7 +3795,7 @@ msgstr "Operacija"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
 msgid "Operation Dependencies"
-msgstr ""
+msgstr "Međuovisnosti operacija"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__operation_id
@@ -4055,12 +4059,12 @@ msgstr "Planiranje naloga"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_with_components_availability
 msgid "Plan based on Components Availability"
-msgstr ""
+msgstr "Planiraj prema dostupnosti komponenti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr ""
+msgstr "Planirajte proizvodne ili nabavne naloge na temelju predviđanja"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -4261,7 +4265,7 @@ msgstr "Proizvodnja nus proizvoda"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -> C + D)"
-msgstr ""
+msgstr "Proizvedi nusproizvode (A + B -> C + D)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4413,7 +4417,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr ""
+msgstr "Proizvod za izradu..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_id
@@ -4876,7 +4880,7 @@ msgstr "Otpisani prijenos"
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Otpis proizvoda"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
@@ -4916,7 +4920,7 @@ msgstr "Potraži proizvodni centar"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Sigurnosno vrijeme"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
@@ -5854,7 +5858,7 @@ msgstr "Sljedivost"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_tracking
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_tracking
 msgid "Tracking"
-msgstr "Sljedivost:"
+msgstr "Praćenje"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
@@ -5996,7 +6000,7 @@ msgstr "Otključajte nalog za proizvodnju"
 #. module: mrp
 #: model:res.groups,name:mrp.group_unlocked_by_default
 msgid "Unlocked by default"
-msgstr ""
+msgstr "Otključano prema zadanim postavkama"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6035,6 +6039,8 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
+"Koristite proizvodne narudžbe (MO) za izradu gotovih proizvoda koristeći "
+"komponente: npr. 1 stol = 4 noge za stol + 1 ploča stola"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -6113,6 +6119,8 @@ msgid ""
 "View and allocate production quantities to customer orders or other "
 "manufacturing orders"
 msgstr ""
+"Pregledajte i alocirajte proizvedene količine na narudžbe kupaca ili druge "
+"proizvodne naloge"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days

@@ -132,6 +132,8 @@ msgstr ""
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
+"Örnek: '219999830019' (format: 12 haneli, sadece rakam, geçerli kontrol "
+"hanesi)"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -156,12 +158,14 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Bu onay kutusu işaretlenirse, uygulanacak varsayılan mali konum, Avrupa VIES"
+" Hizmeti tarafından yapılan doğrulamanın sonucuna bağlı olacaktır."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "Topluluk İçi Geçerli"
 
 #. module: base_vat
 #. odoo-python
@@ -173,7 +177,7 @@ msgstr "MXGODE561231GR8 veya GODE561231GR8"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "VIES Doğrulaması Yap"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -204,7 +208,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "%s KDV numarası VIES sunucusu tarafından yorumlanamadı."
 
 #. module: base_vat
 #. odoo-python
@@ -263,6 +267,7 @@ msgstr "VIES KDV Doğrulaması"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
+"XXXXXXXXX [9 haneli] olmalı ve Luhn algoritması kontrol basamağına uymalıdır"
 
 #. module: base_vat
 #. odoo-python

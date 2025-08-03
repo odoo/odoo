@@ -55,6 +55,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"Nota: els productes als quals no tens accés no es mostraran."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -76,7 +79,7 @@ msgstr "14,00 €"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$15.00"
-msgstr ""
+msgstr "15,00 €"
 
 #. module: product
 #. odoo-python
@@ -85,6 +88,8 @@ msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s amb un descompte del %(discount)s %% %(discount_type)s i %(surcharge)s un cost addicional\n"
+"Exemple: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -93,24 +98,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date "
 "(%(start_date)s)"
 msgstr ""
+"%(item_name)s: la data de finalització (%(end_date)s) ha de ser posterior a "
+"la data d'inici (%(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s en %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% de descompte en %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% de descompte en el preu de venda"
 
 #. module: product
 #. odoo-python
@@ -138,19 +145,19 @@ msgstr "'Productor- %s' % (object.name)"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(per exemple: descripció del producte, ebook, avís legal, etc.)."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ cost addicional de %(amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s de rebaixa"
 
 #. module: product
 #. odoo-python
@@ -187,12 +194,12 @@ msgstr "10"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 unitats"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
-msgstr ""
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -253,6 +260,12 @@ msgid ""
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            Regles\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                            Regla\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -264,6 +277,12 @@ msgid ""
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Llistes de preus\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        Llista de preus\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -273,7 +292,7 @@ msgstr "<span class=\"o_stat_text\"> Productes</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Productes</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -477,7 +496,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Afegeix productes a l'informe de la llista de preus"
 
 #. module: product
 #. odoo-javascript
@@ -492,22 +511,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Afegeix productes mitjançant el botó «Afegir productes» a la part superior dreta per\n"
+"                                incloure'ls a l'informe."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Afegir a tots els productes"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Afegir als productes existents"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Afegir a productes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -541,7 +562,7 @@ msgstr "Tots els Productes"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All categories"
-msgstr ""
+msgstr "Totes les categories"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
@@ -557,19 +578,19 @@ msgstr "Tots els fitxers s'han carregat"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All products"
-msgstr ""
+msgstr "Tots els productes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "Totes les variants"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "Permet que els clients estableixin el seu propi valor"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -706,7 +727,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 msgid "Back to Quotation"
-msgstr ""
+msgstr "Tornar al pressupost"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -1058,7 +1079,7 @@ msgstr "Creeu una nova variant de producte"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "Crear un producte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
@@ -1344,12 +1365,12 @@ msgstr "Documents"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Nombre de documents"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "Documents d'aquesta variant"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1360,7 +1381,7 @@ msgstr "Descarregar"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Download examples"
-msgstr ""
+msgstr "Descarregar exemples"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1438,7 +1459,7 @@ msgstr "Ergonòmic"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "Error en exportar l'arxiu. Si us plau, torna a intentar-ho."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1469,7 +1490,7 @@ msgstr "Informació extra"
 #. module: product
 #: model:product.attribute,name:product.pa_extra_options
 msgid "Extra Options"
-msgstr ""
+msgstr "Opcions addicionals"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
@@ -1755,6 +1776,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
 msgstr ""
+"Si no està marcat, podràs ocultar l'atribut sense haver d'eliminar-lo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2067,7 +2089,7 @@ msgstr "Marges"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr ""
+msgstr "Marge de benefici"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2218,7 +2240,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No products could be found."
-msgstr ""
+msgstr "No s'ha trobat cap producte."
 
 #. module: product
 #. odoo-javascript
@@ -2342,6 +2364,8 @@ msgstr ""
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
+"Vaja! '%(fileName)s' no s'ha pogut carregar perquè el format no és "
+"compatible."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2351,7 +2375,7 @@ msgstr "Adjunció original (sense optimitzar ni redimensionar)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__lst_price
 msgid "Original Price"
-msgstr ""
+msgstr "Preu original"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2412,7 +2436,7 @@ msgstr "Plástic"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "Si us plau, introdueix un nombre positiu sencer."
 
 #. module: product
 #. odoo-python
@@ -2423,12 +2447,16 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"Si us plau, introdueix un URL vàlid.\n"
+"Exemple: https://www.odoo.com\n"
+"\n"
+"URL no vàlid: %s"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "Si us plau, primer selecciona alguns productes."
 
 #. module: product
 #. odoo-python
@@ -2554,7 +2582,7 @@ msgstr "Informe de la llista de cotitzacions"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "Vista prèvia de l'informe de la llista de preus"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2700,7 +2728,7 @@ msgstr "Nombre de productes"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Product Creation"
-msgstr ""
+msgstr "Creació de producte"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
@@ -2973,7 +3001,7 @@ msgstr "Descripció de compra"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit"
-msgstr ""
+msgstr "Unitat de compra"
 
 #. module: product
 #. odoo-javascript
@@ -2984,7 +3012,7 @@ msgstr "Quantitats"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "Quantitats (preu)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2996,7 +3024,7 @@ msgstr "Quantitat"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "Quantitat (%s UdM)"
 
 #. module: product
 #. odoo-javascript
@@ -3181,7 +3209,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Show Name"
-msgstr ""
+msgstr "Mostrar el nom"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3324,7 +3352,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
 msgid "Template Values"
-msgstr ""
+msgstr "Valors de la plantilla"
 
 #. module: product
 #. odoo-python
@@ -3336,7 +3364,7 @@ msgstr "La referència interna '%s' ja existeix."
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "The Reference '%s' already exists."
-msgstr ""
+msgstr "La referència '%s' ja existeix."
 
 #. module: product
 #. odoo-python
@@ -3410,6 +3438,11 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"El preu mínim entre els productes d'aquesta combinació. Aquest valor "
+"s'utilitzarà per prorratejar el preu del combo en relació amb altres "
+"combinacions dins d'un producte d'aquest tipus. Aquesta heurística garanteix"
+" que, independentment del producte que l'usuari triï, el preu sempre serà el"
+" mateix."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3429,6 +3462,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"El nombre de variants a generar és superior al límit permès. Evita crear "
+"variants per a cada combinació o crea-les sota demanda des de la comanda de "
+"venda. Per fer-ho, obre la vista de formulari d'atributs i canvia el mode de"
+" *Crear variants*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3458,7 +3495,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "El mètode d'arrodoniment ha de ser positiu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
@@ -3604,7 +3641,7 @@ msgstr "Tipus d'activitat d'excepció registrada."
 #: code:addons/product/controllers/pricelist_report.py:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "UdM"
 
 #. module: product
 #. odoo-python
@@ -3664,23 +3701,23 @@ msgstr "Categoria UoM"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "Actualitzar els preus addicionals"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "Actualitzar el valor de l'atribut del producte"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "Actualitzar els preus addicionals del producte"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "Actualitzar el preu addicional en productes existents"
 
 #. module: product
 #. odoo-javascript
@@ -3692,7 +3729,7 @@ msgstr "Pujar"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Pujar arxius al producte"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3710,6 +3747,8 @@ msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
 msgstr ""
+"Utilitza les regles de descompte i activa la configuració de descompte "
+"perquè el client pugui visualitzar el descompte."
 
 #. module: product
 #. odoo-python
@@ -3718,6 +3757,8 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"Utilitza aquesta funció per emmagatzemar qualsevol arxiu que vulguis "
+"compartir amb els teus clients."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3765,6 +3806,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"El valor del producte (calculat automàticament mitjançant AVCO).\n"
+"        S'utilitza per valorar el producte quan no es coneix el cost de compra (per exemple, en un ajust d'inventari).\n"
+"        S'utilitza per calcular els marges de les comandes de venda."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3789,7 +3833,7 @@ msgstr "Comptador de variants"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "Creació de la variant"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3835,7 +3879,7 @@ msgstr "Venedor de variants"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Variant Tags"
-msgstr ""
+msgstr "Etiquetes de la variant"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
@@ -3997,12 +4041,14 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"Estàs a punt d'afegir el valor \"%(attribute_value)s\" a %(product_count)s "
+"productes."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "Estàs a punt d'actualitzar el preu addicional de %s productes."
 
 #. module: product
 #. odoo-python
@@ -4011,6 +4057,8 @@ msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
 msgstr ""
+"Estàs desactivant la configuració de la llista de preus. S'arxivaran totes "
+"les llistes de preus actives."
 
 #. module: product
 #. odoo-python
@@ -4035,7 +4083,7 @@ msgstr "Podeu aplicar una marca en establir un descompte negatiu."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "És possible aplicat un marge de benefici en el cost"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -4062,12 +4110,13 @@ msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
 msgstr ""
+"Pots pujar una imatge que s'utilitzarà com el color del valor de l'atribut."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "No és possible editar aquest producte des del catàleg."
 
 #. module: product
 #. odoo-python
@@ -4075,6 +4124,8 @@ msgstr ""
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
+"No és possible arxivar aquest atribut perquè encara hi ha productes "
+"vinculats a aquest."
 
 #. module: product
 #. odoo-python
@@ -4102,6 +4153,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"No és possible canviar l'atribut del valor %(value)s perquè s'utilitza en "
+"els següents productes: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -4148,6 +4201,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"No és possible eliminar les llistes de preus:\n"
+"(%(pricelists)s)\n"
+"S'utilitzen a una altra llista de preus:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4172,6 +4229,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"No és possible eliminar el valor %(value)s perquè s'utilitza en els següents productes:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
@@ -4209,6 +4268,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Has de definir un producte per a tot el que vens o compres,\n"
+"                            sigui un producte emmagatzemable, un consumible o un servei."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -4262,7 +4323,7 @@ msgstr "Has de posar una quantitat positiva."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "csv"
-msgstr ""
+msgstr ".csv"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4279,12 +4340,12 @@ msgstr "descompte "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 msgid "e.g. 1234567890"
-msgstr ""
+msgstr "per exemple, 1234567890"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "per exemple, opció d'hamburguesa"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4305,7 +4366,7 @@ msgstr "e.x. Subscripció a Odoo Enterprise"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "per exemple, entrant - principal - postres"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -4346,7 +4407,7 @@ msgstr "producte"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "cost del producte"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -4358,7 +4419,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
-msgstr ""
+msgstr "preu de venda"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
@@ -4379,4 +4440,4 @@ msgstr "fins"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
-msgstr ""
+msgstr ".xlsx"
