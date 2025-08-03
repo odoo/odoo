@@ -286,6 +286,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">สวัสดีค่ะ <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p><b>ขอแสดงความยินดีด้วย!</b></p>\n"
+"                        <p>คุณได้สำเร็จหลักสูตร <b t-out=\"object.channel_id.name or ''\">หลักพื้นฐานของการทำสวน</b> แล้ว</p>\n"
+"                        <p>ลองดูหลักสูตรอื่นๆ ที่มีให้บริการ</p><br/>\n"
+"\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" t-attf-style=\"background-color: {{object.channel_id.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.channel_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">\n"
+"                                ค้นพบหลักสูตร\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        ขอให้คุณสนุกไปกับเนื้อหาสุดพิเศษ!\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.channel_id.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_shared
@@ -311,6 +331,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        สวัสดีค่ะ<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> ได้แชร์ <strong t-out=\"object.name or ''\">เอกสาร</strong> กับคุณ!\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\" t-attf-style=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">\n"
+"                                ดู <strong t-out=\"object.name or ''\">เอกสาร</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -382,6 +422,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        สวัสดีค่ะ<br/><br/>\n"
+"                        มีสิ่งใหม่ในหลักสูตร <strong t-out=\"object.channel_id.name or ''\">ต้นไม้ ไม้ และสวน</strong> ที่คุณกำลังติดตามอยู่:<br/><br/>\n"
+"                        </p><center><strong t-out=\"object.name or ''\">ต้นไม้</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" t-attf-style=\"background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">ดูเนื้อหา</a>\n"
+"                        </div>\n"
+"                        สนุกไปกับเนื้อหาพิเศษนี้!\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -2450,7 +2513,7 @@ msgstr "สร้างกลุ่มหลักสูตร"
 #. module: website_slides
 #: model:ir.model,website_form_label:website_slides.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "สร้างลูกค้า"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -5793,14 +5856,14 @@ msgstr "คำอธิบายที่แสดงอยู่ด้านบ
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_absolute_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "URL แบบเต็มเพื่อเข้าถึงเอกสารผ่านทางเว็บไซต์"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "URL สัมพัทธ์เต็มในการเข้าถึงเอกสารผ่านทางเว็บไซต์"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_completed
@@ -6376,7 +6439,7 @@ msgstr "เว็บไซต์ / สไลด์"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_absolute_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL สัมบูรณ์ของเว็บไซต์"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids

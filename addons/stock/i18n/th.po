@@ -568,6 +568,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        สวัสดีค่ะ <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        เรายินดีที่จะแจ้งให้คุณทราบว่าคำสั่งซื้อของคุณได้รับการจัดส่งแล้ว\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            เลขที่อ้างอิงการติดตามของคุณคือ\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        โปรดดูใบสั่งซื้อการจัดส่งของคุณที่แนบมาเพื่อดูรายละเอียดเพิ่มเติม<br/><br/>\n"
+"        ขอบคุณ\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -633,7 +666,7 @@ msgstr "<span class=\"o_stat_text\">ล็อต/หมายเลขซีเ�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">หมายเลขล็อต/หมายเลขซีเรียล</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1355,6 +1388,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"เนื่องจากมีการใช้งานหน่วยวัดอื่น (เช่น: %(problem_uom)s) นอกเหนือจาก %(uom)s"
+" กับสินค้านี้แล้ว จึงไม่สามารถเปลี่ยนหน่วยวัดได้ หากต้องการเปลี่ยนหน่วยวัด "
+"กรุณาเก็บถาวร (archive) สินค้านี้ไว้ และสร้างรายการสินค้าใหม่"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1979,7 +2015,7 @@ msgstr "คํานวณค่าใช้จ่ายการขนส่ง
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "คำนวณค่าจัดส่งและจัดส่งด้วย Envia.com"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2242,7 +2278,7 @@ msgstr "สร้างสต็อก"
 #. module: stock
 #: model:ir.model,website_form_label:stock.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "สร้างลูกค้า"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -6284,7 +6320,7 @@ msgstr "ประเภทหีบห่อ"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
 msgid "Pack of 6"
-msgstr ""
+msgstr "แพ็ค 6 ชิ้น"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -6480,7 +6516,7 @@ msgstr "ความกว้างของบรรจุภัณฑ์"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "หน่วยบรรจุภัณฑ์จากใบสั่งซื้อหรือใบขาย"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -7300,7 +7336,7 @@ msgstr "ปริมาณใน UoM เริ่มต้นของสิน�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "ปริมาณในหน่วยบรรจุภัณฑ์"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -8223,7 +8259,7 @@ msgstr "ไม่รองรับการเลือก"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "ขายและซื้อสินค้าในหน่วยวัดหรือบรรจุภัณฑ์ที่แตกต่างกัน"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8549,7 +8585,7 @@ msgstr "แสดงการโอนย้าย"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "แสดงบันทึกทั้งหมดที่มีวันที่กิจกรรมครั้งต่อไปผ่านแล้ว"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -10102,7 +10138,7 @@ msgstr "หน่วย"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "หน่วยและบรรจุภัณฑ์"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
