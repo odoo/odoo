@@ -5,6 +5,7 @@
 # Translators:
 # lhmflexerp <lhm@flexerp.dk>, 2025
 # Wil Odoo, 2025
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:24+0000\n"
 "PO-Revision-Date: 2025-02-09 01:00+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +65,8 @@ msgid ""
 "<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
 "                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
 msgstr ""
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
@@ -89,24 +92,24 @@ msgstr "Kontakt"
 #. odoo-python
 #: code:addons/sale_gelato/utils.py:0
 msgid "Could not establish the connection to the Gelato API."
-msgstr ""
+msgstr "Det var ikke muligt at oprette forbindelse til Gelato-API'et."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Could not synchronize with Gelato"
-msgstr ""
+msgstr "Det var ikke muligt at synkronisere med Gelato"
 
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.express_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__express
 msgid "Express Delivery"
-msgstr ""
+msgstr "Ekspreslevering"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.express_delivery_product_product_template
 msgid "Express Delivery (Gelato)"
-msgstr ""
+msgstr "Ekspreslevering (Gelato)"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__module_sale_gelato
@@ -115,46 +118,46 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Gelato"
-msgstr ""
+msgstr "Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_api_key
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_api_key
 msgid "Gelato API Key"
-msgstr ""
+msgstr "Gelato API-Key"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
 msgid "Gelato Print Images"
-msgstr ""
+msgstr "Udskriv Gelato-billeder"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
 msgid "Gelato Product UID"
-msgstr ""
+msgstr "Produkt-UID fra Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_product_uid
 msgid "Gelato Product Uid"
-msgstr ""
+msgstr "Produkt-UID fra Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__gelato_shipping_service_type
 msgid "Gelato Shipping Service Type"
-msgstr ""
+msgstr "Gelato-forsendelsestype"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_template_ref
 msgid "Gelato Template Reference"
-msgstr ""
+msgstr "Gelato-skabelonreference"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
 msgid "Gelato Webhook Secret"
-msgstr ""
+msgstr "Gelato-webhook-hemmelighed"
 
 #. module: sale_gelato
 #. odoo-python
@@ -163,55 +166,57 @@ msgid ""
 "Gelato could not proceed with the fulfillment of order %(order_reference)s: "
 "%(gelato_message)s"
 msgstr ""
+"Gelato kunne ikke gennemføre ordren %(order_reference)s: %(gelato_message)s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has returned order %(reference)s."
-msgstr ""
+msgstr "Gelato har returneret ordre %(reference)s."
 
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
-msgstr ""
+msgstr "Gelato: Opdatering på ordrestatus"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
 msgid "Is Gelato"
-msgstr ""
+msgstr "Er Gelato"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Manage Delivery Methods"
-msgstr ""
+msgstr "Håndtér leveringsmetoder"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_missing_images
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_missing_images
 msgid "Missing Print Images"
-msgstr ""
+msgstr "Manglende udskriftsbilleder"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
-msgstr ""
+msgstr "Manglende produktvarianter og billeder er blevet oprettet."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr ""
+msgstr "Afgiv bestilling gennem Gelatos print-on-demand-service"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Print Images"
-msgstr ""
+msgstr "Udskriftsbilleder"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_document.py:0
 msgid "Print images must be set on products before they can be ordered."
 msgstr ""
+"Udskriftsbilleder skal angives på produkterne, inden de kan bestilles."
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_template
@@ -228,7 +233,7 @@ msgstr "Produktdokument"
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Product UID"
-msgstr ""
+msgstr "Produkt-UID"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_product
@@ -253,7 +258,7 @@ msgstr "Salgsordrelinje"
 #. module: sale_gelato
 #: model:mail.template,description:sale_gelato.order_status_update
 msgid "Sent to the customer when Gelato updates the status of an order"
-msgstr ""
+msgstr "Sendt til kunden, når Gelato opdaterer en ordres status"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_delivery_carrier
@@ -264,18 +269,18 @@ msgstr "Leveringsmetoder"
 #: model:delivery.carrier,name:sale_gelato.standard_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
 msgid "Standard Delivery"
-msgstr ""
+msgstr "Standardlevering"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.standard_delivery_product_product_template
 msgid "Standard Delivery (Gelato)"
-msgstr ""
+msgstr "Standardlevering (Gelato)"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Successfully synchronized with Gelato"
-msgstr ""
+msgstr "Synkronisering med Gelato vellykket"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -286,30 +291,30 @@ msgstr "Synkronisér"
 #: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_template_ref
 msgid "Synchronize to fetch variants from Gelato"
-msgstr ""
+msgstr "Synkronisér for at hente varianter fra Gelato"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Template Reference"
-msgstr ""
+msgstr "Skabelonreference"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The delivery method is not available for this order."
-msgstr ""
+msgstr "Leveringsmetoden er ikke tilgængelig for denne ordre."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The following required address fields are missing: %s"
-msgstr ""
+msgstr "De følgende påkrævede adressefelter mangler: %s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The order has been successfully passed on Gelato."
-msgstr ""
+msgstr "Ordren er blevet gennemført på Gelato."
 
 #. module: sale_gelato
 #. odoo-python
@@ -318,11 +323,13 @@ msgid ""
 "The order with reference %(order_reference)s was not sent to Gelato.\n"
 "Reason: %(error_message)s"
 msgstr ""
+"Ordren med referencenummeret %(order_reference)s blev ikke sendt til Gelato.\n"
+"Årsag: %(error_message)s"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Webhook-hemmelighed"
 
 #. module: sale_gelato
 #. odoo-python
@@ -330,8 +337,10 @@ msgstr ""
 msgid ""
 "You cannot mix Gelato products with non-Gelato products in the same order."
 msgstr ""
+"En ordre kan ikke indeholde både produkter fra Gelato og produkter fra andre"
+" leverandører."
 
 #. module: sale_gelato
 #: model:mail.template,subject:sale_gelato.order_status_update
 msgid "{{ object.reference }}"
-msgstr ""
+msgstr "{{ object.reference }}"
