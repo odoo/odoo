@@ -154,7 +154,7 @@ msgstr ""
 "        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
 "        Hej\n"
 "        <br/><br/>\n"
-"        En betaling med referencen\n"
+"        En betaling med nummeret\n"
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
 "        på\n"
 "        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">10,00 kr.</span>\n"
@@ -425,7 +425,7 @@ msgstr ""
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
 "            er under behandling. Den vil blive bekræftet, når betalingen modtages.\n"
 "            <t t-if=\"object.reference\">\n"
-"                Din betalingsreference er <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
+"                Dit betalingsnummer er <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br/>\n"
@@ -677,7 +677,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        Dit <t t-out=\"doc_name or ''\">tilbud</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
 "        <t t-if=\"object.origin\">\n"
-"            (med referencen: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            (med nummeret: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
 "        på <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 kr.</span> er klar til gennemgang.\n"
 "        <br/>\n"
@@ -736,7 +736,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        Din proforma faktura for <t t-out=\"doc_name or ''\">tilbuddet</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "        <t t-if=\"object.origin\">\n"
-"            (med referencen: <t t-out=\"object.origin or ''\"/> )\n"
+"            (med nummeret: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
 "        på <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 kr.</span> er klar.\n"
 "        <br/><br/>\n"
@@ -975,7 +975,7 @@ msgstr "<strong>Tilbuddet er blevet annulleret.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr "<strong>Din reference</strong>"
+msgstr "<strong>Dit referencenummer</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1065,11 +1065,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Ud fra produktkonfigurationen kan den leverede mængde beregnes automatisk ved hjælp af følgende mekanismer:\n"
+"Afhængigt af produktkonfigurationen kan den leverede mængde beregnes automatisk på følgende måder:\n"
 " - Manuel: Mængden angives manuelt på linjen.\n"
-" - Analytisk (fra udgifter): Mængden svarer til summen af kvantiteter fra bogførte udgifter.\n"
-" - Timeseddel: Mængden beregnes som summen af timer registreret på opgaver, der er knyttet til denne salgslinje.\n"
-" - Lagerbevægelser: Mængden stammer fra bekræftede pluk.\n"
+" - Analytisk fra udgifter: Mængden beregnes som summen af bogførte udgifter.\n"
+" - Timeseddel: Mængden er summen af de timer, der er registreret på opgaver tilknyttet denne salgsordrelinje.\n"
+" - Lagerbevægelser: Mængden stammer fra bekræftede plukninger.\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
@@ -1424,7 +1424,7 @@ msgstr "Baseret på kunde-ID"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr "Baseret på dokumentreference"
+msgstr "Baseret på dokumentnummer"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1948,7 +1948,7 @@ msgstr "Kundeportalens URL"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
 msgid "Customer Reference"
-msgstr "Kundereference"
+msgstr "Kundenummer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2264,7 +2264,7 @@ msgstr "Forudbetaling (annulleret)"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr "Forudbetaling (reference: %(reference)s den %(date)s)"
+msgstr "Forudbetaling (nr.: %(reference)s den %(date)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3006,7 +3006,7 @@ msgstr "Journalpostering"
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
 msgid "Journal Item"
-msgstr "Journalpostering"
+msgstr "Posteringslinje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3530,7 +3530,7 @@ msgstr "Ordrelinjer"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__order_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__name
 msgid "Order Reference"
-msgstr "Ordrereference"
+msgstr "Ordrenummer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__state
@@ -4120,7 +4120,7 @@ msgstr "Genberegn al moms baseret på denne skatteposition"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr "Dokumentreference, der dannede grundlag for denne salgsordre"
+msgstr "Dokumentnummer, der dannede grundlag for denne salgsordre"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -4379,7 +4379,7 @@ msgstr "Bekræftede salgsordrer"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr "Artikel fra kundens ordre"
+msgstr "Salgsordrelinje"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -4457,9 +4457,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"Salgsordrer, som den registrerede tid tilknyttes, så den kan faktureres til "
-"din kunde. Fjern salgsordren for at forhindre, at tidsregistreringen kan "
-"faktureres."
+"Salgsordrelinje, som den registrerede tid tilknyttes, så den kan faktureres "
+"til din kunde. Fjern salgsordren for at forhindre, at tidsregistreringen kan"
+" faktureres."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -5735,7 +5735,7 @@ msgstr "Dine ordrer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Your Reference:"
-msgstr "Din reference:"
+msgstr "Dit referencenummer:"
 
 #. module: sale
 #. odoo-javascript

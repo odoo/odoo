@@ -188,7 +188,7 @@ msgstr "'製造オーダ概要 - %s' % object.display_name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
 msgid "'Production Order - %s' % object.name"
-msgstr "'製造オーダ - %s' % object.name"
+msgstr "'生産オーダ - %s' % object.name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_workorder
@@ -1127,7 +1127,7 @@ msgstr "部品表明細"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
 msgid "Bill of Material used on the Production Order"
-msgstr "製造オーダに使用される部品表"
+msgstr "生産オーダに使用される部品表"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -1803,7 +1803,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
 msgid "Created Production Order"
-msgstr "製造オーダの作成"
+msgstr "生産オーダの作成"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__create_uid
@@ -1914,7 +1914,7 @@ msgid ""
 "                                           Orange if the scheduled date is "
 "in the past."
 msgstr ""
-"開始予定日。                                          赤色: 終了予定日が製造オーダの期限を超える場合。"
+"開始予定日。                                          赤色: 終了予定日が生産オーダの期限を超える場合。"
 "                                          オレンジ: 予定日が過去の場合。"
 
 #. module: mrp
@@ -2757,7 +2757,7 @@ msgstr "このチェックボックスにチェックすると、Odooは製造�
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
-msgstr "このチェックボックスにチェックを入れると、Odooは製造オーダの生産指示書を完了時に自動的に印刷します。"
+msgstr "このチェックボックスにチェックを入れると、Odooは生産オーダの生産オーダを完了時に自動的に印刷します。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -4272,13 +4272,13 @@ msgstr "可能なプロダクトテンプレート属性値"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Post-Production"
-msgstr "製造後"
+msgstr "生産後"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Pre-Production"
-msgstr "製造前"
+msgstr "生産前"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
@@ -4363,7 +4363,7 @@ msgstr "全て生産"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_batch_produce
 msgid "Produce a batch of production order"
-msgstr "製造オーダのバッチを作成"
+msgstr "生産オーダのバッチを作成"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -4519,7 +4519,7 @@ msgstr "プロダクト/ユニットの容量は、各作業区ごとに固有�
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 msgid "Production"
-msgstr "製造"
+msgstr "生産"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_capacity
@@ -4535,19 +4535,19 @@ msgstr "生産日（実績）"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Production Information"
-msgstr "製造情報"
+msgstr "生産情報"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
 msgid "Production Location"
-msgstr "製造ロケーション"
+msgstr "生産ロケーション"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Production Order"
-msgstr "製造オーダ"
+msgstr "生産オーダ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
@@ -4557,7 +4557,7 @@ msgstr "構成品用生産オーダ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
-msgstr "生産済プロダクトの製造オーダ"
+msgstr "生産済プロダクトの生産オーダ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
@@ -4578,7 +4578,7 @@ msgstr "ドラフト製造オーダの生産"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Production started late"
-msgstr "製造は遅れて開始"
+msgstr "生産は遅れて開始"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
@@ -4809,7 +4809,7 @@ msgstr "参照は会社ごとに固有でなければいけません。"
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr "この製造オーダ要求を生成したドキュメントへの参照"
+msgstr "この生産オーダ要求を生成したドキュメントへの参照"
 
 #. module: mrp
 #. odoo-javascript
@@ -4989,7 +4989,7 @@ msgstr "部品表の検索"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr "製造の検索"
+msgstr "生産を検索"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -5206,28 +5206,28 @@ msgstr "分割詳細"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Production"
-msgstr "生産の分割"
+msgstr "生産を分割"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_line
 msgid "Split Production Detail"
-msgstr "生産詳細の分割"
+msgstr "生産詳細を分割"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Productions"
-msgstr "生産の分割"
+msgstr "生産を分割"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split
 msgid "Split production"
-msgstr "生産の分割"
+msgstr "生産を分割"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
-msgstr "生産の分割"
+msgstr "生産を分割"
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
@@ -5662,7 +5662,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "This production has been merge in %s"
-msgstr "このプロダクトは以下でマージされています:%s"
+msgstr "この生産は以下でマージされています:%s"
 
 #. module: mrp
 #. odoo-python
@@ -5837,7 +5837,7 @@ msgstr "工程総コスト"
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Total Cost of Production"
-msgstr "製造総コスト"
+msgstr "生産総コスト"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_total
@@ -6164,7 +6164,7 @@ msgstr "作業オーダを参照"
 msgid ""
 "View and allocate production quantities to customer orders or other "
 "manufacturing orders"
-msgstr "顧客オーダや他の製造オーダへのプロダクト数量の表示と割当"
+msgstr "顧客オーダや他の製造オーダへの生産数量の表示と割当"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
@@ -6723,7 +6723,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You need at least two production orders to merge them."
-msgstr "マージするには少なくとも2つの製造オーダが必要です。"
+msgstr "マージするには少なくとも2つの生産オーダが必要です。"
 
 #. module: mrp
 #. odoo-python

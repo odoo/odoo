@@ -31,6 +31,9 @@ msgid ""
 "\"Optional\" allows guests to place an order without signing in and later "
 "register via the order confirmation page when free sign-up is enabled."
 msgstr ""
+"\"Optionnel\" permet aux invités de passer commande sans se connecter et de "
+"s’enregistrer plus tard via la page de confirmation de commande lorsque "
+"l’inscription gratuite est activée."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -50,12 +53,12 @@ msgstr "'. Affichage des résultats pour '"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax excluded)"
-msgstr ""
+msgstr "(Hors taxes)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax included)"
-msgstr ""
+msgstr "(Toutes taxes comprises)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -239,6 +242,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                    Ajouter au panier"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -304,6 +309,11 @@ msgid ""
 "            Shipping: 2-3 Business Days\n"
 "        </small>"
 msgstr ""
+"<small class=\"text-muted mb-0\">\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>Conditions générales</u></a><br/>\n"
+"            Garantie satisfait ou remboursé de 30 jours<br/>\n"
+"            Livraison : 2-3 jours ouvrables\n"
+"        </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -415,7 +425,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
 msgid "<span class=\"text-muted\">Price</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Prix</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -675,7 +685,7 @@ msgstr "À propos des produits de vente croisée"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Accept Terms"
-msgstr ""
+msgstr "Accepter les conditions"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1269,7 +1279,7 @@ msgstr "Pied de page de la catégorie"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
 msgid "Category image"
-msgstr ""
+msgstr "Image de catégorie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1657,7 +1667,7 @@ msgstr "Canapés"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Coupon, Gift card, Promo-code?"
-msgstr ""
+msgstr "Bon de réduction, carte cadeau, code promo ?"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2477,7 +2487,7 @@ msgstr "A un message"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__has_published_products
 msgid "Has Published Products"
-msgstr ""
+msgstr "A des produits publiés"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hidden
@@ -2513,7 +2523,7 @@ msgstr "Heures."
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hover
 msgid "Hover"
-msgstr ""
+msgstr "Au survol"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
@@ -2716,6 +2726,8 @@ msgstr "Paiement instantané, au lieu d'ajouter au panier"
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
 msgstr ""
+"Les variantes créées instantanément sont disponibles à la sélection depuis "
+"votre page /shop."
 
 #. module: website_sale
 #. odoo-python
@@ -2834,7 +2846,7 @@ msgstr "Grande image"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Large Images"
-msgstr ""
+msgstr "Grandes images"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3354,7 +3366,7 @@ msgstr "Bureaux"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__preview_variants
 msgid "On Product Cards"
-msgstr ""
+msgstr "Sur les cards produits"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -3754,7 +3766,7 @@ msgstr "Outil de comparaison des produits"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Product Details"
-msgstr ""
+msgstr "Détails du produit"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_document
@@ -3985,13 +3997,13 @@ msgstr "Publié"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Options"
-msgstr ""
+msgstr "Options d’achat"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Style"
-msgstr ""
+msgstr "Style d’achat"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4206,7 +4218,7 @@ msgstr "Remplacer"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
 msgid "Replace image"
-msgstr ""
+msgstr "Remplacer l’image"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4558,7 +4570,7 @@ msgstr "Afficher vide"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "Afficher les vignettes"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5207,6 +5219,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Use product variant images instead of the attribute values displays."
 msgstr ""
+"Utiliser les images des variantes produit au lieu d’afficher les valeurs "
+"d’attributs."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5313,7 +5327,7 @@ msgstr "Historique vues produit visiteur"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
 msgid "Visitor's Choice"
-msgstr ""
+msgstr "Choix du visiteur"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes

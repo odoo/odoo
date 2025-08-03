@@ -3,8 +3,8 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Abe Manyo, 2025
 # Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,6 +136,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Izinkan make to Order, atau otomatiskan PO, saat produk dijual dan dapatkan "
+"link langsung antara dokumen-dokumen."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -372,6 +374,9 @@ msgid ""
 "based on actual demand. Use the percentage to take into account seasonality "
 "or business growth."
 msgstr ""
+"Estimasikan volume sales berdasarkan periode atau pesanan masa lalu yang "
+"Anda butuhkan berdasarkan tuntutan asli. Gunakan persentase untuk "
+"mengikutsertakan pertumbuhan bisnis atau musiman."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__based_on
@@ -379,6 +384,8 @@ msgid ""
 "Estimate the sales volume for the period based on past period or order the "
 "forecasted quantity for that period."
 msgstr ""
+"Estimasikan volume sales untuk periode berdasarkan periode masa lalu atau "
+"pesan kuantitas yang di-forecast untuk periode tersebut."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -1004,6 +1011,8 @@ msgid ""
 "Suggested quantities to replenish will be computed to cover this amount of "
 "days for all filtered products in this catalog."
 msgstr ""
+"Kuantitas yang disarankan untuk dipulihkan akan dihitung untuk mencakup "
+"jumlah hari ini untuk semua produk yang difilter di katalog ini."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -1091,6 +1100,11 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Ini menambahkan rute Replenish On Order (MTO) untuk diterapkan ke produk "
+"agar dapat membuat pemulihan saat diminta yang terhubung ke sales orders "
+"Anda (sebagai contoh) saat mereka dikonfirmasi, dengan link langsung. "
+"Purchase order, manufacturing order, dsb. dipicu berdasarkan cara mereka "
+"dipulihkan yang ditetapkan di produk (rute Beli atau Produksi)."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1201,7 +1215,7 @@ msgstr "Analisis Pengiriman Tepat Waktu (OTD) Vendor"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Vendor Pricelist"
-msgstr ""
+msgstr "Daftar Harga Vendor"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
@@ -1258,11 +1272,16 @@ msgid ""
 "\n"
 "Try creating a return first silly billy!"
 msgstr ""
+"Anda sedang mencoba untuk mengurangi kuantitas yang dipesan sampai di bawah jumlah kuantitas yang diterima.\n"
+"\n"
+"Coba melakukan pengembalian terlebih dahulu!"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "based on stock on hand, and expected sales volumes or actual demand."
 msgstr ""
+"berdasarkan stok di tangan, dan volume sales yang diharapkan atau tuntutan "
+"asli"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form

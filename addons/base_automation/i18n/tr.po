@@ -35,7 +35,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_automation/static/src/group_config_menu_patch.js:0
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "\"%s\" etiketi eklendi"
 
 #. module: base_automation
 #. odoo-python
@@ -44,6 +44,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"\"Canlı güncellemede\" otomasyon kuralları yalnızca \"Python Kodu Çalıştır\""
+" eylem türüyle kullanılabilir."
 
 #. module: base_automation
 #. odoo-javascript
@@ -68,6 +70,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
 msgstr ""
+"<code>model</code>: işlemin tetiklendiği kaydın modeli; boş bir kayıt "
+"kümesidir"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -109,6 +113,9 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/>Kullanıcı arayüzündeki değişikliklerle "
+"tetiklenen otomasyon kuralları, izlenen alanlar <em>her değiştiğinde</em> "
+"<em>(kaydetmeseniz bile)</em> çalıştırılır. "
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
@@ -133,7 +140,7 @@ msgstr "Aksiyonlar"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "Yapılacak Eylemler"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -168,7 +175,7 @@ msgstr "Sonra"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "Oluşturulduktan sonra"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
@@ -217,7 +224,7 @@ msgstr "Otomasyon Kuralı Adı"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation Rules"
-msgstr ""
+msgstr "Otomasyon Kuralları"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -233,7 +240,7 @@ msgstr "Otomasyonlar"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Tarih alanına göre"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_mode__before
@@ -292,7 +299,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "Kullanımdan kaldırıldı (kullanmayın)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
@@ -461,7 +468,7 @@ msgstr "Son Güncelleme"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "Aramaları Günlüğe Kaydet"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -587,7 +594,7 @@ msgstr "Arayüzde değişiklik olunca"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "Arşivlendiğinde"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -602,7 +609,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "Silindiğinde"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
@@ -612,22 +619,22 @@ msgstr "Gelen mesajla tetikle"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "Giden mesajda"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "Arşivden Çıkarıldığında"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "Güncellendiğinde"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Webhook tetiklendiğinde"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__previous_domain
@@ -637,7 +644,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "Öncelik şuna ayarlandı:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__rating_ids
@@ -647,7 +654,7 @@ msgstr "Değerlendirmeler"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "Kayıt Getirici"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -688,7 +695,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Bir tarih alanı seçin..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -698,7 +705,7 @@ msgstr "Bir değer seçin..."
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "Alanları seçin..."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -707,6 +714,9 @@ msgid ""
 "                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"Bir nesne durum değiştirdiğinde e-posta gönderin, bir ay boyunca \n"
+"                etkin olmayan kayıtları arşivleyin veya belirli bir etiket eklendiğinde görevleri takip etmek\n"
+"                için kendinize hatırlatma gönderin."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
@@ -715,6 +725,10 @@ msgid ""
 " inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
+"Bir nesne durum değiştirdiğinde e-posta gönderin, bir aydan fazla "
+"kullanılmayan kayıtları arşivleyin ya da belirli bir etiket eklendiğinde "
+"takip hatırlatmaları gönderin.<br>Otomasyon Kuralları ile her türlü iş "
+"akışını otomatikleştirebilirsiniz."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -741,11 +755,13 @@ msgid ""
 "Some triggers need a reference to another field. This field is used to store"
 " it."
 msgstr ""
+"Bazı tetikleyicilerin başka bir alana referansa ihtiyacı vardır. Bu alan, o "
+"referansı saklamak için kullanılır."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "Aşama şuna ayarlandı:"
 
 #. module: base_automation
 #. odoo-javascript
@@ -756,7 +772,7 @@ msgstr "Aşama, \"%s\" olarak ayarlandı"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "Durum şuna ayarlandı:"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_state
@@ -779,7 +795,7 @@ msgstr "Etiket eklendi"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Hedef Kayıt"
 
 #. module: base_automation
 #. odoo-python
@@ -837,7 +853,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Timing Conditions"
-msgstr ""
+msgstr "Zamanlama Koşulları"
 
 #. module: base_automation
 #: model:digest.tip,name:base_automation.digest_tip_base_automation_0
@@ -858,7 +874,7 @@ msgstr "Tetikleyici Tarihi"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "Tetikleyici Alan"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
@@ -873,7 +889,7 @@ msgstr "Tetikleyici Alanlar"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
+msgstr "Tetikleyici Referansı"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_exception_decoration
@@ -910,7 +926,7 @@ msgstr "Kullanıcı atandı"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Values Updated"
-msgstr ""
+msgstr "Güncellenen Değerler"
 
 #. module: base_automation
 #. odoo-python
@@ -922,18 +938,18 @@ msgstr "Uyarı"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Log"
-msgstr ""
+msgstr "Webhook Günlüğü"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Webhook Günlükleri"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "Webhook UUID"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__website_message_ids
@@ -971,7 +987,7 @@ msgstr "İşaretlenmemişse kural gizlidir ve yürütülmez."
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "Güncellenirken"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act

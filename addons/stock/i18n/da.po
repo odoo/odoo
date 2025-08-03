@@ -2778,7 +2778,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.picking_type_out
 msgid "Delivery Orders"
-msgstr "Leveringsordrer"
+msgstr "Ordrer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -2877,7 +2877,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Beskrivelse til leveringsordrer"
+msgstr "Beskrivelse på ordrer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2893,7 +2893,7 @@ msgstr "Beskrivelser på udskrifter"
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Beskrivelse på leveringsordre"
+msgstr "Beskrivelse på ordrer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
@@ -4823,7 +4823,7 @@ msgstr "Forfaldne aktiviteter"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Availability"
-msgstr ""
+msgstr "Seneste tilgængelighed"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -4868,7 +4868,7 @@ msgstr "Efterlad tom"
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
 msgstr ""
-"Lad dette felt være tomt, hvis denne rute deles mellem alle virksomheder"
+"Lad dette felt stå tomt, hvis denne rute deles mellem alle virksomheder"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -7939,7 +7939,7 @@ msgstr "STANDARD BETINGELSER OG VILKÅR FOR SALG"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Sales History"
-msgstr ""
+msgstr "Salgshistorik"
 
 #. module: stock
 #. odoo-python
@@ -8110,14 +8110,13 @@ msgstr "Køb og sælg produkter i forskellige måleenheder eller emballagetyper"
 msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are "
 "done"
-msgstr ""
-"Send en automatisk SMS tekst besked når leveringsordre er færdigbehandlet"
+msgstr "Send en automatisk SMS-besked, når ordren er klar til afsendelse"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Send en automatisk bekræftelses email når leveringsordre er færdigbehandlet"
+"Send en automatisk bekræftelsesmail, når ordrer er klar til afsendelse"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -9377,7 +9376,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr "Dette notat tilføjes til leveringsordre."
+msgstr "Dette notat tilføjes ordrer."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -11339,5 +11338,4 @@ msgstr "enheder"
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Leveringsordre (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Ordre (Ref {{ object.name or 'n/a' }})"

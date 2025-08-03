@@ -125,6 +125,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    เรียน <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    เรายินดีที่จะแจ้งให้คุณทราบว่าข้อเสนอของคุณ<t t-out=\"object.name or ''\">กิจกรรมนี้เกี่ยวกับอะไร</t>ได้รับการยอมรับและยืนยันเข้าร่วมกิจกรรม<t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>แล้ว\n"
+"    <br/>\n"
+"    คุณสามารถค้นพบรายละเอียดเพิ่มเติมได้ที่นี่:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none !important; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px\">\n"
+"            ดูการพูดคุย\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    ขอบคุณ\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -2381,7 +2398,7 @@ msgstr "แสดงปุ่ม"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "แสดงบันทึกทั้งหมดที่มีวันที่กิจกรรมครั้งต่อไปผ่านแล้ว"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
@@ -2542,12 +2559,12 @@ msgstr "ขอบคุณสำหรับข้อเสนอของคุ
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "URL แบบเต็มเพื่อเข้าถึงเอกสารผ่านทางเว็บไซต์"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "URL สัมพัทธ์เต็มในการเข้าถึงเอกสารผ่านทางเว็บไซต์"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -3008,7 +3025,7 @@ msgstr "เว็บไซต์"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL สัมบูรณ์ของเว็บไซต์"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon

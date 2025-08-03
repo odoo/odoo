@@ -66,19 +66,19 @@ msgstr "Feuilles de temps de %(name)s"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s (%(days)s j)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)s h %(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)s h)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -167,6 +167,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        Oups ! L’employé que vous essayez de supprimer a encore des feuilles de temps en attente et ne peut pas être supprimé.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Voici vos deux options : soit supprimer ces feuilles de temps, soit envisager d’archiver l’employé à la place.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Veuillez d’abord supprimer toutes leurs feuilles de temps.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        Êtes-vous sûr de vouloir supprimer ces employés ?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -333,7 +345,7 @@ msgstr "Appelez le client et discutez du projet"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "Choisissez un employé pour créer sa feuille de temps."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -342,6 +354,8 @@ msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected employees on the chosen dates"
 msgstr ""
+"Cliquez sur un jour ou sélectionnez une plage de jours pour générer des "
+"feuilles de temps pour les employés sélectionnés aux dates choisies."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -350,6 +364,8 @@ msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected project on the chosen dates"
 msgstr ""
+"Cliquez sur un jour ou sélectionnez une plage de jours pour générer des "
+"feuilles de temps pour le projet sélectionné aux dates choisies."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -357,6 +373,8 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to permanently delete its contents"
 msgstr ""
+"Cliquez sur un jour ou sélectionnez une plage de jours pour supprimer "
+"définitivement son contenu."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -579,6 +597,7 @@ msgstr "Temps supplémentaire"
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_side_panel/timesheet_calendar_side_panel.xml:0
 msgid "Filter by specific employees to view only their timesheets"
 msgstr ""
+"Filtrer par employés spécifiques pour ne voir que leurs feuilles de temps."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -795,7 +814,7 @@ msgstr "Partenaire"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "Filtres personnels sur les employés pour la vue Calendrier."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -958,6 +977,8 @@ msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
 msgstr ""
+"Certaines entrées de feuille de temps empêchent la suppression de ces "
+"tâches. Veuillez les supprimer en premier lieu !"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1520,7 +1541,7 @@ msgstr "date"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "ex. Envoi d’e-mails"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

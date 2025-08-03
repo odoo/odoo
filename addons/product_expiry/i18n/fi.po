@@ -261,7 +261,7 @@ msgstr "Vapaasti käytettävä määrä"
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.js:0
 msgid "Fresh Free Stock"
-msgstr ""
+msgstr "Tuore vapaa varasto"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -337,6 +337,9 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore.It will be computed on the lot/serial number."
 msgstr ""
+"Päivien määrä ennen viimeistä käyttöpäivää, kun tuotteet tulisi poistaa "
+"varastosta, jotta niitä ei enää laskettaisi tuoreeseen käytettävissä olevaan"
+" saldoon. Tämä lasketaan erän/sarjanumeron perusteella."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -367,7 +370,7 @@ msgstr "Keräily"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except expired"
-msgstr ""
+msgstr "Jatka, paitsi vanhentuneet"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -465,6 +468,9 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore. This date will be used in FEFO removal strategy."
 msgstr ""
+"Tämä on päivämäärä, jolloin tämän sarjanumeron tuotteet tulee poistaa "
+"varastosta, eikä niitä enää lasketa tuoreeseen käytettävissä olevaan "
+"saldoon. Tätä päivämäärää käytetään FEFO-poistostrategiassa."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
@@ -479,19 +485,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_header.xml:0
 msgid "To Remove"
-msgstr ""
+msgstr "Poistettava"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove now"
-msgstr ""
+msgstr "Poistettava nyt"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove on"
-msgstr ""
+msgstr "Poistettava päivänä"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -540,6 +546,8 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired or should at least be removed from stock.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Olet toimittamassa tuotetta %(product_name)s, %(lot_name)s, joka on vanhentunut tai joka tulisi ainakin poistaa varastosta.\n"
+"Haluatko varmasti jatkaa?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry

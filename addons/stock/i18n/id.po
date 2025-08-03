@@ -1258,6 +1258,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Izinkan make to Order, atau otomatiskan PO, saat produk dijual dan dapatkan "
+"link langsung antara dokumen-dokumen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1594,6 +1596,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Kuantitas Tersedia (dihitung sebagai Kuantitas Di Tangan - kuantitas direservasi - kuantitas untuk dihapus)\n"
+"Dalam konteks dengan satu Lokasi Stok, ini termasuk barang yang disimpan di lokasi ini, atau sub-lokasinya.\n"
+"Dalam konteks satu Gudang, ini termasuk barang yang disimpan di Lokasi Stok Gudang ini, atau sub-lokasinya.\n"
+"Bia tidak, ini termasuk barang yang disimpan di Lokasi Stok apapun dengan tipe 'internal'."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -6027,6 +6033,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
+"Kuantitas di tangan yang belum direservasi di transfer dan masih fresh, di "
+"satuan ukuran default produk"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -9523,6 +9531,11 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Ini menambahkan rute Replenish On Order (MTO) untuk diterapkan ke produk "
+"agar dapat membuat pemulihan saat diminta yang terhubung ke sales orders "
+"Anda (sebagai contoh) saat mereka dikonfirmasi, dengan link langsung. "
+"Purchase order, manufacturing order, dsb. dipicu berdasarkan cara mereka "
+"dipulihkan yang ditetapkan di produk (rute Beli atau Manufaktur)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

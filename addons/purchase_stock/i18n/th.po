@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Rasareeyar Lappiam, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +81,7 @@ msgstr "<span> วัน</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">ที่อยู่จัดส่ง</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -91,7 +92,7 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>วันที่ขอจัดส่งสินค้า:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
@@ -135,6 +136,9 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"อนุญาตให้สร้างสินค้าตามสั่ง "
+"หรือสั่งซื้อสินค้าโดยอัตโนมัติเมื่อมีการขายสินค้า พร้อมเชื่อมโยงเอกสารต่างๆ "
+"เข้าด้วยกันโดยตรง"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -207,7 +211,7 @@ msgstr "ไม่พบใบรับสินค้าที่เกี่ย
 #. module: purchase_stock
 #: model:ir.model,website_form_label:purchase_stock.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "สร้างลูกค้า"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
@@ -1083,6 +1087,12 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"ฟังก์ชันนี้จะเพิ่มเส้นทาง \"เติมสินค้าเมื่อมีคำสั่งซื้อ (MTO - Make To "
+"Order)\" เพื่อใช้กับสินค้า "
+"โดยจะช่วยให้สามารถเติมสต็อกตามความต้องการทันทีที่มีการยืนยันคำสั่งขาย (เช่น "
+"กรณีตัวอย่าง) โดยเชื่อมโยงคำสั่งเติมสินค้าเข้ากับคำสั่งขายโดยตรง "
+"ไม่ว่าจะเป็นการสั่งซื้อ (Purchase Order) หรือการผลิต (Manufacturing Order) "
+"ระบบจะเลือกวิธีเติมสินค้า (ซื้อหรือผลิต) ตามที่กำหนดไว้ในแต่ละสินค้า"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase

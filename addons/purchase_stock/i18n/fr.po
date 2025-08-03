@@ -3,8 +3,8 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,6 +136,9 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Autoriser la fabrication à la commande, ou automatiser le bon de commande "
+"lorsqu’un produit est vendu et obtenir des liens directs entre les "
+"documents."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -372,6 +375,10 @@ msgid ""
 "based on actual demand. Use the percentage to take into account seasonality "
 "or business growth."
 msgstr ""
+"Estimez le volume des ventes sur la base d’une période passée ou commandez "
+"ce dont vous avez besoin en fonction de la demande réelle. Utilisez le "
+"pourcentage pour prendre en compte la saisonnalité ou la croissance de "
+"l’activité."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__based_on
@@ -379,6 +386,8 @@ msgid ""
 "Estimate the sales volume for the period based on past period or order the "
 "forecasted quantity for that period."
 msgstr ""
+"Estimez le volume des ventes pour la période sur la base d’une période "
+"passée ou commandez la quantité prévue pour cette période."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -1003,6 +1012,8 @@ msgid ""
 "Suggested quantities to replenish will be computed to cover this amount of "
 "days for all filtered products in this catalog."
 msgstr ""
+"Les quantités suggérées pour le réapprovisionnement seront calculées pour "
+"couvrir ce nombre de jours pour tous les produits filtrés dans ce catalogue."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -1091,6 +1102,12 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Cela ajoute une route Réapprovisionnement sur commande (MTO) à appliquer sur"
+" les produits afin de générer un réapprovisionnement à la demande lié à vos "
+"commandes clients (par exemple) dès leur confirmation, avec un lien direct. "
+"Les bons de commande, ordres de fabrication, etc. sont déclenchés en "
+"fonction de la méthode de réapprovisionnement définie sur le produit (achat "
+"ou fabrication)."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1200,7 +1217,7 @@ msgstr "Analyse de la fiabilité des livraisons des fournisseurs"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Vendor Pricelist"
-msgstr ""
+msgstr "Liste de prix fournisseur"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
@@ -1258,11 +1275,16 @@ msgid ""
 "\n"
 "Try creating a return first silly billy!"
 msgstr ""
+"Vous essayez de diminuer la quantité commandée en dessous de la quantité reçue.\n"
+"\n"
+"Essayez d’abord de créer un retour !"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "based on stock on hand, and expected sales volumes or actual demand."
 msgstr ""
+"sur base du stock disponible et des volumes de ventes prévus ou la demande "
+"réelle."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form

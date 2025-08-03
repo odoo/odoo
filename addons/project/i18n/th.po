@@ -160,6 +160,8 @@ msgid ""
 "<b>Log internal notes</b> and use @<b>mentions</b> to notify your "
 "colleagues."
 msgstr ""
+"<b>จดบันทึกภายใน</b>และใช้ @<b>mentions</b> "
+"เพื่อแจ้งเตือนเพื่อนร่วมงานของคุณ"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -348,6 +350,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    เรียน <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    ขอบคุณที่ติดต่อเรา เรายินดีที่คุณสนใจผลิตภัณฑ์/บริการของเรา<br/>\n"
+"    ขณะนี้ทีมงานของเรากำลังตรวจสอบคำถามของคุณและจะตอบกลับอีเมลของคุณโดยเร็วที่สุด<br/>\n"
+"    หากมีคำถามหรือข้อกังวลเพิ่มเติมในระหว่างนี้ โปรดแจ้งให้เราทราบได้ทันที<br/><br/>\n"
+"    ขอขอบคุณที่กรุณารอค่ะ<br/>\n"
+"    ด้วยความนับถือ\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -356,6 +371,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Neutral\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"พอใจ\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"ปกติ\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"ไม่พอใจ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -370,7 +388,7 @@ msgstr "<i class=\"fa fa-lock\"/> ส่วนตัว"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-warning pe-2\" title=\"คำแจ้งเตือน\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -1062,19 +1080,19 @@ msgstr "คะแนนเฉลี่ย (1-5)"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Happy"
-msgstr ""
+msgstr "คะแนนเฉลี่ย: พึงพอใจ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Neutral"
-msgstr ""
+msgstr "คะแนนเฉลี่ย: ปกติ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Unhappy"
-msgstr ""
+msgstr "คะแนนเฉลี่ย: ไม่พึงพอใจ"
 
 #. module: project
 #. odoo-javascript
@@ -1424,7 +1442,7 @@ msgstr "วันที่สร้าง"
 #. module: project
 #: model:ir.model,website_form_label:project.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "สร้างลูกค้า"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -3594,7 +3612,7 @@ msgstr "งานของโปรเจค"
 #. module: project
 #: model:ir.model,name:project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "ตัวช่วยสร้างการสร้างเทมเพลตโปรเจ็กต์"
 
 #. module: project
 #. odoo-javascript
@@ -4263,7 +4281,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "แสดงบันทึกทั้งหมดที่มีวันที่กิจกรรมครั้งต่อไปที่ผ่านมาแล้ว"
 
 #. module: project
 #. odoo-javascript

@@ -31,6 +31,7 @@ msgid ""
 "\"Optional\" allows guests to place an order without signing in and later "
 "register via the order confirmation page when free sign-up is enabled."
 msgstr ""
+"「オプション」を選択すると、ゲストはログインせずにオーダを行い、後で無料登録が有効になっている場合は、オーダ確認ページから登録することができます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -50,12 +51,12 @@ msgstr "」。 次の結果を表示しています「"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax excluded)"
-msgstr ""
+msgstr "(税抜)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax included)"
-msgstr ""
+msgstr "(税込)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -239,6 +240,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                    カートに追加"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -302,6 +305,11 @@ msgid ""
 "            Shipping: 2-3 Business Days\n"
 "        </small>"
 msgstr ""
+"<small class=\"text-muted mb-0\">\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>利用規約</u></a><br/>\n"
+"            30日間返金保証<br/>\n"
+"            配送: 2-3 営業日内\n"
+"        </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -410,7 +418,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
 msgid "<span class=\"text-muted\">Price</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">価格</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -658,7 +666,7 @@ msgstr "クロスセル製品について"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Accept Terms"
-msgstr ""
+msgstr "利用規約に同意する"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1232,7 +1240,7 @@ msgstr "カテゴリフッタ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
 msgid "Category image"
-msgstr ""
+msgstr "カテゴリ画像"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1503,7 +1511,7 @@ msgstr "オーダで配送費用を計算"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/checkout.js:0
 msgid "Computed after delivery"
-msgstr ""
+msgstr "配送後に計算"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1615,7 +1623,7 @@ msgstr "ソファ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Coupon, Gift card, Promo-code?"
-msgstr ""
+msgstr "クーポン、ギフトカード、プロモーションコード"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2415,7 +2423,7 @@ msgstr "メッセージあり"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__has_published_products
 msgid "Has Published Products"
-msgstr ""
+msgstr "公開済プロダクトあり"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hidden
@@ -2451,7 +2459,7 @@ msgstr "時間後。"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hover
 msgid "Hover"
-msgstr ""
+msgstr "ホバー時"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
@@ -2646,7 +2654,7 @@ msgstr "カートに入れないで即チェックアウト"
 #: model:ir.model.fields,help:website_sale.field_product_attribute__preview_variants
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
-msgstr ""
+msgstr "即座に作成されたバリアントは /shopページから選択できます。"
 
 #. module: website_sale
 #. odoo-python
@@ -2761,7 +2769,7 @@ msgstr "大きな画像"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Large Images"
-msgstr ""
+msgstr "大きな画像"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3271,7 +3279,7 @@ msgstr "オフィスデスク"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__preview_variants
 msgid "On Product Cards"
-msgstr ""
+msgstr "プロダクトカード上"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -3668,7 +3676,7 @@ msgstr "プロダクト比較ツール"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Product Details"
-msgstr ""
+msgstr "プロダクト詳細"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_document
@@ -3897,13 +3905,13 @@ msgstr "公開済"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Options"
-msgstr ""
+msgstr "購入オプション"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Style"
-msgstr ""
+msgstr "購入スタイル"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4466,7 +4474,7 @@ msgstr "空を表示"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "サムネイルを表示"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5086,7 +5094,7 @@ msgstr "Google Places APIで、訪問者が入力した住所を検証します"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Use product variant images instead of the attribute values displays."
-msgstr ""
+msgstr "属性値の表示の代わりに、プロダクトのバリアント画像を使用します。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5193,7 +5201,7 @@ msgstr "訪問者製品閲覧履歴"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
 msgid "Visitor's Choice"
-msgstr ""
+msgstr "訪問者の選択"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes

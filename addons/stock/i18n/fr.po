@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1266,6 +1266,9 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Autoriser la fabrication à la commande, ou automatiser le bon de commande "
+"lorsqu’un produit est vendu et obtenir des liens directs entre les "
+"documents."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1604,6 +1607,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Quantité disponible (calculée comme Quantité en stock - quantité réservée - quantité à retirer)\n"
+"Dans un contexte avec un seul emplacement de stock, cela inclut les marchandises stockées à cet emplacement ou dans l’un de ses enfants.\n"
+"Dans un contexte avec un seul entrepôt, cela inclut les marchandises stockées dans l’emplacement de stock de cet entrepôt ou dans l’un de ses enfants.\n"
+"Sinon, cela inclut les marchandises stockées dans tout emplacement de stock de type \"interne\"."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -2319,6 +2326,9 @@ msgid ""
 "                    products later. Do not create a backorder if you will not\n"
 "                    process the remaining products."
 msgstr ""
+"Créez un reliquat si vous prévoyez de traiter les produits\n"
+"                    restants plus tard. Ne créez pas de reliquat si vous ne comptez pas\n"
+"                    traiter les produits restants."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -2846,6 +2856,11 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
+"Supprimer les mouvements de produits après le transfert ?\n"
+"\n"
+"Ce serait comme remonter dans le temps pour annuler toutes les opérations déclenchées après ce mouvement. Qui sait quel serait le résultat final ? Ne le faisons pas.\n"
+"\n"
+"Essayez plutôt de modifier la quantité \"effectuée\" à 0."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -3001,12 +3016,12 @@ msgstr "Description"
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description Of Picking"
-msgstr ""
+msgstr "Description du transfert"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking_manual
 msgid "Description Picking Manual"
-msgstr ""
+msgstr "Description du transfert manuel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -3650,6 +3665,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Quantité prévue (calculée comme Quantité en stock - Sorties + Entrées - Quantité à retirer)\n"
+"Dans un contexte avec un seul emplacement de stock, cela inclut les biens stockés dans cet emplacement, ou dans l’un de ses enfants.\n"
+"Dans un contexte avec un seul entrepôt, cela inclut les biens stockés dans l’emplacement de stock de cet entrepôt, ou dans l’un de ses enfants.\n"
+"Sinon, cela inclut les biens stockés dans tout emplacement de stock de type \"interne\"."
 
 #. module: stock
 #. odoo-javascript
@@ -4640,7 +4659,7 @@ msgstr "Gestion de l'inventaire"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
 msgid "Inventory Name"
-msgstr ""
+msgstr "Nom de l’inventaire"
 
 #. module: stock
 #. odoo-javascript
@@ -5518,7 +5537,7 @@ msgstr "Mouvement"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Move Date"
-msgstr ""
+msgstr "Date du mouvement"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -6047,6 +6066,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
+"Quantité en stock qui n’a pas été réservée lors d’un transfert et qui est "
+"encore fraîche, dans l’unité de mesure par défaut du produit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -8035,7 +8056,7 @@ msgstr "Annuler l'ajustement de l'inventaire"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "Reverted Moves"
-msgstr ""
+msgstr "Mouvements annulés"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -8224,6 +8245,7 @@ msgstr "Date programmée ou date de traitement"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Scheduled time for the first part of the shipment to be processed."
 msgstr ""
+"Heure prévue pour le traitement de la première partie de l’expédition."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -9246,7 +9268,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "The actual date when the transfer was processed."
-msgstr ""
+msgstr "Date réelle à laquelle le transfert a été effectué."
 
 #. module: stock
 #. odoo-python
@@ -9575,6 +9597,12 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Cela ajoute une route Réapprovisionnement sur commande (MTO) à appliquer sur"
+" les produits afin de générer un réapprovisionnement à la demande lié à vos "
+"commandes clients (par exemple) dès leur confirmation, avec un lien direct. "
+"Les bons de commande, ordres de fabrication, etc. sont déclenchés en "
+"fonction de la méthode de réapprovisionnement définie sur le produit (achat "
+"ou fabrication)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10116,6 +10144,8 @@ msgid ""
 "Transfer trouble alert! Validating a zero quantity transfer? You're not moving invisible goods around are you?\n"
 "Set some quantities and let's get moving!"
 msgstr ""
+"Alerte transfert ! Vous validez un transfert avec une quantité nulle ? Vous ne comptez tout de même pas déplacer des produits invisibles ?\n"
+"Indiquez des quantités avant de passer à l’action !"
 
 #. module: stock
 #. odoo-python
