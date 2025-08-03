@@ -1,0 +1,37 @@
+<odoo>
+    <record id="estate_property_offer_view_form" model="ir.ui.view">
+        <field name="name">estate.property.offer.form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Offer">
+                <sheet>
+                    <group string="Property Offer">
+                        <field name="partner"/>
+                        <field name="property"/>
+                        <field name="price"/>
+                        <field name="state"/>
+                        <field name="deadline"/>
+                        <field name="validitydate"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="estate_property_offer_view_list" model="ir.ui.view">
+        <field name="name">estate.property.offer.list</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <list string="estates offer" decoration-danger="state == 'refused'" decoration-success="state == 'accepted'">
+                <!--use editable  editable="bottom" attribute that will allow for the user to editing the values of
+                the fields without entering the form page, by editing them in the list view-->
+                <field name="price"/>
+                <field name="partner"/>
+                <field name="validitydate"/>
+                <field name="deadline"/>
+                <button name="action_confirm" string="Confirm"  type="object" icon="fa-check" invisible="state != 'proposed'"/>
+                <button name="action_cancel" string="Cancel"  type="object" icon="fa-times" invisible="state != 'proposed'"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+</odoo>

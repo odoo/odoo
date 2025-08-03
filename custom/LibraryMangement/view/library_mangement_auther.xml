@@ -1,0 +1,36 @@
+<odoo>
+    <record id="library_mangement_auther_view_form" model="ir.ui.view">
+        <field name="name">library.mangement.auther.form</field>
+        <field name="model">library.mangement.auther</field>
+        <field name="arch" type="xml">
+            <form string="book">
+                <sheet>
+                    <group >
+                        <field name="name"/>
+                        <field name="descreption"/>
+                        <field name="age"/>
+                    </group>
+                    <notebook>
+                        <page string="Auther Books">
+                            <list>
+                                <field name="books"/>
+                            </list>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="library_mangement_book_view_list" model="ir.ui.view">
+        <field name="name">library.mangement.auther.list</field>
+        <field name="model">library.mangement.auther</field>
+        <field name="arch" type="xml">
+            <list >
+                <field name="name"/>
+                <field name="descreption"/>
+                <field name="age"/>
+            </list>
+        </field>
+    </record>
+</odoo>
