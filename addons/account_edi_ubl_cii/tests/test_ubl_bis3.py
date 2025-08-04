@@ -118,6 +118,46 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_product_code_and_barcode')
 
+    def test_product_intrastat_code(self):
+        if self.env['ir.module.module']._get('account_intrastat').state != 'installed':
+            self.skipTest("module account_intrastat is not installed")
+
+        self.product_a.intrastat_code_id = self.env['account.intrastat.code'].sudo().create({
+            'name': 'An Intrastat Code',
+            'type': 'commodity',
+            'code': 456,
+            'supplementary_unit': 'l',
+        })
+
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0)
+
+        self.product_a.write({
+            'default_code': 'P123',
+            'barcode': '1234567890123',
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_product_intrastat_code')
+
+    def test_product_intrastat_code_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_product_intrastat_code()
+
     def test_financial_account(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)
