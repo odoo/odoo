@@ -482,7 +482,7 @@ class BaseAutomation(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        base_automations = super(BaseAutomation, self).create(vals_list)
+        base_automations = super().create(vals_list)
         self._update_cron()
         self._update_registry()
         if base_automations._has_trigger_onchange():
@@ -492,7 +492,7 @@ class BaseAutomation(models.Model):
 
     def write(self, vals: dict):
         clear_templates = self._has_trigger_onchange()
-        res = super(BaseAutomation, self).write(vals)
+        res = super().write(vals)
         if set(vals).intersection(self.CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
@@ -505,7 +505,7 @@ class BaseAutomation(models.Model):
 
     def unlink(self):
         clear_templates = self._has_trigger_onchange()
-        res = super(BaseAutomation, self).unlink()
+        res = super().unlink()
         self._update_cron()
         self._update_registry()
         if clear_templates:

@@ -39,7 +39,7 @@ class IrDefault(models.Model):
         # invalidate all company dependent fields since their fallback value in cache may be changed
         self.env.invalidate_all()
         self.env.registry.clear_cache()
-        return super(IrDefault, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
         if self:
@@ -55,7 +55,7 @@ class IrDefault(models.Model):
             # invalidate all company dependent fields since their fallback value in cache may be changed
             self.env.invalidate_all()
             self.env.registry.clear_cache()
-        return super(IrDefault, self).unlink()
+        return super().unlink()
 
     @api.model
     def set(self, model_name, field_name, value, user_id=False, company_id=False, condition=False):
