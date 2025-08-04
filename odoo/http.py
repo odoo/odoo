@@ -36,21 +36,19 @@ Here be dragons:
             Request._serve_db
                 env['ir.http']._match
                 if not match:
-                    Request._transactioning
-                        model.retrying
-                            env['ir.http']._serve_fallback
-                            env['ir.http']._post_dispatch
+                    model.retrying(Request._serve_ir_http_fallback)
+                        env['ir.http']._serve_fallback
+                        env['ir.http']._post_dispatch
                 else:
-                    Request._transactioning
-                        model.retrying
-                            env['ir.http']._authenticate
-                            env['ir.http']._pre_dispatch
-                            Dispatcher.pre_dispatch
-                            Dispatcher.dispatch
-                                env['ir.http']._dispatch
-                                    route_wrapper
-                                        endpoint
-                            env['ir.http']._post_dispatch
+                    model.retrying(Request._serve_ir_http)
+                        env['ir.http']._authenticate
+                        env['ir.http']._pre_dispatch
+                        Dispatcher.pre_dispatch
+                        Dispatcher.dispatch
+                            env['ir.http']._dispatch
+                                route_wrapper
+                                    endpoint
+                        env['ir.http']._post_dispatch
 
 Application.__call__
   WSGI entry point, it sanitizes the request, it wraps it in a werkzeug
@@ -74,12 +72,14 @@ Request._serve_nodb
 
 Request._serve_db
   Handle all requests that are not static when it is possible to connect
-  to a database. It opens a registry on the database and then delegates
-  most of the effort the the ``ir.http`` abstract model. This model acts
-  as a module-aware middleware, its implementation in ``base`` is merely
-  more than just delegating to Dispatcher.
+  to a database. It opens a registry on the database, manage the request
+  cursor and environment. The function decides whether to use a
+  read-only or a read/write cursor for its operations:
+  ``check_signaling``, ``match`` and ``serve_fallback`` are called using
+  the same read-only cursor; ``_serve_ir_http`` is called reusing the
+  same (but reset) read-only cursor, or a new read/write one.
 
-Request._transactioning & service.model.retrying
+service.model.retrying
   Manage the cursor, the environment and exceptions that occured while
   executing the underlying function. They recover from various
   exceptions such as serialization errors and writes in read-only
@@ -116,8 +116,8 @@ ir.http._post_dispatch/Dispatcher.post_dispatch
 
 ir.http._handle_error
   Not present in the call-graph, is called for un-managed exceptions (SE
-  or RO) that occured inside of ``Request._transactioning``. It returns
-  a http response that wraps the error that occured.
+  or RO) that occured inside of ``Request._retrying``. It returns a http
+  response that wraps the error that occured.
 
 route_wrapper, closure of the http.route decorator
   Sanitize the request parameters, call the route endpoint and
@@ -1814,15 +1814,6 @@ class Request:
         session.is_dirty = False
         return session, dbname
 
-    def _open_registry(self):
-        try:
-            registry = Registry(self.db)
-            cr_readonly = registry.cursor(readonly=True)
-            registry = registry.check_signaling(cr_readonly)
-        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
-            raise RegistryError(f"Cannot get registry {self.db}") from e
-        return registry, cr_readonly
-
     # =====================================================
     # Getters and setters
     # =====================================================
@@ -2224,45 +2215,87 @@ class Request:
         return response
 
     def _serve_db(self):
-        """
-        Prepare the user session and load the ORM before forwarding the
-        request to ``_serve_ir_http``.
-        """
-        cr_readonly = None
-        rule = None
-        args = None
-        not_found = None
-
-        # reuse the same cursor for building+checking the registry and
-        # for matching the controller endpoint
+        """ Load the ORM and use it to process the request. """
+        # reuse the same cursor for building, checking the registry, for
+        # matching the controller endpoint and serving the data
+        cr = None
         try:
-            self.registry, cr_readonly = self._open_registry()
+            # get the registry and cursor (RO)
+            try:
+                registry = Registry(self.db)
+                cr = registry.cursor(readonly=True)
+                self.registry = registry.check_signaling(cr)
+            except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
+                raise RegistryError(f"Cannot get registry {self.db}") from e
             threading.current_thread().dbname = self.registry.db_name
-            self.env = odoo.api.Environment(cr_readonly, self.session.uid, self.session.context)
+
+            # find the controller endpoint to use
+            self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
             try:
                 rule, args = self.registry['ir.http']._match(self.httprequest.path)
             except NotFound as not_found_exc:
-                not_found = not_found_exc
+                # no controller endpoint matched -> fallback or 404
+                serve_func = functools.partial(self._serve_ir_http_fallback, not_found_exc)
+                readonly = True
+            else:
+                # a controller endpoint matched -> dispatch it the request
+                self._set_request_dispatcher(rule)
+                serve_func = functools.partial(self._serve_ir_http, rule, args)
+                readonly = rule.endpoint.routing['readonly']
+                if callable(readonly):
+                    readonly = readonly(rule.endpoint.func.__self__, rule, args)
+
+            # keep on using the RO cursor when a readonly route matched,
+            # and for serve fallback
+            if readonly and cr.readonly:
+                threading.current_thread().cursor_mode = 'ro'
+                try:
+                    return service_model.retrying(serve_func, env=self.env)
+                except psycopg2.errors.ReadOnlySqlTransaction as exc:
+                    # although the controller is marked read-only, it
+                    # attempted a write operation, try again using a
+                    # read/write cursor
+                    _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
+                    threading.current_thread().cursor_mode = 'ro->rw'
+                except Exception as exc:  # noqa: BLE001
+                    raise self._update_served_exception(exc)
+            else:
+                threading.current_thread().cursor_mode = 'rw'
+
+            # we must use a RW cursor when a read/write route matched, or
+            # there was a ReadOnlySqlTransaction error
+            if cr.readonly:
+                cr.close()
+                cr = self.env.registry.cursor()
+            else:
+                # the cursor is already a RW cursor, start a new transaction
+                # that will avoid repeatable read serialization errors because
+                # check signaling is not done in `retrying` and that function
+                # would just succeed the second time
+                cr.rollback()
+            assert not cr.readonly
+            self.env = self.env(cr=cr)
+            try:
+                return service_model.retrying(serve_func, env=self.env)
+            except Exception as exc:  # noqa: BLE001
+                raise self._update_served_exception(exc)
         finally:
-            if cr_readonly is not None:
-                cr_readonly.close()
+            if cr is not None:
+                cr.close()
 
-        if not_found:
-            # no controller endpoint matched -> fallback or 404
-            return self._transactioning(
-                functools.partial(self._serve_ir_http_fallback, not_found),
-                readonly=True,
-            )
-
-        # a controller endpoint matched -> dispatch it the request
-        self._set_request_dispatcher(rule)
-        readonly = rule.endpoint.routing['readonly']
-        if callable(readonly):
-            readonly = readonly(rule.endpoint.func.__self__, rule, args)
-        return self._transactioning(
-            functools.partial(self._serve_ir_http, rule, args),
-            readonly=readonly,
-        )
+    def _update_served_exception(self, exc):
+        if isinstance(exc, HTTPException) and exc.code is None:
+            return exc  # bubble up to odoo.http.Application.__call__
+        if (
+            'werkzeug' in config['dev_mode']
+            and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
+        ):
+            return exc  # bubble up to werkzeug.debug.DebuggedApplication
+        if not hasattr(exc, 'error_response'):
+            if isinstance(exc, AccessDenied):
+                exc.suppress_traceback()
+            exc.error_response = self.registry['ir.http']._handle_error(exc)
+        return exc
 
     def _serve_ir_http_fallback(self, not_found):
         """
@@ -2293,53 +2326,6 @@ class Request:
         response = self.dispatcher.dispatch(rule.endpoint, args)
         self.registry['ir.http']._post_dispatch(response)
         return response
-
-    def _transactioning(self, func, readonly):
-        """
-        Call ``func`` within a new SQL transaction.
-
-        If ``func`` performs a write query (insert/update/delete) on a
-        read-only transaction, the transaction is rolled back, and
-        ``func`` is called again in a read-write transaction.
-
-        Other errors are handled by ``ir.http._handle_error`` within
-        the same transaction.
-
-        Note: This function does not reset any state set on ``request``
-        and ``request.env`` upon returning. Therefore, any recordset
-        set on request during one transaction WILL NOT be usable inside
-        the following transactions unless the recordset is reset with
-        ``with_env(request.env)``. This is especially a concern between
-        ``_match`` and other ``ir.http`` methods, as ``_match`` is
-        called inside its own dedicated transaction.
-        """
-        for readonly_cr in (True, False) if readonly else (False,):
-            threading.current_thread().cursor_mode = (
-                'ro' if readonly_cr
-                else 'ro->rw' if readonly
-                else 'rw'
-            )
-
-            with contextlib.closing(self.registry.cursor(readonly=readonly_cr)) as cr:
-                self.env = self.env(cr=cr)
-                try:
-                    return service_model.retrying(func, env=self.env)
-                except psycopg2.errors.ReadOnlySqlTransaction as exc:
-                    _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
-                    continue
-                except Exception as exc:
-                    if isinstance(exc, HTTPException) and exc.code is None:
-                        raise  # bubble up to odoo.http.Application.__call__
-                    if (
-                        'werkzeug' in config['dev_mode']
-                        and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
-                    ):
-                        raise  # bubble up to werkzeug.debug.DebuggedApplication
-                    if not hasattr(exc, 'error_response'):
-                        if isinstance(exc, AccessDenied):
-                            exc.suppress_traceback()
-                        exc.error_response = self.registry['ir.http']._handle_error(exc)
-                    raise
 
 
 # =========================================================
