@@ -23,7 +23,12 @@
             <t t-if="showRecurringRevenue">
                 <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(props.group)"/>
                 <AnimatedNumber
+<<<<<<< 609ce29d5232707f7c6d05a7b82909cd3b09c75a
                     t-if="rrmAggregate.value"
+||||||| 9ee1317dd384181fdee106710541c656f93394ce
+=======
+                    t-if="rrmAggregate.value !== false"
+>>>>>>> d397617e37c246b7351a8386034d5a89363d36df
                     value="rrmAggregate.value"
                     title="rrmAggregate.title"
                     duration="1000"
