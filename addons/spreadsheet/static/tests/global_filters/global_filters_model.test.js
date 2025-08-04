@@ -320,11 +320,10 @@ test("Domain of simple date filter", async function () {
         list: { 1: { chain: "date", type: "date" } },
         chart: { [chartId]: { chain: "date", type: "date" } },
     });
-    const result = await setGlobalFilterValue(model, {
+    await setGlobalFilterValue(model, {
         id: THIS_YEAR_GLOBAL_FILTER.id,
         value: { type: "year", year: 2021 },
     });
-    console.log(result);
     const pivotDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     expect(pivotDomain[0]).toBe("&");
     expect(pivotDomain[1]).toEqual(["date", ">=", "2021-01-01"]);
