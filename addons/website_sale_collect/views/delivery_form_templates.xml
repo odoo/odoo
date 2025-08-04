@@ -24,6 +24,46 @@
                     <t t-out="order_line.product_id.name"/>
                     ( <t t-out="order_line.shop_warning"/> )
                     <div name="o_wsale_unavailable_line_button_container">
+                        <t t-set="line_product" t-value="order_line.product_id"/>
+                        <div t-if="not line_product.allow_out_of_stock_order" id="stock_notification_div">
+                            <div
+                                t-if="line_product not in (products_with_stock_notification or [])"
+                                id="product_stock_notification_message"
+                                class="btn btn-link px-0"
+                            >
+                                <small>
+                                    <i class="fa fa-envelope-o me-2"/>Get notified when back in stock
+                                </small>
+                            </div>
+                            <div id="stock_notification_form" class="d-none">
+                                <div class="input-group">
+                                    <input
+                                        class="form-control"
+                                        id="stock_notification_input"
+                                        name="email"
+                                        type="text"
+                                        placeholder="johndoe@example.com"
+                                        t-att-value="stock_notification_email or ''"
+                                    />
+                                    <input name="product_id" type="hidden" t-att-value="line_product.id"/>
+                                    <div id="product_stock_notification_form_submit_button" class="btn btn-primary">
+                                        <i class="fa fa-paper-plane"/>
+                                    </div>
+                                </div>
+                                <div id="stock_notification_input_incorrect" class="d-none form-text text-danger">
+                                    Invalid email
+                                </div>
+                            </div>
+                            <div
+                                id="stock_notification_success_message"
+                                t-att-class="'text-muted' if has_stock_notification else 'd-none'"
+                            >
+                                <small>
+                                    <i class="fa fa-bell"/>
+                                    We'll notify you once the product is back in stock.
+                                </small>
+                            </div>
+                        </div>
                         <a
                             title="Remove from cart"
                             href='#'

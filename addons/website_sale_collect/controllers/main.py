@@ -42,9 +42,20 @@ class WebsiteSaleCollect(WebsiteSale):
         res = super()._prepare_checkout_page_values(order_sudo, **query_params)
 
         res.update(order_sudo._prepare_in_store_default_location_data())
+        notif_enabled_ids = request.session.get('product_with_stock_notification_enabled', [])
         if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.pickup_location_data:
-            res['unavailable_order_lines'] = order_sudo._get_unavailable_order_lines(
+            partner = order_sudo.partner_id
+            unavailable_order_lines = order_sudo._get_unavailable_order_lines(
                 order_sudo.pickup_location_data.get('id')
+            )
+            products_with_stock_notification = unavailable_order_lines.product_id.filtered(
+                lambda p: p.id in notif_enabled_ids or p._has_stock_notification(partner),
+            )
+            email = request.session.get('stock_notification_email', partner.email) or ''
+            res.update(
+                unavailable_order_lines=unavailable_order_lines,
+                products_with_stock_notification=products_with_stock_notification,
+                stock_notification_email=email,
             )
         return res
 
