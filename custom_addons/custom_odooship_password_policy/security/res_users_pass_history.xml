@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="res_users_pass_history_rule" model="ir.rule">
+        <field name="name">Res Users Pass History Access</field>
+        <field name="model_id" ref="custom_odooship_password_policy.model_res_users_pass_history" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="erp_manager_pass_history_rule" model="ir.rule">
+        <field name="name">Res Users Pass History Access</field>
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">1</field>
+        <field name="perm_unlink">0</field>
+        <field name="model_id" ref="custom_odooship_password_policy.model_res_users_pass_history" />
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]" />
+        <field name="domain_force">[(1, '=', 1)]
+        </field>
+    </record>
+
+</odoo>

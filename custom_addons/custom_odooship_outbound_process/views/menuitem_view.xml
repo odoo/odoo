@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Main Menuitem-->
+    <menuitem id="menu_shiperoo_outbound_process"
+              name="Shiperoo Outbound Process"
+              web_icon="custom_odooship_outbound_process,static/description/icon.png"
+              sequence="20"/>
+
+    <menuitem id="menu_custom_pack_app"
+              name="PACK APP"
+              parent="menu_shiperoo_outbound_process"
+              action="action_custom_pack_app"
+              sequence="30"/>
+
+    <!--   Configuration menu for PC totes-->
+    <menuitem id="submenu_configuration_outbound_process"
+              name="Configuration"
+              parent="menu_shiperoo_outbound_process"
+              sequence="50"/>
+
+    <!--    Submenu to configure Crate PC Barcode in system and to track status of Crate is
+    Available and not available-->
+    <menuitem id="submenu_pc_totes_barcode_configuration"
+              name="Geek PC Totes Barcode"
+              parent="submenu_configuration_outbound_process"
+              action="action_pc_container_barcode_configuration"
+              sequence="70"/>
+
+    <menuitem id="menu_onetraker_config"
+              name="OneTraker Configuration"
+              parent="submenu_configuration_outbound_process"
+              action="action_onetracker_config"
+              groups="custom_odooship_decanting_process.group_shiperoo_admin"
+              sequence="80"/>
+
+    <menuitem id="menu_custom_message_config_sub"
+              name="Message Configurations"
+              parent="submenu_configuration_outbound_process"
+              action="action_custom_message_configuration"
+              groups="custom_odooship_decanting_process.group_shiperoo_admin"
+              sequence="90"/>
+
+    <menuitem id="menu_shipping_integration_log" name="Integration Logs"
+              parent="submenu_configuration_outbound_process"
+              action="action_shipping_integration_log"
+              groups="custom_odooship_decanting_process.group_shiperoo_admin"
+              sequence="100"/>
+
+</odoo>

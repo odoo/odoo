@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing form view to add configuration fields Site code-->
+        <record id="view_stock_location_inherit_site_code" model="ir.ui.view">
+            <field name="name">stock.location.form.inherit.custom</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <!-- Add the fields in the appropriate position -->
+                <xpath expr="//form/sheet/group/group" position="inside">
+                    <field name="site_code_id" string="Site Code"/>
+                    <field name="filled" invisible="system_type not in ('manual')"/>
+                    <field name="automation_manual"/>
+                    <field name="pending_putaway"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

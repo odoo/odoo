@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_custom_message_configuration_tree" model="ir.ui.view">
+        <field name="name">custom.message.configuration.tree</field>
+        <field name="model">custom.message.configuration</field>
+        <field name="arch" type="xml">
+            <tree string="Message Configurations">
+                <field name="message_code"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_custom_message_configuration_form" model="ir.ui.view">
+        <field name="name">custom.message.configuration.form</field>
+        <field name="model">custom.message.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Message Configuration">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="message_code"/>
+                        </group>
+                        <group>
+
+                            <field name="description"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_message_configuration" model="ir.actions.act_window">
+        <field name="name">Message Configurations</field>
+        <field name="res_model">custom.message.configuration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define unique message codes with descriptions.
+            </p>
+        </field>
+    </record>
+
+</odoo>
+

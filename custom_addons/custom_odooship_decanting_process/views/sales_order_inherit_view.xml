@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend the existing search view of sale.order to include the tags filter -->
+   <record id="view_order_form_inherit_auto_assign_route" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.auto.assign.route</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group" position="inside">
+                    <field name="tenant_code_id" string="Tenant ID"/>
+                </xpath>
+                <xpath expr="//field[@name='carrier']" position="after">
+                     <field name="service_type"/>
+                    <field name="packaging_source_type"/>
+                    <field name="post_category"/>
+                </xpath>
+                <!-- Add the field to the order_line tree view -->
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                    <field name="auto_assign_route" />
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

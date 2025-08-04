@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Cron to Validate pick, update Tracking details on Sale order and update DB-->
+    <record id="ir_cron_shipping_log_retry" model="ir.cron">
+        <field name="name">Shipping Integration Log Retry</field>
+        <field name="model_id" ref="model_shipping_integration_log"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_process_shipping_logs()</field>
+        <field name="interval_type">minutes</field>
+        <field name="interval_number">2</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

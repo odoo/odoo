@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing form view to add configuration fields Tenant code and Site code-->
+        <record id="view_stock_picking_inherit_site_outbound_process" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header" position="inside">
+                    <hr/>
+                    <field name="current_state"
+                           invisible="operation_process_type not in ('pick')"
+                           widget="statusbar"/>
+                    <button name="action_confirm_geek_pick"
+                            string="Geek Pick confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="current_state in ('pick','pack')"
+                    />
+                    <button name="action_confirm_pack"
+                            string="Geek Pack confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="current_state in ('draft','pack')"
+                    />
+                    <button name="action_allow_partial"
+                            string="Allow Partial"
+                            type="object"
+                            class="btn-secondary"/>
+                </xpath>
+<!--                Hide Print, print Label and Cancel button -->
+                <xpath expr="//button[@name='do_print_picking']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_open_label_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='batch_id']" position="before">
+                    <field name="discrete_pick"/>
+                    <field name="automation_manual_order"/>
+                    <field name="slsu"/>
+                    <field name="operation_process_type"/>
+                    <field name="allow_partial" invisible="operation_process_type != 'pick'"/>
+                    <field name="is_international"/>
+                    <field name="merge_pick_type"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']"
+                       position="after">
+                    <field name="pc_container_code" column_invisible="parent.operation_process_type!='pick'"/>
+                    <field name="packed" optional="hide" column_invisible="parent.operation_process_type!='pick'"/>
+                    <field name="pick_status" optional="hide" column_invisible="parent.operation_process_type!='pick'"/>
+                    <field name="picked_qty" optional="hide" column_invisible="parent.operation_process_type!='pick'"/>
+                    <field name="packed_qty" optional="hide" column_invisible="parent.operation_process_type!='pick'"/>
+                    <field name="remaining_picked_qty" readonly="1" optional="hide" column_invisible="parent.operation_process_type!='pick'"/>
+                    <field name="remaining_packed_qty" readonly="1" optional="hide" column_invisible="parent.operation_process_type!='pick'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_picking_inherit_modify_validate_order_button" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="custom_odooship_decanting_process.view_stock_picking_inherit_site_tenant_code"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_validate_picking']" position="attributes">
+                    <attribute name="invisible">operation_process_type not in ('dr')</attribute>
+                </xpath>
+<!--                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='remaining_qty']" position="attributes">-->
+<!--                    <attribute name="column_invisible">operation_process_type not in ('dr')</attribute>-->
+<!--                </xpath>-->
+            </field>
+        </record>
+    </data>
+</odoo>
