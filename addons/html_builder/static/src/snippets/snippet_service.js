@@ -358,7 +358,7 @@ export class SnippetModel extends Reactive {
                         const snippetKey = isButton ? "s_button" : snippetEl.dataset.snippet;
                         const thumbnailURL = this.getSnippetThumbnailURL(snippetKey);
 
-                        const snippetCopyEl = wrapWithSaveSnippetHandlers(snippetEl, () =>
+                        const snippetCopyEl = await wrapWithSaveSnippetHandlers(snippetEl, () =>
                             snippetEl.cloneNode(true)
                         );
 

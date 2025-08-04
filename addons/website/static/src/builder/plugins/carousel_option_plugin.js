@@ -7,6 +7,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 import { between } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export const CAROUSEL_CARDS_SEQUENCE = between(WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW);
 
@@ -78,9 +79,9 @@ export class CarouselOptionPlugin extends Plugin {
     /**
      * Restores all the carousels so their first slide is the active one.
      */
-    restoreCarousels() {
+    restoreCarousels(rootEl = this.editable) {
         // Set the first slide as the active one.
-        for (const carouselEl of this.editable.querySelectorAll(".carousel")) {
+        for (const carouselEl of selectElements(rootEl,".carousel")) {
             carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
                 itemEl.classList.remove("next", "prev", "left", "right");
                 itemEl.classList.toggle("active", i === 0);
