@@ -599,9 +599,11 @@ patch(PosStore.prototype, {
         const domain = new Domain(reward_product_domain);
 
         try {
-            reward.all_discount_product_ids = [
-                ["link", ...products.filter((p) => domain.contains(p.serialize()))],
-            ];
+            reward.update({
+                all_discount_product_ids: [
+                    ["link", ...products.filter((p) => domain.contains(p.serialize()))],
+                ],
+            });
         } catch (error) {
             if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
                 throw error;
