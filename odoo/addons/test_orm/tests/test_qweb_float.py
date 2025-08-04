@@ -39,11 +39,13 @@ class TestFloatExport(common.TransactionCase):
     def test_precision_domain(self):
         self.env['decimal.precision'].create({
             'name': 'A',
-            'digits': 2,
+            'min_digits': 2,
+            'max_digits': 2,
         })
         self.env['decimal.precision'].create({
             'name': 'B',
-            'digits': 6,
+            'min_digits': 6,
+            'max_digits': 6,
         })
 
         converter = self.get_converter('float')

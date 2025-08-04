@@ -158,7 +158,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.check_reconciliation(invoice2, picking)
 
     def test_rounding_discount(self):
-        self.env.ref("product.decimal_discount").digits = 5
+        self.env.ref("product.decimal_discount").max_digits = 5
         tax_exclude_id = self.env["account.tax"].create(
             {
                 "name": "Exclude tax",
@@ -194,7 +194,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.check_reconciliation(invoice, picking)
 
     def test_rounding_price_unit(self):
-        self.env.ref("product.decimal_price").digits = 6
+        self.env.ref("product.decimal_price").max_digits = 6
 
         test_product = self.test_product_delivery
         date_po_and_delivery = '2018-01-01'

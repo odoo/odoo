@@ -348,7 +348,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.setup_partner_as_be2(self.partner_a)
         tax_21 = self.percent_tax(21.0)
         decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)
-        decimal_precision.digits = 4
+        decimal_precision.max_digits = 4
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',

@@ -1396,7 +1396,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
         """
         self.env.company.tax_calculation_rounding_method = 'round_globally'
         self.change_company_country(self.env.company, self.env.ref('base.pt'))
-        self.env['decimal.precision'].search([('name', '=', "Product Price")]).digits = 6
+        self.env['decimal.precision'].search([('name', '=', "Product Price")]).max_digits = 6
         tax_0 = self.percent_tax(0, tax_group_id=self.tax_groups[0].id)
         tax_6 = self.percent_tax(6, tax_group_id=self.tax_groups[1].id)
         tax_13 = self.percent_tax(13, tax_group_id=self.tax_groups[2].id)

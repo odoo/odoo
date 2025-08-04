@@ -18,19 +18,23 @@
         -->
         <record forcecreate="True" id="decimal_price" model="decimal.precision">
             <field name="name">Product Price</field>
-            <field name="digits">2</field>
+            <field name="min_digits">2</field>
+            <field name="max_digits">2</field>
         </record>
         <record forcecreate="True" id="decimal_discount" model="decimal.precision">
             <field name="name">Discount</field>
-            <field name="digits">2</field>
+            <field name="min_digits">2</field>
+            <field name="max_digits">2</field>
         </record>
         <record forcecreate="True" id="decimal_stock_weight" model="decimal.precision">
             <field name="name">Stock Weight</field>
-            <field name="digits">2</field>
+            <field name="min_digits">2</field>
+            <field name="max_digits">2</field>
         </record>
         <record forcecreate="True" id="decimal_volume" model="decimal.precision">
             <field name="name">Volume</field>
-            <field name="digits">2</field>
+            <field name="min_digits">2</field>
+            <field name="max_digits">2</field>
         </record>
 
         <!--

@@ -305,7 +305,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
-        ]).digits = 5
+        ]).max_digits = 5
         product = self.env['product.product'].create({
             'name': 'product_test',
             'uom_id': self.env.ref('uom.product_uom_unit').id,

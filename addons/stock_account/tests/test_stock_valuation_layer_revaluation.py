@@ -137,7 +137,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
 
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
-        ]).digits = 2
+        ]).max_digits = 2
         self.product1.write({'standard_price': 0})
 
         # First Move
@@ -170,7 +170,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
 
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
-        ]).digits = 5
+        ]).max_digits = 5
 
         # First Move
         self.product1.write({'standard_price': 0.00875})

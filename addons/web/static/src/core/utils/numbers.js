@@ -98,11 +98,11 @@ export function roundPrecision(value, precision, method = "HALF-UP") {
     return denormalize(roundedValue);
 }
 
-function formatFixedDecimals(value, decimals) {
-    const rounded = roundDecimals(value, decimals);
+function formatFixedDecimals(value, min_decimals, max_decimals) {
+    const rounded = roundDecimals(value, max_decimals);
     const [intPart, decPart = ""] = rounded.toString().split(".");
-    const paddedDecimals = decPart.padEnd(decimals, "0").slice(0, decimals);
-    return decimals === 0 ? intPart : `${intPart}.${paddedDecimals}`;
+    const paddedDecimals = decPart.padEnd(min_decimals, "0").slice(0, max_decimals);
+    return max_decimals === 0 ? intPart : `${intPart}.${paddedDecimals}`;
 }
 
 export function roundDecimals(value, decimals) {
@@ -218,13 +218,16 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
  * @returns {string}
  */
 export function formatFloat(value, options = {}) {
-    let precision;
+    let min_decimals;
+    let max_decimals;
     if (options.digits && options.digits[1] !== undefined) {
-        precision = options.digits[1];
+        min_decimals = options.digits[1];
+        max_decimals = options.digits[2] !== undefined? options.digits[2]: options.digits[1];
     } else {
-        precision = 2;
+        min_decimals = 2;
+        max_decimals = 2;
     }
-    if (floatIsZero(value, precision)) {
+    if (floatIsZero(value, max_decimals)) {
         value = 0.0;
     }
     if (options.humanReadable) {
@@ -233,7 +236,7 @@ export function formatFloat(value, options = {}) {
     const grouping = options.grouping || l10n.grouping;
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
     const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
-    const formatted = formatFixedDecimals(value, precision).split(".");
+    const formatted = formatFixedDecimals(value, min_decimals, max_decimals).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.trailingZeros === false && formatted[1]) {
         formatted[1] = formatted[1].replace(/0+$/, "");

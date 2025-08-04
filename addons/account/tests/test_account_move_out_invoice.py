@@ -341,7 +341,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # Check rounding.
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
         decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
-        decimal_precision.digits = 4
+        decimal_precision.max_digits = 4
 
         product.lst_price = 90.0034
         invoice = self.env['account.move'].create({
@@ -770,7 +770,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertTrue(decimal_precision, "Decimal precision '%s' not found" % decimal_precision_name)
 
         self.other_currency.rounding = 0.01
-        decimal_precision.digits = 4
+        decimal_precision.max_digits = 4
 
         def check_invoice_values(invoice):
             self.assertInvoiceValues(invoice, [
@@ -3198,7 +3198,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         '''
         self.env['decimal.precision'].search([
             ('name', '=', self.env['account.move.line']._fields['price_unit']._digits),
-        ]).digits = 5
+        ]).max_digits = 5
 
         self.env['res.currency.rate'].create({
             'name': '2019-01-01',
@@ -3232,7 +3232,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         '''
         self.env['decimal.precision'].search([
             ('name', '=', self.env['account.move.line']._fields['price_unit']._digits),
-        ]).digits = 5
+        ]).max_digits = 5
 
         self.env['res.currency.rate'].search([]).unlink()
 

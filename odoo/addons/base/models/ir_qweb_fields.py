@@ -13,7 +13,7 @@ from PIL import Image
 from lxml import etree, html
 
 from odoo import api, fields, models, tools
-from odoo.tools import posix_to_ldml, float_utils, format_date, format_duration
+from odoo.tools import posix_to_ldml, float_repr, float_utils, format_date, format_duration
 from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools.mimetypes import guess_mimetype
@@ -219,14 +219,18 @@ class IrQwebFieldFloat(models.AbstractModel):
     def value_to_html(self, value, options):
         if 'decimal_precision' in options:
             precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
+            min_digits = self.env['decimal.precision']._get_min_digits(options['decimal_precision'])
         else:
             precision = options['precision']
+            min_digits = options.get('min_digits', precision)
 
         if precision is None:
             fmt = '%f'
         else:
             value = float_utils.float_round(value, precision_digits=precision)
-            fmt = '%.{precision}f'.format(precision=precision)
+            value_str = float_repr(value, precision, min_digits=min_digits)
+            nb_of_decimals = len(value_str.split('.')[1])
+            fmt = f'%.{nb_of_decimals}f'
 
         formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
@@ -242,8 +246,8 @@ class IrQwebFieldFloat(models.AbstractModel):
     @api.model
     def record_to_html(self, record, field_name, options):
         if 'precision' not in options and 'decimal_precision' not in options:
-            _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
-            options = dict(options, precision=precision)
+            _, min_digits, max_digits = record._fields[field_name].get_digits(record.env) or (None, None, None)
+            options = dict(options, precision=max_digits, min_digits=min_digits)
         return super().record_to_html(record, field_name, options)
 
 

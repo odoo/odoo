@@ -750,9 +750,9 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         of rounding with decimal precision.
         """
         decimal_price = self.env.ref('product.decimal_price')
-        decimal_price.digits = 5
+        decimal_price.max_digits = 5
         decimal_product_uom = self.env.ref('uom.decimal_product_uom')
-        decimal_product_uom.digits = 5
+        decimal_product_uom.max_digits = 5
 
         self.env.company.anglo_saxon_accounting = True
         self.product1.purchase_method = 'purchase'

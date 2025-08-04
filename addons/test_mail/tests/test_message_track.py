@@ -576,7 +576,7 @@ class TestTrackingInternals(MailCommon):
         formatted_values_all = new_message.sudo().tracking_value_ids._tracking_value_format()
         for (field_name, field_type, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
             currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
-            precision = None if field_name != 'float_field_with_digits' else (10, 8)
+            precision = None if field_name != 'float_field_with_digits' else (10, 8, 8)
             with self.subTest(field_name=field_name):
                 self.assertEqual(formatted_vals['fieldInfo']['currencyId'], currency)
                 self.assertEqual(formatted_vals['fieldInfo']['floatPrecision'], precision)

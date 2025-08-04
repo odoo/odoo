@@ -15,7 +15,7 @@ class TestStockFlow(TestStockCommon):
             'implied_ids': [Command.link(cls.env.ref('stock.group_production_lot').id)],
         })
         decimal_product_uom = cls.env.ref('uom.decimal_product_uom')
-        decimal_product_uom.digits = 3
+        decimal_product_uom.max_digits = 3
         cls.partner_company2 = cls.env['res.partner'].create({
             'name': 'My Company (Chicago)-demo',
             'email': 'chicago@yourcompany.com',

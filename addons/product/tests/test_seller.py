@@ -120,7 +120,7 @@ class TestSeller(TransactionCase):
         """Check that the right seller is selected, even when the decimal precision of
         Product Price is higher than the precision of the currency.
         """
-        self.env.ref('product.decimal_price').digits = 3
+        self.env.ref('product.decimal_price').max_digits = 3
         partner = self.asustec
         product = self.product_consu
         self.env['product.supplierinfo'].create([{
@@ -135,7 +135,7 @@ class TestSeller(TransactionCase):
         """Test that the min_qty has the precision of Product UoM."""
         # Arrange: Change precision digits
         uom_precision = self.env.ref("uom.decimal_product_uom")
-        uom_precision.digits = 3
+        uom_precision.max_digits = 3
         product = self.product_service
         product.seller_ids = [
             Command.create({

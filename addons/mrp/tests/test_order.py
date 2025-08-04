@@ -578,7 +578,7 @@ class TestMrpOrder(TestMrpCommon):
                 Command.create({'product_id': self.product_8.id, 'product_qty': 4.16}),
             ]
         })
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).max_digits = 0
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.product_6
         production_form.bom_id = bom_eff
@@ -2153,7 +2153,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # the overall decimal accuracy is set to 3 digits
         precision = self.env.ref('uom.decimal_product_uom')
-        precision.digits = 3
+        precision.max_digits = 3
 
         # define L and ml, L has rounding .001 but ml has rounding .01
         # when producing e.g. 187.5ml, it will be rounded to .188L
@@ -3593,7 +3593,7 @@ class TestMrpOrder(TestMrpCommon):
             'relative_uom_id': self.uom_unit.id,
         })
         # Only consider whole units
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).max_digits = 0
 
         test_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_7_template.id,

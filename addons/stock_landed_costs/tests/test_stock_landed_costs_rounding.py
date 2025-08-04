@@ -158,7 +158,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
     def test_stock_landed_costs_rounding_02(self):
         """ The landed costs should be correctly computed, even when the decimal accuracy
         of the deciaml price is increased. """
-        self.env.ref("product.decimal_price").digits = 4
+        self.env.ref("product.decimal_price").max_digits = 4
 
         fifo_pc = self.env['product.category'].create({
             'name': 'Fifo Category',

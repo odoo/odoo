@@ -341,7 +341,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         })
 
     def test_product_price_decimal_accuracy(self):
-        self.env.ref('product.decimal_price').digits = 3
+        self.env.ref('product.decimal_price').max_digits = 3
         self.env.company.currency_id.rounding = 0.01
 
         po = self.env['purchase.order'].with_context(tracking_disable=True).create({

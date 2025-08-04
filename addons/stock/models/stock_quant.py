@@ -1112,7 +1112,7 @@ class StockQuant(models.Model):
         this method is often called in batch and each unlink invalidate
         the cache. We defer the calls to unlink in this method.
         """
-        precision_digits = max(6, self.sudo().env.ref('uom.decimal_product_uom').digits * 2)
+        precision_digits = max(6, self.sudo().env.ref('uom.decimal_product_uom').max_digits * 2)
         # Use a select instead of ORM search for UoM robustness.
         query = """SELECT id FROM stock_quant WHERE (round(quantity::numeric, %s) = 0 OR quantity IS NULL)
                                                      AND round(reserved_quantity::numeric, %s) = 0

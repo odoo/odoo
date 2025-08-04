@@ -7,4 +7,4 @@ class DecimalPrecision(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'digits']
+        return ['id', 'name', 'max_digits']

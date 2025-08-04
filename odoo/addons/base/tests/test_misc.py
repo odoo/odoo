@@ -375,7 +375,8 @@ class TestFormatLang(TransactionCase):
     def test_decimal_precision(self):
         decimal_precision = self.env['decimal.precision'].create({
             'name': 'formatLang Decimal Precision',
-            'digits': 3,  # We want .001 decimals to make sure the decimal precision parameter 'dp' is chosen.
+            'min_digits': 3,
+            'max_digits': 3,  # We want .001 decimals to make sure the decimal precision parameter 'dp' is chosen.
         })
 
         self.assertEqual(misc.formatLang(self.env, 100, dp=decimal_precision.name), '100.000')
@@ -397,7 +398,8 @@ class TestFormatLang(TransactionCase):
     def test_decimal_precision_and_currency_object(self):
         decimal_precision = self.env['decimal.precision'].create({
             'name': 'formatLang Decimal Precision',
-            'digits': 3,
+            'min_digits': 3,
+            'max_digits': 3,
         })
 
         currency_object = self.env['res.currency'].create({

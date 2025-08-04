@@ -437,7 +437,7 @@ class AccountMove(models.Model):
 
     def _l10n_it_edi_add_base_lines_xml_values(self, base_lines_aggregated_values, is_downpayment):
         self.ensure_one()
-        quantita_pd = min(self.env['account.move.line']._fields['quantity'].get_digits(self.env)[1], 8)
+        quantita_pd = min(self.env['account.move.line']._fields['quantity'].get_digits(self.env)[2], 8)
         for index, (base_line, aggregated_values) in enumerate(base_lines_aggregated_values, start=1):
             line = base_line['record']
             tax_details = base_line['tax_details']

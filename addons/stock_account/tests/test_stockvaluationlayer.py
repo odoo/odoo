@@ -1196,7 +1196,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
-        ]).digits = 4
+        ]).max_digits = 4
         self.product1.standard_price = 280.8475
 
         move1 = self._make_out_move(self.product1, 4, create_picking=True, force_assign=True)

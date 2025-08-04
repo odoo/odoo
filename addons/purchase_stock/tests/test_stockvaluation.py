@@ -71,7 +71,7 @@ class TestStockValuation(TransactionCase):
         """ Set a quantity to replenish via the "Buy" route
         where product_uom is different from purchase uom
         """
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 3
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).max_digits = 3
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', False)
 
         # Create and set a new weight unit.
@@ -839,7 +839,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
-        self.env.ref('product.decimal_price').digits = 5
+        self.env.ref('product.decimal_price').max_digits = 5
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
@@ -873,7 +873,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
-        self.env.ref('product.decimal_price').digits = 5
+        self.env.ref('product.decimal_price').max_digits = 5
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,

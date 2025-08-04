@@ -443,7 +443,7 @@ class TestBoM(TestMrpCommon):
         # Because float_round(-384.0, 5) = -384.00000000000006
         # And float_round(-384.0, 2) = -384.0
         precision = self.env.ref('uom.decimal_product_uom')
-        precision.digits = 5
+        precision.max_digits = 5
 
         _ = self.env['mrp.bom'].create({
             'product_id': self.product_2.id,

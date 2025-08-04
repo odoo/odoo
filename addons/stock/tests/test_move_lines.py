@@ -107,7 +107,7 @@ class TestStockMoveLine(TestStockCommon):
     def test_pick_from_5(self):
         """ check small quantities get handled correctly """
         precision = self.env.ref('uom.decimal_product_uom')
-        precision.digits = 6
+        precision.max_digits = 6
         self.product.uom_id = self.uom_kg
         move = self.env['stock.move'].create({
             'product_id': self.product.id,

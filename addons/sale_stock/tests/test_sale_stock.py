@@ -381,7 +381,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         lines to the moves and edit a last time the ordered quantities. Deliver, check the
         quantities.
         """
-        self.env.ref('uom.decimal_product_uom').digits = 0
+        self.env.ref('uom.decimal_product_uom').max_digits = 0
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         item1 = self.company_data['product_order_no']

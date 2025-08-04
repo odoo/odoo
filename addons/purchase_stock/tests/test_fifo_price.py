@@ -309,7 +309,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         """" This test ensures that unit price keeps its decimal precision """
 
         unit_price_precision = self.env.ref('product.decimal_price')
-        unit_price_precision.digits = 3
+        unit_price_precision.max_digits = 3
 
         tax = self.env["account.tax"].create({
             "name": "Dummy Tax",

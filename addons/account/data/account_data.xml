@@ -4,7 +4,8 @@
 
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
             <field name="name">Payment Terms</field>
-            <field name="digits">6</field>
+            <field name="min_digits">6</field>
+            <field name="max_digits">6</field>
         </record>
 
         <!-- Open Settings from Purchase Journal to configure mail servers -->

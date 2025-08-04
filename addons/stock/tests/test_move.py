@@ -1885,7 +1885,7 @@ class TestStockMove(TestStockCommon):
         quantity available is not enough to reserve the move. Check also that it is not possible
         to set `quantity` with a value not honouring the UOM's rounding.
         """
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).max_digits = 0
 
         # 6 units are available in stock
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 6.0)

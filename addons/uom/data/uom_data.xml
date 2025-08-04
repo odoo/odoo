@@ -4,7 +4,8 @@
     <!-- DECIMAL.PRECISION -->
     <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
         <field name="name">Product Unit</field>
-        <field name="digits" eval="2"/>
+        <field name="min_digits" eval="2"/>
+        <field name="max_digits" eval="2"/>
     </record>
 
     <!-- UOM.UOM -->

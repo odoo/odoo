@@ -10,7 +10,8 @@
                     <sheet>
                         <group col="4">
                             <field name="name" readonly="id"/>
-                            <field name="digits"/>
+                            <field name="min_digits"/>
+                            <field name="max_digits"/>
                         </group>
                     </sheet>
                 </form>
@@ -22,7 +23,8 @@
             <field name="arch" type="xml">
                 <list string="Decimal Precision">
                     <field name="name"/>
-                    <field name="digits"/>
+                    <field name="min_digits"/>
+                    <field name="max_digits"/>
                 </list>
             </field>
         </record>

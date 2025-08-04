@@ -4,6 +4,7 @@ from typing import Literal, overload
 
 import builtins
 import math
+import re
 
 RoundingMethod = Literal['UP', 'DOWN', 'HALF-UP', 'HALF-DOWN', 'HALF-EVEN']
 
@@ -259,7 +260,7 @@ def float_compare(
     return -1 if delta < 0.0 else 1
 
 
-def float_repr(value: float, precision_digits: int) -> str:
+def float_repr(value: float, precision_digits: int, min_digits=False) -> str:
     """Returns a string representation of a float with the
        given number of fractional digits. This should not be
        used to perform a rounding operation (this is done via
@@ -275,7 +276,12 @@ def float_repr(value: float, precision_digits: int) -> str:
     # precision. e.g. str(123456789.1234) == str(123456789.123)!!
     if float_is_zero(value, precision_digits=precision_digits):
         value = 0.0
-    return "%.*f" % (precision_digits, value)
+    float_str = "%.*f" % (precision_digits, value)
+    if min_digits:
+        pattern = r'(\d+\.\d{' + str(min_digits) + r'}\d*?)0+$'
+        if regex_match := re.search(pattern, float_str):
+            float_str = regex_match.group(1)
+    return float_str
 
 
 def float_split_str(value: float, precision_digits: int) -> tuple[str, str]:

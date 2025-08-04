@@ -989,7 +989,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         """ test field description """
         precision = self.env.ref('test_orm.decimal_orm_number')
         description = self.env['test_orm.mixed'].fields_get()['number2']
-        self.assertEqual(description['digits'], (16, precision.digits))
+        self.assertEqual(description['digits'], (16, precision.min_digits, precision.max_digits))
 
     def check_monetary(self, record, amount, currency, msg=None):
         # determine the possible roundings of amount

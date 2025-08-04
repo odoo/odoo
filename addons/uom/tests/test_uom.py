@@ -32,7 +32,7 @@ class TestUom(UomCommon):
             'relative_factor': 20,
             'relative_uom_id': self.uom_unit.id,
         })
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).max_digits = 0
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
         self.assertEqual(qty, 1, "Converted quantity should be rounded up.")

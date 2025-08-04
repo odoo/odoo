@@ -396,7 +396,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         """
 
         unit_price_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
-        unit_price_precision.digits = 6
+        unit_price_precision.max_digits = 6
 
         tax = self.env["account.tax"].create({
             "name": "Dummy Tax",

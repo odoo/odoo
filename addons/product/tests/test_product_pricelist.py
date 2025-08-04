@@ -302,7 +302,7 @@ class TestProductPricelist(ProductCommon):
         """Test that the min_quantity has the precision of Product UoM."""
         # Arrange: Change precision digits
         uom_precision = self.env.ref("uom.decimal_product_uom")
-        uom_precision.digits = 3
+        uom_precision.max_digits = 3
         pricelist_item = self.customer_pricelist.item_ids[0]
         precise_value = 1.234
 

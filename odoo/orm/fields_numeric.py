@@ -98,7 +98,7 @@ class Float(Field[float]):
     """
 
     type = 'float'
-    _digits: str | tuple[int, int] | None = None  # digits argument passed to class initializer
+    _digits: str | tuple[int, int] | tuple[int, int, int] | None = None  # digits argument passed to class initializer
     falsy_value = 0.0
     aggregator = 'sum'
 
@@ -115,22 +115,25 @@ class Float(Field[float]):
         return ('numeric', 'numeric') if self._digits is not None else \
                ('float8', 'double precision')
 
-    def get_digits(self, env: Environment) -> tuple[int, int] | None:
+    def get_digits(self, env: Environment) -> tuple[int, int, int] | None:
         if isinstance(self._digits, str):
+            min_digits = env['decimal.precision']._get_min_digits(self._digits)
             precision = env['decimal.precision'].precision_get(self._digits)
-            return 16, precision
+            return 16, min_digits, precision
         else:
+            if isinstance(self._digits, tuple) and len(self._digits) == 2:
+                return (self._digits[0], self._digits[1], self._digits[1])
             return self._digits
 
     _related__digits = property(attrgetter('_digits'))
 
-    def _description_digits(self, env: Environment) -> tuple[int, int] | None:
+    def _description_digits(self, env: Environment) -> tuple[int, int, int] | None:
         return self.get_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         value_float = value = float(value or 0.0)
         if digits := self.get_digits(record.env):
-            _precision, scale = digits
+            _precision, _min_digits, scale = digits
             value_float = float_round(value, precision_digits=scale)
             value = float_repr(value_float, precision_digits=scale)
         if self.company_dependent:
@@ -141,7 +144,7 @@ class Float(Field[float]):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
         digits = self.get_digits(record.env)
-        return float_round(value, precision_digits=digits[1]) if digits else value
+        return float_round(value, precision_digits=digits[2]) if digits else value
 
     def convert_to_record(self, value, record):
         return value or 0.0

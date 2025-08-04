@@ -326,7 +326,7 @@ class TestItEdiExport(TestItEdi):
     def test_invoice_more_decimal_price_unit(self):
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
         decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
-        decimal_precision.digits = 4
+        decimal_precision.max_digits = 4
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-24',

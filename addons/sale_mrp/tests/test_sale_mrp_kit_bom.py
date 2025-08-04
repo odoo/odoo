@@ -224,7 +224,7 @@ class TestSaleMrpKitBom(BaseCommon):
     def test_qty_delivered_with_bom(self):
         """Check the quantity delivered, when a bom line has a non integer quantity"""
 
-        self.env.ref('uom.decimal_product_uom').digits = 5
+        self.env.ref('uom.decimal_product_uom').max_digits = 5
 
         self.kit = self._create_product('Kit', True, 0.00)
         self.comp = self._create_product('Component', True, 0.00)

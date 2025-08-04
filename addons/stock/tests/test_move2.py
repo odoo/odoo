@@ -2610,7 +2610,7 @@ class TestStockUOM(TestStockCommon):
     def setUpClass(cls):
         super().setUpClass()
         dp = cls.env.ref('uom.decimal_product_uom')
-        dp.digits = 7
+        dp.max_digits = 7
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
@@ -2681,7 +2681,7 @@ class TestStockUOM(TestStockCommon):
         we reserve less than the quantity in stock
         """
         precision = self.env.ref('uom.decimal_product_uom')
-        precision.digits = 3
+        precision.max_digits = 3
 
         product_G = self.env['product.product'].create({
             'name': 'Product G',
