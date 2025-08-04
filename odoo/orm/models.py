@@ -5456,7 +5456,7 @@ class BaseModel(metaclass=MetaModel):
         return new_records
 
     @api.private
-    def exists(self) -> Self:
+    def exists(self, raise_if_missing: bool = False) -> Self:
         """ The subset of records in ``self`` that exist.
         It can be used as a test on records::
 
@@ -5464,6 +5464,10 @@ class BaseModel(metaclass=MetaModel):
                 ...
 
         By convention, new records are returned as existing.
+
+        :param bool raise_if_missing: whether the method should raise if not all records exist
+        :returns: existing records
+        :raise MissingError: if one or more records don't exist and ``raise_if_missing`` is True
         """
         new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
         if not ids:
@@ -5472,7 +5476,15 @@ class BaseModel(metaclass=MetaModel):
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         real_ids = (id_ for [id_] in self.env.execute_query(query.select()))
         valid_ids = {*real_ids, *new_ids}
-        return self.browse(i for i in self._ids if i in valid_ids)
+        res = self.browse(i for i in self._ids if i in valid_ids)
+        if raise_if_missing and (missing := self - res):
+            raise MissingError(_(
+                "Some records do not exist or have been deleted.\n"
+                "(Records: %(records)s, User: %(user)s)",
+                records=str(missing),
+                user=self.env.uid,
+            )) from None
+        return res
 
     @api.private
     def lock_for_update(self, *, allow_referencing: bool = False) -> None:

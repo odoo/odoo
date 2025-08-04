@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import AccessError, LockError
+from odoo.exceptions import AccessError, LockError, MissingError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
@@ -151,6 +151,8 @@ class TestORM(TransactionCase):
         # check that there is no record with id 0
         recs = partner.browse([0])
         self.assertFalse(recs.exists())
+        with self.assertRaises(MissingError):
+            self.assertFalse(recs.exists(raise_if_missing=True))
 
     def test_lock_for_update(self):
         partner = self.env['res.partner']

@@ -365,9 +365,15 @@ class IrActionsAct_Window(models.Model):
         self.env.registry.clear_cache()
         return super().unlink()
 
-    def exists(self):
+    def exists(self, raise_if_missing=False):
         ids = self._existing()
         existing = self.filtered(lambda rec: rec.id in ids)
+        if raise_if_missing and (missing := self - existing):
+            raise MissingError(_(
+                "Some records do not exist or have been deleted.\n"
+                "(Records: %(records)s, User: %(user)s)",
+                records=str(missing), user=self.env.uid,
+            )) from None
         return existing
 
     @api.model
