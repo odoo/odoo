@@ -1897,16 +1897,16 @@ test(`basic grouped list rendering with widget="handle" col`, async () => {
     `,
         groupBy: ["bar"],
     });
-    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(3, {
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(4, {
         message:
-            "should have 1 th for checkbox (desktop only), 1 th for handle, 1 th for Foo, 1 th for Bar",
+            "should have 1 th for checkbox (desktop only), 1 th for handle, 1 th for Foo, 1 th for Bar and 1 for eventual cog",
     });
     expect(`thead th[data-name=foo]`).toHaveCount(1);
     expect(`thead th[data-name=bar]`).toHaveCount(1);
     expect(`thead th[data-name=int_field]`).toHaveCount(1);
     expect(`tr.o_group_header`).toHaveCount(2);
     expect(`th.o_group_name`).toHaveCount(2);
-    expect(`.o_group_header:eq(0) th`).toHaveCount(2); // group name + colspan 2
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3); // group name + colspan 2 + cog placeholder
     expect(`.o_group_header:eq(0) .o_list_number`).toHaveCount(0);
 });
 
@@ -1923,13 +1923,15 @@ test(`basic grouped list rendering with a date field between two fields with a a
         `,
         groupBy: ["bar"],
     });
-    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(3, {
-        message: "should have 1 th for checkbox (desktop only), 1 th for Foo, 1 Int, 1 Date, 1 Int",
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(4, {
+        message:
+            "should have 1 th for checkbox (desktop only), 1 th for Foo, 1 Int, 1 Date, 1 Int, 1 cog placeholder",
     });
     expect(queryAllTexts(`thead th:not(.o_list_record_selector)`)).toEqual([
         "Int field",
         "Date",
         "Int field",
+        "",
     ]);
     expect(`tr.o_group_header`).toHaveCount(2);
     expect(`th.o_group_name`).toHaveCount(2);
@@ -1944,7 +1946,7 @@ test(`basic grouped list rendering 1 col without selector`, async () => {
         groupBy: ["bar"],
         allowSelectors: false,
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(1);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
 });
 
@@ -1956,7 +1958,7 @@ test(`basic grouped list rendering 1 col with selector on desktop`, async () => 
         arch: `<list><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(1);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
 });
 
@@ -1968,7 +1970,7 @@ test(`basic grouped list rendering 1 col with selector on mobile`, async () => {
         arch: `<list><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(1);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
 });
 
@@ -1980,7 +1982,7 @@ test(`basic grouped list rendering 2 cols without selector`, async () => {
         groupBy: ["bar"],
         allowSelectors: false,
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
 });
 
@@ -1992,7 +1994,7 @@ test(`basic grouped list rendering 3 cols without selector`, async () => {
         groupBy: ["bar"],
         allowSelectors: false,
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
 });
 
@@ -2005,7 +2007,7 @@ test(`basic grouped list rendering 2 col with selector on desktop`, async () => 
         groupBy: ["bar"],
         allowSelectors: true,
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
 });
 
@@ -2018,7 +2020,7 @@ test(`basic grouped list rendering 2 col with selector on mobile`, async () => {
         groupBy: ["bar"],
         allowSelectors: true,
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
 });
 
@@ -2032,7 +2034,7 @@ test(`basic grouped list rendering 3 cols with selector on desktop`, async () =>
         allowSelectors: true,
     });
 
-    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "3");
 });
 
@@ -2046,7 +2048,7 @@ test(`basic grouped list rendering 3 cols with selector on mobile`, async () => 
         allowSelectors: true,
     });
 
-    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
 });
 
@@ -2068,14 +2070,13 @@ test(`basic grouped list rendering 7 cols with aggregates and selector on deskto
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(5);
+    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(6);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "3");
     expect(`.o_group_header:eq(0) td`).toHaveCount(3, {
         message: "there should be 3 tds (aggregates + fields in between)",
     });
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "2", {
-        message:
-            "header last cell should span on the two last fields (to give space for the pager) (colspan 2)",
+    expect(`.o_group_header th:eq(4)`).toHaveAttribute("colspan", "2", {
+        message: "pager cell in the group header should span on the two last fields (colspan 2)",
     });
 });
 
@@ -2097,14 +2098,13 @@ test(`basic grouped list rendering 7 cols with aggregates and selector on mobile
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(5);
+    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(6);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
     expect(`.o_group_header:eq(0) td`).toHaveCount(3, {
         message: "there should be 3 tds (aggregates + fields in between)",
     });
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "2", {
-        message:
-            "header last cell should span on the two last fields (to give space for the pager) (colspan 2)",
+    expect(`.o_group_header th:eq(-2)`).toHaveAttribute("colspan", "2", {
+        message: "pager cell in the group header should span on the two last fields (colspan 2)",
     });
 });
 
@@ -2126,14 +2126,13 @@ test(`basic grouped list rendering 7 cols with aggregates, selector and optional
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(5);
+    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(6);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "3");
     expect(`.o_group_header:eq(0) td`).toHaveCount(3, {
         message: "there should be 3 tds (aggregates + fields in between)",
     });
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "3", {
-        message:
-            "header last cell should span on the two last fields (to give space for the pager) (colspan 2)",
+    expect(`.o_group_header th:eq(-2)`).toHaveAttribute("colspan", "2", {
+        message: "pager cell in the group header should span on the two last fields (colspan 2)",
     });
 });
 
@@ -2155,14 +2154,13 @@ test(`basic grouped list rendering 7 cols with aggregates, selector and optional
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(5);
+    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(6);
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
     expect(`.o_group_header:eq(0) td`).toHaveCount(3, {
         message: "there should be 3 tds (aggregates + fields in between)",
     });
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "3", {
-        message:
-            "header last cell should span on the two last fields (to give space for the pager) (colspan 2)",
+    expect(`.o_group_header th:eq(-2)`).toHaveAttribute("colspan", "2", {
+        message: "pager cell in the group header should span on the two last fields (colspan 2)",
     });
 });
 
@@ -2176,13 +2174,14 @@ test(`basic grouped list rendering 4 cols with aggregates, selector and openForm
                 <field name="datetime"/>
                 <field name="int_field" sum="Sum1"/>
                 <field name="bar"/>
+                <field name="m2o"/>
                 <field name="qux" sum="Sum2" optional="hide"/>
             </list>
         `,
         groupBy: ["bar"],
     });
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "2");
+    expect(`.o_group_header th:eq(-2)`).toHaveAttribute("colspan", "2");
 });
 
 test.tags("mobile");
@@ -2195,13 +2194,14 @@ test(`basic grouped list rendering 4 cols with aggregates, selector and openForm
                 <field name="datetime"/>
                 <field name="int_field" sum="Sum1"/>
                 <field name="bar"/>
+                <field name="m2o"/>
                 <field name="qux" sum="Sum2" optional="hide"/>
             </list>
         `,
         groupBy: ["bar"],
     });
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "2");
+    expect(`.o_group_header th:eq(-2)`).toHaveAttribute("colspan", "2");
 });
 
 test.tags("desktop");
@@ -2220,7 +2220,7 @@ test(`basic grouped list rendering 4 cols with aggregates, selector, optional an
         groupBy: ["bar"],
     });
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "1");
+    expect(`.o_group_header th:eq(-1)`).not.toHaveAttribute("colspan");
 });
 
 test.tags("mobile");
@@ -2239,7 +2239,7 @@ test(`basic grouped list rendering 4 cols with aggregates, selector, optional an
         groupBy: ["bar"],
     });
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "1");
+    expect(`.o_group_header th:eq(-2)`).toHaveAttribute("colspan", "1");
 });
 
 test(`group a list view with the aggregable field 'value'`, async () => {
@@ -2355,7 +2355,7 @@ test(`grouped list rendering with default_group_by m2o field: add group`, async 
         type: "list",
         arch: `<list default_group_by="m2o"><field name="foo"/></list>`,
     });
-    expect(`.o_group_header:eq(0) th`).toHaveCount(1);
+    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
     expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)"]);
     expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
     await contains(`.o_list_footer td > button`).click();
@@ -2402,7 +2402,7 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     await getService("action").doAction(1);
 
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
-    expect(`.o_group_header:first .o_group_config`).toHaveCount(1);
+    expect(`.o_group_header:first th:last .o_group_config`).toHaveCount(1);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
     expect(`.o-dropdown--group-config-menu`).toHaveCount(1);
     await contains(`.o-dropdown--group-config-menu .o_group_edit`).click();
@@ -10325,16 +10325,16 @@ test(`editable grouped list with handle widget`, async () => {
     await contains(`.o_group_header:last`).click();
     expect(`.o_group_header:first`).toHaveText("No (1)\n 0");
     expect(`.o_group_header:last`).toHaveText("Yes (3)\n 2,000");
-    expect(`tbody .o_data_row:eq(0) td:last`).toHaveText("0", {
+    expect(`tbody .o_data_row:eq(0) td:eq(-2)`).toHaveText("0", {
         message: "default fourth record should have amount 0",
     });
-    expect(`tbody .o_data_row:eq(1) td:last`).toHaveText("1,200", {
+    expect(`tbody .o_data_row:eq(1) td:eq(-2)`).toHaveText("1,200", {
         message: "default first record should have amount 1,200",
     });
-    expect(`tbody .o_data_row:eq(2) td:last`).toHaveText("500", {
+    expect(`tbody .o_data_row:eq(2) td:eq(-2)`).toHaveText("500", {
         message: "default second record should have amount 500",
     });
-    expect(`tbody .o_data_row:eq(3) td:last`).toHaveText("300", {
+    expect(`tbody .o_data_row:eq(3) td:eq(-2)`).toHaveText("300", {
         message: "default third record should have amount 300",
     });
 
@@ -10349,21 +10349,21 @@ test(`editable grouped list with handle widget`, async () => {
     // Aggregates are not updated, todo later?
     expect(`.o_group_header:first`).toHaveText("No (2)\n 0");
     expect(`.o_group_header:last`).toHaveText("Yes (2)\n 2,000");
-    expect(`tbody .o_data_row:eq(0) td:last`).toHaveText("300", {
+    expect(`tbody .o_data_row:eq(0) td:eq(-2)`).toHaveText("300", {
         message: "new first record should have amount 300",
     });
-    expect(`tbody .o_data_row:eq(1) td:last`).toHaveText("0", {
+    expect(`tbody .o_data_row:eq(1) td:eq(-2)`).toHaveText("0", {
         message: "new second record should have amount 0",
     });
-    expect(`tbody .o_data_row:eq(2) td:last`).toHaveText("1,200", {
+    expect(`tbody .o_data_row:eq(2) td:eq(-2)`).toHaveText("1,200", {
         message: "new third record should have amount 1,200",
     });
-    expect(`tbody .o_data_row:eq(3) td:last`).toHaveText("500", {
+    expect(`tbody .o_data_row:eq(3) td:eq(-2)`).toHaveText("500", {
         message: "new fourth record should have amount 500",
     });
 
     await contains(`tbody .o_data_row:eq(0) div[name='amount']`).click();
-    expect(`tbody .o_data_row:eq(0) td:last input`).toHaveValue("300", {
+    expect(`tbody .o_data_row:eq(0) td:eq(-2) input`).toHaveValue("300", {
         message: "the edited record should be the good one",
     });
 });
@@ -17399,7 +17399,7 @@ test(`properties: optional show/hide (at reload, config from local storage)`, as
     // list is grouped, no record displayed
     expect(`.o_group_header`).toHaveCount(2);
     expect(`.o_data_row`).toHaveCount(0);
-    expect(`.o_list_table thead th:not(.o_list_record_selector)`).toHaveCount(1);
+    expect(`.o_list_table thead th:not(.o_list_record_selector)`).toHaveCount(2);
     expect(`.o_list_table thead th[data-name=m2o]`).toHaveCount(1);
 
     await contains(`.o_group_header`).click(); // open group Value 1

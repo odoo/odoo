@@ -337,7 +337,9 @@ export class ListRenderer extends Component {
         return !!(
             this.displayOptionalFields ||
             this.activeActions.onDelete ||
-            this.hasOptionalOpenFormViewColumn
+            this.hasOptionalOpenFormViewColumn ||
+            // spare some space to display the cog icon in group headers
+            this.props.list.isGrouped
         );
     }
 
@@ -1106,6 +1108,7 @@ export class ListRenderer extends Component {
         const index = reversedColumns.findIndex(
             (col) =>
                 col.name in aggregates &&
+                col.widget !== "handle" &&
                 AGGREGATABLE_FIELD_TYPES.includes(this.fields[col.name].type)
         );
         return index > -1 ? this.columns.length - index - 1 : -1;
@@ -1139,9 +1142,6 @@ export class ListRenderer extends Component {
         let colspan;
         if (lastAggregateIndex > -1) {
             colspan = this.columns.length - lastAggregateIndex - 1;
-            if (this.displayOptionalFields) {
-                colspan++;
-            }
         } else {
             colspan = this.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
         }

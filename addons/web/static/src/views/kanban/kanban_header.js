@@ -76,6 +76,7 @@ export class KanbanHeader extends Component {
                             o_kanban_toggle_fold: true,
                             disabled: this.props.list.model.useSampleModel,
                         }),
+                        icon: "fa-compress",
                     },
                 ],
                 ...registry.category("group_config_items").getEntries(),
