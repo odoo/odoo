@@ -4,7 +4,7 @@
 <t t-name="html_builder.OptionsContainer">
     <div t-if="props.options.length"
          class="options-container mb-1" t-ref="root" t-att-data-container-title="title"
-         t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
+         t-on-pointerenter="onPointerEnter" t-on-pointerleave="onPointerLeave">
         <div class="options-container-header d-flex align-items-center justify-content-between">
             <t t-set="isActionable" t-value="Object.keys(props.snippetModel).length > 0"></t>
             <span

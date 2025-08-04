@@ -61,13 +61,13 @@ export class BuilderSelectItem extends Component {
             this.removeKeydown?.();
         }
     }
-    onMouseenter() {
+    onPointerEnter() {
         this.operation.preview();
         const _onKeydown = this.onKeydown.bind(this);
         document.addEventListener("keydown", _onKeydown);
         this.removeKeydown = () => document.removeEventListener("keydown", _onKeydown);
     }
-    onMouseleave() {
+    onPointerLeave() {
         this.operation.revert();
         this.removeKeydown();
     }
