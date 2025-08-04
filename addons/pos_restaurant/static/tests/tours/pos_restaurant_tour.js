@@ -247,6 +247,8 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             {
                 trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
             },
+            ProductScreen.fireCourseButtonHighlighted("Course 2"),
+            ProductScreen.payButtonNotHighlighted(),
             ProductScreen.clickCourseButton(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
