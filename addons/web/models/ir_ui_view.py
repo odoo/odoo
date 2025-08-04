@@ -16,7 +16,7 @@ class IrUiView(models.Model):
             }
             for (type_, display_name)
             in self.fields_get(['type'], ['selection'])['type']['selection']
-            if type_ != 'qweb'
+            if type_ != 'qweb' and type_ in _view_info
         }
 
     def _get_view_info(self):
