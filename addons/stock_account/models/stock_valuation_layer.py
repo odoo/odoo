@@ -60,6 +60,7 @@ class StockValuationLayer(models.Model):
             ('stock_move_id.location_id.warehouse_id', operator, value),
         ]
 
+    # TODO: remove in master
     def _candidate_sort_key(self):
         self.ensure_one()
         return tuple()
