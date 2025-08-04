@@ -100,7 +100,7 @@ html, body {
     height: 100%;
 }
 
-pre {    
+pre {
     padding: map-get($spacers, 2) map-get($spacers, 3);
     border: $border-width solid $border-color;
     border-radius: $border-radius;
@@ -759,6 +759,18 @@ pre {
     overflow: hidden;
     background-repeat: no-repeat;
     pointer-events: none;
+    // For border with all 4 edges of equal value the max function is useless,
+    // but in case the border is uneven it approximates the correct roundness
+    // See BORDER_VARIABLES_RULES_EXTENSION
+    //
+    // --box-border-XXX-(radius|width) : editor Round Corners user input
+    // --box-border-(radius|width) : rounded-XXX classes
+    // --border-(radius|width) : theme (+ default bootstrap)
+    border-radius:
+        calc(var(--box-border-top-left-radius, 0) - max(var(--box-border-top-width, 0), var(--box-border-left-width, 0)))
+        calc(var(--box-border-top-right-radius, 0) - max(var(--box-border-top-width, 0), var(--box-border-right-width, 0)))
+        calc(var(--box-border-bottom-right-radius, 0) - max(var(--box-border-bottom-width, 0), var(--box-border-right-width, 0)))
+        calc(var(--box-border-bottom-left-radius, 0) - max(var(--box-border-bottom-width, 0), var(--box-border-left-width, 0)))
 }
 
 section, .oe_img_bg, [data-oe-shape-data] {

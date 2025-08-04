@@ -385,6 +385,9 @@
         'web._assets_frontend_helpers': [
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
         ],
+        'web._assets_bootstrap_frontend': [
+            ('after', 'web/static/src/scss/utilities_custom.scss', 'html_builder/static/src/scss/utilities_custom.scss'),
+        ],
         'web_editor.assets_wysiwyg': [
             'website/static/src/js/editor/editor.js',
             'website/static/src/xml/web_editor.xml',
