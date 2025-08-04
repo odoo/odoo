@@ -945,17 +945,313 @@ a.no-decoration {
     text-decoration: none !important;
 }
 
-// TODO remove this styling and improve the image template on master to better
-// distinguish single / multiple images regardless of grid/carousel.
-// The goal is to constraint the height on extra long images.
-.o_wsale_product_page_grid_column div:only-child,
-#o-carousel-product .carousel-item:only-child {
-    img {
-        max-height: 75vh !important;
-        object-fit: contain;
+
+// ==== Product Page View ======================================================
+// =============================================================================
+
+// ==== Utilities ==============================================================
+$-product-ratios-map: (
+    'auto': auto,
+    '21_9': 21/9,
+    '16_9': 16/9,
+     '4_3': 4/3,
+     '6_5': 6/5,
+     '1_1': 1/1,
+     '4_5': 4/5,
+     '2_3': 2/3,
+);
+
+@each $-ratio-name, $-ratio-value in $-product-ratios-map {
+    .o_wsale_product_page_opt_image_ratio_#{$-ratio-name} {
+        --o-wsale-product-image-ratio: #{$-ratio-value};
+    }
+}
+@each $-ratio-name, $-ratio-value in $-product-ratios-map {
+    @if($-ratio-name != 'auto') {
+        .o_wsale_product_page_opt_image_ratio_mobile_#{$-ratio-name} {
+            @include media-breakpoint-down(md) {
+                --o-wsale-product-image-ratio: #{$-ratio-value};
+            }
+        }
     }
 }
 
+$-product-radius-map: (
+    'none': 0,
+    'small': var(--border-radius-sm),
+    'medium': var(--border-radius),
+    'big': var(--border-radius-lg),
+);
+
+@each $-name, $-value in $-product-radius-map {
+    .o_wsale_product_page_opt_image_radius_#{$-name} {
+        --o-wsale-product-image-radius: #{$-value};
+    }
+}
+
+// ==== Layout =================================================================
+.o_wsale_content_contained {
+    --gutter-x: 0;
+}
+
+#product_detail_main {
+    padding: 0;
+
+    @include media-breakpoint-up(lg) {
+        padding: 0 $grid-gutter-width * 0.5;
+    }
+}
+
+#product_details {
+    flex: 0 0 auto;
+    width: var(--o-wsale-product-col-details-width, 100%);
+    padding-top: map-get($spacers, 3);
+    padding-left: var(--o-wsale-product-col-details-padding-left, calc(var(--gutter-x) * .5));
+    padding-right: var(--o-wsale-product-col-details-padding-right, calc(var(--gutter-x) * .5));
+    background-color: $body-bg;
+    container: product-details / inline-size;
+    z-index: 0;
+
+    @include media-breakpoint-up(lg) {
+        padding-top: var(--o-wsale-product-col-details-padding-top-lg, 0px);
+    }
+}
+
+.o_wsale_product_images {
+    flex: 0 0 auto;
+    position: var(--o-wsale-product-col-images-position);
+    display: var(--o-wsale-product-col-images-display);
+    width: var(--o-wsale-product-col-images-width, 100%);
+    padding: var(--o-wsale-product-col-images-padding, 0);
+    z-index: 1;
+}
+
+.o_wsale_sticky_object {
+    transition: top 200ms;
+
+    @include media-breakpoint-down(lg) {
+        top: 0px !important;
+    }
+}
+
+// ==== Main Details Container =================================================
+// The product details container behaves differently from the default Bootstrap
+// container. Gap, gutter, and padding are carefully adjusted to handle specific
+// option combinations.
+//
+// Note: we avoid targeting Bootstrap's default classes (e.g. `.container` or
+// `.container-fluid`) because they use `@extend`. Any custom rule applied there
+// would unintentionally propagate across the entire website.
+#product_detail {
+    &.o_wsale_container_lg .o_wsale_product_images {
+        padding: 0;
+    }
+
+    &.o_wsale_container_fluid {
+        .o_wsale_content_contained {
+            --gutter-x: 0;
+            max-width: none;
+        }
+
+        &:where(.o_wsale_product_page_opt_image_width_33_pc),
+        &:where(.o_wsale_product_page_opt_image_width_50_pc),
+        &:where(.o_wsale_product_page_opt_image_width_66_pc) {
+            @include media-breakpoint-up(xxl) {
+                --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * 2};
+            }
+        }
+    }
+}
+#product_detail_main:where(.flex-lg-row-reverse) #product_details {
+    padding-left: var(--o-wsale-product-col-details-padding-right, calc(var(--gutter-x) * .5));
+    padding-right: var(--o-wsale-product-col-details-padding-left, calc(var(--gutter-x) * .5));
+}
+
+// ==== Image Area Width =======================================================
+.o_wsale_product_page_opt_image_width_none {
+    --o-wsale-product-col-images-display: none;
+}
+
+.o_wsale_product_page_opt_image_width_33_pc,
+.o_wsale_product_page_opt_image_width_50_pc,
+.o_wsale_product_page_opt_image_width_66_pc {
+    @include media-breakpoint-up(lg) {
+        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * .5};
+        --o-wsale-product-col-details-padding-right: 0;
+    }
+    @include media-breakpoint-up(xl) {
+        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * 1.25};
+    }
+    @include media-breakpoint-up(xl) {
+        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * 2};
+    }
+}
+.o_wsale_product_page_opt_image_width_66_pc {
+    @include media-breakpoint-up(xl) {
+        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width };
+    }
+}
+
+.o_wsale_product_page_opt_image_width_33_pc {
+    @include media-breakpoint-up(lg) {
+        --o-wsale-product-col-images-position: sticky;
+        --o-wsale-product-col-images-width: 33.3333%;
+        --o-wsale-product-col-details-width: 66.6666%;
+    }
+}
+
+.o_wsale_product_page_opt_image_width_50_pc {
+    @include media-breakpoint-up(lg) {
+        --o-wsale-product-col-images-position: sticky;
+        --o-wsale-product-col-images-width: 50%;
+        --o-wsale-product-col-details-width: 50%;
+        --o-wsale-product-details-content-max-width: 960px;
+    }
+}
+
+.o_wsale_product_page_opt_image_width_66_pc {
+    @include media-breakpoint-up(lg) {
+        --o-wsale-product-col-images-position: sticky;
+        --o-wsale-product-col-images-width: 66%;
+        --o-wsale-product-col-details-width: 34%;
+        --o-wsale-product-details-content-max-width: 960px;
+    }
+}
+
+.o_wsale_product_page_opt_image_width_100_pc {
+    --o-wsale-product-col-images-width: 100%;
+    --o-wsale-product-col-details-width: 100%;
+    --o-wsale-product-col-details-padding-top-lg: #{map-get($spacers, 3)};
+}
+
+.o_wsale_product_page_opt_image_width_100_pc,
+.o_wsale_product_page_opt_image_width_none {
+    @include media-breakpoint-up(lg) {
+        --o-wsale-product-col-details-padding-left: 0;
+        --o-wsale-product-col-details-padding-right: 0;
+    }
+}
+
+// ==== Product Details Content ================================================
+#o_wsale_product_details_content {
+    display: flex;
+    flex-direction: column;
+
+    // Two-Column Product Details Layout Mixin
+    // =========================================================================
+    // Creates a responsive two-column layout for product details pages using
+    // CSS container queries. When the container width exceeds the minimum
+    // threshold, transforms the layout from single-column to a three-column
+    // grid (info | spacer | CTA) where content spans the first and third
+    // columns.
+    //
+    // Layout Structure:
+    // ┌─────────────────┬────────┬─────────────────┐
+    // │   Product Info  │ Spacer │      CTA        │
+    // │   (Details,     │        │   (Buy button,  │
+    // │   Description,  │        │   Add to cart,  │
+    // │   etc.)         │        │   Price, etc.)  │
+    // └─────────────────┴────────┴─────────────────┘
+    //
+    // @param {Length|null} $_infos_max - Maximum width for the info column
+    // @param {Length|null} $_spacer_max - Maximum width for the spacer column
+    //
+    // Container Query Breakpoint:
+    // - Activates when container width ≥ (412px + spacer + 300px) = ~minimum
+    //   viable width.
+    // - Uses CSS container queries for element-based responsive design
+    @mixin o-product-details-trig-two-cols($_infos_max: null, $_spacer_max: null) {
+        $_sizes_min: (
+            'infos': 412px,
+            'spacer': $grid-gutter-width * 0.5,
+            'cta': 300px,
+        );
+        $_sizes_max: (
+            'infos': if($_infos_max != null, $_infos_max, 520px),
+            'spacer': if($_spacer_max != null, $_spacer_max, $grid-gutter-width),
+            'cta': 400px,
+        );
+        $_min_width: map-get($_sizes_min, 'infos') + map-get($_sizes_min, 'spacer') + map-get($_sizes_min, 'cta');
+        $_max_width: map-get($_sizes_max, 'infos') + map-get($_sizes_max, 'spacer') + map-get($_sizes_max, 'cta');
+
+        @container product-details (min-width: #{$_min_width}) {
+            width: 100%;
+            max-width: var(--o-wsale-product-details-content-max-width, #{$_max_width}) !important;
+            margin: 0;
+
+            form {
+                display: grid;
+                grid-template-columns:
+                    minmax(map-get($_sizes_min, 'infos'), map-get($_sizes_max, 'infos'))
+                    minmax(map-get($_sizes_min, 'spacer'), map-get($_sizes_max, 'spacer'))
+                    minmax(map-get($_sizes_min, 'cta'), map-get($_sizes_max, 'cta'));
+                grid-auto-rows: auto;
+                align-items: start;
+
+                .o_wsale_product_details_content_section {
+                    grid-column: 1;
+                }
+
+                .o_wsale_product_details_content_section_cta {
+                    --o-wsale-product-details-section-border-width: 0px;
+                    --o-wsale-product-details-section-padding-top: 0px;
+                    grid-column: 3;
+                    grid-row: 1 / -6;
+                    align-self: start;
+                }
+            }
+        }
+    }
+
+    // ==== Two-columns info product layout trigger conditions
+    .o_wsale_product_page_opt_image_width_none &,
+    .o_wsale_product_page_opt_image_width_100_pc & {
+        @include media-breakpoint-up(lg) {
+            --o-wsale-product-details-content-max-width: 100%;
+            --o-wsale-product-details-content-section-max-width: 640px;
+
+            @include o-product-details-trig-two-cols($_infos_max: 640px, $_spacer_max: 10000px);
+        }
+    }
+    .o_wsale_product_page_opt_image_width_33_pc & {
+        @include media-breakpoint-up(lg) {
+            @include o-product-details-trig-two-cols($_spacer_max: var(--o-wsale-product-col-details-padding-left));
+        }
+    }
+
+    .o_wsale_product_details_content_section {
+        max-width: var(--o-wsale-product-details-content-section-max-width, 520px);
+    }
+
+    // Hide but render empty attributes sections.
+    .o_wsale_product_details_content_section_attributes {
+        display: none;
+
+        &:where(:has(li.variant_attribute:not(.d-none))) {
+            display: block;
+        }
+    }
+}
+
+// ==== Separators
+.o_wsale_product_page_opt_separators {
+    .o_wsale_product_details_content_section {
+        &:where(:not(
+            .o_wsale_product_details_content_section_title,
+            .o_wsale_product_details_content_section_price,
+            .o_wsale_product_details_content_section_accordion
+        )) {
+            border-top: var(--o-wsale-product-details-section-border-width, #{$border-width}) solid $border-color;
+            padding-top: var(--o-wsale-product-details-section-padding-top, #{map-get($spacers, 4)});
+        }
+        &:where(.o_wsale_product_details_content_section_cta:has(.o_wsale_cta_wrapper_boxed)) {
+            --o-wsale-product-details-section-border-width: 0;
+            --o-wsale-product-details-section-padding-top: #{map-get($spacers, 2)};
+        }
+    }
+}
+
+// ==== CTA Wrapper ============================================================
 #o_wsale_cta_wrapper {
     &.o_wsale_cta_wrapper_boxed {
         max-width: 26rem;
@@ -972,48 +1268,213 @@ a.no-decoration {
     }
 }
 
+// ==== Product Grid ===========================================================
+#o-grid-product {
+    @at-root {
+        // Make custom property animatable
+        @property --o-wsale-js-grid-product-height {
+            syntax: "<length>";
+            inherits: true;
+            initial-value: 280px;
+        }
+    }
+
+    .o_wsale_product_page_grid_row {
+        display: var(--o-wsale-grid-product-row-display, flex);
+    }
+
+    .o_wsale_product_page_grid_column {
+        display: var(--o-wsale-grid-product-col-display, flex);
+        flex: 1;
+    }
+
+    .o_ribbons:not([data-ribbon-id]) {
+        // Do not render empty ribbons to avoid conflicts with grid's gaps
+        display: none;
+    }
+
+    // ==== Mobile specific styles
+    @include media-breakpoint-down(lg) {
+        --o-wsale-grid-product-col-display: contents;
+    }
+
+    // ==== Solo grid styles
+    &.o_grid_solo {
+        --o-wsale-grid-product-col-display: contents;
+
+        @include media-breakpoint-up(lg) {
+            .o_wsale_product_page_grid_column, .o_product_detail_img_wrapper, .product_detail_img {
+                border-radius: var(--o-wsale-product-image-radius);
+            }
+        }
+    }
+
+    // ==== Multi-item grid styles
+    &:where(:not(.o_grid_solo)) {
+
+        // ==== Mobile specific styles
+        @include media-breakpoint-down(lg) {
+            $_max_height: 60vh;
+
+            .o_wsale_product_page_grid_row {
+                --_lastBlock_margin_bottom: #{$grid-gutter-width * -0.5};
+
+                flex-direction: column;
+                height: var(--o-wsale-js-grid-product-height);
+                min-height: 146px; // Arbitrary, based on the wider aspect-ratio
+                max-height: $_max_height;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                scroll-snap-type: y mandatory;
+                scrollbar-color: currentColor rgba($body-bg, .5);
+                padding-bottom: $grid-gutter-width * .5 !important;
+                box-sizing: content-box;
+                transition: height .2s ease-out;
+
+                &:not(.gap-0) {
+                    --_lastBlock_margin_bottom: #{$grid-gutter-width * -0.75};
+
+                    // Normalize desktop values for mobile
+                    gap: $grid-gutter-width * .25 0 !important;
+                    padding-right: $grid-gutter-width * .5 !important;
+                    padding-bottom: $grid-gutter-width * .75 !important;
+                }
+            }
+
+            &:has(.o_wsale_product_page_grid_row:not(.gap-0)) {
+                // Handle ribbon
+                padding-left: $grid-gutter-width * .5 !important;
+            }
+
+            .o_product_detail_img_wrapper {
+                scroll-snap-align: center;
+                scroll-snap-stop: always;
+                max-height: $_max_height;
+                order: var(--o-wsale-grid-product-img-natural-order);
+                width: 100%;
+
+                &.o_product_detail_img_wrapper_last {
+                    margin-bottom: var( --_lastBlock_margin_bottom);
+                }
+            }
+
+            &.o_grid_uses_ratio_auto.o_grid_uses_ratio_mobile_auto {
+                // When images have inconsistent aspect-ratio, we set the grid
+                // height in js according to the tallest image. Perform a "loading"
+                // animation during this process.
+                @keyframes o-produt-grid-loading {
+                    0% { opacity: .25; }
+                    100% { opacity: .5; }
+                }
+                .o_product_detail_img_wrapper {
+                    animation: o-produt-grid-loading 2s ease-in-out var(--o-wsale-grid-product-images-animation-count, infinite);
+                }
+                &.o_grid_product_ready {
+                    --o-wsale-grid-product-images-animation-count: 1;
+                }
+            }
+        }
+
+
+        .o_wsale_product_page_grid_column {
+            gap: inherit;
+        }
+
+        .o_wsale_product_page_grid_row:where(:not(.gap-0)) {
+            .o_wsale_product_page_grid_column, .o_product_detail_img_wrapper, .product_detail_img {
+                border-radius: var(--o-wsale-product-image-radius);
+            }
+        }
+
+        // Complex grid layout for 100% width images
+        @include media-breakpoint-up(lg) {
+            .o_wsale_product_page_opt_image_width_100_pc & {
+                --o-wsale-grid-product-row-display: grid;
+                --o-wsale-grid-product-col-display: contents;
+
+                .o_wsale_product_page_grid_row {
+                    grid-auto-rows: 1fr;
+                    grid-template-columns: var(--_grid-colums, 66.666666% 1fr);
+                }
+
+                .o_product_detail_img_wrapper {
+                    order: var(--o-wsale-grid-product-img-natural-order);
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .o_wsale_product_page_grid_column:first-of-type {
+                    .o_product_detail_img_wrapper:first-of-type {
+                        grid-row: var(--_first-image-grid-row, 1 / -3);
+                        grid-column: var(--_first-image-grid-column);
+                        height: 100%;
+                    }
+                }
+
+                &.o_grid_has_more_than_3 {
+                    --_grid-colums: 50% 1fr 1fr;
+                }
+
+                &.o_grid_has_more_than_5 {
+                    --_grid-colums: repeat(7, 1fr);
+                    --_first-image-grid-row: 1 / -5;
+                    --_first-image-grid-column: 1 / -3;
+                }
+
+                &.o_grid_has_more_than_9 {
+                    --_grid-colums: repeat(7, 1fr);
+                    --_first-image-grid-row: 1 / -6;
+                    --_first-image-grid-column: 1 / -3;
+                }
+
+                &.o_grid_has_more_than_11 {
+                    --_grid-colums: repeat(9, 1fr);
+                    --_first-image-grid-row: 1 / -7;
+                    --_first-image-grid-column: 1 / -4;
+                }
+            }
+        }
+    }
+}
+
+// ==== Grid image styling
+.o_wsale_product_page_grid_column .o_product_detail_img_wrapper {
+    aspect-ratio: var(--o-wsale-product-image-ratio);
+
+    > .product_detail_img {
+        aspect-ratio: inherit;
+        object-fit: cover;
+    }
+}
+
+// ==== Carousel ===============================================================
 #o-carousel-product {
     transition: top 200ms;
 
-    .carousel-inner {
-        img {
-            object-fit: contain;
+    .carousel-inner img {
+        object-fit: cover;
+
+        @include media-breakpoint-up(lg) {
+            border-radius: var(--o-wsale-product-image-radius);
         }
     }
 
-    &.o_carousel_not_single .carousel-outer {
-        aspect-ratio: 1 / 1;
-
-        &.o_wsale_carousel_ratio_4x3 {
-            aspect-ratio: 4 / 3;
-        }
-
-        &.o_wsale_carousel_ratio_4x5 {
-            aspect-ratio: 4 / 5;
-        }
-
-        &.o_wsale_carousel_ratio_16x9 {
-            aspect-ratio: 16 / 9;
-        }
-
-        &.o_wsale_carousel_ratio_21x9 {
-            aspect-ratio: 21 / 9;
-        }
-
-        .product_detail_img {
-            width: auto !important;
-        }
+    .carousel-outer {
+        aspect-ratio: var(--o-wsale-product-image-ratio);
     }
 
+    // Hide controls when not hovering on desktop
     @include media-breakpoint-up(xl) {
         &:not(:hover) {
-            .carousel-control-prev, .carousel-control-next {
+            .carousel-control-prev,
+            .carousel-control-next {
                 opacity: 0;
             }
         }
     }
 
-    .carousel-item, .o_carousel_product_indicators {
+    .carousel-item,
+    .o_carousel_product_indicators {
         transition: transform 0.2s ease-out;
     }
 
@@ -1021,19 +1482,34 @@ a.no-decoration {
         transition: transform 0.3s ease-in-out;
     }
 
+    // ==== Carousel indicators
     .o_carousel_product_indicators {
         max-height: 400px;
 
+        .o_wsale_product_page_opt_image_width_100_pc & {
+            @include media-breakpoint-up(lg) {
+                @include o-position-absolute(auto, 0, .75rem, 0);
+            }
+        }
+
+        // Desktop indicator styles
         @include media-breakpoint-up(lg) {
             .carousel-indicators {
                 justify-content: start;
 
                 li {
                     width: 64px;
-                    height: 64px;
+                    height: auto;
                     text-indent: unset;
                     transition: none;
-                    border: 1px solid map-get($grays, '400');
+                    border: $border-width solid $border-color;
+
+                    &,
+                    & > div,
+                    & > div > img {
+                        border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
+                        aspect-ratio: var(--o-wsale-product-image-ratio);
+                    }
 
                     .o_product_video_thumb {
                         @include o-position-absolute(0, 0, 0, 0);
@@ -1044,7 +1520,12 @@ a.no-decoration {
                         border-color: map-get($theme-colors, 'primary');
                     }
 
-                    &:hover {
+                    &:where(:not(:hover)) {
+                        opacity: .75;
+                    }
+
+                    &:hover,
+                    &.active {
                         opacity: 1;
                     }
                 }
@@ -1052,6 +1533,7 @@ a.no-decoration {
         }
     }
 
+    // Mobile indicator styles
     @include media-breakpoint-down(lg) {
         &.o_carousel_product_left_indicators {
             flex-direction: column-reverse;
@@ -1078,6 +1560,7 @@ a.no-decoration {
         }
     }
 
+    // Indicator spacing
     @include media-breakpoint-up(lg) {
         .carousel-indicators li {
             margin: 0;
@@ -1099,6 +1582,7 @@ a.no-decoration {
     }
 }
 
+// ==== Carousel Controls (shared between carousel and image viewer) ===========
 #o-carousel-product, .o_wsale_image_viewer {
     .carousel-control-prev, .carousel-control-next {
         top: auto;
@@ -1121,10 +1605,8 @@ a.no-decoration {
             line-height: 2.5rem;
             @include font-size(1.15rem);
             border-radius: var(--btn-border-radius);
-        }
 
-        @include media-breakpoint-down(lg) {
-            > i {
+            @include media-breakpoint-down(lg) {
                 width: 2rem;
                 height: 2rem;
                 line-height: 2rem;
@@ -1134,29 +1616,20 @@ a.no-decoration {
     }
 }
 
-// Customization of the grid on /product page.
-.o_wsale_product_page_grid_column div {
-    &:first-child {
-        margin-top: 0 !important;
-    }
-
-    &:last-child {
-        margin-bottom: 0 !important;
-    }
-}
-
+// ==== IMAGE ZOOM (discontinued) ==============================================
 .ecom-zoomable {
-    &[data-ecom-zoom-click] {
-        img.product_detail_img {
-            cursor: zoom-in;
-        }
+    &[data-ecom-zoom-click] img.product_detail_img {
+        cursor: zoom-in;
     }
+
     img[data-zoom] {
         cursor: zoom-in;
     }
+
     .o_editable img[data-zoom] {
         cursor: pointer;
     }
+
     .zoomodoo-flyout {
         box-shadow: 0 0 20px 2px rgba(black, 0.2);
         z-index: 1050;

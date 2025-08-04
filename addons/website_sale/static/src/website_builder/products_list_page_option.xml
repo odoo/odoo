@@ -6,15 +6,17 @@
     <div class="d-none o_wsale_products_list_page_options"/>
 
     <BuilderRow label.translate="Content Width">
-        <BuilderButtonGroup action="'previewableWebsiteConfig'">
+        <BuilderButtonGroup action="'setShopContainer'">
             <BuilderButton
                     title.translate="Regular"
-                    actionParam="{views: [], previewClass: 'container'}"
+                    actionParam="{ previewClass: 'container'}"
+                    actionValue="'regular'"
                     iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
             />
             <BuilderButton
                     title.translate="Full"
-                    actionParam="{views: ['website_sale.shop_fullwidth'], previewClass: 'container-fluid o_wsale_page_fluid'}"
+                    actionParam="{ previewClass: 'container-fluid o_wsale_page_fluid'}"
+                    actionValue="'fluid'"
                     iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
             />
         </BuilderButtonGroup>

@@ -3,7 +3,7 @@
     <template id="variants">
         <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination)"/>
         <ul
-            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 pt-3 #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
+            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
             t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
         >
             <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
@@ -214,15 +214,5 @@
     </template>
     <template id="website_sale.packaging_title" name="Packaging title">
         <h6 class="attribute_name mb-2">Packaging</h6>
-    </template>
-    <template
-        id="variants_separator"
-        inherit_id="website_sale.variants"
-        active="True"
-        name="Variants Separator"
-    >
-        <xpath expr="//ul" position="attributes">
-            <attribute name="t-attf-class" remove="pt-3" add="border-top pt-4" separator=" "/>
-        </xpath>
     </template>
 </odoo>

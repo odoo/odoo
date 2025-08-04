@@ -5,7 +5,7 @@ import { ProductPageOption } from "./product_page_option";
 import { rpc } from "@web/core/network/rpc";
 import { isImageCorsProtected } from "@html_editor/utils/image";
 import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
-import { WebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
+import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
@@ -13,7 +13,7 @@ export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
-    static shared = ["getDisabledOtherZoomViews"];
+    static shared = ["getDisabledOtherZoomViews", "forceCarouselRedraw"];
     resources = {
         builder_options: {
             OptionComponent: ProductPageOption,
@@ -25,8 +25,13 @@ class ProductPageOptionPlugin extends Plugin {
             title: _t("Product Page"),
         },
         builder_actions: {
+            ProductPageContainerWidthAction,
+            ProductPageContainerOrderAction,
             ProductPageImageWidthAction,
+            ProductPageImageRatioAction,
+            ProductPageImageRatioMobileAction,
             ProductPageImageLayoutAction,
+            ProductPageImageRoundnessAction,
             ProductPageImageGridSpacingAction,
             ProductPageImageGridColumnsAction,
             ProductReplaceMainImageAction,
@@ -67,6 +72,7 @@ class ProductPageOptionPlugin extends Plugin {
             },
         ],
     };
+
     setup() {
         const mainEl = this.document.querySelector(productPageSelector);
         if (mainEl) {
@@ -79,6 +85,7 @@ class ProductPageOptionPlugin extends Plugin {
                 this.model = "product.product";
             }
             // Different targets
+            this.productDetailEl = mainEl.querySelector("#product_detail");
             this.productDetailMain = mainEl.querySelector("#product_detail_main");
             this.productPageCarousel = mainEl.querySelector("#o-carousel-product");
             this.productPageGrid = mainEl.querySelector("#o-grid-product");
@@ -86,8 +93,8 @@ class ProductPageOptionPlugin extends Plugin {
     }
 
     getZoomLevels() {
-        const hasImages = this.productDetailMain.dataset.image_width != "none";
-        const isFullImage = this.productDetailMain.dataset.image_width == "100_pc";
+        const hasImages = !this.productDetailEl.classList.contains("o_wsale_product_page_opt_image_width_none");
+        const isFullImage = this.productDetailEl.classList.contains("o_wsale_product_page_opt_image_width_100_pc");
         return [
             {
                 id: "o_wsale_zoom_hover",
@@ -125,18 +132,69 @@ class ProductPageOptionPlugin extends Plugin {
     getDisabledOtherZoomViews(keptView) {
         return this.getZoomViews().map((view) => (view === keptView ? view : `!${view}`));
     }
+    forceCarouselRedraw() {
+        if (!this.productPageCarousel) {
+            return;
+        }
+        const targetWindow = this.productPageCarousel.ownerDocument.defaultView || window;
+        const resizeEvent = new Event('resize');
+        targetWindow.dispatchEvent(resizeEvent);
+    }
 }
 
-export class ProductPageImageWidthAction extends WebsiteConfigAction {
+// Base class for product page configuration actions
+export class BasePreviewableProductPageAction extends PreviewableWebsiteConfigAction {
+    static dependencies = [...super.dependencies, "productPageOption"];
+    static rpcParameterName = null;
+    static shouldForceCarouselRedraw = true;
+
+    async apply({ editingElement, isPreviewing, params, value }) {
+        await super.apply({ editingElement, isPreviewing, params, value });
+
+        if (this.constructor.shouldForceCarouselRedraw) {
+            this.dependencies.productPageOption.forceCarouselRedraw();
+        }
+        if (!isPreviewing) {
+            await this.handlePreCommit(value, params);
+            await this.makeRpcCall(value);
+        }
+    }
+
+    async makeRpcCall(value) {
+        if (this.constructor.rpcParameterName) {
+            await rpc("/shop/config/website", { [this.constructor.rpcParameterName]: value });
+        }
+    }
+
+    // To be overridden for custom logic prior RPC calls
+    async handlePreCommit(value, params) {}
+}
+export class ProductPageContainerWidthAction extends BasePreviewableProductPageAction {
+    static id = "productPageContainerWidth";
+    static rpcParameterName = "product_page_container";
+}
+
+export class ProductPageContainerOrderAction extends BasePreviewableProductPageAction {
+    static id = "productPageContainerOrder";
+    static rpcParameterName = "product_page_cols_order";
+    static shouldForceCarouselRedraw = false;
+}
+
+export class ProductPageImageRatioAction extends BasePreviewableProductPageAction {
+    static id = "productPageImageRatio";
+    static rpcParameterName = "product_page_image_ratio";
+}
+
+export class ProductPageImageRatioMobileAction extends BasePreviewableProductPageAction {
+    static id = "productPageImageRatioMobile";
+    static rpcParameterName = "product_page_image_ratio_mobile";
+}
+
+export class ProductPageImageWidthAction extends BasePreviewableProductPageAction {
     static id = "productPageImageWidth";
-    static dependencies = [...super.dependencies, "customizeWebsite", "productPageOption"];
-    isApplied({ editingElement: productDetailMainEl, value }) {
-        return productDetailMainEl.dataset.image_width === value;
-    }
-    getValue({ editingElement: productDetailMainEl }) {
-        return productDetailMainEl.dataset.image_width;
-    }
-    async apply({ value }) {
+    static rpcParameterName = "product_page_image_width";
+
+    async handlePreCommit(value, params) {
         if (value === "100_pc") {
             const defaultZoomOption = "website_sale.product_picture_magnify_click";
             await super.apply({
@@ -145,9 +203,19 @@ export class ProductPageImageWidthAction extends WebsiteConfigAction {
                 },
             });
         }
-        await rpc("/shop/config/website", { product_page_image_width: value });
     }
 }
+
+export class ProductPageImageGridSpacingAction extends BasePreviewableProductPageAction {
+    static id = "productPageImageGridSpacing";
+    static rpcParameterName = "product_page_image_spacing";
+}
+
+export class ProductPageImageRoundnessAction extends BasePreviewableProductPageAction {
+    static id = "productPageRoundness";
+    static rpcParameterName = "product_page_image_roundness";
+}
+
 export class ProductPageImageLayoutAction extends WebsiteConfigAction {
     static id = "productPageImageLayout";
     static dependencies = [...super.dependencies, "customizeWebsite", "productPageOption"];
@@ -158,13 +226,15 @@ export class ProductPageImageLayoutAction extends WebsiteConfigAction {
         return productDetailMainEl.dataset.image_layout;
     }
     async apply({ editingElement: productDetailMainEl, value }) {
-        const imageWidthOption = productDetailMainEl.dataset.image_width;
+        const imageIsFullWidth = productDetailMainEl.classList.contains(
+            "o_wsale_product_page_opt_image_width_100_pc"
+        );
         let defaultZoomOption =
             value === "grid"
                 ? "website_sale.product_picture_magnify_click"
                 : "website_sale.product_picture_magnify_hover";
         if (
-            imageWidthOption === "100_pc" &&
+            imageIsFullWidth &&
             defaultZoomOption === "website_sale.product_picture_magnify_hover"
         ) {
             defaultZoomOption = "website_sale.product_picture_magnify_click";
@@ -296,36 +366,7 @@ export class BaseProductPageAction extends BuilderAction {
         }
     }
 }
-export class ProductPageImageGridSpacingAction extends BaseProductPageAction {
-    static id = "productPageImageGridSpacing";
-    getValue() {
-        if (!this.productPageGrid) {
-            return 0;
-        }
-        return {
-            none: 0,
-            small: 1,
-            medium: 2,
-            big: 3,
-        }[this.productPageGrid.dataset.image_spacing];
-    }
-    async load({ value }) {
-        const spacing = {
-            0: "none",
-            1: "small",
-            2: "medium",
-            3: "big",
-        }[value];
 
-        await rpc("/shop/config/website", {
-            product_page_image_spacing: spacing,
-        });
-        return spacing;
-    }
-    apply({ loadResult: spacing }) {
-        this.productPageGrid.dataset.image_spacing = spacing;
-    }
-}
 export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
     static id = "productPageImageGridColumns";
 

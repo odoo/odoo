@@ -202,7 +202,7 @@ class ProductsRibbonOptionPlugin extends Plugin {
      *
      */
     deleteRibbon(editingElement) {
-        const ribbonId = parseInt(editingElement.querySelector('.o_ribbons').dataset.ribbonId);
+        const ribbonId = parseInt(editingElement.querySelector('.o_ribbons')?.dataset.ribbonId);
         if (this.ribbonsObject[ribbonId]) {
             const ribbonIndex = this.ribbons.findIndex(ribbon => ribbon.id === ribbonId);
             if (ribbonIndex !== -1 ) {

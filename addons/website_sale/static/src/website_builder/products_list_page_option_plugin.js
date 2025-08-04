@@ -1,4 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -19,11 +20,23 @@ class ProductsListPageOptionPlugin extends Plugin {
             },
         ],
         builder_actions: {
+            SetShopContainerAction,
             SetPpgAction,
             SetPprAction,
             SetDefaultSortAction,
         },
     };
+}
+export class SetShopContainerAction extends PreviewableWebsiteConfigAction {
+    static id = "setShopContainer";
+
+    async apply({ editingElement: productDetailMainEl, isPreviewing, params, value }) {
+        await super.apply({ editingElement: productDetailMainEl, isPreviewing, params, value });
+
+        if (!isPreviewing) {
+            await rpc("/shop/config/website", { 'shop_page_container': value });
+        }
+    }
 }
 export class SetPpgAction extends BuilderAction {
     static id = "setPpg";

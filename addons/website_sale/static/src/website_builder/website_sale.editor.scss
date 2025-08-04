@@ -1,4 +1,5 @@
-.options-container:has(.o_wsale_products_list_page_options) {
+.options-container:has(.o_wsale_products_list_page_options),
+.options-container:has(.o_wsale_product_page_options) {
     > div:first-child { // Title
         display: none !important;
     }
@@ -7,7 +8,12 @@
         margin-top: -4px; // Cancel margin
         padding-top: 8px; // Avoid margin collapse, like bootstrap's pt-2
     }
+    .o_wsale_panel_section_title {
+        color: white;
+    }
+}
 
+.options-container:has(.o_wsale_products_list_page_options) {
     div[data-label="Style"].hb-row-sublevel-1:after {
         height: calc(#{$o-hb-row-min-height} * 0.5);
     }

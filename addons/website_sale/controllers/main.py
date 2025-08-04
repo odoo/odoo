@@ -1753,10 +1753,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         current_website = request.env['website'].get_current_website()
         # Restrict options we can write to.
         writable_fields = {
-            'shop_ppg', 'shop_ppr', 'shop_default_sort', 'shop_gap',
-            'product_page_image_layout', 'product_page_image_width',
-            'product_page_grid_columns', 'product_page_image_spacing',
-            'shop_opt_products_design_classes',
+            'shop_page_container', 'shop_ppg', 'shop_ppr', 'shop_default_sort', 'shop_gap',
+            'shop_opt_products_design_classes', 'product_page_container',
+            'product_page_image_layout', 'product_page_image_width', 'product_page_grid_columns',
+            'product_page_image_spacing', 'product_page_image_ratio',
+            'product_page_image_ratio_mobile', 'product_page_cols_order',
+            'product_page_image_roundness', 'product_page_cta_design'
         }
         # Default ppg to 1.
         if 'ppg' in options and not options['ppg']:
