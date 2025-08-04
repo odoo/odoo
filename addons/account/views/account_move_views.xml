@@ -800,22 +800,22 @@
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info" role="alert"
-                         invisible="move_type not in ('out_invoice', 'out_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
+                         invisible="state != 'posted' or move_type not in ('out_invoice', 'out_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> listed below for this customer.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info" role="alert"
-                         invisible="move_type not in ('in_invoice', 'in_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
+                         invisible="state != 'posted' or move_type not in ('in_invoice', 'in_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> listed below for this vendor.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info" role="alert"
-                         invisible="move_type != 'out_refund' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
+                         invisible="state != 'posted' or move_type != 'out_refund' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> listed below for this customer.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info" role="alert"
-                         invisible="move_type != 'in_refund' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
+                         invisible="state != 'posted' or move_type != 'in_refund' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> listed below for this vendor.
                     </div>
                     <!-- Currency consistency -->
