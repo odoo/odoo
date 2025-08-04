@@ -237,7 +237,6 @@
                     <div t-if="showGroupPager(group)" t-on-click.stop="" class="ms-auto">
                         <Pager t-props="getGroupPagerProps(group)"/>
                     </div>
-                    <GroupConfigMenu t-if="showGroupConfigMenu(group)" t-props="getGroupConfigMenuProps(group)"/>
                 </div>
             </th>
             <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
@@ -251,6 +250,9 @@
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
             <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
+            <th class="p-0" t-on-keydown="(ev) => this.onCellKeydown(ev, group)">
+                <GroupConfigMenu t-if="showGroupConfigMenu(group)" t-props="getGroupConfigMenuProps(group)"/>
+            </th>
         </tr>
     </t>
 
@@ -331,7 +333,7 @@
 
             <t t-set="useUnlink" t-value="'unlink' in activeActions" />
             <t t-set="hasX2ManyAction" t-value="isX2Many and (useUnlink ? activeActions.unlink : activeActions.delete)" />
-            <t t-if="displayOptionalFields or hasX2ManyAction">
+            <t t-if="displayOptionalFields or props.list.isGrouped or hasX2ManyAction">
                 <t t-if="hasX2ManyAction">
                     <t t-set="hasDeleteButton" t-value="this.displayDeleteIcon(record)"/>
                     <td class="o_list_record_remove w-print-0 p-print-0 text-center"
