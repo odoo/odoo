@@ -706,3 +706,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_popup_visibility_option(self):
         self.start_tour("/", "website_popup_visibility_option", login="admin")
+
+    def test_header_color_and_undo_redo_issues(self):
+        self.start_tour("/", "undo_redo_header_oriented_issue", login="admin")
