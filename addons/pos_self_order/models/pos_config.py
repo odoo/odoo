@@ -5,7 +5,6 @@ import zipfile
 import qrcode
 import qrcode.image.svg
 from io import BytesIO
-from os.path import join as opj
 from typing import Optional, List, Dict
 from urllib.parse import unquote
 from odoo.exceptions import UserError, ValidationError, AccessError
@@ -111,9 +110,6 @@ class PosConfig(models.Model):
 
     @api.model
     def _prepare_self_order_splash_screen(self, vals_list, is_new=False):
-        def read_image_datas(image_name):
-            with file_open(opj("pos_self_order/static/img", image_name), "rb") as f:
-                return base64.b64encode(f.read())
         for vals in vals_list:
             if not vals.get('self_ordering_mode'):
                 return True
@@ -121,17 +117,17 @@ class PosConfig(models.Model):
             if not vals.get('self_ordering_image_home_ids'):
                 vals['self_ordering_image_home_ids'] = [(0, 0, {
                     'name': image_name,
-                    'datas': read_image_datas(image_name),
+                    'type': 'url',
+                    'url': f'/pos_self_order/static/img/{image_name}',
                     'res_model': 'pos.config',
-                    'type': 'binary',
                 }) for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']]
 
             if is_new and not vals.get('self_ordering_image_background_ids'):
                 vals['self_ordering_image_background_ids'] = [(0, 0, {
                     'name': "background.jpg",
-                    'datas': read_image_datas("kiosk_background.jpg"),
+                    'type': 'url',
+                    'url': '/pos_self_order/static/img/kiosk_background.jpg',
                     'res_model': 'pos.config',
-                    'type': 'binary',
                 })]
 
         return True
