@@ -89,23 +89,23 @@ test("image should not be draggable", async () => {
     expect(events.get("dragstart").defaultPrevented).toBe(true);
 });
 
+function pasteFile(editor, file) {
+    const clipboardData = new DataTransfer();
+    clipboardData.items.add(file);
+    const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+    editor.editable.dispatchEvent(pasteEvent);
+}
+
+function createBase64ImageFile(base64ImageData, filename) {
+    const binaryImageData = atob(base64ImageData);
+    const uint8Array = new Uint8Array(binaryImageData.length);
+    for (let i = 0; i < binaryImageData.length; i++) {
+        uint8Array[i] = binaryImageData.charCodeAt(i);
+    }
+    return new File([uint8Array], filename ?? "test_image.png", { type: "image/png" });
+}
+
 test("pasted/dropped images are converted to attachments on save in website editor", async () => {
-    function pasteFile(editor, file) {
-        const clipboardData = new DataTransfer();
-        clipboardData.items.add(file);
-        const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
-        editor.editable.dispatchEvent(pasteEvent);
-    }
-
-    function createBase64ImageFile(base64ImageData) {
-        const binaryImageData = atob(base64ImageData);
-        const uint8Array = new Uint8Array(binaryImageData.length);
-        for (let i = 0; i < binaryImageData.length; i++) {
-            uint8Array[i] = binaryImageData.charCodeAt(i);
-        }
-        return new File([uint8Array], "test_image.png", { type: "image/png" });
-    }
-
     onRpc("/html_editor/attachment/add_data", async (request) => {
         const { params } = await request.json();
         expect(
@@ -155,6 +155,80 @@ test("pasted/dropped images are converted to attachments on save in website edit
     // Save and check if image has been saved as attachment
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect.verifySteps(["add_data", "save"]);
+});
+
+test("pasted/dropped images are converted to attachments on snippet save", async () => {
+    const imageData =
+        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
+    onRpc("/html_editor/attachment/add_data", async (request) => {
+        const { params } = await request.json();
+        expect(params.data).toBe(imageData + "=");
+        expect.step(`add_data ${params.name}`);
+        return {
+            image_src: `/url_${params.name}`,
+            access_token: "1234",
+            public: false,
+        };
+    });
+
+    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+        expect.step("save snippet");
+        expect(kwargs.arch).toInclude('src="/url_image-1.png?access_token=1234"');
+        return "Custom Cover";
+    });
+
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step("save");
+        expect(args[1]).toInclude('src="/url_image-1.png?access_token=1234"');
+        expect(args[1]).toInclude('src="/url_image-2.png?access_token=1234"');
+        return true;
+    });
+
+    const { getEditor } = await setupWebsiteBuilder(`
+        <section data-snippet="s_cover" test-id="1">
+            <p>Text</p>
+            <p><br></p>
+            <p>More Text</p>
+        </section>
+        <section data-snippet="s_cover" test-id="2">
+            <p>Text</p>
+            <p><br></p>
+            <p>More Text</p>
+        </section>
+    `);
+
+    const editor = getEditor();
+
+    // Paste images
+    let p = queryOne(":iframe section[test-id='1'] > p:has(br)");
+    setSelection({ anchorNode: p, anchorOffset: 0 });
+    pasteFile(editor, createBase64ImageFile(imageData, "image-1.png"));
+
+    // Check if image is set to be saved as attachment
+    expect(await waitFor(":iframe [test-id='1'] img.o_b64_image_to_save")).toHaveAttribute(
+        "src",
+        /^data:image\/png;base64,/
+    );
+
+    p = queryOne(":iframe section[test-id='2'] > p:has(br)");
+    setSelection({ anchorNode: p, anchorOffset: 0 });
+    pasteFile(editor, createBase64ImageFile(imageData, "image-2.png"));
+
+    // Check if image is set to be saved as attachment
+    expect(await waitFor(":iframe [test-id='2'] img.o_b64_image_to_save")).toHaveAttribute(
+        "src",
+        /^data:image\/png;base64,/
+    );
+
+    // Save snippet of section 1 and check if its image has been saved as attachment
+    await contains(":iframe [test-id='1']").click();
+    await contains("button.oe_snippet_save").click();
+    await contains(".modal button:contains(Save)").click();
+    await expect.waitForSteps(["add_data image-1.png", "save snippet"]);
+
+    // Save and check if image of section 2 has been saved as attachment
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await expect.waitForSteps(["add_data image-2.png", "save"]);
 });
 
 describe("Image format/optimize", () => {

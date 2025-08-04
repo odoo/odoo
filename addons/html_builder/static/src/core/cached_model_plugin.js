@@ -7,7 +7,7 @@ export class CachedModelPlugin extends Plugin {
     static shared = ["ormRead", "ormSearchRead", "useModelEdit"];
     static dependencies = ["history"];
     resources = {
-        before_save_handlers: this.savePendingRecords.bind(this),
+        save_handlers: this.savePendingRecords.bind(this),
     };
     setup() {
         this.ormReadCache = new Cache(
@@ -39,7 +39,7 @@ export class CachedModelPlugin extends Plugin {
         // track el ?
         return modelEdit;
     }
-    async savePendingRecords(editableEl = this.editable) {
+    async savePendingRecords() {
         const inventory = {}; // model => { recordId => { field => value } }
         for (const modelEdit of Object.values(this.modelEditCache.cache)) {
             modelEdit.collect(inventory);
