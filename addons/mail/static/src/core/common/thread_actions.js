@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { markEventHandled } from "@web/core/utils/misc";
+import { transformDiscussAction } from "./discuss_actions_definition";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -109,10 +110,6 @@ function transformAction(component, id, action) {
         get condition() {
             return threadActionsInternal.condition(component, id, action);
         },
-        /** If set, this is considered as a danger (destructive) action. */
-        get danger() {
-            return typeof action.danger === "function" ? action.danger(component) : action.danger;
-        },
         /** Condition to disable the button of this action (but still display it). */
         get disabledCondition() {
             return action.disabledCondition?.(component);
@@ -139,8 +136,6 @@ function transformAction(component, id, action) {
                 ? action.iconLarge(component)
                 : action.iconLarge ?? action.icon;
         },
-        /** Unique id of this action. */
-        id,
         /** States whether this action is currently active. */
         get isActive() {
             return id === component.threadActions.activeAction?.id;
@@ -220,12 +215,6 @@ function transformAction(component, id, action) {
         },
         /** Determines whether this is a popover linked to this action. */
         popover: null,
-        /** Determines the order of this action (smaller first). */
-        get sequence() {
-            return typeof action.sequence === "function"
-                ? action.sequence(component)
-                : action.sequence;
-        },
         get sequenceGroup() {
             return typeof action.sequenceGroup === "function"
                 ? action.sequenceGroup(component)
@@ -243,14 +232,6 @@ function transformAction(component, id, action) {
         sidebar: action.sidebar ?? action.sidebarSequence ?? false,
         sidebarSequence: action.sidebarSequence,
         sidebarSequenceGroup: action.sidebarSequenceGroup,
-        /** Component setup to execute when this action is registered. */
-        setup: action.setup,
-        /** If set, this is considered as a success (high-commitment positive) action. */
-        get success() {
-            return typeof action.success === "function"
-                ? action.success(component)
-                : action.success;
-        },
         /** Text for the button of this action */
         text: action.text,
         /** Determines whether this action is a one time effect or can be toggled (on or off). */
@@ -273,9 +254,11 @@ function makeContextualAction(action, ctx) {
 
 export function useThreadActions() {
     const component = useComponent();
-    const transformedActions = threadActionsRegistry
-        .getEntries()
-        .map(([id, action]) => transformAction(component, id, action));
+    const transformedActions = threadActionsRegistry.getEntries().map(([id, action]) => {
+        const act = transformAction(component, id, action);
+        Object.setPrototypeOf(act, transformDiscussAction(component, id, action));
+        return act;
+    });
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);
