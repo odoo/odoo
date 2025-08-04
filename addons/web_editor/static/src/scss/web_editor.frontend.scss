@@ -132,3 +132,76 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
         background-color: transparent !important;
     }
 }
+
+// Bootstrap is overridden to allow the use of CSS variables to configure border
+// and radius. The main goal is to allow computation on the children layers (see
+// %o-we-background-layer) whose radius would depend on both the parent border
+// width and border radius.
+// See BORDER_VARIABLES_RULES_EXTENSION
+//
+// --box-border-XXX-(radius|width) : editor Round Corners user input
+// --box-border-(radius|width) : rounded-XXX classes
+// --border-(radius|width) : theme (+ default bootstrap)
+
+// BORDER WIDTH
+%box-border-width-rules {
+    // Setup shorthands and fallback: in any case, inline style (on the original
+    // property or on the CSS variable) will dominate. Setting them up this way
+    // allows to make reading/writing on those more precise (although not
+    // fully: reading the main property will not detail the sub-properties).
+    --box-border-width: var(--border-width);
+    --box-border-top-width: var(--box-border-width);
+    --box-border-right-width: var(--box-border-width);
+    --box-border-bottom-width: var(--box-border-width);
+    --box-border-left-width: var(--box-border-width);
+
+    // TODO make it so builder options do not force all 4 values when the user
+    // simply want to set a single value (and instead use the main CSS variable
+    // in that case). Something to do with improving setStyle's understanding of
+    // CSS_SHORTHANDS when it comes to CSS variables.
+
+    border-width:
+        var(--box-border-top-width)
+        var(--box-border-right-width)
+        var(--box-border-bottom-width)
+        var(--box-border-left-width) !important;
+}
+// TODO this should probably be done for all bootstrap "border" classes like
+// "rounded" classes below? At the moment, it was not done because builder
+// options do not allow to set those but layouts could?
+.border {
+    @extend %box-border-width-rules;
+}
+
+// BORDER RADIUS
+%box-border-radius-rules {
+    // Setup shorthands and fallback: in any case, inline style (on the original
+    // property or on the CSS variable) will dominate. Setting them up this way
+    // allows to make reading/writing on those more precise (although not
+    // fully: reading the main property will not detail the sub-properties).
+    --box-border-radius: var(--border-radius);
+    --box-border-top-left-radius: var(--box-border-radius);
+    --box-border-top-right-radius: var(--box-border-radius);
+    --box-border-bottom-right-radius: var(--box-border-radius);
+    --box-border-bottom-left-radius: var(--box-border-radius);
+
+    // TODO make it so builder options do not force all 4 values when the user
+    // simply want to set a single value (and instead use the main CSS variable
+    // in that case). Something to do with improving setStyle's understanding of
+    // CSS_SHORTHANDS when it comes to CSS variables.
+
+    border-radius:
+        var(--box-border-top-left-radius)
+        var(--box-border-top-right-radius)
+        var(--box-border-bottom-right-radius)
+        var(--box-border-bottom-left-radius) !important;
+}
+$utilities-radius-keys: ("rounded", "rounded-top", "rounded-end", "rounded-bottom", "rounded-start") !default;
+@each $direction in $utilities-radius-keys {
+    @each $size, $value in $rounded-sizes {
+        $class-suffix: if($size == null, "", "-#{$size}");
+        .#{$direction}#{$class-suffix} {
+            @extend %box-border-radius-rules;
+        }
+    }
+};

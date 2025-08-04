@@ -25,6 +25,18 @@ export const CSS_SHORTHANDS = {
         "border-bottom-right-radius",
         "border-bottom-left-radius",
     ],
+    "--box-border-width": [
+        "--box-border-top-width",
+        "--box-border-right-width",
+        "--box-border-bottom-width",
+        "--box-border-left-width",
+    ],
+    "--box-border-radius": [
+        "--box-border-top-left-radius",
+        "--box-border-top-right-radius",
+        "--box-border-bottom-right-radius",
+        "--box-border-bottom-left-radius",
+    ],
     "border-color": [
         "border-top-color",
         "border-right-color",

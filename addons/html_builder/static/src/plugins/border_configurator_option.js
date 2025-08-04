@@ -22,7 +22,12 @@ export class BorderConfigurator extends BaseOptionComponent {
         }));
     }
     getStyleActionParam(param) {
-        return `border-${this.props.direction ? this.props.direction + "-" : ""}${param}`;
+        const property = `border-${this.props.direction ? (this.props.direction + "-") : ""}${param}`;
+        if (this.props.withBSClass && (param === "width" || param === "radius")) {
+            // grep: --box-border-width, --box-border-radius
+            return `--box-${property}`;
+        }
+        return property;
     }
     hasBorder(editingElement) {
         const getAction = this.env.editor.shared.builderActions.getAction;
