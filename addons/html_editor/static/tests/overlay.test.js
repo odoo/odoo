@@ -1,9 +1,14 @@
 import { expect, test } from "@odoo/hoot";
 import { setSelection } from "./_helpers/selection";
 import { click, hover, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { unformat } from "./_helpers/format";
+import { Plugin } from "@html_editor/plugin";
+import { Component, onMounted, onWillUnmount, xml } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { setupEditor } from "./_helpers/editor";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 class Test extends models.Model {
     name = fields.Char();
@@ -237,4 +242,59 @@ test("Toolbar should keep stable while extending down the selection", async () =
     // Toolbar should not move
     expect(top(toolbar)).toBe(referenceTop);
     expect(left(toolbar)).toBe(referenceLeft);
+});
+
+test("overlay don't close when click on child overlay", async () => {
+    class MySubOverlay extends Component {
+        static template = xml`<button class="my-suboverlay">Overlay</button>`;
+        static props = {};
+    }
+    class MyOverlay extends Component {
+        static template = xml`<div class="my-overlay">Overlay</div>`;
+        static props = {};
+
+        setup() {
+            const overlayService = useService("overlay");
+            let remove;
+            onMounted(() => {
+                remove = overlayService.add(MySubOverlay, {});
+            });
+            onWillUnmount(() => remove?.());
+        }
+    }
+
+    class MyPlugin extends Plugin {
+        static id = "my.plugin";
+        static dependencies = ["overlay"];
+        setup() {
+            this.overlay = this.dependencies.overlay.createOverlay(MyOverlay, {});
+            this.overlay.open({ target: this.editable });
+        }
+        destroy() {
+            this.overlay.close();
+        }
+    }
+
+    const { editor } = await setupEditor("<div>edit</div>", {
+        config: { Plugins: [...MAIN_PLUGINS, MyPlugin] },
+    });
+    await waitFor(".my-overlay");
+    await contains(".my-suboverlay").click();
+    await animationFrame();
+    expect(document.activeElement).toBe(queryOne(".my-suboverlay"));
+    expect(".my-overlay").toHaveCount(1);
+    editor.destroy();
+    await animationFrame();
+
+    await setupEditor("<div>edit</div>", {
+        config: { Plugins: [...MAIN_PLUGINS, MyPlugin] },
+        props: {
+            iframe: true,
+        },
+    });
+    await waitFor(".my-overlay");
+    await contains(".my-suboverlay").click();
+    await animationFrame();
+    expect(document.activeElement).toBe(queryOne(".my-suboverlay"));
+    expect(".my-overlay").toHaveCount(1);
 });
