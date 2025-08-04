@@ -496,6 +496,13 @@ class TestMailingControllers(TestMailingControllersCommon):
         })
         private_list.subscription_ids[0].opt_out = True
 
+        # non-public list should not be displayed even if user is subscribed
+        self.env['mailing.list'].create({
+            'contact_ids': [(0, 0, {'name': 'Déboulonneur User', 'email': 'fleurus@example.com'})],
+            'name': 'List6',
+            'is_public': False,
+        })
+
         # launch 'my' mailing' tour
         self.authenticate(portal_user.login, portal_user.login)
         with freeze_time(self._reference_now):
