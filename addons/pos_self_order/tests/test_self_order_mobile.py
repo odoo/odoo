@@ -196,6 +196,54 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.assertEqual(last_order.table_id.table_number, 1)
         self.assertNotEqual(last_order.floating_order_name, "Self-Order T 1")
 
+    def test_sub_categories_products_displayed(self):
+        miscellaneous = self.env['pos.category'].search([('name', '=', 'Miscellaneous')], limit=1)
+        soda = self.env['pos.category'].create({
+            'name': 'Soda',
+            'parent_id': miscellaneous.id,
+            'sequence': 1,
+        })
+        empty_parent_category = self.env['pos.category'].create({'name': 'Parent'})
+        child_category = self.env['pos.category'].create({
+            'name': 'Child',
+            'parent_id': empty_parent_category.id,
+        })
+        grand_child_category = self.env['pos.category'].create({
+            'name': 'Grandchild',
+            'parent_id': child_category.id,
+        })
+
+        self.cola.write({'pos_categ_ids': [(6, 0, [soda.id])]})
+        self.fanta.write({'pos_categ_ids': [(6, 0, [grand_child_category.id])]})
+
+        # Mobile
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+            'use_presets': False,
+            'iface_available_categ_ids': [(6, 0, [miscellaneous.id, soda.id, empty_parent_category.id, child_category.id, grand_child_category.id])],
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_sub_categories_products_displayed")
+
+        # Consultation
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+        self.pos_config.write({'self_ordering_mode': 'consultation'})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_sub_categories_products_displayed")
+
+        # Kiosk
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+        self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_sub_categories_products_displayed")
+
     def test_mobile_self_order_preparation_changes(self):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
