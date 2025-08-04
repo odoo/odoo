@@ -179,7 +179,13 @@ class ResPartnerCategory(models.Model):
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if operator.endswith('like'):
+<<<<<<< a50e6ea418ca647ad3256ff4a24800834876d818
             return [('id', 'child_of', tuple(self._search(domain)))]
+||||||| 6daad4c4a7470c791ca988049479013a93aedfb7
+            return [('id', 'child_of', self._search(domain))]
+=======
+            return [('id', 'child_of', self._search(list(domain)))]
+>>>>>>> fd0d89f94b7066c70d02977c4f40d612bc36ea04
         return domain
 
 
