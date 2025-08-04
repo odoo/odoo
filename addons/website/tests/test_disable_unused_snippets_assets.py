@@ -68,10 +68,10 @@ class TestDisableSnippetsAssets(TransactionCase):
         cache_clears = []
 
         init_clear_cache = self.env.registry.clear_cache
-        def patched_clear_cache(*cache_names):
-            for cache_name in cache_names:
-                cache_clears.append(cache_name)
-            init_clear_cache(*cache_names)
+
+        def patched_clear_cache(cache_name):
+            cache_clears.append(cache_name)
+            init_clear_cache(cache_name)
 
         with patch.object(self.env.registry, 'clear_cache', patched_clear_cache):
             self.Website._disable_unused_snippets_assets()

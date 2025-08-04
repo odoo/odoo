@@ -633,7 +633,7 @@ class ResUsers(models.Model):
                 if env.user in self:
                     reset_cached_properties(env)
 
-        if 'group_ids' in vals and self.ids:
+        if 'group_ids' in vals and any(self._ids):
             # clear caches linked to the users
             self.env['ir.model.access'].call_cache_clearing_methods()
 
@@ -641,7 +641,7 @@ class ResUsers(models.Model):
         # clear_cache/clear_caches methods pretty much just end up calling
         # Registry.clear_cache
         invalidation_fields = self._get_invalidation_fields()
-        if invalidation_fields & vals.keys():
+        if not invalidation_fields.isdisjoint(vals):
             self.env.registry.clear_cache()
 
         return res
