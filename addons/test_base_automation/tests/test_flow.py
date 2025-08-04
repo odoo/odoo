@@ -9,7 +9,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import Form, common, tagged
+from odoo.tests import Form, common, tagged, WhitespaceInsensitive
 from odoo.tools import mute_logger
 
 
@@ -1669,7 +1669,7 @@ class TestCompute(common.TransactionCase):
             })
         expected.insert(0, {
             "code": "pass",
-            "display_name": f"May 1, 2025, 10:00:00 AM - {self.env.ref('base.user_root').name}",
+            "display_name": WhitespaceInsensitive(f"May 1, 2025, 10:00:00 AM - {self.env.ref('base.user_root').name}"),
         })
         assert_history(action, expected)
 
@@ -1678,7 +1678,7 @@ class TestCompute(common.TransactionCase):
             action.with_user(self.env.ref('base.user_admin')).write({"code": "hello"})
         expected.insert(0, {
             "code": "hello",
-            "display_name": f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}",
+            "display_name": WhitespaceInsensitive(f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}"),
         })
         assert_history(action, expected)
 
@@ -1687,7 +1687,7 @@ class TestCompute(common.TransactionCase):
             action.with_user(self.env.ref('base.user_admin')).write({"code": "coucou"})
         expected.insert(0, {
             "code": "coucou",
-            "display_name": f"May 5, 2025, 1:30:00 PM - {self.env.ref('base.user_admin').name}",
+            "display_name": WhitespaceInsensitive(f"May 5, 2025, 1:30:00 PM - {self.env.ref('base.user_admin').name}"),
         })
         assert_history(action, expected)
 
@@ -1697,7 +1697,7 @@ class TestCompute(common.TransactionCase):
                 self.assertRecordValues(wizard_form.revision, [
                     {
                         "code": "hello",
-                        "display_name": f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}",
+                        "display_name": WhitespaceInsensitive(f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}"),
                     }
                 ])
                 first_diff = str(wizard_form.code_diff)
@@ -1709,7 +1709,7 @@ class TestCompute(common.TransactionCase):
         self.assertEqual(action.code, "pass")
         expected.insert(0, {
             "code": "pass",
-            "display_name": f"May 12, 2025, 11:30:00 AM - {self.env.ref('base.user_root').name}",
+            "display_name": WhitespaceInsensitive(f"May 12, 2025, 11:30:00 AM - {self.env.ref('base.user_root').name}"),
         })
         assert_history(action, expected)
 
