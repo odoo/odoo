@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
@@ -11,6 +10,7 @@ class MailMessageSubtype(models.Model):
     _name = 'mail.message.subtype'
     _description = 'Message Subtype'
     _order = 'sequence, id'
+    _clear_cache_name = 'default'  # _get_auto_subscription_subtypes
 
     name = fields.Char(
         'Message Type', required=True, translate=True,
@@ -42,19 +42,6 @@ class MailMessageSubtype(models.Model):
     hidden = fields.Boolean('Hidden', help="Hide the subtype in the follower options")
     track_recipients = fields.Boolean('Track Recipients',
                                       help="Whether to display all the recipients or only the important ones.")
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
-        return super(MailMessageSubtype, self).create(vals_list)
-
-    def write(self, vals):
-        self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
-        return super(MailMessageSubtype, self).write(vals)
-
-    def unlink(self):
-        self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
-        return super(MailMessageSubtype, self).unlink()
 
     @tools.ormcache('model_name')
     def _get_auto_subscription_subtypes(self, model_name):

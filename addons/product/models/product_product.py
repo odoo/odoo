@@ -16,6 +16,11 @@ class ProductProduct(models.Model):
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'default_code, name, id'
+    _clear_cache_name = 'default'
+    _clear_cache_on_fields = {
+        'active',  # _get_first_possible_variant_id
+        'product_template_attribute_value_ids',  # _get_variant_id_for_combination
+    }
     _check_company_domain = models.check_company_domain_parent_of
 
     # price_extra: catalog extra value only, sum of variant extra attributes
@@ -422,20 +427,7 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
-        # `_get_variant_id_for_combination` depends on existing variants
-        self.env.registry.clear_cache()
-        return products
-
-    def write(self, vals):
-        res = super().write(vals)
-        if 'product_template_attribute_value_ids' in vals:
-            # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`
-            self.env.registry.clear_cache()
-        elif 'active' in vals:
-            # `_get_first_possible_variant_id` depends on variants active state
-            self.env.registry.clear_cache()
-        return res
+        return super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
 
     def action_archive(self):
         records = self.filtered('active')
@@ -481,8 +473,6 @@ class ProductProduct(models.Model):
         # products due to ondelete='cascade'
         unlink_templates = self.env['product.template'].browse(unlink_templates_ids)
         unlink_templates.unlink()
-        # `_get_variant_id_for_combination` depends on existing variants
-        self.env.registry.clear_cache()
         return res
 
     def _filter_to_unlink(self):

@@ -19,6 +19,13 @@ class ResCompany(models.Model):
     _order = 'sequence, name'
     _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
+    _clear_cache_name = 'default'
+    _clear_cache_on_fields = {
+        # This list is not well defined and tests should be improved
+        'active',  # user._get_company_ids and other potential cached search
+        'sequence',  # user._get_company_ids and other potential cached search
+    }
+    _clear_asset_cache_on_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
 
     def copy(self, default=None):
         raise UserError(self.env._('Duplicating a company is not allowed. Please create a new company instead.'))
@@ -304,7 +311,6 @@ class ResCompany(models.Model):
                 for fname in self._get_company_root_delegated_field_names():
                     vals.setdefault(fname, self._fields[fname].convert_to_write(parent[fname], parent))
 
-        self.env.registry.clear_cache()
         companies = super().create(vals_list)
 
         # The write is made on the user to set it automatically in the multi company group.
@@ -322,22 +328,6 @@ class ResCompany(models.Model):
 
         return companies
 
-    def cache_invalidation_fields(self):
-        # This list is not well defined and tests should be improved
-        return {
-            'active', # user._get_company_ids and other potential cached search
-            'sequence', # user._get_company_ids and other potential cached search
-        }
-
-    def unlink(self):
-        """
-        Unlink the companies and clear the cache to make sure that
-        _get_company_ids of res.users gets only existing company ids.
-        """
-        res = super().unlink()
-        self.env.registry.clear_cache()
-        return res
-
     def write(self, vals):
         if 'parent_id' in vals:
             raise UserError(self.env._("The company hierarchy cannot be changed."))
@@ -348,17 +338,13 @@ class ResCompany(models.Model):
                 currency.write({'active': True})
 
         res = super().write(vals)
-        invalidation_fields = self.cache_invalidation_fields()
-        asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
 
         companies_needs_l10n = (
             vals.get('country_id')
             and self.filtered(lambda company: not company.country_id)
         ) or self.browse()
-        if not invalidation_fields.isdisjoint(vals):
-            self.env.registry.clear_cache()
 
-        if not asset_invalidation_fields.isdisjoint(vals):
+        if any(self._ids) and not self._clear_asset_cache_on_fields.isdisjoint(vals):
             # this is used in the content of an asset (see asset_styles_company_report)
             # and thus needs to invalidate the assets cache when this is changed
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case

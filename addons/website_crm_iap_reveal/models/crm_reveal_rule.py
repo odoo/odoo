@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -7,7 +6,6 @@ import logging
 import re
 from dateutil.relativedelta import relativedelta
 
-import odoo
 from odoo import api, fields, models, tools, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
@@ -24,6 +22,8 @@ class CrmRevealRule(models.Model):
     _name = 'crm.reveal.rule'
     _description = 'CRM Lead Generation Rule'
     _order = 'sequence'
+    _clear_cache_name = 'default'
+    _clear_cache_on_fields = {'active', 'country_ids', 'regex_url'}  # in order to recompute _get_active_rules
 
     name = fields.Char(string='Rule Name', required=True)
     active = fields.Boolean(default=True)
@@ -84,23 +84,6 @@ class CrmRevealRule(models.Model):
                 re.compile(self.regex_url)
         except Exception:
             raise ValidationError(_('Enter Valid Regex.'))
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super().create(vals_list)
-
-    def write(self, vals):
-        fields_set = {
-            'country_ids', 'regex_url', 'active'
-        }
-        if set(vals.keys()) & fields_set:
-            self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super().write(vals)
-
-    def unlink(self):
-        self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super().unlink()
 
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")

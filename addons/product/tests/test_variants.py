@@ -1447,26 +1447,26 @@ class TestVariantsArchive(ProductVariantsCommon):
         (multiple_archived + multiple_active).unlink()
         self.assertFalse(products.exists())
 
-@tagged('post_install', '-at_install')
-class TestVariantWrite(TransactionCase):
-
     def test_active_one2many(self):
-        template = self.env['product.template'].create({'name': 'Foo', 'description': 'Foo'})
-        self.assertEqual(len(template.product_variant_ids), 1)
+        template = self.template
 
         # check the consistency of one2many field product_variant_ids w.r.t. active variants
-        variant1 = template.product_variant_ids
-        variant2 = self.env['product.product'].create({'product_tmpl_id': template.id})
-        self.assertEqual(template.product_variant_ids, variant1 + variant2)
+        variant1, variant2 = template.product_variant_ids[:2]
+        other = template.product_variant_ids[2:]
+        self.assertEqual(template.product_variant_ids, variant1 + variant2 + other)
 
         variant2.active = False
-        self.assertEqual(template.product_variant_ids, variant1)
+        self.assertEqual(template.product_variant_ids, variant1 + other)
 
         variant2.active = True
-        self.assertEqual(template.product_variant_ids, variant1 + variant2)
+        self.assertEqual(template.product_variant_ids, variant1 + variant2 + other)
 
         variant1.active = False
-        self.assertEqual(template.product_variant_ids, variant2)
+        self.assertEqual(template.product_variant_ids, variant2 + other)
+
+
+@tagged('post_install', '-at_install')
+class TestVariantWrite(TransactionCase):
 
     def test_write_inherited_field(self):
         product = self.env['product.product'].create({'name': 'Foo', 'sequence': 1})

@@ -327,8 +327,10 @@ class IrModuleModule(models.Model):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
 
     def unlink(self):
-        self.env.registry.clear_cache('stable')
-        return super().unlink()
+        res = super().unlink()
+        if self:
+            self.env.registry.clear_cache('stable')
+        return res
 
     def _get_modules_to_load_domain(self):
         """ Domain to retrieve the modules that should be loaded by the registry. """

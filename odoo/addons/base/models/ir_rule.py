@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
@@ -18,6 +17,7 @@ class IrRule(models.Model):
     _order = 'model_id DESC,id'
     _MODES = ('read', 'write', 'create', 'unlink')
     _allow_sudo_commands = False
+    _clear_cache_name = 'default'
 
     name = fields.Char()
     active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
@@ -118,6 +118,7 @@ class IrRule(models.Model):
         if self.env.su:
             return self.browse(())
 
+        self.flush_model()
         sql = SQL("""
             SELECT r.id FROM ir_rule r
             JOIN ir_model m ON (r.model_id=m.id)
@@ -181,29 +182,25 @@ class IrRule(models.Model):
             yield v
 
     def unlink(self):
-        res = super(IrRule, self).unlink()
+        res = super().unlink()
         self.env.transaction.clear_access_cache()
-        self.env.registry.clear_cache()
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrRule, self).create(vals_list)
-        # DLE P33: tests
         self.env.flush_all()
+        res = super().create(vals_list)
         self.env.transaction.clear_access_cache()
-        self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
-        res = super(IrRule, self).write(vals)
-        # DLE P33: tests
+        # DLE P33: tests for cached values
         # - odoo/addons/test_access_rights/tests/test_feedback.py
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
         self.env.flush_all()
+        res = super().write(vals)
         self.env.transaction.clear_access_cache()
-        self.env.registry.clear_cache()
         return res
 
     def _make_access_error(self, operation, records):
