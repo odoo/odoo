@@ -152,11 +152,531 @@ class ProductProduct(models.Model):
                 continue
             self.env['product.value'].sudo().create({
                 'product_id': product.id,
+<<<<<<< 9ab3f4e4e70f501e4d2acaf2ffab8531c667b9e2
                 'value': product.standard_price,
                 'company_id': product.company_id.id or self.env.company.id,
                 'date': fields.Datetime.now(),
                 'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
                     old_price=old_price, new_price=product.standard_price, user=self.env.user.name)
+||||||| 995a7072cb3315fc03544b281b1ed5ca4e81e901
+                'description': _(
+                    'Product value manually modified (from %(original_price)s to %(new_price)s)',
+                    original_price=product.standard_price,
+                    new_price=rounded_new_price,
+                ),
+                'value': value,
+                'quantity': 0,
+            }
+            svl_vals_list.append(svl_vals)
+        stock_valuation_layers = self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
+        stock_valuation_layers._change_standart_price_accounting_entries(new_price)
+
+    def _get_fifo_candidates_domain(self, company, lot=False):
+        return [
+            ("product_id", "=", self.id),
+            ("remaining_qty", ">", 0),
+            ("company_id", "=", company.id),
+            ("lot_id", "=", lot.id if lot else False),
+        ]
+
+    def _get_fifo_candidates(self, company, lot=False):
+        candidates_domain = self._get_fifo_candidates_domain(company, lot=lot)
+        return self.env["stock.valuation.layer"].sudo().search(candidates_domain).sorted(lambda svl: svl._candidate_sort_key())
+
+    def _get_qty_taken_on_candidate(self, qty_to_take_on_candidates, candidate):
+        return min(qty_to_take_on_candidates, candidate.remaining_qty)
+
+    def _run_fifo(self, quantity, company, lot=False):
+        self.ensure_one()
+
+        # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
+        qty_to_take_on_candidates = quantity
+        candidates = self._get_fifo_candidates(company, lot=lot)
+        new_standard_price = 0
+        tmp_value = 0  # to accumulate the value taken on the candidates
+        for candidate in candidates:
+            qty_taken_on_candidate = self._get_qty_taken_on_candidate(qty_to_take_on_candidates, candidate)
+
+            candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+            new_standard_price = candidate_unit_cost
+            value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+            value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+            new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
+            candidate_vals = {
+                'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                'remaining_value': new_remaining_value,
+            }
+
+            candidate.write(candidate_vals)
+
+            qty_to_take_on_candidates -= qty_taken_on_candidate
+            tmp_value += value_taken_on_candidate
+
+            if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                if float_is_zero(candidate.remaining_qty, precision_rounding=self.uom_id.rounding):
+                    next_candidates = candidates.filtered(lambda svl: svl.remaining_qty > 0)
+                    new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
+                break
+
+        # Fifo out will change the AVCO value of the product. So in case of out,
+        # we recompute it base on the remaining value and quantities.
+        if self.cost_method == 'fifo':
+            quantity_svl = sum(candidates.mapped('remaining_qty'))
+            value_svl = sum(candidates.mapped('remaining_value'))
+            product = self.sudo().with_company(company.id).with_context(disable_auto_svl=True)
+            if float_compare(quantity_svl, 0.0, precision_rounding=self.uom_id.rounding) > 0:
+                product.standard_price = value_svl / quantity_svl
+            elif candidates and not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                product.standard_price = new_standard_price
+
+        # If there's still quantity to value but we're out of candidates, we fall in the
+        # negative stock use case. We chose to value the out move at the price of the
+        # last out and a correction entry will be made once `_fifo_vacuum` is called.
+        vals = {}
+        if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+            vals = {
+                'value': -tmp_value,
+                'unit_cost': tmp_value / quantity,
+            }
+        else:
+            assert qty_to_take_on_candidates > 0
+            last_fifo_price = new_standard_price or self.standard_price
+            negative_stock_value = last_fifo_price * -qty_to_take_on_candidates
+            tmp_value += abs(negative_stock_value)
+            vals = {
+                'remaining_qty': -qty_to_take_on_candidates,
+                'value': -tmp_value,
+                'unit_cost': last_fifo_price,
+            }
+        return vals
+
+    def _run_fifo_vacuum(self, company=None):
+        """Compensate layer valued at an estimated price with the price of future receipts
+        if any. If the estimated price is equals to the real price, no layer is created but
+        the original layer is marked as compensated.
+
+        :param company: recordset of `res.company` to limit the execution of the vacuum
+        """
+        if company is None:
+            company = self.env.company
+        ValuationLayer = self.env['stock.valuation.layer'].sudo()
+        svls_to_vacuum_by_product = defaultdict(lambda: ValuationLayer)
+        res = ValuationLayer._read_group([
+            ('product_id', 'in', self.ids),
+            ('remaining_qty', '<', 0),
+            ('stock_move_id', '!=', False),
+            ('company_id', '=', company.id),
+        ], ['product_id'], ['id:recordset', 'create_date:min'], order='create_date:min')
+        min_create_date = datetime.max
+        if not res:
+            return
+        for group in res:
+            svls_to_vacuum_by_product[group[0].id] = group[1].sorted(key=lambda r: (r.create_date, r.id))
+            min_create_date = min(min_create_date, group[2])
+        all_candidates_by_product = defaultdict(lambda: ValuationLayer)
+        lot_to_update = []
+        res = ValuationLayer._read_group([
+            ('product_id', 'in', self.ids),
+            ('remaining_qty', '>', 0),
+            ('company_id', '=', company.id),
+            ('create_date', '>=', min_create_date),
+        ], ['product_id'], ['id:recordset'])
+        for group in res:
+            all_candidates_by_product[group[0].id] = group[1]
+
+        new_svl_vals_real_time = []
+        new_svl_vals_manual = []
+        real_time_svls_to_vacuum = ValuationLayer
+
+        for product in self.with_company(company.id):
+            all_candidates = all_candidates_by_product[product.id]
+            current_real_time_svls = ValuationLayer
+            for svl_to_vacuum in svls_to_vacuum_by_product[product.id]:
+                # We don't use search to avoid executing _flush_search and to decrease interaction with DB
+                candidates = all_candidates.filtered(
+                    lambda r: r.create_date > svl_to_vacuum.create_date
+                    or r.create_date == svl_to_vacuum.create_date
+                    and r.id > svl_to_vacuum.id
+                )
+                if product.lot_valuated:
+                    candidates = candidates.filtered(lambda r: r.lot_id == svl_to_vacuum.lot_id)
+                if not candidates:
+                    break
+                qty_to_take_on_candidates = abs(svl_to_vacuum.remaining_qty)
+                qty_taken_on_candidates = 0
+                tmp_value = 0
+                for candidate in candidates:
+                    qty_taken_on_candidate = min(candidate.remaining_qty, qty_to_take_on_candidates)
+                    qty_taken_on_candidates += qty_taken_on_candidate
+
+                    candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+                    value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+                    value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+                    new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
+                    candidate_vals = {
+                        'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                        'remaining_value': new_remaining_value
+                    }
+                    candidate.write(candidate_vals)
+                    if not (candidate.remaining_qty > 0):
+                        all_candidates -= candidate
+
+                    qty_to_take_on_candidates -= qty_taken_on_candidate
+                    tmp_value += value_taken_on_candidate
+                    if float_is_zero(qty_to_take_on_candidates, precision_rounding=product.uom_id.rounding):
+                        break
+
+                # Get the estimated value we will correct.
+                remaining_value_before_vacuum = svl_to_vacuum.unit_cost * qty_taken_on_candidates
+                new_remaining_qty = svl_to_vacuum.remaining_qty + qty_taken_on_candidates
+                corrected_value = remaining_value_before_vacuum - tmp_value
+                svl_to_vacuum.write({
+                    'remaining_qty': new_remaining_qty,
+                })
+
+                # Don't create a layer or an accounting entry if the corrected value is zero.
+                if svl_to_vacuum.currency_id.is_zero(corrected_value):
+                    continue
+
+                corrected_value = svl_to_vacuum.currency_id.round(corrected_value)
+
+                move = svl_to_vacuum.stock_move_id
+                new_svl_vals = new_svl_vals_real_time if product.valuation == 'real_time' else new_svl_vals_manual
+                new_svl_vals.append({
+                    'product_id': product.id,
+                    'value': corrected_value,
+                    'unit_cost': 0,
+                    'quantity': 0,
+                    'remaining_qty': 0,
+                    'stock_move_id': move.id,
+                    'company_id': move.company_id.id,
+                    'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.name),
+                    'stock_valuation_layer_id': svl_to_vacuum.id,
+                    'lot_id': svl_to_vacuum.lot_id.id,
+                })
+                lot_to_update.append(svl_to_vacuum.lot_id)
+                if product.valuation == 'real_time':
+                    current_real_time_svls |= svl_to_vacuum
+            real_time_svls_to_vacuum |= current_real_time_svls
+        ValuationLayer.create(new_svl_vals_manual)
+        vacuum_svls = ValuationLayer.create(new_svl_vals_real_time)
+
+        # If some negative stock were fixed, we need to recompute the standard price.
+        for product in self:
+            product = product.with_company(company.id)
+            if not svls_to_vacuum_by_product[product.id]:
+                continue
+            if product.cost_method not in ['average', 'fifo'] or float_is_zero(product.quantity_svl,
+                                                                      precision_rounding=product.uom_id.rounding):
+                continue
+            if product.lot_valuated:
+                for lot in lot_to_update:
+                    if float_is_zero(lot.quantity_svl, precision_rounding=product.uom_id.rounding):
+                        continue
+                    lot.sudo().with_context(disable_auto_svl=True).write(
+                        {'standard_price': lot.value_svl / lot.quantity_svl}
+                    )
+            product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+
+        vacuum_svls._validate_accounting_entries()
+        self._create_fifo_vacuum_anglo_saxon_expense_entries(zip(vacuum_svls, real_time_svls_to_vacuum))
+
+    @api.model
+    def _create_fifo_vacuum_anglo_saxon_expense_entries(self, vacuum_pairs):
+        """ Batch version of _create_fifo_vacuum_anglo_saxon_expense_entry
+        """
+        AccountMove = self.env['account.move'].sudo()
+        account_move_vals = []
+        vacuum_pairs_to_reconcile = []
+        svls_accounts = {}
+        for vacuum_svl, svl_to_vacuum in vacuum_pairs:
+            if not vacuum_svl.company_id.anglo_saxon_accounting or not svl_to_vacuum.stock_move_id._is_out():
+                continue
+            account_move_lines = svl_to_vacuum.account_move_id.line_ids
+            # Find related customer invoice where product is delivered while you don't have units in stock anymore
+            reconciled_line_ids = list(set(account_move_lines._reconciled_lines()) - set(account_move_lines.ids))
+            account_move = AccountMove.search([('line_ids', 'in', reconciled_line_ids)], limit=1)
+            # If delivered quantity is not invoiced then no need to create this entry
+            if not account_move:
+                continue
+            accounts = svl_to_vacuum.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=account_move.fiscal_position_id)
+            if not accounts.get('stock_output') or not accounts.get('expense'):
+                continue
+            svls_accounts[svl_to_vacuum.id] = accounts
+            description = "Expenses %s" % (vacuum_svl.description)
+            move_lines = vacuum_svl.stock_move_id._prepare_account_move_line(
+            vacuum_svl.quantity, vacuum_svl.value * -1,
+            accounts['stock_output'].id, accounts['expense'].id,
+            vacuum_svl.id, description)
+            account_move_vals.append({
+                'journal_id': accounts['stock_journal'].id,
+                'line_ids': move_lines,
+                'date': self._context.get('force_period_date', fields.Date.context_today(self)),
+                'ref': description,
+                'stock_move_id': vacuum_svl.stock_move_id.id,
+                'move_type': 'entry',
+=======
+                'description': _(
+                    'Product value manually modified (from %(original_price)s to %(new_price)s)',
+                    original_price=product.standard_price,
+                    new_price=rounded_new_price,
+                ),
+                'value': value,
+                'quantity': 0,
+            }
+            svl_vals_list.append(svl_vals)
+        stock_valuation_layers = self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
+        stock_valuation_layers._change_standart_price_accounting_entries(new_price)
+
+    def _get_fifo_candidates_domain(self, company, lot=False):
+        return [
+            ("product_id", "=", self.id),
+            ("remaining_qty", ">", 0),
+            ("company_id", "=", company.id),
+            ("lot_id", "=", lot.id if lot else False),
+        ]
+
+    def _get_fifo_candidates(self, company, lot=False):
+        candidates_domain = self._get_fifo_candidates_domain(company, lot=lot)
+        return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
+
+    def _get_qty_taken_on_candidate(self, qty_to_take_on_candidates, candidate):
+        return min(qty_to_take_on_candidates, candidate.remaining_qty)
+
+    def _run_fifo(self, quantity, company, lot=False):
+        self.ensure_one()
+
+        # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
+        qty_to_take_on_candidates = quantity
+        candidates = self._get_fifo_candidates(company, lot=lot)
+        new_standard_price = 0
+        tmp_value = 0  # to accumulate the value taken on the candidates
+        for candidate in candidates:
+            qty_taken_on_candidate = self._get_qty_taken_on_candidate(qty_to_take_on_candidates, candidate)
+
+            candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+            new_standard_price = candidate_unit_cost
+            value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+            value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+            new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
+            candidate_vals = {
+                'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                'remaining_value': new_remaining_value,
+            }
+
+            candidate.write(candidate_vals)
+
+            qty_to_take_on_candidates -= qty_taken_on_candidate
+            tmp_value += value_taken_on_candidate
+
+            if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                if float_is_zero(candidate.remaining_qty, precision_rounding=self.uom_id.rounding):
+                    next_candidates = candidates.filtered(lambda svl: svl.remaining_qty > 0)
+                    new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
+                break
+
+        # Fifo out will change the AVCO value of the product. So in case of out,
+        # we recompute it base on the remaining value and quantities.
+        if self.cost_method == 'fifo':
+            quantity_svl = sum(candidates.mapped('remaining_qty'))
+            value_svl = sum(candidates.mapped('remaining_value'))
+            product = self.sudo().with_company(company.id).with_context(disable_auto_svl=True)
+            if float_compare(quantity_svl, 0.0, precision_rounding=self.uom_id.rounding) > 0:
+                product.standard_price = value_svl / quantity_svl
+            elif candidates and not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                product.standard_price = new_standard_price
+
+        # If there's still quantity to value but we're out of candidates, we fall in the
+        # negative stock use case. We chose to value the out move at the price of the
+        # last out and a correction entry will be made once `_fifo_vacuum` is called.
+        vals = {}
+        if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+            vals = {
+                'value': -tmp_value,
+                'unit_cost': tmp_value / quantity,
+            }
+        else:
+            assert qty_to_take_on_candidates > 0
+            last_fifo_price = new_standard_price or self.standard_price
+            negative_stock_value = last_fifo_price * -qty_to_take_on_candidates
+            tmp_value += abs(negative_stock_value)
+            vals = {
+                'remaining_qty': -qty_to_take_on_candidates,
+                'value': -tmp_value,
+                'unit_cost': last_fifo_price,
+            }
+        return vals
+
+    def _run_fifo_vacuum(self, company=None):
+        """Compensate layer valued at an estimated price with the price of future receipts
+        if any. If the estimated price is equals to the real price, no layer is created but
+        the original layer is marked as compensated.
+
+        :param company: recordset of `res.company` to limit the execution of the vacuum
+        """
+        if company is None:
+            company = self.env.company
+        ValuationLayer = self.env['stock.valuation.layer'].sudo()
+        svls_to_vacuum_by_product = defaultdict(lambda: ValuationLayer)
+        res = ValuationLayer._read_group([
+            ('product_id', 'in', self.ids),
+            ('remaining_qty', '<', 0),
+            ('stock_move_id', '!=', False),
+            ('company_id', '=', company.id),
+        ], ['product_id'], ['id:recordset', 'create_date:min'], order='create_date:min')
+        min_create_date = datetime.max
+        if not res:
+            return
+        for group in res:
+            svls_to_vacuum_by_product[group[0].id] = group[1].sorted(key=lambda r: (r.create_date, r.id))
+            min_create_date = min(min_create_date, group[2])
+        all_candidates_by_product = defaultdict(lambda: ValuationLayer)
+        lot_to_update = []
+        res = ValuationLayer._read_group([
+            ('product_id', 'in', self.ids),
+            ('remaining_qty', '>', 0),
+            ('company_id', '=', company.id),
+            ('create_date', '>=', min_create_date),
+        ], ['product_id'], ['id:recordset'])
+        for group in res:
+            all_candidates_by_product[group[0].id] = group[1]
+
+        new_svl_vals_real_time = []
+        new_svl_vals_manual = []
+        real_time_svls_to_vacuum = ValuationLayer
+
+        for product in self.with_company(company.id):
+            all_candidates = all_candidates_by_product[product.id]
+            current_real_time_svls = ValuationLayer
+            for svl_to_vacuum in svls_to_vacuum_by_product[product.id]:
+                # We don't use search to avoid executing _flush_search and to decrease interaction with DB
+                candidates = all_candidates.filtered(
+                    lambda r: r.create_date > svl_to_vacuum.create_date
+                    or r.create_date == svl_to_vacuum.create_date
+                    and r.id > svl_to_vacuum.id
+                )
+                if product.lot_valuated:
+                    candidates = candidates.filtered(lambda r: r.lot_id == svl_to_vacuum.lot_id)
+                if not candidates:
+                    break
+                qty_to_take_on_candidates = abs(svl_to_vacuum.remaining_qty)
+                qty_taken_on_candidates = 0
+                tmp_value = 0
+                for candidate in candidates:
+                    qty_taken_on_candidate = min(candidate.remaining_qty, qty_to_take_on_candidates)
+                    qty_taken_on_candidates += qty_taken_on_candidate
+
+                    candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+                    value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+                    value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+                    new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
+                    candidate_vals = {
+                        'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                        'remaining_value': new_remaining_value
+                    }
+                    candidate.write(candidate_vals)
+                    if not (candidate.remaining_qty > 0):
+                        all_candidates -= candidate
+
+                    qty_to_take_on_candidates -= qty_taken_on_candidate
+                    tmp_value += value_taken_on_candidate
+                    if float_is_zero(qty_to_take_on_candidates, precision_rounding=product.uom_id.rounding):
+                        break
+
+                # Get the estimated value we will correct.
+                remaining_value_before_vacuum = svl_to_vacuum.unit_cost * qty_taken_on_candidates
+                new_remaining_qty = svl_to_vacuum.remaining_qty + qty_taken_on_candidates
+                corrected_value = remaining_value_before_vacuum - tmp_value
+                svl_to_vacuum.write({
+                    'remaining_qty': new_remaining_qty,
+                })
+
+                # Don't create a layer or an accounting entry if the corrected value is zero.
+                if svl_to_vacuum.currency_id.is_zero(corrected_value):
+                    continue
+
+                corrected_value = svl_to_vacuum.currency_id.round(corrected_value)
+
+                move = svl_to_vacuum.stock_move_id
+                new_svl_vals = new_svl_vals_real_time if product.valuation == 'real_time' else new_svl_vals_manual
+                new_svl_vals.append({
+                    'product_id': product.id,
+                    'value': corrected_value,
+                    'unit_cost': 0,
+                    'quantity': 0,
+                    'remaining_qty': 0,
+                    'stock_move_id': move.id,
+                    'company_id': move.company_id.id,
+                    'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.name),
+                    'stock_valuation_layer_id': svl_to_vacuum.id,
+                    'lot_id': svl_to_vacuum.lot_id.id,
+                })
+                lot_to_update.append(svl_to_vacuum.lot_id)
+                if product.valuation == 'real_time':
+                    current_real_time_svls |= svl_to_vacuum
+            real_time_svls_to_vacuum |= current_real_time_svls
+        ValuationLayer.create(new_svl_vals_manual)
+        vacuum_svls = ValuationLayer.create(new_svl_vals_real_time)
+
+        # If some negative stock were fixed, we need to recompute the standard price.
+        for product in self:
+            product = product.with_company(company.id)
+            if not svls_to_vacuum_by_product[product.id]:
+                continue
+            if product.cost_method not in ['average', 'fifo'] or float_is_zero(product.quantity_svl,
+                                                                      precision_rounding=product.uom_id.rounding):
+                continue
+            if product.lot_valuated:
+                for lot in lot_to_update:
+                    if float_is_zero(lot.quantity_svl, precision_rounding=product.uom_id.rounding):
+                        continue
+                    lot.sudo().with_context(disable_auto_svl=True).write(
+                        {'standard_price': lot.value_svl / lot.quantity_svl}
+                    )
+            product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+
+        vacuum_svls._validate_accounting_entries()
+        self._create_fifo_vacuum_anglo_saxon_expense_entries(zip(vacuum_svls, real_time_svls_to_vacuum))
+
+    @api.model
+    def _create_fifo_vacuum_anglo_saxon_expense_entries(self, vacuum_pairs):
+        """ Batch version of _create_fifo_vacuum_anglo_saxon_expense_entry
+        """
+        AccountMove = self.env['account.move'].sudo()
+        account_move_vals = []
+        vacuum_pairs_to_reconcile = []
+        svls_accounts = {}
+        for vacuum_svl, svl_to_vacuum in vacuum_pairs:
+            if not vacuum_svl.company_id.anglo_saxon_accounting or not svl_to_vacuum.stock_move_id._is_out():
+                continue
+            account_move_lines = svl_to_vacuum.account_move_id.line_ids
+            # Find related customer invoice where product is delivered while you don't have units in stock anymore
+            reconciled_line_ids = list(set(account_move_lines._reconciled_lines()) - set(account_move_lines.ids))
+            account_move = AccountMove.search([('line_ids', 'in', reconciled_line_ids)], limit=1)
+            # If delivered quantity is not invoiced then no need to create this entry
+            if not account_move:
+                continue
+            accounts = svl_to_vacuum.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=account_move.fiscal_position_id)
+            if not accounts.get('stock_output') or not accounts.get('expense'):
+                continue
+            svls_accounts[svl_to_vacuum.id] = accounts
+            description = "Expenses %s" % (vacuum_svl.description)
+            move_lines = vacuum_svl.stock_move_id._prepare_account_move_line(
+            vacuum_svl.quantity, vacuum_svl.value * -1,
+            accounts['stock_output'].id, accounts['expense'].id,
+            vacuum_svl.id, description)
+            account_move_vals.append({
+                'journal_id': accounts['stock_journal'].id,
+                'line_ids': move_lines,
+                'date': self._context.get('force_period_date', fields.Date.context_today(self)),
+                'ref': description,
+                'stock_move_id': vacuum_svl.stock_move_id.id,
+                'move_type': 'entry',
+>>>>>>> 27fa43467d14f6d4aa0bcfe5b135b3c5a429df18
             })
         return
 
