@@ -449,16 +449,11 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.assertRecordValues(mo.move_raw_ids, [
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
         ])
-        move = self.env['stock.move'].create({
-            'name': mo.name,
-            'product_id': compo2.id,
-            'raw_material_production_id': mo.id,
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.company.id)]).id,
-        })
-        move.should_consume_qty = 1
-        move.quantity = 1
-        move._action_assign()
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as move_form:
+            move_form.product_id = compo2
+            move_form.product_uom_qty = 1
+        mo = mo_form.save()
         self.assertRecordValues(mo.move_raw_ids, [
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
