@@ -11570,7 +11570,7 @@ test("quick create record and click outside (no dirty input)", async () => {
     await createKanbanRecord();
 
     expect.verifySteps(["create record"]);
-    expect(".o_kanban_quick_create").toHaveCount(0);
+    expect(".o_kanban_quick_create").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -11636,7 +11636,7 @@ test("quick create record and click outside (with dirty input)", async () => {
     await createKanbanRecord();
 
     expect.verifySteps(["create record"]);
-    expect(".o_kanban_quick_create").toHaveCount(0);
+    expect(".o_kanban_quick_create").toHaveCount(1);
 });
 
 test("quick create record and click on 'Load more'", async () => {

@@ -110,6 +110,9 @@ export class KanbanQuickCreateController extends Component {
                     for (const selector of ACTION_SELECTORS) {
                         const closestEl = target.closest(selector);
                         if (closestEl) {
+                            if (closestEl.classList.contains('o-kanban-button-new')) {
+                                this.validate("add");
+                            }
                             force = true;
                             break;
                         }
