@@ -178,7 +178,7 @@ class IrUiMenu(models.Model):
         direct_children = self.with_context(active_test=False).search([('parent_id', 'in', self.ids)])
         direct_children.write({'parent_id': False})
 
-        return super(IrUiMenu, self).unlink()
+        return super().unlink()
 
     def copy(self, default=None):
         new_menus = super().copy(default=default)
