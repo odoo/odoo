@@ -621,12 +621,14 @@ class TestProjectSubtasks(TestProjectCommon):
             'user_ids': [(4, employee.id)],
         })
 
-        # Ensure the employee can read subtask fields
+        # Ensure the employee can read subtask fields that depends on the parent task
+        parent_dependent_fields = [
+            name for name, field in self.env['project.task']._fields.items()
+            if field.compute and any(dep.startswith('parent_id') for dep in field.get_depends(self.env['project.task'])[0])
+        ]
 
-        # List to be extended in future fixes if more fields give same error
-        fields_to_read = ["display_in_project"]
         self.env.invalidate_all()
-        subtask_data = subtask.with_user(employee).read(fields_to_read)
+        subtask_data = subtask.with_user(employee).read(parent_dependent_fields)
         self.assertTrue(subtask_data, "The employee should be able to read the subtask data.")
 
     def test_subtasks_inherits_tags_of_parent(self):
