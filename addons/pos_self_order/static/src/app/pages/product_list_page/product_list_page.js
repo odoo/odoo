@@ -154,10 +154,7 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
-        if (this.selfOrder.kioskMode && category.child_ids?.length > 0) {
-            return category.associatedProducts;
-        }
-        return this.selfOrder.productByCategIds[category.id] || [];
+        return category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
     }
 
     toggleSubCategoryPanel() {
