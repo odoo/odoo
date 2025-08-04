@@ -9,6 +9,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { transformDiscussAction } from "./discuss_actions_definition";
 
 const { DateTime } = luxon;
 
@@ -179,15 +180,10 @@ messageActionsRegistry
 function transformAction(component, id, action) {
     return {
         component: action.component,
-        id,
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,
         /** Condition to display this action. */
         get condition() {
             return messageActionsInternal.condition(component, id, action);
-        },
-        /** If set, this is considered as a danger (destructive) action. */
-        get danger() {
-            return typeof action.danger === "function" ? action.danger(component) : action.danger;
         },
         /** Icon for the button this action. */
         get icon() {
@@ -204,12 +200,6 @@ function transformAction(component, id, action) {
         onSelected(ev) {
             return action.onSelected?.(component, this, ev);
         },
-        /** Determines the order of this action (smaller first). */
-        get sequence() {
-            return messageActionsInternal.sequence(component, id, action);
-        },
-        /** Component setup to execute when this action is registered. */
-        setup: action.setup,
     };
 }
 
@@ -224,9 +214,11 @@ export const messageActionsInternal = {
 
 export function useMessageActions() {
     const component = useComponent();
-    const transformedActions = messageActionsRegistry
-        .getEntries()
-        .map(([id, action]) => transformAction(component, id, action));
+    const transformedActions = messageActionsRegistry.getEntries().map(([id, action]) => {
+        const act = transformAction(component, id, action);
+        Object.setPrototypeOf(act, transformDiscussAction(component, id, action));
+        return act;
+    });
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);

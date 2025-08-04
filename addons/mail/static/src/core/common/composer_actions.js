@@ -4,6 +4,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
+import { transformDiscussAction } from "./discuss_actions_definition";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -159,7 +160,6 @@ function transformAction(component, id, action) {
         get icon() {
             return typeof action.icon === "function" ? action.icon(component) : action.icon;
         },
-        id,
         isPicker: action.isPicker,
         get name() {
             return typeof action.name === "function" ? action.name(component) : action.name;
@@ -172,11 +172,6 @@ function transformAction(component, id, action) {
                 ? action.pickerName(component)
                 : action.pickerName;
         },
-        get sequence() {
-            return typeof action.sequence === "function"
-                ? action.sequence(component)
-                : action.sequence;
-        },
         get sequenceGroup() {
             return typeof action.sequenceGroup === "function"
                 ? action.sequenceGroup(component)
@@ -187,7 +182,6 @@ function transformAction(component, id, action) {
                 ? action.sequenceQuick(component)
                 : action.sequenceQuick;
         },
-        setup: action.setup,
     };
 }
 
@@ -204,9 +198,11 @@ export const composerActionsInternal = {
 
 export function useComposerActions() {
     const component = useComponent();
-    const transformedActions = composerActionsRegistry
-        .getEntries()
-        .map(([id, action]) => transformAction(component, id, action));
+    const transformedActions = composerActionsRegistry.getEntries().map(([id, action]) => {
+        const act = transformAction(component, id, action);
+        Object.setPrototypeOf(act, transformDiscussAction(component, id, action));
+        return act;
+    });
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);
