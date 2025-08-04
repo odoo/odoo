@@ -588,11 +588,25 @@ export class SearchBar extends Component {
         }
         const query = ev.target.value;
         if (query.trim()) {
-            this.inputDropdownState.open();
+            if (!ev.isComposing) {
+                // Protection for IME input
+                this.inputDropdownState.open();
+            }
             this.computeState({ query, expanded: [], subItems: [] });
         } else if (this.items.length) {
             this.inputDropdownState.close();
             this.resetState();
+        }
+    }
+    
+    /**
+     * @param {CompositionEvent} ev
+     */
+    onCompositionEnd(ev) {
+        const query = ev.target.value;
+        if (query.trim()) {
+            // Open dropdown after IME composition is complete
+            this.inputDropdownState.open();
         }
     }
 
