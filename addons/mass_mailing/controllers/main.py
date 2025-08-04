@@ -236,8 +236,9 @@ class MassMailController(http.Controller):
         # as there may be several contacts / email -> consider any opt-in overrides
         # opt-out
         contacts = self._fetch_contacts(email)
+        # private mailing lists are managed directly from received emails, with unsubscription links
         lists_optin = contacts.subscription_ids.filtered(
-            lambda sub: not sub.opt_out
+            lambda sub: not sub.opt_out and sub.list_id.is_public
         ).list_id.filtered('active')
         lists_optout = contacts.subscription_ids.filtered(
             lambda sub: sub.opt_out and sub.list_id not in lists_optin
