@@ -200,7 +200,7 @@ export function convertNumericToUnit(value, unitFrom, unitTo, htmlStyle) {
     if (converter === undefined) {
         throw new Error(`Cannot convert '${unitFrom}' units into '${unitTo}' units !`);
     }
-    return value * converter(htmlStyle);
+    return parseFloat((value * converter(htmlStyle)).toFixed(3));
 }
 
 export function getHtmlStyle(document) {
