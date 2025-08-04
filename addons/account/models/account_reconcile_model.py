@@ -150,10 +150,10 @@ class AccountReconcileModel(models.Model):
                 except re.error:
                     raise UserError(_('The regex is not valid'))
 
-    @api.depends('mapped_partner_id', 'match_label', 'match_partner_ids', 'trigger')
+    @api.depends('mapped_partner_id', 'match_label', 'match_amount', 'match_partner_ids', 'trigger')
     def _compute_can_be_proposed(self):
         for model in self:
-            model.can_be_proposed = not model.mapped_partner_id and (model.match_label or model.match_partner_ids or model.trigger == 'auto_reconcile')
+            model.can_be_proposed = not model.mapped_partner_id and (model.match_label or model.match_amount or model.match_partner_ids or model.trigger == 'auto_reconcile')
 
     @api.depends('match_label', 'line_ids.partner_id', 'line_ids.account_id')
     def _compute_partner_mapping(self):
