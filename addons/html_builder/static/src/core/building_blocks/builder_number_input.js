@@ -108,12 +108,21 @@ export class BuilderNumberInput extends Component {
         displayValue = displayValue.replace(/,/g, ".");
         // Only accept 0-9, dot, - sign and space if multiple values are allowed
         if (this.props.composable) {
-            displayValue = displayValue.replace(/[^0-9.-\s]/g, "");
+            displayValue = displayValue
+                .trim()
+                .replace(/[^0-9.-\s]/g, "")
+                .replace(/(?<!^|\s)-/g, "");
         } else {
             displayValue = displayValue
                 .trim()
+                // Remove any space after a "-" to accept "- 10" as "-10"
+                .replace(/-\s*/g, "-")
                 .split(" ")[0]
-                .replace(/[^0-9.-]/g, "");
+                .replace(/[^0-9.-]/g, "")
+                // Only keep "-" if it is at the start
+                .replace(/(?<!^)-/g, "")
+                // Only keep the first "."
+                .replace(/^([^.]*)\.?(.*)/, (_, a, b) => a + (b ? '.' + b.replace(/\./g, '') : ''));
         }
         displayValue = displayValue.split(" ").map(this.clampValue.bind(this)).join(" ");
 
