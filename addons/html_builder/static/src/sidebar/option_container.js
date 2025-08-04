@@ -106,11 +106,11 @@ export class OptionsContainer extends BaseOptionComponent {
         }
     }
 
-    onMouseEnter() {
+    onPointerEnter() {
         this.toggleOverlayPreview(this.props.editingElement, true);
     }
 
-    onMouseLeave() {
+    onPointerLeave() {
         this.toggleOverlayPreview(this.props.editingElement, false);
     }
 
