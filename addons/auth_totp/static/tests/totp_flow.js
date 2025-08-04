@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     run: "click",
 },
 {
-    trigger: ".modal div:contains(entering your password)",
+    trigger: ".modal div:contains(Enter your current password)",
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -312,7 +312,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     run: "click",
 },
 {
-    trigger: ".modal div:contains(entering your password)",
+    trigger: ".modal div:contains(Enter your current password)",
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -406,7 +406,7 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     run: "click",
 },
 {
-    trigger: ".modal div:contains(entering your password)",
+    trigger: ".modal div:contains(Enter your current password)",
 },
 { // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
