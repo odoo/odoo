@@ -566,7 +566,12 @@ class MailMessage(models.Model):
             for document_domain, operation_res_ids in documents._mail_get_operation_for_mail_message_operation(operation):
                 if not documents:
                     break
-                records = documents.sudo().filtered_domain(document_domain).with_env(documents.env)
+                try:
+                    records = documents.sudo().filtered_domain(document_domain).with_env(documents.env)
+                except MissingError:
+                    # some documents don't exist, they are inaccessible
+                    documents = documents.exists()
+                    records = documents.sudo().filtered_domain(document_domain).with_env(documents.env)
                 documents -= records
                 accessible_doc_ids = records._filtered_access(operation_res_ids)._ids
                 for res_id in accessible_doc_ids:
