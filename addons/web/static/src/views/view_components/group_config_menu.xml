@@ -9,6 +9,7 @@
                 <t t-set-slot="content">
                     <t t-foreach="configItems" t-as="item" t-key="item.key">
                         <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() => item.method()">
+                            <i t-if="item.icon" class="fa pe-2" t-att-class="item.icon"/>
                             <t t-esc="item.label"/>
                         </DropdownItem>
                     </t>
