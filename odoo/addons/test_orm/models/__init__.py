@@ -7,4 +7,5 @@ from . import (
     test_performance,
     test_read_group,
     test_unity_read,
+    test_config,
 )
