@@ -430,39 +430,6 @@
         <field name="attribute_id" ref="pa_duration"/>
     </record>
 
-    <!-- Extras -->
-    <record id="pa_extras_pizza" model="product.attribute" >
-        <field name="name">Extras</field>
-        <field name="create_variant">no_variant</field>
-        <field name="display_type">multi</field>
-        <field name="sequence">70</field>
-    </record>
-
-    <record id="pav_extras_pizza_pepperoni" model="product.attribute.value">
-        <field name="name">Pepperoni</field>
-        <field name="attribute_id" ref="pa_extras_pizza"/>
-    </record>
-
-    <record id="pav_extras_pizza_mushroom" model="product.attribute.value">
-        <field name="name">Mushroom</field>
-        <field name="attribute_id" ref="pa_extras_pizza"/>
-    </record>
-
-    <record id="pav_extras_pizza_black_olives" model="product.attribute.value">
-        <field name="name">Black olives</field>
-        <field name="attribute_id" ref="pa_extras_pizza"/>
-    </record>
-
-    <record id="pav_extras_pizza_anchovy" model="product.attribute.value">
-        <field name="name">Anchovy</field>
-        <field name="attribute_id" ref="pa_extras_pizza"/>
-    </record>
-
-    <record id="pav_extras_pizza_extra_cheese" model="product.attribute.value">
-        <field name="name">Extra cheese</field>
-        <field name="attribute_id" ref="pa_extras_pizza"/>
-    </record>
-
     <!-- Fabric -->
     <record id="pa_fabric" model="product.attribute">
         <field name="name">Fabric</field>
