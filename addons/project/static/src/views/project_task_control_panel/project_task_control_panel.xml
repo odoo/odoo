@@ -3,15 +3,13 @@
 
     <t t-name="project.ProjectTaskControlPanel" t-inherit="web.ControlPanel">
         <xpath expr="//button[@name='embedded_actions']" position="replace">
-            <t t-if="showTaskOptions">
+            <t t-if="showTaskOptions and !env.isSmall or env.isSmall and !state.embeddedInfos.embeddedActions?.length">
                 <Dropdown>
                     <button class="btn btn-secondary" t-att-title="taskOptionsTitle">
                         <i class="fa fa-sliders"/>
                     </button>
                     <t t-set-slot="content">
-                        <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="state.showSubtasks ? 'selected' : ''">
-                            Show Sub-Tasks
-                        </DropdownItem>
+                        <t t-call="showSubtasksAction"/>
                         <DropdownItem t-if="state.embeddedInfos.embeddedActions?.length and !env.isSmall"
                             class="state.embeddedInfos.showEmbedded ? 'selected' : ''"
                             onSelected="() => this.onClickShowEmbedded()"
@@ -22,6 +20,19 @@
                 </Dropdown>
             </t>
         </xpath>
+    </t>
+
+    <t t-name="project.TaskembeddedActionsDropdown" t-inherit="web.embeddedActionsDropdown" t-inherit-mode="primary">
+        <xpath expr="//t[@t-foreach='state.embeddedInfos.embeddedActions']" position="before">
+            <t t-call="showSubtasksAction"/>
+            <div role="separator" class="dropdown-divider"/>
+        </xpath>
+    </t>
+
+    <t t-name="showSubtasksAction">
+        <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="state.showSubtasks ? 'selected' : ''">
+            Show Sub-Tasks
+        </DropdownItem>
     </t>
 
 </templates>
