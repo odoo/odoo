@@ -13,6 +13,12 @@ commandCategoryRegistry
     .add(DISCUSS_RECENT, { namespace: "@", name: _t("Recent") }, { sequence: 20 });
 
 patch(DiscussCommandPalette.prototype, {
+    async fetch() {
+        await this.store.channels.fetch();
+        if (this.cleanedTerm) {
+            await this.store.searchConversations(this.cleanedTerm);
+        }
+    },
     buildResults() {
         const importantChannels = this.store.getSelfImportantChannels();
         const recentChannels = this.store.getSelfRecentChannels();

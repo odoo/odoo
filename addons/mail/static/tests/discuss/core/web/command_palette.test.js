@@ -120,17 +120,15 @@ test("only partners with dedicated users will be displayed in command palette", 
     const pyEnv = await startServer();
     const demoUid = pyEnv["res.users"].create({ name: "Demo" });
     pyEnv["res.partner"].create({ name: "Demo", user_ids: [demoUid] });
-    pyEnv["res.partner"].create({ name: "Portal" });
+    pyEnv["res.partner"].create({ name: "Demo (Portal)" });
     await start();
     triggerHotkey("control+k");
-    await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command_name", { count: 5 });
+    await insertText(".o_command_palette_search input", "@demo");
+    await contains(".o_command_name", { count: 3 });
     await contains(".o_command_name", { text: "Demo" });
-    await contains(".o_command_name", { text: "OdooBot" });
-    await contains(".o_command_name", { text: "Mitchell Admin" }); // self-conversation
     await contains(".o_command_name", { text: "Create Channel" });
     await contains(".o_command_name", { text: "Create Chat" });
-    await contains(".o_command_name", { text: "Portal", count: 0 });
+    await contains(".o_command_name", { text: "Demo (Portal)", count: 0 });
 });
 
 test("hide conversations in recent if they have mentions", async () => {
