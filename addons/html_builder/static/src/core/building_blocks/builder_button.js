@@ -35,8 +35,8 @@ export class BuilderButton extends Component {
         const { state, operation } = useSelectableItemComponent(this.props.id);
         this.state = state;
         this.onClick = operation.commit;
-        this.onMouseenter = operation.preview;
-        this.onMouseleave = operation.revert;
+        this.onPointerEnter = operation.preview;
+        this.onPointerLeave = operation.revert;
     }
 
     get className() {
