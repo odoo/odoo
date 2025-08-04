@@ -278,12 +278,14 @@ class Website(models.Model):
         website_settings = {}
         views_to_disable = []
         views_to_enable = []
+        scss_customization_params = {}
         ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_['website_fields'])
             views_to_disable.extend(style_config_['views']['disable'])
             views_to_enable.extend(style_config_['views']['enable'])
+            scss_customization_params.update(style_config_.get('scss_customization_params', {}))
 
         # Extract shop page settings.
         if shop_page_style_option:
@@ -308,6 +310,12 @@ class Website(models.Model):
         for xml_id in views_to_enable:
             ThemeUtils.enable_view(xml_id)
 
+        # Apply SCSS customizations if any.
+        if scss_customization_params:
+            self.env['web_editor.assets'].make_scss_customization(
+                '/website/static/src/scss/options/user_values.scss',
+                scss_customization_params,
+            )
         return res
 
     def configurator_addons_apply(self, industry_name=None, **kwargs):

@@ -11,120 +11,201 @@ SHOP_PAGE_STYLE_MAPPING = {
         'title': _lt("Classic Grid"),
         'img_src': '/website_sale/static/src/img/configurator/shop/classic_grid.jpg',
         'views': {
-            'enable': [
-                'website.template_header_sales_one',  # Header
-            ],
+            'enable': [],
             'disable': [],
         },
-        'website_fields': {},  # Default
+        'website_fields': {
+            'shop_opt_products_design_classes': 'o_wsale_products_opt_layout_catalog '
+                                                'o_wsale_products_opt_design_thumbs '
+                                                'o_wsale_products_opt_name_color_regular '
+                                                'o_wsale_products_opt_thumb_cover '
+                                                'o_wsale_products_opt_img_secondary_show '
+                                                'o_wsale_products_opt_img_hover_zoom_out_light '
+                                                'o_wsale_products_opt_has_cta '
+                                                'o_wsale_products_opt_actions_onhover '
+                                                'o_wsale_products_opt_has_wishlist '
+                                                'o_wsale_products_opt_wishlist_fixed '
+                                                'o_wsale_products_opt_cc1 '
+                                                'o_wsale_products_opt_rounded_2 '
+                                                'o_wsale_products_opt_has_comparison '
+                                                'o_wsale_products_opt_actions_promote',
+        },
     },
-    'modern_showcase': {
-        'title': _lt("Modern Showcase"),
-        'img_src': '/website_sale/static/src/img/configurator/shop/modern_showcase.jpg',
+    'modern_grid': {
+        'title': _lt("Modern Grid"),
+        'img_src': '/website_sale/static/src/img/configurator/shop/modern_grid.jpg',
         'views': {
             'enable': [
-                'website_sale.shop_fullwidth',  # Content width
-                'website_sale.products_design_grid',  # Style
-                'website_sale.products_thumb_4_5',  # Style/Images size
-                'website_sale.products_attributes_top',  # Filters
-                'website_sale.floating_bar',  # Toolbar/floating
-                'website.template_header_search',  # Header
+                'website.template_header_search',  # Header menu with search bar
                 'website.header_width_full',  # Header width
+                'website_sale.shop_fullwidth',  # Content Fullwidth
+                'website_sale.products_mobile_cols_single',  # Mobile cols single
+                'website_sale.filmstrip_categories_grid',  # Category style
             ],
-            'disable': [
-                'website_sale.products_design_card',  # Style
-                'website_sale.products_design_thumbs',  # Style
-                'website_sale.products_thumb_4_3',  # Images size
-                'website_sale.products_thumb_2_3',  # Images size
-                'website_sale.products_attributes',  # Filters
-                'website.header_width_small',  # Header width
-            ],
+            'disable': [],
         },
         'website_fields': {
             'shop_ppr': 5,
             'shop_gap': '0px',
+            'shop_opt_products_design_classes': 'o_wsale_products_opt_thumb_cover '
+                                                'o_wsale_products_opt_img_hover_zoom_out_light '
+                                                'o_wsale_products_opt_has_cta '
+                                                'o_wsale_products_opt_has_wishlist '
+                                                'o_wsale_products_opt_has_comparison '
+                                                'o_wsale_products_opt_actions_onhover '
+                                                'o_wsale_products_opt_wishlist_fixed '
+                                                'o_wsale_products_opt_layout_catalog '
+                                                'o_wsale_products_opt_design_grid '
+                                                'o_wsale_products_opt_actions_theme '
+                                                'o_wsale_products_opt_img_secondary_show '
+                                                'o_wsale_products_opt_thumb_4_5 '
+                                                'o_wsale_products_opt_text_align_center',
+        },
+        'scss_customization_params': {
+            'header-links-style': 'default',
+            'header-template': 'search',
         },
     },
-    'compact_list': {
-        'title': _lt("Compact List"),
-        'img_src': '/website_sale/static/src/img/configurator/shop/compact_list.jpg',
+    'showcase': {
+        'title': _lt("Showcase"),
+        'img_src': '/website_sale/static/src/img/configurator/shop/showcase.jpg',
         'views': {
             'enable': [
-                'website_sale.products_list_view',  # Listview layout
-                'website_sale.products_description',  # Description
-                'website.template_header_sales_two',  # Header
-            ],
-            'disable': [],
-        },
-        'website_fields': {},
-    },
-    'quick_browse_grid': {
-        'title': _lt("Quick Browse Grid"),
-        'img_src': '/website_sale/static/src/img/configurator/shop/quick_browse_grid.jpg',
-        'views': {
-            'enable': [
-                'website_sale.products_design_card',  # Style
-                'website_sale.products_categories',  # Categories sidebar
-                'website_sale.option_collapse_products_categories',  # Categories/Collapse
-                'website_sale.products_attributes_top',  # Filters
                 'website.template_header_sales_four',  # Header
+                'website.header_width_full',  # Header width
+                'website_sale.shop_fullwidth',  # Content fullwidth
+                'website_sale.filmstrip_categories_pills',  # Category style
+                'website_sale.products_attributes_top',  # Filters
+                'website_sale.floating_bar',  # Toolbar/floating
+
             ],
             'disable': [
-                'website_sale.products_design_thumbs',  # Style
-                'website_sale.products_design_grid',  # Style
-                'website_sale.products_categories_top',  # Categories top
                 'website_sale.products_attributes',  # Filters
             ],
         },
         'website_fields': {
-            'shop_ppr': 5,
+            'shop_gap': '0px',
+            'shop_opt_products_design_classes': 'o_wsale_products_opt_name_color_regular '
+                                                'o_wsale_products_opt_thumb_cover '
+                                                'o_wsale_products_opt_has_description '
+                                                'o_wsale_products_opt_cc o_wsale_products_opt_cc5 '
+                                                'o_wsale_products_opt_layout_list '
+                                                'o_wsale_products_opt_design_showcase '
+                                                'o_wsale_products_opt_thumb_4_5 '
+                                                'o_wsale_products_opt_has_wishlist '
+                                                'o_wsale_products_opt_actions_onhover '
+                                                'o_wsale_products_opt_wishlist_fixed '
+                                                'o_wsale_products_opt_actions_subtle',
+        },
+        'scss_customization_params': {
+            'header-links-style': 'default',
+            'header-template': 'sales_four',
         },
     },
-    'default_list': {
-        'title': _lt("Detailed List"),
-        'img_src': '/website_sale/static/src/img/configurator/shop/default_list.jpg',
+    'chips_contained': {
+        'title': _lt("Chips Contained"),
+        'img_src': '/website_sale/static/src/img/configurator/shop/chips_contained.jpg',
         'views': {
             'enable': [
-                'website_sale.products_list_view',  # Listview layout
-                'website_sale.products_description',  # Description
-                'website_sale.products_categories',  # Categories sidebar
+                'website.template_header_sales_one',  # Header
+                'website_sale.products_mobile_cols_single',  # Mobile cols single
+                'website_sale.filmstrip_categories_bordered',  # Category style
                 'website_sale.products_attributes_top',  # Filters
-                'website_sale.floating_bar',  # Toolbar/floating
-                'website.template_header_sales_three',  # Header
             ],
             'disable': [
-                'website_sale.products_categories_top',  # Categories top
                 'website_sale.products_attributes',  # Filters
             ],
         },
         'website_fields': {
             'shop_ppr': 4,
-            'shop_gap': '28px',
+            'shop_gap': '16px',
+            'shop_opt_products_design_classes': 'o_wsale_products_opt_name_color_regular '
+                                                'o_wsale_products_opt_thumb_cover '
+                                                'o_wsale_products_opt_img_secondary_show '
+                                                'o_wsale_products_opt_img_hover_zoom_out_light '
+                                                'o_wsale_products_opt_has_cta '
+                                                'o_wsale_products_opt_has_wishlist '
+                                                'o_wsale_products_opt_has_comparison '
+                                                'o_wsale_products_opt_actions_inline '
+                                                'o_wsale_products_opt_wishlist_inline '
+                                                'o_wsale_products_opt_actions_promote '
+                                                'o_wsale_products_opt_cc o_wsale_products_opt_cc1 '
+                                                'o_wsale_products_opt_rounded_4 '
+                                                'o_wsale_products_opt_layout_catalog '
+                                                'o_wsale_products_opt_design_chips',
+        },
+        'scss_customization_params': {
+            'header-links-style': 'default',
+            'header-template': 'sales_one',
         },
     },
-    'sidebar_grid': {
-        'title': _lt("Sidebar Grid"),
-        'img_src': '/website_sale/static/src/img/configurator/shop/sidebar_grid.jpg',
+    'condensed_list': {
+        'title': _lt("Condensed List"),
+        'img_src': '/website_sale/static/src/img/configurator/shop/condensed_list.jpg',
         'views': {
             'enable': [
-                'website_sale.products_design_grid',  # Style
-                'website_sale.products_thumb_4_3',  # Style/Images sizes (Landscape)
-                'website_sale.products_categories',  # Categories/Sidebar
+                'website.template_header_hamburger',  # Header
+                'website.no_autohide_menu',  # Header
+                'website_sale.filmstrip_categories_images',  # Category style
+            ],
+            'disable': [],
+        },
+        'website_fields': {
+            'shop_gap': '16px',
+            'shop_opt_products_design_classes': 'o_wsale_products_opt_name_color_regular '
+                                                'o_wsale_products_opt_thumb_cover '
+                                                'o_wsale_products_opt_has_cta '
+                                                'o_wsale_products_opt_has_wishlist '
+                                                'o_wsale_products_opt_actions_inline '
+                                                'o_wsale_products_opt_cc o_wsale_products_opt_cc1 '
+                                                'o_wsale_products_opt_rounded_2 '
+                                                'o_wsale_products_opt_img_secondary_show '
+                                                'o_wsale_products_opt_actions_promote '
+                                                'o_wsale_products_opt_layout_list '
+                                                'o_wsale_products_opt_design_thumbs',
+        },
+        'scss_customization_params': {
+            'header-links-style': 'default',
+            'header-template': 'hamburger',
+        },
+    },
+    'cards': {
+        'title': _lt("Cards"),
+        'img_src': '/website_sale/static/src/img/configurator/shop/cards.jpg',
+        'views': {
+            'enable': [
+                'website.template_header_sidebar',  # Header
+                'website.no_autohide_menu',  # Header
+                'website_sale.shop_fullwidth',  # Content Fullwidth
+                'website_sale.products_mobile_cols_single',  # Mobile cols single
+                'website_sale.filmstrip_categories_large_images',  # Category style
                 'website_sale.products_attributes_top',  # Filters
-                'website.template_header_stretch',  # Header
             ],
             'disable': [
-                'website_sale.products_design_card',  # Style
-                'website_sale.products_design_thumbs',  # Style
-                'website_sale.products_thumb_4_5',  # Style/Images sizes
-                'website_sale.products_thumb_2_3',  # Style/Images sizes
-                'website_sale.products_categories_top',  # Categories/Top
                 'website_sale.products_attributes',  # Filters
             ],
         },
         'website_fields': {
-            'shop_ppr': 3,
-            'shop_gap': '0px',
+            'shop_ppr': 4,
+            'shop_gap': '8px',
+            'shop_opt_products_design_classes': 'o_wsale_products_opt_name_color_regular '
+                                                'o_wsale_products_opt_thumb_cover '
+                                                'o_wsale_products_opt_img_secondary_show '
+                                                'o_wsale_products_opt_img_hover_zoom_out_light '
+                                                'o_wsale_products_opt_has_cta '
+                                                'o_wsale_products_opt_has_wishlist '
+                                                'o_wsale_products_opt_actions_onhover '
+                                                'o_wsale_products_opt_wishlist_fixed '
+                                                'o_wsale_products_opt_actions_subtle '
+                                                'o_wsale_products_opt_rounded_2 '
+                                                'o_wsale_products_opt_layout_catalog '
+                                                'o_wsale_products_opt_design_cards '
+                                                'o_wsale_products_opt_thumb_4_5 '
+                                                'o_wsale_products_opt_has_comparison',
+        },
+        'scss_customization_params': {
+            'header-links-style': 'default',
+            'header-template': 'sidebar',
         },
     },
 }
