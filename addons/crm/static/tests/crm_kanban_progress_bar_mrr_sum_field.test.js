@@ -142,6 +142,64 @@ test("Progressbar: do not show sum of MRR if recurring revenues is not enabled",
     });
 });
 
+test.tags("desktop");
+test("Progressbar: drag&drop record to an empty stage should not crash AnimatedNumber", async () => {
+    const def = new Deferred();
+    Lead._records = [
+        { id: 1, name: "Lead 11", stage_id: 1 },
+        { id: 2, name: "Lead 12", stage_id: 2 },
+        { id: 3, name: "Lead 13", stage_id: 3 },
+    ];
+
+    await mountView({
+        type: "kanban",
+        resModel: "crm.lead",
+        groupBy: ["stage_id"],
+        arch: `
+            <kanban js_class="crm_kanban">
+                <field name="activity_state"/>
+                <progressbar field="activity_state"
+                             colors='{"planned": "success", "today": "warning", "overdue": "danger"}'
+                             sum_field="expected_revenue"
+                             recurring_revenue_sum_field="recurring_revenue_monthly"/>
+                <templates>
+                    <t t-name="card" class="flex-row justify-content-between">
+                        <field name="name" class="p-2"/>
+                        <field name="expected_revenue" class="p-2"/>
+                        <field name="recurring_revenue_monthly" class="p-2"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    onRpc("web_save", async () => {
+        await def;
+    });
+
+    // drag the first record of the first column on top of the second column
+    await contains(".o_kanban_group:eq(0) .o_kanban_record").dragAndDrop(
+        ".o_kanban_group:eq(1) .o_kanban_record"
+    );
+
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(0);
+    expect(".o_kanban_group:eq(1) .o_kanban_record").toHaveCount(2);
+
+    // drag that same record to the first column -> should have no effect as save still pending
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").dragAndDrop(
+        ".o_kanban_group:eq(0)"
+    );
+
+    def.resolve();
+    await animationFrame();
+
+    // drag that same record to the first column
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").dragAndDrop(
+        ".o_kanban_group:eq(0)"
+    );
+
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
+});
+
 test("Progressbar: ensure correct MRR sum is displayed if recurring revenues is enabled", async () => {
     await mountView({
         type: "kanban",

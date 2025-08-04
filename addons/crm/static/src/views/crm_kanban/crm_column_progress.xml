@@ -8,6 +8,7 @@
             <t t-if="showRecurringRevenue">
                 <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(props.group)"/>
                 <AnimatedNumber
+                    t-if="rrmAggregate.value !== false"
                     value="rrmAggregate.value"
                     title="rrmAggregate.title"
                     duration="1000"
