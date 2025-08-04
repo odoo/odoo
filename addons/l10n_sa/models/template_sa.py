@@ -46,21 +46,21 @@ class AccountChartTemplate(models.AbstractModel):
                 'code': 'TA',
                 'type': 'general',
                 'show_on_dashboard': True,
-                'sequence': 1,
+                'sequence': 10,
             },
             "ifrs16": {
                 'name': 'IFRS 16 Right of Use Asset',
                 'code': 'IFRS',
                 'type': 'general',
                 'show_on_dashboard': True,
-                'sequence': 10,
+                'sequence': 11,
             },
             "zakat": {
                 'name': 'Zakat',
                 'code': 'ZAKAT',
                 'type': 'general',
                 'show_on_dashboard': True,
-                'sequence': 10,
+                'sequence': 11,
             }
         }
 
