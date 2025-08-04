@@ -352,6 +352,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'id': product.barcode,
                 'id_attrs': {'schemeID': '0160'},  # GTIN
             } if product.barcode else {},
+            # The intrastat code is added to the product in enterprise module `account_instrastat`
+            'commodity_classification_vals': [{
+                'item_classification_code': product.intrastat_code_id.code,
+                'item_classification_attrs': {'listID': 'HS'},
+            }] if product._fields.get('intrastat_code_id') and product.intrastat_code_id else [],
         }
 
     def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
@@ -1754,6 +1759,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'schemeID': '0160',  # GTIN
                 } if product.barcode else None,
             },
+            'cac:CommodityClassification': [{
+                # The intrastat code is added to the product in enterprise module `account_instrastat`
+                'cbc:ItemClassificationCode': {
+                    '_text': product.intrastat_code_id.code,
+                    'listID': 'HS',
+                },
+            }] if product._fields.get('intrastat_code_id') and product.intrastat_code_id else [],
             'cac:AdditionalItemProperty': [
                 {
                     'cbc:Name': {'_text': value.attribute_id.name},
