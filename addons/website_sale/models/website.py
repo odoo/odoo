@@ -279,6 +279,7 @@ class Website(models.Model):
         website_settings = {}
         views_to_disable = []
         views_to_enable = []
+        scss_customization_params = {}
         ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
         Assets = self.env['web_editor.assets']
 
@@ -286,6 +287,7 @@ class Website(models.Model):
             website_settings.update(style_config_['website_fields'])
             views_to_disable.extend(style_config_['views']['disable'])
             views_to_enable.extend(style_config_['views']['enable'])
+            scss_customization_params.update(style_config_.get('scss_customization_params', {}))
 
         # Extract shop page settings.
         if shop_page_style_option:
@@ -363,12 +365,15 @@ class Website(models.Model):
                 if footer_updated:
                     footer_view.write({'arch': etree.tostring(arch_tree)})
 
-        # For website editor to recognize the correct footer template
+        if 'website_sale.template_footer_website_sale' in views_to_enable:
+            scss_customization_params['footer-template'] = 'website_sale'
+
+        # For a website editor to recognize the correct header/footer templates
         # (reason `isApplied` method of footer plugin)
-        if 'website_sale.footer_template_website_sale' in views_to_enable:
+        if scss_customization_params:
             Assets.make_scss_customization(
                 '/website/static/src/scss/options/user_values.scss',
-                {'footer-template': 'website_sale'},
+                scss_customization_params,
             )
 
         return res
