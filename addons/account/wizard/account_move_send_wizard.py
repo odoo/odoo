@@ -129,7 +129,7 @@ class AccountMoveSendWizard(models.TransientModel):
         methods = self.env['ir.model.fields'].get_field_selection('res.partner', 'invoice_sending_method')
 
         # We never want to display the manual method.
-        methods = [method for method in methods if method != ('manual', 'Manual')]
+        methods = [method for method in methods if method[0] != 'manual']
 
         for wizard in self:
             preferred_methods = self._get_default_sending_methods(wizard.move_id)
