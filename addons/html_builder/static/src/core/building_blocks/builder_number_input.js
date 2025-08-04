@@ -92,13 +92,17 @@ export class BuilderNumberInput extends Component {
     }
 
     clampValue(value) {
-        if (parseFloat(value) < this.props.min) {
+        if (!value) {
+            return value;
+        }
+        value = parseFloat(value);
+        if (value < this.props.min) {
             return `${this.props.min}`;
         }
-        if (parseFloat(value) > this.props.max) {
+        if (value > this.props.max) {
             return `${this.props.max}`;
         }
-        return value;
+        return +value.toFixed(3);
     }
 
     parseDisplayValue(displayValue) {
@@ -122,7 +126,7 @@ export class BuilderNumberInput extends Component {
                 // Only keep "-" if it is at the start
                 .replace(/(?<!^)-/g, "")
                 // Only keep the first "."
-                .replace(/^([^.]*)\.?(.*)/, (_, a, b) => a + (b ? '.' + b.replace(/\./g, '') : ''));
+                .replace(/^([^.]*)\.?(.*)/, (_, a, b) => a + (b ? "." + b.replace(/\./g, "") : ""));
         }
         displayValue = displayValue.split(" ").map(this.clampValue.bind(this)).join(" ");
 
