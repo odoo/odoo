@@ -108,6 +108,13 @@ class Website(models.Model):
         compute='_compute_send_abandoned_cart_email_activation_time',
         store=True,
     )
+    shop_page_container = fields.Selection(
+        selection=[
+            ('regular', "Regular"),
+            ('fluid', "Full-width"),
+        ],
+        default='regular',
+    )
     shop_ppg = fields.Integer(
         string="Number of products in the grid on the shop", default=21,
     )
@@ -138,6 +145,24 @@ class Website(models.Model):
         inverse_name='website_id',
     )
 
+    product_page_container = fields.Selection(
+        selection=[
+            ('unset', "Unset"),
+            ('regular', "Regular"),
+            ('fluid', "Full-width"),
+        ],
+        default='unset'
+    )
+
+    product_page_cols_order = fields.Selection(
+        selection=[
+            ('regular', "Regular order"),
+            ('inverse', "Inverse order"),
+        ],
+        string="Product Page main columns order",
+        default='regular',
+    )
+
     product_page_image_layout = fields.Selection(
         selection=[
             ('carousel', "Carousel"),
@@ -149,6 +174,7 @@ class Website(models.Model):
     product_page_image_width = fields.Selection(
         selection=[
             ('none', "Hidden"),
+            ('33_pc', "33 %"),
             ('50_pc', "50 %"),
             ('66_pc', "66 %"),
             ('100_pc', "100 %"),
@@ -164,7 +190,45 @@ class Website(models.Model):
             ('big', "Big"),
         ],
         required=True,
-        default='small',
+        default='none',
+    )
+    product_page_image_roundness = fields.Selection(
+        selection=[
+            ('none', "None"),
+            ('small', "Small"),
+            ('medium', "Medium"),
+            ('big', "Big"),
+        ],
+        required=True,
+        default='none',
+    )
+    product_page_image_ratio = fields.Selection(
+        selection=[
+            ('auto', "Auto"),
+            ('21_9', "Wider (21/9)"),
+            ('16_9', "Wide (16/9)"),
+            ('4_3', "Landscape (4/3)"),
+            ('6_5', "Horizontal (6/5)"),
+            ('1_1', "Default (1/1)"),
+            ('4_5', "Portrait (4/5)"),
+            ('2_3', "Vertical (2/3)"),
+        ],
+        required=True,
+        default='1_1',
+    )
+    product_page_image_ratio_mobile = fields.Selection(
+        selection=[
+            ('auto', "Auto"),
+            ('21_9', "Wider (21/9)"),
+            ('16_9', "Wide (16/9)"),
+            ('4_3', "Landscape (4/3)"),
+            ('6_5', "Horizontal (6/5)"),
+            ('1_1', "Default (1/1)"),
+            ('4_5', "Portrait (4/5)"),
+            ('2_3', "Vertical (2/3)"),
+        ],
+        required=True,
+        default='auto',
     )
     ecommerce_access = fields.Selection(
         selection=[
@@ -811,12 +875,24 @@ class Website(models.Model):
 
     def _get_product_page_grid_image_spacing_classes(self):
         spacing_map = {
-            'none': 'm-0',
-            'small': 'm-1',
-            'medium': 'm-2',
-            'big': 'm-3',
+            'none': 'gap-0',
+            'small': 'gap-1',
+            'medium': 'gap-2',
+            'big': 'gap-3',
         }
         return spacing_map.get(self.product_page_image_spacing)
+
+    def _get_product_page_grid_image_rounded_classes(self):
+        roundness_map = {
+            'none': 'o_wsale_product_page_opt_image_radius_none',
+            'small': 'o_wsale_product_page_opt_image_radius_small',
+            'medium': 'o_wsale_product_page_opt_image_radius_medium',
+            'big': 'o_wsale_product_page_opt_image_radius_big',
+        }
+        return roundness_map.get(self.product_page_image_roundness)
+
+    def _get_product_page_container(self):
+        return self.shop_page_container if self.product_page_container == 'unset' else self.product_page_container
 
     @api.model
     def _send_abandoned_cart_email(self):
