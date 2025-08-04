@@ -52,13 +52,20 @@ export class SavePlugin extends Plugin {
         this.savableSelector = this.getResource("savable_selectors").join(", ");
     }
 
-    async save() {
-        // TODO: implement the "group by" feature for save
-        const proms = [];
-        for (const fn of this.getResource("before_save_handlers")) {
-            proms.push(fn());
+    async save({ alwaysSkipAfterSaveHandlers = true } = {}) {
+        let success;
+        try {
+            await Promise.all(this.getResource("before_save_handlers").map((handler) => handler()));
+            await this._save();
+            success = true;
+        } finally {
+            if (!(alwaysSkipAfterSaveHandlers || success)) {
+                this.getResource("after_save_handlers").forEach((handler) => handler());
+            }
         }
-        await Promise.all(proms);
+    }
+    async _save() {
+        // TODO: implement the "group by" feature for save
         const dirtyEls = [];
         for (const getDirtyEls of this.getResource("get_dirty_els")) {
             dirtyEls.push(...getDirtyEls());
