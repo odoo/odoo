@@ -10,7 +10,8 @@ export class EditInteractionPlugin extends Plugin {
     resources = {
         normalize_handlers: this.refreshInteractions.bind(this),
         content_manually_updated_handlers: this.refreshInteractions.bind(this),
-        before_save_handlers: withSequence(5, () => this.stopInteractions()),
+        before_save_handlers: withSequence(5, this.stopInteractions.bind(this)),
+        after_save_handlers: this.restartInteractions.bind(this),
         on_will_clone_handlers: ({ originalEl }) => {
             this.stopInteractions(originalEl);
         },
@@ -18,12 +19,6 @@ export class EditInteractionPlugin extends Plugin {
             this.restartInteractions(originalEl);
             // The clonedEl is implicitly started because it is a newly
             // inserted content.
-        },
-        on_will_save_snippet_handlers: ({ snippetEl }) => {
-            this.stopInteractions(snippetEl);
-        },
-        on_saved_snippet_handlers: ({ snippetEl }) => {
-            this.restartInteractions(snippetEl);
         },
     };
 

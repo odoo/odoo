@@ -61,7 +61,7 @@ export class HighlightPlugin extends Plugin {
         format_selection_handlers: () => {
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
-        on_will_save_snippet_handlers: () => {
+        before_save_handlers: () => {
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
     };

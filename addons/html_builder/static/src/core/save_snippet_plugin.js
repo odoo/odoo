@@ -21,16 +21,6 @@ export class SaveSnippetPlugin extends Plugin {
             1,
             this.getOptionsContainerTopButtons.bind(this)
         ),
-        on_will_save_snippet_handlers: [
-            // ({ snippetEl }) => {
-            //     called on the original element just before cloning for saving
-            // }
-        ],
-        on_saved_snippet_handlers: [
-            // ({ snippetEl }) => {
-            //     called on the original element just after cloning for saving
-            // }
-        ],
     };
 
     getOptionsContainerTopButtons(el) {
@@ -48,24 +38,24 @@ export class SaveSnippetPlugin extends Plugin {
     }
 
     /**
-     * Execute the `on_will_save_snippet_handlers` on {@link snippetEl},
+     * Execute the `before_save_handlers` on {@link snippetEl},
      * then execute {@link callback}, and finally execute the
-     * `on_saved_snippet_handlers` on {@link snippetEl}.
+     * `after_save_handlers` on {@link snippetEl}.
      * This is used, for example, to stop the interactions before cloning a
      * snippet, and restarting them after cloning it.
      *
      * @param {HTMLElement} snippetEl
      * @param {Function} callback
      */
-    wrapWithSaveSnippetHandlers(snippetEl, callback) {
-        const onWillSaveHandlers = this.getResource("on_will_save_snippet_handlers");
-        const onSavedHandlers = this.getResource("on_saved_snippet_handlers");
-        onWillSaveHandlers.forEach((handler) => handler({ snippetEl }));
+    async wrapWithBeforeAfterSaveHandlers(snippetEl, callback) {
+        await Promise.all(
+            this.getResource("before_save_handlers").map((handler) => handler(snippetEl))
+        );
         let node;
         try {
             node = callback();
         } finally {
-            onSavedHandlers.forEach((handler) => handler({ snippetEl }));
+            this.getResource("after_save_handlers").forEach((handler) => handler(snippetEl));
         }
         return node;
     }
@@ -78,7 +68,7 @@ export class SaveSnippetPlugin extends Plugin {
         const savedName = await this.config.saveSnippet(
             el,
             cleanForSaveHandlers,
-            this.wrapWithSaveSnippetHandlers.bind(this)
+            this.wrapWithBeforeAfterSaveHandlers.bind(this)
         );
         if (savedName) {
             const message = markup(
