@@ -7,7 +7,7 @@ patch(PaymentScreen.prototype, {
     onMounted() {
         super.onMounted();
         if (this.pos.isPeruvianCompany()) {
-            this.currentOrder.setToInvoice(true);
+            this.currentOrder.set_to_invoice(true);
         }
     },
     async _isOrderValid(isForceValidate) {
