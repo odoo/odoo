@@ -19,6 +19,13 @@ FIGURE_TYPE_SELECTION_VALUES = [
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
+ACCOUNT_CODES_ENGINE_SPLIT_REGEX = re.compile(r"(?=[+-])")
+ACCOUNT_CODES_ENGINE_TERM_REGEX = re.compile(
+    r"^(?P<sign>[+-]?)"
+    r"(?P<prefix>([A-Za-z\d.]*|tag\([\w.]+\))((?=\\)|(?<=[^CD])))"
+    r"(\\\((?P<excluded_prefixes>([A-Za-z\d.]+,)*[A-Za-z\d.]*)\))?"
+    r"(?P<balance_character>[DC]?)$"
+)
 
 class AccountReport(models.Model):
     _name = "account.report"
@@ -494,6 +501,22 @@ class AccountReportExpression(models.Model):
             except:
                 raise UserError(_("Invalid domain for expression '%s' of line '%s': %s",
                                 expression.label, expression.report_line_name, expression.formula))
+
+    @api.constrains('formula')
+    def _check_account_code_prefix_formula(self):
+        for expression in self.filtered(lambda expr: expr.engine == 'account_codes'):
+            for token in ACCOUNT_CODES_ENGINE_SPLIT_REGEX.split(expression.formula.replace(' ', '')):
+                if token:
+                    token_match = ACCOUNT_CODES_ENGINE_TERM_REGEX.match(token)
+                    prefix = token_match['prefix']
+                    if not prefix:
+                        raise UserError(_(
+                            "Your formula includes an empty prefix, which means all accounts are included.\n\n"
+                            "This usually happens if the formula ends with an unexpected sign ('+' or '-').\n"
+                            "If you need all accounts, please use the Odoo domain engine.\n\n"
+                            "Formula for expression '%s' of line '%s': %s",
+                            expression.label, expression.report_line_name, expression.formula
+                        ))
 
     @api.depends('engine')
     def _compute_auditable(self):
