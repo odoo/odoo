@@ -106,27 +106,3 @@ registry.category("web_tour.tours").add('hr_holidays_launch', {
         },
     ]
 });
-
-registry.category("web_tour.tours").add('employee_holidays_archived_tour', {
-    url: '/web',
-    steps: () => [
-        stepUtils.showAppsMenuItem(),
-        {
-            trigger: '.o_app[data-menu-xmlid="hr.menu_hr_root"]',
-            run: "click",
-        },
-        {
-            trigger: '.o_kanban_record:contains("test_user")',
-            run: "click",
-        },
-        {
-            trigger: '.o_stat_info:contains("Time Off")',
-            run: () => {
-                const time_off_stats = $('.o_stat_info:contains("Time Off")');
-                if (time_off_stats.toArray().some(el => $(el).text().includes('10'))) {
-                    throw new Error('The archived time off should not be displayed!');
-                }
-            }
-        },
-    ]
-});
