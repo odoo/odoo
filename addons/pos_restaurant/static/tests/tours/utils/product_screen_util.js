@@ -68,6 +68,23 @@ export function fireCourseButton() {
         },
     ];
 }
+export function fireCourseButtonHighlighted(courseName) {
+    return [
+        {
+            content: "fire course button highlighted",
+            trigger: `.actionpad .fire-btn.btn-primary:contains('Fire ${courseName}')`,
+        },
+    ];
+}
+export function payButtonNotHighlighted() {
+    return [
+        {
+            content: "pay button not highlighted",
+            trigger:
+                ".actionpad .pay-order-button:not('.highlight'):not('.btn-primary'):contains('Payment')",
+        },
+    ];
+}
 export function setTab(name) {
     return [
         {

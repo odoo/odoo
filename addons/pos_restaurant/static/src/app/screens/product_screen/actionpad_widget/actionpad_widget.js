@@ -44,7 +44,8 @@ patch(ActionpadWidget.prototype, {
         return (
             this.currentOrder?.lines?.length &&
             !this.hasChangesToPrint &&
-            this.hasQuantity(this.currentOrder)
+            this.hasQuantity(this.currentOrder) &&
+            !this.getCourseToFire()
         );
     },
     get displayCategoryCount() {
