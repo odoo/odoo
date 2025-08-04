@@ -8,6 +8,7 @@ from odoo.addons.website.models import ir_http
 
 class ProductPricelist(models.Model):
     _inherit = 'product.pricelist'
+    _clear_cache_name = 'default'
 
     #=== DEFAULT METHODS ===#
 
@@ -64,20 +65,7 @@ class ProductPricelist(models.Model):
                 # YTI FIXME: The fix is not at the correct place
                 # It be set when we actually create the pricelist
                 self = self.with_context(default_company_id=vals['company_id'])
-        pricelists = super().create(vals_list)
-        if pricelists:
-            self.env.registry.clear_cache()
-        return pricelists
-
-    def write(self, vals):
-        res = super().write(vals)
-        self and self.env.registry.clear_cache()
-        return res
-
-    def unlink(self):
-        res = super().unlink()
-        self and self.env.registry.clear_cache()
-        return res
+        return super().create(vals_list)
 
     #=== BUSINESS METHODS ===#
 

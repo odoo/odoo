@@ -125,7 +125,7 @@ class AuthPasskeyKey(models.Model):
         for key in self:
             if key.create_uid.id == self.env.user.id:
                 # Force to go through `res.users.auth_passkey_key_ids` to trigger the session token cache invalidation
-                # See `res.users.write` and `_get_invalidation_fields`
+                # See `res.users.write` and `_clear_cache_on_fields`
                 # `self.env.user` is already sudo, so no need to re-apply `sudo` to get delete access right.
                 self.env.user.write({'auth_passkey_key_ids': [Command.delete(key.id)]})
                 new_token = self.env.user._compute_session_token(request.session.sid)
@@ -167,7 +167,7 @@ class AuthPasskeyKeyCreate(models.TransientModel):
         self.ensure_one()
         verification = request.env['auth.passkey.key']._verify_registration_options(registration)
         # Force to go through `res.users.auth_passkey_key_ids` to trigger the session token cache invalidation
-        # See `res.users.write` and `_get_invalidation_fields`
+        # See `res.users.write` and `_clear_cache_on_fields`
         # `self.env.user` is already sudo, so no need to re-apply `sudo` to get create access right.
         self.env.user.write({'auth_passkey_key_ids': [Command.create({
             'name': self.name,
