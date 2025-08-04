@@ -184,10 +184,8 @@ class WebsitePage(models.Model):
             if 'visibility' in vals:
                 if vals['visibility'] != 'restricted_group':
                     vals['group_ids'] = False
-
-        if 'url' in vals or 'visibility' in vals or 'group_ids' in vals:
-            self.env.registry.clear_cache('templates')   # Clear cache because the response depends on the path and the rendering of the view changes.
-
+        # write on page == write on view
+        # the view will invalidate the 'templates' cache
         return super().write(vals)
 
     def get_website_meta(self):
