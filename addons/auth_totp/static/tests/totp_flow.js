@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     run: "click",
 }, {
     content: "Check the wizard has opened",
-    trigger: '.modal li:contains("When requested to do so")',
+    trigger: '.modal:contains("Two-Factor Authentication Activation")',
 }, {
     content: "Get secret from collapsed div",
     trigger: `.modal a:contains("Cannot scan it?")`,
