@@ -3,7 +3,7 @@ import os.path
 
 from odoo.tests.common import BaseCase
 from odoo.tools.misc import file_open
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import guess_mimetype, magic
 
 def contents(extension):
     with file_open(os.path.join(
@@ -16,14 +16,16 @@ def contents(extension):
 
 class TestMimeGuessing(BaseCase):
     def test_doc(self):
-        self.assertEqual(
+        expected_mimetypes = ['application/msword'] if magic is None else ['application/x-ole-storage', 'application/CDFV2']
+        self.assertIn(
             guess_mimetype(contents('doc')),
-            'application/msword'
+            expected_mimetypes
         )
     def test_xls(self):
-        self.assertEqual(
+        expected_mimetypes = ['application/vnd.ms-excel'] if magic is None else ['application/x-ole-storage', 'application/CDFV2']
+        self.assertIn(
             guess_mimetype(contents('xls')),
-            'application/vnd.ms-excel'
+            expected_mimetypes
         )
     def test_docx(self):
         self.assertEqual(
@@ -64,7 +66,8 @@ class TestMimeGuessing(BaseCase):
         )
 
     def test_unknown(self):
+        expected_mimetype = 'application/octet-stream' if magic is None else 'text/csv'
         self.assertEqual(
             guess_mimetype(contents('csv')),
-            'application/octet-stream'
+            expected_mimetype
         )

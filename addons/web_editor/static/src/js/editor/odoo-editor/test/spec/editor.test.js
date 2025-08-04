@@ -1712,6 +1712,17 @@ X[]
                     contentAfter: '<p>ab</p><p>[]<br></p><p>ef</p>',
                 });
             });
+            it('should not delete text on the next container', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>keep<br>[delete</p>
+                        <p>delete<br>delete<br>]</p>
+                        <p>keep</p>
+                    `),
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>keep<br>[]keep</p>',
+                });
+            });
         });
     });
 

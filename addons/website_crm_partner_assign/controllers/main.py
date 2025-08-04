@@ -348,7 +348,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
                 if slug(partner) != current_slug:
                     return request.redirect('/partners/%s' % slug(partner))
                 values = {
-                    'main_object': partner,
+                    # See REVIEW_CAN_PUBLISH_UNSUDO
+                    'main_object': partner.with_context(can_publish_unsudo_main_object=True),
                     'partner': partner,
                     'current_grade': current_grade,
                     'current_country': current_country

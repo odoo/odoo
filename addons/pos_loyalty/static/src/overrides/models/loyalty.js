@@ -533,7 +533,7 @@ patch(Order.prototype, {
             for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
-            if (pointsAdded.length < oldChanges.length) {
+            if (pointsAdded.length < oldChanges.length || !this._programIsApplicable(program)) {
                 const removedIds = oldChanges.map((pe) => pe.coupon_id);
                 this.couponPointChanges = Object.fromEntries(
                     Object.entries(this.couponPointChanges).filter(([k, pe]) => {
@@ -757,7 +757,7 @@ patch(Order.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines().filter((line) => !line.refunded_orderline_id);
+        const orderLines = this.get_orderlines().filter((line) => !line.refunded_orderline_id && !line.comboParent);
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id ? this.pos.reward_by_id[line.reward_id] : undefined;
@@ -799,11 +799,11 @@ patch(Order.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(),
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax()),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPriceWithoutTax() : line.get_price_without_tax()),
                     0
                 );
                 const amountCheck =
@@ -842,7 +842,7 @@ patch(Order.prototype, {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.get_price_with_tax();
+                        orderedProductPaid += line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }

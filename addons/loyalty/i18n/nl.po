@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-07-18 01:16+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -1600,6 +1600,7 @@ msgid "Portal Visible"
 msgstr "Zichtbaar in portaal"
 
 #. module: loyalty
+#: model:ir.model,name:loyalty.model_product_pricelist
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
 msgid "Pricelist"
 msgstr "Prijslijst"
@@ -1947,6 +1948,17 @@ msgid ""
 msgstr ""
 "Dit is het maximale bedrag dat deze beloning mag verminderen, laat op 0 "
 "staan voor geen limiet."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"This pricelist may not be archived. It is being used for active promotion "
+"programs: %s"
+msgstr ""
+"Deze prijslijst kan niet worden gearchiveerd. Ze wordt gebruikt voor actieve"
+" promotieprogramma's: %s"
 
 #. module: loyalty
 #. odoo-python

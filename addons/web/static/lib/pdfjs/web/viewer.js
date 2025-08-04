@@ -18115,6 +18115,8 @@ PDFPrintService.prototype = {
     const pageSize = this.pagesOverview[0];
     this.pageStyleSheet.textContent = "@page { size: " + pageSize.width + "pt " + pageSize.height + "pt;}";
     body.append(this.pageStyleSheet);
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    this.hasFinishPrint = null;
   },
 
   destroy() {
@@ -18193,17 +18195,25 @@ PDFPrintService.prototype = {
 
   performPrint() {
     this.throwIfInactive();
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (!this.active) {
-          resolve();
-          return;
-        }
-
-        print.call(window);
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    const hasFinishPrintPromise = new Promise((resolve) => {
+      if ("afterprint" in window) {
+        this.hasFinishPrint = resolve;
+      } else {
         setTimeout(resolve, 20);
-      }, 0);
+      }
     });
+    setTimeout(() => {
+      if (!this.active) {
+        // ODOO PATCH PRINT PREVIEW MOBILE
+        this.hasFinishPrint();
+        return;
+      }
+
+      print.call(window);
+    }, 0);
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    return hasFinishPrintPromise;
   },
 
   get active() {
@@ -18245,12 +18255,17 @@ window.print = function () {
     }
 
     const activeServiceOnEntry = activeService;
+    // ODOO: FIX MOBILE PRINT PREVIEW
+    const timeBeforeRendering = new Date().getTime();
     activeService.renderPages().then(function () {
-      return activeServiceOnEntry.performPrint();
+      // ODOO: FIX MOBILE PRINT PREVIEW
+      return Promise.all([
+        activeServiceOnEntry.performPrint(),
+        new Promise(resolve => setTimeout(resolve, 1000 + new Date().getTime() - timeBeforeRendering))
+      ]);
     }).catch(function () {}).then(function () {
       if (activeServiceOnEntry.active) {
-        // ODOO Patch: https://github.com/mozilla/pdf.js/issues/10630#issuecomment-855754913
-        setTimeout(abort, 1000);
+        abort();
       }
     });
   }
@@ -18297,6 +18312,11 @@ window.addEventListener("keydown", function (event) {
 
 if ("onbeforeprint" in window) {
   const stopPropagationIfNeeded = function (event) {
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    if (activeService?.hasFinishPrint && event.type === "afterprint") {
+      activeService.hasFinishPrint();
+      return;
+    }
     if (event.detail !== "custom" && event.stopImmediatePropagation) {
       event.stopImmediatePropagation();
     }

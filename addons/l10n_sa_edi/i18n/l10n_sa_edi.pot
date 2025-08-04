@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-26 10:46+0000\n"
-"PO-Revision-Date: 2025-06-26 10:46+0000\n"
+"POT-Creation-Date: 2025-07-09 12:44+0000\n"
+"PO-Revision-Date: 2025-07-09 12:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Building Number: %s, Plot Identification: %s \n"
+"Building Number: %s, Plot Identification: %s\n"
 "Neighborhood: %s"
 msgstr ""
 
@@ -140,13 +140,6 @@ msgid "<span class=\"fw-bold\">VAT Amount</span>"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">ZATCA API Integration</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
 msgid "<strong>الإجمالي الفرعي بالريال السعودي</strong>"
 msgstr ""
@@ -174,6 +167,11 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_account_move_reversal
 msgid "Account Move Reversal"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model,name:l10n_sa_edi.model_account_move_send
+msgid "Account Move Send"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -304,7 +302,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Complete the Compliance Checks\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" attrs=\"{'invisible': [('l10n_sa_compliance_checks_passed', '=', False)]}\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_checks_passed\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -403,7 +401,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_tax__l10n_sa_is_retention
-#: model:ir.model.fields,help:l10n_sa_edi.field_account_tax_template__l10n_sa_is_retention
 msgid "Determines whether or not a tax counts as a Withholding Tax"
 msgstr ""
 
@@ -433,7 +430,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__l10n_sa_exemption_reason_code
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax_template__l10n_sa_exemption_reason_code
 msgid "Exemption Reason Code"
 msgstr ""
 
@@ -465,6 +461,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "ICV"
 msgstr ""
@@ -500,8 +498,8 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 #, python-format
 msgid ""
-"Invoice could not be cleared: \r\n"
-" %s "
+"Invoice could not be cleared:\n"
+"%s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -509,8 +507,8 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 #, python-format
 msgid ""
-"Invoice could not be reported: \r\n"
-" %s "
+"Invoice could not be reported:\n"
+"%s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -550,7 +548,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__l10n_sa_is_retention
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax_template__l10n_sa_is_retention
 msgid "Is Retention"
 msgstr ""
 
@@ -627,11 +624,6 @@ msgid "L10N Sa Edi Plot Identification"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -657,6 +649,8 @@ msgid "Momra License"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "N/A"
 msgstr ""
@@ -716,8 +710,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid ""
 "Once you change the submission mode to <strong>Production</strong>, you cannot change it anymore.\n"
-"                                Be very careful, as any invoice submitted to ZATCA in Production mode will be accounted for\n"
-"                                and might lead to <strong>Fines &amp; Penalties</strong>."
+"                            Be very careful, as any invoice submitted to ZATCA in Production mode will be accounted for\n"
+"                            and might lead to <strong>Fines &amp; Penalties</strong>."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -750,6 +744,8 @@ msgid "PCSID Renewal"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "PIH"
 msgstr ""
@@ -764,6 +760,15 @@ msgstr ""
 #: code:addons/l10n_sa_edi/migrations/0.2/post-migrate.py:0
 #, python-format
 msgid "Please Re-Onboard the Journal for a new serial number"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Please make sure that the invoice company matches the journal company on all"
+" invoices you wish to confirm"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -839,6 +844,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "QR"
 msgstr ""
@@ -877,14 +884,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Request a Compliance Certificate (CCSID)\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" groups=\"base.group_system\" attrs=\"{'invisible': [('l10n_sa_compliance_csid_json', '=', False)]}\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" groups=\"base.group_system\" invisible=\"not l10n_sa_compliance_csid_json\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Request a Production Certificate (PCSID)\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" groups=\"base.group_system\" attrs=\"{'invisible': [('l10n_sa_production_csid_json', '=', False)]}\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" groups=\"base.group_system\" invisible=\"not l10n_sa_production_csid_json\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -907,13 +914,6 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 #, python-format
 msgid "Server returned an unexpected error: %(error)s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"Set a Serial Number for your device\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" attrs=\"{'invisible': [('l10n_sa_serial_number', '=', False)]}\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -973,7 +973,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_tax__l10n_sa_exemption_reason_code
-#: model:ir.model.fields,help:l10n_sa_edi.field_account_tax_template__l10n_sa_exemption_reason_code
 msgid "Tax Exemption Reason Code (ZATCA)"
 msgstr ""
 
@@ -985,11 +984,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
 msgid "Tax Invoice"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model,name:l10n_sa_edi.model_account_tax_template
-msgid "Templates for Taxes"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1081,7 +1075,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-29
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-29
 msgid ""
 "VATEX-SA-29 Financial services mentioned in Article 29 of the VAT "
 "Regulations."
@@ -1089,14 +1082,12 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-29-7
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-29-7
 msgid ""
 "VATEX-SA-29-7 Life insurance services mentioned in Article 29 of the VAT."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-30
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-30
 msgid ""
 "VATEX-SA-30 Real estate transactions mentioned in Article 30 of the VAT "
 "Regulations."
@@ -1104,31 +1095,27 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-32
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-32
 msgid "VATEX-SA-32 Export of goods."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-33
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-33
 msgid "VATEX-SA-33 Export of Services."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-1
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-34-1
 msgid "VATEX-SA-34-1 The international transport of Goods."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-2
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-34-2
-msgid "VATEX-SA-34-1 The international transport of Passengers."
+msgid "VATEX-SA-34-2 The international transport of Passengers."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-3
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-34-3
 msgid ""
 "VATEX-SA-34-3 Services directly connected and incidental to a Supply of "
 "international passenger transport."
@@ -1136,13 +1123,11 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-4
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-34-4
 msgid "VATEX-SA-34-4 Supply of a qualifying means of transport."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-5
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-34-5
 msgid ""
 "VATEX-SA-34-5 Any services relating to Goods or passenger transportation, as"
 " defined in article twenty five of these Regulations."
@@ -1150,31 +1135,26 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-35
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-35
 msgid "VATEX-SA-35 Medicines and medical equipment."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-36
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-36
 msgid "VATEX-SA-36 Qualifying metals."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-edu
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-edu
 msgid "VATEX-SA-EDU Private education to citizen."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-hea
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-hea
 msgid "VATEX-SA-HEA Private healthcare to citizen."
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-oos
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax_template__l10n_sa_exemption_reason_code__vatex-sa-oos
 msgid "VATEX-SA-OOS Not subject to VAT."
 msgstr ""
 
@@ -1189,7 +1169,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid ""
 "You can select the API used for submissions down below. There are three modes available: Sandbox, Pre-Production and Production.\n"
-"                                Once you have selected the correct API, you can start the Onboarding process by going to the Journals and checking the options under the ZATCA tab."
+"                            Once you have selected the correct API, you can start the Onboarding process by going to the Journals and checking the options under the ZATCA tab."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1225,6 +1205,7 @@ msgid "You need to request the CCSID first before you can proceed"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_send__l10n_sa_edi_enable_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid "ZATCA"
 msgstr ""
@@ -1252,6 +1233,11 @@ msgid "ZATCA chain index"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid "ZATCA specific settings for Saudi eInvoicing"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "ZIP"
 msgstr ""
@@ -1273,6 +1259,8 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.export_sa_zatca_ubl_extensions
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "urn:oasis:names:specification:ubl:dsig:enveloped:xades"
 msgstr ""
@@ -1284,6 +1272,8 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.export_sa_zatca_ubl_extensions
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "urn:oasis:names:specification:ubl:signature:Invoice"
 msgstr ""

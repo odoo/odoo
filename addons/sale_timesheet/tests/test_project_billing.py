@@ -449,8 +449,9 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             with project_form.sale_line_employee_ids.new() as mapping_form:
                 mapping_form.employee_id = self.employee_manager
                 mapping_form.sale_line_id = self.so.order_line[:1]
-            self.assertEqual(project_form.partner_id, self.so.partner_id, 'The partner should be the one defined the SO linked to the SOL defined in the mapping.')
+            self.assertFalse(project_form.partner_id, 'The partner should be the one defined the SO linked to the SOL defined in the mapping.')
             project = project_form.save()
+            self.assertEqual(project_form.partner_id, self.so.partner_id, 'The partner should be the one defined the SO linked to the SOL defined in the mapping.')
             self.assertEqual(project.pricing_type, 'employee_rate', 'Since there is a mapping in this project, the pricing type should be employee rate.')
 
     def test_take_into_account_invoicing_app_legacy(self):
