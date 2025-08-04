@@ -759,3 +759,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_hiding_sidebar_header(self):
         self.start_tour("/", "hide_sidebar_header", login="admin")
+
+    def test_header_color_and_undo_redo_issue(self):
+        self.start_tour("/", "undo_redo_header_oriented_issue", login="admin")
