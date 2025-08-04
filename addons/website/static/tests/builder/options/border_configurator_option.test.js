@@ -8,6 +8,7 @@ import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_
 defineWebsiteModels();
 
 test("empty border input is treated as 0", async () => {
+    let expectBorder = false;
     patchWithCleanup(BorderConfigurator.prototype, {
         hasBorder(editingElement) {
             const styleActionValue = this.env.editor.shared.builderActions
@@ -18,10 +19,10 @@ test("empty border input is treated as 0", async () => {
                         mainParam: this.getStyleActionParam("width"),
                     },
                 });
-            expect(styleActionValue).toBe("0px");
+            expect(styleActionValue).toBe(expectBorder ? expectBorder : "0px");
             const hasBorder = super.hasBorder(editingElement);
             expect.step("hasBorder");
-            expect(hasBorder).toBe(false);
+            expect(hasBorder).toBe(!!expectBorder);
             return hasBorder;
         },
     });
@@ -29,10 +30,29 @@ test("empty border input is treated as 0", async () => {
         selector: ".test-options-target",
         template: xml`<BorderConfigurator label="'Border'"/>`,
     });
-    await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`);
+    await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`, {
+        loadIframeBundles: true,
+    });
+    const borderOptionInputSelector = ".options-container [data-label=Border] input";
+
+    expectBorder = false;
     await contains(":iframe section").click();
     expect.verifySteps(["hasBorder"]);
-    await contains(".options-container [data-label=Border] input").edit(" "); // .clear() doesn't trigger a rerender.
+
+    expectBorder = "1px";
+    await contains(borderOptionInputSelector).edit("1");
+    expect.verifySteps(["hasBorder"]);
+
+    expectBorder = false;
+    await contains(borderOptionInputSelector).edit("    ");
+    expect.verifySteps(["hasBorder"]);
+
+    expectBorder = "2px";
+    await contains(borderOptionInputSelector).edit("2");
+    expect.verifySteps(["hasBorder"]);
+
+    expectBorder = false;
+    await contains(borderOptionInputSelector).clear();
     expect.verifySteps(["hasBorder"]);
 });
 test("hasBorder is true when multiple-value border starts by 0", async () => {
