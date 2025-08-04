@@ -3,6 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import DynamicSnippetCarousel from "@website/snippets/s_dynamic_snippet_carousel/000";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
+import dom from "@web/legacy/js/core/dom";
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
@@ -139,18 +140,24 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      * @param {OdooEvent} ev
      */
     async _onClickAddToCart(ev) {
-        const $card = $(ev.currentTarget).closest('.card');
-        const data = await this.rpc("/shop/cart/update_json", {
-            product_id: $card.find('input[data-product-id]').data('product-id'),
-            add_qty: 1,
-            display: false,
-        });
-        wSaleUtils.updateCartNavBar(data);
-        wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
-        if (this.add2cartRerender) {
-            this.trigger_up('widgets_start_request', {
-                $target: this.$el.closest('.s_dynamic'),
+        const buttonEl = ev.currentTarget;
+        const $card = $(buttonEl).closest('.card');
+        const restoreBtnLoading = dom.addButtonLoadingEffect(buttonEl);
+        try {
+            const data = await this.rpc("/shop/cart/update_json", {
+                product_id: $card.find('input[data-product-id]').data('product-id'),
+                add_qty: 1,
+                display: false,
             });
+            wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
+            if (this.add2cartRerender) {
+                this.trigger_up('widgets_start_request', {
+                    $target: this.$el.closest('.s_dynamic'),
+                });
+            }
+        } finally {
+            restoreBtnLoading();
         }
     },
     /**
