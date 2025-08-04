@@ -601,8 +601,10 @@ patch(PosStore.prototype, {
         const domain = new Domain(reward_product_domain);
 
         try {
+            const existingProduct = reward.all_discount_product_ids;
             reward.all_discount_product_ids = [
-                ["link", ...products.filter((p) => domain.contains(p.raw))],
+                ...existingProduct,
+                ...products.filter((p) => domain.contains(p.raw)),
             ];
         } catch (error) {
             if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
