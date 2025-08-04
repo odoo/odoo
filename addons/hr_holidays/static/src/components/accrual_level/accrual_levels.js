@@ -120,7 +120,8 @@ export const accrualLevels = {
     component: AccrualLevels,
     fieldDependencies: [
         { name: "carryover_day", type: "integer" }
-    ]
+    ],
+    relatedFields: () => [{ name: "id", type: "integer" }],
 };
 
 registry.category("fields").add("accrual_levels", accrualLevels);
