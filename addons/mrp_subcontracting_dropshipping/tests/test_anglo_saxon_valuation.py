@@ -118,8 +118,8 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
         all_amls_ids += amls.ids
         self.assertRecordValues(amls, [
-            {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 0.0,   'credit': 110.0},
-            {'account_id': stock_in_acc_id,     'product_id': self.product_a.id,    'debit': 110.0, 'credit': 0.0},
+            {'account_id': stock_out_acc_id,      'product_id': self.product_a.id,    'debit': 0.0,   'credit': 110.0},
+            {'account_id': stock_valu_acc_id,     'product_id': self.product_a.id,    'debit': 110.0, 'credit': 0.0},
         ])
 
         # return to stock location
