@@ -227,6 +227,24 @@ export class StyleAction extends BuilderAction {
     static id = "styleAction";
     static dependencies = ["color"];
     getValue({ editingElement: el, params: { mainParam: styleName } }) {
+        if (styleName === "--box-border-width"
+                || CSS_SHORTHANDS["--box-border-width"].includes(styleName)
+                || styleName === "--box-border-radius"
+                || CSS_SHORTHANDS["--box-border-radius"].includes(styleName)) {
+            // When reading a CSS variable, we need to get the computed value
+            // of the actual property it controls, ideally. Not only because the
+            // panel should reflect what the user actually sees but also because
+            // the user could have forced its own inline style by himself. Also,
+            // by compatibility with how borders were edited in the past.
+            // See CSS_VARIABLE_EDIT_TODO.
+            //
+            // TODO this should probably be more generic. Note that this was
+            // also done as a fix where reading the actual CSS variable value
+            // was simply not working properly because getStyleValue checks the
+            // CSS_SHORTHANDS which obviously do not magically work.
+            styleName = styleName.substring("--box-".length);
+        }
+
         if (styleName === "box-shadow") {
             const value = getStyleValue(el, styleName);
             const inset = value.includes("inset");

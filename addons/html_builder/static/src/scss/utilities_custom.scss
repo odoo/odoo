@@ -1,0 +1,49 @@
+// Extend utilities
+// See BORDER_VARIABLES_RULES_EXTENSION
+
+$rounded-sizes: () !default;
+$rounded-sizes: map-merge(
+    $rounded-sizes,
+    (
+        null: var(--#{$prefix}border-radius),
+        0: 0,
+        1: var(--#{$prefix}border-radius-sm),
+        2: var(--#{$prefix}border-radius),
+        3: var(--#{$prefix}border-radius-lg),
+        4: var(--#{$prefix}border-radius-xl),
+        5: var(--#{$prefix}border-radius-xxl),
+        circle: 50%,
+        pill: var(--#{$prefix}border-radius-pill)
+    )
+);
+$utilities: () !default;
+$utilities: map-merge(
+    $utilities,
+    (
+        "rounded": (
+            property: --box-border-radius,
+            class: rounded,
+            values: $rounded-sizes,
+        ),
+        "rounded-top": (
+            property: --box-border-top-left-radius --box-border-top-right-radius,
+            class: rounded-top,
+            values: $rounded-sizes,
+        ),
+        "rounded-end": (
+            property: --box-border-top-right-radius --box-border-bottom-right-radius,
+            class: rounded-end,
+            values: $rounded-sizes,
+        ),
+        "rounded-bottom": (
+            property: --box-border-bottom-right-radius --box-border-bottom-left-radius,
+            class: rounded-bottom,
+            values: $rounded-sizes,
+        ),
+        "rounded-start": (
+            property: --box-border-bottom-left-radius --box-border-top-left-radius,
+            class: rounded-start,
+            values: $rounded-sizes,
+        ),
+    ),
+);
