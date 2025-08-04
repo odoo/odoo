@@ -100,5 +100,10 @@
         <output class="s_range_bubble" contenteditable="false">25</output>
     </div>
 </t>
+ <t t-name="website_payment.DonationPageOption">
+    <BuilderRow label.translate="Donation">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_payment.donation_full_address','website_payment.donation_citizen_id_number']}" />
+    </BuilderRow>
+</t>
 
 </templates>

@@ -155,4 +155,63 @@
         </small>
     </template>
 
+    <template id="website_payment.donation_citizen_id_number" inherit_id="website_payment.donation_information">
+        <xpath expr="//div/div" position="after">
+            <div t-attf-class="mb-3 #{error.get('citizen_id_number') and 'o_has_error' or ''} col-lg-12 div_name">
+                <label class="col-form-label fw-bold" for="citizen_id_number">Citizen ID Number
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <input t-att-readonly="'1' if partner_details['citizen_id_number'] and partner_id else None" type="text" name="citizen_id_number" t-attf-class="form-control #{error.get('citizen_id_number') and 'is-invalid' or ''}" t-att-value="partner_details.get('citizen_id_number')" required="1"/>
+                <div class="invalid-feedback">
+                    Please provide your citizen ID number.
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="website_payment.donation_full_address" inherit_id="website_payment.donation_information">
+        <xpath expr="//div[contains(@t-attf-class, 'div_country')]" position="after">
+            <div t-attf-class="mb-3 #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_name">
+                <label class="col-form-label fw-bold" for="street">Street
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <input t-att-readonly="'1' if 'street' in partner_details and partner_id else None" type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="partner_details.get('street')" required="1"/>
+                <div class="invalid-feedback">
+                    Please provide your street.
+                </div>
+            </div>
+            <div t-attf-class="mb-3 col-lg-12 div_name">
+                <label class="col-form-label fw-bold" for="street2">Street 2<span/></label>
+                <input t-att-readonly="'1' if 'street2' in partner_details and partner_id else None" type="text" name="street2" t-att-value="partner_details.get('street2')"/>
+            </div>
+            <div t-attf-class="mb-3 #{error.get('zip') and 'o_has_error' or ''} col-lg-3 div_name">
+                <label class="col-form-label fw-bold" for="zip">zip
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <input t-att-readonly="'1' if 'zip' in partner_details and partner_id else None" type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="partner_details.get('zip')" required="1"/>
+                <div class="invalid-feedback">
+                    Please provide your ZIP.
+                </div>
+            </div>
+            <div t-attf-class="mb-3 #{error.get('city') and 'o_has_error' or ''} col-lg-6 div_name">
+                <label class="col-form-label fw-bold" for="city">City
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <input t-att-readonly="'1' if 'city' in partner_details and partner_id else None" type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="partner_details.get('city')" required="1"/>
+                <div class="invalid-feedback">
+                    Please provide your city.
+                </div>
+            </div>
+            <div t-attf-class="mb-3 #{error.get('state') and 'o_has_error' or ''} col-lg-3 div_name">
+                <label class="col-form-label fw-bold" for="state">State
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <input t-att-readonly="'1' if 'state' in partner_details and partner_id else None" type="text" name="state" t-attf-class="form-control #{error.get('state') and 'is-invalid' or ''}" t-att-value="partner_details.get('state')" required="1"/>
+                <div class="invalid-feedback">
+                    Please provide your state.
+                </div>
+            </div>
+        </xpath>
+    </template>
+
 </odoo>

@@ -106,6 +106,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                     'name': partner_sudo.name,
                     'email': partner_sudo.email,
                     'country_id': partner_sudo.country_id.id,
+                    'citizen_id_number': partner_sudo.citizen_id_number,
                 }
 
             countries = request.env['res.country'].sudo().search([])
