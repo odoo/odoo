@@ -125,6 +125,62 @@ test("input kept on async action", async () => {
     expect(".options-container input").toHaveValue("23");
 });
 
+test("input should remove invalid char", async () => {
+    addActionOption({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            setup() {
+                this.preview = false;
+            }
+            getValue({ editingElement }) {
+                return editingElement.dataset.test;
+            }
+            async apply({ editingElement, value }) {
+                editingElement.dataset.test = value;
+            }
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
+    addOption({
+        selector: ".test-options-target-composable",
+        template: xml`<BuilderNumberInput action="'customAction'" composable="true"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target" data-test="1">Hello</div><div class="test-options-target-composable" data-test="2">World</div>`);
+    
+    // Single
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".options-container:first input").edit("-1-2-");
+    await animationFrame();
+    expect(".options-container:first input").toHaveValue("-12");
+
+    await contains(".options-container:first input").edit("3-4-5");
+    await animationFrame();
+    expect(".options-container:first input").toHaveValue("345");
+
+    await contains(".options-container:first input").edit(" .$a?,6.b$?,7.$?c,  ");
+    await animationFrame();
+    expect(".options-container:first input").toHaveValue(".67");
+
+    // Composable 
+    await contains(":iframe .test-options-target-composable").click();
+
+    await contains(".options-container:last input").edit("-12 12 -12 12");
+    await animationFrame();
+    expect(".options-container:last input").toHaveValue("-12 12 -12 12");
+
+    await contains(".options-container:last input").edit("3?/4.5 34,/?5");
+    await animationFrame();
+    expect(".options-container:last input").toHaveValue("34.5 34.5");
+
+    await contains(".options-container:last input").edit("  6bc7 6//7 6$a7 6d7  ");
+    await animationFrame();
+    expect(".options-container:last input").toHaveValue("67 67 67 67");
+});
+
 describe("default value", () => {
     test("should use the default value when there is no value onChange", async () => {
         addActionOption({
