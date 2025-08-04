@@ -103,6 +103,23 @@ export class Builder extends Component {
                     on_mobile_preview_clicked: withSequence(20, () => {
                         this.triggerDomUpdated();
                     }),
+                    before_save_handlers: () => {
+                        const snippetMenuEl = this.builder_sidebarRef.el;
+                        // Add a loading effect on the save button and disable the other actions
+                        this.removeLoadingEffect = addButtonLoadingEffect(
+                            snippetMenuEl.querySelector("[data-action='save']")
+                        );
+                        this.actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
+                        for (const actionButtonEl of this.actionButtonEls) {
+                            actionButtonEl.disabled = true;
+                        }
+                    },
+                    after_save_handlers: () => {
+                        for (const actionButtonEl of this.actionButtonEls) {
+                            actionButtonEl.removeAttribute("disabled");
+                        }
+                        this.removeLoadingEffect();
+                    },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {
@@ -238,26 +255,8 @@ export class Builder extends Component {
     async _save() {
         this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
-        const snippetMenuEl = this.builder_sidebarRef.el;
-        // Add a loading effect on the save button and disable the other actions
-        const removeLoadingEffect = addButtonLoadingEffect(
-            snippetMenuEl.querySelector("[data-action='save']")
-        );
-        const actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
-        for (const actionButtonEl of actionButtonEls) {
-            actionButtonEl.disabled = true;
-        }
-        try {
-            await this.editor.shared.savePlugin.save();
-            this.props.closeEditor();
-        } catch (error) {
-            for (const actionButtonEl of actionButtonEls) {
-                actionButtonEl.removeAttribute("disabled");
-            }
-            removeLoadingEffect();
-            this.editor.shared.edit_interaction.restartInteractions();
-            throw error;
-        }
+        await this.editor.shared.savePlugin.save({ alwaysSkipAfterSaveHandlers: false });
+        this.props.closeEditor();
     }
 
     /**
