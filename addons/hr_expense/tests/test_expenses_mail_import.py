@@ -49,12 +49,12 @@ class TestExpensesMailImport(TestExpenseCommon):
         user.company_id = company_2.id
 
         # Create a second employee linked to the user for another company
-        company_2_employee = self.env['hr.employee'].create({
+        company_2_employee = self.env['hr.employee'].sudo().create({
             'name': 'expense_employee_2',
             'company_id': company_2.id,
             'user_id': user.id,
             'work_email': user.email,
-        })
+        }).sudo(False)
 
         message_parsed = {
             'message_id': "the-world-is-a-ghetto",
@@ -72,7 +72,7 @@ class TestExpensesMailImport(TestExpenseCommon):
     def test_import_expense_from_email_employee_without_user(self):
         """ When an employee is not linked to a user, he has to be able to create expenses from email """
         employee = self.expense_employee
-        employee.user_id = False
+        employee.sudo().user_id = False
 
         message_parsed = {
             'message_id': "the-world-is-a-ghetto",

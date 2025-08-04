@@ -189,8 +189,8 @@ class TestExpensesStates(TestExpenseCommon):
 
     def test_expense_state_autovalidation(self):
         """ Test the auto-validation flow skips 'submitted' state when there is no manager"""
-        self.expense_employee.expense_manager_id = False
-        self.expenses_all.manager_id = False
+        self.expense_employee.sudo().expense_manager_id = False
+        self.expenses_all.sudo().manager_id = False
         self.expenses_all.action_submit()
         self.assertSequenceEqual(['approved', 'approved'], self.expenses_all.mapped('state'))
 

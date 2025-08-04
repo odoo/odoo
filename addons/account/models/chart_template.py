@@ -178,7 +178,7 @@ class AccountChartTemplate(models.AbstractModel):
         # Ensure that the context is the correct one, even if not called by try_loading
         if not self.env.is_system():
             raise AccessError(_("Only administrators can install chart templates"))
-
+        self = self.sudo()  # noqa: PLW0642
         chart_template_mapping = self._get_chart_template_mapping()[template_code]
         if not company.country_id:
             company.country_id = chart_template_mapping.get('country_id')
