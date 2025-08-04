@@ -1100,7 +1100,7 @@ class IrActionsServer(models.Model):
                     VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (self.env.uid, 'server', self.env.cr.dbname, __name__, level, message, "action", action.id, action.name))
 
-        eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
+        eval_context = super()._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
         model = self.env[model_name]
         record = None
@@ -1338,14 +1338,14 @@ class IrActionsTodo(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        todos = super(IrActionsTodo, self).create(vals_list)
+        todos = super().create(vals_list)
         for todo in todos:
             if todo.state == "open":
                 self.ensure_one_open_todo()
         return todos
 
     def write(self, vals):
-        res = super(IrActionsTodo, self).write(vals)
+        res = super().write(vals)
         if vals.get('state', '') == 'open':
             self.ensure_one_open_todo()
         return res
@@ -1366,7 +1366,7 @@ class IrActionsTodo(models.Model):
                     self -= todo_open_menu
             except ValueError:
                 pass
-        return super(IrActionsTodo, self).unlink()
+        return super().unlink()
 
     def action_launch(self):
         """ Launch Action of Wizard"""

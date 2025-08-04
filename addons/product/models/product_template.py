@@ -506,7 +506,7 @@ class ProductTemplate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
-        templates = super(ProductTemplate, self).create(vals_list)
+        templates = super().create(vals_list)
         if self.env.context.get("create_product_product", True):
             templates._create_variant_ids()
 
@@ -525,8 +525,8 @@ class ProductTemplate(models.Model):
         if 'uom_id' in vals:
             products = self.filtered(lambda template: template.uom_id.id != vals['uom_id']).product_variant_ids
             products.with_context(skip_uom_conversion=True)._update_uom(vals['uom_id'])
-        res = super(ProductTemplate, self).write(vals)
-        if self.env.context.get("create_product_product", True) and 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
+        res = super().write(vals)
+        if (self.env.context.get("create_product_product", True) and 'attribute_line_ids' in vals) or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
@@ -1354,7 +1354,7 @@ class ProductTemplate(models.Model):
         self = self.with_context(
             empty_list_help_document_name=_("product"),
         )
-        return super(ProductTemplate, self).get_empty_list_help(help_message)
+        return super().get_empty_list_help(help_message)
 
     @api.model
     def get_import_templates(self):
