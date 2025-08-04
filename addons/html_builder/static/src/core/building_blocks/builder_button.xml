@@ -16,8 +16,8 @@
             t-att-title="props.title"
             t-att-aria-label="props.title"
             t-on-click="() => this.onClick()"
-            t-on-mouseenter="() => this.onMouseenter(props.id)"
-            t-on-mouseleave="() => this.onMouseleave(props.id)">
+            t-on-pointerenter="() => this.onPointerEnter(props.id)"
+            t-on-pointerleave="() => this.onPointerLeave(props.id)">
             <Img t-if="props.iconImg" src="props.iconImg" attrs="{alt:props.iconImgAlt}"/>
             <i t-if="props.icon" t-att-class="iconClassName" role="img"/>
             <t t-if="props.label"  t-out="props.label"/>
