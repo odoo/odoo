@@ -335,7 +335,7 @@ class ProductProduct(models.Model):
 
     def _get_fifo_candidates(self, company):
         candidates_domain = self._get_fifo_candidates_domain(company)
-        return self.env["stock.valuation.layer"].sudo().search(candidates_domain).sorted(lambda svl: svl._candidate_sort_key())
+        return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
 
     def _get_qty_taken_on_candidate(self, qty_to_take_on_candidates, candidate):
         return min(qty_to_take_on_candidates, candidate.remaining_qty)
