@@ -420,7 +420,7 @@ class HrEmployee(models.Model):
         if version_to_copy.date_version == date:
             return version_to_copy
 
-        date_from, date_to = self._get_contract_dates(date)
+        date_from, date_to = self.sudo()._get_contract_dates(date)
         contract_date_start = values['contract_date_start'] = values.get('contract_date_start', date_from)
         contract_date_end = values['contract_date_end'] = values.get('contract_date_end', date_to)
         if isinstance(contract_date_start, str):
@@ -432,15 +432,18 @@ class HrEmployee(models.Model):
             values['employee_id'] = self.id
 
         if contract_date_start == date_from and contract_date_end != date_to:
-            versions_to_sync = self.env['hr.version'].with_context(sync_contract_dates=True).search([
+            versions_sudo_to_sync = self.env['hr.version'].with_context(sync_contract_dates=True).sudo().search([
                 ('employee_id', '=', values['employee_id']),
                 ('contract_date_start', '=', date_from),
             ])
-            if versions_to_sync:
-                versions_to_sync.write({
+            if versions_sudo_to_sync:
+                versions_sudo_to_sync.write({
                     'contract_date_end': contract_date_end,
                 })
-        return version_to_copy.copy(values)
+        self.check_access('write')
+        version_to_copy.check_access('write')
+        new_version = version_to_copy.sudo().copy(values)
+        return new_version.sudo(False)
 
     def _is_in_contract(self, date):
         return self._get_version(date)._is_in_contract(date)
