@@ -383,23 +383,14 @@
         <field name="feature_url">/our-services</field>
     </record>
     <record id="feature_page_pricing" model="website.configurator.feature">
-        <field name="name">Pricing</field>
-        <field name="description">Designed to drive conversion</field>
+        <field name="name">Pricing Plan</field>
+        <field name="description">Useful if you sell subscriptions</field>
         <field name="iap_page_code">pricing</field>
         <field name="sequence">4</field>
         <field name="page_view_id" ref="pricing"/>
         <field name="icon">fa-random</field>
         <field name="menu_sequence">35</field>
         <field name="feature_url">/pricing</field>
-    </record>
-    <record id="feature_page_privacy_policy" model="website.configurator.feature">
-        <field name="name">Privacy Policy</field>
-        <field name="description">Explain how you protect privacy</field>
-        <field name="iap_page_code">privacy_policy</field>
-        <field name="sequence">5</field>
-        <field name="page_view_id" ref="privacy_policy"/>
-        <field name="icon">fa-gavel</field>
-        <field name="feature_url">/privacy</field>
     </record>
 
     <!-- Configurator apps features -->
@@ -412,16 +403,6 @@
         <field name="icon">fa-rss</field>
         <field name="menu_company">True</field>
         <field name="menu_sequence">40</field>
-        <field name="feature_url">/blog</field>
-    </record>
-    <record id="feature_module_success_stories" model="website.configurator.feature">
-        <field name="name">Success Stories</field>
-        <field name="description">Share your best case studies</field>
-        <field name="sequence">7</field>
-        <field name="module_id" ref="base.module_website_blog"/>
-        <field name="icon">fa-star</field>
-        <field name="menu_company">True</field>
-        <field name="menu_sequence">45</field>
         <field name="feature_url">/blog</field>
     </record>
     <record id="feature_module_career" model="website.configurator.feature">
@@ -451,14 +432,6 @@
         <field name="menu_sequence">20</field>
         <field name="feature_url">/event</field>
     </record>
-    <record id="feature_module_forum" model="website.configurator.feature">
-        <field name="name">Forum</field>
-        <field name="description">Give visitors the information they need</field>
-        <field name="sequence">11</field>
-        <field name="module_id" ref="base.module_website_forum"/>
-        <field name="icon">fa-users</field>
-        <field name="feature_url">/forum</field>
-    </record>
     <record id="feature_module_live_chat" model="website.configurator.feature">
         <field name="name">Live Chat</field>
         <field name="description">Chat with visitors to improve traction</field>
@@ -475,13 +448,6 @@
         <field name="icon">fa-graduation-cap</field>
         <field name="menu_sequence">25</field>
         <field name="feature_url">/slides</field>
-    </record>
-    <record id="feature_module_stores_locator" model="website.configurator.feature">
-        <field name="name">Stores Locator</field>
-        <field name="description">A map and a listing of your stores</field>
-        <field name="sequence">15</field>
-        <field name="module_id" ref="base.module_website_google_map"/>
-        <field name="icon">fa-map-marker</field>
     </record>
 
     <data noupdate="1">
@@ -500,7 +466,13 @@
             <field name="track">True</field>
             <field name="website_meta_description">This is the contact us page of the website</field>
         </record>
-
+        <record id="privacy_policy_page" model="website.page">
+            <field name="is_published">True</field>
+            <field name="url">/privacy</field>
+            <field name="view_id" ref="privacy_policy"/>
+            <field name="track">True</field>
+            <field name="website_meta_description">This is the privacy policy page of the website</field>
+        </record>
         <!-- Default Menu to store module menus for new website -->
         <record id="main_menu" model="website.menu">
           <field name="name">Default Main Menu</field>
@@ -512,13 +484,6 @@
             <field name="page_id" ref="website.homepage_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
-        </record>
-        <record id="menu_contactus" model="website.menu">
-            <field name="name">Contact us</field>
-            <field name="url">/contactus</field>
-            <field name="page_id" ref="website.contactus_page"/>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">60</field>
         </record>
 
         <!-- Default Website -->

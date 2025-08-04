@@ -35,7 +35,7 @@ export const ROUTES = {
 
 export const WEBSITE_TYPES = {
     1: {id: 1, label: _t("a business website"), name: 'business'},
-    2: {id: 2, label: _t("an online store"), name: 'online_store'},
+    2: {id: 2, label: _t("an eCommerce"), name: 'ecommerce'},
     3: {id: 3, label: _t("a blog"), name: 'blog'},
     4: {id: 4, label: _t("an event website"), name: 'event'},
     5: {id: 5, label: _t("an elearning platform"), name: 'elearning'},

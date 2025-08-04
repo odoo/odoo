@@ -92,7 +92,7 @@ goBackToBlocks(),
     tooltipPosition: "bottom",
     run: "click",
 }, {
-    trigger: "a[data-menu-xmlid='website.menu_website_dashboard'], a[data-menu-xmlid='website.menu_website_analytics']",
+    trigger: "a[data-menu-xmlid='website.menu_website_analytics']",
     content: _t("Let's now take a look at your eCommerce dashboard to get your eCommerce website ready in no time."),
     tooltipPosition: "bottom",
     // Just check during test mode. Otherwise, clicking it will result to random error on loading the Chart.js script.
