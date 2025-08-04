@@ -1,4 +1,5 @@
 import { Component, onWillDestroy, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { closestScrollableY } from "@web/core/utils/scrolling";
@@ -71,11 +72,16 @@ export class EditorOverlay extends Component {
         }
 
         if (this.props.closeOnPointerdown) {
+            const clickAway = (ev) => {
+                if (!this.env[OVERLAY_SYMBOL]?.contains(ev.composedPath()[0])) {
+                    this.props.close();
+                }
+            };
             const editableDocument = this.props.editable.ownerDocument;
-            useExternalListener(editableDocument, "pointerdown", this.props.close);
+            useExternalListener(editableDocument, "pointerdown", clickAway);
             // Listen to pointerdown outside the iframe
             if (editableDocument !== document) {
-                useExternalListener(document, "pointerdown", this.props.close);
+                useExternalListener(document, "pointerdown", clickAway);
             }
         }
 
