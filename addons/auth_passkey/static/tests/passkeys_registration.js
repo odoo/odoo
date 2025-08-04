@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('passkeys_tour_registration', {
             run: 'click',
         }, {
             content: "Check that we have to enter enhanced security mode",
-            trigger: ".modal div:contains(entering your password)",
+            trigger: ".modal div:contains(Enter your current password)",
         }, {
             content: "Input password",
             trigger: '.modal [name=password] input',
