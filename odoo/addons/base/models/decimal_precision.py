@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 class DecimalPrecision(models.Model):
     _name = 'decimal.precision'
     _description = 'Decimal Precision'
+    _clear_cache_name = 'stable'
 
     name = fields.Char('Usage', required=True)
     digits = fields.Integer('Digits', required=True, default=2)
@@ -25,22 +26,6 @@ class DecimalPrecision(models.Model):
         self.env.cr.execute('select digits from decimal_precision where name=%s', (application,))
         res = self.env.cr.fetchone()
         return res[0] if res else 2
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        self.env.registry.clear_cache('stable')
-        return res
-
-    def write(self, vals):
-        res = super().write(vals)
-        self.env.registry.clear_cache('stable')
-        return res
-
-    def unlink(self):
-        res = super().unlink()
-        self.env.registry.clear_cache('stable')
-        return res
 
     @api.onchange('digits')
     def _onchange_digits_warning(self):

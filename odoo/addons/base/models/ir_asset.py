@@ -61,20 +61,7 @@ class IrAsset(models.Model):
     _description = 'Asset'
     _order = 'sequence, id'
     _allow_sudo_commands = False
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.registry.clear_cache('assets')
-        return super().create(vals_list)
-
-    def write(self, vals):
-        if self:
-            self.env.registry.clear_cache('assets')
-        return super().write(vals)
-
-    def unlink(self):
-        self.env.registry.clear_cache('assets')
-        return super().unlink()
+    _clear_cache_name = 'assets'
 
     name = fields.Char(string='Name', required=True)
     bundle = fields.Char(string='Bundle name', required=True)

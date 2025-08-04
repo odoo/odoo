@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import json
 import locale
 import logging
 import re
@@ -79,6 +77,7 @@ class ResLang(models.Model):
     _description = "Language"
     _order = "active desc,name"
     _allow_sudo_commands = False
+    _clear_cache_name = 'stable'
 
     _disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
@@ -361,7 +360,6 @@ class ResLang(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.registry.clear_cache('stable')
         for vals in vals_list:
             if not vals.get('url_code'):
                 vals['url_code'] = vals.get('iso_code') or vals['code']
@@ -382,6 +380,7 @@ class ResLang(models.Model):
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super().write(vals)
+        self.flush_recordset(['url_code'])
 
         if vals.get('active'):
             # If we activate a lang, set it's url_code to the shortest version
@@ -402,8 +401,6 @@ class ResLang(models.Model):
                     short_lang.url_code = short_lang.code
                     long_lang.url_code = short_code
 
-        self.env.flush_all()
-        self.env.registry.clear_cache('stable')
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -416,10 +413,6 @@ class ResLang(models.Model):
                 raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
-
-    def unlink(self):
-        self.env.registry.clear_cache('stable')
-        return super().unlink()
 
     def copy_data(self, default=None):
         default = dict(default or {})

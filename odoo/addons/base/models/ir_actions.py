@@ -54,6 +54,7 @@ class LoggerProxy:
 class IrActionsActions(models.Model):
     _name = 'ir.actions.actions'
     _description = 'Action'
+    _clear_cache_name = 'default'  # self.get_bindings() depends on action records
     _table = 'ir_actions'
     _order = 'name, id'
     _allow_sudo_commands = False
@@ -106,19 +107,6 @@ class IrActionsActions(models.Model):
         for record in self:
             record.xml_id = res.get(record.id)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        # self.get_bindings() depends on action records
-        self.env.registry.clear_cache()
-        return res
-
-    def write(self, vals):
-        res = super().write(vals)
-        # self.get_bindings() depends on action records
-        self.env.registry.clear_cache()
-        return res
-
     def unlink(self):
         """unlink ir.action.todo/ir.filters which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
@@ -126,10 +114,7 @@ class IrActionsActions(models.Model):
         todos.unlink()
         filters = self.env['ir.filters'].search([('action_id', 'in', self.ids)])
         filters.unlink()
-        res = super().unlink()
-        # self.get_bindings() depends on action records
-        self.env.registry.clear_cache()
-        return res
+        return super().unlink()
 
     @api.ondelete(at_uninstall=True)
     def _unlink_check_home_action(self):
@@ -355,15 +340,10 @@ class IrActionsAct_Window(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.registry.clear_cache()
         for vals in vals_list:
             if not vals.get('name') and vals.get('res_model'):
                 vals['name'] = self.env[vals['res_model']]._description
         return super().create(vals_list)
-
-    def unlink(self):
-        self.env.registry.clear_cache()
-        return super().unlink()
 
     def exists(self):
         ids = self._existing()
