@@ -630,3 +630,15 @@ registry.category("web_tour.tours").add("test_refund_does_not_decrease_points", 
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_discount_after_unknown_scan", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product A", "1"),
+            scan_barcode("00998877665544332211"), //should be unknown
+            PosLoyalty.hasRewardLine("10% on Test Product A", "-0.50"),
+            ProductScreen.totalAmountIs("4.50"),
+        ].flat(),
+});
