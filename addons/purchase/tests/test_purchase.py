@@ -989,6 +989,15 @@ class TestPurchase(AccountTestInvoicingCommon):
                 'date_end': fields.Date.today() + timedelta(days=3),
                 'product_code': 'HHH',
             },
+            {
+                'partner_id': self.partner_a.id,
+                'product_id': self.product_a.id,
+                'min_qty': 20,
+                'price': 80,
+                'date_start': fields.Date.today() - timedelta(days=5),
+                'date_end': fields.Date.today() + timedelta(days=3),
+                'product_code': 'HHH-min_qty_20',
+            },
         ])
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
