@@ -440,3 +440,33 @@ class TestAllocations(TestHrHolidaysCommon):
                 allocation_form.number_of_hours_display = 10
                 allocation_form.employee_id = self.env["hr.employee"]
             allocation_form.save()
+
+    def test_employee_holidays_archived_display(self):
+        admin_user = self.env.ref('base.user_admin')
+
+        employee = self.env['hr.employee'].create({
+            'name': 'test_employee',
+        })
+
+        leave_type = self.env['hr.leave.type'].with_user(admin_user)
+
+        holidays_type_1 = leave_type.create({
+            'name': 'archived_holidays',
+            'allocation_validation_type': 'no_validation',
+        })
+
+        self.env['hr.leave.allocation'].create({
+            'name': 'archived_holidays_allocation',
+            'employee_id': employee.id,
+            'holiday_status_id': holidays_type_1.id,
+            'number_of_days': 10,
+            'state': 'confirm',
+            'date_from': '2022-01-01',
+        })
+
+        self.assertEqual(employee.allocation_display, '10')
+
+        holidays_type_1.active = False
+        employee._compute_allocation_remaining_display()
+
+        self.assertEqual(employee.allocation_display, '0')
