@@ -25,8 +25,10 @@ export function initElementForEdition(element, options = {}) {
         const height = img.getAttribute("height");
         img.removeAttribute("height");
         img.removeAttribute("width");
-        img.style.setProperty("width", width);
-        img.style.setProperty("height", height);
+        let unit = !isNaN(Number(width)) ? "px" : "";
+        img.style.setProperty("width", `${width}${unit}`);
+        unit = !isNaN(Number(height)) ? "px" : "";
+        img.style.setProperty("height", `${height}${unit}`);
     }
 }
 
