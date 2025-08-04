@@ -202,7 +202,9 @@ class Selection(Field[str | typing.Literal[False]]):
         """
         selection = self.selection
         if isinstance(selection, str) or callable(selection):
-            return determine(selection, env[self.model_name])
+            selection = determine(selection, env[self.model_name])
+            # force all values to be strings (check _get_year_selection)
+            return [(str(key), str(label)) for key, label in selection]
 
         # translate selection labels
         if env.lang:
