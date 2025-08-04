@@ -95,3 +95,4 @@ class SaleOrder(models.Model):
                 pick.discrete_pick = order.discrete_pick
                 pick.automation_manual_order = order.automation_manual_order
                 pick.slsu = order.slsu
+                pick.update_merge_pick_type()

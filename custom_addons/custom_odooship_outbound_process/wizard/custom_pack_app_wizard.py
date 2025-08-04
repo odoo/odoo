@@ -150,14 +150,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not tote_codes:
             return
 
-        # Find all pickings for this site and assigned and not packed (possible merged)
         all_pickings = self.env["stock.picking"].search([
             ("site_code_id", "=", self.site_code_id.id),
             ("state", "=", "assigned"),
             ("current_state", "!=", "pack"),
         ])
 
-        # Step 1: Find all SOs involved in scanned totes (just like before)
         sale_ids = set()
         for picking in all_pickings:
             for mv in picking.move_ids_without_package:
@@ -165,68 +163,94 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     if picking.sale_id:
                         sale_ids.add(picking.sale_id.id)
 
-        # Step 2: For those SOs, get ALL pickings with operation_process_type == 'pick'
         if not sale_ids:
             raise ValidationError(
                 (
-                    "No picking found for scanned tote(s): %s at this site with state='Ready'. Please check the tote code or picking state.")
-                % ', '.join(sorted(tote_codes))
+                    "No picking found for scanned tote(s): %s at this site with state='Ready'. "
+                    "Please check the tote code or picking state."
+                ) % ', '.join(sorted(tote_codes))
             )
 
-        relevant_pickings = self.env["stock.picking"].search([
-            ("site_code_id", "=", self.site_code_id.id),
-            ("state", "=", "assigned"),
-            ("current_state", "!=", "pack"),
-            ("operation_process_type", "=", "pick"),
-            ("sale_id", "in", list(sale_ids)),
-        ])
-        print("\n\n\n relevant picks====", relevant_pickings)
+        # ===== SPLIT PICKING LOGIC HERE =====
+        # Check if any pick meets the relaxed AusPost merge-pick condition
+        merge_condition_applies = False
+        for picking in all_pickings:
+            if (
+                    picking.merge_pick_type and
+                    picking.discrete_pick and
+                    picking.sale_id and
+                    picking.sale_id.discrete_pick and
+                    (picking.sale_id.carrier or '').strip().lower() == 'auspost' and
+                    not picking.is_international and
+                    any(_split_codes([(mv.pc_container_code or "")]) & tote_codes for mv in
+                        picking.move_ids_without_package)
+            ):
+                merge_condition_applies = True
+                break
+
+        if merge_condition_applies:
+            # Only process scanned pickings (relaxed rule)
+            relevant_pickings = all_pickings.filtered(
+                lambda p: any(
+                    _split_codes([(mv.pc_container_code or "")]) & tote_codes
+                    for mv in p.move_ids_without_package
+                )
+            )
+        else:
+            # Default: process all picks for SOs (strict rule)
+            relevant_pickings = self.env["stock.picking"].search([
+                ("site_code_id", "=", self.site_code_id.id),
+                ("state", "=", "assigned"),
+                ("current_state", "!=", "pack"),
+                ("operation_process_type", "=", "pick"),
+                ("sale_id", "in", list(sale_ids)),
+            ])
+
         if not relevant_pickings:
             raise ValidationError(
-                ("No pickings found for involved Sale Orders at this site with state='Ready'.")
+                "No pickings found for involved Sale Orders at this site with state='Ready'."
             )
 
-        # Step 3: Gather ALL required totes for these picks (including "-")
-        required_totes = set()
-        for picking in relevant_pickings:
-            for mv in picking.move_ids_without_package:
-                tote = (mv.pc_container_code or "").strip()
-                required_totes.update(_split_codes([tote]))
-                if not tote:
-                    required_totes.add("-")
-
-        # Step 4: Raise error if not all are scanned (shows all pick numbers and their totes)
-        missing = required_totes - tote_codes
-        if missing:
-            picks_and_totes = []
-            for picking in relevant_pickings:
-                pick_totes = []
-                for mv in picking.move_ids_without_package:
-                    code = (mv.pc_container_code or "").strip()
-                    pick_totes.append(code if code else "-")
-                picks_and_totes.append(
-                    f"Pick: {picking.name} - Tote(s): {', '.join(pick_totes) if pick_totes else '-'}"
-                )
-            missing_display = [m or '-' for m in missing]
-            raise ValidationError((
-                    f"You must scan ALL totes before packing!\n"
-                    f"Missing tote(s): {', '.join(missing_display)}\n"
-                    "Picks for this order:\n" +
-                    "\n".join(picks_and_totes)
-            ))
-
-        # All required totes are now scanned, proceed: only create lines for the actual scanned pickings
-        # (Still only pickings with a move that matches a scanned tote)
-        pickings_to_load = relevant_pickings.filtered(
+        scanned_pickings = relevant_pickings.filtered(
             lambda p: any(
                 bool(_split_codes([(mv.pc_container_code or "")]) & tote_codes)
                 for mv in p.move_ids_without_package
             )
         )
-        self.picking_ids = [(6, 0, pickings_to_load.ids)]
+
+        # Tote validation (strict if not under merge exception)
+        if not merge_condition_applies:
+            required_totes = set()
+            for picking in relevant_pickings:
+                for mv in picking.move_ids_without_package:
+                    code = (mv.pc_container_code or "").strip()
+                    required_totes.update(_split_codes([code]))
+                    if not code:
+                        required_totes.add("-")
+
+            missing = required_totes - tote_codes
+            if missing:
+                picks_and_totes = []
+                for picking in relevant_pickings:
+                    pick_totes = []
+                    for mv in picking.move_ids_without_package:
+                        code = (mv.pc_container_code or "").strip()
+                        pick_totes.append(code if code else "-")
+                    picks_and_totes.append(
+                        f"Pick: {picking.name} - Tote(s): {', '.join(pick_totes) if pick_totes else '-'}"
+                    )
+                missing_display = [m or '-' for m in missing]
+                raise ValidationError((
+                        f"You must scan ALL totes before packing!\n"
+                        f"Missing tote(s): {', '.join(missing_display)}\n"
+                        "Picks for this order:\n" +
+                        "\n".join(picks_and_totes)
+                ))
+
+        self.picking_ids = [(6, 0, scanned_pickings.ids)]
 
         vals_list = []
-        for picking in pickings_to_load:
+        for picking in scanned_pickings:
             incoterm = picking.sale_id.packaging_source_type if picking.sale_id else False
             pkg_id = self._get_package_box_id(
                 picking.tenant_code_id.id,
@@ -244,38 +268,36 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "product_id": mv.product_id.id,
                         "picking_id": picking.id,
                         "quantity": 0,
-                        # "available_quantity": 1,
                         "weight": mv.product_id.weight,
                         "tenant_code_id": picking.tenant_code_id.id,
                         "site_code_id": picking.site_code_id.id,
                         "sale_order_id": picking.sale_id.id,
                         "package_box_type_id": pkg_id,
                     })
+
         if vals_list:
             self.line_ids = [(0, 0, v) for v in vals_list]
 
         self._compute_fields_based_on_picking_ids()
 
-        # --- SHORT PICK VALIDATION: Do not allow if picked_qty != demand_qty (product_uom_qty) ---
         for picking in self.picking_ids:
             for move in picking.move_ids_without_package:
                 demand_qty = move.product_uom_qty
                 picked_qty = move.picked_qty
                 if demand_qty > picked_qty:
-                    # Check if partial packing is allowed for this pick
                     allow_partial = picking.allow_partial or False
                     if not allow_partial:
                         raise ValidationError((
-                            "Short Pick Detected!\n\n"
-                            "In Picking '%s', Product '[%s]  %s':\n"
-                            "Picked Qty = %.2f, Demand Qty = %.2f.\n\n"
-                            "Please call supervisor before processing this order."
-                        ) % (
-                              picking.name,
-                              move.product_id.default_code or '',
-                              move.product_id.name or '',
-                              picked_qty,
-                              demand_qty))
+                                                  "Short Pick Detected!\n\n"
+                                                  "In Picking '%s', Product '[%s]  %s':\n"
+                                                  "Picked Qty = %.2f, Demand Qty = %.2f.\n\n"
+                                                  "Please call supervisor before processing this order."
+                                              ) % (
+                                                  picking.name,
+                                                  move.product_id.default_code or '',
+                                                  move.product_id.name or '',
+                                                  picked_qty,
+                                                  demand_qty))
 
     def update_packed_qty_after_success(self, picking_name, packed_lines):
         """
@@ -519,8 +541,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     line.scanned = True
                     payload = self._prepare_old_logic_payload_multi_picks()
                     is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
-                    api_url = "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment" if is_prod == 'True' \
-                        else "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment"
+                    api_url = "https://shiperoo-connect-carrier.uat.automation.shiperoo.com/auspost/shipment" if is_prod == 'True' \
+                        else "https://shiperoo-connect-carrier.uat.automation.shiperoo.com/auspost/shipment"
 
                     headers = {'Content-Type': 'application/json'}
                     response = requests.post(api_url, headers=headers, data=json.dumps(payload))
@@ -792,8 +814,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             api_url = "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders" if is_production == 'True' \
                 else "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
         if (line.picking_id.sale_id.carrier or '').upper() == 'AUSPOST':
-            api_url = "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment" if is_production == 'True' \
-                else "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment"
+            api_url = "https://shiperoo-connect-carrier.uat.automation.shiperoo.com/auspost/shipment" if is_production == 'True' \
+                else "https://shiperoo-connect-carrier.uat.automation.shiperoo.com/auspost/shipment"
         print("\n\n\n old logic Aup[opst payload single pick=====", api_url)
         _logger.info(f"[OLD LOGIC] Sending legacy payload:\n{json.dumps(payload, indent=4)}")
         self.send_payload_to_api(api_url, payload)

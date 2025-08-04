@@ -37,6 +37,18 @@ class StockPicking(models.Model):
         compute='_compute_is_international',
         store=True
     )
+    merge_pick_type = fields.Boolean(string='Automation Merge Pick', default=False)
+
+    def update_merge_pick_type(self):
+        for rec in self:
+            location = (rec.location_id.name or '').strip().lower()
+            rec.merge_pick_type = (
+                    rec.discrete_pick
+                    and rec.automation_manual_order == 'merge'
+                    and 'automation' in location
+            )
+            _logger.info(
+                f"[{rec.name}] merge_pick_type={rec.merge_pick_type}, location={location}, discrete={rec.discrete_pick}, order_type={rec.automation_manual_order}")
 
     def button_validate(self):
         for picking in self:
