@@ -5,14 +5,14 @@ export class BuilderContentEditablePlugin extends Plugin {
     static id = "builderContentEditablePlugin";
     resources = {
         force_not_editable_selector: [
-            "section:has(> .o_container_small, > .container, > .container-fluid)",
+            ".o_editable section:has(> .o_container_small, > .container, > .container-fluid)",
             ".o_not_editable",
             "[data-oe-field='arch']:empty",
         ],
         force_editable_selector: [
-            "section > .o_container_small",
-            "section > .container",
-            "section > .container-fluid",
+            ".o_editable section > .o_container_small",
+            ".o_editable section > .container",
+            ".o_editable section > .container-fluid",
             ".o_editable",
         ],
         filter_contenteditable_handlers: this.filterContentEditable.bind(this),
