@@ -130,6 +130,7 @@ class ResPartner extends models.ServerModel {
     }
 }
 test("don't retry sending data to the server if the reason that caused the failure is not a network error", async () => {
+    onRpc("/pos/ping", () => {});
     defineModels({ PosSession, ResPartner });
     onRpc("pos.session", "filter_local_data", () => ({}));
     await makeMockEnv();
