@@ -31,7 +31,7 @@
                     <t t-if="order.presetDateTime" t-out="order.presetDateTime" />
                 </div>
             </div>
-            <div t-if="order.tracking_number">
+            <div t-if="order.tracking_number and order.config.displayTrackingNumber">
                 <span class="tracking-number fs-1" t-esc="order.tracking_number" />
             </div>
         </div>
