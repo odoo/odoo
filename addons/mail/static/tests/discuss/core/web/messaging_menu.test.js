@@ -29,7 +29,7 @@ test("can make DM chat in mobile", async () => {
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chats" });
-    await click("button", { text: "Start a conversation" });
+    await click(".o-mail-DiscussSearch-inputContainer");
     await insertText("input[placeholder='Search a conversation']", "Gandalf");
     await click(".o_command_name", { text: "Gandalf" });
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
@@ -43,7 +43,7 @@ test("can search channel in mobile", async () => {
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channels" });
-    await click("button", { text: "Start a conversation" });
+    await click(".o-mail-DiscussSearch-inputContainer");
     await insertText("input[placeholder='Search a conversation']", "Gryff");
     await click("a", { text: "Gryffindors" });
     await contains(".o-mail-ChatWindow div[title='Gryffindors']");
@@ -55,7 +55,7 @@ test("can make new channel in mobile", async () => {
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channels" });
-    await click("button", { text: "Start a conversation" });
+    await click(".o-mail-DiscussSearch-inputContainer");
     await insertText("input[placeholder='Search a conversation']", "slytherins");
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-ChatWindow", { text: "slytherins" });

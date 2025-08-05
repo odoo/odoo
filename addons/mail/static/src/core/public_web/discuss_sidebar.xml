@@ -4,23 +4,13 @@
         <div class="o-mail-DiscussSidebar-resizablePanelContainer h-100 d-flex">
             <ResizablePanel handleSide="'end'" initialWidth="store.discuss.isSidebarCompact ? store.discuss.COMPACT_SIDEBAR_WIDTH : store.discuss.INSPECTOR_WIDTH" minWidth="60" onResize.bind="onResize">
                 <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto o-scrollbar-thin flex-shrink-0 h-100 border-end border-secondary z-1 o-mail-discussSidebarBgColor o-gap-0_5" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }">
-                    <div class="o-mail-DiscussSidebar-top position-sticky top-0 z-2 o-mail-discussSidebarBgColor d-flex align-items-center gap-1" t-att-class="{ 'py-2': !store.inPublicPage, 'pt-2 o-px-2_5': store.inPublicPage, 'flex-column': store.discuss.isSidebarCompact, 'o-ps-2_5 o-pe-1_5 mt-1': !store.discuss.isSidebarCompact }" t-ref="top">
-                        <Dropdown t-if="store.discuss.isSidebarCompact" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0'" manual="true">
-                            <button class="o-mail-DiscussSidebar-searchBtn btn btn-light d-flex align-items-center justify-content-center border-0 px-1 mx-2 opacity-75 bg-transparent" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-fw fa-search"/></button>
-                            <t t-set-slot="content">
-                                <div class="px-2" t-ref="search-floating">
-                                    <span class="text-muted user-select-none">Search conversations</span>
-                                </div>
-                            </t>
-                        </Dropdown>
-                        <div t-else="" class="o-mail-DiscussSidebar-search rounded border border-secondary shadow-sm position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1" t-on-click="onClickFindOrStartConversation">
-                            <div class="d-flex w-100 align-items-center ps-2 gap-2">
-                                <i class="oi oi-search o-opacity-35 smaller"/>
-                                <input class="form-control rounded border-0 bg-inherit ps-0" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Search conversations" tabindex="0"/>
-                            </div>
-                            <div class="o-mail-DiscussSidebar-searchClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
-                        </div>
-                    </div>
+                    <DiscussSearch class="{
+                        'position-sticky top-0 z-2 o-mail-discussSidebarBgColor': true,
+                        'py-2': !store.inPublicPage,
+                        'pt-2 o-px-2_5': store.inPublicPage,
+                        'flex-column': store.discuss.isSidebarCompact and !ui.isSmall,
+                        'o-ps-2_5 o-pe-1_5 mt-1': !store.discuss.isSidebarCompact or ui.isSmall,
+                    }"/>
                     <t t-foreach="discussSidebarItems" t-as="item" t-key="item_index" t-component="item"/>
                 </div>
             </ResizablePanel>
