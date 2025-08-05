@@ -387,6 +387,43 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self._assert_invoice_ubl_file(invoice, 'bis3/test_price_unit_with_more_decimals')
 
     # -------------------------------------------------------------------------
+    # PAYMENT Method
+    # -------------------------------------------------------------------------
+    def test_payment_means(self):
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_6 = self.percent_tax(6.0)
+
+        payment_method = self.env.ref('account_edi_ubl_cii.account_payment_method_standing_agreement_in')
+        payment_method_line = self.env['account.payment.method.line'].create({
+            'name': 'Standing Agreement Test',
+            'payment_method_id': payment_method.id,
+            'payment_type': 'inbound',
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'preferred_payment_method_line_id': payment_method_line.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'tax_ids': [Command.set(tax_6.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_payment_means')
+
+    def test_payment_means_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_payment_means()
+
+    # -------------------------------------------------------------------------
     # PAYMENT TERM
     # -------------------------------------------------------------------------
 

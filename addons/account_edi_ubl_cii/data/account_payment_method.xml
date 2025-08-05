@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- TODO: Maybe move somewhere else?-->
+
+        <record id="account_payment_method_credit_card" model="account.payment.method">
+            <field name="name">Credit Card</field>
+            <field name="code">credit_card</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+        <record id="account_payment_method_debit_card" model="account.payment.method">
+            <field name="name">Debit Card</field>
+            <field name="code">debit_card</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+        <record id="account_payment_method_bankgiro_in" model="account.payment.method">
+            <field name="name">Bankgiro</field>
+            <field name="code">bankgiro</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+        <record id="account_payment_method_bankgiro_out" model="account.payment.method">
+            <field name="name">Bankgiro</field>
+            <field name="code">bankgiro</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="account_payment_method_standing_agreement_in" model="account.payment.method">
+            <field name="name">Standing Agreement</field>
+            <field name="code">standing_agreement</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+        <record id="account_payment_method_standing_agreement_out" model="account.payment.method">
+            <field name="name">Standing Agreement</field>
+            <field name="code">standing_agreement</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="account_payment_method_sepa_credit_transfer" model="account.payment.method">
+            <field name="name">SEPA Credit Transfer</field>
+            <field name="code">sepa_credit_transfer</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <!-- SEPA Direct Debit payment methods exist already in other modules. See the following records-->
+        <!-- - account_sepa_direct_debit.payment_method_sdd -->
+        <!-- - payment_sepa_direct_debit.payment_method_sepa_direct_debit -->
+
+    </data>
+</odoo>

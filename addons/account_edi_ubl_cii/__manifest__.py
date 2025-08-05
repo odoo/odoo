@@ -23,6 +23,7 @@ Pro rules and show the errors.
     """,
     'depends': ['account'],
     'data': [
+        'data/account_payment_method.xml',
         'data/cii_22_templates.xml',
         'data/ubl_20_templates.xml',
         'data/ubl_21_templates.xml',
