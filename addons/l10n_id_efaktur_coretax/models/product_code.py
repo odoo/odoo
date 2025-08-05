@@ -16,7 +16,7 @@ class EfakturProductCode(models.Model):
         for record in self:
             result.append((record.id, f"{record.code} - {record.description}"))
         return result
-    
+
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
@@ -26,12 +26,12 @@ class EfakturProductCode(models.Model):
         if len(parts) == 2:
             domain = [('code', operator, parts[0]), ('description', operator, parts[1])]
             return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        
+
         if name and operator == 'ilike':
             domain = ['|',
                 ('code', operator, name),
                 ('description', operator, name),
             ]
             return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        
+
         return super()._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
