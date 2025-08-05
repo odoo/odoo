@@ -3,7 +3,6 @@
 from cups import Connection as CupsConnection
 from itertools import groupby
 from re import sub
-from threading import Lock
 from urllib.parse import urlsplit, parse_qs, unquote
 from zeroconf import (
     IPVersion,
@@ -15,14 +14,11 @@ import logging
 import pyudev
 import time
 
+from odoo.addons.iot_drivers.main import print_lock
 from odoo.addons.iot_drivers.interface import Interface
 from odoo.addons.iot_drivers.main import iot_devices
 
 _logger = logging.getLogger(__name__)
-
-conn = CupsConnection()
-PPDs = conn.getPPDs()
-cups_lock = Lock()  # We can only make one call to Cups at a time
 
 
 class PrinterInterface(Interface):
@@ -32,12 +28,13 @@ class PrinterInterface(Interface):
     def __init__(self):
         super().__init__()
         self.start_time = time.time()
+        self.conn = CupsConnection()
 
     def get_devices(self):
         discovered_devices = {}
-        with cups_lock:
-            printers = conn.getPrinters()
-            devices = conn.getDevices()
+        with print_lock:
+            printers = self.conn.getPrinters()
+            devices = self.conn.getDevices()
             for printer_name, printer in printers.items():
                 path = printer.get('device-uri', False)
                 if printer_name != self.get_identifier(path):

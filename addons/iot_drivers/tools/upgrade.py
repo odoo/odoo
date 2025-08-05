@@ -2,13 +2,13 @@
 
 import logging
 import platform
+import re
 import requests
 import subprocess
 from functools import wraps
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
     path_file,
-    require_db,
     toggleable,
     unlink_file,
     writable,
@@ -60,59 +60,56 @@ def pip(*args):
     return p.returncode
 
 
-def get_db_branch(server_url):
-    """Get the current branch of the database.
-
-    :param server_url: The URL of the connected Odoo database.
-    :return: the current branch of the database
-    """
+def get_last_stable_odoo_version():
+    """Get the last stable Odoo version from the server."""
     try:
-        response = requests.post(server_url + "/web/webclient/version_info", json={}, timeout=5)
+        # 200 per page, as there already are 86 branches (08/2025)
+        response = requests.get('https://api.github.com/repos/odoo/odoo/branches?per_page=200', timeout=5)
         response.raise_for_status()
-    except requests.exceptions.HTTPError:
-        _logger.exception('Could not reach configured server to get the Odoo version')
+        branches = response.json()
+    except requests.exceptions.RequestException as e:
+        _logger.error("Failed to fetch branches from GitHub: %s", e)
         return None
-    try:
-        return response.json()['result']['server_serie'].replace('~', '-')
-    except ValueError:
-        _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
+    ordered_branches = sorted({
+        float(match.group(1))
+        for branch in branches
+        if (match := re.search(r'(\d+(?:\.\d+)?)', branch['name']))
+    }, reverse=True)
+    if not ordered_branches:
         return None
+
+    last = ordered_branches[0]
+    return f'saas-{last}' if int(last) != last else str(last)
 
 
 @toggleable
-@require_db
-def check_git_branch(server_url=None):
-    """Check if the local branch is the same as the connected Odoo DB and
-    checkout to match it if needed.
-
-    :param server_url: The URL of the connected Odoo database (provided by decorator).
-    """
-    db_branch = get_db_branch(server_url)
-    if not db_branch:
-        _logger.warning("Could not get the database branch, skipping git checkout")
-        return
+def check_git_branch():
+    """Checkout the IoT Box code to the last stable Odoo branch"""
+    last_stable_branch = get_last_stable_odoo_version()
+    if not last_stable_branch:
+        _logger.warning("Could not get the database branch, will update following the local branch")
 
     try:
-        if not git('ls-remote', 'origin', db_branch):
-            db_branch = 'master'
-
         local_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
-        _logger.info("IoT Box git branch: %s / Associated Odoo db's git branch: %s", local_branch, db_branch)
 
-        if db_branch != local_branch:
-            unlink_file("odoo/.git/shallow.lock")  # In case of previous crash/power-off, clean old lockfile
-            with writable():
-                # Repository updates
-                checkout(db_branch)
-                update_requirements()
+        if not last_stable_branch and not git('ls-remote', 'origin', local_branch):
+            _logger.warning("Local branch %s does not exist on the remote repository, aborting upgrade", local_branch)
+            return
 
-                # System updates
-                update_packages()
+        _logger.info("IoT Box git branch: %s / Last Odoo stable git branch: %s", local_branch, last_stable_branch)
+        unlink_file("odoo/.git/shallow.lock")  # In case of previous crash/power-off, clean old lockfile
+        with writable():
+            # Repository updates
+            checkout(last_stable_branch or local_branch)
+            update_requirements()
 
-                # Miscellaneous updates (version migrations)
-                misc_migration_updates()
-            _logger.warning("Update completed, restarting...")
-            odoo_restart()
+            # System updates
+            update_packages()
+
+            # Miscellaneous updates (version migrations)
+            misc_migration_updates()
+        _logger.warning("Update completed, restarting...")
+        odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
 

@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from threading import Lock
 import win32print
 
+from odoo.addons.iot_drivers.main import print_lock
 from odoo.addons.iot_drivers.interface import Interface
 
 _logger = logging.getLogger(__name__)
-
-win32print_lock = Lock()  # Calling win32print in parallel can cause failed prints
 
 
 class PrinterInterface(Interface):
@@ -17,7 +15,7 @@ class PrinterInterface(Interface):
 
     def get_devices(self):
         printer_devices = {}
-        with win32print_lock:
+        with print_lock:
             printers = win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL)
 
             for printer in printers:

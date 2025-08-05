@@ -38,9 +38,6 @@ class StatusPage extends Component {
         <div class="spinner-border">
             <span class="visually-hidden">Loading...</span>
         </div>
-        <span t-if="state.data.new_database_url" class="fs-4">
-            Connecting to <t t-out="state.data.new_database_url"/>, please wait
-        </span>
     </div>
     <div t-else="" class="container-fluid">
         <!-- QR Codes shown on status page -->

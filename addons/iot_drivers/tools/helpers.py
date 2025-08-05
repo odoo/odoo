@@ -4,7 +4,6 @@ import configparser
 import contextlib
 from enum import Enum
 from functools import cache, wraps
-from importlib import util
 import inspect
 import io
 import logging
@@ -23,9 +22,7 @@ import time
 import zipfile
 from werkzeug.exceptions import Locked
 
-from odoo import http, release, service
-from odoo.tools.func import reset_cached_properties
-from odoo.tools.misc import file_path
+from odoo import release, service
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
@@ -282,23 +279,6 @@ def get_version(detailed_version=False):
     return version
 
 
-def delete_iot_handlers():
-    """Delete all drivers, interfaces and libs if any.
-    This is needed to avoid conflicts with the newly downloaded drivers.
-    """
-    try:
-        iot_handlers = Path(file_path('iot_drivers/iot_handlers'))
-        filenames = [
-            f"odoo/addons/iot_drivers/iot_handlers/{file.relative_to(iot_handlers)}"
-            for file in iot_handlers.glob('**/*')
-            if file.is_file()
-        ]
-        unlink_file(*filenames)
-        _logger.info("Deleted old IoT handlers")
-    except OSError:
-        _logger.exception('Failed to delete old IoT handlers')
-
-
 @toggleable
 @require_db
 def download_iot_handlers(auto=True, server_url=None):
@@ -309,6 +289,9 @@ def download_iot_handlers(auto=True, server_url=None):
     :param auto: If True, the download will depend on the parameter set in the database
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
+    if not get_conf('custom_handlers'):
+        return
+    _logger.info('Custom handlers option enabled, downloading handlers from db')
     etag = get_conf('iot_handlers_etag')
     try:
         response = requests.post(
@@ -338,35 +321,15 @@ def download_iot_handlers(auto=True, server_url=None):
         _logger.exception('Bad IoT handlers response received: not a zip file')
         return
 
-    delete_iot_handlers()
     path = path_file('odoo', 'addons', 'iot_drivers', 'iot_handlers')
     with writable():
         zip_file.extractall(path)
+    odoo_restart()  # Restart Odoo to load the new handlers
 
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.iot_drivers.iot_handlers.{handler_kind}.{handler_name}".\
         format(handler_kind=handler_kind, handler_name=handler_file_name.removesuffix('.py'))
-
-
-def load_iot_handlers():
-    """
-    This method loads local files: 'odoo/addons/iot_drivers/iot_handlers/drivers' and
-    'odoo/addons/iot_drivers/iot_handlers/interfaces'
-    And execute these python drivers and interfaces
-    """
-    for directory in ['interfaces', 'drivers']:
-        path = file_path(f'iot_drivers/iot_handlers/{directory}')
-        filesList = list_file_by_os(path)
-        for file in filesList:
-            spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), str(Path(path).joinpath(file)))
-            if spec:
-                module = util.module_from_spec(spec)
-                try:
-                    spec.loader.exec_module(module)
-                except Exception:
-                    _logger.exception('Unable to load handler file: %s', file)
-    reset_cached_properties(http.root)
 
 
 def list_file_by_os(file_list):

@@ -1,7 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
-from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO
+from cups import (
+    IPPError,
+    IPP_JOB_COMPLETED,
+    IPP_JOB_PROCESSING,
+    IPP_JOB_PENDING,
+    CUPS_FORMAT_AUTO,
+    Connection as CupsConnection,
+)
 from escpos import printer
 import escpos.exceptions
 import logging
@@ -9,14 +16,13 @@ import netifaces as ni
 import re
 import time
 
-from odoo import http
 from odoo.addons.iot_drivers.connection_manager import connection_manager
-from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
-from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import PPDs, conn, cups_lock
-from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, wifi, route
+from odoo.addons.iot_drivers.main import print_lock
+from odoo.addons.iot_drivers.tools import helpers, wifi
 
+conn = CupsConnection()
+PPDs = conn.getPPDs()
 _logger = logging.getLogger(__name__)
 
 
@@ -79,7 +85,7 @@ class PrinterDriver(PrinterDriverBase):
                 if model and model in PPDs[ppd]['ppd-product']:
                     ppd_file = ppd
                     break
-            with cups_lock, helpers.writable():
+            with print_lock, helpers.writable():
                 try:
                     if ppd_file:
                         conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
@@ -123,7 +129,7 @@ class PrinterDriver(PrinterDriverBase):
             return
 
         try:
-            with cups_lock:
+            with print_lock:
                 job_id = conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
                 conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
                 conn.writeRequestData(data, len(data))
@@ -266,7 +272,7 @@ class PrinterDriver(PrinterDriverBase):
 
     def _check_job_status(self, job_id):
         try:
-            with cups_lock:
+            with print_lock:
                 job = conn.getJobAttributes(job_id, requested_attributes=['job-state', 'job-state-reasons', 'job-printer-state-message', 'time-at-creation'])
                 _logger.debug("job details for job id #%d: %s", job_id, job)
                 job_state = job['job-state']
@@ -285,17 +291,3 @@ class PrinterDriver(PrinterDriverBase):
         except IPPError:
             _logger.exception('IPP error occurred while fetching CUPS jobs')
             self.job_ids.remove(job_id)
-
-
-class PrinterController(http.Controller):
-
-    @route.iot_route('/hw_proxy/default_printer_action', type='jsonrpc', cors='*')
-    def default_printer_action(self, data):
-        printer = next((d for d in iot_devices if iot_devices[d].device_type == 'printer' and iot_devices[d].device_connection == 'direct'), None)
-        if printer:
-            iot_devices[printer].action(data)
-            return True
-        return False
-
-
-proxy_drivers['printer'] = PrinterDriver

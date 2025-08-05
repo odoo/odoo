@@ -175,7 +175,6 @@ class IotBoxOwlHomePage(http.Controller):
             'devices': grouped_devices,
             'server_status': odoo_server_url,
             'pairing_code': connection_manager.pairing_code,
-            'new_database_url': connection_manager.new_database_url,
             'pairing_code_expired': connection_manager.pairing_code_expired and not odoo_server_url,
             'six_terminal': six_terminal,
             'is_access_point_up': platform.system() == 'Linux' and wifi.is_access_point(),
@@ -244,6 +243,7 @@ class IotBoxOwlHomePage(http.Controller):
             'available_log_levels': AVAILABLE_LOG_LEVELS,
             'drivers_logger_info': self._get_iot_handlers_logger(drivers_list, 'drivers'),
             'interfaces_logger_info': self._get_iot_handlers_logger(interfaces_list, 'interfaces'),
+            'is_custom_handlers_enabled': helpers.get_conf('custom_handlers'),
         })
 
     @route.iot_route('/iot_drivers/load_iot_handlers', type="http", cors='*')
@@ -314,7 +314,11 @@ class IotBoxOwlHomePage(http.Controller):
         return res_payload
 
     @route.iot_route(
-        '/iot_drivers/generate_password', type="jsonrpc", methods=["POST"], cors='*', linux_only=True
+        ['/iot_drivers/generate_password', '/hw_posbox_homepage/generate_password'],
+        type="jsonrpc",
+        methods=["POST"],
+        cors='*',
+        linux_only=True,
     )
     def generate_password(self):
         return {
@@ -459,6 +463,16 @@ class IotBoxOwlHomePage(http.Controller):
             'status': 'success',
             'message': 'Successfully updated the IoT Box',
         }
+
+    @route.iot_route('/iot_drivers/enable_custom_handlers', type="jsonrpc", methods=['POST'], cors='*')
+    def enable_custom_handlers(self, enable):
+        if enable:
+            helpers.update_conf({'custom_handlers': True})
+            helpers.download_iot_handlers(False)
+        else:
+            helpers.update_conf({'custom_handlers': False})
+            helpers.odoo_restart()  # Will reset to the default handlers as it will restart
+        return {'status': 'success'}
 
     # ---------------------------------------------------------- #
     # Utils                                                      #
