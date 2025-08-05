@@ -55,7 +55,7 @@
             <div class="o_wevent_search d-flex w-100 w-lg-auto">
                 <t t-call="website.website_search_box_input">
                     <t t-set="_classes" t-valuef="o_wevent_event_track_searchbar_form flex-grow-1"/>
-                    <t t-set="search_type">track</t>
+                    <t t-set="search_type" t-translation="off">track</t>
                     <t t-set="action" t-value="'/event/%s/track' % (slug(event))"/>
                     <t t-set="display_detail" t-valuef="false"/>
                     <t t-set="search" t-value="search or searches and searches['search']"/>
