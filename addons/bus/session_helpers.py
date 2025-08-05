@@ -4,7 +4,6 @@ import time
 
 from odoo.api import Environment
 from odoo.http.session import SessionExpiredException, session_store
-from odoo.modules.registry import Registry
 from odoo.sql_db import SQL
 from odoo.tools.lru import LRU
 from odoo.tools.misc import consteq
@@ -23,7 +22,6 @@ def _get_session_token_query_params(cr, session):
         cr.execute('SELECT MAX(id) FROM orm_signaling_registry')
         if cached_value['registry_sequence'] == cr.fetchone()[0]:
             return cached_value['query_params']
-    Registry(cr.dbname).check_signaling()
     env = new_env(cr, session)
     params = env.user._get_session_token_query_params()
     _query_params_by_user[cache_key] = {

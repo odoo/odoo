@@ -366,12 +366,13 @@ def serve_db(request: Request) -> Response:
         try:
             registry = Registry(request.db)
             cr = registry.cursor(readonly=True)
-            request.registry = registry.check_signaling(cr)
+            # check signaling
+            request.env = Environment(cr, request.session.uid, request.session.context)
+            request.registry = request.env.registry
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
             raise RegistryError(f"Cannot get registry {request.db}") from e
 
         # find the controller endpoint to use
-        request.env = Environment(cr, request.session.uid, request.session.context)
         try:
             rule, args = request.registry['ir.http']._match(request.httprequest.path)
         except NotFound as not_found_exc:

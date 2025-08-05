@@ -130,7 +130,7 @@ class TestTimesheet(TestCommonTimesheet):
     def setUp(self):
         super().setUp()
         # Make sure to clean the plan fields
-        self.env.registry._setup_models__(self.env.cr)
+        self.env.transaction.will_change_registry()
 
         # Crappy hack to disable the rule from timesheet grid, if it exists
         # The registry doesn't contain the field timesheet_manager_id.

@@ -930,7 +930,8 @@ class PreforkServer(CommonServer):
             for registry in registries.values():
                 try:
                     with contextlib.closing(registry.cursor()) as cr:
-                        registry.check_signaling(cr)
+                        # check signaling by instantiating an environment
+                        api.Environment(cr, api.SUPERUSER_ID, {})
                 except Exception as e:  # noqa: BLE001
                     _logger.info("Continue spawning, failed to check signaling on %s. Cause: %s", registry.db_name, e)
             registries.clear()

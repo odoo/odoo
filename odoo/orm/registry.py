@@ -15,7 +15,7 @@ import typing
 import warnings
 from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import closing, nullcontext, ExitStack
+from contextlib import closing, ExitStack
 from functools import partial
 from operator import attrgetter
 
@@ -262,8 +262,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
         registry.ready = True
-        registry.registry_invalidated = bool(update_module)
-        registry.signal_changes()
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
@@ -322,10 +320,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.not_null_fields: set[Field] = set()
 
         # Inter-process signaling:
-        # The `orm_signaling_registry` sequence indicates the whole registry
-        # must be reloaded.
-        # The `orm_signaling_... sequence` indicates the corresponding cache must be
-        # invalidated (i.e. cleared).
+        # The `orm_signaling_... sequence` indicates that the corresponding
+        # cache must be invalidated. The 'registry' sequence indicates that this
+        # registry must be rebuilt.
         self.registry_sequence: int = -1
         self.cache_sequences: dict[str, int] = {}
 
@@ -442,6 +439,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         from .environments import Environment  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, {})
         env.invalidate_all()
+        if self.ready:
+            env.transaction.will_change_registry()
 
         # Uninstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
@@ -454,7 +453,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             cache.clear()
 
         reset_cached_properties(self)
-        self.registry_invalidated = True
 
         # model classes on which to *not* recompute field_depends[_context]
         models_field_depends_done = set()
@@ -787,6 +785,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         from .environments import Environment  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
+        env.transaction.will_change_registry()
 
         try:
             self._post_init_queue: deque[Callable] = deque()
@@ -1030,15 +1029,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         return model._table in self._ordinary_tables
 
     @property
-    def registry_invalidated(self) -> bool:
-        """ Determine whether the current thread has modified the registry. """
-        return getattr(self._invalidation_flags, 'registry', False)
-
-    @registry_invalidated.setter
-    def registry_invalidated(self, value: bool):
-        self._invalidation_flags.registry = value
-
-    @property
     def cache_invalidated(self) -> set[str]:
         """ Determine whether the current thread has modified the cache. """
         try:
@@ -1049,6 +1039,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     def setup_signaling(self) -> None:
         """ Setup the inter-process signaling on this registry. """
+        assert self.registry_sequence < 0 and not self.cache_sequences, "Setup signaling already performed"
         with self.cursor() as cr:
             # The `orm_signaling_registry` sequence indicates when the registry
             # must be reloaded.
@@ -1072,10 +1063,13 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
             self.registry_sequence = db_registry_sequence
-            self.cache_sequences.update(db_cache_sequences)
+            self.cache_sequences = {
+                name: db_cache_sequences.get(name) or 0
+                for name in _REGISTRY_CACHES
+            }
 
             _logger.debug("Multiprocess load registry signaling: [Registry: %s] %s",
-                          self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
+                          db_registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in db_cache_sequences.items()))
 
     def get_sequences(self, cr: BaseCursor) -> tuple[int, dict[str, int]]:
         signaling_tables = tuple(f'orm_signaling_{cache_name}' for cache_name in ['registry', *_CACHES_BY_KEY])
@@ -1089,79 +1083,25 @@ class Registry(Mapping[str, type["BaseModel"]]):
             cr._now = now
         return registry_sequence, cache_sequences
 
-    def check_signaling(self, cr: BaseCursor | None = None) -> Registry:
-        """ Check whether the registry has changed, and performs all necessary
-        operations to update the registry. Return an up-to-date registry.
-        """
-        with nullcontext(cr) if cr is not None else closing(self.cursor(readonly=True)) as cr:
-            assert cr is not None
-            db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
-            changes = ''
-            # Check if the model registry must be reloaded
-            if self.registry_sequence != db_registry_sequence:
-                _logger.info("Reloading the model registry after database signaling.")
-                old_sequence = self.registry_sequence
-                self = Registry.new(self.db_name)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    changes += "[Registry - %s -> %s]" % (old_sequence, self.registry_sequence)
-            # Check if the model caches must be invalidated.
-            else:
-                invalidated = []
-                for cache_name, cache_sequence in self.cache_sequences.items():
-                    expected_sequence = db_cache_sequences[cache_name]
-                    if cache_sequence != expected_sequence:
-                        for cache in _CACHES_BY_KEY[cache_name]: # don't call clear_cache to avoid signal loop
-                            if cache not in invalidated:
-                                invalidated.append(cache)
-                                self.__caches[cache].clear()
-                        self.cache_sequences[cache_name] = expected_sequence
-                        if _logger.isEnabledFor(logging.DEBUG):
-                            changes += "[Cache %s - %s -> %s]" % (cache_name, cache_sequence, expected_sequence)
-                if invalidated:
-                    _logger.info("Invalidating caches after database signaling: %s", sorted(invalidated))
-            if changes:
-                _logger.debug("Multiprocess signaling check: %s", changes)
-        return self
-
-    def signal_changes(self) -> None:
+    def _signal_changes(self, cr: BaseCursor, names: Collection[str]) -> None:
         """ Notifies other processes if registry or cache has been invalidated. """
-        if self.registry_invalidated:
+        if not names:
+            return
+        if 'registry' in names:
             _logger.info("Registry changed, signaling through the database")
-            with self.cursor() as cr:
-                cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
-                # If another process concurrently updates the registry,
-                # self.registry_sequence will actually be out-of-date,
-                # and the next call to check_signaling() will detect that and trigger a registry reload.
-                # otherwise, self.registry_sequence should be equal to cr.fetchone()[0]
-                self.registry_sequence += 1
+            cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
+            # If another process concurrently updates the registry, the sequence
+            # will actually be out-of-date, and the next call to
+            # _check_signaling() will detect that and trigger a registry reload.
+            return
 
-        # no need to notify cache invalidation in case of registry invalidation,
-        # because reloading the registry implies starting with an empty cache
-        elif self.cache_invalidated:
-            _logger.info("Caches invalidated, signaling through the database: %s", sorted(self.cache_invalidated))
-            with self.cursor() as cr:
-                for cache_name in self.cache_invalidated:
-                    cr.execute(SQL("INSERT INTO %s DEFAULT VALUES", SQL.identifier(f'orm_signaling_{cache_name}')))
-                    # If another process concurrently updates the cache,
-                    # self.cache_sequences[cache_name] will actually be out-of-date,
-                    # and the next call to check_signaling() will detect that and trigger cache invalidation.
-                    # otherwise, self.cache_sequences[cache_name] should be equal to cr.fetchone()[0]
-                    self.cache_sequences[cache_name] += 1
-
-        self.registry_invalidated = False
-        self.cache_invalidated.clear()
-
-    def reset_changes(self) -> None:
-        """ Reset the registry and cancel all invalidations. """
-        if self.registry_invalidated:
-            with closing(self.cursor()) as cr:
-                self._setup_models__(cr)
-                self.registry_invalidated = False
-        if self.cache_invalidated:
-            for cache_name in self.cache_invalidated:
-                for cache in _CACHES_BY_KEY[cache_name]:
-                    self.__caches[cache].clear()
-            self.cache_invalidated.clear()
+        names = sorted(names)
+        _logger.info("Caches invalidated, signaling through the database: %s", names)
+        # If another process concurrently updates the cache, the sequences
+        # will actually be out-of-date, and the next call to
+        # _check_signaling() will detect use the new sequence.
+        for cache_name in names:
+            cr.execute(SQL("INSERT INTO %s DEFAULT VALUES", SQL.identifier(f'orm_signaling_{cache_name}')))
 
     def cursor(self, /, readonly: bool = False) -> BaseCursor:
         """ Return a new cursor for the database. The cursor itself may be used

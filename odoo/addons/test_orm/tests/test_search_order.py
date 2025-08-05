@@ -232,7 +232,7 @@ class TestSearch(TransactionCase):
         # test that a custom field x_active filters like active
         # we take the model res.country as a test model as it is included in base and does
         # not have an active field
-        self.addCleanup(self.registry.reset_changes) # reset the registry to avoid polluting other tests
+        self.env.transaction.will_change_registry()
 
         model_country = self.env['test_orm.country']
         self.assertNotIn('active', model_country._fields)  # just in case someone adds the active field in the model
