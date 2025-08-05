@@ -16,6 +16,9 @@
                 <div t-if="order?.getCashierName() and (!order.preset_id or order.preset_id.identification === 'name')" class="cashier">
                     <div>Served by: <t t-esc="order.getCashierName()" /></div>
                 </div>
+                <div t-if="order.tracking_number and order.config.displayTrackingNumber and !order.config.displayBigTrackingNumber">
+                    <span class="tracking-number fs-1" t-esc="order.tracking_number" />
+                </div>
             </div>
         </div>
         <div t-if="order?.presetDateTime" class="pt-2">
