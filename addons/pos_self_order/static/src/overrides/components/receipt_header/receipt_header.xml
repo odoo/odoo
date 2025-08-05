@@ -8,7 +8,7 @@
                     <span t-elif="order.preset_id?.identification == 'name' or (!order.preset_id and order.config.self_ordering_service_mode != 'table')">Pickup At Counter</span>
                     <span t-else="">Delivery</span>
                 </div>
-                <h1 t-if="order.tracking_number" class="tracking-number text-center" style="font-size: 100px" t-out="order.tracking_number" />
+                <h1 t-if="order.tracking_number and order.config.displayBigTrackingNumber" class="tracking-number text-center" style="font-size: 100px" t-out="order.tracking_number" />
                 <div t-if="order.config.self_ordering_mode !== 'nothing' and order.table_stand_number" class="table-tracker text-center">
                     Table Tracker:
                     <span class="pt-3" t-out="order.table_stand_number" />
