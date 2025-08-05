@@ -30,6 +30,9 @@ patch(Thread.prototype, {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
     },
     get correspondents() {
+        if (!super.correspondents) {
+            return [];
+        }
         return super.correspondents.filter(
             (correspondent) => correspondent.livechat_member_type !== "bot"
         );
@@ -77,7 +80,7 @@ patch(Thread.prototype, {
     async leaveChannel({ force = false } = {}) {
         if (
             this.channel_type === "livechat" &&
-            this.channel_member_ids.length <= 2 &&
+            this.channel?.channel_member_ids.length <= 2 &&
             !this.livechat_end_dt &&
             !force
         ) {

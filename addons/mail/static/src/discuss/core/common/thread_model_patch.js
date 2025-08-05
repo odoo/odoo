@@ -60,6 +60,19 @@ patch(Thread, threadStaticPatch);
 const threadPatch = {
     setup() {
         super.setup();
+        this.channel = fields.One("discuss.channel", {
+            inverse: "thread",
+            compute() {
+                if (this.model === "discuss.channel") {
+                    return {
+                        id: this.id,
+                        channel_member_ids: this.channel_member_ids,
+                    };
+                }
+                return undefined;
+            },
+            onDelete: (r) => r.delete(),
+        });
         this.channel_member_ids = fields.Many("discuss.channel.member", {
             inverse: "channel_id",
             onDelete: (r) => r.delete(),
@@ -137,7 +150,7 @@ const threadPatch = {
                 if (!this.hasSeenFeature) {
                     return;
                 }
-                return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
+                return this.channel?.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
                     if (member.persona.notEq(this.store.self) && member.seen_message_id) {
                         return lastMessageSeenByAllId
                             ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
@@ -180,7 +193,7 @@ const threadPatch = {
         this.onlineMembers = fields.Many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.channel_member_ids
+                return this.channel?.channel_member_ids
                     .filter((member) => this.store.onlineMemberStatuses.includes(member.im_status))
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
@@ -219,12 +232,12 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
-        return this.channel_member_ids.filter(
+        return this.channel?.channel_member_ids.filter(
             (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
         );
     },
     get areAllMembersLoaded() {
-        return this.member_count === this.channel_member_ids.length;
+        return this.member_count === this.channel?.channel_member_ids.length;
     },
     get avatarUrl() {
         if (this.channel_type === "channel" || this.channel_type === "group") {
@@ -255,19 +268,24 @@ const threadPatch = {
             return undefined;
         }
         const correspondents = this.correspondents;
-        if (correspondents.length === 1) {
+        if (correspondents?.length === 1) {
             // 2 members chat.
             return correspondents[0];
         }
-        if (correspondents.length === 0 && this.channel_member_ids.length === 1) {
+        if (correspondents?.length === 0 && this.channel?.channel_member_ids.length === 1) {
             // Self-chat.
-            return this.channel_member_ids[0];
+            return this.channel?.channel_member_ids[0];
         }
         return undefined;
     },
     /** @returns {import("models").ChannelMember[]} */
     get correspondents() {
-        return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
+        if (!this.channel?.channel_member_ids) {
+            return [];
+        }
+        return this.channel?.channel_member_ids?.filter(({ persona }) =>
+            persona?.notEq(this.store.self)
+        );
     },
     get displayName() {
         if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
@@ -298,7 +316,9 @@ const threadPatch = {
         }
         const previousState = this.fetchMembersState;
         this.fetchMembersState = "pending";
-        const known_member_ids = this.channel_member_ids.map((channelMember) => channelMember.id);
+        const known_member_ids = this.channel?.channel_member_ids.map(
+            (channelMember) => channelMember.id
+        );
         let data;
         try {
             data = await rpc("/discuss/channel/members", {
@@ -409,7 +429,7 @@ const threadPatch = {
      * @returns {import("models").ChannelMember[]}
      */
     get membersThatCanSeen() {
-        return this.channel_member_ids;
+        return this.channel?.channel_member_ids;
     },
     /** @override */
     get needactionCounter() {
@@ -468,7 +488,7 @@ const threadPatch = {
         return this.self_member_id?.message_unread_counter_ui > 0;
     },
     get unknownMembersCount() {
-        return (this.member_count ?? 0) - this.channel_member_ids.length;
+        return (this.member_count ?? 0) - this.channel?.channel_member_ids.length;
     },
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
