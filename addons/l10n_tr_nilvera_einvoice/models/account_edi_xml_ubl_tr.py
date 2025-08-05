@@ -37,7 +37,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
         # Check the customer status if it hasn't been done before as it's needed for profile_id
         if invoice.partner_id.l10n_tr_nilvera_customer_status == 'not_checked':
-            invoice.partner_id.check_nilvera_customer()
+            invoice.partner_id._check_nilvera_customer()
 
         # For now, we assume that the sequence is going to be in the format {prefix}/{year}/{invoice_number}.
         # To send an invoice to Nlvera, the format needs to follow ABC2009123456789.

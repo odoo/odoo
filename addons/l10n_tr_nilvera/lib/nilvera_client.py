@@ -3,6 +3,7 @@ import requests
 from datetime import datetime
 from json import JSONDecodeError
 
+from odoo import _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -46,8 +47,8 @@ class NilveraClient:
                 files=files,
             )
         except requests.exceptions.RequestException as e:
-            _logger.info("Network error during request: %s", e)
-            raise UserError("Network connectivity issue. Please check your internet connection and try again.")
+            _logger.info(_("Network error during request: %s"), e)
+            raise UserError(_("Network connectivity issue. Please check your internet connection and try again."))
 
         end = datetime.utcnow()
         duration = (end - start).total_seconds()
@@ -70,12 +71,12 @@ class NilveraClient:
 
     def handle_response(self, response):
         if response.status_code in {401, 403}:
-            raise UserError("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera.")
+            raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
         elif 403 < response.status_code < 600:
-            raise UserError("Odoo could not perform this action at the moment, try again later.\n%s - %s" % (response.reason, response.code))
+            raise UserError(_("Odoo could not perform this action at the moment, try again later.\n%s - %s", response.reason, response.status_code))
 
         try:
             return response.json()
         except JSONDecodeError:
-            _logger.exception("Invalid JSON response: %s", response.text)
-            raise UserError("An error occurred. Try again later.")
+            _logger.exception(_("Invalid JSON response: %s", response.text))
+            raise UserError(_("An error occurred. Try again later."))

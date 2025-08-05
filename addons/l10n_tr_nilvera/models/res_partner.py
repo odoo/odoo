@@ -1,8 +1,9 @@
 import logging
 import urllib.parse
 
-from odoo import api, fields, models, modules
-from odoo.exceptions import UserError
+from collections import defaultdict
+
+from odoo import _, api, fields, models
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 
@@ -16,49 +17,78 @@ class ResPartner(models.Model):
     invoice_edi_format = fields.Selection(selection_add=[('ubl_tr', "Turkyie (UBL TR 1.2)")])
     l10n_tr_nilvera_customer_status = fields.Selection(
         selection=[
-            ('not_checked', "Not Checked"),
+            ('not_checked', "Not Verified"),
             ('earchive', "E-Archive"),
             ('einvoice', "E-Invoice"),
         ],
         string="Nilvera Status",
-        compute='_compute_nilvera_customer_status_and_alias_id',
-        store=True,
         copy=False,
         default='not_checked',
+        readonly=True,
+        tracking=True,
     )
     l10n_tr_nilvera_customer_alias_id = fields.Many2one(
         comodel_name='l10n_tr.nilvera.alias',
         string="Alias",
-        compute='_compute_nilvera_customer_status_and_alias_id',
+        compute='_compute_nilvera_customer_alias_id',
         domain="[('partner_id', '=', id)]",
         copy=False,
         store=True,
         readonly=False,
     )
 
-    # This field is only used technically for optimisation purposes. It's needed for check_nilvera_customer.
+    # This field is only used technically for optimisation purposes. It's needed for _check_nilvera_customer.
     l10n_tr_nilvera_customer_alias_ids = fields.One2many(
         comodel_name='l10n_tr.nilvera.alias',
         inverse_name="partner_id",
     )
 
-    @api.depends('vat', 'invoice_edi_format')
-    def _compute_nilvera_customer_status_and_alias_id(self):
-        if modules.module.current_test:
-            return
-        for partner in self:
-            if partner.vat and partner.invoice_edi_format == 'ubl_tr':
-                try:
-                    partner.check_nilvera_customer()
-                except UserError:
-                    # In case of an internet connection issue, exit silently.
-                    continue
-            else:
-                # Reset the alias if no VAT or UBL format changed.
-                partner.l10n_tr_nilvera_customer_status = 'not_checked'
-                partner.l10n_tr_nilvera_customer_alias_id = False
+    @api.depends('l10n_tr_nilvera_customer_alias_ids')
+    def _compute_nilvera_customer_alias_id(self):
+        for record in self:
+            record.l10n_tr_nilvera_customer_alias_id = record.l10n_tr_nilvera_customer_alias_ids[:1]
 
-    def check_nilvera_customer(self):
+    def _send_user_notification(self, type, message, action_button=None):
+        self.env.user._bus_send(
+            'account_notification' if action_button else 'simple_notification',
+            {
+                'type': type,
+                'message': message,
+                'action_button': action_button,
+            }
+        )
+
+    def l10n_tr_check_nilvera_customer(self):
+        results = defaultdict(lambda: self.env['res.partner'])
+        for record in self:
+            if not record.vat:
+                return
+
+            if record._check_nilvera_customer():
+                if len(record.l10n_tr_nilvera_customer_alias_ids) > 1:
+                    results['multi_alias'] |= record
+                else:
+                    results['success'] |= record
+            else:
+                results['failure'] |= record
+
+        if results['failure']:
+            self._send_user_notification('danger', _('Nilvera verification failed. Please try again.'))
+        if results['success']:
+            self._send_user_notification('success', _('Nilvera status verified successfully.'))
+        if multi_alias := results['multi_alias']:
+            self._send_user_notification(
+                'warning',
+                _('Multiple alias entries were found for the following partners. Please verify the correct one manually.'),
+                action_button={
+                    'name': _('View Partners'),
+                    'action_name': _('Partners in Error'),
+                    'model': 'res.partner',
+                    'res_ids': multi_alias.ids,
+                },
+            )
+
+    def _check_nilvera_customer(self):
         self.ensure_one()
         if not self.vat:
             return
@@ -93,6 +123,9 @@ class ResPartner(models.Model):
                     remaining_aliases = newly_persisted_aliases | to_keep
                     if not self.l10n_tr_nilvera_customer_alias_id and remaining_aliases:
                         self.l10n_tr_nilvera_customer_alias_id = remaining_aliases[0]
+                return True
+            else:
+                return False
 
     def _get_suggested_invoice_edi_format(self):
         # EXTENDS 'account'
