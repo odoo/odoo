@@ -89,6 +89,7 @@ class RestaurantFloor(models.Model):
 
 class RestaurantTable(models.Model):
     _name = 'restaurant.table'
+    _order = 'floor_id, table_number'
 
     _description = 'Restaurant Table'
     _inherit = ['pos.load.mixin']
