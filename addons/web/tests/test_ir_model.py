@@ -82,13 +82,6 @@ class TestIrModel(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        # The test mode is necessary in this case.  After each test, we call
-        # registry.reset_changes(), which opens a new cursor to retrieve custom
-        # models and fields.  A regular cursor would correspond to the state of
-        # the database before setUpClass(), which is not correct.  Instead, a
-        # test cursor will correspond to the state of the database of cls.cr at
-        # that point, i.e., before the call to setUp().
         cls.enterClassContext(cls.registry_test_mode())
 
         # model and records for banana stages
@@ -142,11 +135,6 @@ class TestIrModel(TransactionCase):
             'x_length': 10,
             'x_color': 6,
         }])
-
-    def setUp(self):
-        # this cleanup is necessary after each test, and must be done last
-        self.addCleanup(self.registry.reset_changes)
-        super().setUp()
 
     def test_model_order_constraint(self):
         """Check that the order constraint is properly enforced."""

@@ -965,12 +965,12 @@ class TestSequenceMixinConcurrency(TransactionCase):
             moves.name = False
             moves[0].action_post()
             self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', False, False])
-            env.cr.commit()
         self.data = {
             'move_ids': moves.ids,
             'account_id': account.id,
             'journal_id': journal.id,
             'envs': [
+                # all transactions are started here...
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
@@ -989,7 +989,6 @@ class TestSequenceMixinConcurrency(TransactionCase):
             journal.unlink()
             account = env['account.account'].browse(self.data['account_id'])
             account.unlink()
-            env.cr.commit()
         for env in self.data['envs']:
             env.cr.close()
 
@@ -1011,6 +1010,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
         env1.cr.commit()
 
         # check the values
+        env0.cr.rollback()
         moves = env0['account.move'].browse(self.data['move_ids'])
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
         self.assertEqual(moves.mapped('sequence_prefix'), ['CT/2016/01/', 'CT/2016/01/', 'CT/2016/01/'])
@@ -1037,6 +1037,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
         env1.cr.commit()
 
         # check the values
+        env0.cr.rollback()
         moves = env0['account.move'].browse(self.data['move_ids'])
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', False, 'CT/2016/01/0002'])
 

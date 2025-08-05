@@ -685,9 +685,9 @@ class BaseAutomation(models.Model):
         """ Update the registry after a modification on automation rules. """
         if self.env.registry.ready and not self.env.context.get('import_file'):
             # re-install the model patches, and notify other workers
+            self.env.transaction.will_change_registry()
             self._unregister_hook()
             self._register_hook()
-            self.env.registry.registry_invalidated = True
 
     def _get_actions(self, records, triggers):
         """ Return the automations of the given triggers for records' model. The

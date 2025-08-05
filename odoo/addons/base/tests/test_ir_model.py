@@ -410,10 +410,10 @@ class TestCommonCustomFields(TransactionCase):
         def check_registry():
             assert set(self.registry[self.MODEL]._fields) == fnames
 
-        self.addCleanup(self.registry.reset_changes)
         self.addCleanup(self.drop_ormcaches)
 
         super().setUp()
+        self.env.transaction.will_change_registry()
 
     def create_field(self, name, *, field_type='char'):
         """ create a custom field and return it """

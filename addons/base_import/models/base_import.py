@@ -1479,7 +1479,7 @@ class Base_ImportImport(models.TransientModel):
             for cache_name in ('default', 'groups', 'stable'):
                 self.pool.clear_cache(cache_name)
             # don't propagate to other workers since it was rollbacked
-            self.pool.reset_changes()
+            self.env.transaction.reset()
             _logger.info('Previous import was a dry/test run, changes were reset')
 
         # Insert/Update mapping columns when import complete successfully

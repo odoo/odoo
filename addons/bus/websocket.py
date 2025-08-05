@@ -26,7 +26,7 @@ from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 from werkzeug.local import LocalStack
 
 import odoo
-from odoo import modules
+from odoo import api, modules
 from odoo.http.requestlib import Request
 from odoo.http.response import Response
 from odoo.http.retrying import retrying
@@ -701,12 +701,13 @@ class Websocket:
         if code is CloseCode.SERVER_ERROR:
             reason = None
             registry = Registry(self._session.db)
-            sequence = registry.registry_sequence
-            registry = registry.check_signaling()
-            if sequence != registry.registry_sequence:
+            with registry.cursor() as cr:
+                env = api.Environment(cr, api.SUPERUSER_ID, {})
+                changed_registry = registry is not env.registry
+            if changed_registry:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
-                _logger.error(exc, exc_info=True)  # noqa: LOG014
+                _logger.error(exc, exc_info=exc)
         if self.state is ConnectionState.OPEN:
             self._disconnect(code, reason)
         else:
@@ -946,17 +947,16 @@ class WebsocketRequest:
         data = jsonrequest.get('data')
         self.session = self._get_session()
 
-        try:
-            self.registry = Registry(self.db).check_signaling()
-        except (
-            AttributeError,
-            psycopg2.OperationalError,
-            psycopg2.ProgrammingError,
-        ) as exc:
-            raise InvalidDatabaseException() from exc
-
         with acquire_cursor(self.db) as cr:
-            self.env = new_env(cr, self.session, set_lang=True)
+            try:
+                self.env = new_env(cr, self.session, set_lang=True)
+                self.registry = self.env.registry
+            except (
+                AttributeError,
+                psycopg2.OperationalError,
+                psycopg2.ProgrammingError,
+            ) as exc:
+                raise InvalidDatabaseException() from exc
             retrying(
                 functools.partial(self._serve_ir_websocket, event_name, data),
                 self.env,

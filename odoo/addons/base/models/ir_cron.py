@@ -19,7 +19,6 @@ from odoo import api, fields, models, sql_db
 from odoo.exceptions import LockError, UserError
 from odoo.http.dispatcher import serialize_exception
 from odoo.modules import Manifest
-from odoo.modules.registry import Registry
 from odoo.tools import SQL, config
 from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.func import deprecated
@@ -222,7 +221,6 @@ class IrCron(models.Model):
         The `cron_cr` is used to lock the currently processed job and relased
         by committing after each job.
         """
-        db_name = cron_cr.dbname
         for job_id in job_ids:
             try:
                 job = IrCron._acquire_one_job(cron_cr, job_id)
@@ -234,8 +232,8 @@ class IrCron(models.Model):
                 _logger.debug("job %s is being processed by another worker, skip", job_id)
                 continue
             _logger.debug("job %s acquired", job_id)
-            # take into account overridings of _process_job() on that database
-            registry = Registry(db_name).check_signaling()
+            # take into account overridings of _process_job() on that database, check_signaling
+            registry = api.Environment(cron_cr, api.SUPERUSER_ID, {}).registry
             registry[IrCron._name]._process_job(cron_cr, job)
             cron_cr.commit()
             _logger.debug("job %s updated and released", job_id)
@@ -696,10 +694,6 @@ class IrCron(models.Model):
         is the user calling this method. """
         self.ensure_one()
         try:
-            if self.pool != self.pool.check_signaling():
-                # the registry has changed, reload self in the new registry
-                self.env.transaction.reset()
-
             _logger.debug(
                 "cron.object.execute(%r, %d, '*', %r, %d)",
                 self.env.cr.dbname,
@@ -709,10 +703,8 @@ class IrCron(models.Model):
             )
             self.env['ir.actions.server'].browse(server_action_id).run()
             self.env.flush_all()
-            self.pool.signal_changes()
             self.env.cr.commit()
         except Exception:
-            self.pool.reset_changes()
             self.env.cr.rollback()
             raise
 

@@ -104,6 +104,8 @@ class TestIrSequenceNoGap(BaseCase):
                 n0 = env0['ir.sequence'].next_by_code('test_sequence_type_2')
                 self.assertTrue(n0)
                 env1['ir.sequence'].next_by_code('test_sequence_type_2')
+            env0.cr.rollback()
+            env1.cr.rollback()
 
     @classmethod
     def tearDownClass(cls):

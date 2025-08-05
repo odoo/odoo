@@ -1095,8 +1095,6 @@ class BaseModel(metaclass=MetaModel):
         if any(message['type'] == 'error' for message in messages):
             savepoint.rollback()
             ids = False
-            # cancel all changes done to the registry/ormcache
-            self.pool.reset_changes()
         savepoint.close(rollback=False)
 
         nextrow = info['rows']['to'] + 1
