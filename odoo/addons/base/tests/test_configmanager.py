@@ -11,6 +11,10 @@ EMPTY_CONFIG_PATH = file_path('base/tests/config/empty.conf')
 PROJECT_PATH = odoo.tools.config.root_path.removesuffix('/odoo')
 DEFAULT_DATADIR = odoo.tools.config._default_options['data_dir']
 
+MISSING_HTTP_INTERFACE = """\
+WARNING:odoo.tools.config:missing --http-interface/http_interface, \
+using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0"""
+
 
 class TestConfigManager(TransactionCase):
     maxDiff = None
@@ -89,7 +93,7 @@ class TestConfigManager(TransactionCase):
             'data_dir': DEFAULT_DATADIR,
 
             # HTTP
-            'http_interface': '',
+            'http_interface': '0.0.0.0',
             'http_port': 8069,
             'gevent_port': 8072,
             'http_enable': True,
@@ -313,7 +317,10 @@ class TestConfigManager(TransactionCase):
         config_path = file_path('base/tests/config/16.0.conf')
         with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
             self.config._parse_config(['--config', config_path])
-        with self.assertNoLogs('py.warnings'):
+        with (
+            self.assertNoLogs('py.warnings'),
+            self.assertLogs('odoo.tools.config', 'WARNING') as capture_warn,
+        ):
             self.config._warn_deprecated_options()
         self.assertConfigEqual({
             # options taken from the configuration file
@@ -333,7 +340,7 @@ class TestConfigManager(TransactionCase):
             'email_from': '',
             'geoip_city_db': '/usr/share/GeoIP/GeoLite2-City.mmdb',
             'http_enable': True,
-            'http_interface': '',
+            'http_interface': '0.0.0.0',
             'http_port': 8069,
             'import_file_maxbytes': 10485760,
             'import_file_timeout': 3,
@@ -444,14 +451,20 @@ class TestConfigManager(TransactionCase):
             )
             + missing('translate_modules'),
         )
+        self.assertEqual(capture_warn.output, [
+            'WARNING:odoo.tools.config:missing --http-interface/http_interface, '
+               'using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0',
+        ])
 
     def test_05_repeat_parse_config(self):
         """Emulate multiple calls to parse_config()"""
-        config = configmanager()
-        config._parse_config()
-        config._warn_deprecated_options()
-        config._parse_config()
-        config._warn_deprecated_options()
+        with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
+            config = configmanager()
+            config._parse_config()
+            config._warn_deprecated_options()
+            config._parse_config()
+            config._warn_deprecated_options()
+        self.assertEqual(capture.output, [MISSING_HTTP_INTERFACE] * 2)
 
     def test_06_cli(self):
         with file_open('base/tests/config/cli') as file:
