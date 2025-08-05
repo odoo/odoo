@@ -132,13 +132,16 @@ class PrinterInterface(Interface):
                 result += printers_with_same_ip
                 continue
 
-            chosen_printer = next((
-                printer for printer in printers_with_same_ip
-                if 'CMD:' in printer['device-id'] or 'ZPL' in printer['device-id']
-                ), None)
-            if not chosen_printer:
-                chosen_printer = printers_with_same_ip[0]
-            result.append(chosen_printer)
+            device_id = ''
+            for printer in printers_with_same_ip:
+                if 'CMD:' in printer['device-id'] or 'ZPL' in printer['device-id']:
+                    device_id = printer.get('device-id')
+                if 'passthru' in printer['identifier'].lower():
+                    printers_with_same_ip.remove(printer)
+                    continue
+
+            printers_with_same_ip[0]['device-id'] = device_id
+            result.append(printers_with_same_ip[0])
 
         return {printer['identifier']: printer for printer in result}
 
