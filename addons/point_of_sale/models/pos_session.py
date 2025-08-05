@@ -747,6 +747,7 @@ class PosSession(models.Model):
                 'id': cash_move.id,
                 'date': cash_move.create_date,
                 'cashier_name': cash_move.partner_id.name,
+                'cash_move_type': cash_move.cash_move_type
             })
         return cash_in_out_list
 
@@ -1806,7 +1807,7 @@ class PosSession(models.Model):
             ))
         return True
 
-    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, partner_id, extras):
+    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, cash_type, partner_id, extras):
         return {
             'pos_session_id': session.id,
             'journal_id': session.cash_journal_id.id,
@@ -1814,16 +1815,17 @@ class PosSession(models.Model):
             'date': fields.Date.context_today(self),
             'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
             'partner_id': partner_id,
+            'cash_move_type': cash_type
         }
 
-    def try_cash_in_out(self, _type, amount, reason, partner_id, extras):
+    def try_cash_in_out(self, _type, amount, reason, cash_type, partner_id, extras):
         sign = 1 if _type == 'in' else -1
         sessions = self.filtered('cash_journal_id')
         if not sessions:
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
         vals_list = [
-            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, partner_id, extras)
+            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, cash_type, partner_id, extras)
             for session in sessions
         ]
 

@@ -198,7 +198,7 @@ registry.category("web_tour.tours").add("test_cash_in_out", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             Chrome.freezeDateTime(1749965940000),
-            Chrome.doCashMove("10", "MOBT in"),
+            Chrome.doCashMove("10", "MOBT in", "in", "Cash flow adjustment"),
             Chrome.doCashMove("5", "MOBT out"),
             Chrome.clickMenuOption("Close Register"),
             Utils.selectButton("Cash In/Out"),

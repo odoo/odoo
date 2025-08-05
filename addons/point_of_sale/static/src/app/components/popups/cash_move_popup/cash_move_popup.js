@@ -15,7 +15,7 @@ const { DateTime } = luxon;
 export class CashMovePopup extends Component {
     static template = "point_of_sale.CashMovePopup";
     static components = { Input, Dialog };
-    static props = ["confirmKey?", "close", "getPayload?"];
+    static props = ["confirmKey?", "close", "getPayload?", "cashAmount"];
     setup() {
         super.setup();
         this.notification = useService("notification");
@@ -28,6 +28,7 @@ export class CashMovePopup extends Component {
             type: "out",
             amount: "",
             reason: "",
+            cashType: "",
         });
         this.confirm = useAsyncLockedMethod(this.confirm);
         this.ui = useService("ui");
@@ -46,6 +47,7 @@ export class CashMovePopup extends Component {
         }
 
         const type = this.state.type;
+        const cashType = this.state.cashType;
         const translatedType = _t(type);
         const extras = { formattedAmount, translatedType };
         const reason = this.state.reason.trim();
@@ -53,7 +55,14 @@ export class CashMovePopup extends Component {
         await this.pos.data.call(
             "pos.session",
             "try_cash_in_out",
-            this._prepareTryCashInOutPayload(type, amount, reason, this.partnerId, extras),
+            this._prepareTryCashInOutPayload(
+                type,
+                amount,
+                reason,
+                cashType,
+                this.partnerId,
+                extras
+            ),
             {},
             true
         );
@@ -97,8 +106,8 @@ export class CashMovePopup extends Component {
             ? this.env.utils.formatCurrency(parseFloat(value))
             : "";
     }
-    _prepareTryCashInOutPayload(type, amount, reason, partnerId, extras) {
-        return [[this.pos.session.id], type, amount, reason, partnerId, extras];
+    _prepareTryCashInOutPayload(type, amount, reason, cashType, partnerId, extras) {
+        return [[this.pos.session.id], type, amount, reason, cashType, partnerId, extras];
     }
     isValidCashMove() {
         return this.env.utils.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
@@ -114,5 +123,18 @@ export class CashMovePopup extends Component {
             })),
             partnerId: this.partnerId,
         });
+    }
+
+    getCashTypeOptions() {
+        return this.state.type == "in"
+            ? ["Cash flow adjustment", "Bank withdrawal", "Miscellaneous"]
+            : [
+                  "Vendor payment",
+                  "Cash flow adjustment",
+                  "Expense",
+                  "Bank deposit",
+                  "Employee reimbursement",
+                  "Miscellaneous",
+              ];
     }
 }

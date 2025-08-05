@@ -31,13 +31,21 @@ export function isCashMoveButtonHidden() {
         },
     ];
 }
-export function doCashMove(amount, reason) {
+export function doCashMove(amount, reason, cashSign = "out", cashType = "") {
     return [
         ...clickMenuOption("Cash In/Out"),
         fillTextArea(".cash-reason", reason),
         {
+            trigger: `input[type="radio"][value="${cashSign}"]`,
+            run: "click",
+        },
+        {
             trigger: ".modal .input-amount input",
             run: "edit " + amount,
+        },
+        {
+            trigger: ".form-select",
+            run: "select " + cashType,
         },
         Dialog.confirm(),
     ];

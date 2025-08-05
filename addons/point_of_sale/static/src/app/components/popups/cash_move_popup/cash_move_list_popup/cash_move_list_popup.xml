@@ -13,8 +13,11 @@
                                         <div class="cash-move-date fs-6 fw-bolder"><t t-esc="this.pos.getDate(cm.date)"></t></div>
                                         <div class="cash-move-time small text-muted"><t t-esc="this.pos.getTime(cm.date)"></t></div>
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         <t t-if="cm.cashier_name" t-esc="cm.cashier_name"/>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div><t t-esc="cm.cash_move_type"></t></div>
                                     </td>
                                     <td class="align-middle text-end">
                                         <t t-set="status" t-value="getStatus(cm)" />

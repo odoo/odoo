@@ -2,28 +2,46 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.CashMovePopup">
-        <Dialog header="false">
-            <div class="input-amount d-flex mb-2 gap-2">
-                <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall }">
-                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
-                        Cash In
-                    </button>
-                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'out' ? 'red-highlight btn-danger' : 'btn-secondary' }">
-                        Cash Out
-                    </button>
-                </div>
-                <div t-attf-class="{{this.ui.isSmall ? 'mw-50 h-50' : 'w-25'}}">
+        <Dialog title.translate="Cash In / Out">
+            <div class="d-flex gap-2 mb-3">
+                <label class="form-check-label me-5">
+                    <input type="radio" class="form-check-input" value="in" t-model="state.type"/>
+                    Cash In
+                </label>
+                <label class="form-check-label me-5">
+                    <input type="radio" class="form-check-input" value="out" t-model="state.type"/>
+                    Cash Out
+                </label>
+            </div>
+            <div t-attf-class="{{ this.ui.isSmall ? 'd-flex flex-column' : 'd-flex flex-row align-items-end gap-3' }}" class="mb-3">
+                <div class="input-amount" t-attf-class="{{this.ui.isSmall ? 'w-100' : 'w-25'}}">
+                    <label class="form-label fw-bold mb-1" style="font-size: 110%">Amount</label>
                     <Input tModel="[state, 'amount']"
                         icon="{type: 'string', value: pos.currency.symbol}"
                         iconOnLeftSide="pos.currency.position === 'before'"
                         isValid.bind="env.utils.isValidFloat"
                         autofocus="true"
+                        class="'input-cash-amount'"
                         getRef="(ref) => this.inputRef = ref" />
                 </div>
-            </div> 
+
+                <div t-attf-class="{{ this.ui.isSmall ? 'w-100 mt-3' : 'w-25 mt-0' }}">
+                    <label class="form-label fw-bold mb-1" style="font-size: 110%">Type</label>
+                    <select class="form-select form-control form-control-lg select-cash-type"
+                            t-model="state.cashType">
+                        <option value=""></option>
+                        <t t-foreach="getCashTypeOptions()" t-as="option" t-key="option_index">
+                            <option t-att-value="option" t-esc="option" />
+                        </t>
+                    </select>
+                </div>
+            </div>
             <div class="form-floating">
                 <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
                 <label for="reason">Reason</label>
+            </div>
+            <div class="text-end mt-2 fw-bold" style="font-size: 120%">
+                <span>Current cash: <t t-esc="env.utils.formatCurrency(props.cashAmount)" /></span>
             </div>
             <t t-set-slot="footer">
                 <div class="w-100 d-flex flex-wrap justify-content-between gap-2">

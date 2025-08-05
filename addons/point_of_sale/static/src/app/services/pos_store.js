@@ -431,9 +431,14 @@ export class PosStore extends WithLazyGetterTrap {
 
         await this.processProductAttributes();
     }
-    cashMove() {
+    async cashMove() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
-        return makeAwaitable(this.dialog, CashMovePopup);
+        const closingData = await this.data.call("pos.session", "get_closing_control_data", [
+            [this.session.id],
+        ]);
+        return makeAwaitable(this.dialog, CashMovePopup, {
+            cashAmount: closingData.default_cash_details.amount,
+        });
     }
     async closeSession() {
         const info = await this.getClosePosInfo();
