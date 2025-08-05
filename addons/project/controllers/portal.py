@@ -320,6 +320,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'state': {'label': _('Status'), 'sequence': 40},
             'priority': {'label': _('Priority'), 'sequence': 60},
             'partner_id': {'label': _('Customer'), 'sequence': 70},
+            'parent_id': {'label': self.env._('Parent Task'), 'sequence': 90},
         }
         if not project:
             values['project_id'] = {'label': _('Project'), 'sequence': 30}
@@ -339,6 +340,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'status': {'input': 'status', 'label': _('Search in Status'), 'sequence': 40},
             'priority': {'input': 'priority', 'label': _('Search in Priority'), 'sequence': 60},
             'partner_id': {'input': 'partner_id', 'label': _('Search in Customer'), 'sequence': 80},
+            'parent_id': {'input': 'parent_id', 'label': self.env._('Search in Parent Task'), 'sequence': 110},
         }
         if not project:
             values['project_id'] = {'input': 'project_id', 'label': _('Search in Project'), 'sequence': 50}

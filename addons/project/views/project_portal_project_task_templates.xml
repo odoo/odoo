@@ -75,6 +75,12 @@
                                         t-field="tasks[0].sudo().partner_id.name"/>
                                     <span t-else="">No Customer</span>
                                 </t>
+                                <t t-if="groupby == 'parent_id'">
+                                    <span t-if="tasks[0].sudo().parent_id"
+                                        class="text-truncate"
+                                        t-field="tasks[0].sudo().parent_id.name"/>
+                                    <span t-else="">No Parent Task</span>
+                                </t>
                             </th>
                             <th name="state_col" t-if="groupby != 'state'"/>
                             <th name="stage_id_col" t-if="groupby != 'stage_id'"/>
