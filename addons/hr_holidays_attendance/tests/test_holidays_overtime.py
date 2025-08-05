@@ -121,8 +121,8 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertEqual(self.employee.total_overtime, 8)
 
         leave.action_reset_confirm()
-        self.assertFalse(leave.overtime_id.exists(), "Overtime should not be created")
-        self.assertEqual(self.employee.total_overtime, 8)
+        self.assertTrue(leave.overtime_id.adjustment, "Overtime should be created")
+        self.assertEqual(self.employee.total_overtime, 0)
 
         overtime = leave.overtime_id
         leave.unlink()
