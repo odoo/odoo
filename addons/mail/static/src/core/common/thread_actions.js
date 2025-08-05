@@ -100,19 +100,9 @@ class ThreadActionDefinition extends DiscussActionDefinition {
         this.explicitDefinition.close?.(this._component, this);
     }
 
-    /** Optional component that should be displayed in the view when this action is active. */
-    get component() {
-        return this.explicitDefinition.component;
-    }
-
     /** Condition to display the component of this action. */
     get componentCondition() {
         return this.isActive && this.component && this.condition && !this.popover;
-    }
-
-    /** Props to pass to the component of this action. */
-    get componentProps() {
-        return this.explicitDefinition.componentProps?.(this, this._component);
     }
 
     /** Condition to display this action. */
@@ -120,46 +110,12 @@ class ThreadActionDefinition extends DiscussActionDefinition {
         return threadActionsInternal.condition(this._component, this.id, this.explicitDefinition);
     }
 
-    /** Condition to disable the button of this action (but still display it). */
-    get disabledCondition() {
-        return this.explicitDefinition.disabledCondition?.(this._component);
-    }
-
-    /** Determines whether this action opens a dropdown on selection. Value is shaped { template, menuClass } */
-    get dropdown() {
-        return this.explicitDefinition.dropdown;
-    }
-
-    /**
-     * Icon for the button this action.
-     * - When a string, this is considered an icon as classname (.fa and .oi).
-     * - When an object with property `template`, this is an icon rendered in template.
-     *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
-     */
-    get icon() {
-        return typeof this.explicitDefinition.icon === "function"
-            ? this.explicitDefinition.icon(this._component)
-            : this.explicitDefinition.icon;
-    }
-
-    /**
-     * Large icon for the button this action.
-     * - When a string, this is considered an icon as classname (.fa and .oi).
-     * - When an object with property `template`, this is an icon rendered in template.
-     *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
-     */
-    get iconLarge() {
-        return typeof this.explicitDefinition.iconLarge === "function"
-            ? this.explicitDefinition.iconLarge(this._component)
-            : this.explicitDefinition.iconLarge ?? this.explicitDefinition.icon;
-    }
-
     /** States whether this action is currently active. */
     get isActive() {
         return this.id === this._component.threadActions.activeAction?.id;
     }
 
-    /** Name of this action, displayed to the user. */
+    /** @override **/
     get name() {
         const res =
             this.isActive && this.explicitDefinition.nameActive
@@ -176,8 +132,7 @@ class ThreadActionDefinition extends DiscussActionDefinition {
     }
 
     /**
-     * Action to execute when this action is selected (on or off).
-     *
+     * @override
      * @param {MouseEvent} [ev]
      * @param {object} [param0]
      * @param {boolean} [param0.keepPrevious] Whether the previous action
@@ -281,13 +236,6 @@ class ThreadActionDefinition extends DiscussActionDefinition {
         return typeof this.explicitDefinition.sidebarSequenceGroup === "function"
             ? this.explicitDefinition.sidebarSequenceGroup(this._component)
             : this.explicitDefinition.sidebarSequenceGroup;
-    }
-
-    /** Text for the button of this action */
-    get text() {
-        return typeof this.explicitDefinition.text === "function"
-            ? this.explicitDefinition.text(this._component)
-            : this.explicitDefinition.text;
     }
 
     /** Determines whether this action is a one time effect or can be toggled (on or off). */

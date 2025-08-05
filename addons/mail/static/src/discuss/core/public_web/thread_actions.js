@@ -15,7 +15,7 @@ threadActionsRegistry.add("show-threads", {
     iconLarge: "fa fa-fw fa-lg fa-comments-o",
     name: _t("Threads"),
     component: SubChannelList,
-    componentProps(action) {
+    componentProps(component, action) {
         return { close: () => action.close() };
     },
     setup(action) {

@@ -98,7 +98,7 @@ threadActionsRegistry
             action.popover?.close();
         },
         component: ChannelInvitation,
-        componentProps(action) {
+        componentProps(component, action) {
             return { close: () => action.close() };
         },
         condition(component) {
@@ -159,7 +159,7 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
-        componentProps(action, component) {
+        componentProps(component, action) {
             return {
                 openChannelInvitePanel({ keepPrevious } = {}) {
                     component.threadActions.actions

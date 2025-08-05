@@ -88,7 +88,7 @@
     <t t-if="action.icon?.template" t-call="{{ action.icon.template }}">
         <t t-set="templateParams" t-value="action.icon.params"/>
     </t>
-    <i t-elif="props.inline and action.iconLarge" t-attf-class="{{ action.iconLarge }}" class="fa-fw"/><i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'o-fs-small': props.dropdown }" class="fa-fw"/> <span t-if="action.text" t-esc="action.text"/>
+    <i t-elif="props.inline and action.iconLarge" t-attf-class="{{ action.iconLarge }}" class="fa-fw"/><i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'o-fs-small': props.dropdown }" class="fa-fw"/><span t-elif="action.name" t-esc="action.name"/>
     <span t-if="!props.inline" class="o-mail-DiscussActions-actionLabel fw-bold mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
 </t>
 

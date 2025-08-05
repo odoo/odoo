@@ -59,7 +59,7 @@ threadActionsRegistry
     })
     .add("call-settings", {
         component: CallSettings,
-        componentProps(action) {
+        componentProps(component, action) {
             return { isCompact: true };
         },
         condition(component) {

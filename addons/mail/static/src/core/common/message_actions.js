@@ -18,7 +18,7 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
 messageActionsRegistry
     .add("reaction", {
         component: QuickReactionMenu,
-        props: (component) => ({
+        componentProps: (component) => ({
             message: component.props.message,
             action: messageActionsRegistry.get("reaction"),
             messageActive: component.isActive,
@@ -88,7 +88,6 @@ messageActionsRegistry
         onSelected: (component) => component.openReactionMenu(),
         sequence: 50,
         mobileCloseAfterClick: false,
-        dropdown: true,
     })
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
@@ -178,10 +177,6 @@ messageActionsRegistry
     });
 
 class MessageActionDefinition extends DiscussActionDefinition {
-    get component() {
-        return this.explicitDefinition.component;
-    }
-
     get mobileCloseAfterClick() {
         return this.explicitDefinition.mobileCloseAfterClick ?? true;
     }
@@ -189,30 +184,6 @@ class MessageActionDefinition extends DiscussActionDefinition {
     /** Condition to display this action. */
     get condition() {
         return messageActionsInternal.condition(this._component, this.id, this.explicitDefinition);
-    }
-
-    /** Icon for the button this action. */
-    get icon() {
-        return typeof this.explicitDefinition.icon === "function"
-            ? this.explicitDefinition.icon(this._component)
-            : this.explicitDefinition.icon;
-    }
-
-    /** Name of this action, displayed to the user. */
-    get name() {
-        const res =
-            this.isActive && this.explicitDefinition.nameActive
-                ? this.explicitDefinition.nameActive
-                : this.explicitDefinition.name;
-        return typeof res === "function" ? res(this._component) : res;
-    }
-
-    get props() {
-        return this.explicitDefinition.props(this._component);
-    }
-
-    onSelected(ev) {
-        return this.explicitDefinition.onSelected?.(this._component, this, ev);
     }
 }
 
