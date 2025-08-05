@@ -4014,6 +4014,16 @@ X[]
                         contentAfter: '<div><a>ab</a><br>[]cd</div>',
                     });
                 });
+                it('should keep the last line break in the old paragraph', async () => {
+                    const pressEnter = editor => {
+                        editor.document.execCommand('insertParagraph');
+                    };
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><p>abc<br>[]<br></p></div>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<div><p>abc<br><br></p><p>[]<br></p></div>',
+                    });
+                });
                 it('should insert a paragraph break outside the starting edge of an anchor', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><a>[]ab</a></p>',
