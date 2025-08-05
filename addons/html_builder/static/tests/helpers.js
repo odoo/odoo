@@ -72,7 +72,7 @@ class BuilderContainer extends Component {
             </div>
         </div>`;
     static components = { Builder, LocalOverlayContainer };
-    static props = { content: String, Plugins: Array };
+    static props = { content: String, headerContent: String, Plugins: Array };
 
     setup() {
         this.state = useState({ isMobile: false, isEditing: false, showSidebar: true });
@@ -87,7 +87,7 @@ class BuilderContainer extends Component {
                 }
 
                 const el = this.iframeRef.el;
-                el.contentDocument.body.innerHTML = `<div id="wrapwrap"><div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${this.props.content}</div></div>`;
+                el.contentDocument.body.innerHTML = `<div id="wrapwrap">${this.props.headerContent}<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${this.props.content}</div></div>`;
                 resolve(el);
             });
         });
@@ -124,7 +124,7 @@ class IrUiView extends models.Model {
 
 export async function setupHTMLBuilder(
     content = "",
-    { snippetContent, dropzoneSelectors, styleContent } = {}
+    { headerContent = "", snippetContent, dropzoneSelectors, styleContent } = {}
 ) {
     defineMailModels(); // fuck this shit
 
@@ -188,7 +188,9 @@ export async function setupHTMLBuilder(
             _resolve();
         },
     });
-    const comp = await mountWithCleanup(BuilderContainer, { props: { content, Plugins } });
+    const comp = await mountWithCleanup(BuilderContainer, {
+        props: { content, headerContent, Plugins },
+    });
     await comp.iframeLoaded;
     if (styleContent) {
         const iframeDocument = queryOne(":iframe");
