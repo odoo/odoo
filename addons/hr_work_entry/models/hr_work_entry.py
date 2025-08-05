@@ -92,8 +92,8 @@ class HrWorkEntry(models.Model):
                         hr_version AS hc
                     ON
                         hwe.employee_id=hc.employee_id AND
-                        hwe.date_start >= hc.date_start AND
-                        hwe.date_stop < COALESCE(hc.date_end + integer '1', '9999-12-31 23:59:59')
+                        hwe.date_start >= hc.contract_date_start AND
+                        hwe.date_stop < COALESCE(hc.contract_date_end + integer '1', '9999-12-31 23:59:59')
                     WHERE
                         hwe.version_id IS NULL
                     GROUP BY
