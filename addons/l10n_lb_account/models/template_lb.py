@@ -15,8 +15,6 @@ class AccountChartTemplate(models.AbstractModel):
             "property_account_expense_id": "lb_account_601101",
             "property_account_income_id": "lb_account_701000",
             "property_stock_valuation_account_id": "lb_account_370001",
-            "property_stock_account_input_categ_id": "lb_account_370002",
-            "property_stock_account_output_categ_id": "lb_account_370003",
             "property_stock_account_production_cost_id": "lb_account_370004",
             "tax_payable_account_id": "lb_account_442001",
             "tax_receivable_account_id": "lb_account_442201",

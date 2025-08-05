@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="stock_account.StockValuationReport.InventoryValuationLine">
+        <tr t-att-class="cssClass">
+            <td class="line_name" t-on-click="onClick" style="width: 50%;">
+                <div class="wrapper">
+                    <a href="#" t-if="label" t-out="label"/>
+                </div>
+            </td>
+            <td style="width: 25%;">
+                <div t-if="formattedValue" t-out="formattedValue"/>
+                <div t-elif="debit" t-out="debit"/>
+            </td>
+            <td t-if="credit" style="width: 25%;">
+                <div t-out="credit"/>
+            </td>
+            <td t-else="" t-on-click="onClickToggle" style="width: 25%;">
+                <button t-attf-class="btn btn_foldable#{props.sublines ? '' : '_empty'}"
+                        t-att-tabindex="props.lines ? 0 : -1">
+                    <i t-if="props.sublines"
+                        t-attf-class="fa fa-folder#{state.displaySublines ? '-open' : ''}-o"/>
+                </button>
+            </td>
+        </tr>
+        <t t-if="state.displaySublines">
+            <t t-if="props.displayDebitCredit">
+                <tr>
+                    <td/>
+                    <td>Debit</td>
+                    <td>Credit</td>
+                </tr>
+            </t>
+            <t t-foreach="props.sublines" t-as="line" t-key="line.account">
+                <StockValuationReportLine
+                    label="line.display_name || line.label"
+                    line="line"
+                    sublines="line.lines"
+                    level="props.level + 2"
+                    onClickMethod="props.onClickMethod || line.method"
+                    value="line.value"/>
+            </t>
+        </t>
+        <!-- <t t-if="displayTotalOnSeparateLine">
+            <StockValuationReportLine t-props="totalProps"/>
+        </t> -->
+    </t>
+</templates>

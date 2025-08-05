@@ -996,33 +996,6 @@ class PosSession(models.Model):
                 partners = (order.partner_id | order.partner_id.commercial_partner_id)
                 partners._increase_rank('customer_rank')
 
-        if self.company_id.anglo_saxon_accounting:
-            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
-            if all_picking_ids:
-                # Combine stock lines
-                stock_move_sudo = self.env['stock.move'].sudo()
-                stock_moves = stock_move_sudo.search([
-                    ('picking_id', 'in', all_picking_ids),
-                    ('company_id.anglo_saxon_accounting', '=', True),
-                    ('product_id.categ_id.property_valuation', '=', 'real_time'),
-                    ('product_id.is_storable', '=', True),
-                ])
-                for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
-                    candidates = stock_moves_batch\
-                        .filtered(lambda m: not bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
-                        .mapped('stock_valuation_layer_ids')
-                    for move in stock_moves_batch.with_context(candidates_prefetch_ids=candidates._prefetch_ids):
-                        exp_key = move.product_id._get_product_accounts()['expense']
-                        out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                        signed_product_qty = move.product_qty
-                        if move._is_in():
-                            signed_product_qty *= -1
-                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity, move)
-                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.create_date, force_company_currency=True)
-                        if move._is_in():
-                            stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.create_date, force_company_currency=True)
-                        else:
-                            stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.create_date, force_company_currency=True)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 
         data.update({
@@ -1368,16 +1341,6 @@ class PosSession(models.Model):
                 lines = split_inv_payment_receivable_lines[payment] | split_invoice_receivable_lines.get(payment, self.env['account.move.line'])
                 lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
-        # reconcile stock output lines
-        pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
-        pickings |= self._get_closed_orders().filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
-        stock_account_move_lines = self.env['account.move'].search(
-            [('stock_move_id.picking_id', 'in', pickings.ids)]
-        ).mapped('line_ids')
-        for account_id in stock_output_lines:
-            ( stock_output_lines[account_id]
-            | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
-            ).filtered(lambda aml: not aml.reconciled).with_context(no_cash_basis=True).reconcile()
         return data
 
     def _get_rounding_difference_vals(self, amount, amount_converted):
@@ -1698,7 +1661,7 @@ class PosSession(models.Model):
         pickings = self.picking_ids | self._get_closed_orders().mapped('picking_ids')
         invoices = self.mapped('order_ids.account_move')
         invoice_payments = self.mapped('order_ids.payment_ids.account_move_id')
-        stock_account_moves = pickings.mapped('move_ids.account_move_ids')
+        stock_account_moves = pickings.move_ids.account_move_id
         cash_moves = self.statement_line_ids.mapped('move_id')
         bank_payment_moves = self.bank_payment_ids.mapped('move_id')
         other_related_moves = self._get_other_related_moves()

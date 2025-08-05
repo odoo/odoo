@@ -20,10 +20,7 @@
                 <group name="logistics" position="after">
                     <group string="Inventory Valuation">
                         <field name="property_cost_method" required="True"/>
-                        <label for="property_valuation" groups="stock_account.group_stock_accounting_automatic"/>
-                        <div groups="stock_account.group_stock_accounting_automatic">
-                            <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
-                        </div>
+                        <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
                     </group>
                 </group>
             </field>
@@ -35,15 +32,10 @@
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <group name="account_property" position="inside">
-                    <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_readonly" invisible="property_valuation == 'manual_periodic'">
-                        <field name="property_valuation" invisible="True" required="True"/>
-                        <field name="property_stock_valuation_account_id" options="{'no_create': True}" required="property_valuation == 'real_time'"/>
-                        <field name="property_stock_journal" required="property_valuation == 'real_time'" />
-                        <field name="property_stock_account_input_categ_id" options="{'no_create': True}" required="property_valuation == 'real_time'" />
-                        <field name="property_stock_account_output_categ_id" options="{'no_create': True}" required="property_valuation == 'real_time'" />
-                        <div colspan="2" class="alert alert-info mt16" role="status">
-                            <b>Set other input/output accounts on specific </b><button name="%(stock.action_prod_inv_location_form)d" role="button" type="action" class="btn-link" style="padding: 0;vertical-align: baseline;" string="locations"/>.
-                        </div>
+                    <group name="account_stock_property" string="Accounting Stock Valuation" groups="account.group_account_readonly">
+                        <field name="property_stock_valuation_account_id" string="Stock Account" options="{'no_create': True}" required="property_valuation == 'real_time'"/>
+                        <field name="property_cogs_account_id" string="Cost of Goods Sold Account" options="{'no_create': True}" invisible="not anglo_saxon_accounting"/>
+                        <field name="property_price_difference_account_id" options="{'no_create': True}" invisible="not (property_cost_method == 'standard' and property_valuation == 'real_time')"/>
                     </group>
                 </group>
             </field>
@@ -71,10 +63,6 @@
                     <field name="cost_method" column_invisible="True"/>
                     <field name="avg_cost" string="Unit Cost" optional="show" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
                     <field name="total_value" string="Total Value" optional="show" widget='monetary' options="{'currency_field': 'company_currency_id'}" sum="Total Value"/>
-                    <button name="%(stock_valuation_layer_action)d" title="Valuation Report" type="action" class="btn-link"
-                        icon="fa-bar-chart" context="{'search_default_product_id': id, 'default_product_id': id}"  invisible="cost_method != 'average'"/>
-                    <button name="%(stock_valuation_layer_report_action)d" title="Valuation Report" type="action" class="btn-link"
-                        icon="fa-bar-chart" context="{'search_default_product_id': id, 'default_product_id': id}"  invisible="cost_method != 'fifo'"/>
                 </field>
             </field>
         </record>

@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'ua_psbp_361',
             'property_account_payable_id': 'ua_psbp_631',
-            'property_stock_account_input_categ_id': 'ua_psbp_2812',
-            'property_stock_account_output_categ_id': 'ua_psbp_2811',
             'property_stock_valuation_account_id': 'ua_psbp_281',
             'name': _('IFRS Chart of Accounts'),
             'code_digits': '6',

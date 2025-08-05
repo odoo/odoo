@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'chart1213',
             'property_account_payable_id': 'chart4212',
-            'property_stock_account_input_categ_id': 'chart6111',
-            'property_stock_account_output_categ_id': 'chart69111',
             'property_stock_valuation_account_id': 'chart20111',
             'code_digits': '7',
         }

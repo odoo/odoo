@@ -87,7 +87,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        lines = super(PurchaseOrderLine, self).create(vals_list)
+        lines = super().create(vals_list)
         lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return lines
 
@@ -101,7 +101,7 @@ class PurchaseOrderLine(models.Model):
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
-        result = super(PurchaseOrderLine, self).write(values)
+        result = super().write(values)
         if 'price_unit' in values:
             for line in lines:
                 # Avoid updating kit components' stock.move
@@ -110,6 +110,9 @@ class PurchaseOrderLine(models.Model):
         if 'product_qty' in values:
             lines = lines.filtered(lambda l: l.product_uom_id.compare(previous_product_qty[l.id], l.product_qty) != 0)
             lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
+        valuation_trigger = ['price_unit', 'product_qty', 'product_uom']
+        if any(field in valuation_trigger for field in values):
+            self.move_ids.filtered(lambda m: m.is_valued)._set_value()
         return result
 
     def action_product_forecast_report(self):
@@ -193,30 +196,6 @@ class PurchaseOrderLine(models.Model):
                 moves = line._create_stock_moves(picking)
                 moves._action_confirm()._action_assign()
 
-    def _get_stock_move_price_unit(self):
-        self.ensure_one()
-        order = self.order_id
-        price_unit = self.price_unit
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-        if self.tax_ids:
-            qty = self.product_qty or 1
-            price_unit = self.tax_ids.compute_all(
-                price_unit,
-                currency=self.order_id.currency_id,
-                quantity=qty,
-                product=self.product_id,
-                partner=self.order_id.partner_id,
-                rounding_method="round_globally",
-            )['total_void']
-            price_unit = price_unit / qty
-        if self.product_uom_id.id != self.product_id.uom_id.id:
-            price_unit /= self.product_uom_id.factor
-            price_unit *= self.product_id.uom_id.factor
-        if order.currency_id != order.company_id.currency_id:
-            price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
-        return float_round(price_unit, precision_digits=price_unit_prec)
-
     def _get_move_dests_initial_demand(self, move_dests):
         return self.product_id.uom_id._compute_quantity(
             sum(move_dests.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier').mapped('product_qty')),
@@ -254,6 +233,30 @@ class PurchaseOrderLine(models.Model):
             extra_move_vals['move_dest_ids'] = False  # don't attach
             res.append(extra_move_vals)
         return res
+
+    def _get_stock_move_price_unit(self):
+        self.ensure_one()
+        order = self.order_id
+        price_unit = self.price_unit
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        if self.tax_ids:
+            qty = self.product_qty or 1
+            price_unit = self.tax_ids.compute_all(
+                price_unit,
+                currency=self.order_id.currency_id,
+                quantity=qty,
+                product=self.product_id,
+                partner=self.order_id.partner_id,
+                rounding_method="round_globally",
+            )['total_void']
+            price_unit = price_unit / qty
+        if self.product_uom_id.id != self.product_id.uom_id.id:
+            price_unit /= self.product_uom_id.factor
+            price_unit *= self.product_id.uom_id.factor
+        if order.currency_id != order.company_id.currency_id:
+            price_unit = order.currency_id._convert(
+                price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
+        return float_round(price_unit, precision_digits=price_unit_prec)
 
     def _get_qty_procurement(self):
         self.ensure_one()

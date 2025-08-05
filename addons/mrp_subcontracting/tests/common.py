@@ -65,17 +65,7 @@ class TestMrpSubcontractingCommon(TransactionCase):
         """
         Sets up the all category with some stock accounts.
         """
-        a_in, a_out, a_val = self.env['account.account'].create([{
-            'name': 'Stock Interim (Received)',
-            'code': '1102',
-            'account_type': 'asset_current',
-            'reconcile': True
-        }, {
-            'name': 'Stock Interim (Delivered)',
-            'code': '1103',
-            'account_type': 'asset_current',
-            'reconcile': True
-        }, {
+        a_val = self.env['account.account'].create([{
             'name': 'VALU Account',
             'code': '000003',
             'account_type': 'asset_current',
@@ -86,7 +76,5 @@ class TestMrpSubcontractingCommon(TransactionCase):
             'type': 'general',
         })
         product_category_all = self.env.ref('product.product_category_goods')
-        product_category_all.property_stock_account_input_categ_id = a_in
-        product_category_all.property_stock_account_output_categ_id = a_out
         product_category_all.property_stock_valuation_account_id = a_val
         product_category_all.property_stock_journal = stock_journal

@@ -8,23 +8,12 @@
             <field name="arch" type="xml">
                 <form string="Landed Costs">
                     <field name="company_id" invisible="1"/>
-                    <field name="stock_valuation_layer_ids" invisible="1"/>
                     <header>
                         <button name="button_validate" string="Validate" invisible="state != 'draft'" class="oe_highlight" type="object"/>
                         <button name="button_cancel" string="Cancel" invisible="state != 'draft'" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button type="object"
-                                name="action_view_stock_valuation_layers"
-                                class="oe_stat_button" icon="fa-dollar" groups="account.group_account_invoice"
-                                invisible="state != 'done' or not stock_valuation_layer_ids">
-                                <div class="o_stat_info">
-                                    <span class="o_stat_text">Valuation</span>
-                                </div>
-                            </button>
-                        </div>
                         <div class="oe_title">
                             <label for="name" string="Landed Cost"/>
                             <h1>
@@ -37,7 +26,7 @@
                                 <field name="target_model" widget="radio" invisible="1" readonly="state == 'done'"/>
                                 <field name="picking_ids" widget="many2many_tags" 
                                     options="{'no_create_edit': True}" invisible="target_model != 'picking'" readonly="state == 'done'"
-                                    domain="[('company_id', '=', company_id), ('move_ids.stock_valuation_layer_ids', '!=', False)]"/>
+                                    domain="[('company_id', '=', company_id), '|', ('move_ids.is_in', '!=', False), ('move_ids.is_out', '!=', False)]"/>
                             </group>
                             <group>
                                 <label for="account_journal_id" string="Journal"/>

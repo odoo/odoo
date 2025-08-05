@@ -15,7 +15,7 @@
                     widget="many2many_tags" options="{'no_create_edit': True}"
                     invisible="target_model != 'manufacturing'"
                     readonly="state == 'done'"
-                    domain="[('company_id', '=', company_id), ('move_finished_ids.stock_valuation_layer_ids', '!=', False)]"/>
+                    domain="[('company_id', '=', company_id), ('move_finished_ids.is_in', '!=', False)]"/>
             </field>
         </field>
     </record>
