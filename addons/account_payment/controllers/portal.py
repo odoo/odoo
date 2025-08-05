@@ -39,7 +39,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             access_token=access_token,
             **kwargs)
 
-        amount_custom = amount and float('amount') or 0.0
+        amount_custom = float(amount or 0.0)
         values |= {
             **common_view_values,
             'amount_custom': amount_custom,
