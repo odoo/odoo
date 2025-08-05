@@ -1,11 +1,11 @@
 import { patch } from "@web/core/utils/patch";
-import { DiscussSidebar } from "../public_web/discuss_sidebar";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DiscussSearch } from "../public_web/discuss_search";
 
-patch(DiscussSidebar.prototype, {
+patch(DiscussSearch.prototype, {
     setup() {
         super.setup();
         this.ui = useService("ui");
@@ -25,5 +25,11 @@ patch(DiscussSidebar.prototype, {
     },
     get newMeetingText() {
         return _t("New Meeting");
+    },
+    onClickNewMeeting() {
+        this.store.startMeeting();
+        if (this.env.inMessagingMenu) {
+            this.env.inMessagingMenu.dropdown.close();
+        }
     },
 });
