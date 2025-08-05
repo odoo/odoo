@@ -1,4 +1,4 @@
-import { defineModels } from "@web/../tests/web_test_helpers";
+import { defineModels, onRpc } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { ResourceCalendar } from "./resource_calendar.data";
 import { AccountMove } from "./account_move.data";
@@ -109,6 +109,6 @@ export const definePosModels = () => {
     const modelsFromMail = Object.values(mailModels).filter(
         (modelClass) => !posModelNames.includes(modelClass.prototype.constructor._name)
     );
-
+    onRpc("/pos/ping", () => {});
     defineModels([...modelsFromMail, ...hootPosModels]);
 };
