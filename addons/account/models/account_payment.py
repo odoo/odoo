@@ -556,13 +556,8 @@ class AccountPayment(models.Model):
         for pay in self:
             pay.currency_id = pay.journal_id.currency_id or pay.journal_id.company_id.currency_id
 
-    @api.depends('journal_id')
     def _compute_partner_id(self):
-        for pay in self:
-            if pay.partner_id == pay.journal_id.company_id.partner_id:
-                pay.partner_id = False
-            else:
-                pay.partner_id = pay.partner_id
+        pass
 
     @api.depends('payment_method_line_id')
     def _compute_outstanding_account_id(self):
