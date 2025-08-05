@@ -165,7 +165,7 @@ class SaleOrderLine(models.Model):
         string="Taxes",
         compute='_compute_tax_ids',
         store=True, readonly=False, precompute=True,
-        context={'active_test': False},
+        context={'active_test': False, 'hide_original_tax_ids': True},
         check_company=True,
         domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
     )

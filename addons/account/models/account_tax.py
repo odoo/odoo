@@ -142,6 +142,14 @@ class AccountTax(models.Model):
         ondelete='cascade',
         help="List of taxes to replace when applying any of the stipulated fiscal positions.",
     )
+    replacing_tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        relation='account_tax_alternatives',
+        column1='src_tax_id',  # Domestic Tax to replace
+        column2='dest_tax_id',  # This Replacement tax
+        readonly=True,
+        string="Replaced by",
+    )
     display_alternative_taxes_field = fields.Boolean(compute='_compute_display_alternative_taxes_field')
     is_domestic = fields.Boolean(compute='_compute_is_domestic', store=True, precompute=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
@@ -283,6 +291,8 @@ class AccountTax(models.Model):
             domain &= Domain('fiscal_position_ids', '=', False) | Domain('fiscal_position_ids.is_domestic', '=', True)
         if fp_id := self.env.context.get('dynamic_fiscal_position_id'):
             domain &= Domain('fiscal_position_ids', 'in', [False, int(fp_id)])
+        if self.env.context.get('hide_original_tax_ids') and fp_id:
+            domain &= Domain('replacing_tax_ids', 'not any', domain)
         return super().name_search(name, domain, operator, limit)
 
     @api.depends('company_id')
