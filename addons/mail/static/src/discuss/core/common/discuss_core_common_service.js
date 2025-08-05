@@ -79,61 +79,61 @@ export class DiscussCoreCommon {
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
         const { data, id: channelId, silent, temporary_id } = payload;
-        const channel = await this.store.Thread.getOrFetch({
+        const thread = await this.store.Thread.getOrFetch({
             model: "discuss.channel",
             id: channelId,
         });
-        if (!channel) {
+        if (!thread) {
             return;
         }
         const message = this.store["mail.message"].get(data["mail.message"][0]);
         if (!message) {
             return;
         }
-        if (message.notIn(channel.messages)) {
-            if (!channel.loadNewer) {
-                channel.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
-            } else if (channel.status === "loading") {
-                channel.pendingNewMessages.push(message);
+        if (message.notIn(thread.messages)) {
+            if (!thread.loadNewer) {
+                thread.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
+            } else if (thread.status === "loading") {
+                thread.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored) {
-                channel.onNewSelfMessage(message);
+                thread.onNewSelfMessage(message);
             } else {
-                if (channel.isDisplayed && channel.self_member_id?.new_message_separator_ui === 0) {
-                    channel.self_member_id.new_message_separator_ui = message.id;
+                if (thread.isDisplayed && thread.self_member_id?.new_message_separator_ui === 0) {
+                    thread.self_member_id.new_message_separator_ui = message.id;
                 }
-                if (!channel.isDisplayed && channel.self_member_id) {
-                    channel.scrollUnread = true;
+                if (!thread.isDisplayed && thread.self_member_id) {
+                    thread.scrollUnread = true;
                 }
                 if (
-                    notifId > channel.self_member_id?.message_unread_counter_bus_id &&
+                    notifId > thread.self_member_id?.message_unread_counter_bus_id &&
                     !message.isNotification
                 ) {
-                    channel.self_member_id.message_unread_counter++;
+                    thread.self_member_id.message_unread_counter++;
                 }
             }
         }
         if (
-            channel.channel_type !== "channel" &&
+            thread.channel_type !== "channel" &&
             this.store.self_partner &&
-            channel.self_member_id
+            thread.self_member_id
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
-            channel.markAsFetched();
+            thread.markAsFetched();
         }
         if (
-            !channel.loadNewer &&
+            !thread.loadNewer &&
             !message.isSelfAuthored &&
-            channel.composer.isFocused &&
+            thread.composer.isFocused &&
             this.store.self_partner &&
-            channel.newestPersistentMessage?.eq(channel.newestMessage) &&
-            !channel.markedAsUnread
+            thread.newestPersistentMessage?.eq(thread.newestMessage) &&
+            !thread.markedAsUnread
         ) {
-            channel.markAsRead();
+            thread.markAsRead();
         }
-        this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
-        const authorMember = channel.channel_member_ids.find((member) =>
+        this.env.bus.trigger("discuss.channel/new_message", { channel: thread, message, silent });
+        const authorMember = thread.channel?.channel_member_ids.find((member) =>
             member.persona?.eq(message.author)
         );
         if (authorMember) {

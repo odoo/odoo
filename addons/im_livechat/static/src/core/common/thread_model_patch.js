@@ -16,7 +16,7 @@ patch(Thread.prototype, {
                 }
                 // For livechat threads, the correspondent is the first
                 // channel member that is not the operator.
-                const orderedChannelMembers = [...this.channel_member_ids].sort(
+                const orderedChannelMembers = [...this.channel.channel_member_ids].sort(
                     (a, b) => a.id - b.id
                 );
                 const isFirstMemberOperator = orderedChannelMembers[0]?.partner_id?.eq(
