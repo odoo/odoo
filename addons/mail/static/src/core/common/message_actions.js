@@ -9,7 +9,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { transformDiscussAction } from "./discuss_actions_definition";
+import { DiscussActionDefinition } from "./discuss_actions_definition";
 
 const { DateTime } = luxon;
 
@@ -177,30 +177,43 @@ messageActionsRegistry
         sequence: 110,
     });
 
-function transformAction(component, id, action) {
-    return {
-        component: action.component,
-        mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,
-        /** Condition to display this action. */
-        get condition() {
-            return messageActionsInternal.condition(component, id, action);
-        },
-        /** Icon for the button this action. */
-        get icon() {
-            return typeof action.icon === "function" ? action.icon(component) : action.icon;
-        },
-        /** Name of this action, displayed to the user. */
-        get name() {
-            const res = this.isActive && action.nameActive ? action.nameActive : action.name;
-            return typeof res === "function" ? res(component) : res;
-        },
-        get props() {
-            return action.props(component);
-        },
-        onSelected(ev) {
-            return action.onSelected?.(component, this, ev);
-        },
-    };
+class MessageActionDefinition extends DiscussActionDefinition {
+    get component() {
+        return this.explicitDefinition.component;
+    }
+
+    get mobileCloseAfterClick() {
+        return this.explicitDefinition.mobileCloseAfterClick ?? true;
+    }
+
+    /** Condition to display this action. */
+    get condition() {
+        return messageActionsInternal.condition(this._component, this.id, this.explicitDefinition);
+    }
+
+    /** Icon for the button this action. */
+    get icon() {
+        return typeof this.explicitDefinition.icon === "function"
+            ? this.explicitDefinition.icon(this._component)
+            : this.explicitDefinition.icon;
+    }
+
+    /** Name of this action, displayed to the user. */
+    get name() {
+        const res =
+            this.isActive && this.explicitDefinition.nameActive
+                ? this.explicitDefinition.nameActive
+                : this.explicitDefinition.name;
+        return typeof res === "function" ? res(this._component) : res;
+    }
+
+    get props() {
+        return this.explicitDefinition.props(this._component);
+    }
+
+    onSelected(ev) {
+        return this.explicitDefinition.onSelected?.(this._component, this, ev);
+    }
 }
 
 export const messageActionsInternal = {
@@ -214,11 +227,9 @@ export const messageActionsInternal = {
 
 export function useMessageActions() {
     const component = useComponent();
-    const transformedActions = messageActionsRegistry.getEntries().map(([id, action]) => {
-        const act = transformAction(component, id, action);
-        Object.setPrototypeOf(act, transformDiscussAction(component, id, action));
-        return act;
-    });
+    const transformedActions = messageActionsRegistry
+        .getEntries()
+        .map(([id, action]) => new MessageActionDefinition(component, id, action));
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);

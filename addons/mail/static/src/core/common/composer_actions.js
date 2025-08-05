@@ -4,7 +4,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
-import { transformDiscussAction } from "./discuss_actions_definition";
+import { DiscussActionDefinition } from "./discuss_actions_definition";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -137,52 +137,72 @@ composerActionsRegistry
         sequence: 5,
     });
 
-function transformAction(component, id, action) {
-    return {
-        get btnClass() {
-            return typeof action.btnClass === "function"
-                ? action.btnClass(component)
-                : action.btnClass;
-        },
-        component: action.component,
-        get componentProps() {
-            return action.componentProps?.(component, this);
-        },
-        get condition() {
-            return composerActionsInternal.condition(component, id, action);
-        },
-        get disabledCondition() {
-            return action.disabledCondition?.(component);
-        },
-        get hotkey() {
-            return typeof action.hotkey === "function" ? action.hotkey(component) : action.hotkey;
-        },
-        get icon() {
-            return typeof action.icon === "function" ? action.icon(component) : action.icon;
-        },
-        isPicker: action.isPicker,
-        get name() {
-            return typeof action.name === "function" ? action.name(component) : action.name;
-        },
-        onSelected(ev) {
-            action.onSelected?.(component, this, ev);
-        },
-        get pickerName() {
-            return typeof action.pickerName === "function"
-                ? action.pickerName(component)
-                : action.pickerName;
-        },
-        get sequenceGroup() {
-            return typeof action.sequenceGroup === "function"
-                ? action.sequenceGroup(component)
-                : action.sequenceGroup;
-        },
-        get sequenceQuick() {
-            return typeof action.sequenceQuick === "function"
-                ? action.sequenceQuick(component)
-                : action.sequenceQuick;
-        },
-    };
+class ComposerActionDefinition extends DiscussActionDefinition {
+    get btnClass() {
+        return typeof this.explicitDefinition.btnClass === "function"
+            ? this.explicitDefinition.btnClass(this._component)
+            : this.explicitDefinition.btnClass;
+    }
+
+    get component() {
+        return this.explicitDefinition.component;
+    }
+
+    get componentProps() {
+        return this.explicitDefinition.componentProps?.(this._component, this);
+    }
+
+    get condition() {
+        return composerActionsInternal.condition(this._component, this.id, this.explicitDefinition);
+    }
+
+    get disabledCondition() {
+        return this.explicitDefinition.disabledCondition?.(this._component);
+    }
+
+    get hotkey() {
+        return typeof this.explicitDefinition.hotkey === "function"
+            ? this.explicitDefinition.hotkey(this._component)
+            : this.explicitDefinition.hotkey;
+    }
+
+    get icon() {
+        return typeof this.explicitDefinition.icon === "function"
+            ? this.explicitDefinition.icon(this._component)
+            : this.explicitDefinition.icon;
+    }
+
+    get isPicker() {
+        return this.explicitDefinition.isPicker;
+    }
+
+    get name() {
+        return typeof this.explicitDefinition.name === "function"
+            ? this.explicitDefinition.name(this._component)
+            : this.explicitDefinition.name;
+    }
+
+    onSelected(ev) {
+        this.explicitDefinition.onSelected?.(this._component, this, ev);
+    }
+
+    get pickerName() {
+        return typeof this.explicitDefinition.pickerName === "function"
+            ? this.explicitDefinition.pickerName(this._component)
+            : this.explicitDefinition.pickerName;
+    }
+
+    get sequenceGroup() {
+        return typeof this.explicitDefinition.sequenceGroup === "function"
+            ? this.explicitDefinition.sequenceGroup(this._component)
+            : this.explicitDefinition.sequenceGroup;
+    }
+
+    get sequenceQuick() {
+        return typeof this.explicitDefinition.sequenceQuick === "function"
+            ? this.explicitDefinition.sequenceQuick(this._component)
+            : this.explicitDefinition.sequenceQuick;
+    }
 }
 
 export const composerActionsInternal = {
@@ -198,11 +218,9 @@ export const composerActionsInternal = {
 
 export function useComposerActions() {
     const component = useComponent();
-    const transformedActions = composerActionsRegistry.getEntries().map(([id, action]) => {
-        const act = transformAction(component, id, action);
-        Object.setPrototypeOf(act, transformDiscussAction(component, id, action));
-        return act;
-    });
+    const transformedActions = composerActionsRegistry
+        .getEntries()
+        .map(([id, action]) => new ComposerActionDefinition(component, id, action));
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);
