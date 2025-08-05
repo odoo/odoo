@@ -135,7 +135,8 @@ class ResPartner(models.Model):
         service_references = participant_info.findall(
             '{*}ServiceMetadataReferenceCollection/{*}ServiceMetadataReference'
         )
-        document_type = self.env['account.edi.xml.ubl_21']._get_customization_ids()[ubl_cii_format]
+        edi_builder = self._get_edi_builder(ubl_cii_format)
+        document_type = edi_builder._get_customization_id()
         for service in service_references:
             if document_type in parse.unquote_plus(service.attrib.get('href', '')):
                 return True

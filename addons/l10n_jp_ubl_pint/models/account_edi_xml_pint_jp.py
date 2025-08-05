@@ -20,12 +20,14 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_jp.xml"
 
+    def _get_customization_id(self):
+        return 'urn:peppol:pint:billing-1@jp-1'
+
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']
         super()._add_invoice_header_nodes(document_node, vals)
 
         # see https://docs.peppol.eu/poac/jp/pint-jp/bis/#profiles
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['pint_jp']}
         document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
 
         if invoice.currency_id != invoice.company_id.currency_id:

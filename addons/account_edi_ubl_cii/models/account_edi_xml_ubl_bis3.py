@@ -45,6 +45,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # EXPORT: Templates for invoice header nodes
     # -------------------------------------------------------------------------
 
+    def _get_customization_id(self):
+        return 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # Call the parent method from UBL 2.1
         super()._add_invoice_header_nodes(document_node, vals)
@@ -53,7 +56,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         # Override specific BIS3 values
         document_node.update({
             'cbc:UBLVersionID': None,
-            'cbc:CustomizationID': {'_text': self._get_customization_ids()['ubl_bis3']},
+            'cbc:CustomizationID': {'_text': self._get_customization_id()},
             'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'},
         })
 
