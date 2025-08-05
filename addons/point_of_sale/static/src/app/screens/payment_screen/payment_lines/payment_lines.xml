@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreenPaymentLines">
-            <div class="paymentlines d-flex flex-column overflow-y-auto gap-2 mb-3">
+            <div t-if="props.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
                 <t t-foreach="props.paymentLines" t-as="line" t-key="line.uuid">
                     <t t-if="line.isSelected()">
                         <div t-attf-class="paymentline selected d-flex align-items-center rounded-3"
