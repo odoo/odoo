@@ -66,8 +66,13 @@ export class SetBackgroundSizeAction extends BuilderAction {
 
 export class BackgroundPositionOverlayAction extends BuilderAction {
     static id = "backgroundPositionOverlay";
-    static dependencies = ["overlayButtons", "overlay"];
+    static dependencies = ["overlayButtons", "overlay", "edit_interaction"];
     async load({ editingElement }) {
+        const editInteraction = this.dependencies.edit_interaction;
+        const parallaxEl = editingElement.closest(".parallax");
+        if (parallaxEl) {
+            editInteraction.stopInteractions(editingElement.closest(".parallax"));
+        }
         let imgEl;
         await new Promise((resolve) => {
             imgEl = document.createElement("img");
@@ -93,16 +98,25 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
             const applyPosition = (bgPosition) => {
                 appliedBgPosition = bgPosition;
                 overlay.close();
+                if (parallaxEl) {
+                    editInteraction.restartInteractions(editingElement.closest(".parallax"));
+                }
+            };
+            const discardPosition = () => {
+                overlay.close();
+                if (parallaxEl) {
+                    editInteraction.restartInteractions(editingElement.closest(".parallax"));
+                }
             };
             overlay.open({
                 target: editingElement,
                 props: {
                     outerHtmlEditingElement: markup(this.safeCloneOuterHTML(copyEl)),
-                    editingElement: editingElement,
-                    mockEditingElOnImg: imgEl,
-                    applyPosition: applyPosition,
-                    discardPosition: () => overlay.close(),
                     editable: this.editable,
+                    mockEditingElOnImg: imgEl,
+                    applyPosition,
+                    discardPosition,
+                    editingElement,
                 },
             });
         });
