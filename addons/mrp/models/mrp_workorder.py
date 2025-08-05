@@ -622,7 +622,7 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             intervals = Intervals([
                 [t.date_start, t.date_end, t]
-                for t in workorder.time_ids if not date or t.date_end < date
+                for t in workorder.time_ids if t.date_end and (not date or t.date_end < date)
             ])
             duration = sum_intervals(intervals)
             total += duration * workorder.workcenter_id.costs_hour
