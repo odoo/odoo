@@ -2610,4 +2610,45 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         pos_order = self.env['pos.order'].search([])
         pos_order.action_pos_order_invoice()
+<<<<<<< ac57e368e2bc5e5b666cd820a76a845fb6bef32a
         self.assertEqual(pos_order.state, 'done')
+||||||| f0b80bd634c4a907a4df7d06d318572ccdeb2fca
+        self.assertEqual(pos_order.state, 'invoiced')
+=======
+        self.assertEqual(pos_order.state, 'invoiced')
+
+    def test_search_tracking_number(self):
+        self.pos_config.open_ui()
+        session_id = self.pos_config.current_session_id
+
+        def create_order(pos_reference):
+            return self.env['pos.order'].create({
+                'amount_tax': 0,
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_return': 0,
+                'company_id': self.pos_config.company_id.id,
+                'pricelist_id': self.pos_config.pricelist_id.id,
+                'session_id': session_id.id,
+                'sequence_number': int(pos_reference[-1]),
+                'pos_reference': pos_reference,
+            })
+
+        create_order(f'Order {session_id.id:05d}-003-0001')
+        create_order(f'Order {session_id.id - 1:05d}-003-0002')
+
+        order = self.env['pos.order'].search([('tracking_number', 'ilike', str((session_id.id % 10) * 100 + 1).zfill(3))])
+        self.assertEqual(len(order), 1, "Should find one order with the tracking number")
+        self.assertEqual(order.pos_reference, f'Order {session_id.id:05d}-003-0001', "Should find the correct order")
+        order = self.env['pos.order'].search([('tracking_number', 'ilike', str((session_id.id % 10) * 100 + 2).zfill(3))])
+        self.assertEqual(len(order), 1, "Should find one order with the tracking number")
+        self.assertEqual(order.pos_reference, f'Order {session_id.id - 1:05d}-003-0002', "Should find the correct order")
+        order = self.env['pos.order'].search([('tracking_number', 'ilike', '1')])
+        self.assertEqual(len(order), 1, "Should find one order with the tracking number")
+        self.assertEqual(order.pos_reference, f'Order {session_id.id:05d}-003-0001', "Should find the correct order")
+        order = self.env['pos.order'].search([('tracking_number', 'ilike', '01')])
+        self.assertEqual(len(order), 1, "Should find one order with the tracking number")
+        self.assertEqual(order.pos_reference, f'Order {session_id.id:05d}-003-0001', "Should find the correct order")
+        order = self.env['pos.order'].search([('tracking_number', 'ilike', '03')])
+        self.assertEqual(len(order), 0, "Should not find any order with the tracking number")
+>>>>>>> 36b584247e78e712d4f653ece1c28b82476dd687

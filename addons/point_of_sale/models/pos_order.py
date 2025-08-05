@@ -14,7 +14,7 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, tools, _, Command
-from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
+from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang, SQL
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
 import base64
@@ -365,6 +365,7 @@ class PosOrder(models.Model):
             'last_order_preparation_change': self.last_order_preparation_change,
         }
 
+<<<<<<< ac57e368e2bc5e5b666cd820a76a845fb6bef32a
     def _ensure_to_keep_last_preparation_change(self, vals):
         for record in self:
             if record.last_order_preparation_change:
@@ -397,6 +398,40 @@ class PosOrder(models.Model):
         for order in self:
             if order.session_id:
                 order.config_id = order.session_id.config_id
+||||||| f0b80bd634c4a907a4df7d06d318572ccdeb2fca
+    def _search_tracking_number(self, operator, value):
+        #search is made over the pos_reference field
+        #The pos_reference field is like 'Order 00001-001-0001'
+        if operator in ['ilike', '='] and isinstance(value, str):
+            if value[0] == '%' and value[-1] == '%':
+                value = value[1:-1]
+            value = value.zfill(3)
+            search = '% ____' + value[0] + '-___-__' + value[1:]
+            return [('pos_reference', operator, search or '')]
+        else:
+            raise NotImplementedError(_("Unsupported search operation"))
+=======
+    def _search_tracking_number(self, operator, value):
+        #search is made over the pos_reference field
+        #The pos_reference field is like 'Order 00001-001-0001'
+        if operator in ['ilike', '='] and isinstance(value, str):
+            if value[0] == '%' and value[-1] == '%':
+                value = value[1:-1]
+            if len(value) < 3 and operator == 'ilike':
+                value = value.zfill(2)
+                search = '% _____-___-__' + value
+                return [('pos_reference', operator, search or '')]
+            elif len(value) == 3:
+                sql = SQL("""(
+                    SELECT id
+                      FROM pos_order
+                     WHERE pos_reference LIKE %s
+                       AND MOD(session_id, 10) = %s
+                    )""", '% _____-___-__' + value[1:], int(value[0]))
+                return [('id', 'in', sql)]
+
+        raise NotImplementedError(_("Unsupported search operation"))
+>>>>>>> 36b584247e78e712d4f653ece1c28b82476dd687
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
