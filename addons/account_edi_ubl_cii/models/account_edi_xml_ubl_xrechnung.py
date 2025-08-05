@@ -29,10 +29,12 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
     # EXPORT: Templates
     # -------------------------------------------------------------------------
 
+    def _get_customization_id(self):
+        return 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0'
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['xrechnung']}
         if not document_node['cbc:BuyerReference']['_text']:
             document_node['cbc:BuyerReference']['_text'] = 'N/A'
 

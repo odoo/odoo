@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import models
 
 
 class AccountEdiXmlUBL21RS(models.AbstractModel):
@@ -6,18 +6,15 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
     _inherit = 'account.edi.xml.ubl_21'
     _description = "UBL 2.1 (RS eFaktura)"
 
-    @api.model
-    def _get_customization_ids(self):
-        vals = super()._get_customization_ids()
-        vals['efaktura_rs'] = 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022'
-        return vals
+    def _get_customization_id(self):
+        return 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022'
 
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS 'account_edi_ubl_cii'
         super()._add_invoice_header_nodes(document_node, vals)
         invoice = vals['invoice']
 
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['efaktura_rs']}
+        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_id()}
 
         # Billing Reference values for Credit Note
         if invoice.move_type == 'out_refund' and invoice.reversed_entry_id:
