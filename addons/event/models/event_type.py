@@ -28,11 +28,7 @@ class EventType(models.Model):
                  })]
 
     def _default_question_ids(self):
-        """ Get ids of default questions from ir.model.data. """
-        return self.env['ir.model.data'].sudo().search([
-            ('module', '=', 'event'),
-            ('name', 'in', ['event_question_name', 'event_question_email', 'event_question_phone'])
-        ]).mapped('res_id')
+        return self.env['event.question'].search([('is_default', '=', True), ('active', '=', True)]).ids
 
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')

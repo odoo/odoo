@@ -22,6 +22,7 @@ class EventQuestion(models.Model):
     event_type_ids = fields.Many2many('event.type', string='Event Types', copy=False)
     event_ids = fields.Many2many('event.event', string='Events', copy=False)
     event_count = fields.Integer('# Events', compute='_compute_event_count')
+    is_default = fields.Boolean('Default question', help="Include by default in new events.")
     answer_ids = fields.One2many('event.question.answer', 'question_id', "Answers", copy=True)
     sequence = fields.Integer(default=10)
     once_per_order = fields.Boolean('Ask once per order',
