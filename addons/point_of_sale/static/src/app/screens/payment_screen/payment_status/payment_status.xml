@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreenStatus">
-        <div t-if="props.order.payment_ids.length == 0" class="text-bg-light border text-center py-4 fs-4">
-    Please select a payment method 
+        <div t-if="props.order.payment_ids.length == 0" class="d-flex justify-content-center align-items-center text-center fs-4 flex-grow-1">
+    Please select a payment method
         </div>
         <section t-else="" t-attf-class="paymentlines-container border-top pt-3 {{ props.order.getDue() > 0 ? 'text-danger' : 'text-success'}}">
             <div class="payment-status-container d-flex flex-column-reverse flex-lg-row justify-content-between fs-2">
