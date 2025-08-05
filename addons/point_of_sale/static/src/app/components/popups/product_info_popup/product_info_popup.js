@@ -33,4 +33,7 @@ export class ProductInfoPopup extends Component {
             is_favorite: !this.props.productTemplate.is_favorite,
         });
     }
+    get showAvailabilitySection() {
+        return false;
+    }
 }

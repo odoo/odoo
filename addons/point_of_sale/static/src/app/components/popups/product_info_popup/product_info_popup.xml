@@ -17,6 +17,8 @@
                 </h3>
                 <t t-out="props.productTemplate.productDescriptionMarkup" />
             </div>
+            <!-- meant to override -->
+            <div t-if="showAvailabilitySection" class="section-availability mt-3 mb-4 pb-4 border-bottom text-start d-flex flex-column gap-2" />
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.warehouses?.length > 0">
                 <h3 class="section-title">
                     Inventory
