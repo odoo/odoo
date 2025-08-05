@@ -13,7 +13,7 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, tools, _, Command
-from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
+from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang, SQL
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
 import base64
@@ -357,11 +357,20 @@ class PosOrder(models.Model):
         if operator in ['ilike', '='] and isinstance(value, str):
             if value[0] == '%' and value[-1] == '%':
                 value = value[1:-1]
-            value = value.zfill(3)
-            search = '% ____' + value[0] + '-___-__' + value[1:]
-            return [('pos_reference', operator, search or '')]
-        else:
-            raise NotImplementedError(_("Unsupported search operation"))
+            if len(value) < 3 and operator == 'ilike':
+                value = value.zfill(2)
+                search = '% _____-___-__' + value
+                return [('pos_reference', operator, search or '')]
+            elif len(value) == 3:
+                sql = SQL("""(
+                    SELECT id
+                      FROM pos_order
+                     WHERE pos_reference LIKE %s
+                       AND MOD(session_id, 10) = %s
+                    )""", '% _____-___-__' + value[1:], int(value[0]))
+                return [('id', 'in', sql)]
+
+        raise NotImplementedError(_("Unsupported search operation"))
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
