@@ -150,7 +150,11 @@ class HrContract(models.Model):
             tz = pytz.timezone(calendar.tz)
 
             attendances = attendances_by_resource[resource.id]
-
+            processed_attendances = WorkIntervals()
+            for attendance in attendances:
+                if attendance[2]._name == 'hr.attendance' and self.env['hr.work.entry'].search([('attendance_id', '=', attendance[2].id)]):
+                    processed_attendances._items.append(attendance)
+            attendances -= processed_attendances
             # Other calendars: In case the employee has declared time off in another calendar
             # Example: Take a time off, then a credit time.
             resources_list = [self.env['resource.resource'], resource]
