@@ -72,11 +72,24 @@ export const turnStile = {
     },
 
     /**
+     * Remove spinner if any and enable the button.
+     */
+    cleanSpinner() {
+        const buttonEl = this.spinnerEl?.parentElement;
+        if (buttonEl) {
+            buttonEl.disabled = false;
+            buttonEl.classList.remove("disabled");
+            this.spinnerEl.remove();
+        }
+    },
+
+    /**
      * @override
      * Discard all library changes to reset the state of the Html.
      */
     destroy: function () {
         this.cleanTurnstile();
+        this.cleanSpinner();
         this._super(...arguments);
     },
 
@@ -114,20 +127,20 @@ export const turnStile = {
      * same as addSpinner but does not set innerText
      */
     addSpinnerNoMangle(button) {
-        const spinner = this._createSpinner();
-        spinner.classList.add("me-1");
+        this.spinnerEl = this._createSpinner();
+        this.spinnerEl.classList.add("me-1");
         button.disabled = true;
         button.classList.add("disabled");
-        button.prepend(spinner);
+        button.prepend(this.spinnerEl);
     },
 
     addSpinner(button) {
-        const spinner = this._createSpinner();
+        this.spinnerEl = this._createSpinner();
         // avoids double-spacing if the button already contains a space
         button.innerText = " " + button.innerText;
         button.disabled = true;
         button.classList.add("disabled");
-        button.prepend(spinner);
+        button.prepend(this.spinnerEl);
     },
 };
 
