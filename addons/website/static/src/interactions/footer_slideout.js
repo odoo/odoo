@@ -4,17 +4,6 @@ import { registry } from "@web/core/registry";
 export class FooterSlideout extends Interaction {
     static selector = "#wrapwrap";
     static selectorHas = ".o_footer_slideout";
-    dynamicContent = {
-        _root: {
-            "t-att-class": () => ({
-                "o_footer_effect_enable": this.slideoutEffect,
-            }),
-        },
-    };
-
-    setup() {
-        this.slideoutEffect = this.el.querySelector(":scope > main").offsetHeight >= window.innerHeight;
-    }
 
     start() {
         // On safari, add a pixel div over the footer, after in the DOM, and add

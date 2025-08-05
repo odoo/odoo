@@ -21,19 +21,7 @@ test("footer_slideout does nothing if the effect is not enabled", async () => {
     expect(core.interactions).toHaveLength(0);
 });
 
-test("footer_slideout only adds a class if the effect is enabled on non-safari", async () => {
-    mockUserAgent("android");
-    const { core } = await startInteractions(`
-        <div id="wrapwrap">
-            <main style="min-height: 1000px">Main Content</main>
-            <footer class="o_footer_slideout">Footer Content</footer>
-        </div>
-    `);
-    expect(core.interactions).toHaveLength(1);
-    expect("#wrapwrap").toHaveClass("o_footer_effect_enable");
-});
-
-test("footer_slideout adds a class and a pixel if the effect is enabled on safari", async () => {
+test("footer_slideout adds a pixel if the effect is enabled on safari", async () => {
     mockUserAgent("safari");
     const { core } = await startInteractions(`
         <div id="wrapwrap">
@@ -42,7 +30,6 @@ test("footer_slideout adds a class and a pixel if the effect is enabled on safar
         </div>
     `);
     expect(core.interactions).toHaveLength(1);
-    expect("#wrapwrap").toHaveClass("o_footer_effect_enable");
     expect(queryAll("#wrapwrap > div")).toHaveLength(1);
     expect("#wrapwrap > div").toHaveStyle({ "width": "1px" });
     core.stopInteractions();

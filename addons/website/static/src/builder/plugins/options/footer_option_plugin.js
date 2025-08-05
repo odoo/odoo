@@ -2,16 +2,32 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
-import { after, SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+import { SNIPPET_SPECIFIC_END, SNIPPET_SPECIFIC_NEXT, splitBetween } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-export const FOOTER_TEMPLATE = SNIPPET_SPECIFIC_NEXT;
-export const FOOTER_WIDTH = after(FOOTER_TEMPLATE);
-export const FOOTER_SLIDEOUT = after(FOOTER_WIDTH);
-export const FOOTER_BORDER = after(FOOTER_SLIDEOUT);
-export const FOOTER_COLORS = after(FOOTER_BORDER);
-export const FOOTER_SCROLL_TO = after(FOOTER_COLORS);
-export const FOOTER_COPYRIGHT = after(FOOTER_SCROLL_TO);
+const [
+    FOOTER_TEMPLATE,
+    FOOTER_COLORS,
+    FOOTER_WIDTH,
+    FOOTER_SLIDEOUT,
+    FOOTER_SCROLL_TO,
+    FOOTER_COPYRIGHT,
+    FOOTER_BORDER,
+    ...__ERROR_CHECK__
+] = splitBetween(SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, 7);
+if (__ERROR_CHECK__.length > 0) {
+    console.error("Wrong count in footer option split");
+}
+
+export {
+    FOOTER_TEMPLATE,
+    FOOTER_COLORS,
+    FOOTER_WIDTH,
+    FOOTER_SLIDEOUT,
+    FOOTER_SCROLL_TO,
+    FOOTER_COPYRIGHT,
+    FOOTER_BORDER,
+}
 
 class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
