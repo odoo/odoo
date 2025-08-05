@@ -1066,3 +1066,19 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 self.call_post_commit_hooks()
             self.assertFalse(future_recurrence._is_event_over(), "Future recurrence should not be considered over")
             self.assertGoogleEventSendUpdates('all')
+
+    @patch_api
+    def test_eliminate_remote_meet_link_when_removed_locally(self):
+        partner = self.env['res.partner'].create({'name': 'Name', 'email': 'email@emailprovider.com'})
+        google_id = 'nicegoogleid'
+        event = self.env['calendar.event'].create({
+            'google_id': google_id,
+            'name': "Awesome event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+            'need_sync': False,
+        })
+        event.write({'videocall_location': False})
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventPatched(google_id, {'conferenceData': None}, timeout=3)

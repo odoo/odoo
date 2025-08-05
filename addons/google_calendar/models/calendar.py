@@ -46,7 +46,7 @@ class CalendarEvent(models.Model):
     @api.model
     def _get_google_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as'}
+                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as', 'videocall_location'}
 
     @api.model
     def _restart_google_sync(self):
@@ -335,6 +335,8 @@ class CalendarEvent(models.Model):
         }
         if not self.google_id and not self.videocall_location and not self.location:
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
+        if self.google_id and not self.videocall_location:
+            values['conferenceData'] = None
         if self.privacy:
             values['visibility'] = self.privacy
         if self.show_as:
