@@ -123,6 +123,7 @@
                                     <field name="question_type" string="Type" />
                                     <field name="answer_ids" widget="many2many_tags"
                                         invisible="question_type != 'simple_choice'" />
+                                    <field name="is_default" optional="hide"/>
                                     <button name="action_view_question_answers"
                                         type="object"
                                         class="p-0"
