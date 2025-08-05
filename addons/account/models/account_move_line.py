@@ -336,23 +336,24 @@ class AccountMoveLine(models.Model):
         required=True,
     )
     # section related fields
-    hide_composition = fields.Boolean(
+    collapse_composition = fields.Boolean(
         string="Hide Composition",
         help="If checked, the lines below this section will not be displayed in reports and portal.",
         compute="_compute_hide_section", store=True, readonly=False,
     )
-    hide_prices = fields.Boolean(
+    collapse_prices = fields.Boolean(
         string="Hide Prices",
         help="If checked, the prices of the lines below this section will not be displayed in reports and portal.",
         compute="_compute_hide_section", store=True, readonly=False,
     )
-    section_line_parent_id = fields.Many2one(
+    parent_id = fields.Many2one(
         'account.move.line',
-        string="Parent Section Line",
-        compute='_compute_section_line_parent_id',
-        store=True, copy=False, index='btree_not_null',
+        string="Parent Line",
+        compute='_compute_parent_id',
+        search='_search_parent_id',
+        copy=False,
     )
-    section_line_child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='section_line_parent_id')
+    child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='parent_id')
     product_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
@@ -1173,34 +1174,34 @@ class AccountMoveLine(models.Model):
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
     @api.depends('sequence', 'move_id')
-    def _compute_section_line_parent_id(self):
-        section_lines_ordered = (self.move_id.invoice_line_ids
-            .filtered(lambda line: line.display_type in ('line_section', 'line_subsection'))
-            .sorted(lambda line: line.sequence))
+    def _compute_parent_id(self):
+        for _move, lines in self.grouped('move_id').items():
+            last_section = False
+            last_sub = False
+            for line in lines.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    last_section = line
+                    line.parent_id = False
+                    last_sub = False
+                elif line.display_type == 'line_subsection':
+                    line.parent_id = last_section
+                    last_sub = line
+                elif line.display_type == 'product':
+                    line.parent_id = last_sub or last_section or False
+                else:
+                    line.parent_id = False
 
-        for line in self.filtered(lambda line: line.display_type != 'line_section'):
-            if line.display_type == 'line_subsection':
-                qualified_lines = section_lines_ordered.filtered(
-                    lambda l: l.display_type == 'line_section' and l.sequence < line.sequence,
-                )
-            elif line.display_type == 'product':
-                qualified_lines = section_lines_ordered.filtered(
-                    lambda l: l.sequence < line.sequence,
-                )
-            else:
-                line.section_line_parent_id = False
-                continue
-
-            line.section_line_parent_id = qualified_lines[-1:]
-
-    @api.depends('section_line_parent_id')
+    @api.depends('parent_id')
     def _compute_hide_section(self):
         for line in self:
             if line.display_type in ('line_section', 'line_subsection'):
                 continue
 
-            line.hide_prices = line.section_line_parent_id.hide_prices
-            line.hide_composition = line.section_line_parent_id.hide_composition
+            line.collapse_prices = line.parent_id.collapse_prices
+            line.collapse_composition = line.parent_id.collapse_composition
+
+    def _search_parent_id(self, operator, value):
+        return [('id', operator, value)]
 
     def _search_payment_date(self, operator, value):
         if operator == 'in':
@@ -3344,7 +3345,7 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
 
-        section_lines = self.section_line_child_ids + self.move_id.invoice_line_ids.filtered(lambda line: line.display_type == 'line_subsection' and line.section_line_parent_id == self).section_line_child_ids
+        section_lines = self.child_ids + self.child_ids.child_ids
         result = []
         for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
             tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
@@ -3369,7 +3370,7 @@ class AccountMoveLine(models.Model):
         }]
 
     def get_section_subtotal(self):
-        section_lines = self.section_line_child_ids + self.move_id.invoice_line_ids.filtered(lambda line: line.display_type == 'line_subsection' and line.section_line_parent_id == self).section_line_child_ids
+        section_lines = self.child_ids + self.child_ids.child_ids
         return sum(section_lines.mapped('price_subtotal'))
 
     # -------------------------------------------------------------------------

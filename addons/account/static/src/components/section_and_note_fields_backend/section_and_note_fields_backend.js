@@ -104,34 +104,31 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     get hidePrices() {
-        return this.record.data.hide_prices;
+        return this.record.data.collapse_prices;
     }
 
     get hideCompositions() {
-        return this.record.data.hide_composition;
+        return this.record.data.collapse_composition;
     }
 
     get showPricesButton() {
         if (this.record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
             const parent_record = this.getParentSectionRecord(this.record);
-            return !parent_record.data.hide_prices && !parent_record.data.hide_composition;
+            return !parent_record?.data?.collapse_prices && !parent_record?.data?.collapse_composition;
         }
         return true;
     }
 
     get showCompositionButton() {
         if (this.record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
-            return !this.getParentSectionRecord(this.record).data.hide_composition;
+            return !this.getParentSectionRecord(this.record)?.data?.collapse_composition;
         }
         return true;
     }
 
     getParentSectionRecord(record) {
-        let index = this.props.list.records.indexOf(record);
-        while (index >= 0 && this.props.list.records[index].data.display_type !== DISPLAY_TYPES.SECTION) {
-            index--;
-        }
-        return this.props.list.records[index];
+        const parentRecord = this.props.list.records.filter((r) => r.resId === record.data.parent_id.id);
+        return parentRecord.length === 1 ? parentRecord[0] : false;
     }
 
     async toggleHidePrices(record) {
@@ -139,7 +136,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         const commands = [];
         for (const sectionRecord of sectionRecords) {
             commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
-                hide_prices: !record.data.hide_prices,
+                collapse_prices: !record.data.collapse_prices,
             }));
         }
         await this.props.list.applyCommands(commands, { sort: true });
@@ -150,7 +147,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         const commands = [];
         for (const sectionRecord of sectionRecords) {
             commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
-                hide_composition: !record.data.hide_composition,
+                collapse_composition: !record.data.collapse_composition,
             }));
         }
         await this.props.list.applyCommands(commands, { sort: true });
@@ -331,7 +328,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return record.data.display_type === DISPLAY_TYPES.SUBSECTION;
     }
 
-    hideRecord(record, state) {
+    isHidden(record, state) {
         if (!this.isSection(record)) {
             return true;
         }
@@ -341,11 +338,11 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         }
 
         if (this.isSubSection(record)) {
-            if (state === 'composition' && this.getParentSectionRecord(record).data.hide_composition) {
+            if (state === 'composition' && this.getParentSectionRecord(record)?.data?.collapse_composition) {
                 return true;
             }
 
-            if (state === 'prices' && this.getParentSectionRecord(record).data.hide_prices) {
+            if (state === 'prices' && this.getParentSectionRecord(record)?.data?.collapse_prices) {
                 return true;
             }
         }
@@ -354,7 +351,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     getRowClass(record) {
         const existingClasses = super.getRowClass(record);
         let newClasses = `${existingClasses} o_is_${record.data.display_type}`;
-        if (this.hideRecord(record, 'composition') && record.data.hide_composition) {
+        if (this.isHidden(record, 'composition') && record.data.collapse_composition) {
             newClasses += " text-muted";
         }
         return newClasses;
@@ -370,7 +367,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             return `${classNames} o_hidden`;
         }
 
-        if (this.hideRecord(record, 'prices') && this.props.aggregatedFields.includes(column.name) && record.data.hide_prices) {
+        if (this.isHidden(record, 'prices') && this.props.aggregatedFields.includes(column.name) && record.data.collapse_prices) {
             classNames += " text-muted";
         }
 
