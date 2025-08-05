@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '5',
             'property_account_receivable_id': 'nz_11200',
             'property_account_payable_id': 'nz_21200',
-            'property_stock_account_input_categ_id': 'nz_21210',
-            'property_stock_account_output_categ_id': 'nz_11340',
             'property_stock_valuation_account_id': 'nz_11330',
             'property_stock_account_production_cost_id': 'nz_11350',
         }

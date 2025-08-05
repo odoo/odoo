@@ -12,7 +12,7 @@ patch(Parent.prototype, {
         const context = this._getActionContext();
         return this.action.doAction({
             name: _t('Stock Valuation'),
-            res_model: 'stock.valuation.layer',
+            res_model: 'stock.move',
             type: 'ir.actions.act_window',
             view_mode: 'list,form',
             views: [[false, 'list'], [false, 'form']],
@@ -32,4 +32,3 @@ patch(Parent.prototype, {
         return context;
     }
 });
-

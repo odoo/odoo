@@ -1418,8 +1418,10 @@ class StockPicking(models.Model):
                 lambda p: p.picking_type_id.create_backorder != 'always'
             )
         pickings_to_backorder = self - pickings_not_to_backorder
-        pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
-        pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
+        if pickings_not_to_backorder:
+            pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
+        if pickings_to_backorder:
+            pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
         report_actions = self._get_autoprint_report_actions()
         another_action = False
         if self.env.user.has_group('stock.group_reception_report'):

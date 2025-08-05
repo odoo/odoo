@@ -9,7 +9,7 @@
                 <attribute name="context">{'search_view_ref': 'mrp_subcontracting.mrp_production_subcontracting_filter', 'list_view_ref': 'mrp_subcontracting.mrp_production_subcontracting_tree_view'}</attribute>
             </field>
             <field name="picking_ids" position="attributes">
-                <attribute name="domain">[('company_id', '=', company_id), '|', ('move_ids.stock_valuation_layer_ids', '!=', False), '&amp;', ('move_ids.is_subcontract', '!=', False), ('move_ids.state', '=', 'done')]</attribute>
+                <attribute name="domain">[('company_id', '=', company_id), '|', '|', ('move_ids.is_in', '!=', False), ('move_ids.is_out', '!=', False), '&amp;', ('move_ids.is_subcontract', '!=', False), ('move_ids.state', '=', 'done')]</attribute>
             </field>
         </field>
     </record>

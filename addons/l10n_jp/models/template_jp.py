@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'l10n_jp_126000',
             'property_account_payable_id': 'l10n_jp_220000',
             'property_stock_valuation_account_id': 'l10n_jp_121100',
-            'property_stock_account_input_categ_id': 'l10n_jp_121200',
-            'property_stock_account_output_categ_id': 'l10n_jp_121300',
         }
 
     @template('jp', 'res.company')

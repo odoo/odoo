@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
             'property_account_receivable_id': 'account_1410',
             'property_account_payable_id': 'account_1610',
-            'property_stock_account_input_categ_id': 'account_3970',
-            'property_stock_account_output_categ_id': 'account_3980',
             'property_stock_valuation_account_id': 'account_3960',
             'name': 'German Chart of Accounts SKR03',
         }

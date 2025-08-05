@@ -28,6 +28,5 @@ class MrpProduction(models.Model):
         res = super().write(vals)
         for production in self:
             if 'project_id' in vals and production.state != 'draft':
-                production.move_raw_ids._account_analytic_entry_move()
                 production.workorder_ids._create_or_update_analytic_entry()
         return res

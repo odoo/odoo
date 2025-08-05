@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'ke1100',
             'property_account_payable_id': 'ke2100',
             'property_stock_valuation_account_id': 'ke1001',
-            'property_stock_account_output_categ_id': 'ke100120',
-            'property_stock_account_input_categ_id': 'ke100110',
             'code_digits': '6',
         }
 

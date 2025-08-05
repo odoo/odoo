@@ -18,7 +18,7 @@ class AccountMoveLine(models.Model):
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'sale_line_ids' field as well.
-        super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
+        super()._copy_data_extend_business_fields(values)
         values['sale_line_ids'] = [(6, None, self.sale_line_ids.ids)]
 
     def _related_analytic_distribution(self):
@@ -32,7 +32,7 @@ class AccountMoveLine(models.Model):
         """ Note: This method is called only on the move.line that having an analytic distribution, and
             so that should create analytic entries.
         """
-        values_list = super(AccountMoveLine, self)._prepare_analytic_lines()
+        values_list = super()._prepare_analytic_lines()
 
         # filter the move lines that can be reinvoiced: a cost (negative amount) analytic line without SO line but with a product can be reinvoiced
         move_to_reinvoice = self.env['account.move.line']

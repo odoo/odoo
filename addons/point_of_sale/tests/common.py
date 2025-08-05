@@ -578,8 +578,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'parent_id': False,
             'property_cost_method': 'fifo',
             'property_valuation': 'real_time',
-            'property_stock_account_input_categ_id': cls.company_data['default_account_stock_in'].id,
-            'property_stock_account_output_categ_id': cls.company_data['default_account_stock_out'].id,
             'property_stock_valuation_account_id': cls.company_data['default_account_stock_valuation'].copy().id
         })
 

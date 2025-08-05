@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'l10n_kr_111301',
             'property_account_payable_id': 'l10n_kr_212001',
             'property_stock_valuation_account_id': 'l10n_kr_112101',
-            'property_stock_account_input_categ_id': 'l10n_kr_112702',
-            'property_stock_account_output_categ_id': 'l10n_kr_112703',
             'property_stock_account_production_cost_id': 'l10n_kr_112704',
         }
 

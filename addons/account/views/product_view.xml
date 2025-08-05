@@ -75,11 +75,9 @@
                 <page name="inventory" position="after">
                     <page string="Accounting" name="invoicing" groups="account.group_account_readonly">
                         <group name="properties" groups="account.group_account_readonly">
-                            <group string="Receivables">
+                            <group string="Cost and Revenue">
                                 <field name="property_account_income_id"
                                     groups="account.group_account_readonly"/>
-                            </group>
-                            <group string="Payables" name="payables">
                                 <field name="property_account_expense_id"
                                     groups="account.group_account_readonly"/>
                             </group>

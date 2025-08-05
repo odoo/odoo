@@ -26,13 +26,11 @@ class AccountChartTemplate(models.AbstractModel):
             ref = template_data.get('loss_stock_valuation_account')
             if (loss_loc := loss_locs.get(company)) and (loss_loc_account := ref and Template.ref(ref, raise_if_not_found=False)):
                 loss_loc.write({
-                    'valuation_in_account_id': loss_loc_account.id,
-                    'valuation_out_account_id': loss_loc_account.id,
+                    'valuation_account_id': loss_loc_account.id,
                 })
 
             ref = template_data.get('production_stock_valuation_account')
             if (prod_loc := prod_locs.get(company)) and (prod_loc_account := ref and Template.ref(ref, raise_if_not_found=False)):
                 prod_loc.write({
-                    'valuation_in_account_id': prod_loc_account.id,
-                    'valuation_out_account_id': prod_loc_account.id,
+                    'valuation_account_id': prod_loc_account.id,
                 })
