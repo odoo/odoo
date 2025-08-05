@@ -27,6 +27,10 @@ async function twoDeleteForward(editor) {
     await deleteForward(editor);
 }
 
+const pressEnter = editor => {
+    editor.document.execCommand('insertParagraph');
+};
+
 describe('Editor', () => {
     describe('init', () => {
         describe('No orphan inline elements compatibility mode', () => {
@@ -4026,6 +4030,41 @@ X[]
                         contentBefore: '<div><a>ab[]</a>cd</div>',
                         stepFunction: pressEnter,
                         contentAfter: '<div><a>ab</a><br>[]cd</div>',
+                    });
+                });
+                it('should keep the last line break in the old paragraph (1)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><p>abc<br>[]<br></p></div>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<div><p>abc<br><br></p><p>[]<br></p></div>',
+                    });
+                });
+                it('should keep the last line break in the old paragraph (2)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: "<div><p>abc<br>[]<br></p></div>",
+                        stepFunction: pressEnter,
+                        contentAfter: "<div><p>abc<br><br></p><p>[]<br></p></div>",
+                    });
+                });
+                it('should keep the last line break in the old paragraph (3)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: "<div><p>abc<br>[]<br>def</p></div>",
+                        stepFunction: pressEnter,
+                        contentAfter: "<div><p>abc<br><br></p><p>[]<br>def</p></div>",
+                    });
+                });
+                it('should keep the last line break in the old paragraph (4)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: "<div><p>abc<br>[]<br><br></p></div>",
+                        stepFunction: pressEnter,
+                        contentAfter: "<div><p>abc<br><br></p><p>[]<br><br></p></div>",
+                    });
+                });
+                it('should keep the last line break in the old paragraph (5)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: "<div><p><br>[]<br></p></div>",
+                        stepFunction: pressEnter,
+                        contentAfter: "<div><p><br><br></p><p>[]<br></p></div>",
                     });
                 });
                 it('should insert a paragraph break outside the starting edge of an anchor', async () => {
