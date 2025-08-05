@@ -20,16 +20,6 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_jp.xml"
 
-    def _get_tax_totals_vals_list(self, invoice, aggregated_tax_details):
-        # [aligned-ibr-jp-06]-Tax category tax amount (ibt-117) with currency code JPY and tax category tax amount
-        # in accounting currency (ibt-190) shall not have decimal.
-        # see also: https://docs.peppol.eu/poac/jp/pint-jp/bis/#_rounding
-        vals_list = super()._get_tax_totals_vals_list(invoice, aggregated_tax_details)
-        for vals in vals_list:
-            vals['currency_dp'] = invoice.currency_id.decimal_places
-            for subtotal_vals in vals.get('tax_subtotal_vals', []):
-                subtotal_vals['currency_dp'] = invoice.currency_id.decimal_places
-
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']
         super()._add_invoice_header_nodes(document_node, vals)
