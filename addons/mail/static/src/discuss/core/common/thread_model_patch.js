@@ -257,7 +257,7 @@ const threadPatch = {
         }
         if (correspondents.length === 0 && this.channel_member_ids.length === 1) {
             // Self-chat.
-            return this.channel_member_ids[0];
+            return this.selfMember;
         }
         return undefined;
     },
