@@ -23,6 +23,10 @@ export class PosPrinterService extends PrinterService {
         this.dialog = dialog;
         this.device = hardware_proxy.printer;
     }
+    async print() {
+        this.setPrinter(this.hardware_proxy.printer);
+        return super.print(...arguments);
+    }
     printWeb() {
         try {
             return super.printWeb(...arguments);
