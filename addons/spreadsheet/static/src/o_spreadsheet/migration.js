@@ -159,6 +159,13 @@ migrationStepRegistry.add("18.5.10", {
     },
 });
 
+migrationStepRegistry.add("18.5.11", {
+    migrate(data) {
+        delete data.chartOdooMenusReferences;
+        return data;
+    },
+});
+
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
     if (version < 1) {

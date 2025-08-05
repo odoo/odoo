@@ -1,6 +1,7 @@
 import { navigateTo } from "@spreadsheet/actions/helpers";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
+import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
 
 export function onOdooChartItemClick(getters, chart) {
     return navigateInOdooMenuOnClick(getters, chart, (chartJsItem, chartData) => {
@@ -169,6 +170,38 @@ export async function navigateToOdooMenu(menu, actionService, notificationServic
         return;
     }
     await actionService.doAction(menu.actionID, { newWindow });
+}
+
+export async function navigateToOdooDatasourceFromChart(env, figureId, newWindow) {
+    const getters = env.model.getters;
+    const { type, dataSourceId } = getters.getChartLinkedDataSource(figureId);
+    const reg = globalFieldMatchingRegistry.get(type);
+    const domain = reg.getDomain(getters, dataSourceId);
+    const actionXmlId = reg.getActionXmlId(getters, dataSourceId);
+    const model = reg.getModel(getters, dataSourceId);
+    // not sure about this one
+    const name = reg.getDisplayName(getters, dataSourceId);
+    const context = reg.getContext(getters, dataSourceId);
+
+    await navigateTo(
+        env,
+        actionXmlId,
+        {
+            type: "ir.actions.act_window",
+            name,
+            res_model: model,
+            views: [
+                [false, "list"],
+                [false, "form"],
+                [false, "graph"],
+                [false, "pivot"],
+            ],
+            target: "current",
+            domain,
+            context,
+        },
+        { viewType: "graph", newWindow }
+    );
 }
 
 /**

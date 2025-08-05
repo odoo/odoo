@@ -666,6 +666,9 @@ pivotRegistry.add("ODOO", {
         field.groupable &&
         !field.isCustomField &&
         ["many2one", "char", "one2many", "many2many", "selection"].includes(field.type),
+    isPivotUnused: (env, pivotId) =>
+        env.model.getters.isPivotUnused(pivotId) &&
+        !env.model.getters.isDataSourceLinkedToChart("pivot", pivotId),
 });
 
 supportedPivotPositionalFormulaRegistry.add("ODOO", true);

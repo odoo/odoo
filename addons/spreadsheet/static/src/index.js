@@ -32,7 +32,7 @@ import {
 } from "@spreadsheet/pivot/index"; // list depends on filter for its getters
 import { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin } from "@spreadsheet/list/index"; // pivot depends on filter for its getters
 import {
-    ChartOdooMenuPlugin,
+    ChartOdooDatasourcePlugin,
     OdooChartCorePlugin,
     OdooChartCoreViewPlugin,
 } from "@spreadsheet/chart/index"; // Odoochart depends on filter for its getters
@@ -68,6 +68,8 @@ globalFieldMatchingRegistry.add("pivot", {
             .map((pivot) => pivot.loadMetadata()),
     getFields: (getters, pivotId) => getters.getPivot(pivotId).getFields(),
     getActionXmlId: (getters, pivotId) => getters.getPivotCoreDefinition(pivotId).actionXmlId,
+    getDomain: (getters, pivotId) => getters.getPivot(pivotId).getDomainWithGlobalFilters(),
+    getContext: (getters, pivotId) => getters.getPivotCoreDefinition(pivotId).context,
 });
 
 globalFieldMatchingRegistry.add("list", {
@@ -80,6 +82,8 @@ globalFieldMatchingRegistry.add("list", {
         getters.getListIds().map((listId) => getters.getListDataSource(listId).loadMetadata()),
     getFields: (getters, listId) => getters.getListDataSource(listId).getFields(),
     getActionXmlId: (getters, listId) => getters.getListDefinition(listId).actionXmlId,
+    getDomain: (getters, listId) => getters.getListComputedDomain(listId),
+    getContext: (getters, listId) => getters.getListDefinition(listId).context,
 });
 
 globalFieldMatchingRegistry.add("chart", {
@@ -91,7 +95,7 @@ globalFieldMatchingRegistry.add("chart", {
         getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
     getTag: async (getters, chartId) => {
         const chartModel = await getters.getChartDataSource(chartId).getModelLabel();
-        return _t("Chart - %(chart_model)s", { chart_model: chartModel });
+        return _t("Chart - %(chartModel)s", { chartModel });
     },
     waitForReady: (getters) =>
         getters
@@ -99,6 +103,9 @@ globalFieldMatchingRegistry.add("chart", {
             .map((chartId) => getters.getChartDataSource(chartId).loadMetadata()),
     getFields: (getters, chartId) => getters.getChartDataSource(chartId).getFields(),
     getActionXmlId: (getters, chartId) => getters.getChartDefinition(chartId).actionXmlId,
+    getDomain: (getters, chartId) => getters.getChartDataSource(chartId).getComputedDomain(),
+    // Note: we don't support the datasource context on drilldown for the charts, so we never stored it
+    getContext: (getters, chartId) => {},
 });
 
 corePluginRegistry.add("OdooGlobalFiltersCorePlugin", GlobalFiltersCorePlugin);
@@ -107,7 +114,7 @@ corePluginRegistry.add("OdooPivotGlobalFiltersCorePlugin", PivotCoreGlobalFilter
 corePluginRegistry.add("OdooListCorePlugin", ListCorePlugin);
 corePluginRegistry.add("OdooListCoreGlobalFilterPlugin", ListCoreGlobalFilterPlugin);
 corePluginRegistry.add("odooChartCorePlugin", OdooChartCorePlugin);
-corePluginRegistry.add("chartOdooMenuPlugin", ChartOdooMenuPlugin);
+corePluginRegistry.add("chartOdooDataSourcePlugin", ChartOdooDatasourcePlugin);
 
 coreViewsPluginRegistry.add("OdooGlobalFiltersCoreViewPlugin", GlobalFiltersCoreViewPlugin);
 coreViewsPluginRegistry.add(
