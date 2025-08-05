@@ -13,14 +13,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-11 18:36+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-08-05 19:58+0000\n"
+"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-2/stock/"
+"fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock
 #. odoo-python
@@ -143,7 +145,7 @@ msgstr "%(name)s Pakkauksen sekvenssi"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking"
-msgstr "%(name)s Poiminnan sekvenssi"
+msgstr "%(name)s Keräilyn sarjoissa"
 
 #. module: stock
 #. odoo-python
@@ -2092,19 +2094,19 @@ msgstr "Vahvistettu"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
 msgid "Conflict in Inventory"
-msgstr "Ristiriita inventaariossa"
+msgstr "Ristiriitaisuus varastossa"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Conflict in Inventory Adjustment"
-msgstr "Ristiriita varastomäärien korjauksessa"
+msgstr "Ristiriitaisuus varastomäärien määrittämisessä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__quant_to_fix_ids
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Conflicts"
-msgstr "Konfliktit"
+msgstr "Ristiriitaisuudet"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__visibility_days
@@ -2112,8 +2114,10 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
-"Tarkastellaan tuote-ennustetta monta päivää tulevaisuudessa, kun tuotetta täydennetään, ja asetetaan arvoksi 0, kun kyseessä on just-in-time-toimitus.\n"
-"Arvo riippuu reitin tyypistä (osto tai valmistus)"
+"Tuotetta täydennettäessä tuote-ennuste näin monta päivää etukäteen on "
+"huomioitava ja asetetaan arvoksi asetetaan 0, kun kyseessä on just-in-time-"
+"toimitus.\n"
+"Arvo riippuu reitin tyypistä (osto tai tuotanto)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -2179,32 +2183,32 @@ msgstr "Valmiita siirtoja"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
-msgstr "Count Picking"
+msgstr "Määrien keräily"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Count Picking Backorders"
+msgstr "Määrien keräily viivakoodeilla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr "Count Picking Draft"
+msgstr "Määrien keräilyn luonnos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr "Count Picking Late"
+msgstr "Määrien keräily myöhässä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr "Count Picking Ready"
+msgstr "Määrien keräily valmis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr "Laske odotus odottamaan"
+msgstr "Määrien keräily odottaa"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
@@ -3374,10 +3378,10 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Nauti nopeatempoisesta kokemuksesta Odoo-viivakoodisovelluksen avulla. Se on"
-" huikean nopea ja toimii jopa ilman vakaata internetyhteyttä. Se tukee "
-"kaikkia virtauksia: varaston oikaisut, erien poiminta, erien tai "
-"kuormalavojen siirtäminen, alhaisen varaston tarkistukset jne. Mene "
+"Nauti ripeästä käyttökokemuksesta Odoo Viivakoodi -sovelluksen avulla. Se on "
+"huikean nopea ja toimii myös ilman vakaata internetyhteyttä. Se tukee "
+"kaikkia työnkulkuja: varaston oikaisut, erien keräilyt, erien tai "
+"kuormalavojen siirtäminen, alhaisen varaston tarkistukset jne. Siirry "
 "\"Sovellukset\"-valikkoon aktivoidaksesi viivakoodikäyttöliittymän."
 
 #. module: stock
@@ -3413,7 +3417,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "Poikkeus tapahtui keräyksessä"
+msgstr "Poikkeus tapahtui keräilyssä"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -4138,8 +4142,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
-"Jos rastitettu, Odoo tulostaa automaattisesti toimituskirjan, kun poiminta "
-"on vahvistettu."
+"Jos rastitettu, Odoo tulostaa automaattisesti toimituskirjan, kun keräily on "
+"vahvistettu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -4147,8 +4151,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
-"Jos rastitettu, Odoo tulostaa automaattisesti poiminnan erän/SN-tunnisteen, "
-"kun se on vahvistettu."
+"Jos rastitettu, Odoo tulostaa automaattisesti keräilyn erän/SN-tarrat, kun "
+"se on vahvistettu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -4166,7 +4170,7 @@ msgid ""
 "their contents of a picking when it is validated."
 msgstr ""
 "Jos rastitettu, Odoo tulostaa automaattisesti paketit ja niiden sisällön, "
-"kun poiminta on vahvistettu."
+"kun keräily on vahvistettu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -4174,7 +4178,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a picking when it is validated."
 msgstr ""
-"Jos rastitettu, Odoo tulostaa automaattisesti poiminnan tuotetarrat, kun se "
+"Jos rastitettu, Odoo tulostaa automaattisesti keräilyn tuotetarrat, kun se "
 "on vahvistettu."
 
 #. module: stock
@@ -4184,7 +4188,7 @@ msgid ""
 "report labels of a picking when it is validated."
 msgstr ""
 "Jos rastitettu, Odoo tulostaa automaattisesti vastaanottoraportin tarrat, "
-"kun poiminta on vahvistettu."
+"kun keräily on vahvistettu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
@@ -4192,8 +4196,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
 msgstr ""
-"Jos rastitettu, Odoo tulostaa automaattisesti poiminnan vastaanottoraportin,"
-" kun se on validoitu ja sille on osoitettu siirtoja."
+"Jos rastitettu, Odoo tulostaa automaattisesti keräilyn vastaanottoraportin, "
+"kun se on vahvistettu ja sille on osoitettu siirtoja."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
@@ -4201,7 +4205,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of"
 " a picking when it is validated."
 msgstr ""
-"Jos rastitettu, Odoo tulostaa automaattisesti poiminnan palautuslomakkeen, "
+"Jos rastitettu, Odoo tulostaa automaattisesti keräilyn palautuslomakkeen, "
 "kun se on vahvistettu."
 
 #. module: stock
@@ -4222,8 +4226,8 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Jos tämä on valittuna, keräilyrivit edustavat yksityiskohtaisia "
-"​​varastotoimintoja. Jos näin ei ole, keräilyrivit edustavat koottua "
+"Jos tämä on valittu, keräilyrivit edustavat yksityiskohtaisia "
+"varastotoimintoja. Jos näin ei ole, keräilyrivit edustavat koottua "
 "yksityiskohtaista varastotoimintaa."
 
 #. module: stock
@@ -4256,8 +4260,8 @@ msgid ""
 "If this picking was created as a return of another picking, this field links"
 " to the original picking."
 msgstr ""
-"Jos tämä poiminta on luotu toisen poiminnan palautuksena, tämä kenttä "
-"viittaa alkuperäiseen poimintaan."
+"Jos tämä keräily on luotu toisen keräilyn palautuksena, tämä kenttä viittaa "
+"niistä alkuperäiseen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__backorder_id
@@ -4983,7 +4987,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Availability"
-msgstr "Myöhäinen saatavuus"
+msgstr "Nopeasti saatavilla"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -7922,7 +7926,7 @@ msgstr "Palauta keräily"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Palauta poimintalinja"
+msgstr "Palauta keräilyrivi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7980,8 +7984,13 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"Uudelleenkäytettäviä laatikoita käytetään eräpoiminnassa ja tyhjennetään sen jälkeen uudelleenkäyttöä varten. Viivakoodisovelluksessa uudelleenkäytettävän laatikon skannaaminen lisää kyseisessä laatikossa olevat tuotteet.\n"
-"        Kertakäyttölaatikoita ei käytetä uudelleen, kun kertakäyttölaatikko skannataan viivakoodisovelluksessa, sen sisältämät tuotteet lisätään siirtoon."
+"Uudelleenkäytettäviä laatikoita käytetään eräkeräilyssä ja tyhjennetään sen "
+"jälkeen uudelleenkäyttöä varten. Viivakoodi-sovelluksessa "
+"uudelleenkäytettävän laatikon skannaaminen lisää kyseisessä laatikossa "
+"olevat tuotteet.\n"
+"        Kertakäyttölaatikoita ei käytetä uudelleen, kun kertakäyttölaatikko "
+"skannataan Viivakoodi-sovelluksessa, sen sisältämät tuotteet lisätään "
+"siirtoon."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
@@ -8529,8 +8538,8 @@ msgid ""
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
 "Toimitusliitännät mahdollistavat tarkkojen kuljetusmaksujen laskemisen, "
-"postimerkkien tulostamisen ja kuljettajan poimimisen varastossasi "
-"lähettämään asiakkaalle. Käytä toimitusliitäntää toimitusmenetelmistä."
+"postimerkkien tulostamisen ja kuljettajan pyytämisen noutamaan varastoltasi "
+"ja toimittamaan asiakkaalle. Lisää toimitusliitäntä toimitustavoista."
 
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
@@ -8589,7 +8598,7 @@ msgstr "Näytä erät"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_next_pickings
 msgid "Show Next Pickings"
-msgstr "Näytä Seuraava poiminta"
+msgstr "Näytä seuraava keräily"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
@@ -8605,7 +8614,7 @@ msgstr "Näytä toiminta yleiskatsauksessa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr "Näytä poimintatyyppi"
+msgstr "Näytä keräilytyyppi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_qty_update_button
@@ -9182,8 +9191,8 @@ msgid ""
 "The Picking Operations report has been deleted so you cannot print at this "
 "time unless the report is restored."
 msgstr ""
-"Poimintaoperaatioiden raportti on poistettu, joten et voi tulostaa sitä "
-"tällä hetkellä, ellei raporttia palauteta."
+"Keräilyoperaatioiden raportti on poistettu, joten et voi tulostaa sitä tällä "
+"hetkellä, ellei raporttia palauteta."
 
 #. module: stock
 #. odoo-python
@@ -10087,8 +10096,8 @@ msgstr "Siirrot ryhmille"
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
 msgstr ""
-"Kuljetukset, jotka ovat myöhässä aikataulun mukaisesta ajasta tai jostakin "
-"poiminnasta, ovat myöhässä"
+"Kuljetukset, jotka ovat myöhässä aikataulusta tai yksi keräily tulee olemaan "
+"myöhässä"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -10261,7 +10270,7 @@ msgid ""
 " picking policy for this operation type."
 msgstr ""
 "Ellei lähdeasiakirjassa ole aiemmin määritetty, tämä on toimintatyypin "
-"oletusarvoinen poimintakäytäntö."
+"oletusarvoinen keräilykäytäntö."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -10635,7 +10644,7 @@ msgstr "Varoitusviesti"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "Varoitus keräilyyn"
+msgstr "Varoitus keräilyssä"
 
 #. module: stock
 #. odoo-python
@@ -10996,7 +11005,7 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
-"Tuotetta ei voi poistaa, jos keräys on tehty. Voit korjata vain tehdyt "
+"Tuotetta ei voi poistaa, jos keräily on tehty. Voit korjata vain tehdyt "
 "määrät."
 
 #. module: stock
@@ -11276,13 +11285,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return Done pickings."
-msgstr "Voit palauttaa vain valmiit varastonsiirrot."
+msgstr "Voit palauttaa vain valmiit keräilyt."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return one picking at a time."
-msgstr "Voit palauttaa vain yhden keräyksen kerrallaan."
+msgstr "Voit palauttaa vain yhden keräilyn kerrallaan."
 
 #. module: stock
 #. odoo-python
