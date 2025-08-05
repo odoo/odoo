@@ -34,22 +34,24 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
     };
 
     async onSnippetDropped({ snippetEl }) {
-        for (const [optionName, value] of [
-            ['showParent', true],
-            ['columns', 2],
-            ['rounded', 2],
-            ['gap', 2],
-            ['size', 'medium'],
-            ['button', 'Explore Now'],
-            ['alignment', 'left'],
-        ]) {
-            setDatasetIfUndefined(snippetEl, optionName, value);
+        if (snippetEl.matches(this.selector)) {
+            for (const [optionName, value] of [
+                ['showParent', true],
+                ['columns', 2],
+                ['rounded', 2],
+                ['gap', 2],
+                ['size', 'medium'],
+                ['button', 'Explore Now'],
+                ['alignment', 'left'],
+            ]) {
+                setDatasetIfUndefined(snippetEl, optionName, value);
+            }
+            await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
+                snippetEl,
+                this.modelNameFilter,
+                [],
+            );
         }
-        await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
-            snippetEl,
-            this.modelNameFilter,
-            [],
-        );
     }
 }
 
