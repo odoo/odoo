@@ -27,7 +27,7 @@ class HrWorkEntry(models.Model):
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
     duration = fields.Float(compute='_compute_duration', store=True, string="Duration", readonly=False)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, required=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
