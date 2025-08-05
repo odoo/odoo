@@ -114,7 +114,7 @@
                             </field>
                         </page>
                          <page string="Questions" name="questions">
-                            <field name="question_ids" string="Question" nolabel="1">
+                            <field name="question_ids" string="Question" nolabel="1" domain="[('is_reusable', '=', True)]" context="{'list_view_ref': 'event.event_question_view_list_add'}">
                                 <list>
                                     <field name="sequence" widget="handle" />
                                     <field name="title"/>
@@ -124,6 +124,7 @@
                                     <field name="answer_ids" widget="many2many_tags"
                                         invisible="question_type != 'simple_choice'" />
                                     <field name="is_default" optional="hide"/>
+                                    <field name="is_reusable" optional="hide"/>
                                     <button name="action_view_question_answers"
                                         type="object"
                                         class="p-0"

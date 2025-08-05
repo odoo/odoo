@@ -22,6 +22,9 @@
                         name="filter_for_each_attendee"
                         domain="[('once_per_order', '=', False)]"/>
                 <separator/>
+                <filter name="filter_is_reusable" string="Reusable" domain="[('is_reusable', '=', True)]"/>
+                <filter name="filter_is_not_reusable" string="Not Reusable" domain="[('is_reusable', '=', False)]"/>
+                <separator/>
                 <filter name="filter_is_default" string="Default Questions" domain="[('is_default', '=', True)]"/>
                 <group>
                     <filter string="Event" name="group_by_event" context="{'group_by': 'event_ids'}"/>
@@ -53,6 +56,8 @@
                         <group>
                             <field name="once_per_order"/>
                             <field name="is_default"/>
+                            <field name="event_type_ids" invisible="1"/>
+                            <field name="is_reusable" readonly="is_default"/>
                         </group>
                     </group>
                     <notebook invisible="question_type != 'simple_choice'">
@@ -75,6 +80,7 @@
     <record id="event_question_view_list" model="ir.ui.view">
         <field name="name">event.question.view.list</field>
         <field name="model">event.question</field>
+        <field name="priority" eval="10"/>
         <field name="arch" type="xml">
             <list>
                 <field name="title"/>
@@ -84,7 +90,19 @@
                 <field name="answer_ids" widget="many2many_tags"
                     invisible="question_type != 'simple_choice'"/>
                 <field name="is_default"/>
+                <field name="is_reusable" optional="hide"/>
             </list>
+        </field>
+    </record>
+
+    <record id="event_question_view_list_add" model="ir.ui.view">
+        <field name="name">event.question.view.list.add</field>
+        <field name="model">event.question</field>
+        <field name="inherit_id" ref="event.event_question_view_list"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_reusable']" position="replace"/>
         </field>
     </record>
 
