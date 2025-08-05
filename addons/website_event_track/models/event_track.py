@@ -652,7 +652,7 @@ class EventTrack(models.Model):
             cal_track.add('summary').value = track.name
             cal_track.add('description').value = track._get_track_calendar_description()
             if track.event_id.address_inline or track.location_id:
-                cal_track.add('location').value = ', '.join([track.event_id.address_inline, track.location_id.name or ''])
+                cal_track.add('location').value = ', '.join([track.event_id.address_inline, track.location_id.sudo().name or ''])
 
             result[track.id] = cal.serialize().encode('utf-8')
         return result
