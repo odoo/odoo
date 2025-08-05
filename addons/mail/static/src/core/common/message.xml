@@ -184,7 +184,7 @@
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }"/>
-                    <button t-else="" class="o-mail-Message-actionsBtn btn border-0 p-0 rounded-0" t-att-title="action.name" t-att-name="action.id" t-on-click.stop="action.onSelected" t-att-class="{
+                    <button t-else="" class="o-mail-Message-actionsBtn btn border-0 p-0 rounded-0" t-att-title="action.name" t-att-name="action.id" t-on-click.stop="(ev) => action.onSelected(ev)" t-att-class="{
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }">
