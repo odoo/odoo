@@ -184,7 +184,7 @@ class AccountMoveSend(models.AbstractModel):
                 if not invoice.partner_id.l10n_tr_nilvera_customer_alias_id:
                     # If no alias is saved, the user is either an E-Archive user or we haven't checked before. Check again
                     # just in case.
-                    invoice.partner_id.check_nilvera_customer()
+                    invoice.partner_id._check_nilvera_customer()
                 customer_alias = invoice.partner_id.l10n_tr_nilvera_customer_alias_id.name
                 if customer_alias:  # E-Invoice
                     invoice._l10n_tr_nilvera_submit_einvoice(xml_file, customer_alias)
