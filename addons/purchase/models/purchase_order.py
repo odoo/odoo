@@ -95,8 +95,13 @@ class PurchaseOrder(models.Model):
     dest_address_id = fields.Many2one('res.partner', check_company=True, string='Dropship Address',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
-    currency_id = fields.Many2one('res.currency', 'Currency', required=True,
-        default=lambda self: self.env.company.currency_id.id)
+    currency_id = fields.Many2one('res.currency', 'Currency',
+        required=True,
+        compute='_compute_currency_id',
+        store=True,
+        readonly=False,
+        precompute=True,
+    )
     state = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
@@ -423,17 +428,23 @@ class PurchaseOrder(models.Model):
         # are taken with the company of the order
         # if not defined, with_company doesn't change anything.
         self = self.with_company(self.company_id)
-        default_currency = self.env.context.get("default_currency_id")
         if not self.partner_id:
             self.fiscal_position_id = False
-            self.currency_id = default_currency or self.env.company.currency_id.id
         else:
             self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = default_currency or self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
             if self.partner_id.buyer_id:
                 self.user_id = self.partner_id.buyer_id
         return {}
+
+    @api.depends('partner_id', 'company_id')
+    def _compute_currency_id(self):
+        for order in self:
+            order = order.with_company(order.company_id)
+            if not order.partner_id:
+                order.currency_id = order.company_id.currency_id
+            else:
+                order.currency_id = order.partner_id.property_purchase_currency_id or order.company_id.currency_id
 
     @api.onchange('fiscal_position_id', 'company_id')
     def _compute_tax_id(self):
