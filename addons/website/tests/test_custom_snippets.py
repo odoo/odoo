@@ -15,7 +15,7 @@ class TestCustomSnippet(TransactionCase):
             'name': 'Parseltongue',
             'code': 'pa_GB',
             'iso_code': 'pa_GB',
-            'url_code': 'pa_GB',
+            'url_code': 'pa-GB',
         })
         ResLang._activate_lang(parseltongue.code)
         website = self.env.ref('website.default_website')
