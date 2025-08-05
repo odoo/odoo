@@ -1188,6 +1188,29 @@ class StockQuant(TransactionCase):
             'lot_id': False,
         }])
 
+    def test_onchange_location_quantity(self):
+        """
+        Ensure that the quantity is correctly updated when changing the product or location,
+        based on existing quants in that location.
+        """
+        product = self.env['product.product'].create({
+            'name': 'ELCT',
+            'type': 'product',
+        })
+        quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': product.id,
+            'inventory_quantity': 10,
+        })
+        quant.action_apply_inventory()
+
+        form = Form(self.env['stock.quant'].with_context({'inventory_mode': True}))
+        form.product_id = product
+        form.location_id = self.stock_location
+        self.assertEqual(form.quantity, 10.0)
+        form.location_id = self.stock_subloc2
+        self.assertEqual(form.quantity, 0.0)
+
 
 class StockQuantRemovalStrategy(TransactionCase):
     def setUp(self):
