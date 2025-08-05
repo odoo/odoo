@@ -16,7 +16,7 @@ threadActionsRegistry
             component.orm.silent.call("mail.message", "mark_all_as_read");
         },
         sequence: 1,
-        text: _t("Mark all read"),
+        name: _t("Mark all read"),
     })
     .add("unstar-all", {
         condition(component) {
@@ -33,5 +33,5 @@ threadActionsRegistry
             const component = useComponent();
             component.store = useService("mail.store");
         },
-        text: _t("Unstar all"),
+        name: _t("Unstar all"),
     });

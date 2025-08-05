@@ -180,7 +180,7 @@
                 <t t-foreach="quickActions" t-as="action" t-key="action.id">
                     <t t-set="isStart" t-value="(!isReverse and action.isFirst) or (isReverse and action.isLast)"/>
                     <t t-set="isEnd" t-value="(!isReverse and action.isLast) or (isReverse and action.isFirst)"/>
-                    <t t-if="action.component" t-component="action.component" t-props="action.props" classNames="{
+                    <t t-if="action.component" t-component="action.component" t-props="action.componentProps" classNames="{
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }"/>
