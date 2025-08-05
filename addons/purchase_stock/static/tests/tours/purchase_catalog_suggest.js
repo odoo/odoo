@@ -1,15 +1,18 @@
 import { registry } from "@web/core/registry";
 import { assert } from "@stock/../tests/tours/tour_helper";
 import {
-    selectPOVendor,
-    selectPOWarehouse,
     goToCatalogFromPO,
     goToPOFromCatalog,
     toggleSuggest,
     setSuggestParameters,
     checkKanbanRecordHighlight,
-} from "./tour_helpers";
+} from "./tour_helper";
+import { selectPOVendor, selectPOWarehouse } from "@purchase/../tests/tours/tour_helper";
 
+/**
+ * Checks that the Suggest UI in the search panel works well
+ * (estimated price, warehouse logic, toggling, saving defaults)
+ */
 registry.category("web_tour.tours").add("test_purchase_order_suggest_search_panel_ux", {
     steps: () => [
         /*
@@ -39,7 +42,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         },
         ...goToPOFromCatalog(),
         ...goToCatalogFromPO(),
-        { trigger: "button[name='toggle_suggest_catalog'].fa-toggle-off" }, // Should still be off
+        { trigger: 'div[name="search-suggest-toggle"] input:not(:checked)' }, // Should still be off
         ...toggleSuggest(true),
         ...setSuggestParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
         { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" },
@@ -47,7 +50,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...selectPOWarehouse("Base Warehouse: Receipts"), // Still the same PO, no need to reset vendor
         ...goToCatalogFromPO(),
         { trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view" },
-        { trigger: "button[name='toggle_suggest_catalog'].fa-toggle-on" }, // Should still be ON
+        { trigger: 'div[name="search-suggest-toggle"] input:checked' }, // Should still be ON
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
         // Now for the correct WH suggest should be 12 units/week * 4 weeks * 20$/ unit * 50% = 480$
         { trigger: "span[name='suggest_total']:visible:contains('480')" },
@@ -74,30 +77,30 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...selectPOVendor("Julia Agrolait"),
         ...selectPOWarehouse("Base Warehouse: Receipts"),
         ...goToCatalogFromPO(),
-        // { Reactivate when saving is done
-        //     content: "Check number days saved",
-        //     trigger: "input.o_PurchaseSuggestInput:eq(0)",
-        //     run() {
-        //         const days = parseInt(this.anchor.value);
-        //         assert(days, 28, `Expected days to be saved to 28, but got ${days}`);
-        //     },
-        // },
-        // {
-        //     content: "Check percent factor saved",
-        //     trigger: "input.o_PurchaseSuggestInput:eq(1)",
-        //     run() {
-        //         const percent = parseInt(this.anchor.value);
-        //         assert(percent, 50, `Expected percent factor to be saved to 50% got ${percent}`);
-        //     },
-        // },
-        // {
-        //     content: "Check based on saved",
-        //     trigger: ".o_TimePeriodSelectionField",
-        //     run() {
-        //         const i = this.anchor.querySelector(".o_select_menu_toggler");
-        //         assert(i.value, "Last 7 days", `based_on = ${i.value},should be "Last 7 days"`);
-        //     },
-        // },
+        {
+            content: "Check number days saved",
+            trigger: "input.o_PurchaseSuggestInput:eq(0)",
+            run() {
+                const days = parseInt(this.anchor.value);
+                assert(days, 28, `Expected days to be saved to 28, but got ${days}`);
+            },
+        },
+        {
+            content: "Check percent factor saved",
+            trigger: "input.o_PurchaseSuggestInput:eq(1)",
+            run() {
+                const percent = parseInt(this.anchor.value);
+                assert(percent, 50, `Expected percent factor to be saved to 50% got ${percent}`);
+            },
+        },
+        {
+            content: "Check based on saved",
+            trigger: ".o_TimePeriodSelectionField",
+            run() {
+                const i = this.anchor.querySelector(".o_select_menu_toggler");
+                assert(i.value, "Last 7 days", `based_on = ${i.value},should be "Last 7 days"`);
+            },
+        },
         ...setSuggestParameters({ basedOn: "Actual Demand", nbDays: 30, factor: 50 }),
         // Suggest total should be -100 units forcasted * 50% * 20 = 1000$
         { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
@@ -105,7 +108,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * -----------------  PART 2 : Kanban Interactions -----------------
          * Checks that the Suggest UI and the Kanban record interactions
          * (monthly demand, suggest_qtys, ADD suggested qtys)
-         * TODO: filtering attributes and categories
+         * TODO: filtering attributes and categories (including Group by)
+         * TODO: Check monthly demand and Suggested qty when changing warehouse
          * ------------------------------------------------------------------
          */
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),

@@ -12,12 +12,13 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
     setup() {
         super.setup();
         this.state = useState({
-            basedOn: "last_30_days",
-            numberOfDays: 7,
+            numberOfDays: this.props.context.vendor_suggest_days,
+            basedOn: this.props.context.vendor_suggest_based_on,
+            percentFactor: this.props.context.vendo_suggest_percent,
+            poState: this.props.context.po_state,
+            estimatedPrice: 0.0,
             currencyId: this.props.context.product_catalog_currency_id,
             digits: this.props.context.product_catalog_digits,
-            percentFactor: 100,
-            estimatedPrice: 0.0,
             vendorName: this.props.context.vendor_name,
             suggestToggle: this._loadSuggestToggleState(),
         });
@@ -54,7 +55,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
                 this.model.config.domain,
                 this._getCatalogContext(),
             ]);
-            this.model.root.load();
+            this._reload_grid();
         };
 
         useSubEnv({
@@ -96,6 +97,9 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
     /**  Loads last suggest toggle state from local storage (defaults to true) */
     _loadSuggestToggleState() {
+        if (this.props.context.po_state !== "draft") {
+            return { isOn: false };
+        }
         const local_state = JSON.parse(localStorage.getItem("purchase_stock.suggest_toggle_state"));
         if (local_state?.isOn !== undefined) {
             return local_state;

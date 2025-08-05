@@ -9,7 +9,7 @@ class PurchaseOrderSuggest extends models.Model {
         selection: [
             ["actual_demand", "Actual Demand"],
             ["one_week", "Last 7 days"],
-            ["last_30_days", "Last 30 days"],
+            ["30_days", "Last 30 days"],
             ["three_months", "Last 3 months"],
             ["one_year", "Last 12 months"],
             ["last_year", "Same month last year"],
@@ -17,7 +17,7 @@ class PurchaseOrderSuggest extends models.Model {
             ["last_year_m_plus_2", "After next month last year"],
             ["last_year_quarter", "Last year quarter"],
         ],
-        default: "last_30_days",
+        default: "30_days",
         string: "Based on",
     });
     _views = {
