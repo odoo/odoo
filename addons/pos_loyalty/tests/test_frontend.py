@@ -3086,3 +3086,31 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_combo_product_dont_grant_point",
             login="pos_user",
         )
+
+    def test_customer_name_in_receipt(self):
+        """
+        Tests that the customer's name is correctly displayed in the
+        receipt, regardless of what's happening with loyalty programs
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Used Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        # The customer will always be displayed unless it's an card that has been used before
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': self.loyalty_program.id,
+            'points': 50,
+            'code': 'EXISTING-CARD-123'
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_customer_name_in_receipt', login="pos_user")

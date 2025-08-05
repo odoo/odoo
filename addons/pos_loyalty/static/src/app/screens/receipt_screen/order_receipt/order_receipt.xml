@@ -3,15 +3,16 @@
 
     <t t-name="pos_coupon.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
+            <t t-if="order.partner_id and order.preset_id?.identification != 'address'">
+                <br/>
+                <div class="d-flex pb-1" style="font-size: 75%;">
+                    <span>Customer</span>
+                    <span t-out="order.partner_id.name" class="ms-auto fw-bolder"/>
+                </div>
+            </t>
             <t t-if="order.new_coupon_info and order.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards pt-3">
                     <t t-foreach="order.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
-                        <t t-if="order.partner_id and order.preset_id?.identification != 'address'">
-                            <div class="d-flex pb-1" style="font-size: 75%;">
-                                <span>Customer</span>
-                                <span t-out="order.partner_id.name" class="ms-auto fw-bolder"/>
-                            </div>
-                        </t>
                         <div class="coupon-container">
                             <div class="row g-2">
                                 <div class="col-6">

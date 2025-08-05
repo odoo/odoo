@@ -630,3 +630,21 @@ registry.category("web_tour.tours").add("test_refund_does_not_decrease_points", 
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_customer_name_in_receipt", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            {
+                content: "Check that the customer's name is in the receipt",
+                trigger: ".before-footer .d-flex span.ms-auto.fw-bolder:contains('AAA Partner')",
+            },
+        ].flat(),
+});
