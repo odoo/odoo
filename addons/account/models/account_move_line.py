@@ -350,7 +350,7 @@ class AccountMoveLine(models.Model):
         'account.move.line',
         string="Parent Section Line",
         compute='_compute_section_line_parent_id',
-        store=True, copy=False,
+        store=True, copy=False, index='btree_not_null',
     )
     section_line_child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='section_line_parent_id')
     product_id = fields.Many2one(
