@@ -133,13 +133,28 @@ class PurchaseOrder(models.Model):
         action['views'] = [(kanban_view_id, view_type) if view_type == 'kanban' else (view_id, view_type) for (view_id, view_type) in action['views']]
         return action
 
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'warehouse_id': self.picking_type_id.warehouse_id.id if self.picking_type_id else False,
+            'vendor_name': self.partner_id.display_name,
+            'vendor_suggest_days': self.partner_id.suggest_days,
+            'vendor_suggest_based_on': self.partner_id.suggest_based_on,
+            'vendo_suggest_percent': self.partner_id.suggest_percent,
+            'po_state': self.state,
+        }
+
     @api.model
     def action_purchase_order_suggest(self, domain, suggest_ctx):
         """ Adds suggested products to PO, removing products with no suggested_qty, and
-        collapsing existing po_lines into at most 1 orderline. """
-        po = self.browse(suggest_ctx.get("order_id"))
-        po.ensure_one()
+        collapsing existing po_lines into at most 1 orderline. Saves suggestion params
+        (eg. number_of_days) to partner table. """
+        po = self.browse(suggest_ctx.get("order_id")).ensure_one()
         products = self.env['product.product'].with_context(suggest_ctx).search(domain)
+
+        po.partner_id.suggest_days = suggest_ctx.get('suggest_days')
+        po.partner_id.suggest_based_on = suggest_ctx.get('suggest_based_on')
+        po.partner_id.suggest_percent = suggest_ctx.get('suggest_percent')
 
         po_lines_commands = []
         for product in products:
@@ -162,13 +177,6 @@ class PurchaseOrder(models.Model):
                 po_lines_commands.append(Command.create(suggest_line))
 
         po.order_line = po_lines_commands
-
-    def _get_action_add_from_catalog_extra_context(self):
-        return {
-            **super()._get_action_add_from_catalog_extra_context(),
-            'warehouse_id': self.picking_type_id.warehouse_id.id if self.picking_type_id else False,
-            'vendor_name': self.partner_id.display_name,
-        }
 
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)

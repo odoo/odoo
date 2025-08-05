@@ -15,6 +15,9 @@ class ResPartner(models.Model):
         "On-Time Delivery Rate", compute='_compute_on_time_rate',
         help="Over the past x days; the number of products received on time divided by the number of ordered products."\
             "x is either the System Parameter purchase_stock.on_time_delivery_days or the default 365")
+    suggest_based_on = fields.Char(store=True, default='last_30_days')
+    suggest_days = fields.Float(store=True, default=7)
+    suggest_percent = fields.Integer(store=True, default=100)
 
     @api.depends('purchase_line_ids')
     def _compute_on_time_rate(self):

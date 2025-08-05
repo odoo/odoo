@@ -23,6 +23,7 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
         super.setup();
         this.suggest = useState(useEnv().suggest);
         this.addAllProducts = useEnv().addAllProducts;
+        this.displaySuggest = useEnv().suggest.poState === "draft";
         this.tooltipTitle = _t(
             "Get recommendations of products to purchase at %(vendorName)s based on stock on hand, incoming quantities, " +
                 "and expected sales volumes.\n\n Set a reference period to estimate sales, and use the percentage " +
