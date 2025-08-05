@@ -34,6 +34,6 @@ Pro rules and show the errors.
         ],
     },
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'license': 'LGPL-3',
 }
