@@ -588,7 +588,8 @@ class MailActivity(models.Model):
 
     @api.readonly
     def action_open_document(self):
-        """ Opens the related record based on the model and ID """
+        """ Opens the related record based on the model and ID, or activity if user has no
+         access to the related record."""
         self.ensure_one()
         if not self.res_model:
             return {
@@ -598,6 +599,15 @@ class MailActivity(models.Model):
                 'res_model': 'mail.activity',
                 'view_id': self.env.ref('mail.mail_activity_view_form_popup').id,
                 'target': 'new',
+            }
+        if not self.env[self.res_model].browse(self.res_id).has_access('read'):
+            return {
+                'res_id': self.id,
+                'res_model': 'mail.activity',
+                'target': 'current',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'views': [(self.env.ref('mail.mail_activity_view_form_without_record_access').id, 'form')],
             }
         return {
             'res_id': self.res_id,
