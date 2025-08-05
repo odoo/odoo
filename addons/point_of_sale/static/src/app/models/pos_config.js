@@ -45,6 +45,10 @@ export class PosConfig extends Base {
         }
         return new Set();
     }
+
+    get displayTrackingNumber() {
+        return this.module_pos_restaurant;
+    }
 }
 
 registry.category("pos_available_models").add(PosConfig.pythonModel, PosConfig);
