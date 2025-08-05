@@ -355,6 +355,7 @@
                             options="{'no_quick_create': True}"
                             context="{'form_view_ref': 'base.view_partner_simple_form'}"
                         />
+                        <field name="location"/>
                         <label for="videocall_location" class="opacity-100"/>
                         <div col="2">
                             <field name="videocall_location" string="Meeting Link" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss'"/>
