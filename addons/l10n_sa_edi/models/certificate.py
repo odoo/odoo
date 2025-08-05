@@ -62,7 +62,7 @@ class CertificateCertificate(models.Model):
                 # EGS Serial Number. Manufacturer or Solution Provider Name, Model or Version and Serial Number.
                 # To be written in the following format: "1-... |2-... |3-..."
                 x509.NameAttribute(ObjectIdentifier('2.5.4.4'), '1-Odoo|2-%s|3-%s' % (
-                    version_info['server_version_info'][0], journal.id)),
+                    version_info['server_serie'], journal.id)),
                 # Organisation Identifier (UID)
                 x509.NameAttribute(NameOID.USER_ID, company_id.vat),
                 # Invoice Type. 4-digit numerical input using 0 & 1
