@@ -194,7 +194,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.tax',
         string="Taxes",
         compute='_compute_tax_ids', store=True, readonly=False, precompute=True,
-        context={'active_test': False},
+        context={'active_test': False, 'hide_original_tax_ids': True},
         check_company=True,
         tracking=True,
     )
