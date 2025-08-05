@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="stock_account.StockValuationReport">
+        <div class="o_action account_report">
+            <ControlPanel>
+                <!-- Buttons bar -->
+                <t t-set-slot="control-panel-create-button">
+                    <StockValuationReportButtonsBar/>
+                </t>
+                <!-- <t t-set-slot="control-panel-additional-actions">
+                    <AccountReportCogMenu/>
+                </t> -->
+
+                <!-- Filters -->
+                <!-- <t t-set-slot="layout-actions">
+                   <div class="d-flex gap-1 flex-wrap">
+                       <StockValuationReportFilters/>
+                   </div>
+                </t> -->
+            </ControlPanel>
+             <div class="o_content">
+                <div id="warnings" class="warnings d-print-none"/>
+                <div class="mx-auto fit-content w-print-100">
+                    <table class="table table-borderless table-hover w-print-100">
+                        <tbody>
+                            <t t-call="stock_account.StockValuationReport.InitialBalance"/>
+                            <t t-call="stock_account.StockValuationReport.InventoryLoss"/>
+                            <t t-call="stock_account.StockValuationReport.StockVariation"/>
+                            <t t-call="stock_account.StockValuationReport.EndingStock"/>
+                            <!-- <t t-call="stock_account.StockValuationReport.InventoryValuation"/> -->
+                            <!-- <t t-call="stock_account.StockValuationReport.InventoryAccountingValuation"/> -->
+                            <!-- <t t-call="stock_account.StockValuationReport.EmptyLine"/> -->
+                            <!-- <t t-call="stock_account.StockValuationReport.Footer"/> -->
+                            <!-- <t t-call="stock_account.StockValuationReport.Accrual"/> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.EmptyLine">
+        <tr class="empty"><td colspan="3"/></tr>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.InitialBalance">
+        <StockValuationReportLine
+            label="_t('Initial Balance')"
+            level="0"
+            onClickMethod.bind="openAccountMoves"
+            sublines="data.initial_balance.lines"
+            value="data.initial_balance.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.StockVariation">
+        <StockValuationReportLine
+            label="_t('Stock Variation')"
+            level="0"
+            sublines="data.stock_variation.lines"
+            displayDebitCredit="true"
+            value="data.stock_variation.value"/>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.EndingStock">
+        <StockValuationReportLine
+            label="_t('Ending Stock')"
+            level="0"
+            onClickMethod="() => this.openAccountMoves(data.ending_stock.accountMoves)"
+            sublines="data.ending_stock.lines"
+            value="data.ending_stock.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.InventoryLoss">
+        <StockValuationReportLine
+            label="_t('Inventory Loss')"
+            level="0"
+            displayDebitCredit="true"
+            onClickMethod.bind="openInventoryLoss"
+            sublines="data.inventory_loss.lines"
+            value="data.inventory_loss.value"/>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.InventoryValuation">
+        <StockValuationReportLine
+            label="_t('Inventory Valuation')"
+            level="0"
+            onClickMethod.bind="openStockReport"
+            sublines="data.inventory_valuation.lines"
+            value="data.inventory_valuation.value"/>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.InventoryAccountingValuation">
+        <StockValuationReportLine
+            label="_t('Inventory Accounting Valuation')"
+            level="0"
+            onClickMethod.bind="openStockReport"
+            sublines="data.accounting_stock_valuation.lines"
+            value="data.accounting_stock_valuation.value"/>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.Footer">
+        <tr class="unfolded">
+            <td>
+                <div>Account Stock Valuation</div>
+            </td>
+            <td>
+                <div t-out="accountingStockValuation"/>
+            </td>
+        </tr>
+        <tr class="unfolded">
+            <td>
+                <div>- Stock Initial</div>
+            </td>
+            <td>
+                <div t-out="stockInitial"/>
+            </td>
+        </tr>
+        <tr class="unfolded">
+            <td>
+                <div>= Stock Variation</div>
+            </td>
+            <td>
+                <div t-out="stockVariation"/>
+            </td>
+        </tr>
+    </t>
+
+    <t t-name="stock_account.StockValuationReport.Accrual">
+        <t t-if="accrual.lines.length">
+            <StockValuationReportToggleLine
+                label="_t('Accrual')"
+                sublines="accrual.lines"
+                level="0"/>
+        </t>
+    </t>
+</templates>

@@ -263,10 +263,9 @@ class PosOrder(models.Model):
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
             .mapped('picking_ids.move_ids')\
-            ._filter_anglo_saxon_moves(product)\
+            .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time')\
             .sorted(lambda x: x.date)
-        price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
-        return price_unit
+        return moves._get_average_price_unit()
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
@@ -959,33 +958,6 @@ class PosOrder(models.Model):
                         'balance': balance,
                         'display_type': 'rounding',
                     })
-
-        # Stock.
-        if self.company_id.anglo_saxon_accounting and self.picking_ids.ids:
-            stock_moves = self.env['stock.move'].sudo().search([
-                ('picking_id', 'in', self.picking_ids.ids),
-                ('product_id.categ_id.property_valuation', '=', 'real_time')
-            ])
-            for stock_move in stock_moves:
-                expense_account = stock_move.product_id._get_product_accounts()['expense']
-                stock_output_account = stock_move.product_id.categ_id.property_stock_account_output_categ_id
-                balance = -sum(stock_move.stock_valuation_layer_ids.mapped('value'))
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock input for %s", stock_move.product_id.name),
-                    'account_id': expense_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': balance,
-                    'balance': balance,
-                })
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock output for %s", stock_move.product_id.name),
-                    'account_id': stock_output_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': -balance,
-                    'balance': -balance,
-                })
 
         # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
@@ -1741,7 +1713,8 @@ class PosOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.is_total_cost_computed):
             product = line.product_id
             if line._is_product_storable_fifo_avco() and stock_moves:
-                product_cost = product._compute_average_price(0, line.qty, line._get_stock_moves_to_consider(stock_moves, product))
+                moves = line._get_stock_moves_to_consider(stock_moves, product)
+                product_cost = moves._get_average_price_unit()
                 if (product.cost_currency_id.is_zero(product_cost) and line.order_id.shipping_date and line.refunded_orderline_id):
                     product_cost = line.refunded_orderline_id.total_cost / line.refunded_orderline_id.qty
             else:

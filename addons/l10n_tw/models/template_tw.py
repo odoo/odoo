@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'tw_119100',
             'property_account_payable_id': 'tw_217100',
-            'property_stock_account_input_categ_id': 'tw_124500',
-            'property_stock_account_output_categ_id': 'tw_124600',
             'property_stock_valuation_account_id': 'tw_123100',
         }
 

@@ -14,8 +14,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_expense_id': 'jo_account_500101',
             'property_account_income_id': 'jo_account_400101',
             'property_stock_valuation_account_id': 'jo_account_100502',
-            'property_stock_account_input_categ_id': 'jo_account_100503',
-            'property_stock_account_output_categ_id': 'jo_account_100504',
             'property_stock_account_production_cost_id': 'jo_account_100505',
             'code_digits': '6',
         }

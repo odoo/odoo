@@ -8,16 +8,6 @@
                 <field name="show_valuation" invisible="1" groups="stock.group_stock_manager"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <t groups="stock.group_stock_manager">
-                    <button type="object"
-                        name="action_view_stock_valuation_layers"
-                        class="oe_stat_button" icon="fa-dollar" groups="base.group_no_one"
-                        invisible="not show_valuation" >
-                        <div class="o_stat_info">
-                            <span class="o_stat_text">Valuation</span>
-                        </div>
-                    </button>
-                </t>
                 <button name="action_view_move_wip" type="object" class="oe_stat_button" icon="fa-book"
                         groups="account.group_account_user" invisible="wip_move_count == 0">
                     <div class="o_field_widget o_stat_info">

@@ -60,30 +60,6 @@ class ProductProduct(models.Model):
                 if price:
                     self.standard_price = price
 
-    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves, is_returned=False):
-        self.ensure_one()
-        if stock_moves.product_id == self:
-            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_returned)
-        bom = self.env['mrp.bom']._bom_find(self, company_id=stock_moves.company_id.id, bom_type='phantom')[self]
-        if not bom:
-            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_returned)
-        value = 0
-        dummy, bom_lines = bom.explode(self, 1)
-        bom_lines = {line: data for line, data in bom_lines}
-        for bom_line, moves_list in groupby(stock_moves.filtered(lambda sm: sm.state != 'cancel'), lambda sm: sm.bom_line_id):
-            if bom_line not in bom_lines:
-                for move in moves_list:
-                    component_quantity = next(
-                        (bml.product_qty for bml in move.product_id.bom_line_ids if bml in bom_lines),
-                        1
-                    )
-                    value += component_quantity * move.product_id._compute_average_price(qty_invoiced * move.product_qty, qty_to_invoice * move.product_qty, move, is_returned=is_returned)
-                continue
-            line_qty = bom_line.product_uom_id._compute_quantity(bom_lines[bom_line]['qty'], bom_line.product_id.uom_id)
-            moves = self.env['stock.move'].concat(*moves_list)
-            value += line_qty * bom_line.product_id._compute_average_price(qty_invoiced * line_qty, qty_to_invoice * line_qty, moves, is_returned=is_returned)
-        return value
-
     def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
         self.ensure_one()
         if not bom:
@@ -120,6 +96,7 @@ class ProductProduct(models.Model):
             if byproduct_cost_share:
                 total *= float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001)
             return bom.product_uom_id._compute_price(total / bom.product_qty, self.uom_id)
+        return 0.0
 
 
 class ProductCategory(models.Model):
@@ -130,6 +107,3 @@ class ProductCategory(models.Model):
         check_company=True,
         help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
                 If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")
-
-    def _get_stock_account_property_field_names(self):
-        return super()._get_stock_account_property_field_names() + ['property_stock_account_production_cost_id']

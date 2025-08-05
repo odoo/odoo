@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'visible': True,
             'property_account_receivable_id': 'chart_at_template_2000',
             'property_account_payable_id': 'chart_at_template_3300',
-            'property_stock_account_input_categ_id': 'chart_at_template_3740',
-            'property_stock_account_output_categ_id': 'chart_at_template_5000',
             'property_stock_valuation_account_id': 'chart_at_template_1600',
             'code_digits': '4',
         }

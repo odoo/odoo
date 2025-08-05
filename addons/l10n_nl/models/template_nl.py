@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'recv',
             'property_account_payable_id': 'pay',
-            'property_stock_account_input_categ_id': '1450',
-            'property_stock_account_output_categ_id': '1250',
             'property_stock_valuation_account_id': '3200',
         }
 

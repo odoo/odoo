@@ -241,7 +241,7 @@ class PurchaseOrderLine(models.Model):
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
-        return super(PurchaseOrderLine, self).write(values)
+        return super().write(values)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_purchase(self):

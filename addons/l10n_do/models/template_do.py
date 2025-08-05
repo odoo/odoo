@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '8',
             'property_account_receivable_id': 'l10n_do_11030201',
             'property_account_payable_id': 'l10n_do_21010200',
-            'property_stock_account_input_categ_id': 'l10n_do_21021200',
-            'property_stock_account_output_categ_id': 'l10n_do_11050600',
             'property_stock_valuation_account_id': 'l10n_do_11050100',
         }
 

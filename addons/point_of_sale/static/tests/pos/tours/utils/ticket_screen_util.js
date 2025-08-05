@@ -36,6 +36,9 @@ export function selectOrderByPrice(price) {
             trigger: `.ticket-screen .order-row:contains("${price}")`,
             run: "click",
         },
+        {
+            trigger: `.ticket-screen .order-row.active:contains("${price}")`,
+        },
     ];
 }
 export function doubleClickOrder(orderName) {

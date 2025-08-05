@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'ec1102050101',
             'property_account_payable_id': 'ec210301',
             'journal_account_expense_categ_id': 'ec52022816',
-            'property_stock_account_input_categ_id': 'ec110307',
-            'property_stock_account_output_categ_id': 'ec510102',
             'property_stock_valuation_account_id': 'ec110306',
             'loss_stock_valuation_account': 'ec510112',
             'production_stock_valuation_account': 'ec110302',

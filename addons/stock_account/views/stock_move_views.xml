@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="stock_move_view_list">
+        <field name="name">stock.move.view.list.inherit.stock.account</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="value" optional="show"/>
+                <field name="remaining_qty" optional="hide"/>
+                <field name="remaining_value" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="stock_move_action_adjust_valuation">
+        <field name="name">Adjust Valuation</field>
+        <field name="model_id" ref="model_stock_move"/>
+        <field name="binding_model_id" ref="model_stock_move"/>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_adjust_valuation()
+        </field>
+    </record>
+</odoo>

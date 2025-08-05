@@ -2,7 +2,6 @@
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
-from odoo.fields import Domain
 
 
 class StockMove(models.Model):
@@ -23,12 +22,6 @@ class StockMove(models.Model):
 
     def _get_valid_moves_domain(self):
         return ['&', ('picking_id.project_id', '!=', False), ('picking_type_id.analytic_costs', '!=', False)]
-
-    def _account_analytic_entry_move(self):
-        domain = Domain(self._get_valid_moves_domain())
-        domain = Domain('picking_id', '=', False) | domain
-        valid_moves = self.filtered_domain(domain)
-        super(StockMove, valid_moves)._account_analytic_entry_move()
 
     def _prepare_analytic_lines(self):
         res = super()._prepare_analytic_lines()

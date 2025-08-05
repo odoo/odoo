@@ -5,20 +5,23 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
+    def _post_load_data(self, template_code, company, template_data):
+        res = super()._post_load_data(template_code, company, template_data)
+        company.account_stock_valuation_id.account_stock_variation_id = company.expense_account_id
+        return res
+
     @template('generic_coa', 'res.company')
     def _get_generic_coa_res_company(self):
         res = super()._get_generic_coa_res_company()
         res[self.env.company.id].update({
+            'account_stock_journal_id': 'inventory_valuation',
+            'account_stock_valuation_id': 'stock_valuation',
+            'account_cogs_id': 'expense',
             'account_production_wip_account_id': 'wip',
             'account_production_wip_overhead_account_id': 'cost_of_production',
         })
         return res
 
-    def _load_wip_accounts(self, company, template_data):
-        company = company or self.env.company
-        if company.id in template_data:
-            company_data = template_data[company.id]
-            if 'account_production_wip_account_id' in company_data:
-                company.account_production_wip_account_id = self.ref(company_data['account_production_wip_account_id'])
-            if 'account_production_wip_overhead_account_id' in company_data:
-                company.account_production_wip_overhead_account_id = self.ref(company_data['account_production_wip_overhead_account_id'])
+    def _get_generic_coa_account_account(self):
+        # TODO: Probably the correct place to add link between account
+        return super()._get_generic_coa_account_account()

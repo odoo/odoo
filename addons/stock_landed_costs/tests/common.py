@@ -23,7 +23,7 @@ class TestStockLandedCostsCommon(ValuationReconciliationTestCommon):
         cls.customer_location_id = cls.env.ref('stock.stock_location_customers').id
         cls.categ_all = cls.stock_account_product_categ
         cls.categ_manual_periodic = cls.env.ref('product.product_category_goods').copy({
-            "property_valuation": "manual_periodic",
+            "property_valuation": "periodic",
             "property_cost_method": "fifo"
         })
         cls.categ_real_time = cls.env.ref('product.product_category_goods').copy({

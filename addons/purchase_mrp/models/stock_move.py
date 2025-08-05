@@ -10,13 +10,13 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
-        vals = super(StockMove, self)._prepare_phantom_move_values(bom_line, product_qty, quantity_done)
+        vals = super()._prepare_phantom_move_values(bom_line, product_qty, quantity_done)
         if self.purchase_line_id:
             vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
     def _get_price_unit(self):
-        if self.product_id == self.purchase_line_id.product_id or not self.bom_line_id or self._should_ignore_pol_price():
+        if self.product_id == self.purchase_line_id.product_id or not self.bom_line_id or not self.purchase_line_id:
             return super()._get_price_unit()
         line = self.purchase_line_id
         # price_unit here with uom of product

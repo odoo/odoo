@@ -66,17 +66,6 @@
             </field>
         </record>
 
-        <record id="view_category_property_form" model="ir.ui.view">
-            <field name="name">product.category.stock.property.form.inherit</field>
-            <field name="model">product.category</field>
-            <field name="inherit_id" ref="stock_account.view_category_property_form"/>
-            <field name="arch" type="xml">
-                <field name="property_stock_account_output_categ_id" position="after">
-                    <field name="property_stock_account_production_cost_id" options="{'no_create': True}"/>
-                </field>
-            </field>
-        </record>
-
         <record id="action_compute_price_bom_template" model="ir.actions.server">
             <field name="name">Compute Price from BoM</field>
             <field name="model_id" ref="product.model_product_template"/>

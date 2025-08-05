@@ -46,8 +46,6 @@ class StockQuant(models.Model):
 
     @api.depends('company_id', 'location_id', 'owner_id', 'product_id', 'quantity')
     def _compute_value(self):
-        """ (Product.value_svl / Product.quantity_svl) * quant.quantity, i.e. average unit cost * on hand qty
-        """
         self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity', 'lot_id'])
         self.value = 0
         for quant in self:
@@ -57,14 +55,14 @@ class StockQuant(models.Model):
                     quant.product_id.uom_id.is_zero(quant.quantity):
                 continue
             if quant.product_id.lot_valuated:
-                quantity = quant.lot_id.with_company(quant.company_id).quantity_svl
-                value_svl = quant.lot_id.with_company(quant.company_id).value_svl
+                quantity = quant.lot_id.with_company(quant.company_id).product_qty
+                value = quant.lot_id.with_company(quant.company_id).total_value
             else:
-                quantity = quant.product_id.with_company(quant.company_id).quantity_svl
-                value_svl = quant.product_id.with_company(quant.company_id).value_svl
+                quantity = quant.product_id.with_company(quant.company_id).qty_available
+                value = quant.product_id.with_company(quant.company_id).total_value
             if quant.product_id.uom_id.is_zero(quantity):
                 continue
-            quant.value = quant.quantity * value_svl / quantity
+            quant.value = quant.quantity * value / quantity
 
     def _read_group_select(self, aggregate_spec, query):
         # flag value as aggregatable, and manually sum the values from the

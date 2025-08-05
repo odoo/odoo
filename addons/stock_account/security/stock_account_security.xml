@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record model="ir.rule" id="stock_valuation_layer_company_rule">
-        <field name="name">Stock Valuation Layer Multicompany</field>
-        <field name="model_id" search="[('model','=','stock.valuation.layer')]" model="ir.model"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
     <record id="group_lot_on_invoice" model="res.groups">
         <field name="name">Display Serial &amp; Lot Number on Invoices</field>
     </record>
-
-    <record id="group_stock_accounting_automatic" model="res.groups">
-        <field name="name">Stock Accounting Automatic</field>
-    </record>
-
+    
 </odoo>

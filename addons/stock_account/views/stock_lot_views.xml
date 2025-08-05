@@ -6,16 +6,6 @@
         <field name="model">stock.lot</field>
         <field name="inherit_id" ref="stock.view_production_lot_form"/>
         <field name="arch" type="xml">
-        <xpath expr="//div[@name='button_box']" position="inside">
-            <button type="object"
-                name="action_view_stock_valuation_layers"
-                class="oe_stat_button" icon="fa-dollar" groups="stock.group_stock_manager"
-                invisible="not stock_valuation_layer_ids">
-                <div class="o_stat_info">
-                    <span class="o_stat_text">Valuation</span>
-                </div>
-            </button>
-        </xpath>
         <group name="inventory_group" position="inside">
             <field name="company_currency_id" invisible="1"/>
             <field name="total_value" widget="monetary" invisible="not lot_valuated"

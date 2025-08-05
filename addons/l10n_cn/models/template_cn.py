@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'parent': 'cn_common',
             'property_account_expense_categ_id': 'l10n_cn_account_5401',
             'property_account_income_categ_id': 'l10n_cn_account_5001',
-            'property_stock_account_input_categ_id': 'l10n_cn_account_140201',
-            'property_stock_account_output_categ_id': 'l10n_cn_account_140202',
         }
 
     @template('cn', 'res.company')
