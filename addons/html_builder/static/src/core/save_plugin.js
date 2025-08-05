@@ -95,7 +95,7 @@ export class SavePlugin extends Plugin {
                 .map((saveElementHandler) => saveElementHandler(cleanedEls[0]))
                 .filter(Boolean);
             if (!proms.length) {
-                console.warning("no save_element_handlers for dirty element", cleanedEls[0]);
+                console.warn("no save_element_handlers for dirty element", cleanedEls[0]);
             }
             await Promise.all(proms);
         });
