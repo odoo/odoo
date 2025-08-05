@@ -1141,7 +1141,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
             # To avoid losing data we commit after every document
             if self.env['account.move']._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
         waiting_time_seconds = info.get('waiting_time_seconds')
         if waiting_time_seconds:
@@ -1152,7 +1152,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         self._cancel_after_sending(info)
 
         if self.env['account.move']._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
         return batch_dict, info
 
