@@ -64,7 +64,15 @@ export class SelectTranslateDialog extends Component {
     </WebsiteDialog>
     `;
     static props = {
-        node: String,
+        node: {
+            // type: Object doesn't work in firefox.
+            // the node is in an iframe, so its Object prototype
+            // isn't the same as the rest of the page.
+            validate: (node) => {
+                // if the object has those two, should be a node
+                return "nodeType" in node && "nodeName" in node;
+            },
+        },
         close: Function,
     };
     setup() {
