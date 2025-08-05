@@ -110,7 +110,7 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
             'name': 'Parseltongue',
             'code': 'pa_GB',
             'iso_code': 'pa_GB',
-            'url_code': 'pa_GB',
+            'url_code': 'pa-GB',
         })
         self.env["base.language.install"].create({
             'overwrite': True,

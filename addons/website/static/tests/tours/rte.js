@@ -174,7 +174,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "click on Parseltongue version",
-            trigger: ':iframe .js_language_selector a[data-url_code="pa_GB"]',
+            trigger: ':iframe .js_language_selector a[data-url_code="pa-GB"]',
             run: "click",
         },
         {
@@ -364,7 +364,7 @@ registerWebsitePreviewTour(
         {
             content: "return in Parseltongue",
             trigger:
-                ':iframe html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa_GB"]',
+                ':iframe html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa-GB"]',
             run: "click",
         },
         {

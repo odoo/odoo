@@ -140,7 +140,7 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
             'name': 'Parseltongue',
             'code': 'pa_GB',
             'iso_code': 'pa_GB',
-            'url_code': 'pa_GB',
+            'url_code': 'pa-GB',
         })
         cls.env["base.language.install"].create({
             'overwrite': True,

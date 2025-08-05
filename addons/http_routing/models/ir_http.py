@@ -310,7 +310,13 @@ class IrHttp(models.AbstractModel):
         if lang_code in frontend_langs:
             return lang_code
 
-        short = lang_code.partition('_')[0]
+        if '_' in lang_code:
+            short = lang_code.partition('_')[0]
+        elif '-' in lang_code:
+            short = lang_code.partition('-')[0]
+        else:
+            short = lang_code
+
         if not short:
             return None
         return next((code for code in frontend_langs if code.startswith(short)), None)

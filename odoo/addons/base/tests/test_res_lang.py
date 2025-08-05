@@ -125,26 +125,26 @@ class test_res_lang(TransactionCase):
         ResLang = self.env['res.lang']
         es_ES = self.env.ref('base.lang_es')
         self.assertFalse(es_ES.active)
-        self.assertEqual(es_ES.url_code, 'es_ES')
+        self.assertEqual(es_ES.url_code, 'es-ES')
         es_419 = self.env.ref('base.lang_es_419')
         self.assertFalse(es_419.active)
         self.assertEqual(es_419.url_code, 'es')
 
         # Activating es_ES should give it the url_code 'es' (short version) and
-        # es_419 should have its url_code changed from 'es' to 'es_419'
+        # es_419 should have its url_code changed from 'es' to 'es-419'
         ResLang._activate_lang('es_ES')
-        self.assertEqual(es_419.url_code, 'es_419')
+        self.assertEqual(es_419.url_code, 'es-419')
         self.assertEqual(es_ES.url_code, 'es')
         # Activating es_419 should not set it's url_code back to 'es'
         ResLang._activate_lang('es_419')
-        self.assertEqual(es_419.url_code, 'es_419')
+        self.assertEqual(es_419.url_code, 'es-419')
         self.assertEqual(es_ES.url_code, 'es')
         # Disabling both 'es' languages and activating 'es_419' should set its
         # url_code back to 'es' since that short version is now 'available'
         (es_419 + es_ES).write({'active': False})
         ResLang._activate_lang('es_419')
         self.assertEqual(es_419.url_code, 'es')
-        self.assertEqual(es_ES.url_code, 'es_ES')
+        self.assertEqual(es_ES.url_code, 'es-ES')
 
         # Now, special case if one day a lang receive a short code as default
         # `code`, it's not the case as of today but there is plan to make it
@@ -155,14 +155,14 @@ class test_res_lang(TransactionCase):
         (es_419 + es_ES).write({'active': False})
         ResLang._activate_lang('es_419')
         self.assertEqual(es_419.url_code, 'es')
-        self.assertEqual(es_ES.url_code, 'es_ES')
+        self.assertEqual(es_ES.url_code, 'es-ES')
         es_419.active = False
         ResLang._activate_lang('es_ES')
         self.assertEqual(es_419.url_code, 'es')
         # es_ES can't have its url_code shortened because there is no
-        # possibility to replace 'es' url_code from 'es_419' if we change its
-        # code from 'es_419' to 'es' in the future
-        self.assertEqual(es_ES.url_code, 'es_ES')
+        # possibility to replace 'es' url_code from 'es-419' if we change its
+        # code from 'es-419' to 'es' in the future
+        self.assertEqual(es_ES.url_code, 'es-ES')
 
         # Another special case, /my is reserved to portal controller
         my_MM = ResLang._activate_lang('my_MM')

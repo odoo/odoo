@@ -76,7 +76,7 @@
                 <span t-if="not no_text"
                         t-attf-class="#{_txt_class}"
                         t-out="active_lang.name.split('/').pop()"/>
-                <span t-elif="codes" class="align-middle" t-out="active_lang.url_code.split('_').pop(0).upper()"/>
+                <span t-elif="codes" class="align-middle" t-out="active_lang.url_code.upper()"/>
             </button>
             <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
                 <t t-foreach="frontend_languages.values()" t-as="lg">
@@ -85,7 +85,7 @@
                     t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
                     role="menuitem">
                         <span t-if="not no_text" t-out="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
-                        <span t-elif="codes" t-out="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
+                        <span t-elif="codes" t-out="lg.url_code.upper()" t-attf-class="align-middle #{_txt_class}"/>
                     </a>
                 </t>
             </div>

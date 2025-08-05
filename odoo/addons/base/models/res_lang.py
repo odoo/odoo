@@ -362,7 +362,9 @@ class ResLang(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if not vals.get('url_code'):
-                vals['url_code'] = vals.get('iso_code') or vals['code']
+                url_code = vals.get('iso_code') or vals.get('code')
+                if url_code:
+                    vals['url_code'] = url_code.replace('_', '-')
         return super().create(vals_list)
 
     def write(self, vals):
@@ -385,7 +387,7 @@ class ResLang(models.Model):
         if vals.get('active'):
             # If we activate a lang, set it's url_code to the shortest version
             # if possible
-            for long_lang in self.filtered(lambda lang: '_' in lang.url_code):
+            for long_lang in self.filtered(lambda lang: '-' in lang.url_code):
                 short_code = long_lang.code.split('_')[0]
                 short_lang = self.with_context(active_test=False).search([
                     ('url_code', '=', short_code),
@@ -398,7 +400,7 @@ class ResLang(models.Model):
                     # This `and` is about not failing if it's the case one day.
                     and short_lang.code != short_code
                 ):
-                    short_lang.url_code = short_lang.code
+                    short_lang.url_code = short_lang.code.replace('_', '-')
                     long_lang.url_code = short_code
 
         return res

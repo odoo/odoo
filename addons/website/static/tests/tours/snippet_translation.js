@@ -54,7 +54,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select the language to Parseltongue",
-            trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=pa_GB]",
+            trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=pa-GB]",
             run: "click",
         },
         {
