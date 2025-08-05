@@ -17,24 +17,10 @@
         <menuitem
             id="menu_hr_employee_payroll"
             name="Employees"
+            action="open_view_employee_list_my"
             parent="menu_hr_root"
             groups="group_hr_user"
             sequence="3"/>
-
-            <menuitem
-                id="menu_hr_employee_user"
-                name="Employees"
-                action="open_view_employee_list_my"
-                parent="menu_hr_employee_payroll"
-                sequence="1"/>
-
-            <menuitem
-                id="menu_hr_employee_contract_templates"
-                name="Contract Templates"
-                action="action_hr_contract_templates"
-                parent="menu_hr_employee_payroll"
-                sequence="2"
-                groups="hr.group_hr_manager"/>
 
         <menuitem
             id="menu_hr_employee"
@@ -116,10 +102,19 @@
                     sequence="1"/>
 
                 <menuitem
+                    id="menu_hr_employee_contract_templates"
+                    name="Contract Templates"
+                    action="action_hr_contract_templates"
+                    parent="menu_config_recruitment"
+                    sequence="2"
+                    groups="hr.group_hr_manager"/>
+
+                <menuitem
                     id="menu_view_hr_contract_type"
                     action="hr_contract_type_action"
                     parent="menu_config_recruitment"
-                    sequence="2"
+                    sequence="3"
+                    groups="group_hr_user"
                     active="0"/>
 
     </data>
