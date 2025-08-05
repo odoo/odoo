@@ -23,7 +23,7 @@ const messagePatch = {
         this.hasSomeoneFetched = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                return this.thread?.channel_member_ids.some(
+                return this.thread?.channel?.channel_member_ids.some(
                     (m) => m.persona.notEq(this.author) && m.fetched_message_id?.id >= this.id
                 );
             },

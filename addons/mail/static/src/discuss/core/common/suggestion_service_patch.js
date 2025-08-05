@@ -40,7 +40,7 @@ const suggestionServicePatch = {
             // would be notified to the mentioned partner, so this prevents
             // from inadvertently leaking the private message to the
             // mentioned partner.
-            let partners = thread.channel_member_ids
+            let partners = (thread.channel?.channel_member_ids ?? [])
                 .filter((m) => m.partner_id)
                 .map((m) => m.partner_id);
             if (thread.channel_type === "channel") {
@@ -122,7 +122,7 @@ const suggestionServicePatch = {
         return Object.assign(super.sortPartnerSuggestionsContext(), {
             recentChatPartnerIds: this.store.getRecentChatPartnerIds(),
             memberPartnerIds: new Set(
-                thread?.channel_member_ids
+                thread?.channel?.channel_member_ids
                     .filter((member) => member.partner_id)
                     .map((member) => member.partner_id.id)
             ),
