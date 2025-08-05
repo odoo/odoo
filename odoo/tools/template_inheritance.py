@@ -210,15 +210,24 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                             node.addprevious(child)
                         node.getparent().remove(node)
                 elif mode == "inner":
-                    # Replace the entire content of an element
-                    for child in node:
-                        node.remove(child)
+                    # use a sentinel to keep the existing children nodes, so
+                    # that one can move existing children nodes inside the new
+                    # content of the node (with position="move")
+                    sentinel = E.sentinel()
+                    if len(node) > 0:
+                        node[0].addprevious(sentinel)
+                    else:
+                        node.append(sentinel)
+                    # fill the node with the spec *before* the sentinel
+                    # remove node.text before that operation, otherwise it will
+                    # be merged with the new content's text
                     node.text = None
-
-                    for child in spec:
-                        node.append(copy.deepcopy(child))
-                    node.text = spec.text
-
+                    add_stripped_items_before(sentinel, copy.deepcopy(spec), extract)
+                    # now remove the old content and the sentinel
+                    for child in reversed(node):
+                        node.remove(child)
+                        if child == sentinel:
+                            break
                 else:
                     raise ValueError(_lt("Invalid mode attribute: “%s”", mode))
             elif pos == 'attributes':

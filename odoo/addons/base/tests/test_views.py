@@ -690,6 +690,28 @@ class TestApplyInheritanceSpecs(ViewCase):
         self.View.apply_inheritance_specs(self.adv_arch, spec)
         self.assertEqual(self.adv_arch, expected)
 
+    def test_replace_inner_2(self):
+        spec = E.field(
+            "TEXT 4",
+            E.xpath(position="move", expr="//field[2]"),
+            "TEXT 5",
+            E.xpath(expr="//field[@name='subtarget']", position="move"),
+            "TEXT 6",
+            name="target", position="replace", mode="inner")
+
+        expected = E.form(
+            E.field(
+                "TEXT 4",
+                E.field(name="anothersubtarget"),
+                "TEXT 5",
+                E.field(name="subtarget"),
+                "TEXT 6",
+                name="target"),
+            string="Title")
+
+        self.View.apply_inheritance_specs(self.adv_arch, spec)
+        self.assertEqual(self.adv_arch, expected)
+
     def test_unpack_data(self):
         spec = E.data(
                 E.field(E.field(name="inserted 0"), name="target"),
