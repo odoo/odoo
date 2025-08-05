@@ -231,18 +231,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return vals
 
     def _get_invoice_payment_means_vals_list(self, invoice):
-        if invoice.move_type == 'out_invoice':
-            if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = (30, 'credit transfer')
-            else:
-                payment_means_code, payment_means_name = ('ZZZ', 'mutually defined')
-        else:
-            payment_means_code, payment_means_name = (57, 'standing agreement')
-
-        # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
-        # as we cannot deduce this information from the invoice
-        if invoice.partner_id.country_code == 'DK':
-            payment_means_code, payment_means_name = 1, 'unknown'
+        payment_means_code, payment_means_name = self._get_payment_means_code(invoice)
 
         vals = {
             'payment_means_code': payment_means_code,
@@ -1139,20 +1128,60 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                                  if vals['partner_shipping'] else None,
         }
 
+    def _get_payment_means_code(self, invoice):
+
+        # First we try to determine the payment means by a hardcoded mapping from the
+        # payment method xmlid to the payment means code (and name).
+        # TODO: check: maybe there is a function to get the xmlid already?
+        # TODO: maybe mapping the code would be good enough too?
+        payment_method = invoice.preferred_payment_method_line_id.payment_method_id
+        payment_method_data = self.env['ir.model.data'].search([
+            ('model', '=', 'account.payment.method'),
+            ('res_id', '=', payment_method.id),
+        ], limit=1) if payment_method else None
+        payment_method_xml_id = payment_method_data and f'{payment_method_data.module}.{payment_method_data.name}'
+        payment_means_code, payment_means_name = {
+            # TODO:
+            # 'account.account_payment_method_manual_in': (None, None),
+            # 'account.account_payment_method_manual_out': (None, None),
+            'account_edi_ubl_cii.account_payment_method_credit_card': (54, 'credit card'),
+            'account_edi_ubl_cii.account_payment_method_debit_card': (55, 'debit card'),
+            'account_edi_ubl_cii.account_payment_method_bankgiro_in': (56, 'bankgiro'),
+            'account_edi_ubl_cii.account_payment_method_bankgiro_out': (56, 'bankgiro'),
+            'account_edi_ubl_cii.account_payment_method_standing_agreement_in': (57, 'standing agreement'),
+            'account_edi_ubl_cii.account_payment_method_standing_agreement_out': (57, 'standing agreement'),
+            'account_edi_ubl_cii.account_payment_method_sepa_credit_transfer': (58, 'SEPA credit transfer'),
+            # 'account_edi_ubl_cii.account_payment_method_sepa_direct_debit': (59, 'SEPA direct debit'),
+            'account_sepa_direct_debit.payment_method_sdd': (59, 'SEPA direct debit'),
+            'payment_sepa_direct_debit.payment_method_sepa_direct_debit': (59, 'SEPA direct debit'),
+        }.get(payment_method_xml_id, (None, None))
+        # TODO: https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/DE-R-019/
+        #     Maybe we should check the account for SEPA rules
+        #     Maybe also for bankgiro
+
+        if not payment_means_code:
+            # Fallback in case we can not determine the payment means from the payment methods.
+            # This i.e. happens for user defined payment methods.
+            if invoice.move_type == 'out_invoice':
+                if invoice.partner_bank_id:
+                    payment_means_code, payment_means_name = 30, 'credit transfer'
+                else:
+                    payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
+            else:
+                payment_means_code, payment_means_name = 57, 'standing agreement'
+
+        # In Denmark only some payment means codes are allowed; see rule (DK-R-005):
+        # https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/DK-R-005/
+        # Instead of using a forbidden code we use 1 ("unknown") for now.
+        payment_means_codes_DK = {1, 10, 31, 42, 48, 49, 50, 58, 59, 93, 97}
+        if invoice.partner_id.country_code == 'DK' and payment_means_code not in payment_means_codes_DK:
+            payment_means_code, payment_means_name = 1, 'unknown'
+
+        return payment_means_code, payment_means_name
+
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         invoice = vals['invoice']
-        if invoice.move_type == 'out_invoice':
-            if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = 30, 'credit transfer'
-            else:
-                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
-        else:
-            payment_means_code, payment_means_name = 57, 'standing agreement'
-
-        # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
-        # as we cannot deduce this information from the invoice
-        if invoice.partner_id.country_code == 'DK':
-            payment_means_code, payment_means_name = 1, 'unknown'
+        payment_means_code, payment_means_name = self._get_payment_means_code(invoice)
 
         document_node['cac:PaymentMeans'] = {
             'cbc:PaymentMeansCode': {
