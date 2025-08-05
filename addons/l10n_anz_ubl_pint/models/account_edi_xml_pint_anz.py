@@ -24,10 +24,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_anz.xml"
 
-    def _get_customization_ids(self):
-        vals = super()._get_customization_ids()
-        vals['pint_anz'] = 'urn:peppol:pint:billing-1@aunz-1'
-        return vals
+    def _get_customization_id(self):
+        return 'urn:peppol:pint:billing-1@aunz-1'
 
     def _get_tax_category_code(self, customer, supplier, tax):
         """ See https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_category_code """
@@ -47,7 +45,6 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         super()._add_invoice_header_nodes(document_node, vals)
 
         # see https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_identifying_the_a_nz_billing_specialisation
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['pint_anz']}
         document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
 
         invoice = vals['invoice']

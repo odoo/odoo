@@ -53,10 +53,12 @@ class AccountEdiXmlPint_My(models.AbstractModel):
     # EXPORT: Templates
     # -------------------------------------------------------------------------
 
+    def _get_customization_id(self):
+        return 'urn:peppol:pint:billing-1@my-1'
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['pint_my']}
         document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
 
         invoice = vals['invoice']
