@@ -10,7 +10,7 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
     static basedOnOptions = [
         ["actual_demand", "Actual Demand"],
         ["one_week", "Last 7 days"],
-        ["last_30_days", "Last 30 days"],
+        ["30_days", "Last 30 days"],
         ["three_months", "Last 3 months"],
         ["one_year", "Last 12 months"],
         ["last_year", "Same month last year"],
@@ -23,6 +23,7 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
         super.setup();
         this.suggest = useState(useEnv().suggest);
         this.addAllProducts = useEnv().addAllProducts;
+        this.displaySuggest = useEnv().suggest.poState === "draft";
         this.tooltipTitle = _t(
             "Get recommendations of products to purchase at %(vendorName)s based on stock on hand, incoming quantities, " +
                 "and expected sales volumes.\n\n Set a reference period to estimate sales, and use the percentage " +
