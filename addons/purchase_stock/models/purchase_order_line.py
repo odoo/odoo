@@ -307,8 +307,14 @@ class PurchaseOrderLine(models.Model):
     def _prepare_account_move_line(self, move=False):
         res = super()._prepare_account_move_line(move=move)
         if 'balance' not in res:
+            total_wo_tax = self.taxes_id.with_context(round=False, round_base=False).compute_all(
+                self.price_unit_discounted,
+                currency=self.order_id.currency_id,
+                quantity=self.qty_to_invoice,
+                product=self.product_id
+            )['total_excluded']
             res['balance'] = self.currency_id._convert(
-                self.price_unit_discounted * self.qty_to_invoice,
+                total_wo_tax,
                 self.company_id.currency_id,
                 round=False,
             )

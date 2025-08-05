@@ -882,3 +882,60 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             ),
             places=self.env.company.currency_id.decimal_places,
         )
+
+    def test_foreign_bill_tax_included(self):
+        """ Test the bill values with a PO having tax included in price """
+        currency = self.env['res.currency'].create({
+            'name': "Test",
+            'symbol': 'T',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2025-01-01', 'rate': 1.5}),
+            ],
+        })
+        tax_price_include = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'payment_term_id': self.pay_terms_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_id_1.id,
+                'price_unit': 100.0,
+                'product_qty': 3,
+                'taxes_id': [Command.set(tax_price_include.ids)],
+            })],
+        })
+        po.button_confirm()
+
+        picking = po.picking_ids[0]
+        picking.move_line_ids.quantity = 3.0
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+        po.action_create_invoice()
+
+        self.assertRecordValues(po.invoice_ids.line_ids.sorted('tax_line_id'), [
+            {
+                'amount_currency': 272.73,
+                'credit': 0,
+                'debit': 181.82,
+            },
+            {
+                'amount_currency': -300.0,
+                'credit': 200,
+                'debit': 0,
+            },
+            {
+                'amount_currency': 27.27,
+                'credit': 0,
+                'debit': 18.18,
+            },
+        ])
