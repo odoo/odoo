@@ -8,6 +8,7 @@ import { useService } from '@web/core/utils/hooks';
 import { onWillStart } from "@odoo/owl";
 
 
+// DONE
 export class SkillsListRenderer extends CommonSkillsListRenderer {
     static template = "hr_skills.SkillsListRenderer";
     setup() {

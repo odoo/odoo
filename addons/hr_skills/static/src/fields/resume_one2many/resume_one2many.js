@@ -7,6 +7,7 @@ import { formatDate } from "@web/core/l10n/dates";
 import { SkillsX2ManyField, skillsX2ManyField } from "../skills_one2many/skills_one2many";
 import { CommonSkillsListRenderer } from "../../views/skills_list_renderer";
 
+// DONE
 export class ResumeListRenderer extends CommonSkillsListRenderer {
     static template = "hr_skills.ResumeListRenderer";
     static rowsTemplate = "hr_skills.ResumeListRenderer.Rows";

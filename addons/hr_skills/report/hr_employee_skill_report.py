@@ -3,6 +3,7 @@
 from odoo import fields, models, tools
 
 
+# DONE
 class HrEmployeeSkillReport(models.BaseModel):
     _name = 'hr.employee.skill.report'
     _auto = False

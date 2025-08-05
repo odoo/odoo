@@ -9,6 +9,7 @@ from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
+# DONE
 class TestEmployeeSkills(TransactionCase):
 
     @classmethod

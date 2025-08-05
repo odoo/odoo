@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { pivotView } from "@web/views/pivot/pivot_view";
 import { SkillsPivotModel } from "./skills_pivot_model";
 
+// DONE
 const viewRegistry = registry.category("views");
 
 export const skillsPivotModel = {

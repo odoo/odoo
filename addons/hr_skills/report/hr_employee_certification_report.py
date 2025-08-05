@@ -3,6 +3,7 @@
 from odoo import fields, models, tools
 
 
+# DONE
 class HrEmployeeCertificationReport(models.BaseModel):
     _name = 'hr.employee.certification.report'
     _auto = False

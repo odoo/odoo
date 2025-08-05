@@ -1,5 +1,6 @@
 import { PivotModel } from "@web/views/pivot/pivot_model";
 
+// DONE
 export class SkillsPivotModel extends PivotModel {
     setup() {
         super.setup(...arguments);

@@ -81,6 +81,13 @@ class HrEmployeePublic(models.Model):
     # Crap
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 
+    # Skills
+    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
+    employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",
+        domain=[('skill_type_id.active', '=', True)])
+    current_employee_skill_ids = fields.One2many('hr.employee.skill', related='employee_id.current_employee_skill_ids')
+    certification_ids = fields.One2many('hr.employee.skill', related='employee_id.certification_ids')
+
     def _compute_from_employee(self, field_names):
         if isinstance(field_names, str):
             field_names = [field_names]

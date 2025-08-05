@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-
+    <!-- DONE -->
     <t t-name="hr_skills.SkillsTagsList" t-inherit="web.TagsList">
         <xpath expr='//span[hasclass("o_tag")]' position="attributes">
             <attribute name="t-attf-class" add="{{ getTextStyle(tag) ? 'border border-2' : '' }}" separator=" "/>

@@ -7,7 +7,7 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
-
+# DONE
 class HrIndividualSkillMixin(models.AbstractModel):
     _name = 'hr.individual.skill.mixin'
     _description = "Skill level"

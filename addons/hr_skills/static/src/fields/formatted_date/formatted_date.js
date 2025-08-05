@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
+// DONE
 export class FormattedDate extends Component {
     static template = "hr_skills.FormattedDate";
     static props = {

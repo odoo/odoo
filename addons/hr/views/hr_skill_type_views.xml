@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="hr_skill_type_action" model="ir.actions.act_window">
+        <field name="name">Skill Types</field>
+        <field name="res_model">hr.skill.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hr_skill_type_view_search" model="ir.ui.view">
+        <field name="name">hr.skill.type.search</field>
+        <field name="model">hr.skill.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Skill Type">
+                <field name="name" string="Skill Types"/>
+                <field name="skill_ids"/>
+                <field name="skill_level_ids"/>
+                <field name="active" invisible="1"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_skill_type_view_tree" model="ir.ui.view">
+        <field name="name">hr.skill.type.list</field>
+        <field name="model">hr.skill.type</field>
+        <field name="arch" type="xml">
+            <list string="Skill Types">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" string="Skill Types"/>
+                <field name="color" widget="color_picker" optional="show"/>
+                <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="skill_level_ids" widget="many2many_tags_skills"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_type_view_form" model="ir.ui.view">
+        <field name="name">hr.skill.type.form</field>
+        <field name="model">hr.skill.type</field>
+        <field name="arch" type="xml">
+            <form string="Skill Type">
+                <field name="id" invisible="1"/>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" string="Skill Type"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Languages" required="True"/>
+                            <field name="active" invisible="1"/>
+                        </h1>
+                        <group name="name">
+                            <field name="color" widget="color_picker"/>
+                            <field name="is_certification" widget="boolean_toggle" options="{'autosave': False}"/>
+                        </group>
+                    </div>
+                    <group string="Skills">
+                    </group>
+                    <field name="skill_ids" nolabel="1" context="{'default_skill_type_id': id}">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="name"/>
+                        </list>
+                    </field>
+                    <group string="Levels">
+                    </group>
+                    <field name="skill_level_ids" nolabel="1" context="{'default_skill_type_id': id}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- DONE -->
     <record id="hr_employee_view_search" model="ir.ui.view">
         <field name="name">hr.employee.skill.search</field>
         <field name="model">hr.employee</field>
@@ -17,6 +18,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_employee_public_view_search" model="ir.ui.view">
         <field name="name">hr.employee.public.skill.search</field>
         <field name="model">hr.employee.public</field>
@@ -29,6 +31,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="resume_line_view_form" model="ir.ui.view">
         <field name="name">hr.resume.line.form</field>
         <field name="model">hr.resume.line</field>
@@ -62,6 +65,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_employee_view_form" model="ir.ui.view">
         <field name="name">hr.employee.view.form.inherit.resume</field>
         <field name="model">hr.employee</field>
@@ -123,7 +127,7 @@
         </field>
     </record>
 
-
+<!-- DONE -->
     <record id="hr_employee_public_view_form_inherit" model="ir.ui.view">
         <field name="name">hr.employee.public.view.form.inherit.resume</field>
         <field name="model">hr.employee.public</field>
@@ -189,6 +193,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="res_users_view_form" model="ir.ui.view">
         <field name="name">hr.user.preferences.form.inherit.hr.skills</field>
         <field name="model">res.users</field>
@@ -251,6 +256,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_resume_line_type_tree_view" model="ir.ui.view">
         <field name="name">hr.resume.line.type.list.view</field>
         <field name="model">hr.resume.line.type</field>
@@ -262,12 +268,14 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_resume_type_action" model="ir.actions.act_window">
         <field name="name">Resume Line Types</field>
         <field name="res_model">hr.resume.line.type</field>
         <field name="view_mode">list,form</field>
     </record>
 
+    <!-- DONE -->
     <menuitem
             id="menu_human_resources_configuration_resume"
             name="Resume"
@@ -275,6 +283,7 @@
             sequence="15"
             groups="base.group_no_one"/>
 
+    <!-- DONE -->
     <menuitem
         id="hr_resume_line_type_menu"
         name="Line Types"
@@ -285,12 +294,14 @@
 
     <!-- Skills -->
 
+    <!-- DONE -->
     <record id="hr_skill_type_action" model="ir.actions.act_window">
         <field name="name">Skill Types</field>
         <field name="res_model">hr.skill.type</field>
         <field name="view_mode">list,form</field>
     </record>
 
+    <!-- DONE -->
     <record id="employee_skill_level_view_tree" model="ir.ui.view">
         <field name="name">hr.skill.level.list</field>
         <field name="model">hr.skill.level</field>
@@ -304,6 +315,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="employee_skill_view_tree" model="ir.ui.view">
         <field name="name">hr.skill.list</field>
         <field name="model">hr.skill</field>
@@ -315,6 +327,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="employee_skill_level_view_form" model="ir.ui.view">
         <field name="name">hr.skill.level.form</field>
         <field name="model">hr.skill.level</field>
@@ -330,6 +343,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="employee_skill_view_form" model="ir.ui.view">
         <field name="name">hr.employees.skill.form</field>
         <field name="model">hr.employee.skill</field>
@@ -363,6 +377,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="employee_skill_view_inherit_certificate_form" model="ir.ui.view">
         <field name="name">hr.employees.skill.inherit.certificate.form</field>
         <field name="model">hr.employee.skill</field>
@@ -376,6 +391,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_skill_view_form" model="ir.ui.view">
         <field name="name">hr.skill.form</field>
         <field name="model">hr.skill</field>
@@ -391,6 +407,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_skill_view_search" model="ir.ui.view">
         <field name="name">hr.skill.view.search</field>
         <field name="model">hr.skill</field>
@@ -406,6 +423,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
      <record id="hr_skill_type_view_search" model="ir.ui.view">
         <field name="name">hr.skill.type.search</field>
         <field name="model">hr.skill.type</field>
@@ -421,6 +439,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_skill_type_view_tree" model="ir.ui.view">
         <field name="name">hr.skill.type.list</field>
         <field name="model">hr.skill.type</field>
@@ -435,6 +454,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_employee_skill_type_view_form" model="ir.ui.view">
         <field name="name">hr.skill.type.form</field>
         <field name="model">hr.skill.type</field>
@@ -470,6 +490,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_employee_skill_view_list" model="ir.ui.view">
         <field name="name">hr.employees.skill.list</field>
         <field name="model">hr.employee.skill</field>
@@ -495,6 +516,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="hr_employee_skill_view_search" model="ir.ui.view">
         <field name="name">hr.employee.skill.view.search</field>
         <field name="model">hr.employee.skill</field>
@@ -515,6 +537,7 @@
         </field>
     </record>
 
+    <!-- DONE -->
     <record id="action_hr_employee_skill_certification" model="ir.actions.act_window">
         <field name="name">Certifications</field>
         <field name="res_model">hr.employee.skill</field>
@@ -527,6 +550,7 @@
             (0, 0, {'view_mode': 'form', 'view_id': ref('employee_skill_view_inherit_certificate_form')})]"/>
     </record>
 
+    <!-- DONE -->
     <menuitem
         id="hr_skill_type_menu"
         name="Skill Types"
@@ -535,12 +559,14 @@
         sequence="7"
         groups="hr.group_hr_user"/>
 
+        <!-- DONE -->
         <menuitem
         id="hr_employee_skill_report_menu"
         name="Skills"
         parent="hr.hr_menu_hr_reports"
         sequence="15"/>
 
+    <!-- DONE -->
     <menuitem
         id="hr_skill_learning_menu"
         name="Learning"
@@ -548,6 +574,7 @@
         sequence="93"
         groups="hr.group_hr_user"/>
 
+    <!-- DONE -->
         <menuitem
             id="hr_certification_menu"
             name="Certifications"

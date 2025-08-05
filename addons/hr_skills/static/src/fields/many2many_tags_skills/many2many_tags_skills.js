@@ -7,6 +7,7 @@ import {
 import { SkillsTagList } from "../hr_skills_tags_list/hr_skills_tags_list";
 
 
+// DONE
 class SkillsMany2ManyTags extends Many2ManyTagsField {
     static components = { ...Many2ManyTagsField.components, TagsList: SkillsTagList };
     getTagProps(record) {

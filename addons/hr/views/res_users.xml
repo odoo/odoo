@@ -108,6 +108,58 @@
                     </group>
                 </notebook>
                 <notebook position="inside">
+                    <page name="skills_resume" string="Resume">
+                        <div class="row">
+                            <field name="employee_id" invisible="1"/> <!-- For skills_one2many and resume_one2many -->
+                            <div class="o_hr_skills_group o_group_resume col-lg-6 d-flex margin-left: 0.1em">
+                                <!-- This field uses a custom list view rendered by the 'resume_one2many' widget.
+                                    Adding fields in the list arch below makes them accessible to the widget
+                                -->
+                                <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many" readonly="not can_edit">
+                                    <list>
+                                        <field name="line_type_id"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="date_start"/>
+                                        <field name="date_end"/>
+                                        <field name="display_type" invisible="1"/>
+                                    </list>
+                                </field>
+                            </div>
+                            <div class="o_hr_skills_group o_group_skills col-lg-5 d-flex flex-column">
+                                <field mode="list" name="current_employee_skill_ids"  widget="skills_one2many" context="{'no_timeline': not employee_skill_ids}" readonly="not can_edit">
+                                    <list
+                                        decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
+                                        decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
+                                        decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
+                                        <field name="skill_type_id" optional="hidden"/>
+                                        <field name="skill_id"/>
+                                        <field name="skill_level_id"/>
+                                        <field name="level_progress" widget="progressbar"/>
+                                        <field name="valid_to" column_invisible="1"/>
+                                    </list>
+                                </field>
+                            </div>
+                        </div>
+                    </page>
+                    <page name="certification" string="Certifications">
+                        <field name="certification_ids" mode="list" nolabel="1" readonly="not can_edit" string="Certifications" context="{'form_view_ref': 'hr.employee_skill_view_inherit_certificate_form', 'dialog_size': 'large', 'certificate_skill': True}">
+                            <list
+                                decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')">
+                                <field name="skill_id" width="300" string="Certification"/>
+                                <field name="valid_from" string="From" widget="formatted_date" options="{
+                                    'month_format': 'short',
+                                }"/>
+                                <field name="valid_to" string="To" widget="formatted_date" options="{
+                                    'month_format': 'short',
+                                    'color': {
+                                        'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt; context_today().strftime(\'%Y-%m-%d\')',
+                                        'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
+                                    }
+                                }"/>
+                            </list>
+                        </field>
+                    </page>
                     <page name="contract_information" string="Work Information">
                         <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                             <div id="o_work_employee_main" class="flex-grow-1">

@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="employee_skill_view_form" model="ir.ui.view">
+        <field name="name">hr.employees.skill.form</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="arch" type="xml">
+            <form string="Skills" class="o_hr_skills_dialog_form">
+                <sheet>
+                    <group>
+                        <field name="employee_id" widget="many2one_avatar_employee" invisible="not context.get('show_employee', False)"/>
+                        <field name="skill_type_id" widget="selection_badge" string="Category"/>
+                        <field name="skill_id" widget="selection_badge"
+                            context="{'default_skill_type_id': skill_type_id}"
+                            domain="[('skill_type_id', '=', skill_type_id)]"
+                            invisible="not skill_type_id"/>
+                        <field name="skill_level_id"
+                            readonly="not skill_id" widget="selection_badge"
+                            invisible="levels_count &lt;= 1"
+                            options="{'no_open': True, 'no_create': True}"
+                            context="{'default_skill_type_id': skill_type_id}"/>
+                        <label for="valid_from" string="Validity" class="me-1" invisible="not is_certification"/>
+                        <div class="d-flex flex-row" invisible="not is_certification">
+                            <field name="valid_from" nolabel="1" class="w-25" required="is_certification"/>
+                            <label for="valid_to" string="To" class="mx-1"/>
+                            <field name="valid_to" placeholder="indefinite" nolabel="1" class="w-25"/>
+                        </div>
+                    </group>
+                    <div class="alert alert-warning ps-3" role="alert" invisible="not display_warning_message">
+                        The end date must be after the start date.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_skill_view_inherit_certificate_form" model="ir.ui.view">
+        <field name="name">hr.employees.skill.inherit.certificate.form</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="inherit_id" ref="employee_skill_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="skill_type_id" position="attributes">
+                <attribute name="domain">[('is_certification', '=', True)]</attribute>
+                <attribute name="invisible">certification_skill_type_count &lt;= 1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_view_list" model="ir.ui.view">
+        <field name="name">hr.employees.skill.list</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="arch" type="xml">
+            <list string="Certification"
+                action="open_hr_employee_skill_modal"
+                type="object"
+                create="0"
+                expand="1"
+                decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
+                decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
+                decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
+                <header>
+                    <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always"/>
+                </header>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="skill_id" string="Certification"/>
+                <field name="skill_level_id" optional="hide"/>
+                <field name="skill_type_id" optional="hide"/>
+                <field name="valid_from" string="From" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
+                <field name="valid_to" string="To" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.skill.view.search</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="arch" type="xml">
+            <search>
+                <field string="Certification" name="skill_id"/>
+                <field name="employee_id"/>
+                <filter string="Valid certification" name="valid_certification"
+                    domain="[
+                        '|',
+                            ('valid_to', '=', False),
+                            ('valid_to', '&gt;', 'today')
+                    ]"/>
+                <filter string='Certification' name="group_by_certification"  context="{'group_by': 'skill_id'}"/>
+                <filter string='Type' name="group_by_type"  context="{'group_by': 'skill_type_id'}"/>
+                <filter string='Employee' name="group_by_employee" context="{'group_by': 'employee_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_employee_skill_certification" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">hr.employee.skill</field>
+        <field name="path">certifications</field>
+        <field name="domain">[('is_certification', '=', True)]</field>
+        <field name="context">{'show_employee': True, 'search_default_group_by_type': 1}</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': False}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('employee_skill_view_inherit_certificate_form')})]"/>
+    </record>
+</odoo>

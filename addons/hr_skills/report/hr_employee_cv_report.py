@@ -5,6 +5,7 @@ from collections import defaultdict
 from odoo import _, models
 
 
+# DONE
 class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
     _name = 'report.hr_skills.report_employee_cv'
     _description = 'Employee Resume'

@@ -2,7 +2,7 @@
 from collections import defaultdict
 from odoo import fields, models
 
-
+# DONE
 class HrEmployeeSkill(models.Model):
     _name = 'hr.employee.skill'
     _inherit = 'hr.individual.skill.mixin'

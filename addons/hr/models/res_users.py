@@ -160,6 +160,12 @@ class ResUsers(models.Model):
     is_system = fields.Boolean(compute="_compute_is_system")
     is_hr_user = fields.Boolean(compute='_compute_is_hr_user')
 
+    # Skills
+    resume_line_ids = fields.One2many(related='employee_id.resume_line_ids', readonly=False)
+    employee_skill_ids = fields.One2many(related='employee_id.employee_skill_ids')
+    current_employee_skill_ids = fields.One2many('hr.employee.skill', related="employee_id.current_employee_skill_ids", readonly=False)
+    certification_ids = fields.One2many('hr.employee.skill', related="employee_id.certification_ids", readonly=False)
+
     @api.depends_context('uid')
     def _compute_is_system(self):
         self.is_system = self.env.user._is_system()
@@ -383,3 +389,29 @@ class ResUsers(models.Model):
             employee_fields = self.employee_ids._get_store_avatar_card_fields(target)
             avatar_card_fields.append(Store.Many("employee_ids", employee_fields, mode="ADD"))
         return avatar_card_fields
+
+    # Skills
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + [
+            'resume_line_ids',
+            'employee_skill_ids',
+            'current_employee_skill_ids',
+            'certification_ids',
+        ]
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + [
+            'resume_line_ids',
+        ]
+
+    def write(self, vals):
+        if 'current_employee_skill_ids' in vals or 'certification_ids' in vals or 'employee_skill_ids' in vals:
+            vals['employee_skill_ids'] = vals.pop('current_employee_skill_ids', []) + vals.pop('certification_ids', []) + vals.get('employee_skill_ids', [])
+
+        # Must be called directly on employee_id to prevent SET values in vals from causing unintended behavior
+        if 'employee_skill_ids' in vals:
+            self.employee_id.write({'employee_skill_ids': vals.pop("employee_skill_ids")})
+        res = super().write(vals)
+        return res

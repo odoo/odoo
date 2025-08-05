@@ -4,6 +4,7 @@ import { HrEmployeeSkill } from "./mock_server/mock_models/hr_employee_skill";
 import { HrSkill } from "./mock_server/mock_models/hr_skill";
 import { M2oAvatarEmployee } from "./mock_server/mock_models/m2o_avatar_employee";
 
+// DONE
 export function defineHrSkillModels() {
     return defineModels(hrSkillModels);
 }

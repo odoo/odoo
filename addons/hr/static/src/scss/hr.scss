@@ -77,3 +77,51 @@
         max-width: #{$size}rem!important;
     }
 }
+
+.o_hr_skills_group {
+    padding: 0 calc(var(--gutter-x) * 1)!important;
+    &:first-child {
+        padding-left: calc(var(--gutter-x) * .5)!important;
+    }
+    &:last-child {
+        padding-right: calc(var(--gutter-x) * .5)!important;
+    }
+    .o_list_renderer {
+        overflow-x: hidden!important;
+    }
+}
+
+.o_hr_skill_type_form {
+    th[data-name="level_progress"] div span {
+        text-align: left !important;
+    }
+}
+
+.o_list_renderer {
+    .o_list_table {
+        .o_data_row:not(.o_selected_row) .o_data_cell {
+            &.o_boolean_toggle_load_cell {
+                > .o_field_widget:not(.o_readonly_modifier) .form-check {
+                    pointer-events: auto;
+                }
+            }
+        }
+    }
+}
+
+// hide expand button when the form view is readonly
+.o_hr_skills_dialog_form:has(main > div.o_form_readonly) > header > button.o_expand_button {
+    display: None !important;
+}
+
+.o_skill_level_tree{
+    .o_list_renderer .o_list_table thead .o_list_number_th{
+        text-align: start !important;
+    }
+    .o_progressbar_value .o_input {
+        width: 0 !important;
+    }
+    .flex-row-reverse {
+        flex-direction: inherit !important;
+    }
+}

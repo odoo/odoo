@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="employee_skill_view_tree" model="ir.ui.view">
+        <field name="name">hr.skill.list</field>
+        <field name="model">hr.skill</field>
+        <field name="arch" type="xml">
+            <list string="Skill Levels">
+                <field name="name"/>
+                <field name="skill_type_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_skill_view_form" model="ir.ui.view">
+        <field name="name">hr.skill.form</field>
+        <field name="model">hr.skill</field>
+        <field name="arch" type="xml">
+            <form string="Skills">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="skill_type_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_skill_view_search" model="ir.ui.view">
+        <field name="name">hr.skill.view.search</field>
+        <field name="model">hr.skill</field>
+        <field name="arch" type="xml">
+            <search string="Search Skill">
+                <field name="name" string="Skill"/>
+                <field name="skill_type_id" string="Skill Type"/>
+                <separator/>
+                <group string="Group By...">
+                        <filter string="Skill Type" name="group_skill_type_id" domain="[]" context="{'group_by':'skill_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -5,7 +5,7 @@ from random import randint
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-
+# DONE
 class HrSkillType(models.Model):
     _name = 'hr.skill.type'
     _description = "Skill Type"

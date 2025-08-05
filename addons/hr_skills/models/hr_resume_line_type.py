@@ -3,7 +3,7 @@
 
 from odoo import fields, models
 
-
+# DONE
 class HrResumeLineType(models.Model):
     _name = 'hr.resume.line.type'
     _description = "Type of a resume line"

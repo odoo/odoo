@@ -2,7 +2,7 @@
 
 from odoo import fields, models
 
-
+# DONE
 class HrEmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 

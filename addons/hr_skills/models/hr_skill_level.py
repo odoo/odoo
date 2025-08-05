@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 
-
+# DONE
 class HrSkillLevel(models.Model):
     _name = 'hr.skill.level'
     _description = "Skill Level"

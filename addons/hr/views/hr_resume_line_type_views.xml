@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="hr_resume_line_type_tree_view" model="ir.ui.view">
+        <field name="name">hr.resume.line.type.list.view</field>
+        <field name="model">hr.resume.line.type</field>
+        <field name="arch" type="xml">
+            <list name="Resume Line Types" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_resume_type_action" model="ir.actions.act_window">
+        <field name="name">Resume Line Types</field>
+        <field name="res_model">hr.resume.line.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

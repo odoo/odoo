@@ -4,6 +4,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryAttribute } from "@odoo/hoot-dom";
 import { defineHrSkillModels } from "@hr_skills/../tests/hr_skills_test_helpers";
 
+// DONE
 describe.current.tags("desktop");
 defineHrSkillModels();
 

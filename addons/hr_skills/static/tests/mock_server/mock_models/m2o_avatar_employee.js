@@ -1,5 +1,6 @@
 import { fields, models } from "@web/../tests/web_test_helpers";
 
+// DONE
 export class M2oAvatarEmployee extends models.Model {
     _name = "m2o.avatar.employee";
 

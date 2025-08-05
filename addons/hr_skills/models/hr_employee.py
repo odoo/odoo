@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 from odoo.tools import convert
 
-
+# DONE
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 

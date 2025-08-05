@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
 
-
+# DONE
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
