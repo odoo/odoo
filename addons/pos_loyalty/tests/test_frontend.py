@@ -1170,6 +1170,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'points': 100,
         })
 
+        self.main_pos_config.write({'use_pricelist': True})
         self.main_pos_config.open_ui()
         self.start_pos_tour("PosLoyaltyTour6")
 
