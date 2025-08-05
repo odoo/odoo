@@ -94,6 +94,7 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
             pyEnv[resModel]._fields
         ),
         name: "Partner Pivot",
+        actionXmlId: params.actionXmlId,
     };
     model.dispatch("ADD_PIVOT", {
         pivotId,
@@ -121,7 +122,11 @@ export async function createSpreadsheetWithPivot(params = {}) {
     });
     const arch = params.arch || getBasicPivotArch();
     const pivotId = "PIVOT#1";
-    await insertPivotInSpreadsheet(model, pivotId, { arch, pivotType: params.pivotType });
+    await insertPivotInSpreadsheet(model, pivotId, {
+        arch,
+        pivotType: params.pivotType,
+        actionXmlId: params.actionXmlId,
+    });
     await waitForDataLoaded(model);
     return { model, env, pivotId };
 }

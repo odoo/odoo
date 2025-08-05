@@ -59642,6 +59642,7 @@ sidePanelRegistry.add("ChartPanel", {
         if (!chartId || !getters.isChartDefined(chartId)) {
             return { isOpen: false };
         }
+        console.log("Opening chart panel for chartId", chartId);
         return { isOpen: true, props: { chartId } };
     },
 });

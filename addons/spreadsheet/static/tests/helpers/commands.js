@@ -330,6 +330,14 @@ export function createSheet(model, data = {}) {
     });
 }
 
+export function deleteSheet(model, sheetId) {
+    const sheetName = model.getters.tryGetSheet(sheetId)?.name ?? "SheetName";
+    return model.dispatch("DELETE_SHEET", {
+        sheetId,
+        sheetName,
+    });
+}
+
 export function createCarousel(model, data = { items: [] }, carouselId, sheetId, figureData = {}) {
     return model.dispatch("CREATE_CAROUSEL", {
         figureId: carouselId || model.uuidGenerator.smallUuid(),

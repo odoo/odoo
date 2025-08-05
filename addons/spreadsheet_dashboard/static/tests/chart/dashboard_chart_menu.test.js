@@ -9,7 +9,7 @@ import {
     createGaugeChart,
 } from "@spreadsheet/../tests/helpers/commands";
 import { getBasicData } from "@spreadsheet/../tests/helpers/data";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { mountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
 import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { contains, mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -26,7 +26,7 @@ let serverData = /** @type {ServerData} */ ({});
 function mockActionService(doActionStep) {
     const fakeActionService = {
         doAction: async (actionRequest, options = {}) => {
-            if (actionRequest === "menuAction2") {
+            if (actionRequest.xml_id === "menuAction2") {
                 expect.step(doActionStep);
             }
         },
@@ -45,6 +45,16 @@ beforeEach(() => {
             actionID: "menuAction2",
         },
     };
+    serverData.actions = {
+        menuAction2: {
+            id: 100,
+            xml_id: "menuAction2",
+            name: "menuAction2",
+            res_model: "ir.ui.menu",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+        },
+    };
     serverData.models = {
         ...getBasicData(),
         "ir.ui.menu": {
@@ -54,19 +64,25 @@ beforeEach(() => {
     };
 });
 
-test("Click on chart in dashboard mode redirect to the odoo menu", async function () {
+test("Click on chart in dashboard mode redirect to the datasource action", async function () {
     const doActionStep = "doAction";
     mockActionService(doActionStep);
-    const { model } = await createModelWithDataSource({ serverData });
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        serverData,
+        actionXmlId: "menuAction2",
+    });
     const fixture = await mountSpreadsheet(model);
 
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+    model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
-        odooMenuId: 2,
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
     });
-    const chartMenu = model.getters.getChartOdooMenu(chartId);
-    expect(chartMenu.id).toBe(2, { message: "Odoo menu is linked to chart" });
+    const chartMenu = model.getters.getChartOdooLink(chartId);
+    expect(chartMenu).toEqual(
+        { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
+        { message: "Odoo menu is linked to chart" }
+    );
     await animationFrame();
 
     await click(fixture.querySelector(".o-chart-container canvas"));
@@ -91,21 +107,29 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
 
     mockService("action", {
         doAction: async (actionRequest, options = {}) => {
-            if (actionRequest === "menuAction2") {
-                expect.step("chartMenuRedirect");
-            } else if (
+            if (
                 actionRequest.type === "ir.actions.act_window" &&
                 actionRequest.res_model === "partner"
             ) {
-                expect.step("chartElementRedirect");
+                if (actionRequest.xml_id === "menuAction2") {
+                    expect.step("chartMenuRedirect");
+                } else {
+                    expect.step("chartElementRedirect"); // no relation to the related ds
+                }
             }
         },
     });
 
-    const { model } = await createModelWithDataSource({ serverData });
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        serverData,
+        actionXmlId: "menuAction2",
+    });
     const fixture = await mountSpreadsheet(model);
     const chartId = insertChartInSpreadsheet(model, "odoo_pie");
-    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId, odooMenuId: 2 });
+    model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
+        chartId,
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
+    });
     await animationFrame();
     model.updateMode("dashboard");
     await animationFrame();
@@ -114,8 +138,8 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
     const chartCanvas = fixture.querySelector(".o-chart-container canvas");
     const canvasRect = chartCanvas.getBoundingClientRect();
     const canvasCenter = {
-        x: canvasRect.left + canvasRect.width / 2,
-        y: canvasRect.top + canvasRect.height / 2,
+        x: canvasRect.left + canvasRect.width / 2 - 5,
+        y: canvasRect.top + canvasRect.height / 2 - 5,
     };
     await click(".o-chart-container canvas", { position: canvasCenter, relative: true });
     await animationFrame();
@@ -127,17 +151,40 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
     expect.verifySteps(["chartMenuRedirect"]);
 });
 
-test("Clicking on a scorecard or gauge redirects to the linked menu id", async function () {
+test("Can click on a chart with no odoo link", async function () {
+    const { model } = await createSpreadsheetWithPivot({ serverData });
+    await mountSpreadsheet(model);
+    createBasicChart(model, chartId);
+    await animationFrame();
+
+    model.updateMode("dashboard");
+    await animationFrame();
+
+    await contains(".o-chart-container canvas").click();
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test("Clicking on a scorecard or gauge redirects to the linked datasource", async function () {
     mockService("action", {
-        doAction: async (actionRequest) => expect.step(actionRequest),
+        doAction: async (actionRequest) => expect.step(actionRequest.xml_id || "noId"),
     });
 
-    const { model } = await createModelWithDataSource({ serverData });
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        serverData,
+        actionXmlId: "menuAction2",
+    });
     await mountSpreadsheet(model);
     createScorecardChart(model, "scorecardId");
     createGaugeChart(model, "gaugeId");
-    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId: "scorecardId", odooMenuId: 2 });
-    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId: "gaugeId", odooMenuId: 2 });
+    model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
+        chartId: "scorecardId",
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
+    });
+    model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
+        chartId: "gaugeId",
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
+    });
     await animationFrame();
 
     model.updateMode("dashboard");
@@ -146,6 +193,7 @@ test("Clicking on a scorecard or gauge redirects to the linked menu id", async f
     const figures = document.querySelectorAll(".o-figure");
 
     await click(figures[0]);
+    await animationFrame();
     expect.verifySteps(["menuAction2"]);
 
     await click(figures[1]);
@@ -153,14 +201,17 @@ test("Clicking on a scorecard or gauge redirects to the linked menu id", async f
 });
 
 test.tags("desktop");
-test("Middle-click on chart in dashboard mode open the odoo menu in a new tab", async function () {
-    const { model } = await createModelWithDataSource({ serverData });
+test("Middle-click on chart in dashboard mode open the linked datasource in a new tab", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        serverData,
+        actionXmlId: "menuAction2",
+    });
     await mountSpreadsheet(model);
 
     mockService("action", {
         doAction(_, options) {
             expect.step("doAction");
-            expect(options).toEqual({
+            expect(options).toMatchObject({
                 newWindow: true,
             });
             return Promise.resolve(true);
@@ -168,9 +219,9 @@ test("Middle-click on chart in dashboard mode open the odoo menu in a new tab", 
     });
 
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+    model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
-        odooMenuId: 2,
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
     });
 
     model.updateMode("dashboard");
