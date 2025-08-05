@@ -114,9 +114,7 @@ class AccountPayment(models.Model):
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Customer/Vendor",
-        store=True, readonly=False, ondelete='restrict',
-        compute='_compute_partner_id',
-        precompute=True,
+        ondelete='restrict',
         domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
         tracking=True,
         check_company=True)
@@ -555,14 +553,6 @@ class AccountPayment(models.Model):
     def _compute_currency_id(self):
         for pay in self:
             pay.currency_id = pay.journal_id.currency_id or pay.journal_id.company_id.currency_id
-
-    @api.depends('journal_id')
-    def _compute_partner_id(self):
-        for pay in self:
-            if pay.partner_id == pay.journal_id.company_id.partner_id:
-                pay.partner_id = False
-            else:
-                pay.partner_id = pay.partner_id
 
     @api.depends('payment_method_line_id')
     def _compute_outstanding_account_id(self):
