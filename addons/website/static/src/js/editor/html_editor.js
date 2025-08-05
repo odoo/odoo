@@ -51,7 +51,6 @@ export class AutoCompleteInLinkPopover extends AutoComplete {
 
 patch(LinkPopover, {
     components: { ...LinkPopover.components, AutoCompleteInLinkPopover },
-    template: "website.linkPopover",
 });
 
 /* patch the LinkPopover component to maintain the option source for the

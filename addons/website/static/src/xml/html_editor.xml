@@ -39,7 +39,7 @@
     </AutoCompleteInLinkPopover>
 </t>
 
-<t t-name="website.linkPopover" t-inherit="html_editor.linkPopover" t-inherit-mode="primary">
+<t t-inherit="html_editor.linkPopover" t-inherit-mode="extension">
     <xpath expr="//input[@name='o_linkpopover_url']" position="replace">
         <t t-call="website.InputURLAutoComplete"/>
     </xpath>

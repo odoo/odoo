@@ -10,6 +10,7 @@ import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { browser } from "@web/core/browser/browser";
 
 defineWebsiteModels();
 
@@ -97,6 +98,38 @@ describe("NavbarLinkPopover", () => {
         setSelection({ anchorNode: el.querySelector(".dropdown-item > span"), anchorOffset: 0 });
         await waitFor(".o-we-linkpopover");
         expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
+    });
+
+    test("link redirection should be prefixed for links in the nav bar", async () => {
+        patchWithCleanup(browser, {
+            open(url) {
+                expect.step("website page url prefixed");
+                expect(url.pathname.startsWith("/@")).toBe(true);
+            },
+        });
+        onRpc("/html_editor/link_preview_internal", () => ({}));
+        onRpc("/contactus", () => ({}));
+
+        // website pages should be prefixed with /@
+        const { el } = await setupEditor(
+            `<ul class="top_menu">
+                <li>
+                    <a class="nav-link" href="/contactus">
+                        <span>Top Menu Item</span>
+                    </a>
+                </li>
+            </ul>`,
+            {
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+            }
+        );
+
+        await expectElementCount(".o-we-linkpopover", 0);
+        // selection inside a top menu link
+        setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
+        await waitFor(".o-we-linkpopover");
+        await click(".o-we-linkpopover a");
+        expect.verifySteps(["website page url prefixed"]);
     });
 });
 
