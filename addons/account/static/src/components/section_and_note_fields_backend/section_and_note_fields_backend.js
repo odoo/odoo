@@ -127,7 +127,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     getParentSectionRecord(record) {
-        const parentRecord = this.props.list.records.filter((r) => r.resId === record.data.parent_id.id);
+        const parentRecord = this.props.list.records.filter((r) => r.resId === record.data?.parent_id?.id);
         return parentRecord.length === 1 ? parentRecord[0] : false;
     }
 
