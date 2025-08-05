@@ -2997,13 +2997,21 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_mode': 'per_point',
             })],
         })
-        self.product_refund = self.env["product.product"].create({
-            "name": "Refund Product",
-            "is_storable": True,
-            "list_price": 300,
-            "available_in_pos": True,
-            "taxes_id": False,
-        })
+        self.env["product.product"].create([
+            {
+                "name": "Refund Product",
+                "is_storable": True,
+                "list_price": 300,
+                "available_in_pos": True,
+                "taxes_id": False,
+            }, {
+                "name": "Other Product",
+                "is_storable": True,
+                "list_price": 100,
+                "available_in_pos": True,
+                "taxes_id": False,
+            },
+        ])
         partner_refunding = self.env['res.partner'].create({'name': 'Refunding Guy'})
         card = self.env['loyalty.card'].create({
             'partner_id': partner_refunding.id,
@@ -3012,7 +3020,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
-        self.assertEqual(card.points, 30)
+        self.assertEqual(card.points, 40)
 
     def test_loyalty_reward_with_variant(self):
         self.env['loyalty.program'].search([]).write({'active': False})

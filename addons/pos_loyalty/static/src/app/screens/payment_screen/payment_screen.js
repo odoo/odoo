@@ -105,6 +105,7 @@ patch(PaymentScreen.prototype, {
             }
             return agg;
         }, {});
+        const isRefundOrder = order.lines.some((line) => line.refunded_qty > 0);
         for (const line of rewardLines) {
             const reward = line.reward_id;
             const couponId = line.coupon_id.id;
@@ -125,8 +126,9 @@ patch(PaymentScreen.prototype, {
             if (!couponData[couponId].line_codes.includes(line.reward_identifier_code)) {
                 !couponData[couponId].line_codes.push(line.reward_identifier_code);
             }
-            couponData[couponId].points =
-                line.refunded_qty > 0 ? 0.0 : couponData[couponId].points - line.points_cost;
+            couponData[couponId].points = isRefundOrder
+                ? 0.0
+                : couponData[couponId].points - line.points_cost;
         }
         // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
         couponData = Object.fromEntries(
