@@ -28,7 +28,7 @@ export class BuilderContentEditablePlugin extends Plugin {
             (el) =>
                 !el.matches(
                     "input, [data-oe-readonly], [data-oe-type='monetary'], [data-oe-many2one-id]"
-                )
+                ) && el.closest(".o_editable")
         );
     }
 }
