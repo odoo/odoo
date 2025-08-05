@@ -34,6 +34,33 @@ class TestActivityCommon(MailCommon):
 @tests.tagged('mail_activity')
 class TestActivityRights(TestActivityCommon):
 
+    def test_activity_action_open_document_no_access(self):
+        def _employee_no_access(records, operation):
+            """Simulates employee having no access to the document"""
+            if records.env.uid == self.user_employee.id and not records.env.su:
+                return records, lambda: exceptions.AccessError('Access denied to document')
+            return DEFAULT
+
+        test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+            'summary': 'Test Activity',
+        })
+
+        action = test_activity.with_user(self.user_employee).action_open_document()
+        self.assertEqual(action['res_model'], self.test_record._name)
+        self.assertEqual(action['res_id'], self.test_record.id)
+
+        # If user has no access to the record, should return activity view instead
+        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_no_access):
+            self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
+
+            action = test_activity.with_user(self.user_employee).action_open_document()
+            self.assertEqual(action['res_model'], 'mail.activity')
+            self.assertEqual(action['res_id'], test_activity.id)
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_access_other(self):
         activity = self.test_record.with_user(self.user_employee).activity_schedule(
