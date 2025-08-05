@@ -14,22 +14,6 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
   start: function () {
     return this._super.apply(this, arguments).then(() => {
       if (!session.is_public) {
-        this.$el.on(
-          "hidden.bs.modal",
-          "#terms_modal",
-          this._onTermsModalClosed.bind(this)
-        );
-        this.$el.on(
-          "hidden.bs.modal",
-          "#mandatory_policies_modal",
-          this._onPoliciesModalClosed.bind(this)
-        );
-        this.$el.on(
-          "hidden.bs.modal",
-          "#update_profile_modal",
-          this._onProfileModalClosed.bind(this)
-        );
-
         this.$el.on("policy-read", this._onPolicyRead.bind(this));
         this._checkAndShowModals();
       }
@@ -51,10 +35,6 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
     });
   },
 
-  _onTermsModalClosed: function () {
-    this._checkAndShowPoliciesModal();
-  },
-
   _checkAndShowPoliciesModal: function () {
     rpc("/portal/mandatory_policies_status", {}).then((res) => {
       if (
@@ -65,13 +45,9 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
       ) {
         this._showModal(res.policies, res.read_policy_ids);
       } else {
-        this._showProfileUpdateModal();
+        this._checkProfileUpdate();
       }
     });
-  },
-
-  _onPoliciesModalClosed: function () {
-    this._showProfileUpdateModal();
   },
 
   _checkProfileUpdate: function () {
@@ -82,10 +58,6 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
         this._showAnnouncementsModalIfNeeded();
       }
     });
-  },
-
-  _onProfileModalClosed: function () {
-    this._showAnnouncementsModalIfNeeded();
   },
 
   //Modal de T&C
@@ -113,6 +85,9 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
         if (!acceptButton.prop("disabled")) {
           rpc("/portal/accept_terms", {}).then(() => {
             modalElement.modal("hide");
+            modalElement.one("hidden.bs.modal", () => {
+              this._checkAndShowPoliciesModal();
+            });
           });
         }
       });
@@ -167,7 +142,7 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
         if (res.success) {
           $modal.modal("hide");
           $modal.one("hidden.bs.modal", () => {
-            this._showProfileUpdateModal();
+            this._checkProfileUpdate();
           });
         } else {
           alert(res.error || "No se pudo confirmar.");
@@ -211,20 +186,23 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
 
     confirmButton.prop("disabled", true);
     checkButton.prop("disabled", true);
-    checkButton.removeClass('btn-success').addClass('btn-info').text('Ya actualicé mis datos');
-
+    checkButton
+      .removeClass("btn-success")
+      .addClass("btn-info")
+      .text("Ya actualicé mis datos");
 
     goToProfileLink.off("click").on("click", () => {
       localStorage.setItem("openInKioskMode", "true");
       const profileUrl = goToProfileLink.data("profile-url");
-      const windowFeatures = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=1024,height=768';
-      window.open(profileUrl, 'OdooProfileUpdate', windowFeatures);
-
+      const windowFeatures =
+        "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=1024,height=768";
+      window.open(profileUrl, "OdooProfileUpdate", windowFeatures);
     });
 
     checkButton.off("click").on("click", () => {
       confirmButton.prop("disabled", false);
-      checkButton.prop("disabled", true)
+      checkButton
+        .prop("disabled", true)
         .removeClass("btn-info")
         .addClass("btn-success")
         .text("¡Gracias! Ahora puedes continuar.");
@@ -244,17 +222,17 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
     });
 
     const storageListener = (event) => {
-        if (event.key === 'profileSaveClicked' && event.newValue === 'true') {
-            console.log("Señal de 'guardado' recibida desde la otra pestaña.");
-            checkButton.prop('disabled', false);
-            localStorage.removeItem('profileSaveClicked');
-           }
+      if (event.key === "profileSaveClicked" && event.newValue === "true") {
+        console.log("Señal de 'guardado' recibida desde la otra pestaña.");
+        checkButton.prop("disabled", false);
+        localStorage.removeItem("profileSaveClicked");
+      }
     };
 
-    window.addEventListener('storage', storageListener);
+    window.addEventListener("storage", storageListener);
 
-    modalElement.one('hidden.bs.modal', () => {
-        window.removeEventListener('storage', storageListener);
+    modalElement.one("hidden.bs.modal", () => {
+      window.removeEventListener("storage", storageListener);
     });
 
     modalElement.modal("show");
