@@ -1173,6 +1173,9 @@ test("Can quick search when more than 20 items", async () => {
     await insertText(".o-mail-MessagingMenu input", "admin");
     await contains(".o-mail-NotificationItem", { count: 1 });
     await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
+    await insertText(".o-mail-MessagingMenu input", "no threads", { replace: true });
+    await contains(".o-mail-MessagingMenu div.text-muted", { text: "No thread found." });
+    expect(".o-mail-MessagingMenu-list").toHaveText("No thread found."); // list should contain only this text
 });
 
 test("keyboard navigation", async () => {
