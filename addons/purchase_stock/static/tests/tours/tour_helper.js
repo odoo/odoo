@@ -1,42 +1,30 @@
 import { assert } from "@stock/../tests/tours/tour_helper";
 
 /**
- * Sets the vendor on a purchase order (must already on PO).
- * @param {string} vendorName An existing partner.
+ * Clicks on the "Catalog" button below the purchase order lines
  */
-export function selectPOVendor(vendorName) {
+export function goToCatalogFromPO() {
     return [
         {
-            content: "Fill Vendor Field on PO",
-            trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
-            run: `edit ${vendorName}`,
-        },
-        {
-            content: "Select vendor from many to one",
-            isActive: ["auto"],
-            trigger: `.ui-menu-item > a:contains(${vendorName})`,
+            content: "Go to product catalog",
+            trigger: 'button[name="action_add_from_catalog"]',
             run: "click",
         },
+        { trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view" },
     ];
 }
 
 /**
- * Sets the WH on a purchase order (must already on PO).
- * @param {string} warehouseName An existing warehouse.
+ * Clicks on the "Back to Order" button from the Catalog view
  */
-export function selectPOWarehouse(warehouseName) {
+export function goToPOFromCatalog() {
     return [
         {
-            content: "Fill Warehouse Field on PO",
-            trigger: ".o_field_many2one[name='picking_type_id'] input",
-            run: `edit ${warehouseName}`,
-        },
-        {
-            content: "Select BaseWarehouse as PO WH",
-            isActive: ["auto"],
-            trigger: `.ui-menu-item > a:contains(${warehouseName})`,
+            content: "Go back to the PO",
+            trigger: "button.o-kanban-button-back",
             run: "click",
         },
+        { trigger: ".o_form_view.o_purchase_order" },
     ];
 }
 
@@ -79,43 +67,19 @@ export function setSuggestParameters({ basedOn = false, nbDays = false, factor =
 }
 
 /**
- * Clicks on the "Catalog" button below the purchase order lines
- */
-export function goToCatalogFromPO() {
-    return [
-        {
-            content: "Go to product catalog",
-            trigger: 'button[name="action_add_from_catalog"]',
-            run: "click",
-        },
-        { trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view" },
-    ];
-}
-
-/**
- * Clicks on the "Back to Order" button from the Catalog view
- */
-export function goToPOFromCatalog() {
-    return [
-        {
-            content: "Go back to the PO",
-            trigger: "button.o-kanban-button-back",
-            run: "click",
-        },
-        { trigger: ".o_form_view.o_purchase_order" },
-    ];
-}
-
-/**
  * @param {boolean} turnOn True to turn Suggest ON, false to turn it OFF
  */
 export function toggleSuggest(turnOn) {
     return [
         {
-            trigger: 'button[name="toggle_suggest_catalog"]',
+            trigger: 'div[name="search-suggest-toggle"] input',
             run: "click",
         },
-        { trigger: `button[name="toggle_suggest_catalog"].fa-toggle-${turnOn ? "on" : "off"}` },
+        {
+            trigger: `div[name="search-suggest-toggle"] input:${
+                turnOn ? "checked" : "not(:checked)"
+            }`,
+        },
     ];
 }
 

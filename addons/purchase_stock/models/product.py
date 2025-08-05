@@ -64,7 +64,7 @@ class ProductProduct(models.Model):
 
     @api.depends_context('suggest_based_on', 'warehouse_id')
     def _compute_monthly_demand(self):
-        based_on = self.env.context.get("suggest_based_on", "last_30_days")
+        based_on = self.env.context.get("suggest_based_on", "30_days")
         warehouse_id = self.env.context.get('warehouse_id')
         start_date, limit_date = self._get_monthly_demand_range(based_on)
 
@@ -160,7 +160,7 @@ class ProductProduct(models.Model):
     def _get_monthly_demand_range(self, based_on):
         start_date = limit_date = datetime.now()
 
-        if not based_on or based_on == 'actual_demand' or based_on == 'last_30_days':
+        if not based_on or based_on == 'actual_demand' or based_on == '30_days':
             start_date = start_date - relativedelta(days=30)  # Default monthly demand
         elif based_on == 'one_week':
             start_date = start_date - relativedelta(weeks=1)
