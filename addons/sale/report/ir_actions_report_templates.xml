@@ -98,7 +98,14 @@
                     <t t-foreach="lines_to_report" t-as="line">
 
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+
+                        <t
+                            t-if="line.display_type not in ('line_section', 'line_subsection')
+                                or line.product_type == 'combo'
+                                or not line.collapse_composition"
+                        >
                         <tr
+                            t-if="not line.collapse_composition"
                             t-att-class="{
                                 'fw-bolder o_line_section': line.display_type == 'line_section' or line.product_type == 'combo',
                                 'fw-bold o_line_subsection': line.display_type == 'line_subsection',
@@ -116,7 +123,12 @@
                                     </span>
                                 </td>
                                 <td name="td_priceunit" class="text-end text-nowrap">
-                                    <span t-field="line.price_unit">3</span>
+                                    <span
+                                        t-if="not line.collapse_prices"
+                                        t-field="line.price_unit"
+                                    >
+                                        3
+                                    </span>
                                 </td>
                                 <td name="td_discount" t-if="display_discount" class="text-end">
                                     <span t-field="line.discount">-</span>
@@ -126,15 +138,25 @@
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
                                 <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
-                                    <span t-field="line.price_subtotal">27.00</span>
+                                    <span
+                                        t-if="not line.collapse_prices"
+                                        t-field="line.price_subtotal"
+                                    >
+                                        27.00
+                                    </span>
                                 </td>
                             </t>
-                            <t t-elif="line.display_type in ('line_section', 'line_subsection') or line.product_type == 'combo'">
+                            <t
+                                t-elif="line.display_type in ('line_section', 'line_subsection')
+                                    or line.product_type == 'combo'"
+                            >
                                 <td name="td_section_line" colspan="99">
                                     <span t-field="line.name">A section title</span>
                                 </td>
-                                <t t-set="current_section" t-value="line"/>
-                                <t t-set="current_subtotal" t-value="0"/>
+                                <t t-if="line.display_type == 'line_section'">
+                                    <t t-set="current_section" t-value="line"/>
+                                    <t t-set="current_subtotal" t-value="0"/>
+                                </t>
                             </t>
                             <t t-elif="line.display_type == 'line_note'">
                                 <td name="td_note_line" colspan="99">
@@ -142,6 +164,51 @@
                                 </td>
                             </t>
                         </tr>
+                        </t>
+
+                        <t
+                            t-elif="(
+                                    line.display_type == 'line_subsection'
+                                    and not line.parent_id.collapse_composition
+                                )
+                                or line.display_type == 'line_section'"
+                        >
+                            <tr
+                                t-foreach="line._get_grouped_section_summary()"
+                                t-as="section_line"
+                                class="o_line_section"
+                            >
+                                <td name="td_name">
+                                    <span t-out="section_line['name']">Section Summary</span>
+                                </td>
+                                <td name="td_quantity" class="text-end text-nowrap">
+                                    <span>1.00 Units</span>
+                                </td>
+                                <td name="td_priceunit" class="text-end text-nowrap">
+                                    <span t-out="section_line['price_subtotal']"/>
+                                </td>
+                                <td name="td_discount" t-if="display_discount"/>
+                                <td
+                                    name="td_taxes"
+                                    t-if="display_taxes"
+                                    t-attf-class="text-end {{ 'text-nowrap' if len(section_line['taxes']) &lt; 10 else '' }}"
+                                >
+                                    <span t-out="', '.join(section_line['taxes'])">
+                                        Tax 15%
+                                    </span>
+                                </td>
+                                <td class="text-end o_price_total">
+                                    <span t-out="section_line['price_subtotal']">
+                                        31.05
+                                    </span>
+                                </td>
+                            </tr>
+                            <t t-if="line.display_type == 'line_section'">                                
+                                <t t-set="current_section" t-value="line"/>
+                                <t t-set="current_subtotal" t-value="0"/>
+                            </t>
+                        </t>
+
                         <t
                             t-if="current_section and (
                                 line_last
@@ -151,7 +218,9 @@
                                     line.combo_item_id
                                     and not lines_to_report[line_index+1].combo_item_id
                                 )
-                            ) and not line.is_downpayment"
+                            )
+                            and not line.is_downpayment
+                            and not current_section.collapse_composition"
                         >
                             <t t-set="current_section" t-value="None"/>
                             <tr class="is-subtotal text-end">
