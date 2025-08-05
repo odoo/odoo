@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mandatory_policies_modal_template" name="Modal de Políticas Obligatorias">
+        <div id="mandatory_policies_modal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Políticas de Lectura Obligatoria</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Para continuar, por favor, visualiza todas las políticas y reglamentos a continuación.</p>
+                        <ul id="mandatory_policies_list" class="list-group list-group-flush policy_section">
+                            <li class="list-group-item">Cargando políticas...</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="accept-button" id="confirm_all_policies_btn" disabled="disabled">Confirmo que he leído todo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="mandatory_policies_modal_in_layout" inherit_id="website.layout">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <t t-call="mi_website_ext.mandatory_policies_modal_template"/>
+        </xpath>
+    </template>
+</odoo>

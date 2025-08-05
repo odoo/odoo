@@ -507,10 +507,6 @@ class WebsiteCustom(http.Controller):
                     'user_id': current_user.id,
                 })
 
-            #publication.sudo().write({
-            #    'read_by_user_ids': [(4, current_user.id)]
-            #})
-
             return {'success': True}
             
         except Exception as e:
@@ -577,6 +573,7 @@ class WebsiteCustom(http.Controller):
         return request.render('mi_website_ext.custom_sidebar', {
             'user': user,
         })
+
     
 class TermsController(Controller):
     @http.route('/portal/accept_terms', type='json', auth='user', website=True, methods=['POST'])
@@ -590,3 +587,62 @@ class TermsController(Controller):
         user = request.env.user
         return {'accepted': bool(user.sudo().x_terms_accepted)}
     
+class PolicyController(http.Controller):
+
+    @http.route('/portal/mandatory_policies_status', type='json', auth='user', website=True)
+    def get_mandatory_policies_status(self, **kwargs):
+        user = request.env.user
+        Policy = request.env['website.publication'].sudo()
+        
+        if user.sudo().x_has_accepted_policies:
+            return {'user_already_accepted': True}
+
+        all_policies = Policy.search([
+            ('publication_type', '=', 'policy'),
+            ('is_published', '=', True),
+        ])
+
+        if not all_policies:
+            return {'no_policies': True}
+
+        read_logs = request.env['publication.view.log'].sudo().search([
+            ('user_id', '=', user.id),
+            ('res_model', '=', 'website.publication'),
+            ('res_id', 'in', all_policies.ids),
+        ])
+        read_policy_ids = read_logs.mapped('res_id')
+
+        policies_data = [{'id': p.id, 'name': p.name, 'url': p.attachment_url} for p in all_policies]
+
+        return {
+            'user_already_accepted': False,
+            'policies': policies_data,
+            'read_policy_ids': read_policy_ids,
+            'all_policies_read': len(read_policy_ids) == len(all_policies.ids)
+        }
+
+    @http.route('/portal/confirm_all_policies_read', type='json', auth='user', website=True)
+    def confirm_all_policies_read(self, **kwargs):
+        try:
+            request.env.user.sudo().write({'x_has_accepted_policies': True})
+            return {'success': True}
+        except Exception as e:
+            _logger.error(f"Error al confirmar políticas: {e}")
+            return {'success': False}
+        
+class ProfileUpdateController(http.Controller):
+    
+    @http.route('/portal/profile_update_status', type='json', auth='user', website=True)
+    def get_profile_update_status(self, **kwargs):
+        user = request.env.user.sudo()
+        return {
+            'requires_update': not user.x_has_updated_profile
+        }
+
+    @http.route('/portal/confirm_profile_updated', type='json', auth='user', website=True)
+    def confirm_profile_updated(self, **kwargs):
+        try:
+            request.env.user.sudo().write({'x_has_updated_profile': True})
+            return {'success': True}
+        except Exception:
+            return {'success': False, 'error': 'No se pudo guardar la confirmación.'}

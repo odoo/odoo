@@ -9,10 +9,6 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
     "click .js-view-policy": "_onViewPolicyClick",
   },
 
-  /**
-   * Se añade el método start para inicializar el listener de mensajes.
-   * Este se ejecutará una vez cuando el widget se cargue en la página.
-   */
   start: function () {
     this._super.apply(this, arguments);
     this.currentPolicyId = null;
@@ -20,36 +16,29 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
     this.messageHandler = this._onWindowMessage.bind(this);
     window.addEventListener("message", this.messageHandler);
 
-    // Es una buena práctica limpiar el estado cuando el modal se cierra
     $("#pdf_viewer_modal").on("hidden.bs.modal", () => {
       this.currentPolicyId = null;
       this.currentButtonPlaceholder = null;
     });
   },
 
-  /**
-   * Se añade el método destroy para limpiar el listener cuando se destruye el widget.
-   */
+  
   destroy: function () {
     window.removeEventListener("message", this.messageHandler);
     this._super.apply(this, arguments);
   },
 
-  /**
-   * NUEVO: Este método escucha los mensajes del iframe.
-   * Cuando recibe la señal 'pdf-scrolled-to-end', crea el botón.
-   */
   _onWindowMessage: function (ev) {
     if (
       ev.data === "pdf-scrolled-to-end" &&
       this.currentPolicyId &&
       this.currentButtonPlaceholder
     ) {
-      const $modal = this.currentButtonPlaceholder.closest('.modal');
-      const $headerCloseButton = $modal.find('.btn-close');
-      $headerCloseButton.prop('disabled', false);
+      const $modal = this.currentButtonPlaceholder.closest(".modal");
+      const $headerCloseButton = $modal.find(".btn-close");
+      $headerCloseButton.prop("disabled", false);
       const markReadButton = $(
-        '<button class="btn btn-primary js_mark_as_read_in_modal">Marcar como Leído</button>'
+        '<button class="accept-button js_mark_as_read_in_modal">Marcar como Leído</button>'
       );
       this.currentButtonPlaceholder.html(markReadButton);
 
@@ -80,8 +69,8 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
         `${viewerBaseUrl}?file=${encodedPdfUrl}&policy_id=${policyId}`
       );
 
-    const $headerCloseButton = modalElement.find('.btn-close');
-    $headerCloseButton.prop('disabled', true);
+    const $headerCloseButton = modalElement.find(".btn-close");
+    $headerCloseButton.prop("disabled", true);
 
     const readButtonPlaceholder = modalElement.find(
       "#pdf_modal_read_button_placeholder"
@@ -90,18 +79,13 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
     const alreadyRead = $button.find(".fa-check").length > 0;
 
     if (alreadyRead) {
-      // Tu lógica para políticas ya leídas (esta parte no cambia, es correcta)
-      $headerCloseButton.prop('disabled', false);
+      $headerCloseButton.prop("disabled", false);
       readButtonPlaceholder.html(`
                 <div class="alert alert-success m-0 p-2">
                     <i class="fa fa-check-circle me-2"/>Leído y Entendido
                 </div>`);
     } else {
-      // --- CAMBIO PRINCIPAL AQUÍ ---
-      // Si la política NO ha sido leída, en lugar de crear el botón,
-      // simplemente vaciamos el contenedor y guardamos el contexto.
-      // El método _onWindowMessage se encargará de crear el botón más tarde.
-      readButtonPlaceholder.empty(); // Limpiamos cualquier botón o mensaje anterior
+      readButtonPlaceholder.empty();
       this.currentPolicyId = policyId;
       this.currentButtonPlaceholder = readButtonPlaceholder;
     }
@@ -115,7 +99,6 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
     if (!policyId || !buttonPlaceholder) {
       return;
     }
-    // Tu lógica de RPC no necesita cambios, es correcta.
     buttonPlaceholder
       .find("button")
       .prop("disabled", true)
@@ -135,6 +118,7 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
           '<i class="fa fa-check text-success me-2"/>'
         );
         this.currentPolicyId = null;
+        $(".three-column-layout").trigger("policy-read", { policyId: policyId });
       } else {
         alert(result.error || "No se pudo registrar la acción.");
         buttonPlaceholder

@@ -15,11 +15,15 @@
     "assets": {
         'web.assets_backend': [
             ('after', 'hr_holidays/static/src/components/float_time_selection/float_time_selection_popover.js', 'mi_website_ext/static/src/js/time_format_widget_override.js'),
+            'mi_website_ext/static/src/js/kiosk_mode.js',
+            'mi_website_ext/static/src/css/kiosk_mode.css'
+            
         ],
         "web.assets_frontend": [
             "mi_website_ext/static/src/js/notify_button_handler.js",
+            'mi_website_ext/static/src/js/manual_viewer.js',
+            'mi_website_ext/static/src/js/back_button_refresh.js',
             "mi_website_ext/static/src/js/startup_popups.js",
-            "mi_website_ext/static/src/js/button_time_redirec.js",
             'mi_website_ext/static/src/js/policy_viewer.js',
             "mi_website_ext/static/src/js/read_tracker.js",
             "mi_website_ext/static/src/js/tooltip_handler.js",
@@ -43,7 +47,7 @@
             "mi_website_ext/static/src/css/policy.css",
             "mi_website_ext/static/src/css/task.css",
             "mi_website_ext/static/src/css/modal.css",
-            "mi_website_ext/static/src/css/profile.css",
+            "mi_website_ext/static/src/css/profile.css"
         ],
     },
     "data": [
@@ -81,6 +85,8 @@
         'views/my_account_menu.xml',
         "views/mail_systray.xml",
         "data/ir_cron.xml",
+        'views/manual_viewer_modal.xml',
+        'views/mandatory_policies_modal.xml'
     ],
     "installable": True,
     "application": True,

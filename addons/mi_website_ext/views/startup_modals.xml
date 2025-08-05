@@ -6,7 +6,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Aviso sobre nuestros comunicados internos</h5>
                     </div>
-                    <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                    <div id="terms-content" class="modal-body" style="max-height: 60vh; overflow-y: auto;">
                         <p>La comunicación efectiva entre Cal Engineering Solutions y sus empleados es fundamental para garantizar un entorno de trabajo informado, eficiente y conforme a las normativas internas y externas. En este sentido, el Departamento de Recursos Humanos (en adelante, "RR.HH.") utilizará este canal de comunicación</p>
                         <p>Es una condición obligatoria para todos los empleados de la Empresa leer y comprender los mensajes y comunicados emitidos por RR.HH. de manera oportuna. Estos mensajes pueden contener información crítica y relevante relacionada con:</p>
                         <div>
@@ -52,14 +52,57 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="accept_terms_btn" type="button" class="accept-button">Confirmo que leí los términos</button>
+                        <button id="accept_terms_btn" type="button" class="accept-button" disabled="disabled">Confirmo que leí los términos</button>
                     </div>
                 </div>
             </div>
         </div>
     </template>
+    <template id="update_profile_modal_template" name="Modal de Actualización de Perfil">
+        <div id="update_profile_modal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Actualización de Datos de Perfil</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+            ¡Ya casi terminamos! Antes de continuar, por favor, ayúdanos a mantener tu información actualizada.
+        </p>
+                        <p>
+            Haz clic en el siguiente botón para ir a tu perfil y asegúrate de que todos tus datos sean correctos. La página de tu perfil se abrirá en una nueva pestaña.
+        </p>
+                        <div class="text-center my-3">
+                            <button 
+               class="btn btn-primary"
+               id="go_to_profile_btn"
+               t-attf-data-profile-url="/web#id=#{request.env.user.id}&amp;action=198&amp;model=res.users&amp;view_type=form">
+                                <i class="fa fa-user me-2"/>Ir a Mi Perfil
+                        </button>
+                        </div>
+                        <div class="text-center my-3">
+                            <button type="button" class="btn btn-info" id="profile_update_check_btn">
+                                <i class="fa fa-check me-2"/>Ya actualicé mis datos
+                            </button>
+                        </div>
+                        <p class="text-muted small">
+            Después de guardar los cambios en tu perfil, vuelve a esta ventana y haz clic en "Ya actualicé mis datos" para poder continuar.
+        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="accept-button" id="confirm_profile_updated_btn" disabled="disabled">Continuar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="update_profile_modal_in_layout" inherit_id="website.layout">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <t t-call="mi_website_ext.update_profile_modal_template"/>
+        </xpath>
+    </template>
     <template id="announcements_modal" name="Modal de Anuncios">
-         <div id="announcement_popup_modal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div id="announcement_popup_modal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

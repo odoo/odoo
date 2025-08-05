@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="manual_viewer_modal" name="Modal para Manual de Usuario">
+        <div id="user_manual_modal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Manual de Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"/>
+                    </div>
+                    <div class="modal-body p-0" style="height: 80vh;">
+                        <iframe id="manual_pdf_iframe" src="about:blank" width="100%" height="100%" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="assets_manual_viewer" inherit_id="website.layout">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <t t-call="mi_website_ext.manual_viewer_modal"/>
+        </xpath>
+    </template>
+</odoo>

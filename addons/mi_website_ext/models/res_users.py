@@ -11,6 +11,13 @@ class Users(models.Model):
     
     x_terms_accepted = fields.Boolean(string="Accepted Terms and Conditions", default=False)
 
+    x_has_accepted_policies = fields.Boolean(
+        string="Ha aceptado políticas obligatorias", 
+        default=False
+    )
+
+    x_has_updated_profile = fields.Boolean(string="Ha actualizado su perfil inicial", default=False)
+
     x_days_until_vacation_display = fields.Char(
         string="Días Para Próximas Vacaciones",
         compute='_compute_days_until_next_vacation',
@@ -41,17 +48,12 @@ class Users(models.Model):
         compute='_compute_days_in_company'
     )
 
-
     @api.depends_context('uid')
     def _compute_days_until_next_vacation(self):
         today = fields.Date.context_today(self)
         HrLeave = self.env['hr.leave']
         HrEmployee = self.env['hr.employee']
 
-        
-        
-        # Si el ID 8 es fijo y seguro para tu instancia:
-        # vacation_leave_type_id = 8 
 
         for user in self:
             vacation_leave_type = self.env['hr.leave.type'].sudo().search([('name', '=', 'Vacaciones'), ('company_id', 'in', [user.company_id.id, False])], limit=1) # Asume que el nombre es exactamente "Vacaciones"
@@ -91,7 +93,7 @@ class Users(models.Model):
                     else:
                         user.x_days_until_vacation_display = str(days_remaining)
             else:
-                    user.x_days_until_vacation_display = "--"
+                    user.x_days_until_vacation_display = "N/A"
 
     @api.depends_context('uid')
     def _compute_remunerated_permission_hours(self):

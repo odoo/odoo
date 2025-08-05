@@ -78,8 +78,8 @@
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="card-items">
-                                        <a href="/mi_website_ext/static/pdf/Intranet_manual.pdf" target="_blank">
+                                    <div class="card-items access-card-manual">
+                                        <a href="#" id="open_manual_btn">
                                             <img src="/mi_website_ext/static/src/img/Manual.svg" alt="Grupo" />
                                             <p>Manual de usuario
                                             </p>
@@ -659,7 +659,7 @@
                                     <!-- Cards -->
                                     <div class="cards-section">
                                         <div class="card">
-                                            <h4>Días para vacaciones</h4>
+                                            <h4>Días restantes para vacaciones</h4>
                                             <div class="card-content">
                                                 <p class="vacation_text">
                                                     <t t-esc="user.x_days_until_vacation_display" />
