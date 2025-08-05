@@ -1056,3 +1056,19 @@ class TestPurchase(AccountTestInvoicingCommon):
         action = product_tmpl.action_view_po()
         action_record = self.env[action['res_model']].search(action['domain'])
         self.assertEqual(action_record, po.order_line)
+
+    def test_currency_computed_from_partner(self):
+        """Test that the currency of the purchase order is computed from the partner
+        when the partner is set, and that default_currency_id in context overrides compute.
+        """
+        eur = self.env.ref('base.EUR')
+        gbp = self.env.ref('base.GBP')
+        self.partner_a.property_purchase_currency_id = eur
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        self.assertEqual(po.currency_id, eur, "The currency should be computed from the partner's purchase currency")
+        po_2 = self.env['purchase.order'].with_context(default_currency_id=gbp).create({
+            'partner_id': self.partner_a.id,
+        })
+        self.assertEqual(po_2.currency_id, gbp, "The currency should be set from context default_currency_id, bypassing the compute")
