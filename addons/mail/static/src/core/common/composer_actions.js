@@ -144,20 +144,8 @@ class ComposerActionDefinition extends DiscussActionDefinition {
             : this.explicitDefinition.btnClass;
     }
 
-    get component() {
-        return this.explicitDefinition.component;
-    }
-
-    get componentProps() {
-        return this.explicitDefinition.componentProps?.(this._component, this);
-    }
-
     get condition() {
         return composerActionsInternal.condition(this._component, this.id, this.explicitDefinition);
-    }
-
-    get disabledCondition() {
-        return this.explicitDefinition.disabledCondition?.(this._component);
     }
 
     get hotkey() {
@@ -166,24 +154,8 @@ class ComposerActionDefinition extends DiscussActionDefinition {
             : this.explicitDefinition.hotkey;
     }
 
-    get icon() {
-        return typeof this.explicitDefinition.icon === "function"
-            ? this.explicitDefinition.icon(this._component)
-            : this.explicitDefinition.icon;
-    }
-
     get isPicker() {
         return this.explicitDefinition.isPicker;
-    }
-
-    get name() {
-        return typeof this.explicitDefinition.name === "function"
-            ? this.explicitDefinition.name(this._component)
-            : this.explicitDefinition.name;
-    }
-
-    onSelected(ev) {
-        this.explicitDefinition.onSelected?.(this._component, this, ev);
     }
 
     get pickerName() {
