@@ -307,6 +307,28 @@ class SaleOrderLine(models.Model):
     company_price_include = fields.Selection(related="company_id.account_price_include")
     sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
 
+    # Section-related fields
+    parent_id = fields.Many2one(
+        string="Parent Line",
+        comodel_name='sale.order.line',
+        compute='_compute_parent_id',
+        store=True,
+    )  # The section or subsection this line belongs to.
+    collapse_prices = fields.Boolean(
+        string="Collapse Prices",
+        compute='_compute_section_visibility_fields',
+        store=True,
+        readonly=False,
+        copy=True,
+    )  # Whether this section's lines' prices will be hidden in reports and in the portal.
+    collapse_composition = fields.Boolean(
+        string="Collapse Composition",
+        compute='_compute_section_visibility_fields',
+        store=True,
+        readonly=False,
+        copy=True,
+    )  # Whether this section's lines will be hidden in reports and in the portal.
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('order_partner_id', 'order_id', 'product_id')
@@ -1130,6 +1152,37 @@ class SaleOrderLine(models.Model):
             # line.ids checks whether it's a new record not yet saved
             line.product_uom_readonly = line.ids and line.state in ['sale', 'cancel']
 
+    @api.depends('sequence', 'display_type', 'order_id')
+    def _compute_parent_id(self):
+        for _orders, lines in self.grouped('order_id').items():
+            current_section = None
+            current_subsection = None
+            for line in lines.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    line.parent_id = None
+                    current_section = line
+                    current_subsection = None  # Reset subsection when entering a new section.
+                elif line.display_type == 'line_subsection':
+                    line.parent_id = current_section
+                    current_subsection = line
+                else:  # Product/Note lines
+                    # Link to the current subsection or fall back to the current section.
+                    line.parent_id = current_subsection or current_section
+
+    @api.depends('parent_id', 'display_type')
+    def _compute_section_visibility_fields(self):
+        for line in self:
+            if line.display_type == 'line_section':
+                continue  # Don't recompute when moving sections around.
+            elif line.display_type == 'line_subsection':
+                line.collapse_prices = line.collapse_prices or line.parent_id.collapse_prices
+                line.collapse_composition = (
+                    line.collapse_composition or line.parent_id.collapse_composition
+                )
+            else:  # Product/Note lines
+                line.collapse_prices = line.parent_id.collapse_prices
+                line.collapse_composition = line.parent_id.collapse_composition
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('combo_item_id')
@@ -1386,6 +1439,41 @@ class SaleOrderLine(models.Model):
             for l in self.invoice_lines
             if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
         )
+
+    def _get_grouped_section_summary(self):
+        """Return a tax-wise summary of sales order lines linked to section.
+
+        Group lines by their tax IDs and computes subtotal and total for each group.
+        """
+        self.ensure_one()
+
+        def is_relevant_line(line_):
+            """Return whether the line is a direct or indirect child of the section."""
+            is_direct_child = line_.parent_id == self and not line_.display_type
+            is_indirect_child = (
+                self.display_type == 'line_section'
+                and line_.parent_id
+                and line_.parent_id.display_type == 'line_subsection'
+                and line_.parent_id.parent_id == self
+            )
+            return is_direct_child or is_indirect_child
+
+        section_lines = self.order_id.order_line.filtered(is_relevant_line)
+        result = []
+        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
+            subtotal = sum(l.price_subtotal for l in lines)
+            result.append({
+                'name': self.name,
+                'taxes': tax_labels,
+                'price_subtotal': subtotal,
+            })
+
+        return result or [{
+            'name': self.name,
+            'taxes': [],
+            'price_subtotal': 0.0,
+        }]
 
     #=== CORE METHODS OVERRIDES ===#
 
