@@ -68,6 +68,8 @@ export const turnStile = {
     cleanTurnstile: function () {
         if (this.$(".s_turnstile").length) {
             this.$(".s_turnstile").remove();
+            this.$target.find(".s_website_form_send .turnstile-spinner").remove();
+            this.$target.find(".s_website_form_send").removeClass("disabled");
         }
     },
 
