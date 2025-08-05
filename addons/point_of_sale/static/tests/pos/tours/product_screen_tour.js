@@ -26,6 +26,7 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             // Go by default to home category
 
             Chrome.startPoS(),
+<<<<<<< ea58fc35d88b6033562b163e9ae239604ba8421d:addons/point_of_sale/static/tests/pos/tours/product_screen_tour.js
             OfflineUtil.setOfflineMode(),
             ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
             // Make sure we don't have any scroll bar on the product list
@@ -42,6 +43,27 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2", "10.20"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1", "5.28"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "3", "15.30"),
+||||||| ac5ea3cbd075db650c8e538d59e24657a0f04bb9:addons/point_of_sale/static/tests/tours/product_screen_tour.js
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "3.0", "15.30"),
+=======
+            // Make sure we don't have any scroll bar on the product list
+            {
+                trigger: ".product-list",
+                run: function () {
+                    const productList = document.querySelector(".product-list");
+                    if (productList.scrollWidth > document.documentElement.scrollWidth) {
+                        throw new Error("Product list is overflowing");
+                    }
+                },
+            },
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "3.0", "15.30"),
+>>>>>>> 03fcd3dd808469cd75d2606749dcc9717caf736b:addons/point_of_sale/static/tests/tours/product_screen_tour.js
 
             // Check effects of clicking numpad buttons
             inLeftSide([
