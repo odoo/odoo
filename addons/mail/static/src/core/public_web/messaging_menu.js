@@ -3,7 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState, useSubEnv } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -31,6 +31,7 @@ export class MessagingMenu extends Component {
         });
         this.dropdown = useDropdownState();
         this.notificationList = useRef("notification-list");
+        useSubEnv({ inMessagingMenu: { dropdown: this.dropdown } });
 
         useExternalListener(window, "keydown", this.onKeydown, true);
     }

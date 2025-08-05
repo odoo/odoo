@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="mail.DiscussSearch">
+    <div class="o-mail-DiscussSearch d-flex align-items-center gap-1" t-attf-class="{{ props.class }}" t-ref="root">
+        <Dropdown t-if="store.discuss.isSidebarCompact and !ui.isSmall" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0'" manual="true">
+            <button class="o-mail-DiscussSearch-searchBtn btn btn-light d-flex align-items-center justify-content-center border-0 px-1 mx-2 opacity-75 bg-transparent" t-on-click="onClickSearchConversations" t-ref="search-btn"><i class="fa fa-fw fa-search"/></button>
+            <t t-set-slot="content">
+                <div class="px-2" t-ref="search-floating">
+                    <span class="text-muted user-select-none">Search conversations</span>
+                </div>
+            </t>
+        </Dropdown>
+        <div t-else="" class="o-mail-DiscussSearch-inputContainer rounded border border-secondary shadow-sm position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1" t-on-click="onClickSearchConversations">
+            <div class="d-flex w-100 align-items-center ps-2 gap-2">
+                <i class="oi oi-search o-opacity-35 smaller"/>
+                <input class="form-control rounded border-0 bg-inherit ps-0" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Search conversations" tabindex="0"/>
+            </div>
+            <div class="o-mail-DiscussSearch-inputClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
+        </div>
+    </div>
+</t>
+</templates>

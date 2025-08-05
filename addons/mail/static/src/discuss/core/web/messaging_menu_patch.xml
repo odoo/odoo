@@ -2,19 +2,14 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
-            <div class="flex-grow-1"/>
-            <button t-if="!ui.isSmall" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link px-2 py-1'" t-on-click.stop="onClickNewMessage">
-                New Message
-            </button>
             <t t-if="ui.isSmall">
-                <t t-if="store.discuss.activeTab !== 'main' or !env.inDiscussApp">
-                    <button name="startMeetingButton" class="w-50 m-1 me-0 btn btn-primary" t-on-click.stop="onClickStartMeeting">
-                        <i class="fa fa-user-plus"/> New Meeting
-                    </button>
-                    <button t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
-                        <i class="fa fa-pencil"/> Start a conversation
-                    </button>
-                </t>
+                <DiscussSearch t-if="store.discuss.activeTab !== 'main' or !env.inDiscussApp" class="'w-100 px-2 pb-1'"/>
+            </t>
+            <t t-else="">
+                <div class="flex-grow-1"/>
+                <button t-if="!ui.isSmall" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link px-2 py-1'" t-on-click.stop="onClickNewMessage">
+                    New Message
+                </button>
             </t>
         </xpath>
     </t>
