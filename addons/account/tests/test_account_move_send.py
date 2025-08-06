@@ -1171,12 +1171,12 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'is_invoice_report': True,
         })
         self.company_data['default_journal_sale'].invoice_template_pdf_report_id = third_report
-        invoice2 = self.init_invoice('out_invoice', partner=self.partner_b, post=True, amounts=[1000], journal=self.company_data['default_journal_sale'])
+        invoice2 = self.init_invoice('out_invoice', partner=self.partner_b, post=True, amounts=[1000])
         wizard = self.create_send_and_print(invoice2)
         self.assertEqual(third_report, wizard.pdf_report_id)
 
         # Test with 3 reports, the second one is default for partner and the third one is default for journal
-        invoice3 = self.init_invoice('out_invoice', partner=self.partner_a, post=True, amounts=[300], journal=self.company_data['default_journal_sale'])
+        invoice3 = self.init_invoice('out_invoice', partner=self.partner_a, post=True, amounts=[300])
         wizard = self.create_send_and_print(invoice3)
         self.assertEqual(second_report, wizard.pdf_report_id)
 

@@ -3277,6 +3277,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'company_id': self.company_data_2['company'].id,
         })
 
+        # Create an additional journal to ensure show_journal is True and avoid invisible journal_id constraint
+        self.env['account.journal'].create({
+            'name': 'abc',
+            'code': 'YYYYY',
+            'type': 'sale',
+            'company_id': self.company_data['company'].id,
+        })
+
         product.with_company(self.company_data['company']).write({
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
@@ -3942,7 +3950,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.line_ids.currency_id, self.other_currency)
 
         with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
-            move_form.journal_id = self.company_data['default_journal_sale']
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.product_id = self.product_a
                 line_form.tax_ids.clear()

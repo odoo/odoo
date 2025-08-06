@@ -398,6 +398,7 @@ class AccountMove(models.Model):
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
+    show_journal = fields.Boolean(compute='_compute_show_journal')
     # === Partner fields === #
     partner_id = fields.Many2one(
         'res.partner',
@@ -1368,6 +1369,11 @@ class AccountMove(models.Model):
                         'balance': invoice.amount_total_signed,
                         'amount_currency': invoice.amount_total_in_currency_signed,
                     }
+
+    @api.depends('suitable_journal_ids')
+    def _compute_show_journal(self):
+        for move in self:
+            move.show_journal = len(move.suitable_journal_ids) > 1
 
     def _compute_payments_widget_to_reconcile_info(self):
 

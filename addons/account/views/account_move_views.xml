@@ -1065,13 +1065,12 @@
                                            options="{'no_quick_create':True}" readonly="state in ['cancel', 'posted']"/>
                                 </div>
                                 <field name="delivery_date" invisible="not show_delivery_date" readonly="state != 'draft'"/>
-                                <label for="journal_id" groups="account.group_account_readonly"/>
-                                <label for="currency_id" groups="!account.group_account_readonly,base.group_multi_currency"/>
+                                <label for="journal_id" invisible="not show_journal"/>
+                                <label for="currency_id" groups="base.group_multi_currency" invisible="show_journal"/>
                                 <div name="journal_div"
-                                     class="d-flex"
-                                     groups="account.group_account_readonly,base.group_multi_currency">
+                                     class="d-flex">
                                     <field name="journal_id"
-                                           groups="account.group_account_readonly"
+                                           invisible="not show_journal"
                                            options="{'no_create': True, 'no_open': True}"
                                            readonly="posted_before and name not in (False, '', '/')"/>
                                     <div name="in_and_refresh_button_div"
