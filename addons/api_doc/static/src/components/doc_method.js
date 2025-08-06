@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, markup } from "@odoo/owl";
 import { DocRequest } from "@api_doc/components/doc_request";
 import { DocTable, TABLE_TYPES } from "@api_doc/components/doc_table";
 import { getParameterDefaultValue } from "@api_doc/utils/doc_model_utils";
@@ -27,7 +27,7 @@ export class DocMethod extends Component {
                     value: "annotation" in options ? options.annotation : "-",
                 },
                 { type: TABLE_TYPES.Code, value: this.getDefaultValue(options) },
-                { type: TABLE_TYPES.Tooltip, value: options.doc || "" },
+                { type: TABLE_TYPES.Tooltip, value: markup(options.doc) || "" },
             ]),
         };
     }
@@ -63,7 +63,6 @@ export class DocMethod extends Component {
 
         const request = {
             ids: [],
-            kwargs: {},
             context: {},
         };
 
@@ -73,7 +72,7 @@ export class DocMethod extends Component {
 
         for (const paramName in this.method.parameters) {
             const param = this.method.parameters[paramName];
-            request.kwargs[paramName] = getParameterDefaultValue(paramName, param);
+            request[paramName] = getParameterDefaultValue(paramName, param);
         }
 
         return request;

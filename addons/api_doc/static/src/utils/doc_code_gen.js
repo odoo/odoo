@@ -12,7 +12,21 @@ function noQuotesStringify(obj) {
 
 export function createRequestCode({ language, url, requestObj }) {
     if (LANGUAGES[language] === LANGUAGES.json) {
-        return JSON.stringify(requestObj, null, 4);
+
+        // Display the domain inline
+        const replacer = (key, value) => {
+            if (key === "domain" && Array.isArray(value)) {
+                return { __inline_json__: JSON.stringify(value) };
+            }
+            return value;
+        };
+        let json = JSON.stringify(requestObj, replacer, 4);
+        json = json.replace(
+            /{\s*"__inline_json__":\s*"(.+?)"\s*}/g,
+            (match, p1) => JSON.parse(`"${p1}"`)
+        );
+        return json;
+
     } else if (LANGUAGES[language] === LANGUAGES.javascript) {
         const objStr = noQuotesStringify(requestObj).replace(/\n/gm, "\n    ");
 

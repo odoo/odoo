@@ -16,10 +16,16 @@ export class DocTable extends Component {
 
     setup() {
         this.subTableRef = useRef("subTableRef");
+        this.tooltipRef = useRef("tooltipRef");
+        this.hideTooltipTimeout = null;
         this.state = useState({
             sortBy: 0,
             sortOrder: "desc",
             subTable: undefined,
+            tooltipContent: "",
+            tooltipStyle: "",
+            lastTooltipLeft: 0,
+            lastTooltipTop: 0,
         });
 
         onWillRender(() => {
@@ -37,6 +43,55 @@ export class DocTable extends Component {
         });
 
         useExternalListener(window, "scroll", () => (this.state.subTable = null));
+    }
+
+    showDynamicTooltip(event, content) {
+        if (this.hideTooltipTimeout) {
+            clearTimeout(this.hideTooltipTimeout);
+            this.hideTooltipTimeout = null;
+        }
+        this.state.tooltipContent = content;
+        const triggerRect = event.target.getBoundingClientRect();
+        this.state.tooltipStyle = `
+            opacity: 0;
+            pointer-events: none;
+        `;
+        requestAnimationFrame(() => {
+            if (!this.tooltipRef.el) {
+                return;
+            }
+            const tooltipRect = this.tooltipRef.el.getBoundingClientRect();
+            const top = triggerRect.top - tooltipRect.height - 10;
+            const left = triggerRect.left - tooltipRect.width / 2;
+            this.state.tooltipStyle = `
+                top: ${top}px;
+                left: ${left}px;
+                position: fixed;
+                opacity: 1;
+                pointer-events: auto;
+            `;
+            this.state.lastTooltipTop = top;
+            this.state.lastTooltipLeft = left;
+        });
+    }
+
+    hideDynamicTooltip() {
+        if (this.hideTooltipTimeout) {
+            clearTimeout(this.hideTooltipTimeout);
+            this.hideTooltipTimeout = null;
+        }
+        const top = this.state.lastTooltipTop;
+        const left = this.state.lastTooltipLeft;
+        this.state.tooltipStyle = `
+            top: ${top}px;
+            left: ${left}px;
+            position: fixed;
+            opacity: 0;
+            pointer-events: none;
+        `;
+        this.hideTooltipTimeout = setTimeout(() => {
+            this.state.tooltipContent = "";
+        }, 200);
     }
 
     computeItems() {
