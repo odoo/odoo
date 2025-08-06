@@ -4,6 +4,7 @@
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from unittest.mock import patch
+from datetime import datetime
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -161,6 +162,24 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.picking_count, 1)
+
+    def test_order_sequence_in_self(self):
+        self.pos_config.write({
+            'use_presets': False,
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_order_sequence_in_self")
+
+        current_year = str(datetime.now().year)[-2:]
+        references = self.env['pos.order'].search([], limit=4, order="id desc").mapped('pos_reference')
+        self.assertEqual(references, [f"{current_year}0-{self.pos_config.id}-00000{4 - i}" for i in range(4)])
+        self.assertEqual(self.pos_config.order_backend_seq_id.number_next, 5)
 
     def test_order_table_assignement(self):
         """

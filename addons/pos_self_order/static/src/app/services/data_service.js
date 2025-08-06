@@ -15,6 +15,9 @@ patch(PosData.prototype, {
     get databaseName() {
         return `pos-self-order-${odoo.access_token}`;
     },
+    async initializeDeviceIdentifier() {
+        return false;
+    },
     initIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? super.initIndexedDB(...arguments)

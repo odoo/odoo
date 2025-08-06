@@ -245,7 +245,6 @@
                                             <label string="Invoices" for="pos_invoice_journal_id" class="col-lg-3 o_light_label"/>
                                             <field name="pos_invoice_journal_id"
                                                 domain="[('company_id', '=', company_id), ('type', '=', 'sale')]"
-                                                required="pos_company_has_template"
                                                 context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
                                         </div>
                                     </div>
@@ -324,9 +323,6 @@
                                             <field name="pos_iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
                                         </div>
                                     </div>
-                                </setting>
-                                <setting id="order_reference" groups="base.group_no_one" string="Order Reference" help="Generation of your order references">
-                                    <field name="pos_sequence_id" readonly="1"/>
                                 </setting>
                                 <setting id="pos_sms" help="Send Text receipt Using sms">
                                     <field name="pos_module_pos_sms"/>

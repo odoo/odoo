@@ -3,12 +3,18 @@ import { models } from "@web/../tests/web_test_helpers";
 export class PosConfig extends models.ServerModel {
     _name = "pos.config";
 
-    notify_synchronisation(session_id, login_number, records = {}) {
+    notify_synchronisation(session_id, device_identifier, records = {}) {
         return true;
     }
 
     _load_pos_data_fields() {
         return [];
+    }
+
+    register_new_device_identifier(self) {
+        return {
+            device_identifier: 1,
+        };
     }
 
     read_config_open_orders(configId) {
@@ -20,6 +26,20 @@ export class PosConfig extends models.ServerModel {
                 ...this.env["pos.order"].read_pos_data(orderIds, [], configId),
             },
         };
+    }
+
+    get_next_order_refs(device_identifier = 0) {
+        const sequence_num = ++this._orderRef;
+
+        const now = new Date();
+        const YY = now.getFullYear().toString().slice(-2);
+        const LL = String(device_identifier % 100);
+        const SSS = String(this.id);
+        const F = 0;
+        const OOOO = String(sequence_num).padStart(6, "0");
+        const order_ref = `${YY}${LL}-${SSS}-${F}${OOOO}`;
+
+        return [order_ref, sequence_num, String(sequence_num).padStart(3, "0")];
     }
 
     _load_pos_data_read(data) {
@@ -67,8 +87,6 @@ export class PosConfig extends models.ServerModel {
             proxy_ip: false,
             active: true,
             uuid: "6f9034bb-faf8-4875-b216-dafb78982918",
-            sequence_id: false,
-            sequence_line_id: false,
             session_ids: [1],
             current_session_id: 1,
             current_session_state: "opening_control",

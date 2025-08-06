@@ -216,10 +216,10 @@ describe("pos_store.js", () => {
         const orderData = store.getOrderData(order);
         expect(orderData).toEqual({
             reprint: undefined,
-            pos_reference: "",
+            pos_reference: "1001",
             config_name: "Hoot",
             time: "10:30",
-            tracking_number: "",
+            tracking_number: "1001",
             preset_time: false,
             preset_name: "In",
             employee_name: "Administrator",
@@ -292,14 +292,13 @@ describe("pos_store.js", () => {
         expect(deletedOrder).toBe(true);
     });
 
-    test("getNextOrderRefs", async () => {
+    test("setNextOrderRefs", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
-        await store.getNextOrderRefs(order);
+        await store.setNextOrderRefs(order);
         expect(order.pos_reference).toBeOfType("string");
         expect(order.pos_reference.length).toBeGreaterThan(1);
         expect(order.sequence_number).toBeOfType("integer");
-        expect(order.sequence_number).toBeGreaterThan(0);
         expect(order.tracking_number).toBeOfType("string");
         expect(order.tracking_number.length).toBeGreaterThan(2);
     });

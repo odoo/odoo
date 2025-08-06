@@ -10,6 +10,7 @@ import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 const { DateTime } = luxon;
@@ -52,11 +53,17 @@ export class PosData extends Reactive {
         }
 
         this.initializeWebsocket();
+        await this.initializeDeviceIdentifier();
         await this.intializeDataRelation();
 
         browser.addEventListener("online", () => this.checkConnectivity());
         browser.addEventListener("offline", () => this.checkConnectivity());
         this.bus.addEventListener("BUS:CONNECT", this.reconnectWebSocket.bind(this));
+    }
+
+    async initializeDeviceIdentifier() {
+        this.device = new DeviceIdentifierSequence({ orm: this.orm });
+        await this.device.initialize();
     }
 
     async checkConnectivity() {
@@ -772,22 +779,22 @@ export class PosData extends Reactive {
 
     async checkAndDeleteMissingOrders(results) {
         if (results && results["pos.order"]) {
-            const ids = results["pos.order"]
-                .map((o) => o.id)
-                .filter((id) => typeof id === "number");
+            const ids = new Set(
+                results["pos.order"].map((o) => o.id).filter((id) => typeof id === "number")
+            );
 
-            if (ids.length) {
+            if (ids.size) {
                 const result = await this.callRelated(
                     "pos.order",
                     "read_pos_orders",
-                    [[["id", "in", ids]]],
+                    [[["id", "in", [...ids]]]],
                     {},
                     false,
                     true
                 );
-                const serverIds = result["pos.order"].map((r) => r.id);
 
-                for (const id of ids) {
+                const serverIds = result["pos.order"].map((r) => r.id);
+                for (const id of [...ids]) {
                     if (!serverIds.includes(id)) {
                         this.localDeleteCascade(this.models["pos.order"].get(id));
                     }

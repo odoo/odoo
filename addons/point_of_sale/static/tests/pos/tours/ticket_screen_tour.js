@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Chrome.clickOrders(),
             TicketScreen.deleteOrder("001"),
             Dialog.confirm(),
-            TicketScreen.nthRowContains(1, "003"),
+            TicketScreen.nthRowContains(1, "001"),
             TicketScreen.nthRowIsHighlighted(1),
             Chrome.clickRegister(),
             ProductScreen.addOrderline("Desk Pad", "1", "2"),
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.nthRowContains(1, "Ongoing"),
             TicketScreen.selectFilter("Active"),
             TicketScreen.nthRowContains(3, "Receipt"),
-            TicketScreen.search("Receipt Number", "-00005"),
+            TicketScreen.search("Receipt Number", "-00003"),
             TicketScreen.nthRowContains(1, "Receipt"),
             TicketScreen.search("Customer", "Partner Test 1"),
             TicketScreen.nthRowContains(1, "Partner Test 1", false),
@@ -78,11 +78,11 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             // Open again the TicketScreen to check the Paid filter.
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
-            TicketScreen.nthRowContains(1, "-00005"),
-            TicketScreen.selectOrder("005"),
+            TicketScreen.nthRowContains(1, "003"),
+            TicketScreen.selectOrder("003"),
             // Pay the order that was in PaymentScreen.
             TicketScreen.selectFilter("Payment"),
-            TicketScreen.selectOrder("004"),
+            TicketScreen.selectOrder("002"),
             TicketScreen.loadSelectedOrder(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -93,9 +93,9 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.nthRowContains(1, "Partner Test 2", false),
-            TicketScreen.nthRowContains(2, "-00005"),
+            TicketScreen.nthRowContains(2, "003"),
             // Invoice order
-            TicketScreen.selectOrder("005"),
+            TicketScreen.selectOrder("003"),
             inLeftSide(Order.hasLine()),
             TicketScreen.clickControlButton("Invoice"),
             Dialog.confirm(),
@@ -111,7 +111,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ...ProductScreen.clickRefund(),
             //Filter should be automatically 'Paid'.
             TicketScreen.filterIs("Paid"),
-            TicketScreen.selectOrder("005"),
+            TicketScreen.selectOrder("003"),
             inLeftSide([
                 ...Order.hasLine({ productName: "Desk Pad", withClass: ".selected" }),
                 Numpad.click("3"),
@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
             ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("005"),
+            TicketScreen.selectOrder("003"),
             inLeftSide(Order.hasLine({ productName: "Desk Pad", withClass: ".selected" })),
             ProductScreen.clickNumpad("1"),
             TicketScreen.toRefundTextContains("To Refund: 1"),
@@ -145,7 +145,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ]),
             // Check if the amount being refunded changed to 2.
             ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("005"),
+            TicketScreen.selectOrder("003"),
             TicketScreen.toRefundTextContains("Refunding 1.00"),
             Chrome.clickRegister(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
@@ -157,7 +157,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ReceiptScreen.clickNextOrder(),
             // Check refunded quantity.
             ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("005"),
+            TicketScreen.selectOrder("003"),
             TicketScreen.refundedNoteContains("1.00 Refunded"),
         ].flat(),
 });

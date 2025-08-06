@@ -35,6 +35,12 @@ export class PosOrder extends models.ServerModel {
         };
     }
 
+    create() {
+        const orderId = super.create(...arguments);
+        this.write([orderId], { pos_reference: "000-0-000000" });
+        return orderId;
+    }
+
     sync_from_ui(data) {
         const orderIds = [];
         for (const record of data) {

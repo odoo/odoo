@@ -117,7 +117,7 @@ describe("restaurant pos_store.js", () => {
             await sync.collect({
                 static_records: {},
                 session_id: 1,
-                login_number: 0,
+                device_identifier: 0,
                 records: {},
             });
 
@@ -252,6 +252,7 @@ describe("restaurant pos_store.js", () => {
                         lines: lines.map((line) => line.id),
                         write_date: date,
                         table_id: table.id,
+                        pos_reference: "000-0-000000",
                         session_id: store.session.id,
                         config_id: store.config.id,
                     },

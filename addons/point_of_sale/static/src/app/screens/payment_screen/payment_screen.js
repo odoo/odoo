@@ -221,6 +221,14 @@ export class PaymentScreen extends Component {
         }
     }
     async toggleIsToInvoice() {
+        if (!this.pos.config.canInvoice) {
+            this.notification.add(
+                _t("To enable invoice creation, please add a journal for it in the settings."),
+                { type: "warning" }
+            );
+            return;
+        }
+
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
     }
     openCashbox() {

@@ -72,6 +72,9 @@ class PosOrder(models.Model):
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             order['session_id'] = self._get_valid_session(order).id
 
+        if not order.get('source'):
+            order['source'] = 'pos'
+
         if order.get('partner_id'):
             partner_id = self.env['res.partner'].browse(order['partner_id'])
             if not partner_id.exists():
@@ -141,8 +144,11 @@ class PosOrder(models.Model):
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
 
-        if self.to_invoice and self.state == 'paid':
+        if self.to_invoice and self.state == 'paid' and self.config_id.invoice_journal_id:
             self._generate_pos_order_invoice()
+        elif not self.config_id.invoice_journal_id:
+            _logger.warning('Trying to create an invoice without any journal configured')
+            raise UserError(_('No invoice journal configured for this POS session.'))
 
         return self.id
 
@@ -316,16 +322,7 @@ class PosOrder(models.Model):
     general_customer_note = fields.Text(string='General Customer Note')
     internal_note = fields.Text(string='Internal Note')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
-    pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True, help="""
-        Human readable reference for this order.
-            * Format: YYLL-SSS-FOOOO
-            * YY is the year
-            * LL is the login number (proxy to the device)
-            * SSS is the session id
-            * F is 1 or 0 (1 if sequence number is generated from client)
-            * OOOO is the sequence number.
-    """
-    )
+    pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',
@@ -361,6 +358,7 @@ class PosOrder(models.Model):
         string="Reversal Account Moves",
         help="List of account moves created when this POS order was reversed and invoiced after session close."
     )
+    source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
 
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
@@ -539,11 +537,15 @@ class PosOrder(models.Model):
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
-        if values.get('tracking_number') is None and values.get('pos_reference') is None and values.get('sequence_number') is None:
-            pos_reference, sequence_number, tracking_number = session.get_next_order_refs()
-            values['pos_reference'] = pos_reference
-            values['sequence_number'] = sequence_number
+
+        if not values.get('pos_reference'):
+            reference, tracking_number = session.config_id._get_next_order_refs()
+            values['pos_reference'] = reference
             values['tracking_number'] = tracking_number
+
+        if not values.get('sequence_number'):
+            values['sequence_number'] = session.config_id.order_seq_id._next()  # Some localization needs orders to have a sequence number
+
         return values
 
     def write(self, vals):
@@ -648,7 +650,8 @@ class PosOrder(models.Model):
         if self.refunded_order_id.exists():
             return _('%(refunded_order)s REFUND', refunded_order=self.refunded_order_id.name)
         else:
-            return session.config_id.sequence_id._next()
+            last_reference_part = self.pos_reference.split('-')[-1]
+            return f"{session.config_id.name} - {last_reference_part}"
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -1160,7 +1163,7 @@ class PosOrder(models.Model):
         for order in pos_order_ids:
             order._ensure_access_token()
             if not self.env.context.get('preparation'):
-                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('login_number', 0))
+                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('device_identifier', 0))
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
         return pos_order_ids.read_pos_data(orders, config)
@@ -1221,7 +1224,7 @@ class PosOrder(models.Model):
 
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
-        pos_reference, sequence_number, tracking_number = current_session.get_next_order_refs()
+        pos_reference, tracking_number = current_session.config_id._get_next_order_refs()
         return {
             'name': _('%(name)s REFUND', name=self.name),
             'session_id': current_session.id,
@@ -1231,7 +1234,6 @@ class PosOrder(models.Model):
             'amount_paid': 0,
             'is_total_cost_computed': False,
             'is_refund': True,
-            'sequence_number': sequence_number,
             'tracking_number': tracking_number,
         }
 
@@ -1520,8 +1522,8 @@ class PosOrderLine(models.Model):
             if order and order.exists() and not vals.get('name'):
                 # set name based on the sequence specified on the config
                 config = order.session_id.config_id
-                if config.sequence_line_id:
-                    vals['name'] = config.sequence_line_id._next()
+                if config.order_line_seq_id:
+                    vals['name'] = config.order_line_seq_id._next()
             if not vals.get('name'):
                 # fallback on any pos.order sequence
                 vals['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')

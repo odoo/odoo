@@ -7,6 +7,8 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
+const { DateTime } = luxon;
+
 registry.category("web_tour.tours").add("PosResTicketScreenTour", {
     steps: () =>
         [
@@ -41,9 +43,9 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             ProductScreen.addOrderline("Coca-Cola", "1", "3"),
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Self-Order"),
+            TicketScreen.nthRowContains(1, `${String(DateTime.now().year).slice(-2)}0`),
             TicketScreen.nthRowContains(1, "T 101"),
-            TicketScreen.nthRowNotContains(2, "Self-Order"),
+            TicketScreen.nthRowContains(2, `${String(DateTime.now().year).slice(-2)}1`),
             TicketScreen.nthRowContains(2, "T 103"),
         ].flat(),
 });

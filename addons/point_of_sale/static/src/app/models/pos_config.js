@@ -9,6 +9,10 @@ export class PosConfig extends Base {
         this.uiState = {};
     }
 
+    get canInvoice() {
+        return Boolean(this.raw.invoice_journal_id);
+    }
+
     get useProxy() {
         return (
             this.is_posbox &&

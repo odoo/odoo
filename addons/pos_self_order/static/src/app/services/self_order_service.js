@@ -648,6 +648,7 @@ export class SelfOrder extends Reactive {
             .filter((o) => o.state === "draft" && typeof o.id === "number")
             .map((order) => ({
                 access_token: order.access_token,
+                state: order.state,
                 write_date: serializeDateTime(order.write_date.plus({ seconds: 1 })),
             }))
             .filter((order) => order.access_token);
