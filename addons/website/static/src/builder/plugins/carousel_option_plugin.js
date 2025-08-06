@@ -71,22 +71,29 @@ export class CarouselOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         get_gallery_items_handlers: this.getGalleryItems.bind(this),
         reorder_items_handlers: this.reorderCarouselItems.bind(this),
-        before_save_handlers: () => {
-            const proms = [];
-            // Restore all the carousels so their first slide is the active one.
-            for (const carouselEl of this.editable.querySelectorAll(".carousel")) {
-                const firstItemEl = carouselEl.querySelector(".carousel-item");
-                if (firstItemEl) {
-                    if (firstItemEl.classList.contains("active")) {
-                        continue;
-                    }
-                    proms.push(this.slide(carouselEl, 0));
-                }
-            }
-            return Promise.all(proms);
-        },
+        before_save_handlers: this.restoreCarousels.bind(this),
         is_unremovable_selector: carouselItemOptionSelector,
     };
+
+    /**
+     * Restores all the carousels so their first slide is the active one.
+     */
+    restoreCarousels() {
+        // Set the first slide as the active one.
+        for (const carouselEl of this.editable.querySelectorAll(".carousel")) {
+            carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
+                itemEl.classList.remove("next", "prev", "left", "right");
+                itemEl.classList.toggle("active", i === 0);
+            });
+            carouselEl.querySelectorAll(".carousel-indicators > *").forEach((indicatorEl, i) => {
+                indicatorEl.classList.toggle("active", i === 0);
+                indicatorEl.removeAttribute("aria-current");
+                if (i === 0) {
+                    indicatorEl.setAttribute("aria-current", "true");
+                }
+            });
+        }
+    }
 
     getTitleExtraInfo(editingElement) {
         const itemEls = [...editingElement.parentElement.children];
