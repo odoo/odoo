@@ -309,9 +309,9 @@ class AccountMoveSendWizard(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.constrains('move_id')
-    def _check_move_id_constrains(self):
+    def _check_move_id_constraints(self):
         for wizard in self:
-            self._check_move_constrains(wizard.move_id)
+            self._check_move_constraints(wizard.move_id)
 
     # -------------------------------------------------------------------------
     # HELPERS

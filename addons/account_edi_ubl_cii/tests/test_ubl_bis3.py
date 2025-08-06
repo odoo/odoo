@@ -40,6 +40,16 @@ class TestUblBis3(AccountTestInvoicingCommon):
             'bank_ids': [Command.create({'acc_number': 'BE15001559627230'})],
         })
 
+    def setup_partner_as_fr1(self, partner):
+        partner.write({
+            'street': "Rue de la Paix 1",
+            'zip': "75000",
+            'city': "Paris",
+            'vat': 'FR23334175221',
+            'country_id': self.env.ref('base.fr').id,
+            'bank_ids': [Command.create({'acc_number': 'FR15001559627230'})],
+        })
+
     def setup_partner_as_be2(self, partner):
         partner.write({
             'street': "Rue des Bourlottes 9",
@@ -614,3 +624,93 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_dispatch_base_lines_delta')
+
+    # -------------------------------------------------------------------------
+    # SELF-BILLED INVOICE
+    # -------------------------------------------------------------------------
+
+    def test_export_vendor_bill(self):
+        self.env.company.peppol_activate_self_billing_sending = True
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'is_self_billing': True,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set([tax_21.id])],
+                }),
+            ],
+        })
+
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_bill')
+
+    def test_export_vendor_bill_reverse_charge(self):
+        self.env.company.peppol_activate_self_billing_sending = True
+        self.setup_partner_as_fr1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21_reverse_charge = self.percent_tax(
+            21.0,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        )
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'is_self_billing': True,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set([tax_21_reverse_charge.id])],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_bill_reverse_charge')
+
+    def test_export_vendor_credit_note(self):
+        self.env.company.peppol_activate_self_billing_sending = True
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_refund',
+            'is_self_billing': True,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set([tax_21.id])],
+                }),
+            ],
+        })
+
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_credit_note')

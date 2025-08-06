@@ -187,15 +187,21 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         invoice = vals['invoice']
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.partner_id
+        partner_shipping = invoice.partner_shipping_id or invoice.partner_id
+
+        if invoice.is_purchase_document():
+            supplier, customer = customer, supplier
+            partner_shipping = customer
 
         vals.update({
             'document_type': 'debit_note' if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id
                 else 'credit_note' if invoice.move_type == 'out_refund'
                 else 'invoice',
 
+            'process_type': 'billing',
             'supplier': supplier,
             'customer': customer,
-            'partner_shipping': invoice.partner_shipping_id or invoice.partner_id,
+            'partner_shipping': partner_shipping,
 
             'currency_id': invoice.currency_id,
             'company_currency_id': invoice.company_id.currency_id,
@@ -225,7 +231,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'cbc:UBLVersionID': {'_text': '2.0'},
             'cbc:ID': {'_text': invoice.name},
             'cbc:IssueDate': {'_text': invoice.invoice_date},
-            'cbc:InvoiceTypeCode': {'_text': 380} if vals['document_type'] == 'invoice' else None,
+            'cbc:InvoiceTypeCode': {'_text': 389 if vals['process_type'] == 'selfbilling' else 380} if vals['document_type'] == 'invoice' else None,
             'cbc:Note': {'_text': html2plaintext(invoice.narration)} if invoice.narration else None,
             'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
             'cac:OrderReference': {
@@ -431,7 +437,10 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             return {
                 'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
                 **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
-                'amount': tax.amount if tax else 0.0,
+                # Reverse-charge taxes with +100/-100% repartition lines are used in vendor bills.
+                # In a self-billed invoice, we report them from the seller's perspective, so
+                # we change their percentage to 0%.
+                'amount': tax.amount if tax and not tax.has_negative_factor else 0.0,
                 'amount_type': tax.amount_type if tax else 'percent',
             }
 

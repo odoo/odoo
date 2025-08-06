@@ -20,8 +20,9 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_jp.xml"
 
-    def _get_customization_id(self):
-        return 'urn:peppol:pint:billing-1@jp-1'
+    def _get_customization_id(self, process_type='billing'):
+        if process_type == 'billing':
+            return 'urn:peppol:pint:billing-1@jp-1'
 
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']

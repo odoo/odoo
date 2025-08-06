@@ -306,11 +306,19 @@ class AccountMoveSend(models.AbstractModel):
             raise UserError('\n'.join(danger_alert_messages))
 
     @api.model
-    def _check_move_constrains(self, moves):
-        if any(move.state != 'posted' for move in moves):
-            raise UserError(_("You can't generate invoices that are not posted."))
-        if any(not move.is_sale_document(include_receipts=True) for move in moves):
-            raise UserError(_("You can only generate sales documents."))
+    def _check_move_constraints(self, moves):
+        for move in moves:
+            if move_constraints := self._get_move_constraints(move):
+                raise UserError(next(iter(move_constraints.values()), None))
+
+    @api.model
+    def _get_move_constraints(self, move):
+        constraints = {}
+        if move.state != 'posted':
+            constraints['not_posted'] = _("You can't generate invoices that are not posted.")
+        if not move.is_sale_document(include_receipts=True):
+            constraints['not_sale_document'] = _("You can only generate sales documents.")
+        return constraints
 
     @api.model
     def _check_invoice_report(self, moves, **custom_settings):
@@ -724,7 +732,7 @@ class AccountMoveSend(models.AbstractModel):
         """Assert the data provided to _generate_and_send_invoices are correct.
         This is a security in case the method is called directly without going through the wizards.
         """
-        self._check_move_constrains(moves)
+        self._check_move_constraints(moves)
         self._check_invoice_report(moves, **custom_settings)
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)

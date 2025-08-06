@@ -260,12 +260,23 @@ class AccountEdiCommon(models.AbstractModel):
             if not tax or tax.amount == 0:
                 # in theory, you should indicate the precise law article
                 return 'E'
+            elif tax.has_negative_factor:
+                # Special case: Purchase reverse-charge taxes for self-billed invoices.
+                # From the buyer's perspective, this is a standard tax with a non-zero percentage but
+                # two tax repartition lines that cancel each other out.
+                # But from the seller's perspective, this is a zero-percent tax (VAT liability is deferred
+                # to the buyer).
+                # For a self-billed invoice we, the buyer, create the invoice on behalf of the seller.
+                # So in the XML we put the zero-percent tax with code 'AE' that the seller would have used.
+                return 'AE'
             else:
                 return 'S'  # standard VAT
 
         if supplier.country_id.code in european_economic_area and supplier.vat:
-            if tax.amount != 0:
-                # otherwise, the validator will complain because G and K code should be used with 0% tax
+            if tax.amount != 0 and not tax.has_negative_factor:
+                # Special case: Purchase reverse-charge taxes for self-billed invoices.
+                # See explanation above.
+                # In the XML we put the zero-percent tax with code 'G' or 'K' that the buyer would have used.
                 return 'S'
             if customer.country_id.code not in european_economic_area:
                 return 'G'
