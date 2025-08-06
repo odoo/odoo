@@ -2038,6 +2038,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
         );
     }
+    orderContainsProduct(product) {
+        const lines = this.getOpenOrders().flatMap((o) => o.lines);
+        return lines.some((l) => l.product_id.product_tmpl_id.id === product.id);
+    }
     async loadSampleData() {
         const [isPosManager, isAdmin] = await Promise.all([
             user.hasGroup("point_of_sale.group_pos_manager"),

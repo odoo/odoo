@@ -147,6 +147,30 @@ describe("pos_store.js", () => {
         expect(orderChange.new.length).toBe(0);
         expect(orderChange.cancelled.length).toBe(0);
     });
+
+    test("orderContainsProduct", async () => {
+        const store = await setupPosEnv();
+        await getFilledOrder(store);
+        const product1 = store.models["product.template"].get(5);
+        const product2 = store.models["product.template"].get(6);
+        const product3 = store.models["product.template"].get(8);
+        expect(store.orderContainsProduct(product1)).toBe(true);
+        expect(store.orderContainsProduct(product2)).toBe(true);
+        expect(store.orderContainsProduct(product3)).toBe(false);
+        const order = await store.addNewOrder();
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: product3,
+                qty: 1,
+            },
+            order
+        );
+
+        expect(store.orderContainsProduct(product1)).toBe(true);
+        expect(store.orderContainsProduct(product2)).toBe(true);
+        expect(store.orderContainsProduct(product3)).toBe(true);
+    });
+
     test("generateReceiptsDataToPrint", async () => {
         const store = await setupPosEnv();
         const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
