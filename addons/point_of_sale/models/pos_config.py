@@ -212,10 +212,30 @@ class PosConfig(models.Model):
 
     def notify_synchronisation(self, session_id, login_number, records={}):
         self.ensure_one()
-        static_records = {}
+        models = []
+        search_params = {}
 
         for model, ids in records.items():
-            static_records[model] = self.env[model]._read_pos_record(ids, self.id)
+            models.append(model)
+            search_params[model] = {
+                'domain': [('id', 'in', ids)],
+            }
+
+        if len(models) == 0:
+            self._notify('SYNCHRONISATION', {
+                'static_records': {},
+                'session_id': session_id,
+                'login_number': login_number,
+                'records': records
+            })
+            return
+
+        static_records = self.current_session_id.load_data_pos({
+            'models': models,
+            'records': {},
+            'search_params': search_params,
+            'only_records': True,
+        })
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
@@ -252,9 +272,11 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.session'][0]['config_id'])]
+        return [('id', '=', data['pos.session'].config_id.id)]
 
     def _load_pos_data(self, data):
+        # Deprecated
+        # Kept for backward compatibility.
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(self.id)
         return self.search_read(domain, fields, load=False)

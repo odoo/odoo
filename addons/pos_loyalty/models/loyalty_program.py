@@ -18,7 +18,7 @@ class LoyaltyProgram(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
+        config_id = data['pos.config']
         return [('id', 'in', config_id._get_program_ids().ids)]
 
     @api.model
@@ -30,9 +30,14 @@ class LoyaltyProgram(models.Model):
         ]
 
     def _load_pos_data(self, data):
+        # Deprecated
+        # Kept for backward compatibility.
         domain = self._server_date_to_domain(self._load_pos_data_domain(data))
         fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
         return self.sudo().search_read(domain, fields, load=False)
+
+    def _read_record(self, fields, load=False):
+        return self.sudo().read(fields, load=load)
 
     def _unrelevant_records(self):
         config_id = self.env.context.get('config_id')

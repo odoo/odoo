@@ -262,41 +262,45 @@ class PosConfig(models.Model):
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
             'res.country', 'res.country.state']
 
+    def _post_read_pos_self_data(self, data):
+        data[0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
+        data[0]['_pos_special_products_ids'] = self._get_special_products().ids
+        return super()._post_read_pos_self_data(data)
+
     def load_self_data(self):
+        metadata = self._load_self_metadata()
+        data = self._read_pos_self_data_from_metadata(metadata, self.id)
+        return data
+
+    def _load_self_metadata(self):
+        models = self._load_self_data_models()
+        records = {}
         # Init our first record, in case of self_order is pos_config
-        config_fields = self._load_pos_self_data_fields(self.id)
-        response = {
-            'pos.config': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
+        fields = self._load_pos_self_data_fields(self.id)
+        domain = [('id', '=', self.id)]
+        records['pos.config'] = {
+            'domain': domain,
+            'fields': fields,
+            'records': self.search(domain, limit=1),
+            'relations': self._load_pos_data_relations(fields),
         }
-        response['pos.config'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
-        response['pos.config'][0]['_pos_special_products_ids'] = self._get_special_products().ids
-        self.env['pos.session']._load_pos_data_relations('pos.config', response)
-
-        # Classic data loading
-        for model in self._load_self_data_models():
-            try:
-                response[model] = self.env[model].with_context(config_id=self.id)._post_read_pos_self_data(self.env[model]._load_pos_self_data(response))
-                self.env['pos.session']._load_pos_data_relations(model, response)
-            except AccessError:
-                response[model] = self.env[model]._load_pos_self_data_fields(self.id)
-
-                self.env['pos.session']._load_pos_data_relations(model, response)
-
-        return response
+        for model in models:
+            self.env[model]._load_pos_self_metadata(records, {})
+        return records
 
     def load_data_params(self):
         response = {}
         fields = self._load_pos_self_data_fields(self.id)
         response['pos.config'] = {
             'fields': fields,
-            'relations': self.env['pos.session']._load_pos_data_relations('pos.config', fields)
+            'relations': self._load_pos_data_relations(fields)
         }
 
         for model in self._load_self_data_models():
             fields = self.env[model]._load_pos_self_data_fields(self.id)
             response[model] = {
                 'fields': fields,
-                'relations': self.env['pos.session']._load_pos_data_relations(model, fields)
+                'relations': self.env[model]._load_pos_data_relations(fields)
             }
 
         return response

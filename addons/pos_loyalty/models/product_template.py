@@ -5,6 +5,8 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     def _load_pos_data(self, data):
+        # Deprecated
+        # Kept for backward compatibility.
         res = super()._load_pos_data(data)
         config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         rewards = config_id._get_program_ids().reward_ids

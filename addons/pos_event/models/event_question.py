@@ -13,4 +13,9 @@ class EventQuestion(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('event_id', 'in', [event['id'] for event in data['event.event']])]
+        event_ids = data['event.event'].ids
+        return [('event_id', 'in', event_ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['event.event']

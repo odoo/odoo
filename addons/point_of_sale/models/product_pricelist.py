@@ -8,8 +8,8 @@ class ProductPricelist(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-        pricelist_ids = [preset['pricelist_id'] for preset in data['pos.preset']]
+        config_id = data['pos.config']
+        pricelist_ids = data['pos.preset'].pricelist_id.ids
         return [('id', 'in', config_id._get_available_pricelists().ids + pricelist_ids)]
 
     @api.model
@@ -23,10 +23,11 @@ class ProductPricelistItem(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
-        product_ids = [p['id'] for p in data['product.product']]
-        product_categ = [c['id'] for c in data['product.category']]
-        pricelist_ids = [p['id'] for p in data['product.pricelist']]
+        product_tmpl_ids = data['product.product'].product_tmpl_id.ids
+        product_ids = data['product.product'].ids
+        product_categ = data['product.category'].ids
+        pricelist_ids = data['product.pricelist'].ids
+
         today = fields.Date.today()
         return [
             ('pricelist_id', 'in', pricelist_ids),
@@ -36,6 +37,10 @@ class ProductPricelistItem(models.Model):
             '|', ('date_end', '=', False), ('date_end', '>=', today),
             '|', ('categ_id', '=', False), ('categ_id', 'in', product_categ),
         ]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.pricelist', 'product.product', 'product.category']
 
     @api.model
     def _load_pos_data_fields(self, config_id):

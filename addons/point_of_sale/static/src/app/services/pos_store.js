@@ -191,15 +191,9 @@ export class PosStore extends WithLazyGetterTrap {
         ];
     }
 
-    async reloadData(fullReload = false) {
+    async reloadData() {
         await this.data.resetIndexedDB();
-        const url = new URL(window.location.href);
-
-        if (fullReload) {
-            url.searchParams.set("limited_loading", "0");
-        }
-
-        window.location.href = url.href;
+        window.location.reload();
     }
 
     async showLoginScreen() {
@@ -557,11 +551,23 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {Promise<Object>}
      */
     async loadNewProducts(domain, offset = 0, limit = 0) {
-        const result = await this.data.callRelated("product.template", "load_product_from_pos", [
-            odoo.pos_config_id,
-            domain,
-            offset,
-            limit,
+        const models = this.data.getRelatedModels("product.template");
+        const localData = await this.data.getCachedServerIdsFromIndexedDB(models);
+        const testLocalData = {
+            models: models,
+            records: localData,
+            search_params: {
+                "product.template": {
+                    domain: domain,
+                    offset: offset,
+                    limit: limit || false,
+                },
+            },
+            only_records: true,
+        };
+        const result = await this.data.callRelated("pos.session", "load_data_pos", [
+            odoo.pos_session_id,
+            testLocalData,
         ]);
         this.productAttributesExclusion = this.computeProductAttributesExclusion();
         return result;

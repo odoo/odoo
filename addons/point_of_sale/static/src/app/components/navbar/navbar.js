@@ -4,7 +4,6 @@ import { isDisplayStandalone, isMobileOS } from "@web/core/browser/feature_detec
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
-import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
     handleSaleDetails,
@@ -35,7 +34,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        SyncPopup,
         OrderTabs,
     };
     static props = {};
@@ -125,13 +123,6 @@ export class Navbar extends Component {
         return `/scoped_app?app_id=point_of_sale&app_name=${encodeURIComponent(
             this.pos.config.display_name
         )}&path=${encodeURIComponent(`pos/ui?config_id=${this.pos.config.id}`)}`;
-    }
-
-    async reloadProducts() {
-        this.dialog.add(SyncPopup, {
-            title: _t("Reload Data"),
-            confirm: (fullReload) => this.pos.reloadData(fullReload),
-        });
     }
 
     openCustomerDisplay() {

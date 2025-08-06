@@ -22,6 +22,10 @@ class ProductAttributeCustomValue(models.Model):
         return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order.line']
+
+    @api.model
     def _load_pos_data_fields(self, config_id):
         return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id', 'write_date']
 
@@ -36,8 +40,11 @@ class ProductTemplateAttributeLine(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
-        return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
+        return [('product_tmpl_id', 'in', data['product.template'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.template', 'product.template.attribute.value']
 
 
 class ProductTemplateAttributeValue(models.Model):
@@ -46,13 +53,17 @@ class ProductTemplateAttributeValue(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
-        ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
+        ptav_ids = data['product.product'].product_template_variant_value_ids.ids + data['product.template.attribute.line'].product_template_value_ids.ids
+        product_attribute_ids = data['product.attribute'].ids
         return AND([
             [('ptav_active', '=', True)],
-            [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']])],
+            [('attribute_id', 'in', product_attribute_ids)],
             [('id', 'in', list(ptav_ids))]
         ])
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.attribute']
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -64,9 +75,13 @@ class ProductTemplateAttributeExclusion(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
-        loaded_ptav_ids = list({ptav['id'] for ptav in data['product.template.attribute.value']})
+        loaded_product_tmpl_ids = data['product.template'].ids
+        loaded_ptav_ids = data['product.template.attribute.value'].ids
         return [('product_tmpl_id', 'in', loaded_product_tmpl_ids), ('product_template_attribute_value_id', 'in', loaded_ptav_ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.template', 'product.template.attribute.value']
 
     @api.model
     def _load_pos_data_fields(self, config_id):

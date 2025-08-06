@@ -9,7 +9,7 @@ class PosSession(models.Model):
 
     @api.model
     def _load_pos_self_data_domain(self, data):
-        return [('config_id', '=', data['pos.config'][0]['id']), ('state', '=', 'opened')]
+        return [('config_id', '=', data['pos.config'].id), ('state', '=', 'opened')]
 
     def _load_pos_self_data(self, data):
         result = super()._load_pos_self_data(data)

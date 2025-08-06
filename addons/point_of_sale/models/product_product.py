@@ -9,7 +9,12 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('product_tmpl_id', 'in', [p['id'] for p in data['product.template']])]
+        product_tmpl_ids = data['product.template'].ids
+        return [('product_tmpl_id', 'in', product_tmpl_ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.template.attribute.value', 'product.template']
 
     @api.model
     def _load_pos_data_fields(self, config_id):

@@ -921,7 +921,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                     baseData[model][vals.id] = vals;
 
-                    const oldRecord = this.indexedRecords[model][modelKey][vals[modelKey]];
+                    const oldRecord = this.indexedRecords[model]?.[modelKey][vals[modelKey]];
                     if (oldRecord) {
                         oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
                         for (const [f, p] of Object.entries(

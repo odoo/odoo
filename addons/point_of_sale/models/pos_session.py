@@ -103,46 +103,12 @@ class PosSession(models.Model):
         return super().write(vals)
 
     @api.model
-    def _load_pos_data_relations(self, model, fields):
-        model_fields = self.env[model]._fields
-        relations = {}
-
-        for name, params in model_fields.items():
-            if (name not in fields and len(fields)) or (params.manual and not len(fields)):
-                continue
-
-            if params.comodel_name:
-                relations[name] = {
-                    'name': name,
-                    'model': params.model_name,
-                    'compute': bool(params.compute),
-                    'related': bool(params.related),
-                    'relation': params.comodel_name,
-                    'type': params.type,
-                }
-                if params.type == 'many2one' and params.ondelete:
-                    relations[name]['ondelete'] = params.ondelete
-                if params.type == 'one2many' and params.inverse_name:
-                    relations[name]['inverse_name'] = params.inverse_name
-                if params.type == 'many2many':
-                    relations[name]['relation_table'] = self.env[model]._fields[name].relation
-            else:
-                relations[name] = {
-                    'name': name,
-                    'type': params.type,
-                    'compute': bool(params.compute),
-                    'related': bool(params.related),
-                }
-
-        return relations
-
-    @api.model
     def _load_pos_data_models(self, config_id):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.template.attribute.exclusion', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.category', 'product.pricelist.item',
-            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module']
+            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag']
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -156,23 +122,26 @@ class PosSession(models.Model):
         ]
 
     def _load_pos_data(self, data):
+        # Deprecated
+        # Kept for backward compatibility.
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(self.config_id.id)
         data = self.search_read(domain, fields, load=False, limit=1)
         return data
 
     def _post_read_pos_data(self, data):
-        server_date = self.env.context.get('pos_last_server_date')
         data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
         data[0]['_server_version'] = exp_version()
         data[0]['_base_url'] = self.get_base_url()
-        data[0]['_data_server_date'] = server_date or self.env.cr.now()
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+        data[0]['_module_pos_settle_due'] = bool(self.env['ir.module.module'].search([('name', '=', 'pos_settle_due'), ('state', '=', 'installed')], limit=1))
         return super()._post_read_pos_data(data)
 
     def load_data(self, models_to_load):
+        # Deprecated
+        # Kept for backward compatibility
         response = {}
         response['pos.session'] = self._post_read_pos_data(self._load_pos_data(response))
 
@@ -188,33 +157,84 @@ class PosSession(models.Model):
 
         return response
 
+    def load_data_pos(self, local_data={}):
+        """
+        data contains a dictionary with the following structure:
+        {
+            'models': [],
+            'records': {
+                'model.1': {id1: server_date1, id2: server_date2, ...},
+                'model.2': {id1: server_date1, id2: server_date2, ...},
+                ...
+            },
+            'search_params': {
+                'model.1': {
+                    'domain': domain,
+                    'offset': offset,
+                    'limit': limit,
+                }
+            },
+            'only_records': False, # if True, only returns the records
+        }
+        """
+        models = self._load_pos_data_models(self.config_id.id)
+        metadata = self._load_metadata(models, local_data.get('search_params', {}))
+        if local_data['models']:
+            metadata = {model: data for model, data in metadata.items() if model in local_data['models']}
+        data = self._read_from_metadata(metadata, local_data, self.config_id.id)
+        if local_data.get('only_records'):
+            return {model: d['records'] for model, d in data.items()}
+        elif local_data.get('records'):
+            # Add data to remove from the indexedDB
+            data_to_remove = self.filter_local_data({model: list(d.keys()) for model, d in local_data['records'].items()})
+            for model, ids in data_to_remove.items():
+                if model in data:
+                    data[model]['to_remove'] = ids
+        return data
+
+    def _load_metadata(self, models, search_params={}):
+        records = {}
+        self._load_pos_metadata(records, search_params.get('pos.session', {'limit': 1}))
+        for model in models:
+            if model == 'pos.session':
+                continue
+            self.env[model]._load_pos_metadata(records, search_params.get(model, {}))
+        return records
+
     def load_data_params(self):
         response = {}
         fields = self._load_pos_data_fields(self.config_id.id)
         response['pos.session'] = {
             'fields': fields,
-            'relations': self._load_pos_data_relations('pos.session', fields)
+            'relations': self._load_pos_data_relations(fields),
         }
 
         for model in self._load_pos_data_models(self.config_id.id):
             fields = self.env[model]._load_pos_data_fields(self.config_id.id)
             response[model] = {
                 'fields': fields,
-                'relations': self._load_pos_data_relations(model, fields)
+                'relations': self.env[model]._load_pos_data_relations(fields),
             }
 
         return response
 
-    def filter_local_data(self, models_to_filter):
+    @api.model
+    def _read_from_metadata(self, server_data, local_data, config_id):
         response = {}
-        for model, ids in models_to_filter.items():
-            existing_records = self.env[model].browse(ids).exists()
+        for model, data in server_data.items():
+            response[model] = self.env[model]._read_pos_data_from_metadata(data, local_data, config_id)
 
-            non_existent_ids = set(ids) - set(existing_records.ids)
-            inactive_ids = set(existing_records.with_context(config_id=self.config_id.id)._unrelevant_records())
-
-            response[model] = list(non_existent_ids | inactive_ids)
         return response
+
+    def filter_local_data(self, models_to_filter):
+        non_existent_and_inactive_ids = {}
+        for model, ids in models_to_filter.items():
+            existing_active_records = self.env[model].search_read([('id', 'in', ids)], ['id'])
+            existing_active_records = [r['id'] for r in existing_active_records]
+
+            non_existent_and_inactive_ids[model] = set(ids) - set(existing_active_records)
+
+        return non_existent_and_inactive_ids
 
     def delete_opening_control_session(self):
         self.ensure_one()
@@ -1872,7 +1892,9 @@ class PosSession(models.Model):
         return []
 
     def find_product_by_barcode(self, barcode, config_id):
+        # Deprecated
         # Kept for backward compatibility.
+
         return self.env['product.template'].load_product_from_pos(config_id, [
             '|',
             ('product_variant_ids.barcode', '=', barcode),

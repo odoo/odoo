@@ -45,4 +45,4 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_self_data_domain(self, data):
-        return [('id', 'in', data['pos.config'][0]['floor_ids'])]
+        return [('id', 'in', data['pos.config'].floor_ids.ids)]

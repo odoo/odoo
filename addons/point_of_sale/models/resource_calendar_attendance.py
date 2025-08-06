@@ -7,9 +7,7 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        attendance_ids = []
-        for preset in data['pos.preset']:
-            attendance_ids += preset['attendance_ids']
+        attendance_ids = data['pos.preset'].attendance_ids.ids
         return [('id', 'in', attendance_ids)]
 
     @api.model

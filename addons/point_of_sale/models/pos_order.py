@@ -56,7 +56,11 @@ class PosOrder(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'][0]['id'])]
+        return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'].id)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['res.partner']
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -1182,14 +1186,34 @@ class PosOrder(models.Model):
         session_ids = set({order.get('session_id') for order in data})
         is_new_session = any(order.get('session_id') not in session_ids for order in data)
 
-        return {
-            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': self.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
-            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-        }
+        return self.session_id.load_data_pos({
+            'models': ['pos.session', 'pos.order', 'pos.payment', 'pos.order.line', 'pos.pack.operation.lot', 'product.attribute.custom.value'],
+            'records': {},
+            'search_params': {
+                'pos.session': {
+                    'domain': [('id', '=', self.session_id.id)] if config_id and is_new_session else [('id', '=', False)],
+                },
+                'pos.config': {
+                    'domain': [('id', '=', config_id)] if config_id else [('id', '=', False)],
+                },
+                'pos.order': {
+                    'domain': [('id', 'in', self.ids)] if config_id else [('id', '=', False)],
+                },
+                'pos.payment': {
+                    'domain': [('id', 'in', self.payment_ids.ids)] if config_id else [('id', '=', False)],
+                },
+                'pos.order.line': {
+                    'domain': [('id', 'in', self.lines.ids)] if config_id else [('id', '=', False)],
+                },
+                'pos.pack.operation.lot': {
+                    'domain': [('id', 'in', self.lines.pack_lot_ids.ids)] if config_id else [('id', '=', False)],
+                },
+                'product.attribute.custom.value': {
+                    'domain': [('id', 'in', self.lines.custom_attribute_value_ids.ids)] if config_id else [('id', '=', False)],
+                },
+            },
+            'only_records': True,
+        })
 
     @api.model
     def _get_refunded_orders(self, order):
@@ -1464,6 +1488,10 @@ class PosOrderLine(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         return [('order_id', 'in', [order['id'] for order in data['pos.order']])]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order']
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -1828,6 +1856,10 @@ class PosPackOperationLot(models.Model):
         return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order.line']
+
+    @api.model
     def _load_pos_data_fields(self, config_id):
         return ['lot_name', 'pos_order_line_id', 'write_date']
 
@@ -1845,7 +1877,7 @@ class AccountCashRounding(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.config'][0]['rounding_method'])]
+        return [('id', '=', data['pos.config'].rounding_method.id)]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

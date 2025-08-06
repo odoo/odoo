@@ -7,8 +7,7 @@ class AccountFiscalPosition(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        fp_ids = [preset['fiscal_position_id'] for preset in data['pos.preset']]
-        return [('id', 'in', data['pos.config'][0]['fiscal_position_ids'] + fp_ids)]
+        return [('id', 'in', data['pos.config'].fiscal_position_ids.ids + data['pos.preset'].fiscal_position_id.ids)]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

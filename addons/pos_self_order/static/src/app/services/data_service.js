@@ -6,9 +6,17 @@ import { rpc } from "@web/core/network/rpc";
 patch(PosData.prototype, {
     async loadInitialData() {
         const configId = session.data.config_id;
-        return await rpc(`/pos-self/data/${parseInt(configId)}`);
+        const data = await rpc(`/pos-self/data/${parseInt(configId)}`);
+        const params = this.getFieldsAndRelations(data);
+        await this.initIndexedDB(params);
+        const localData = await this.getCachedServerDataFromIndexedDB();
+        this.initFieldsAndRelations(params);
+        await this.syncInitialData(data, localData, {});
+        return Object.fromEntries(Object.entries(data).map(([key, value]) => [key, value.records]));
     },
     async loadFieldsAndRelations() {
+        // Deprecated
+        // Kept for backward compatibility
         const configId = session.data.config_id;
         return await rpc(`/pos-self/relations/${parseInt(configId)}`);
     },

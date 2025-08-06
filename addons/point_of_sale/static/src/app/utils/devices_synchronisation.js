@@ -85,32 +85,36 @@ export default class DevicesSynchronisation {
      */
     async readDataFromServer() {
         const { domain, recordsIds } = this.constructOrdersDomain();
-        const response = await this.pos.data.call("pos.config", "read_config_open_orders", [
-            odoo.pos_config_id,
-            domain,
-            recordsIds,
-        ]);
+        try {
+            const response = await this.pos.data.call("pos.config", "read_config_open_orders", [
+                odoo.pos_config_id,
+                domain,
+                recordsIds,
+            ]);
+            if (Object.keys(response.dynamic_records).length) {
+                const missing = await this.pos.data.missingRecursive(response.dynamic_records);
+                const { dynamicR, staticR } = Object.entries(missing).reduce(
+                    (acc, [model, records]) => {
+                        if (this.dynamicModels.has(model)) {
+                            acc.dynamicR[model] = records;
+                        } else if (this.staticModels.has(model)) {
+                            acc.staticR[model] = records;
+                        }
+                        return acc;
+                    },
+                    { dynamicR: {}, staticR: {} }
+                );
 
-        if (Object.keys(response.dynamic_records).length) {
-            const missing = await this.pos.data.missingRecursive(response.dynamic_records);
-            const { dynamicR, staticR } = Object.entries(missing).reduce(
-                (acc, [model, records]) => {
-                    if (this.dynamicModels.has(model)) {
-                        acc.dynamicR[model] = records;
-                    } else if (this.staticModels.has(model)) {
-                        acc.staticR[model] = records;
-                    }
-                    return acc;
-                },
-                { dynamicR: {}, staticR: {} }
-            );
+                this.processStaticRecords(staticR);
+                this.processDynamicRecords(dynamicR);
+            }
 
-            this.processStaticRecords(staticR);
-            this.processDynamicRecords(dynamicR);
-        }
-
-        if (Object.keys(response.deleted_record_ids).length) {
-            this.processDeletedRecords(response.deleted_record_ids);
+            if (Object.keys(response.deleted_record_ids).length) {
+                this.processDeletedRecords(response.deleted_record_ids);
+            }
+        } catch (error) {
+            console.error("Error reading data from server:", error);
+            return;
         }
     }
 

@@ -59,3 +59,12 @@ class EventRegistration(models.Model):
         action['views'] = [(False, 'form')]
         action['res_id'] = self.pos_order_id.id
         return action
+
+    @api.model
+    def _load_pos_data_relations(self, fields):
+        relations = super()._load_pos_data_relations(fields)
+        # Force compute to False otherwise the frontend will not send the data
+        relations['email']['compute'] = False
+        relations['phone']['compute'] = False
+        relations['name']['compute'] = False
+        return relations
