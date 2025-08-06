@@ -210,7 +210,7 @@ describe("default value", () => {
         await delay();
         input.dispatchEvent(new Event("change"));
         await delay();
-        expect.verifySteps(["customAction ", "customAction 20"]);
+        expect.verifySteps(["customAction 20", "customAction 20"]);
         expect(input).toHaveValue("20");
     });
     test("clear BuilderNumberInput without default value", async () => {
@@ -237,6 +237,8 @@ describe("default value", () => {
         expect("[data-action-id='customAction'] input").toHaveValue("10");
 
         await clear();
+        expect("[data-action-id='customAction'] input").toHaveValue("");
+        expect(":iframe .test-options-target").toHaveInnerHTML("0"); //Check that default value is used during preview
         await click(".options-container");
         expect("[data-action-id='customAction'] input").toHaveValue("0");
         expect(":iframe .test-options-target").toHaveInnerHTML("0");
@@ -780,7 +782,7 @@ describe("sanitized values", () => {
         `);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit("-1", { instantly: true });
-        expect.verifySteps(["customAction ", "customAction 0"]); // input, change
+        expect.verifySteps(["customAction 0", "customAction 0"]); // input, change
         expect(".options-container input").toHaveValue("0");
     });
     test("use max when the given value is bigger", async () => {
@@ -805,7 +807,7 @@ describe("sanitized values", () => {
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit("11", { instantly: true });
         await animationFrame();
-        expect.verifySteps(["customAction ", "customAction 10"]); // input, change
+        expect.verifySteps(["customAction 0", "customAction 10"]); // input, change
         expect(".options-container input").toHaveValue("10");
     });
     test("multi values: trailing space in BuilderNumberInput is ignored", async () => {

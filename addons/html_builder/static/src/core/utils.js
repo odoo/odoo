@@ -618,6 +618,16 @@ function useOperationWithReload(callApply, reload) {
         await env.editor.config.reloadEditor({ target, url });
     };
 }
+
+function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
+    if (defaultValue !== undefined) {
+        if (!userInputValue || (typeof userInputValue === "string" && !userInputValue.trim())) {
+            return formatRawValue(defaultValue);
+        }
+    }
+    return userInputValue;
+}
+
 export function useInputBuilderComponent({
     id,
     defaultValue,
@@ -670,11 +680,7 @@ export function useInputBuilderComponent({
     }
 
     function commit(userInputValue) {
-        if (defaultValue !== undefined) {
-            if (!userInputValue || (typeof userInputValue === "string" && !userInputValue.trim())) {
-                userInputValue = formatRawValue(defaultValue);
-            }
-        }
+        userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
         const rawValue = parseDisplayValue(userInputValue);
         if (reload) {
             callOperation(operationWithReload, { userInputValue: rawValue });
@@ -696,6 +702,7 @@ export function useInputBuilderComponent({
     const shouldPreview = useHasPreview(getAllActions);
     function preview(userInputValue) {
         if (shouldPreview) {
+            userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
             callOperation(applyOperation.preview, {
                 preview: true,
                 userInputValue: parseDisplayValue(userInputValue),
