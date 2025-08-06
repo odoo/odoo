@@ -159,6 +159,7 @@ class MrpProduction(models.Model):
              " * To Close: The production is done, the MO has to be closed.\n"
              " * Done: The MO is closed, the stock moves are posted. \n"
              " * Cancelled: The MO has been cancelled, can't be confirmed anymore.")
+    state_color = fields.Integer("State Color", compute='_compute_state_color')
     reservation_state = fields.Selection([
         ('confirmed', 'Waiting'),
         ('assigned', 'Ready'),
@@ -564,6 +565,12 @@ class MrpProduction(models.Model):
                 or any(production.move_raw_ids.mapped('picked'))
             ):
                 production.state = 'progress'
+
+    @api.depends('state')
+    def _compute_state_color(self):
+        colors = {'draft': 0, 'confirmed': 4, 'progress': 3, 'to_close': 5, 'done': 10, 'cancel': 1}
+        for production in self:
+            production.state_color = colors[production.state]
 
     @api.depends('bom_id', 'product_id', 'product_qty', 'product_uom_id', 'never_product_template_attribute_value_ids')
     def _compute_workorder_ids(self):

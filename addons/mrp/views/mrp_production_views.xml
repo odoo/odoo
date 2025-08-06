@@ -578,6 +578,40 @@
             </field>
         </record>
 
+        <record id="mrp_production_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.production.kanban</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_kanban_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//footer" position="after">
+                <field name="date_deadline" invisible="1"/>
+                <field name="is_delayed" invisible="1"/>
+                <p class="text-warning mt-2 mb-0" t-if="record.is_delayed.raw_value">
+                    The deadline of this MO is on  <t t-out="record.date_deadline.value"/>
+                </p>
+            </xpath>
+        </field>
+        </record>
+
+        <record id="mrp_production_gantt_view" model="ir.ui.view">
+            <field name="name">mrp.production.gantt</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <gantt 
+                kanban_view_id="%(mrp.mrp_production_kanban_view_inherit)d"
+                date_start="date_start"
+                date_stop="date_finished"
+                default_group_by="product_id"
+                default_range="week"
+                default_scale="week"
+                string="Manufacturing Orders"
+                color="state_color"
+                decoration-warning="is_delayed">
+                </gantt>
+            </field>
+        </record>
+
         <record id="view_production_calendar" model="ir.ui.view">
             <field name="name">mrp.production.calendar</field>
             <field name="model">mrp.production</field>
@@ -689,7 +723,7 @@
             <field name="name">Manufacturing Orders</field>
             <field name="path">manufacturing</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity,gantt</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}</field>
