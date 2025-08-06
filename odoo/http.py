@@ -1446,8 +1446,8 @@ class GeoIP(collections.abc.Mapping):
     def __bool__(self):
         return self.country_name is not None
 
-    # Old dict API, undocumented for now, will be deprecated some day
     def __getitem__(self, item):
+        warnings.warn("Since 20.0, dictionnary GeoIP API is deprecated.", DeprecationWarning, stacklevel=2)
         if item == 'country_name':
             return self.country_name
 
