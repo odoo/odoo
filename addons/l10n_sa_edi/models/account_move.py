@@ -272,7 +272,7 @@ class AccountMove(models.Model):
         }
 
     def action_post(self):
-        if self.filtered(lambda move: move.country_code == "SA" and move.move_type in ('out_invoice', 'out_refund') and move.company_id != move.journal_id.company_id):
+        if self.filtered(lambda move: move.country_code == "SA" and move.move_type in ('out_invoice', 'out_refund') and move.company_id == move.journal_id.company_id):
             raise UserError(_("Please make sure that the invoice company matches the journal company on all invoices you wish to confirm"))
         return super().action_post()
 
