@@ -30,17 +30,38 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         trigger: 'div.o_notebook_headers',
     },
     {
+        id: "project_sale_timesheet_start",
         trigger: 'a.nav-link[name="settings"]',
         content: 'Click on Settings tab to configure this project.',
         run: "click",
     }, {
-        id: "project_sale_timesheet_start",
+        isActive: ["div[name='sale_line_id'] input:empty"],
         trigger: "div[name='sale_line_id'] input",
         content: 'Add the Sales Order Item',
         run: "fill New Sale order line",
-    }, {
+    },
+    {
+        isActive: [".o-autocomplete--dropdown-menu"],
         trigger: ".o_field_widget[name=sale_line_id] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create a",
         content: "Create an Sales Order Item in the autocomplete dropdown.",
+        run: "click"
+    },
+    {
+        isActive: ["body:has(.modal)"],
+        trigger: ".modal div[name='product_id'] input",
+        content: "Select a product for the Sales Order Line",
+        run: "click",
+    },
+    {
+        isActive: ["body:has(.modal)"],
+        trigger: ".modal .ui-autocomplete > li > a:not(:has(i.fa))",
+        content: "Select the product in the autocomplete dropdown",
+        run: "click",
+    },
+    {
+        isActive: ["body:has(.modal)"],
+        trigger: ".modal .o_form_button_save:enabled",
+        content: "Save the Sale Order Line to be created",
         run: "click",
     },
     {
