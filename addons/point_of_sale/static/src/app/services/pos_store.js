@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl, random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
-import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
@@ -235,6 +235,8 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async reloadData(fullReload = false) {
+        const orders = this.models["pos.order"].getAll();
+        this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
         const url = new URL(window.location.href);
 
@@ -329,7 +331,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     async closingSessionNotification(data) {
         if (
-            parseInt(data.login_number) === this.session.login_number ||
+            parseInt(data.device_identifier) === this.device.identifier ||
             this.session.id !== parseInt(data.session_id)
         ) {
             return;
@@ -379,6 +381,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async processServerData() {
+        // Used to identify the device when several devices are connected to the same POS
+        this.device = this.data.device;
+
         // These fields should be unique for the pos_config
         // and should not change during the session, so we can
         // safely take the first element.this.models
@@ -390,7 +395,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.screenState.partnerList.offsetBySearch = {
             "": this.models["res.partner"].length,
         };
-        this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
         const models = Object.keys(this.models);
         const dynamicModels = this.data.opts.dynamicModels;
@@ -1119,6 +1123,7 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
+        this.device.saveUnusedNumber([order]);
         return this.data.localDeleteCascade(order);
     }
 
@@ -1141,7 +1146,7 @@ export class PosStore extends WithLazyGetterTrap {
     get showCashMoveButton() {
         return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
     }
-    createNewOrder(data = {}, onGetNextOrderRefs = () => {}) {
+    createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
             (fp) => fp.id === this.config.default_fiscal_position_id?.id
         );
@@ -1161,7 +1166,7 @@ export class PosStore extends WithLazyGetterTrap {
             ...data,
         });
 
-        this.getNextOrderRefs(order).then(() => onGetNextOrderRefs(order));
+        this.setNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
 
         if (this.config.use_presets) {
@@ -1185,49 +1190,19 @@ export class PosStore extends WithLazyGetterTrap {
     createOrderIfNeeded(data) {
         return this.createNewOrder(data);
     }
-    async getNextOrderRefs(order) {
-        try {
-            const [pos_reference, sequence_number, tracking_number] = await this.data.call(
-                "pos.session",
-                "get_next_order_refs",
-                [[this.session.id], parseInt(odoo.login_number, 10), null, ""]
-            );
-            order.pos_reference = pos_reference;
-            order.sequence_number = sequence_number;
-            order.tracking_number = tracking_number;
-            return true;
-        } catch (error) {
-            if (
-                error instanceof ConnectionLostError ||
-                error instanceof ConnectionAbortedError ||
-                error instanceof RPCError
-            ) {
-                return this.getNextOrderRefsLocal(_t("Order"), order);
-            } else {
-                throw error;
-            }
-        } finally {
-            this.data.debouncedSynchronizeLocalDataInIndexedDB();
-        }
-    }
-    /**
-     * Return value of this method is used when the client is offline.
-     * Side-effect: increments the order counter.
-     */
-    getNextOrderRefsLocal(refPrefix, order) {
-        const sequenceNumber = this.orderCounter.next();
-        const trackingNumber = sequenceNumber.toString().padStart(3, "0");
-        const YY = new Date().getFullYear().toString().slice(-2);
-        const LL = (odoo.login_number % 100).toString().padStart(2, "0");
-        const SSS = this.session.id.toString().padStart(3, "0");
-        const F = "1";
-        const OOOO = sequenceNumber.toString().padStart(4, "0");
-        const posReference = `${refPrefix} ${YY}${LL}-${SSS}-${F}${OOOO}`;
+    setNextOrderRefs(order) {
+        const deviceIdentifier = this.device.identifier;
+        const number = `${this.device.useNext()}`.padStart(6, "0");
+        const configId = this.config.id;
+        const year2Digits = DateTime.now().year.toString().slice(-2);
+        const posReference = `${year2Digits}${deviceIdentifier}-${configId}-${number}`;
+
         order.pos_reference = posReference;
-        order.sequence_number = sequenceNumber;
-        order.tracking_number = trackingNumber;
-        return true;
+        order.tracking_number = deviceIdentifier + `${parseInt(number) % 1000}`.padStart(3, "0");
+
+        this.data.debouncedSynchronizeLocalDataInIndexedDB();
     }
+
     selectNextOrder() {
         const orders = this.models["pos.order"].filter((order) => !order.finalized);
         if (orders.length > 0) {
@@ -1327,7 +1302,7 @@ export class PosStore extends WithLazyGetterTrap {
     getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
-            login_number: odoo.login_number,
+            device_identifier: this.device.identifier,
             ...(options.context || {}),
         };
     }

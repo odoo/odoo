@@ -237,7 +237,7 @@ export class ClosePosPopup extends Component {
                 [this.pos.session.id, bankPaymentMethodDiffPairs],
                 {
                     context: {
-                        login_number: odoo.login_number,
+                        device_identifier: this.pos.device.identifier,
                     },
                 }
             );

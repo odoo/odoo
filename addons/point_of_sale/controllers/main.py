@@ -100,7 +100,6 @@ class PosController(PortalAccount):
             'from_backend': 1 if from_backend else 0,
             'use_pos_fake_tours': True if k.get('tours', False) else False,
             'session_info': session_info,
-            'login_number': pos_session.with_company(pos_session.company_id).login(),
             'pos_session_id': pos_session.id,
             'pos_config_id': pos_session.config_id.id,
             'access_token': pos_session.config_id.access_token,

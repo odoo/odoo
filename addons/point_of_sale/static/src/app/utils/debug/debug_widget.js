@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { useRef, useState, Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { useRef, useState, Component, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -24,6 +24,11 @@ export class DebugWidget extends Component {
             barcodeInput: "",
             weightInput: "",
             buffer: this.numberBuffer.get(),
+            device_identifier: this.pos.device.data.device_identifier,
+            next_number: this.pos.device.data.next_number,
+            unsynced_number_stack: JSON.stringify(
+                this.pos.device?.data?.unsynced_number_stack || []
+            ),
         });
 
         useBus(this.numberBuffer, "buffer-update", this._onBufferUpdate);
@@ -39,6 +44,26 @@ export class DebugWidget extends Component {
                 this.importOrderInput.el.removeEventListener("click", this.handleFileOrderImport);
             }
         });
+
+        useEffect(
+            (isOpen) => {
+                if (!isOpen) {
+                    return;
+                }
+
+                // Since addEventListener('storage') is not triggered from the same tab,
+                // we need to poll the device data to keep the widget updated.
+                const interval = setInterval(() => {
+                    this.state.next_number = this.pos.device?.data?.next_number;
+                    this.state.unsynced_number_stack = JSON.stringify(
+                        this.pos.device?.data?.unsynced_number_stack || []
+                    );
+                }, 500);
+
+                return () => clearInterval(interval);
+            },
+            () => [this.state.isOpen]
+        );
     }
     get isDisabled() {
         return this.pos.cashier._role === "minimal";
@@ -99,6 +124,20 @@ export class DebugWidget extends Component {
             },
         });
     }
+
+    deleteAllIndexedDB() {
+        if (!window.indexedDB || !window.indexedDB.databases) {
+            console.warn("IndexedDB is not supported in this browser.");
+            return;
+        }
+
+        window.indexedDB.databases().then((r) => {
+            for (var i = 0; i < r.length; i++) {
+                window.indexedDB.deleteDatabase(r[i].name);
+            }
+        });
+    }
+
     async exportData() {
         const data = await this.pos.data.synchronizeLocalDataInIndexedDB();
         const blob = this._createBlob(data);

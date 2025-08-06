@@ -77,6 +77,9 @@ export default class OrderPaymentValidation {
      * This method can be overridden to perform checks before starting the order validation process.
      */
     shouldDownloadInvoice() {
+        if (!this.pos.config.canInvoice) {
+            return false;
+        }
         return true;
     }
 

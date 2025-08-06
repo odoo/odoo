@@ -144,22 +144,6 @@ export class PosSession extends models.ServerModel {
         return {};
     }
 
-    get_next_order_refs(login_number = 0, ref_prefix = "", tracking_prefix = "") {
-        const sequence_num = ++this._orderRef;
-
-        const now = new Date();
-        const YY = now.getFullYear().toString().slice(-2);
-        const LL = String(login_number % 100).padStart(2, "0");
-        const SSS = String(this.id).padStart(3, "0");
-        const F = 0;
-        const OOOO = String(sequence_num).padStart(4, "0");
-        const order_ref = ref_prefix
-            ? `${ref_prefix} ${YY}${LL}-${SSS}-${F}${OOOO}`
-            : `${YY}${LL}-${SSS}-${F}${OOOO}`;
-
-        return [order_ref, sequence_num, tracking_prefix + String(sequence_num).padStart(3, "0")];
-    }
-
     _records = [
         {
             id: 1,

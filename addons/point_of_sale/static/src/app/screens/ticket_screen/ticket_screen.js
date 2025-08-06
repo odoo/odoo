@@ -682,7 +682,7 @@ export class TicketScreen extends Component {
                 modelFields: ["pos_reference"],
             },
             INVOICE_NUMBER: {
-                repr: (order) => order.getInvoiceNumber(),
+                repr: (order) => order.invoiceName,
                 displayName: _t("Invoice Number"),
                 modelFields: ["account_move.name"],
             },
