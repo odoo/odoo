@@ -7,10 +7,15 @@ class IrSequence(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_sequence(self):
-        sessions = self.env['pos.session'].search(domain=['|', ('login_number_seq_id', 'in', self.ids), ('order_seq_id', 'in', self.ids)])
-        acive_sessions = sessions.filtered(lambda s: s.state != 'closed')
-        if acive_sessions:
+        configs = self.env['pos.config'].search(domain=[
+            '|', '|', '|',
+            ('order_seq_id', 'in', self.ids),
+            ('order_line_seq_id', 'in', self.ids),
+            ('device_seq_id', 'in', self.ids),
+            ('order_backend_seq_id', 'in', self.ids)
+        ])
+        if len(configs):
             raise UserError(_(
-                "You cannot delete a sequence used in an active session: %s",
-                acive_sessions.login_number_seq_id.mapped('name')
+                "You cannot delete a sequence used in an active POS config: %s",
+                configs.order_seq_id.mapped('name')
             ))

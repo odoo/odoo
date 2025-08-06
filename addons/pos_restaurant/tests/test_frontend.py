@@ -258,7 +258,7 @@ class TestFrontend(TestFrontendCommon):
         order_tips.sort()
         self.assertEqual(order_tips, [0.0, 0.4, 1.0, 1.0, 1.5])
 
-        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00004')], limit=1, order='id desc')
+        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000004')], limit=1, order='id desc')
         self.assertEqual(order4.customer_count, 2)
 
     def test_06_split_bill_screen(self):
@@ -296,7 +296,7 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'order_edit_tracking': True})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OrderTrackingTour')
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00001')], limit=1, order='id desc')
+        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000001')], limit=1, order='id desc')
         self.assertTrue(order1.is_edited)
 
     def test_13_category_check(self):
@@ -747,4 +747,4 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line_release_table')
         order = self.pos_config.current_session_id.order_ids[0]
-        self.assertEqual(len(order.lines), 0)
+        self.assertEqual(order.state, "cancel")

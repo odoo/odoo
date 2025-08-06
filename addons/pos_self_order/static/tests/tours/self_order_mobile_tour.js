@@ -382,3 +382,18 @@ registry.category("web_tour.tours").add("test_order_table_assignement_meal", {
             Utils.clickBtn("Ok"),
         ].flat(),
 });
+
+const createPaidOrder = [
+    Utils.clickBtn("Order Now"),
+    ProductPage.clickProduct("Ketchup"),
+    Utils.clickBtn("Checkout"),
+    CartPage.checkProduct("Ketchup", "0", "1"),
+    Utils.clickBtn("Order"),
+    ConfirmationPage.isShown(),
+    Utils.clickBtn("Ok"),
+];
+
+registry.category("web_tour.tours").add("test_order_sequence_in_self", {
+    steps: () =>
+        [...createPaidOrder, ...createPaidOrder, ...createPaidOrder, ...createPaidOrder].flat(),
+});

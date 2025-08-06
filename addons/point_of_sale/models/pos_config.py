@@ -95,6 +95,10 @@ class PosConfig(models.Model):
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True, compute_sudo=True, string="Currency")
+    order_seq_id = fields.Many2one('ir.sequence', string='Order Sequence', readonly=True, copy=False)
+    order_backend_seq_id = fields.Many2one('ir.sequence', string='Order Backend Sequence', readonly=True, copy=False)
+    order_line_seq_id = fields.Many2one('ir.sequence', string='Order Line Sequence', readonly=True, copy=False)
+    device_seq_id = fields.Many2one('ir.sequence', string='Device Sequence', readonly=True, copy=False)
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
@@ -124,12 +128,6 @@ class PosConfig(models.Model):
     active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
-    sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
-        help="This sequence is automatically created by Odoo but you can change it "
-        "to customize the reference numbers of your orders.", copy=False, ondelete='restrict')
-    sequence_line_id = fields.Many2one('ir.sequence', string='Order Line IDs Sequence', readonly=True,
-        help="This sequence is automatically created by Odoo but you can change it "
-        "to customize the reference numbers of your orders lines.", copy=False)
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
@@ -210,7 +208,13 @@ class PosConfig(models.Model):
         store=True, help="These payment methods will be available for fast payment", readonly=False)
     statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
 
-    def notify_synchronisation(self, session_id, login_number, records={}):
+    def _get_next_order_refs(self, device_identifier='0'):
+        next_number = self.order_backend_seq_id._next()
+        year_2_digits = str(datetime.now().year)[-2:]
+        tracking_number = f"{int(next_number) % 1000}"
+        return f"{year_2_digits}{device_identifier}-{self.id}-{next_number}", tracking_number
+
+    def notify_synchronisation(self, session_id, device_identifier, records={}):
         self.ensure_one()
         static_records = {}
 
@@ -221,7 +225,7 @@ class PosConfig(models.Model):
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
             'session_id': session_id,
-            'login_number': login_number,
+            'device_identifier': device_identifier,
             'records': records
         })
 
@@ -515,9 +519,6 @@ class PosConfig(models.Model):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
 
-    def _config_sequence_implementation(self):
-        return 'standard'
-
     @api.model_create_multi
     def create(self, vals_list):
         if not self._default_warehouse_id():
@@ -527,26 +528,55 @@ class PosConfig(models.Model):
             })
         for vals in vals_list:
             self._check_header_footer(vals)
-            IrSequence = self.env['ir.sequence'].sudo()
-            val = {
-                'name': _('POS Order %s', vals['name']),
-                'padding': 4,
-                'prefix': "%s/" % vals['name'],
-                'code': "pos.order",
-                'company_id': vals.get('company_id', False),
-                'implementation': self._config_sequence_implementation(),
-            }
-            # force sequence_id field to new pos.order sequence
-            vals['sequence_id'] = IrSequence.create(val).id
 
-            val.update(name=_('POS order line %s', vals['name']), code='pos.order.line')
-            vals['sequence_line_id'] = IrSequence.create(val).id
         pos_configs = super().create(vals_list)
+        pos_configs._create_sequences()
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
         pos_configs._update_preparation_printers_menuitem_visibility()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
+
+    def _create_sequences(self):
+        for pos_config in self:
+            sequence_vals = {
+                'padding': 6,
+                'code': "pos.order",
+                'company_id': pos_config.company_id.id,
+                'implementation': 'no_gap',
+            }
+
+            # Create sequences for all orders
+            pos_config.order_seq_id = self.env['ir.sequence'].sudo().create({
+                **sequence_vals,
+                'name': _('POS order from config #%s', pos_config.id),
+            })
+
+            # Create sequences for order that are created from self ore backend
+            pos_config.order_backend_seq_id = self.env['ir.sequence'].sudo().create({
+                **sequence_vals,
+                'name': _('POS order backend from config #%s', pos_config.id),
+            })
+
+            # Create sequences for all order lines
+            pos_config.order_line_seq_id = self.env['ir.sequence'].sudo().create({
+                **sequence_vals,
+                'name': _('POS order line from config #%s', pos_config.id),
+            })
+
+            # Create sequences for devices
+            pos_config.device_seq_id = self.env['ir.sequence'].sudo().create({
+                **sequence_vals,
+                'name': _('POS device from config #%s', pos_config.id),
+                'padding': 0,
+            })
+
+    def register_new_device_identifier(self):
+        self.ensure_one()
+        identifier = self.device_seq_id._next()
+        return {
+            'device_identifier': identifier,
+        }
 
     def _reset_default_on_vals(self, vals):
         if 'tip_product_id' in vals and not vals['tip_product_id'] and 'iface_tipproduct' in vals and vals['iface_tipproduct']:
@@ -662,7 +692,7 @@ class PosConfig(models.Model):
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them
-        sequences_to_delete = self.sequence_id | self.sequence_line_id
+        sequences_to_delete = self.order_line_seq_id | self.device_seq_id
         res = super(PosConfig, self).unlink()
         sequences_to_delete.unlink()
         return res

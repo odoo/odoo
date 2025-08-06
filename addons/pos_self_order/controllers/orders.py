@@ -10,8 +10,7 @@ from odoo.tools import consteq
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
-        pos_config, _ = self._verify_authorization(access_token, table_identifier, order)
-        pos_session = pos_config.current_session_id
+        pos_config, table = self._verify_authorization(access_token, table_identifier, order)
         preset_id = order['preset_id'] if pos_config.use_presets else False
         preset_id = pos_config.env['pos.preset'].browse(preset_id) if preset_id else False
 
@@ -19,29 +18,25 @@ class PosSelfOrderController(http.Controller):
             raise BadRequest("Invalid preset")
 
         # Create the order
-        tracking_prefix, ref_prefix = self._get_prefixes(device_type)
-        sequence_number = order.get('sequence_number')
-        pos_reference = order.get('pos_reference')
-        tracking_number = order.get('tracking_number')
-        if not (sequence_number and pos_reference and tracking_number):
-            pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
-
         if 'picking_type_id' in order:
             del order['picking_type_id']
 
         if 'name' in order:
             del order['name']
 
+        pos_reference, tracking_number = pos_config._get_next_order_refs()
         if device_type == 'kiosk':
             order['floating_order_name'] = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
 
+        prefix = 'K' if device_type == 'kiosk' else 'S'
         order['pos_reference'] = pos_reference
-        order['tracking_number'] = tracking_number
-        order['sequence_number'] = sequence_number
+        order['source'] = 'kiosk' if device_type == 'kiosk' else 'mobile'
+        order['tracking_number'] = f"{prefix}{tracking_number}"
         order['user_id'] = request.session.uid
         order['date_order'] = str(fields.Datetime.now())
         order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
         order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
+        order['self_ordering_table_id'] = table.id if table else False
 
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
         line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
@@ -60,19 +55,6 @@ class PosSelfOrderController(http.Controller):
             order_ids._process_saved_order(False)
 
         return self._generate_return_values(order_ids, pos_config)
-
-    def _get_prefixes(self, device_type):
-        tracking_prefix = ''
-        ref_prefix = None
-
-        if device_type == 'mobile':
-            tracking_prefix = 'S'
-            ref_prefix = 'Self-Order'
-        elif device_type == 'kiosk':
-            tracking_prefix = 'K'
-            ref_prefix = 'Kiosk'
-
-        return tracking_prefix, ref_prefix
 
     def _generate_return_values(self, order, config):
         return {
@@ -183,6 +165,12 @@ class PosSelfOrderController(http.Controller):
             ])
 
         for data in order_access_tokens:
+            domain |= Domain([
+                ('access_token', '=', data.get('access_token')),
+                '|',
+                ('write_date', '>', data.get('write_date')),
+                ('state', '!=', data.get('state'))
+            ])
             domain |= Domain('access_token', '=', data.get('access_token')) \
                 & Domain('write_date', '>', data.get('write_date'))
 

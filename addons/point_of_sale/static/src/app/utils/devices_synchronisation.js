@@ -47,7 +47,7 @@ export default class DevicesSynchronisation {
         await this.pos.data.call("pos.config", "notify_synchronisation", [
             odoo.pos_config_id,
             odoo.pos_session_id,
-            odoo.login_number,
+            this.pos.device.identifier,
             recordIds,
         ]);
     }
@@ -57,13 +57,14 @@ export default class DevicesSynchronisation {
      * This method will collect the synchronization of records from the backend
      * to update the records in the frontend.
      * @param {Object} data - The data that needs to be synchronized.
-     * @param {Number} data.login_number - Session login number.
+     * @param {Number} data.device_identifier - Session login number.
      * @param {Number} data.session_id - Current session id.
      * @param {Object} data.static_records - Records data that need to be synchronized.
      */
     async collect(data) {
-        const { static_records, session_id, login_number } = data;
-        const isSameDevice = odoo.login_number == login_number || odoo.pos_session_id != session_id;
+        const { static_records, session_id, device_identifier } = data;
+        const isSameDevice =
+            odoo.pos_session_id != session_id || device_identifier == this.pos.device.identifier;
 
         logPosMessage(
             "Synchronisation",
@@ -192,12 +193,23 @@ export default class DevicesSynchronisation {
                 const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
                     numberingSystem: "latn",
                 });
-                domains.push(
-                    new Domain([
-                        ["id", "=", record.id],
-                        ["write_date", ">=", recordDateTimeString],
-                    ])
-                );
+
+                let domain = new Domain([
+                    ["id", "=", record.id],
+                    ["write_date", ">=", recordDateTimeString],
+                ]);
+
+                if (model === "pos.order") {
+                    domain = Domain.or([
+                        domain,
+                        new Domain([
+                            ["id", "=", record.id],
+                            ["state", "!=", record.state],
+                        ]),
+                    ]);
+                }
+
+                domains.push(domain);
             }
 
             let domain = Domain.or(domains);

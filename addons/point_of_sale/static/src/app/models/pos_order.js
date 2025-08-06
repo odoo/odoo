@@ -128,6 +128,11 @@ export class PosOrder extends Base {
             ? this.preset_time.toFormat("HH:mm")
             : false;
     }
+
+    get invoiceName() {
+        return this.account_move?.name || "";
+    }
+
     get presetDateTime() {
         return this.preset_time?.isValid
             ? this.preset_time.hasSame(this.date_order, "day")
@@ -762,10 +767,6 @@ export class PosOrder extends Base {
 
     getPartnerName() {
         return this.partner_id ? this.partner_id.name : "";
-    }
-
-    getInvoiceNumber() {
-        return this.account_move ? this.account_move.name : "";
     }
 
     getCardHolderName() {

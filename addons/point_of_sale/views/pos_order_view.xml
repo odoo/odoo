@@ -50,6 +50,7 @@
                 </div>
                 <group col="4" colspan="4" name="order_fields">
                     <field name="name"/>
+                    <field name="source" readonly="True" />
                     <field name="date_order"/>
                     <field name="session_id"  readonly="state != 'draft'"/>
                     <field string="User" name="user_id" readonly="account_move or state == 'done'"/>

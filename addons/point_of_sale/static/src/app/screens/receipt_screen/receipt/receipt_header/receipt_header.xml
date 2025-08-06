@@ -4,8 +4,10 @@
         <img t-attf-src="/web/image?model=res.company&amp;id={{order.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
         <div class="text-center pt-3" style="font-size: 75%;">
             <span class="pos-receipt-vat">
-                <t t-if="order.config._IS_VAT"> VAT </t>
-                Ticket
+                <span class="ticket-name-prefix">
+                    <t t-if="order.config._IS_VAT"> VAT </t>
+                    Ticket
+                </span>
                 <t t-out="order.pos_reference"/>
             </span>
             <div t-if="order.date_order" id="order-date" t-out="order.formatDateOrTime('date_order')"/>
@@ -18,6 +20,20 @@
                 </div>
                 <div t-if="order.tracking_number and order.config.displayTrackingNumber and !order.config.displayBigTrackingNumber">
                     <span class="tracking-number fs-1" t-esc="order.tracking_number" />
+                </div>
+            </div>
+            <div t-if="order.partner_id" class="pos-receipt-customer mt-2">
+                <div t-if="order.partner_id.name">
+                    <t t-if="order.partner_id.parent_name">
+                        <span t-esc="order.partner_id.parent_name" />,
+                    </t>
+                    <span t-esc="order.partner_id.name" />
+                </div>
+                <div t-if="order.partner_id.pos_contact_address">
+                    <span t-esc="order.partner_id.pos_contact_address" />
+                </div>
+                <div t-if="order.partner_id.vat">
+                    <span t-esc="order.partner_id.vat" />
                 </div>
             </div>
         </div>

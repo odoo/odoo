@@ -4,6 +4,9 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 
 patch(PosOrder.prototype, {
+    get isInCompany() {
+        return this.company.country_id?.code === "IN";
+    },
     _prepareL10nInHsnSummary() {
         const company = this.company;
         const orderLines = this.lines;
