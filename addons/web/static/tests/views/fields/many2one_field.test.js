@@ -1223,21 +1223,60 @@ test("many2one searches with correct value", async () => {
 
     expect(".o_field_many2one input").toHaveValue("aaa");
     await contains(".o_field_many2one input").click();
+    expect.verifySteps(["search: "]);
 
     // unset the many2one -> should search again with ''
     await contains(".o_field_many2one input").clear({ confirm: false });
     await runAllTimers();
+    expect.verifySteps(["search: "]);
+
+    await contains(".o_field_many2one input").edit("f", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps(["search: f"]);
+
+    // close and re-open the dropdown -> should search with 'f' again
+    await contains(".o_field_many2one input").click();
+    await runAllTimers();
+    await contains(".o_field_many2one input").click();
+    await runAllTimers();
+    expect.verifySteps(["search: f"]);
+});
+
+test("no additional searches after no result is found", async () => {
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step(`search: ${kwargs.name}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <sheet>
+                    <field name="trululu" />
+                </sheet>
+            </form>`,
+    });
+
+    expect(".o_field_many2one input").toHaveValue("aaa");
+    await contains(".o_field_many2one input").clear({ confirm: false });
+    await runAllTimers();
+    expect.verifySteps(["search: "]);
 
     await contains(".o_field_many2one input").edit("p", { confirm: false });
     await runAllTimers();
-
-    // close and re-open the dropdown -> should search with 'p' again
-    await contains(".o_field_many2one input").click();
+    expect.verifySteps(["search: p"]);
+    expect(".o_many2one .dropdown-menu li:not(.o_m2o_dropdown_option)").toHaveCount(0, {
+        message: "no result is found",
+    });
+    await contains(".o_field_many2one input").edit("pe", { confirm: false });
     await runAllTimers();
-    await contains(".o_field_many2one input").click();
+    // no web_name_search because there was no result for "p"
+    expect.verifySteps([]);
+    await contains(".o_field_many2one input").edit("m", { confirm: false });
     await runAllTimers();
-
-    expect.verifySteps(["search: ", "search: ", "search: p", "search: p"]);
+    // request is no longer an extension of "p" (no result), need a web_name_search
+    expect.verifySteps(["search: m"]);
 });
 
 test("many2one search with trailing and leading spaces", async () => {

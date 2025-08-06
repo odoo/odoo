@@ -479,8 +479,6 @@ test("O2M List with pager, decoration and default_order: add and cancel adding",
 
 test.tags("desktop");
 test("O2M with parented m2o and domain on parent.m2o", async () => {
-    expect.assertions(4);
-
     // Records in an o2m can have a m2o pointing to themselves.
     // In that case, a domain evaluation on that field followed by name_search
     // shouldn't send virtual_ids to the server.
@@ -497,6 +495,7 @@ test("O2M with parented m2o and domain on parent.m2o", async () => {
     };
     onRpc("web_name_search", ({ kwargs }) => {
         expect(kwargs.domain).toEqual([["id", "in", []]]);
+        expect.step("web_name_search");
     });
     await mountView({
         type: "form",
@@ -513,9 +512,10 @@ test("O2M with parented m2o and domain on parent.m2o", async () => {
                 </field>
             </form>`,
     });
-
     await contains(".o_field_x2many_list_row_add a").click();
     await clickFieldDropdown("parent_id");
+    // Only one web_name_search since empty search returns no result
+    expect.verifySteps(["web_name_search"]);
     await contains(".o_field_widget[name=parent_id] input").edit("ABC", { confirm: false });
     await runAllTimers();
     await clickFieldDropdownItem("parent_id", "Create and edit...");

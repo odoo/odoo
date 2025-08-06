@@ -47,6 +47,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 
 //
@@ -242,6 +243,8 @@ export class Many2XAutocomplete extends Component {
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
 
+        this.keepLast = new KeepLast();
+
         this.openMany2X =
             this.props.createAction ??
             useOpenMany2XRecord({
@@ -349,18 +352,22 @@ export class Many2XAutocomplete extends Component {
         };
     }
 
-    search(name) {
-        if (name.length < this.props.searchThreshold) {
+    async search(name) {
+        if (name.startsWith(this.lastEmptySearch) || name.length < this.props.searchThreshold) {
             return [];
         }
-        return this.orm.call(this.props.resModel, "web_name_search", [], {
-            name: name,
+        const records = await this.orm.call(this.props.resModel, "web_name_search", [], {
+            name,
             operator: "ilike",
             domain: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
             specification: this.searchSpecification,
         });
+        if (!records.length) {
+            this.lastEmptySearch = name;
+        }
+        return records;
     }
 
     slowCreate(request) {
@@ -382,11 +389,8 @@ export class Many2XAutocomplete extends Component {
     }
 
     async loadOptionsSource(request) {
-        this.__lastSuggestionsLoadPromise?.abort(false);
-        return this.suggest(request, (promise) => {
-            this.__lastSuggestionsLoadPromise = promise;
-            return promise;
-        });
+        await this.keepLast.add(Promise.resolve());
+        return this.suggest(request, (promise) => this.keepLast.add(promise));
     }
 
     async suggest(request, lock) {
