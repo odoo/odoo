@@ -2199,7 +2199,7 @@ class Website(models.Model):
             query = SQL("""
                 SELECT id,
                     MAX(similarity) as _best_similarity
-                FROM (%s)
+                FROM (%s) sub
                 GROUP BY id
                 ORDER BY _best_similarity DESC
                 LIMIT 1000
