@@ -495,6 +495,34 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     @return $-palette;
 }
 
+$o_shape_connection_size_tiny: 2rem !default;
+$o_shape_connection_size_regular: 4rem !default;
+$o_shape_connection_size_big: 15rem !default;
+$o_shape_angular_size_regular: 15rem !default;
+$o_shape_wavy_size_regular: 15rem !default;
+$o_shape_pattern_size_tiny: o-to-rem(200px) !default;
+$o_shape_pattern_size_regular: o-to-rem(800px) !default;
+
+.o_we_shape {
+    --ShapeConnections--size-tiny: #{$o_shape_connection_size_tiny};
+    --ShapeConnections--size-regular: #{$o_shape_connection_size_regular};
+    --ShapeConnections--size-big: #{$o_shape_connection_size_big};
+    --ShapeAngular--size-regular: #{$o_shape_angular_size_regular};
+    --ShapeWavy--size-regular: #{$o_shape_wavy_size_regular};
+    --ShapePattern--size-tiny: #{$o_shape_pattern_size_tiny};
+    --ShapePattern--size-regular: #{$o_shape_pattern_size_regular};
+}
+
+.o_we_shape_btn_content .o_we_shape {
+    --ShapeConnections--size-tiny: 25%;
+    --ShapeConnections--size-regular: 50%;
+    --ShapeConnections--size-big: 75%;
+    --ShapeAngular--size-regular: 50%;
+    --ShapePattern--size-regular: 100%;
+    --ShapePattern--size-tiny: 50%;
+    --ShapeWavy--size-regular: 100%;
+}
+
 // Regroups bg shapes available in the Web editor
 // format: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
 $o-bg-shapes-current: (
@@ -762,6 +790,7 @@ $o-bg-shapes-discontinued: (
 // format: (module_name: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
 $o-bg-shapes: (
     'web_editor': (map-merge($o-bg-shapes-current, $o-bg-shapes-discontinued)),
+    'html_builder': (map-merge($o-bg-shapes-current, $o-bg-shapes-discontinued)),
 );
 
 @function change-shape-colors-mapping($module, $shape-name, $mapping, $shapes: $o-bg-shapes) {
