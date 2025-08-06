@@ -270,6 +270,17 @@ class AccountPaymentRegister(models.TransientModel):
         partner_bank_account = self.env['res.partner.bank']
         if move.is_invoice(include_receipts=True):
             partner_bank_account = move.partner_bank_id._origin
+        elif line.partner_id and line.partner_id.is_company:
+            if len(line.partner_id.bank_ids) == 0:
+                raise UserError(_("The contact '%(partner)s' must have at least one bank account.",
+                    partner=line.partner_id.name))
+
+            filtered_banks = line.partner_id.bank_ids.filtered(lambda bank: bank.allow_out_payment)
+            if not filtered_banks:
+                raise UserError(_(
+                    "The contact '%(partner)s' must have at least one trusted bank account.", partner=line.partner_id.name))
+
+            partner_bank_account = line.partner_id.bank_ids.sorted('sequence')[0]
 
         return {
             'partner_id': line.partner_id.id,
