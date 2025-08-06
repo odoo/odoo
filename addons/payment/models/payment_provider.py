@@ -128,6 +128,10 @@ class PaymentProvider(models.Model):
              "to make it available for any payment amount.",
         currency_field='main_currency_id',
     )
+    hide_secured_by = fields.Boolean(
+        string="Hide Secured By",
+        help="Enable this option to remove the 'Secured by <provider>' label from the payment form."
+    )
 
     # Message fields
     pre_msg = fields.Html(

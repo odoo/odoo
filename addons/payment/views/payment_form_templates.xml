@@ -209,7 +209,7 @@
                     />
                 </div>
                 <!-- === Provider name (only for desktop and tablet) === -->
-                <t t-set="hide_secured_by" t-value="False"/>
+                <t t-set="hide_secured_by" t-value="provider_sudo.hide_secured_by"/>
                 <div class="col d-none d-md-block">
                     <p name="o_payment_secured_by_desktop" t-att-class="'mb-0 small text-600'
                                     + (' ms-4 ms-md-0' if allow_token_selection else '')
@@ -348,7 +348,7 @@
                     </label>
                 </div>
                 <!-- === Provider name === -->
-                <t t-set="hide_secured_by" t-value="False"/>
+                <t t-set="hide_secured_by" t-value="provider_sudo.hide_secured_by"/>
                 <p name="o_payment_secured_by"
                    t-att-class="'align-self-end mb-0 ms-auto small text-600'
                                 + (' d-none' if hide_secured_by else '')"
