@@ -205,6 +205,12 @@ class DiscussChannelMember(models.Model):
                 raise UserError(
                     _("Adding more members to this chat isn't possible; it's designed for just two people.")
                 )
+        name_members_by_channel = {
+            channel: channel.channel_name_member_ids
+            for channel in self.env["discuss.channel"].browse(
+                {vals["channel_id"] for vals in vals_list}
+            )
+        }
         res = super().create(vals_list)
         # help the ORM to detect changes
         res.partner_id.invalidate_recordset(["channel_ids"])
@@ -214,6 +220,12 @@ class DiscussChannelMember(models.Model):
         for member in res:
             if parent := member.channel_id.parent_channel_id:
                 parent._add_members(partners=member.partner_id, guests=member.guest_id)
+        for channel, members in name_members_by_channel.items():
+            if channel.channel_name_member_ids != members:
+                Store(bus_channel=channel).add(
+                    channel,
+                    Store.Many("channel_name_member_ids", sort="id"),
+                ).bus_send()
         return res
 
     def write(self, vals):
@@ -291,7 +303,21 @@ class DiscussChannelMember(models.Model):
         ]
         for member in self.env["discuss.channel.member"].search(Domain.OR(domains)):
             member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)
-        return super().unlink()
+        # sudo - discuss.channel: allowed to access channels to update member-based naming
+        name_members_by_channel = {
+            channel: channel.channel_name_member_ids for channel in self.channel_id
+        }
+        res = super().unlink()
+        for channel, members in name_members_by_channel.items():
+            # sudo - discuss.channel: updating channel names according to members is allowed,
+            # even after the member left the channel.
+            channel_sudo = channel.sudo()
+            if channel_sudo.channel_name_member_ids != members:
+                Store(bus_channel=channel).add(
+                    channel_sudo,
+                    Store.Many("channel_name_member_ids", sort="id"),
+                ).bus_send()
+        return res
 
     def _bus_channel(self):
         return self.partner_id.main_user_id or self.guest_id

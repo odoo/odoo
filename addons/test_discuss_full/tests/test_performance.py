@@ -96,6 +96,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel_rtc_session
     #       - fetch discuss_channel_rtc_session
     #       - search member (channel_member_ids)
+    #       - search member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
     #       18: member _to_store:
     #           - search im_livechat_channel_member_history (livechat member type)
@@ -150,7 +151,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 61
+    _query_count_discuss_channels = 62
 
     def setUp(self):
         super().setUp()
@@ -635,6 +636,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         members = channel.channel_member_ids
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
+        member_12 = members.filtered(lambda m: m.partner_id == self.users[12].partner_id)
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
@@ -760,6 +762,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_group_1:
             return {
                 "avatar_cache_key": channel.avatar_cache_key,
+                "channel_name_member_ids": [member_0.id, member_12.id],
                 "channel_type": "group",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
