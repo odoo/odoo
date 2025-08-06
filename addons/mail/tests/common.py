@@ -1957,7 +1957,7 @@ class MailCommon(MailCase):
         """
         for data in channels_data:
             # if 'ai_livechat' module is not installed
-            if not ('ai.agent' in self.env and 'im_livechat.channel' in self.env):
+            if "livechat_with_ai_agent" not in self.env["discuss.channel"]._fields:
                 data.pop("livechat_with_ai_agent", None)
         return list(channels_data)
 
