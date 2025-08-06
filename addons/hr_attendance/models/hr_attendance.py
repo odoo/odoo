@@ -657,14 +657,14 @@ class HrAttendance(models.Model):
         if not self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
             employee_domain &= Domain('attendance_manager_id', '=', self.env.user.id)
         if user_domain.is_true():
-            return self.env['hr.employee'].search(employee_domain)
+            return self.env['hr.employee'].sudo().search(employee_domain).sudo(False)
         else:
             employee_name_domain = Domain.OR(
                 Domain('name', condition.operator, condition.value)
                 for condition in user_domain.iter_conditions()
                 if condition.field_expr == 'employee_id'
             )
-            return resources | self.env['hr.employee'].search(employee_name_domain & employee_domain)
+            return resources | self.env['hr.employee'].sudo().search(employee_name_domain & employee_domain).sudo(False)
 
     def action_approve_overtime(self):
         self.write({
