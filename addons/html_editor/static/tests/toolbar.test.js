@@ -375,6 +375,20 @@ test("toolbar works: show the correct text alignment after undo/redo", async () 
     expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-center"> </i>`);
 });
 
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(".o-we-toolbar [name='font_size_selector']").click();
+    expect(getActiveElement()).toBe(inputEl);
+    await waitFor(".o_font_size_selector_menu .dropdown-item:contains('21')");
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+});
+
 test.tags("desktop");
 test("toolbar works: display correct font size on select all", async () => {
     const { el } = await setupEditor("<p>test</p>");
