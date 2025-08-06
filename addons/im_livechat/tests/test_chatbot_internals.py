@@ -214,6 +214,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join["discuss.channel"][0]["livechat_operator_id"] = self.chatbot_script.operator_partner_id.id
             channel_data_join["discuss.channel"][0]["member_count"] = 3
             channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
+            channel_data_join["discuss.channel"][0]["livechat_with_ai_agent"] = False
             channel_data_join["discuss.channel.member"].insert(0, member_bot_data)
             channel_data_join["discuss.channel.member"][2]["fetched_message_id"] = False
             channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
@@ -240,10 +241,16 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             channel_data_emp = Store().add(discuss_channel.with_user(self.user_employee)).get_result()
             channel_data_emp["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
+            channel_data_emp["discuss.channel"][0]["livechat_with_ai_agent"] = False
             channel_data_emp["discuss.channel.member"][1]["message_unread_counter_bus_id"] = 0
             channel_data = Store().add(discuss_channel).get_result()
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
-
+            channel_data["discuss.channel"][0]["livechat_with_ai_agent"] = False
+            self._filter_channels_fields(
+                channel_data_join['discuss.channel'][0],
+                channel_data_emp['discuss.channel'][0],
+                channel_data['discuss.channel'][0],
+            )
             channels, message_items = (
                 [
                     (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
