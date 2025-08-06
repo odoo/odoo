@@ -66,8 +66,12 @@
         }
     }
 
-    &:not(.o_bottom_sheet) .o-dropdown-item:before {
-        display: none;
+    &:not(.o_bottom_sheet) {
+        max-height: 300px;
+
+        .o-dropdown-item:before {
+            display: none;
+        }
     }
 }
 

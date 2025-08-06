@@ -25,7 +25,7 @@ function getTestComponent(popperOptions, styles = {}, target = false) {
                 <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px">
                     <div id="target" t-ref="target" style="background-color: royalblue; width: 50px; height: 50px"/>
                     <div id="popper" t-ref="popper" style="background-color: maroon; height: 100px; width: 100px">
-                        <div id="popper-content" style="background-color: seagreen; height: 50px; width: 50px"/>
+                        <div id="popper-content" t-ref="content" style="background-color: seagreen; height: 50px; width: 50px"/>
                     </div>
                 </div>
             </div>
@@ -37,9 +37,11 @@ function getTestComponent(popperOptions, styles = {}, target = false) {
             }
             const container = useRef("container");
             const popper = useRef("popper");
+            const content = useRef("content");
             onMounted(() => {
                 Object.assign(container.el.style, styles.container);
                 Object.assign(popper.el.style, styles.popper);
+                Object.assign(content.el.style, styles.content);
             });
             usePosition("popper", () => target?.el || target, {
                 ...popperOptions,
@@ -705,13 +707,13 @@ test("not positioned if target not connected", async () => {
     expect.verifySteps([]);
 });
 
-function shrinkPopperTest(position, offset, onPositioned) {
+function shrinkPopperTest(position, offset, onPositioned, popperStyle = {}) {
     return async () => {
         class TestComp extends Component {
             static template = xml`
                 <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px;">
                     <div id="target" t-ref="target" style="background-color: royalblue; width: 50px; height: 50px; margin-top: ${offset}px;"/>
-                    <div id="popper" t-ref="popper" style="background-color: maroon; width: 100px; overflow: auto;">
+                    <div id="popper" t-ref="popper" t-att-style="popperStyle">
                         <div id="popper-content" style="background-color: seagreen; height: 500px; width: 50px;"/>
                     </div>
                 </div>
@@ -734,32 +736,84 @@ function shrinkPopperTest(position, offset, onPositioned) {
                     shrink: true,
                 });
             }
+            get popperStyle() {
+                return Object.entries({
+                    "background-color": "maroon",
+                    width: "100px",
+                    overflow: "auto",
+                    ...popperStyle,
+                })
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join("; ");
+            }
         }
         await mountWithCleanup(TestComp);
         expect.verifySteps(["onPositioned"]);
     };
 }
 
-test("max height to prevent container overflow - top", shrinkPopperTest("top", 10, ({ c, p, t }) => {
-    expect(p.top).toBe(c.top);
-    expect(p.bottom).toBe(t.top);
-}));
-test("max height to prevent container overflow - bottom", shrinkPopperTest("bottom", -10, ({ c, p, t }) => {
-    expect(p.top).toBe(t.bottom);
-    expect(p.bottom).toBe(c.bottom);
-}));
-test("max height to prevent container overflow - right-start", shrinkPopperTest("right-start", 0, ({ c, p, t }) => {
-    expect(p.top).toBe(t.top);
-    expect(p.bottom).toBe(c.bottom);
-}));
-test("max height to prevent container overflow - right-middle", shrinkPopperTest("right-middle", 0, ({ c, p }) => {
-    expect(p.top).toBe(c.top);
-    expect(p.bottom).toBe(c.bottom);
-}));
-test("max height to prevent container overflow - right-end", shrinkPopperTest("right-end", 0, ({ c, p, t }) => {
-    expect(p.bottom).toBe(t.bottom);
-    expect(p.top).toBe(c.top);
-}));
+test(
+    "max height to prevent container overflow - top",
+    shrinkPopperTest("top", 10, ({ c, p, t }) => {
+        expect(p.top).toBe(c.top);
+        expect(p.bottom).toBe(t.top);
+    })
+);
+test(
+    "max height to prevent container overflow - bottom",
+    shrinkPopperTest("bottom", -10, ({ c, p, t }) => {
+        expect(p.top).toBe(t.bottom);
+        expect(p.bottom).toBe(c.bottom);
+    })
+);
+test(
+    "max height to prevent container overflow - right-start",
+    shrinkPopperTest("right-start", 0, ({ c, p, t }) => {
+        expect(p.top).toBe(t.top);
+        expect(p.bottom).toBe(c.bottom);
+    })
+);
+test(
+    "max height to prevent container overflow - right-middle",
+    shrinkPopperTest("right-middle", 0, ({ c, p }) => {
+        expect(p.top).toBe(c.top);
+        expect(p.bottom).toBe(c.bottom);
+    })
+);
+test(
+    "max height to prevent container overflow - right-end",
+    shrinkPopperTest("right-end", 0, ({ c, p, t }) => {
+        expect(p.bottom).toBe(t.bottom);
+        expect(p.top).toBe(c.top);
+    })
+);
+test(
+    "max height to prevent container overflow - smaller max-height set on element",
+    shrinkPopperTest(
+        "top",
+        10,
+        ({ c, p, t }) => {
+            expect(p.height).toBe(100);
+            expect(p.top).toBe(t.top - 100);
+            expect(p.bottom).toBe(t.top);
+        },
+        { "max-height": "100px" }
+    )
+);
+
+test(
+    "max height to prevent container overflow - greater max-height set on element",
+    shrinkPopperTest(
+        "top",
+        10,
+        ({ c, p, t }) => {
+            expect(p.height).not.toBe(900);
+            expect(p.top).toBe(c.top);
+            expect(p.bottom).toBe(t.top);
+        },
+        { "max-height": "900px" }
+    )
+);
 
 function getPositionTest(position, positionToCheck) {
     return async () => {
@@ -1025,3 +1079,37 @@ test("bottom-fit has the same width as the target", getFittingTest("bottom-fit",
 test("top-fit has the same width as the target", getFittingTest("top-fit", "width"));
 test("left-fit has the same height as the target", getFittingTest("left-fit", "height"));
 test("right-fit has the same height as the target", getFittingTest("right-fit", "height"));
+
+test("popper with the fit variant and a large content inside is resized to match the toggler - horizontally", async () => {
+    const TestComp = getTestComponent(
+        { position: "bottom-fit" },
+        {
+            content: {
+                width: "500px",
+            },
+            popper: {
+                width: "unset",
+            },
+        }
+    );
+    await mountWithCleanup(TestComp);
+    expect(queryOne("#target").getBoundingClientRect().left).toBe(225);
+    expect("#popper").toHaveStyle({ left: "225px", width: "50px" });
+});
+
+test("popper with the fit variant and a large content inside is resized to match the toggler - vertically", async () => {
+    const TestComp = getTestComponent(
+        { position: "right-fit" },
+        {
+            content: {
+                height: "500px",
+            },
+            popper: {
+                height: "unset",
+            },
+        }
+    );
+    await mountWithCleanup(TestComp);
+    expect(queryOne("#target").getBoundingClientRect().top).toBe(225);
+    expect("#popper").toHaveStyle({ top: "225px", height: "50px" });
+});

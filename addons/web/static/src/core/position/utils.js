@@ -112,6 +112,12 @@ function computePosition(popper, target, { container, flip, margin, position, sh
         container = container();
     }
 
+    if (variant === "fit") {
+        // make sure the popper has the desired dimensions during the computation of the position
+        const styleProperty = ["top", "bottom"].includes(direction) ? "width" : "height";
+        popper.style[styleProperty] = getComputedStyle(target)[styleProperty];
+    }
+
     // Account for popper actual margins
     const popperStyle = getComputedStyle(popper);
     const { marginTop, marginLeft, marginRight, marginBottom } = popperStyle;
@@ -213,16 +219,20 @@ function computePosition(popper, target, { container, flip, margin, position, sh
         // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
         result.top = positioning.top - popBox.top;
         result.left = positioning.left - popBox.left;
-        if (shrink && malus && v !== "f") {
+        if (shrink && malus) {
             const minTop = Math.floor(!vertical && v === "s" ? targetBox.top : contBox.top);
             result.top = Math.max(minTop, result.top);
-            const height = {
-                vt: targetBox.top - directionMin,
-                vb: directionMax - targetBox.bottom,
-                hs: variantMax - targetBox.top,
-                hm: variantMax - variantMin,
-                he: targetBox.bottom - variantMin,
-            }[variantPrefix + (vertical ? d : v)];
+
+            let height;
+            if (vertical) {
+                height = Math.abs(targetBox[direction] - (d === "t" ? directionMin : directionMax));
+            } else {
+                height = {
+                    s: variantMax - targetBox.top,
+                    m: variantMax - variantMin,
+                    e: targetBox.bottom - variantMin,
+                }[v];
+            }
             result.maxHeight = Math.floor(height);
         }
         return { result, malus };
@@ -279,15 +289,15 @@ export function reposition(popper, target, options) {
     const solution = computePosition(popper, target, { ...DEFAULTS, ...options });
 
     // Apply it
-    const { top, left, maxHeight, direction, variant } = solution;
+    const { top, left, maxHeight } = solution;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
     if (maxHeight) {
-        popper.style.maxHeight = `${maxHeight}px`;
-    }
-    if (variant === "fit") {
-        const styleProperty = ["top", "bottom"].includes(direction) ? "width" : "height";
-        popper.style[styleProperty] = target.getBoundingClientRect()[styleProperty] + "px";
+        const existingMaxHeight = getComputedStyle(popper).maxHeight;
+        popper.style.maxHeight =
+            existingMaxHeight !== "none"
+                ? `min(${existingMaxHeight}, ${maxHeight}px)`
+                : `${maxHeight}px`;
     }
 
     return solution;
