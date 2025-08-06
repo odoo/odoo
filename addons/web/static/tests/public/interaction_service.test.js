@@ -9,9 +9,9 @@ import { startInteraction } from "./helpers";
 
 describe.current.tags("interaction_dev");
 
-test("properly handles case where we have no match for wrapwrap", async () => {
+test("properly fallback to body when we have no match for wrapwrap", async () => {
     const env = await makeMockEnv();
-    expect(env.services["public.interactions"]).toBe(null);
+    expect(env.services["public.interactions"].el).toBe(document.querySelector("body"));
 });
 
 test("wait for translation before starting interactions", async () => {
