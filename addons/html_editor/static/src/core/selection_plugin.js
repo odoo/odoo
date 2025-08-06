@@ -1002,16 +1002,27 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
-        if (documentSelectionIsInEditable) {
+        if (this.editable.contains(this.document.activeElement)) {
+            // Editor has focus — nothing to do.
             return;
         }
-        // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
-        this.editable.focus({ preventScroll: true });
-        const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
-        const selection = this.document.getSelection();
-        if (selection) {
-            selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+
+        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
+
+        const closestNonEditable = (node) => closestElement(node, (el) => !el.isContentEditable);
+        // If selection includes a non-editable element, focusing editor will move cursor to different position.
+        if (!closestNonEditable(editableSelection.anchorNode) && !closestNonEditable(editableSelection.focusNode)) {
+            // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
+            this.editable.focus({ preventScroll: true });
+        }
+
+        if (!documentSelectionIsInEditable) {
+            // Selection is outside the editor — restore it.
+            const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
+            const selection = this.document.getSelection();
+            if (selection) {
+                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            }
         }
     }
 

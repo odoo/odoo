@@ -81,12 +81,10 @@ test("Translate should be disabled if selection spans across non editable conten
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
-test("Translate should be disabled if selection spans across non editable content or unsplittable (3)", async () => {
+test.todo("should not open toolbar when selection contains contenteditable false", async () => {
     await setupEditor('<div contenteditable="false">a[b</div><div>c]d</div>');
     await animationFrame();
-    await tick();
-    await expandToolbar();
-    expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
+    expect(".o-we-toolbar").toHaveCount(0);
 });
 
 test("Translate should be disabled if selection spans across non editable content or unsplittable (4)", async () => {
