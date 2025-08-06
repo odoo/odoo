@@ -6,13 +6,19 @@
         <field name="model">event.slot</field>
         <field name="arch" type="xml">
             <form>
+                <field name="event_id" invisible="1"/>
                 <group>
                     <group>
-                        <field name="start_hour" string="From" widget="float_time"/>
-                        <field name="color" widget="color_picker"/>
+                        <label for="start_hour" string="Hour range"/>
+                        <div>
+                            <field name="start_hour" class="oe_inline o_input_5ch" widget="float_time"/>
+                            <i class="fa fa-arrow-right mx-2" title="to"/>
+                            <field name="end_hour" class="oe_inline o_input_5ch" widget="float_time"/>
+                        </div>
+                        <field name="date_tz" string="Timezone"/>
                     </group>
                     <group>
-                        <field name="end_hour" string="To" widget="float_time"/>
+                        <field name="color" widget="color_picker"/>
                     </group>
                 </group>
             </form>
@@ -25,10 +31,11 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <form>
-                <div class="row">
-                    <label class="col-4" for="color" string="Color"/>
-                    <field class="col-8" name="color" widget="color_picker"/>
-                </div>
+                <field name="event_id" invisible="1"/>
+                <group>
+                    <field name="date_tz" string="Timezone"/>
+                    <field name="color" widget="color_picker"/>
+                </group>
             </form>
         </field>
     </record>
@@ -53,7 +60,8 @@
         <field name="model">event.slot</field>
         <field name="arch" type="xml">
             <calendar js_class="event_slot_calendar" date_start="start_datetime" date_stop="end_datetime"
-                string="Slots" scales="month" color="color" multi_create_view="event.view_event_slot_multi_create_form">
+                string="Slots" scales="month" color="color" quick_create_view_id="%(event.view_event_slot_form)d"
+                multi_create_view="event.view_event_slot_multi_create_form">
                 <field name="start_datetime" invisible="1"/>
                 <field name="end_datetime" invisible="1"/>
                 <field name="date_tz" invisible="1"/>
@@ -61,10 +69,11 @@
         </field>
     </record>
 
-    <record id="act_event_slot_from_event" model="ir.actions.act_window">
+    <record id="event_slot_action_from_event" model="ir.actions.act_window">
         <field name="name">Slots</field>
         <field name="res_model">event.slot</field>
         <field name="view_mode">calendar,list,form</field>
+        <field name="mobile_view_mode">list</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
         <field name="context">{'default_event_id': active_id}</field>
     </record>

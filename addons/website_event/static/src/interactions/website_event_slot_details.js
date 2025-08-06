@@ -88,8 +88,10 @@ export class SlotDetails extends Interaction {
      * @param {MouseEvent} ev
      */
     _onSlotSelected(ev) {
-        this.selectedSlotDatetime = deserializeDateTime(
-            ev.currentTarget.dataset.slotStart).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY);
+        const dataset = ev.currentTarget.dataset;
+        this.selectedSlotDatetime =
+            deserializeDateTime(dataset.slotStart, {tz: dataset.eventTz}).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY) +
+            " - " + deserializeDateTime(dataset.slotEnd, {tz: dataset.eventTz}).toLocaleString(DateTime.TIME_SIMPLE);
         this.form.setAttribute("data-selected-slot-id", parseInt(ev.currentTarget.dataset.slotId));
     }
 
