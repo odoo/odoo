@@ -424,6 +424,8 @@ class TestTranslation(TransactionCase):
         self.env['res.lang']._activate_lang('nl_NL')
         category.with_context(lang='nl_NL').name = 'Klanten'
         self.env.ref('base.lang_nl').active = False
+        self.env.flush_all()
+        self.env.transaction.reset()  # remove environments
 
         category.invalidate_recordset()
         self.assertEqual(category.with_context(lang=None).name, 'Customers')
@@ -657,6 +659,8 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('nl_NL')
         self.category.with_context(lang='nl_NL').name = 'Reblochon nl_NL'
         self.env.ref('base.lang_nl').active = False
+        self.env.flush_all()
+        self.env.transaction.reset()  # remove environments
 
         # [inactive_lang, non_existing_lang, technical_lang, sql_injection_lang]
         langs = ['nl_NL', 'Dummy', '_en_US', "'', NOW("]
