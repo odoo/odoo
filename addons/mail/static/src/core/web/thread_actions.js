@@ -17,6 +17,10 @@ threadActionsRegistry
         },
         sequence: 1,
         name: _t("Mark all read"),
+        setup() {
+            const component = useComponent();
+            component.orm = useService("orm");
+        },
     })
     .add("unstar-all", {
         condition(component) {

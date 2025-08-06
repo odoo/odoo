@@ -17,12 +17,9 @@
     </t>
 
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
-        <xpath expr="//*[@t-ref='notification-list']" position="before">
+        <xpath expr="//*[@name='before-content']" position="after">
             <div class="o-mail-MessagingMenu-header d-flex o-px-1_5" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
-                <t t-if="ui.isSmall">
-                    <div t-if="store.discuss.activeTab === 'inbox'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
-                </t>
-                <t t-else="">
+                <t t-if="!ui.isSmall">
                     <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
                     <t t-else="">
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'notification' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'notification'">Notifications</button>
