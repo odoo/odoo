@@ -318,7 +318,7 @@ test("'New Meeting' in mobile", async () => {
     pyEnv["discuss.channel"].create({ name: "Slytherin" });
     await start();
     await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
+    await contains("button.o-active", { text: "Notifications" });
     await click("button", { text: "Chats" });
     await click("button[title='New Meeting']");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Partner 2" });

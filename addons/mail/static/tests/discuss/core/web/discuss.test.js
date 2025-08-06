@@ -143,7 +143,7 @@ test("mobile chat search should allow to create group chat", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
+    await contains("button.o-active", { text: "Notifications" });
     await click("button", { text: "Chats" });
     await contains(".o-mail-DiscussSearch-inputContainer");
 });

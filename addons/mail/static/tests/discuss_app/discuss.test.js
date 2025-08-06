@@ -1718,6 +1718,7 @@ test("select another mailbox", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss");
+    await click("button:contains('Inbox')");
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
     await click("button", { text: "Starred messages" });
     await contains("button:disabled", { text: "Unstar all" });
@@ -1728,8 +1729,9 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
+    await click("button:contains('Inbox')");
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o-mail-MessagingMenu-navbar button.o-active", { text: "Mailboxes" });
+    await contains(".o-mail-MessagingMenu-navbar button.o-active", { text: "Inbox" });
     await contains("button.active.o-active", { text: "Inbox" });
     await contains("h4", { text: "Your inbox is empty" });
 });

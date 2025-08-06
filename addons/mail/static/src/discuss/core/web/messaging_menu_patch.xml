@@ -3,7 +3,7 @@
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
             <t t-if="ui.isSmall">
-                <DiscussSearch t-if="store.discuss.activeTab !== 'main' or !env.inDiscussApp" class="'w-100 px-2 pb-1'"/>
+                <DiscussSearch t-if="store.discuss.activeTab !== 'inbox'" class="'w-100 px-2 pb-1'"/>
             </t>
             <t t-else="">
                 <div class="flex-grow-1"/>

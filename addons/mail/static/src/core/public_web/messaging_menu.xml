@@ -6,8 +6,8 @@
 </t>
 
 <t t-name="mail.MessagingMenu.content">
-    <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
-        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
+    <div t-if="!(ui.isSmall and store.discuss.activeTab === 'inbox')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
+        <div t-if="store.discuss.activeTab !== 'inbox'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
             <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
@@ -56,8 +56,8 @@
             </t>
         </div>
     </div>
-    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex bg-view border-top shadow-lg w-100 btn-group o-px-1_5">
-        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0 rounded-0 bg-transparent position-relative border-0" t-att-class="{
+    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex bg-view border-top shadow-lg w-100 btn-group o-px-1_5 gap-2">
+        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 px-0 pt-1 mx-0 rounded-0 bg-transparent position-relative border-0" t-att-class="{
             'o-fw-600 o-active': store.discuss.activeTab === tab.id,
             'pb-4': isIosPwa,
             'pb-2': !isIosPwa,

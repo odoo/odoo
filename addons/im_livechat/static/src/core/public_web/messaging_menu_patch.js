@@ -7,8 +7,8 @@ patch(MessagingMenu.prototype, {
     /**
      * @override
      */
-    get tabs() {
-        const items = super.tabs;
+    get _tabs() {
+        const items = super._tabs;
         const hasLivechats = Object.values(this.store.Thread.records).some(
             ({ channel_type }) => channel_type === "livechat"
         );
@@ -22,6 +22,7 @@ patch(MessagingMenu.prototype, {
                 id: "livechat",
                 icon: "fa fa-commenting-o",
                 label: _t("Live Chats"),
+                sequence: 60,
             });
         }
         return items;

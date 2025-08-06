@@ -39,14 +39,15 @@ export class DiscussClientAction extends Component {
             props.action.context.active_id ??
             props.action.params?.active_id ??
             this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
-            "mail.box_inbox"
+            (this.env.services.ui.isSmall ? undefined : "mail.box_inbox")
         );
     }
 
-    /**
-     * @param {string} rawActiveId
-     */
+    /** @param {string} [rawActiveId] */
     parseActiveId(rawActiveId) {
+        if (!rawActiveId) {
+            return undefined;
+        }
         const [model, id] = rawActiveId.split("_");
         if (model === "mail.box") {
             return ["mail.box", id];
@@ -62,7 +63,13 @@ export class DiscussClientAction extends Component {
      */
     async restoreDiscussThread(props) {
         const rawActiveId = this.getActiveId(props);
-        const [model, id] = this.parseActiveId(rawActiveId);
+        const parsedActiveId = this.parseActiveId(rawActiveId);
+        if (!parsedActiveId) {
+            this.store.discuss.thread = undefined;
+            this.store.discuss.hasRestoredThread = true;
+            return;
+        }
+        const [model, id] = parsedActiveId;
         const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             if (props.action?.params?.highlight_message_id) {
