@@ -16,24 +16,29 @@
                                 }
                             </style>
                             <t t-set="ewaybill_states" t-value="('generated', 'cancel')"/>
-                            <table class="border-bottom border-dark">
-                                <tr class="d-flex justify-content-between align-items-center px-4 py-3">
-                                    <td style="width: 8rem;">
-                                        <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)"
-                                             style="max-width: 8rem; height: auto;" alt="Company Logo"/>
-                                    </td>
-                                    <td id="ewaybill_header">
-                                        <t t-name="ewaybill_header">
-                                            <h4 style="margin-top: 1rem;">e-Way Bill</h4>
-                                        </t>
-                                    </td>
-                                    <td t-if="doc.state in ewaybill_states">
-                                        <img t-if="doc.name != False"
-                                             t-att-src="'/report/barcode/QR/' + str(doc.name) + '/' + str(doc.company_id.vat) + '/' + str(doc.ewaybill_date)"
-                                             style="width: 6.25rem; height: 6.25rem;" alt="Barcode"/>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="container-fluid border-bottom py-3">
+                                <div class="row align-items-center">
+                                    <!-- Left: Logo -->
+                                    <div class="col">
+                                        <img t-if="doc.company_id.logo"
+                                             t-att-src="image_data_uri(doc.company_id.logo)"
+                                             style="max-width: 8rem; height: auto;"
+                                             alt="Company Logo"/>
+                                    </div>
+                                    <!-- Center: Title -->
+                                    <div class="col text-center">
+                                        <h4 id="ewaybill_header">e-Way Bill</h4>
+                                    </div>
+                                    <!-- Right: QR Code -->
+                                    <div class="col text-end">
+                                        <img t-if="doc.name and doc.state in ewaybill_states"
+                                        style="width: 6.25rem; height: 6.25rem;"
+                                         t-att-src="'/report/barcode/QR/' + str(doc.name) + '/' + str(doc.company_id.vat) + '/' + str(doc.ewaybill_date)"
+                                         alt="QR Code"/>
+                                    </div>
+                                </div>
+                            </div>
+
                             <br/>
 
                             <t t-set="generate_json" t-value="doc._ewaybill_generate_direct_json()"/>
