@@ -6,7 +6,7 @@
             <div class="mb-3">
                 <label for="zatca_refund_reason" class="form-label">ZATCA Refund Reason: </label>
                 <select class="detail form-select" id="zatca_refund_reason" name="l10n_sa_reason" t-model="state.l10n_sa_reason">
-                    <t t-foreach="pos.session._zatca_refund_reasons" t-as="l10n_sa_reason" t-key="l10n_sa_reason.value">
+                    <t t-foreach="pos.config._zatca_refund_reasons" t-as="l10n_sa_reason" t-key="l10n_sa_reason.value">
                         <option t-att-value="l10n_sa_reason.value"
                                 t-att-selected="l10n_sa_reason.value === state.l10n_sa_reason ? 'selected' : undefined">
                             <t t-out="l10n_sa_reason.name"/>
