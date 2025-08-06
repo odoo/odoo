@@ -44,15 +44,15 @@ class _Relational(Field[BaseModel]):
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
 
-        records._check_field_access(self, 'read')
+        # get the cache (check field access)
+        env = records.env
+        field_cache = self._get_cache(env)
 
         # multi-record case
         if self.compute and self.store:
             self.recompute(records)
-
-        # get the cache
-        env = records.env
-        field_cache = self._get_cache(env)
+            # cache may be changed by recompute
+            field_cache = self._get_cache(env)
 
         # retrieve values in cache, and fetch missing ones
         vals = []
@@ -425,14 +425,14 @@ class Many2one(_Relational):
         record_ids = set(records._ids)
         # align(id) returns a NewId if records are new, a real id otherwise
         align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
-        field_cache = self._get_cache(records.env)
+        field_cache = self._get_cache(records.env, fallback_to_sudo=True)
         corecords = records.env[self.comodel_name].browse(
             align(coid) for record_id in records._ids
             if (coid := field_cache.get(record_id)) is not None
         )
 
         for invf in inverse_fields:
-            inv_cache = invf._get_cache(corecords.env)
+            inv_cache = invf._get_cache(corecords.env, fallback_to_sudo=True)
             for corecord in corecords:
                 ids0 = inv_cache.get(corecord.id)
                 if ids0 is not None:
@@ -448,7 +448,7 @@ class Many2one(_Relational):
             valid_records = records.filtered_domain(invf.get_comodel_domain(corecord))
             if not valid_records:
                 continue
-            ids0 = invf._get_cache(corecord.env).get(corecord.id)
+            ids0 = invf._get_cache(corecord.env, fallback_to_sudo=True).get(corecord.id)
             # if the value for the corecord is not in cache, but this is a new
             # record, assign it anyway, as you won't be able to fetch it from
             # database (see `test_sale_order`)
@@ -578,7 +578,7 @@ class _RelationalMulti(_Relational):
     def _update_inverse(self, records, value):
         new_id = value.id
         assert not new_id, "Field._update_inverse can only be called with a new id"
-        field_cache = self._get_cache(records.env)
+        field_cache = self._get_cache(records.env, fallback_to_sudo=True)
         for record_id in records._ids:
             assert not record_id, "Field._update_inverse can only be called with new records"
             cache_value = field_cache.get(record_id, SENTINEL)
@@ -1575,7 +1575,7 @@ class Many2many(_RelationalMulti):
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
-                inv_cache = invf._get_cache(comodel.env)
+                inv_cache = invf._get_cache(comodel.env, fallback_to_sudo=True)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse(y)
                     try:
@@ -1615,7 +1615,7 @@ class Many2many(_RelationalMulti):
 
             # update the cache of inverse fields
             for invf in records.pool.field_inverses[self]:
-                inv_cache = invf._get_cache(comodel.env)
+                inv_cache = invf._get_cache(comodel.env, fallback_to_sudo=True)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse(y)
                     try:
@@ -1705,7 +1705,7 @@ class Many2many(_RelationalMulti):
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
-                inv_cache = invf._get_cache(comodel.env)
+                inv_cache = invf._get_cache(comodel.env, fallback_to_sudo=True)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse((y,))
                     try:
@@ -1724,7 +1724,7 @@ class Many2many(_RelationalMulti):
                 y_to_xs[y].add(x)
                 modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
-                inv_cache = invf._get_cache(comodel.env)
+                inv_cache = invf._get_cache(comodel.env, fallback_to_sudo=True)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse((y,))
                     try:

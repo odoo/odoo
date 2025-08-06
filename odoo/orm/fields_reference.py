@@ -96,7 +96,7 @@ class Many2oneReference(Integer):
             records = records.filtered_domain(invf.get_comodel_domain(corecord))
             if not records:
                 continue
-            ids0 = invf._get_cache(corecord.env).get(corecord.id)
+            ids0 = invf._get_cache(corecord.env, fallback_to_sudo=True).get(corecord.id)
             # if the value for the corecord is not in cache, but this is a new
             # record, assign it anyway, as you won't be able to fetch it from
             # database (see `test_sale_order`)

@@ -1558,7 +1558,7 @@ class Field(typing.Generic[T]):
     # Cache management methods
     #
 
-    def _get_cache(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
+    def _get_cache(self, env: Environment, *, fallback_to_sudo: bool = False) -> MutableMapping[IdType, typing.Any]:
         """ Return the field's cache, i.e., a mutable mapping from record id to
         a cache value.  The cache may be environment-specific.  This mapping is
         the way to retrieve a field's value for a given record.
@@ -1566,10 +1566,29 @@ class Field(typing.Generic[T]):
         Calling this function multiple times, always returns the same mapping
         instance for a given environment, unless the transaction was entirely
         invalidated.
+
+        When calling the first time, the field access is checked for the model.
+        Sometimes, you may want to retrieve a cache even if you don't have
+        access, for example when updating values. In that case, set
+        `fallback_to_sudo` flag: in case you don't have access, it will return
+        the cache of the sudoed environment instead.
         """
         try:
             return env._field_cache_memo[self]
         except KeyError:
+            if not (env.su or env[self.model_name]._has_field_access(self, 'read')):
+                # optimization: we called _has_field_access() to avoid an extra
+                # function call in _check_field_access()
+                if fallback_to_sudo:
+                    # updates already check for field access, giving them the
+                    # cache in sudo instead to put values in them; for
+                    # context-dependent fields, this may be another cache
+                    return self._get_cache(env(su=True))
+                try:
+                    env[self.model_name]._check_field_access(self, 'read')
+                except AccessError as e:
+                    # remove KeyError context
+                    raise e from None
             field_cache = self._get_cache_impl(env)
             env._field_cache_memo[self] = field_cache
             return field_cache
@@ -1614,7 +1633,7 @@ class Field(typing.Generic[T]):
         """ Return the subset of ``records`` for which the value of ``self`` is
         either not in cache, or different from ``cache_value``.
         """
-        field_cache = self._get_cache(records.env)
+        field_cache = self._get_cache(records.env, fallback_to_sudo=True)
         return records.browse(
             record_id
             for record_id in records._ids
@@ -1633,7 +1652,7 @@ class Field(typing.Generic[T]):
         ignoring the records that don't have a value in cache already.  This
         enables to keep the pending updates of records, and flush them later.
         """
-        field_cache = self._get_cache(records.env)
+        field_cache = self._get_cache(records.env, fallback_to_sudo=True)
         # call setdefault for all ids, values (looping in C)
         # this is ~15% faster than the equivalent:
         # ```
@@ -1654,7 +1673,8 @@ class Field(typing.Generic[T]):
             the update
         """
         env = records.env
-        field_cache = self._get_cache(env)
+
+        field_cache = self._get_cache(env, fallback_to_sudo=True)
         for id_ in records._ids:
             field_cache[id_] = cache_value
 
@@ -1680,11 +1700,9 @@ class Field(typing.Generic[T]):
         if record is None:
             return self         # the field is accessed through the owner class
 
+        # get the cache (check field access)
         env = record.env
-        if not (env.su or record._has_field_access(self, 'read')):
-            # optimization: we called _has_field_access() to avoid an extra
-            # function call in _check_field_access()
-            record._check_field_access(self, 'read')
+        field_cache = self._get_cache(env)
 
         record_len = len(record._ids)
         if record_len != 1:
@@ -1699,9 +1717,10 @@ class Field(typing.Generic[T]):
         if self.compute and self.store:
             # process pending computations
             self.recompute(record)
+            # cache may be changed by recompute
+            field_cache = self._get_cache(env)
 
         record_id = record._ids[0]
-        field_cache = self._get_cache(env)
         try:
             value = field_cache[record_id]
             # convert to record may also throw a KeyError if the value is not

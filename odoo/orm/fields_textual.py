@@ -286,7 +286,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         records = self._filter_not_equal(records, cache_value)
         if not records:
             return
-        field_cache = self._get_cache(records.env)
+        field_cache = self._get_cache(records.env, fallback_to_sudo=True)
         dirty_ids = records.env._field_dirty.get(self, ())
 
         # flush dirty None values

@@ -3042,8 +3042,8 @@ class BaseModel(metaclass=MetaModel):
                 # optimization: fetch field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep_field = self._fields[dotname.split('.', 1)[0]]
-                    if (not dep_field.store) or (
-                        dep_field.prefetch is True
+                    if (
+                        (not dep_field.store or dep_field.prefetch is True)
                         and self._has_field_access(dep_field, 'read')
                     ):
                         fields_todo.append(dep_field)
@@ -6259,12 +6259,14 @@ class RecordCache(Mapping[str, typing.Any]):
         """ Return whether `record` has a cached value for field ``name``. """
         record = self._record
         field = record._fields[name]
-        return record.id in field._get_cache(record.env)
+        return record._has_field_access(field, 'read') and record.id in field._get_cache(record.env)
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """
         record = self._record
         field = record._fields[name]
+        if not record._has_field_access(field, 'read'):
+            raise KeyError(name)
         return field._get_cache(record.env)[record.id]
 
     def __iter__(self):
@@ -6273,7 +6275,7 @@ class RecordCache(Mapping[str, typing.Any]):
         id_ = record.id
         env = record.env
         for name, field in record._fields.items():
-            if id_ in field._get_cache(env):
+            if record._has_field_access(field, 'read') and id_ in field._get_cache(env):
                 yield name
 
     def __len__(self):
