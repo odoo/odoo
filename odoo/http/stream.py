@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import base64
 import contextlib
 import mimetypes
 import os
+import typing
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
@@ -11,6 +14,14 @@ from werkzeug.urls import url_quote
 from werkzeug.utils import send_file as _send_file
 
 from odoo.tools import config, file_path
+
+if typing.TYPE_CHECKING:
+    from datetime import datetime
+    from typing import Self
+
+    from odoo.models import BaseModel
+
+    from .response import Response
 
 STATIC_CACHE = 60 * 60 * 24 * 7  # 1 week
 """ The cache duration for static content from the filesystem. """
@@ -22,7 +33,7 @@ content (usually using a hash)
 """
 
 
-def content_disposition(filename, disposition_type='attachment'):
+def content_disposition(filename: str, disposition_type: typing.Literal['attachment', 'inline'] = 'attachment') -> str:
     """
     Craft a ``Content-Disposition`` header, see :rfc:`6266`.
 
@@ -56,29 +67,31 @@ class Stream:
     dedicated constructors is discouraged.
     """
 
-    type: str = ''  # 'data' or 'path' or 'url'
-    data = None
-    path = None
+    type: typing.Literal['data', 'path', 'url']
+    data: bytes | None = None
+    path: str | None = None
     url = None
 
-    mimetype = None
-    as_attachment = False
-    download_name = None
+    mimetype: str | None = None
+    as_attachment: bool = False
+    download_name: str | None = None
     conditional = True
-    etag = True
-    last_modified = None
+    etag: str | typing.Literal[True] = True
+    last_modified: datetime | float | None = None
     max_age = None
-    immutable = False
-    size = None
-    public = False
+    immutable: bool = False
+    size: int | None = None
+    public: bool = False
 
     def __init__(self, **kwargs):
         # Remove class methods from the instances
         self.from_path = self.from_attachment = self.from_binary_field = None
         self.__dict__.update(kwargs)
+        assert self.type in ('data', 'path', 'url'), f"Invalid type {self.type!r} in Stream"
+        assert getattr(self, self.type, None) is not None, f"Missing attribute {self.type!r} to Stream"
 
     @classmethod
-    def from_path(cls, path, filter_ext=('',), public=False):
+    def from_path(cls, path: str, filter_ext: tuple[str, ...] = (), public: bool = False) -> Self:
         """
         Create a :class:`~Stream`: from an addon resource.
 
@@ -103,7 +116,7 @@ class Stream:
         )
 
     @classmethod
-    def from_binary_field(cls, record, field_name):
+    def from_binary_field(cls, record: BaseModel, field_name: str) -> Self:
         """ Create a :class:`~Stream`: from a binary field. """
         data_b64 = record[field_name]
         data = base64.b64decode(data_b64) if data_b64 else b''
@@ -116,35 +129,37 @@ class Stream:
             public=record.env.user._is_public()  # good enough
         )
 
-    def read(self):
+    def read(self) -> bytes:
         """ Get the stream content as bytes. """
         if self.type == 'url':
             e = "Cannot read an URL"
             raise ValueError(e)
 
         if self.type == 'data':
+            assert self.data is not None
             return self.data
 
+        assert self.path is not None, "Missing path to read Stream"
         with open(self.path, 'rb') as file:
             return file.read()
 
     def get_response(
         self,
-        as_attachment=None,
-        immutable=None,
-        content_security_policy="default-src 'none'",
+        as_attachment: bool | None = None,
+        immutable: bool | None = None,
+        content_security_policy: str | None = "default-src 'none'",
         **send_file_kwargs,
-    ):
+    ) -> Response:
         """
         Create the corresponding :class:`~Response` for the current stream.
 
-        :param bool|None as_attachment: Indicate to the browser that it
+        :param as_attachment: Indicate to the browser that it
             should offer to save the file instead of displaying it.
-        :param bool|None immutable: Add the ``immutable`` directive to
+        :param immutable: Add the ``immutable`` directive to
             the ``Cache-Control`` response header, allowing intermediary
             proxies to aggressively cache the response. This option also
             set the ``max-age`` directive to 1 year.
-        :param str|None content_security_policy: Optional value for the
+        :param content_security_policy: Optional value for the
             ``Content-Security-Policy`` (CSP) header. This header is
             used by browsers to allow/restrict the downloaded resource
             to itself perform new http requests. By default CSP is set
@@ -153,9 +168,6 @@ class Stream:
             :func:`odoo.tools._vendor.send_file.send_file` instead of
             the stream sensitive values. Discouraged.
         """
-        assert self.type in ('url', 'data', 'path'), "Invalid type: {self.type!r}, should be 'url', 'data' or 'path'."
-        assert getattr(self, self.type) is not None, "There is nothing to stream, missing {self.type!r} attribute."
-
         if self.type == 'url':
             if self.max_age is not None:
                 res = request.redirect(self.url, code=302, local=False)
