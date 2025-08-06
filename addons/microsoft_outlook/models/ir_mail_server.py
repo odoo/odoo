@@ -19,12 +19,6 @@ class IrMail_Server(models.Model):
         selection_add=[('outlook', 'Outlook OAuth Authentication')],
         ondelete={'outlook': 'set default'})
 
-    @api.depends('smtp_authentication')
-    def _compute_is_microsoft_outlook_configured(self):
-        outlook_servers = self.filtered(lambda server: server.smtp_authentication == 'outlook')
-        (self - outlook_servers).is_microsoft_outlook_configured = False
-        super(IrMail_Server, outlook_servers)._compute_is_microsoft_outlook_configured()
-
     def _compute_smtp_authentication_info(self):
         outlook_servers = self.filtered(lambda server: server.smtp_authentication == 'outlook')
         outlook_servers.smtp_authentication_info = _(

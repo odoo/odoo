@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import hmac
+from odoo.tools import hmac, email_normalize
 from odoo.tools.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
@@ -22,11 +22,10 @@ class MicrosoftOutlookMixin(models.AbstractModel):
     _description = 'Microsoft Outlook Mixin'
 
     _OUTLOOK_SCOPE = None
+    _DEFAULT_OUTLOOK_IAP_ENDPOINT = 'https://outlook.api.odoo.com'
 
     active = fields.Boolean(default=True)
 
-    is_microsoft_outlook_configured = fields.Boolean('Is Outlook Credential Configured',
-        compute='_compute_is_microsoft_outlook_configured')
     microsoft_outlook_refresh_token = fields.Char(string='Outlook Refresh Token',
         groups='base.group_system', copy=False)
     microsoft_outlook_access_token = fields.Char(string='Outlook Access Token',
@@ -36,20 +35,15 @@ class MicrosoftOutlookMixin(models.AbstractModel):
     microsoft_outlook_uri = fields.Char(compute='_compute_outlook_uri', string='Authentication URI',
         help='The URL to generate the authorization code from Outlook', groups='base.group_system')
 
-    def _compute_is_microsoft_outlook_configured(self):
-        Config = self.env['ir.config_parameter'].sudo()
-        microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
-        microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
-        self.is_microsoft_outlook_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
-
-    @api.depends('is_microsoft_outlook_configured')
     def _compute_outlook_uri(self):
         Config = self.env['ir.config_parameter'].sudo()
         base_url = self.get_base_url()
         microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
+        microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
+        is_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
 
         for record in self:
-            if not record.id or not record.is_microsoft_outlook_configured:
+            if not is_configured:
                 record.microsoft_outlook_uri = False
                 continue
 
@@ -79,12 +73,57 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         if not self.env.is_admin():
             raise AccessError(_('Only the administrator can link an Outlook mail server.'))
 
-        if not self.is_microsoft_outlook_configured:
-            raise UserError(_('Please configure your Outlook credentials.'))
+        email_normalized = email_normalize(self[self._email_field])
+
+        if not email_normalized:
+            raise UserError(_('Please enter a valid email address.'))
+
+        Config = self.env['ir.config_parameter'].sudo()
+        microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
+        microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
+        is_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
+
+        if not is_configured:  # use IAP (see '/microsoft_outlook/iap_confirm')
+            outlook_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
+                'mail.server.outlook.iap.endpoint',
+                self._DEFAULT_OUTLOOK_IAP_ENDPOINT,
+            )
+            db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+
+            # final callback URL that will receive the token from IAP
+            callback_params = url_encode({
+                'model': self._name,
+                'rec_id': self.id,
+                'csrf_token': self._get_outlook_csrf_token(),
+            })
+            callback_url = url_join(self.get_base_url(), f'/microsoft_outlook/iap_confirm?{callback_params}')
+
+            try:
+                response = requests.get(
+                    url_join(outlook_iap_endpoint, '/api/mail_oauth/1/outlook'),
+                    params={'db_uuid': db_uuid, 'callback_url': callback_url},
+                    timeout=3)
+                response.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                _logger.error('Can not contact IAP: %s.', e)
+                raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
+
+            response = response.json()
+            if 'error' in response:
+                self._raise_iap_error(response['error'])
+
+            # URL on IAP that will redirect to Outlook login page
+            microsoft_outlook_uri = response['url']
+
+        else:
+            microsoft_outlook_uri = self.microsoft_outlook_uri
+
+        if not microsoft_outlook_uri:
+            raise UserError(_('Please configure your outlook credentials.'))
 
         return {
             'type': 'ir.actions.act_url',
-            'url': self.microsoft_outlook_uri,
+            'url': microsoft_outlook_uri,
             'target': 'self',
         }
 
@@ -107,6 +146,12 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         :return:
             access_token, access_token_expiration
         """
+        Config = self.env['ir.config_parameter'].sudo()
+        microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
+        microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
+        if not microsoft_outlook_client_id or not microsoft_outlook_client_secret:
+            return self._fetch_outlook_access_token_iap(refresh_token)
+
         response = self._fetch_outlook_token('refresh_token', refresh_token=refresh_token)
         return (
             response['refresh_token'],
@@ -148,6 +193,44 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             raise UserError(_('An error occurred when fetching the access token. %s', error_description))
 
         return response.json()
+
+    def _fetch_outlook_access_token_iap(self, refresh_token):
+        """Fetch the access token using IAP.
+
+        Make a HTTP request to IAP, that will make a HTTP request
+        to the Outlook API and give us the result.
+
+        :return:
+            access_token, access_token_expiration
+        """
+        outlook_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
+            'mail.server.outlook.iap.endpoint',
+            self.env['microsoft.outlook.mixin']._DEFAULT_OUTLOOK_IAP_ENDPOINT,
+        )
+        db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+
+        response = requests.get(
+            url_join(outlook_iap_endpoint, '/api/mail_oauth/1/outlook_access_token'),
+            params={'refresh_token': refresh_token, 'db_uuid': db_uuid},
+            timeout=3,
+        )
+
+        if not response.ok:
+            _logger.error('Can not contact IAP: %s.', response.text)
+            raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
+
+        response = response.json()
+        if 'error' in response:
+            self._raise_iap_error(response['error'])
+
+        return response
+
+    def _raise_iap_error(self, error):
+        errors = {
+            "not_configured": _("Outlook is not configured on IAP."),
+            "no_subscription": _("You don't have an active subscription."),
+        }
+        raise UserError(_('An error occurred: %s.', errors.get(error, error)))
 
     def _generate_outlook_oauth2_string(self, login):
         """Generate a OAuth2 string which can be used for authentication.
