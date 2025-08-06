@@ -64,6 +64,7 @@ function copyRecordData(record) {
             case "many2one_reference":
             case "reference":
                 data[name] = value && Object.assign({}, value);
+                break;
             case "one2many":
                 // Not supported => that field is left empty
                 break;
@@ -221,6 +222,10 @@ export class StaticList extends DataPoint {
     delete(record) {
         return this.model.mutex.exec(async () => {
             await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
+            // All records of last page are deleted => reload the new last page
+            if (this.count === this.offset) {
+                await this._load({ offset: this.offset - this.limit });
+            }
             await this._onUpdate();
         });
     }
@@ -920,17 +925,21 @@ export class StaticList extends DataPoint {
     async _duplicateRecords(records, options) {
         const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
         let sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
-        const newRecords = await Promise.all(records.map(async () => {
-            return this._createNewRecordDatapoint({
-                mode: "readonly",
-            });
-        }));
-        await Promise.all(records.map((record, index) => {
-            return newRecords[index]._update({
-                ...copyRecordData(record),
-                [this.handleField]: sequence++,
-            });
-        }));
+        const newRecords = await Promise.all(
+            records.map(async () =>
+                this._createNewRecordDatapoint({
+                    mode: "readonly",
+                })
+            )
+        );
+        await Promise.all(
+            records.map((record, index) =>
+                newRecords[index]._update({
+                    ...copyRecordData(record),
+                    [this.handleField]: sequence++,
+                })
+            )
+        );
 
         const localIncreaseLimit = this.records.length + records.length - this.limit;
         if (localIncreaseLimit > 0) {
@@ -951,9 +960,7 @@ export class StaticList extends DataPoint {
         }
         await this._applyCommands(commands);
 
-        await Promise.all(newRecords.map((record) => {
-            return this._addRecord(record, { sort: false });
-        }));
+        await Promise.all(newRecords.map((record) => this._addRecord(record, { sort: false })));
 
         await this._sort();
     }
