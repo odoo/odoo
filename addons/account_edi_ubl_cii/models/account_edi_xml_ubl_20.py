@@ -60,6 +60,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # EXTENDS account.edi.common
         return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
+    def _is_paid_and_epd_applied(self, invoice):
+        # TODO: check this with LAS; i.e. the EPD part
+        payterm_lines = invoice.line_ids.filtered(lambda x: x.display_type == 'payment_term')
+        counterpart_amls = payterm_lines.matched_debit_ids.debit_move_id + payterm_lines.matched_credit_ids.credit_move_id
+        counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
+        counterpart_moves = counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type)
+        has_payments = bool(counterpart_moves)
+        is_paid = invoice.payment_state == invoice._get_invoice_in_payment_state()
+        counterpart_move_has_epd_lines = bool(counterpart_moves.line_ids.filtered(lambda l: l.display_type == 'epd'))
+        return has_payments and is_paid and counterpart_move_has_epd_lines
+
     # -------------------------------------------------------------------------
     # EXPORT
     # -------------------------------------------------------------------------
@@ -298,7 +309,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     })
                 tax_totals_vals['tax_subtotal_vals'].append(subtotal)
 
-        if epd_tax_to_discount:
+        if epd_tax_to_discount and not self._is_paid_and_epd_applied(invoice):
             # early payment discounts: hence, need to add a subtotal section
             tax_totals_vals['tax_subtotal_vals'].append({
                 'currency': invoice.currency_id,
@@ -375,20 +386,23 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         'tax_scheme_vals': {'id': 'VAT'},
                     }],
                 })
-            # One global Charge (VAT exempted)
-            vals_list.append({
-                'charge_indicator': 'true',
-                'allowance_charge_reason_code': 'ZZZ',
-                'allowance_charge_reason': _("Conditional cash/payment discount"),
-                'amount': sum(epd_tax_to_discount.values()),
-                'currency_dp': 2,
-                'currency_name': invoice.currency_id.name,
-                'tax_category_vals': [{
-                    'id': 'E',
-                    'percent': 0.0,
-                    'tax_scheme_vals': {'id': 'VAT'},
-                }],
-            })
+
+            if not self._is_paid_and_epd_applied(invoice):
+                # One global Charge (VAT exempted)
+                vals_list.append({
+                    'charge_indicator': 'true',
+                    'allowance_charge_reason_code': 'ZZZ',
+                    'allowance_charge_reason': _("Conditional cash/payment discount"),
+                    'amount': sum(epd_tax_to_discount.values()),
+                    'currency_dp': 2,
+                    'currency_name': invoice.currency_id.name,
+                    'tax_category_vals': [{
+                        'id': 'E',
+                        'percent': 0.0,
+                        'tax_scheme_vals': {'id': 'VAT'},
+                    }],
+                })
+
         return vals_list
 
     def _get_pricing_exchange_rate_vals_list(self, invoice):
@@ -537,15 +551,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Rounding amounts belonging to a tax ('biggest_tax' strategy) are included already in the tax amounts.
         rounding_amls = invoice.line_ids.filtered(lambda line: line.display_type == 'rounding' and not line.tax_line_id)
         payable_rounding_amount = invoice.direction_sign * sum(rounding_amls.mapped('amount_currency'))
+
+        # In case the invoice is paid alread and an early payment discount has been granted we adjust the totals accordingly.
+        epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
+        epd_allowance_amount = sum(epd_tax_to_discount.values()) if epd_tax_to_discount and self._is_paid_and_epd_applied(invoice) else 0
+
         return {
             'currency': invoice.currency_id,
             'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
             'line_extension_amount': line_extension_amount,
-            'tax_exclusive_amount': taxes_vals['base_amount_currency'],
-            'tax_inclusive_amount': invoice.amount_total - payable_rounding_amount,
+            'tax_exclusive_amount': taxes_vals['base_amount_currency'] - epd_allowance_amount,
+            'tax_inclusive_amount': invoice.amount_total - payable_rounding_amount - epd_allowance_amount,
             'allowance_total_amount': allowance_total_amount or None,
             'charge_total_amount': charge_total_amount or None,
-            'prepaid_amount': invoice.amount_total - invoice.amount_residual,
+            'prepaid_amount': invoice.amount_total - invoice.amount_residual - epd_allowance_amount,
             'payable_rounding_amount': payable_rounding_amount or None,
             'payable_amount': invoice.amount_residual,
         }
@@ -1076,6 +1095,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         vals['base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] != 'cash_rounding']
         vals['cash_rounding_base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] == 'cash_rounding']
 
+        invoice = vals['invoice']
+
+        if self._is_paid_and_epd_applied(invoice):
+            # TODO: sign check maybe need to be based on document type?
+            # Remove the early payment lines representing charges
+            vals['base_lines'] = [base_line for base_line in vals['base_lines']
+                                  if (base_line['special_type'] != 'early_payment'
+                                      or base_line['currency_id'].compare_amounts(base_line['tax_details']['total_excluded'], 0) == -1)]
+
     def _add_invoice_currency_vals(self, vals):
         self._add_document_currency_vals(vals)
 
@@ -1204,7 +1232,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice = vals['invoice']
         document_node[monetary_total_tag].update({
             'cbc:PrepaidAmount': {
-                '_text': self.format_float(invoice.amount_total - invoice.amount_residual, vals['currency_dp']),
+                '_text': self.format_float(vals['tax_inclusive_amount_currency'] + vals['cash_rounding_base_amount_currency'] - invoice.amount_residual, vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             },
             'cbc:PayableRoundingAmount': {

@@ -710,6 +710,304 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         self.test_beg_testcase01_minimal_invoice()
 
+    def test_beg_testcase05_cash_discount(self):
+        tax_21 = self.percent_tax(21.0)
+        tax_6 = self.percent_tax(6.0)
+
+        pay_term_cash_discount = self.env['account.payment.term'].create({
+            'name': "2/14 Net 31",
+            'note': "Payment terms: 31 Days, 2% Early Payment Discount under 14 days",
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 14,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 31})],
+        })
+
+        self._setup_beg_supplier(self.env.company.partner_id, vat='BE0123456749')
+        self._setup_beg_customer(self.partner_a)
+        partner = self.env['res.partner'].with_context(no_vat_validation=True).create({
+            'name': 'Hotel Local SPRL - Nom commercial',
+            'parent_id': self.partner_a.id,
+            'email': 'dupont@hotel-local.be',
+        })
+
+        self.product_a.name = "good X"
+        self.product_b.write({
+            'name': "good Y",
+            'uom_id': self.env.ref('uom.product_uom_unit'),  # dozen by default
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_date': '2018-07-25',
+            'delivery_date': '2018-07-01',
+            'invoice_payment_term_id': pay_term_cash_discount.id,
+            'narration': 'Testcase 5',
+            'ref': '123456789',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_6.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 2400,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.assertTrue(invoice.ubl_cii_xml_id)
+
+        xpath = '''
+            <xpath expr="//*[local-name()='ID']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:ID>2019000005</cbc:ID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingSupplierParty']/*[local-name()='Party']/*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID' and text()='BE0123456749']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:CompanyID>0123456749</cbc:CompanyID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingCustomerParty']/*[local-name()='Party']/*[local-name()='Contact']" position="replace"/>
+            <xpath expr="//*[local-name()='Delivery']/*[local-name()='DeliveryLocation']" position="replace"/>
+            <xpath expr="//*[local-name()='Delivery']/*[local-name()='DeliveryParty']" position="replace"/>
+            <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='PaymentID' and text()='INV/2018/00001']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:PaymentID>Invoice 2019000005</cbc:PaymentID>
+            </xpath>
+            <xpath expr="//*[local-name()='PaymentTerms']/*[local-name()='Note' and text()='Payment terms: 31 Days, 2% Early Payment Discount under 14 days']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+        <cbc:Note>  In geval van betaling binnen 14 dagen is 2% (52.00€) betalingskorting van
+                    toepassing      en het te betalen bedrag = 3053.68€
+                    En cas de paiement dans les 14 jours, l'escompte conditionnel de 2% (52.00€) est appliqué et le montant payable = 3053.68€
+                    In case of payment within 14 days, 2% (52.00€) conditional cash/payment discount applies and the payable amount = 3053.68€
+        </cbc:Note>
+            </xpath>
+            <xpath expr="//*[local-name()='LegalMonetaryTotal']/*[local-name()='PrepaidAmount']" position="replace"/>
+            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='good X']" position="replace"/>
+            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='good Y']" position="replace"/>
+        '''
+
+        with_new_helpers = misc.str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True),
+            default=True,
+        )
+        if with_new_helpers:
+            # We create 2 VAT-exempt AllowanceCharge nodes (each non VAT-exempt AllowanceCharge node has a dedicated counterpart node)
+            # In the example there is only 1 VAT-exempt AllowanceCharge node (over the sum of the 2 non VAT-exempt AllowanceCharge nodes)
+            # Also we ouptut the TaxExemptionReason
+            xpath += '''
+                <xpath expr="//*[local-name()='AllowanceCharge'][2]/*[local-name()='TaxCategory']/*[local-name()='TaxExemptionReason']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'][4]/*[local-name()='TaxCategory']/*[local-name()='TaxExemptionReason']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'][1]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'][2]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel</cbc:AllowanceChargeReason>
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'][3]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'][4]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel</cbc:AllowanceChargeReason>
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'
+                                 and ./*[local-name()='TaxCategory']/*[local-name()='Percent' and text()='0.0']
+                                 and ./*[local-name()='AllowanceChargeReasonCode' and text()='ZZZ']
+                                 and ./*[local-name()='Amount' and @currencyID='EUR' and text()='4.00']]" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"/>
+                <xpath expr="//*[local-name()='AllowanceCharge'
+                                 and ./*[local-name()='TaxCategory']/*[local-name()='Percent' and text()='0.0']
+                                 and ./*[local-name()='AllowanceChargeReasonCode' and text()='ZZZ']
+                                ]/*[local-name()='Amount' and @currencyID='EUR' and text()='48.00']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:Amount currencyID="EUR">52.00</cbc:Amount>
+                </xpath>
+            '''
+        else:
+            xpath += '''
+                <xpath expr="//*[local-name()='AllowanceCharge'][1]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'][2]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+                </xpath>
+                <xpath expr="//*[local-name()='AllowanceCharge'][3]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel</cbc:AllowanceChargeReason>
+                </xpath>
+            '''
+
+        # TODO: just make a function that returns the common xpath
+        adjusted_output_tree = self.with_applied_xpath(
+            self._with_applied_common_beg_xpath(etree.fromstring(invoice.ubl_cii_xml_id.raw)),
+            xpath,
+        )
+
+        self.assertXmlTreeEqual(
+            adjusted_output_tree,
+            self._get_xml_tree_from_file('bis3_from_BEG/testcase05_cash_discount'),
+        )
+
+    def test_beg_testcase05_cash_discount_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_beg_testcase05_cash_discount()
+
+    def test_beg_testcase06_discount_with_cash_payment(self):
+        tax_21 = self.percent_tax(21.0)
+        tax_6 = self.percent_tax(6.0)
+
+        pay_term_cash_discount = self.env['account.payment.term'].create({
+            'name': "2/14 Net 31",
+            'note': "Payment terms: 31 Days, 2% Early Payment Discount under 14 days",
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 14,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 31})],
+        })
+
+        self._setup_beg_supplier(self.env.company.partner_id, vat='BE0123456749')
+        self._setup_beg_customer(self.partner_a)
+        partner = self.env['res.partner'].with_context(no_vat_validation=True).create({
+            'name': 'Hotel Local SPRL - Nom commercial',
+            'parent_id': self.partner_a.id,
+            'email': 'dupont@hotel-local.be',
+        })
+
+        self.product_a.name = "goed X"
+        self.product_b.write({
+            'name': "goed Y",
+            'uom_id': self.env.ref('uom.product_uom_unit'),  # dozen by default
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_date': '2018-07-25',
+            'delivery_date': '2018-07-01',
+            'invoice_payment_term_id': pay_term_cash_discount.id,
+            'narration': 'Testcase 6',
+            'ref': '123456789',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_6.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 2400,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2018-07-01'})\
+            ._create_payments()
+        # The invoice is fully paid; but we only paid the discounted amount
+        self.assertRecordValues(invoice, [{
+                'amount_residual': 0.0,
+                'amount_total': 3105.68,
+        }])
+        self.assertRecordValues(invoice.matched_payment_ids, [{'amount': 3053.68}])
+
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.assertTrue(invoice.ubl_cii_xml_id)
+
+        # Note: in the test case `PaymentID` is `Invoice 2019000005` even though `ID` is `2019000006`
+        xpath = '''
+            <xpath expr="//*[local-name()='ID']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:ID>2019000006</cbc:ID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingSupplierParty']/*[local-name()='Party']/*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID' and text()='BE0123456749']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:CompanyID>0123456749</cbc:CompanyID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingCustomerParty']/*[local-name()='Party']/*[local-name()='Contact']" position="replace"/>
+            <xpath expr="//*[local-name()='Delivery']/*[local-name()='DeliveryLocation']" position="replace"/>
+            <xpath expr="//*[local-name()='Delivery']/*[local-name()='DeliveryParty']" position="replace"/>
+            <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='PaymentID' and text()='INV/2018/00001']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:PaymentID>Invoice 2019000005</cbc:PaymentID>
+            </xpath>
+            <xpath expr="//*[local-name()='PaymentTerms']/*[local-name()='Note' and text()='Payment terms: 31 Days, 2% Early Payment Discount under 14 days']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+        <cbc:Note>  In geval van betaling binnen 14 dagen is 2% (52.00€) betalingskorting van toepassing
+                    en het te betalen bedrag = 3053.68€
+                    En cas de paiement dans les 14 jours, l'escompte conditionnel de 2% (52.00€) est appliqué et le montant payable = 3053.68€
+                    In case of payment within 14 days, 2% (52.00€) conditional cash/payment discount applies and the payable amount = 3053.68€
+        </cbc:Note>
+            </xpath>
+            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='goed X']" position="replace"/>
+            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='goed Y']" position="replace"/>
+            <xpath expr="//*[local-name()='AllowanceCharge'][1]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+            </xpath>
+            <xpath expr="//*[local-name()='AllowanceCharge'][2]/*[local-name()='AllowanceChargeReason' and text()='Conditional cash/payment discount']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+            </xpath>
+        '''
+
+        adjusted_output_tree = self.with_applied_xpath(
+            self._with_applied_common_beg_xpath(etree.fromstring(invoice.ubl_cii_xml_id.raw)),
+            xpath,
+        )
+
+        self.assertXmlTreeEqual(
+            adjusted_output_tree,
+            self._get_xml_tree_from_file('bis3_from_BEG/testcase06_discount_with_cash_payment'),
+        )
+
+    def test_beg_testcase06_discount_with_cash_payment_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_beg_testcase06_discount_with_cash_payment()
+
     def test_beg_testcase10_invoice_in_usd_and_eur_vat_21(self):
         currency = self.setup_other_currency('USD', rounding=0.01, rates=[('2018-01-01', 3_272.22 / 2_931.68)])
         tax_21 = self.percent_tax(21.0)
