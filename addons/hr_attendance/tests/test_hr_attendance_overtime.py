@@ -93,6 +93,23 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
         set_calendar_and_tz(cls.europe_employee, 'Europe/Brussels')
 
+        cls.no_contract_employee = cls.env['hr.employee'].create({
+            'name': 'No Contract',
+            'company_id': cls.company.id,
+            'tz': 'UTC',
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': False,
+        })
+        cls.future_contract_employee = cls.env['hr.employee'].create({
+            'name': 'Future contract',
+            'company_id': cls.company.id,
+            'tz': 'UTC',
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2030, 1, 1),
+        })
+
         cls.calendar_flex_40h = cls.env['resource.calendar'].create({
             'name': 'Flexible 40 hours/week',
             'company_id': cls.company.id,
@@ -678,6 +695,10 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     #     # Other company with setting disabled
     #     self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
+
+    #     # Employee with no contract or future contract
+    #     # self.assertAlmostEqual(self.no_contract_employee.total_overtime, 0, 2)
+    #     # self.assertAlmostEqual(self.future_contract_employee.total_overtime, 0, 2)
 
     def test_overtime_hours_flexible_resource(self):
         """ Test the computation of overtime hours for a single flexible resource with 8 hours_per_day.

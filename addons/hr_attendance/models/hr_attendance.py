@@ -656,9 +656,12 @@ class HrAttendance(models.Model):
         checked_in_employees = self.env['hr.attendance.overtime.line'].search([('date', '=', yesterday)]).employee_id
 
         technical_attendances_vals = []
-        absent_employees = self.env['hr.employee'].search([('id', 'not in', checked_in_employees.ids),
-                                                           ('company_id', 'in', companies.ids),
-                                                           ('resource_calendar_id.flexible_hours', '=', False)])
+        absent_employees = self.env['hr.employee'].search([
+            ('id', 'not in', checked_in_employees.ids),
+            ('company_id', 'in', companies.ids),
+            ('resource_calendar_id.flexible_hours', '=', False),
+            ('current_version_id.contract_date_start', '<=', fields.Date.today() - relativedelta(days=1))
+        ])
 
         for emp in absent_employees:
             local_day_start = pytz.utc.localize(yesterday).astimezone(pytz.timezone(emp._get_tz()))
