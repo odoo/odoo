@@ -1034,16 +1034,23 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
-        if (documentSelectionIsInEditable) {
+        if (this.editable.contains(this.document.activeElement)) {
+            // Editor has focus — nothing to do.
             return;
         }
+
+        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
+
         // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
         this.editable.focus({ preventScroll: true });
-        const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
-        const selection = this.document.getSelection();
-        if (selection) {
-            selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+
+        if (!documentSelectionIsInEditable) {
+            // Selection is outside the editor — restore it.
+            const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
+            const selection = this.document.getSelection();
+            if (selection) {
+                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            }
         }
     }
 }
