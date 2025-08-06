@@ -3051,7 +3051,7 @@ test("monetary chart rendering", async () => {
     expect(".o_graph_alert").toHaveText(
         "The graph is mixing several currencies. Select one of them to perform an accurate analysis: EUR - USD"
     );
-    await contains(".o_graph_alert a:first").click();
+    await contains(".o_graph_alert button:first").click();
     checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
         backgroundColor: "#4EA7F2",
         borderColor: undefined,
@@ -3062,7 +3062,7 @@ test("monetary chart rendering", async () => {
     expect(".o_graph_alert").toHaveCount(0);
     await contains(".o_searchview .o_facet_remove").click();
     expect(".o_graph_alert").toHaveCount(1);
-    await contains(".o_graph_alert a:eq(1)").click();
+    await contains(".o_graph_alert button:eq(1)").click();
     checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
         backgroundColor: "#4EA7F2",
         borderColor: undefined,

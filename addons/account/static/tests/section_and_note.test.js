@@ -933,7 +933,7 @@ test("add a section", async () => {
         "C1",
     ]);
     expect(`.o_note_row`).toHaveCount(0);
-    await contains(".o_field_x2many_list_row_add a:eq(1)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(1)").click();
     await edit("D");
     await contains(getFixture()).click();
     expect(queryAllTexts(".o_data_row")).toEqual([
@@ -997,7 +997,7 @@ test("add note", async () => {
         "C1",
     ]);
     expect(`.o_note_row`).toHaveCount(0);
-    await contains(".o_field_x2many_list_row_add a:last").click();
+    await contains(".o_field_x2many_list_row_add button:last").click();
     await edit("this is a note");
     await contains(getFixture()).click();
     expect(queryAllTexts(".o_data_row")).toEqual([
@@ -1061,7 +1061,7 @@ test("section_and_note_text widget", async () => {
         "C1",
     ]);
     expect(`.o_note_row`).toHaveCount(0);
-    await contains(".o_field_x2many_list_row_add a:last").click();
+    await contains(".o_field_x2many_list_row_add button:last").click();
     expect(`.o_is_line_note textarea`).toHaveCount(1);
     await edit("this is a note\non 2 lines");
     await contains(getFixture()).click();
@@ -1125,7 +1125,7 @@ test("sections with required content field", async () => {
     expect(".o_data_row").toHaveCount(14);
     await contains(".o_form_button_cancel").click();
     expect(".o_data_row").toHaveCount(13);
-    await contains(".o_field_x2many_list_row_add a:eq(1)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(1)").click();
     expect(".o_data_row").toHaveCount(14);
     expect(".o_invalid_cell").toHaveCount(0);
     await press("Enter");

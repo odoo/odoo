@@ -1224,7 +1224,7 @@ test(`freeze widths: x2many, add first record`, async () => {
     });
 
     const initialWidths = getColumnWidths();
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_data_row").toHaveCount(1);
     expect(getColumnWidths()).toEqual(initialWidths);
 });
@@ -1304,7 +1304,7 @@ test(`freeze widths: x2many, toggle optional field`, async () => {
 
     // create a record to store the current widths, but discard it directly to keep
     // the list empty (otherwise, the browser automatically computes the optimal widths)
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(getColumnWidths()).toEqual([110, 626, 32]);
 
     await contains(".o_optional_columns_dropdown_toggle").click();

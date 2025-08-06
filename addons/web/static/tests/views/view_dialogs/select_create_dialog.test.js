@@ -376,7 +376,7 @@ test("SelectCreateDialog cascade x2many in create mode on desktop", async () => 
         `,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_field_widget[name=instrument] input").edit("ABC", { confirm: false });
     await runAllTimers();
     await contains(
@@ -385,7 +385,7 @@ test("SelectCreateDialog cascade x2many in create mode on desktop", async () => 
 
     expect(".modal .modal-lg").toHaveCount(1);
 
-    await contains(".modal .o_field_x2many_list_row_add a").click();
+    await contains(".modal .o_field_x2many_list_row_add button").click();
 
     expect(".modal .modal-lg").toHaveCount(2);
 
@@ -453,7 +453,7 @@ test("SelectCreateDialog cascade x2many in create mode on mobile", async () => {
         `,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     click(".o_field_widget[name=instrument] input");
     await animationFrame();
@@ -463,7 +463,7 @@ test("SelectCreateDialog cascade x2many in create mode on mobile", async () => {
     expect(".modal .modal-lg").toHaveCount(2);
 
     await contains(".modal .o_field_char[name=name] input").edit("ABC");
-    await contains(".modal .o_field_x2many_list_row_add a").click();
+    await contains(".modal .o_field_x2many_list_row_add button").click();
 
     expect(".modal .modal-lg").toHaveCount(3);
     await contains(

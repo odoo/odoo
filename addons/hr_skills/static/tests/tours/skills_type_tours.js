@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("hr_skills_type_tour", {
             run: "edit Cooking Skill",
         },
         {
-            trigger: "div[name=skill_ids] .o_field_x2many_list_row_add a",
+            trigger: "div[name=skill_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {
@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("hr_skills_type_tour", {
             run: "edit Macaroon",
         },
         {
-            trigger: "div[name=skill_level_ids] .o_field_x2many_list_row_add a",
+            trigger: "div[name=skill_level_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("hr_skills_type_tour", {
             run: "click",
         },
         {
-            trigger: "div[name=skill_level_ids] .o_field_x2many_list_row_add a",
+            trigger: "div[name=skill_level_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("hr_skills_type_tour", {
             run: "click",
         },
         {
-            trigger: "div[name=skill_level_ids] .o_field_x2many_list_row_add a",
+            trigger: "div[name=skill_level_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {

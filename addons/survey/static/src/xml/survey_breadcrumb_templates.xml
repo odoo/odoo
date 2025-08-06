@@ -15,9 +15,9 @@
                     <t t-set="canGoBack" t-value="false" />
                 </t>
                 <t t-if="canGoBack">
-                    <a class="text-primary text-break" href="#">
+                    <button class="text-primary text-break btn btn-link p-0 oe_survey_breadcrumb">
                         <span t-esc="page.title" />
-                    </a>
+                    </button>
                 </t>
                 <t t-else="">
                     <span t-att-class="'text-break ' + (isActivePage ? 'text-black' : 'text-muted')"

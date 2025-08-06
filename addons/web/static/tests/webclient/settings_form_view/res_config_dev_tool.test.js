@@ -21,9 +21,7 @@ class ResConfigSettings extends models.Model {
 defineModels([ResConfigSettings]);
 
 test("Simple render", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     redirect("/odoo");
     await mountView({
         type: "form",
@@ -46,9 +44,7 @@ test("Simple render", async () => {
 });
 
 test("Activate the developer mode", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -66,16 +62,14 @@ test("Activate the developer mode", async () => {
         resModel: "res.config.settings",
     });
     expect(router.current).toEqual({});
-    await click("a:contains('Activate the developer mode')");
+    await click("button:contains('Activate the developer mode')");
     await tick();
     expect(router.current).toEqual({ debug: 1 });
     expect.verifySteps(["location reload"]);
 });
 
 test("Activate the developer mode (with assets)", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -93,16 +87,14 @@ test("Activate the developer mode (with assets)", async () => {
         resModel: "res.config.settings",
     });
     expect(router.current).toEqual({});
-    await click("a:contains('Activate the developer mode (with assets)')");
+    await click("button:contains('Activate the developer mode (with assets)')");
     await tick();
     expect(router.current).toEqual({ debug: "assets" });
     expect.verifySteps(["location reload"]);
 });
 
 test("Activate the developer mode (with tests assets)", async () => {
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -121,7 +113,7 @@ test("Activate the developer mode (with tests assets)", async () => {
     });
     expect(router.current).toEqual({});
 
-    await click("a:contains('Activate the developer mode (with tests assets)')");
+    await click("button:contains('Activate the developer mode (with tests assets)')");
     await tick();
     expect(router.current).toEqual({ debug: "assets,tests" });
     expect.verifySteps(["location reload"]);
@@ -129,9 +121,7 @@ test("Activate the developer mode (with tests assets)", async () => {
 
 test("Activate the developer modeddd (with tests assets)", async () => {
     serverState.debug = "assets,tests";
-    onRpc("/base_setup/demo_active", () => {
-        return true;
-    });
+    onRpc("/base_setup/demo_active", () => true);
     patchWithCleanup(browser.location, {
         reload() {
             expect.step("location reload");
@@ -154,7 +144,7 @@ test("Activate the developer modeddd (with tests assets)", async () => {
         "Deactivate the developer mode",
     ]);
 
-    await click("a:contains('Deactivate the developer mode')");
+    await click("button:contains('Deactivate the developer mode')");
     await tick();
     expect(router.current).toEqual({ debug: 0 });
     expect.verifySteps(["location reload"]);

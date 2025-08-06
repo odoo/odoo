@@ -121,7 +121,7 @@ test("Set simple field in 'full_name' node option", async () => {
     // Click on the widget to open signature modal
     await click("div[name=sign] div.o_signature");
     await animationFrame();
-    expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
+    expect(".modal .modal-body button.o_web_sign_auto_button").toHaveCount(1, {
         message: 'should open a modal with "Auto" button',
     });
     expect(".o_web_sign_auto_button").toHaveClass("active", {
@@ -158,7 +158,7 @@ test("Set m2o field in 'full_name' node option", async () => {
     await click("div[name=sign] div.o_signature");
     await waitFor(".modal .modal-body");
 
-    expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
+    expect(".modal .modal-body button.o_web_sign_auto_button").toHaveCount(1, {
         message: 'should open a modal with "Auto" button',
     });
     expect.verifySteps(["Veggie Burger"]);
@@ -337,7 +337,7 @@ test("signature field should render initials", async () => {
     // Click on the widget to open signature modal
     await click("div[name=sign] div.o_signature");
     await animationFrame();
-    expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
+    expect(".modal .modal-body button.o_web_sign_auto_button").toHaveCount(1, {
         message: 'should open a modal with "Auto" button',
     });
     expect.verifySteps(["V.B."]);

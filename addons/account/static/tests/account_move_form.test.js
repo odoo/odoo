@@ -33,7 +33,7 @@ test("When I switch tabs, it saves", async () => {
     });
     await insertText("[name='name'] input", "somebody save me!");
     triggerHotkey("Enter");
-    await click('a[name="aml_tab"]');
+    await click('button[name="aml_tab"]');
     await waitForSteps(["tab saved"]);
 });
 

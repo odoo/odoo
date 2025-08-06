@@ -224,7 +224,7 @@ test("can create section inline", async () => {
 
     expect(".o_selected_row").toHaveCount(0);
 
-    await contains(".o_field_x2many_list_row_add a:eq(1)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(1)").click();
     expect(".o_selected_row.o_is_section").toHaveCount(1);
     expect(".modal .o_form_view").toHaveCount(0);
 });
@@ -251,7 +251,7 @@ test("creates real record in form dialog", async () => {
             `,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_selected_row").toHaveCount(0);
     expect(".modal .o_form_view").toHaveCount(1);
 });

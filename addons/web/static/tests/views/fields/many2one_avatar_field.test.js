@@ -357,7 +357,7 @@ test("widget many2one_avatar in kanban view (load more dialog)", async () => {
 
     // open popover
     await contains(
-        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > a.o_quick_assign"
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > button.o_quick_assign"
     ).click();
 
     // load more

@@ -26,7 +26,7 @@ test("should add an icon from the media modal dialog", async () => {
     await insertText(editor, "/image");
     await animationFrame();
     await contains(".o-we-command").click();
-    await contains(".modal .modal-body .nav-item:nth-child(3) a").click();
+    await contains(".modal .modal-body .nav-item:nth-child(3) button").click();
     await contains(".modal .modal-body .fa-heart").click();
     expect(p).toHaveInnerHTML(`x<span class="fa fa-heart" contenteditable="false">\u200b</span>`);
 });

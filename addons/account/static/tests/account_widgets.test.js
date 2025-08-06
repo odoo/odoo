@@ -169,7 +169,7 @@ describe("PaymentTermsLineWidget", () => {
         });
         expect(".o_data_row").toHaveCount(2);
         // click the add button
-        await contains(".o_field_x2many_list_row_add > a").click();
+        await contains(".o_field_x2many_list_row_add > button").click();
         // make sure the new record is added
         expect(".o_data_row").toHaveCount(3);
         // global click
@@ -177,7 +177,7 @@ describe("PaymentTermsLineWidget", () => {
         // make sure the new record is still there
         expect(".o_data_row").toHaveCount(3);
         // click the add button again
-        await contains(".o_field_x2many_list_row_add > a").click();
+        await contains(".o_field_x2many_list_row_add > button").click();
         // make sure the new record is added
         expect(".o_data_row").toHaveCount(4);
         // click on an existing record

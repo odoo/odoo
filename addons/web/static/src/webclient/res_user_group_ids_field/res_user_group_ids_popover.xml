@@ -11,7 +11,7 @@
                         <span t-else="">Group</span>
                     </td>
                     <td>
-                        <a class="fw-bold" href="#" t-on-click="() => this.onGroupClicked(group)" t-out="group.name"/>
+                        <button class="fw-bold btn btn-link p-0" style="font-size:13px" t-on-click="() => this.onGroupClicked(group)" t-out="group.name"/>
                     </td>
                 </tr>
                 <tr t-if="impliedGroups.length">
@@ -43,7 +43,7 @@
                                 </div>
                             </t>
                             <div t-else="">
-                                <a href="#" t-on-click="() => this.state.showExtraGroups = true">View extra groups</a>
+                                <button class="btn btn-link p-0 fw-normal" style="font-size:13px" t-on-click="() => this.state.showExtraGroups = true">View extra groups</button>
                             </div>
                         </t>
                     </td>

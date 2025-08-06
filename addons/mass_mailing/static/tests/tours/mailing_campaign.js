@@ -22,7 +22,7 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         },
         {
             content: 'Add a line (create new mailing)',
-            trigger: '.o_field_x2many_list_row_add a',
+            trigger: '.o_field_x2many_list_row_add button',
             run: "click",
         },
         {

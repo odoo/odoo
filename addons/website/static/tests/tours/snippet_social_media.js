@@ -41,7 +41,7 @@ const replaceIconByImage = function (url) {
     },
     {
         content: "Go to the Images tab in the media dialog",
-        trigger: ".o_select_media_dialog .o_notebook_headers .nav-item a:contains('Images')",
+        trigger: ".o_select_media_dialog .o_notebook_headers .nav-item button:contains('Images')",
         run: "click",
     },
     {

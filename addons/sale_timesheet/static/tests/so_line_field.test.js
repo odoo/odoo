@@ -89,7 +89,7 @@ test("Check whether so_line_field widget works as intended in sub-tree view of t
         asyncStep("web_save");
     });
     await openFormView("project.task");
-    await click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add button");
     await insertText(".o_field_widget[name=so_line] input", "Sale Order Line 2", { replace: true });
     await contains(".ui-autocomplete");
     await click(target.querySelector(".ui-menu-item"));

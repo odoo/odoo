@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_barcode_duplication_error", {steps: () => [
     {
-        trigger: "div.o_form_sheet div.o_notebook li a:contains('Sales')",
+        trigger: "div.o_form_sheet div.o_notebook li button:contains('Sales')",
         run: "click",
     },
     {

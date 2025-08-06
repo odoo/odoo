@@ -142,16 +142,16 @@
                     t-on-keydown="(ev) => this.onCellKeydown(ev, null)"
                 >
                     <t t-foreach="controls" t-as="control" t-key="control_index">
-                        <a
+                        <button
                             t-if="control.type === 'create' and !evalColumnInvisible(control.invisible)"
-                            href="#"
+                            class="btn btn-link"
                             role="button"
                             t-att-class="control_index !== 0 ? 'ml16' : ''"
                             t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: control.context })"
                         >
                             <t t-esc="control.string"/>
-                        </a>
+                        </button>
                         <ViewButton
                             t-if="control.type === 'button' and !evalColumnInvisible(control.invisible)"
                             className="`${control.className} ${control_index !== 0 ? 'ml16' : ''}`"
@@ -185,13 +185,14 @@
                             t-att-colspan="hasSelectors ?  nbCols - 1 : nbCols"
                             class="o_group_field_row_add"
                         >
-                            <a href="#"
+                            <button
+                                class="btn btn-link"
                                 role="button"
                                 t-on-click.stop.prevent="() => this.addInGroup(group)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
                             >
                                 Add a line
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 </t>

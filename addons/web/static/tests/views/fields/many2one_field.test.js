@@ -1501,7 +1501,7 @@ test("list in form: quick create then save directly", async () => {
             </form>`,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     await contains(".o_field_widget[name=trululu] input").edit("b", { confirm: false });
     await runAllTimers();
@@ -1541,7 +1541,7 @@ test("name_create in form dialog", async () => {
             </form>`,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     await contains(".modal .o_field_widget[name=product_id] input").edit("new record", {
         confirm: false,
@@ -1640,13 +1640,13 @@ test("list in form: quick create then add a new line directly", async () => {
             </form>`,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     await contains(".o_field_widget[name=trululu] input").edit("b", { confirm: false });
     await runAllTimers();
     await contains(".o_m2o_dropdown_option_create").click();
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     expect(".o_data_row").toHaveCount(1);
     expect(".o_data_row").toHaveClass("o_selected_row");
@@ -1967,7 +1967,7 @@ test('item dropped on discard with empty required field with "Add an item" (inva
     });
 
     // Click on "Add an item"
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget.o_required_modifier[name=trululu]").toHaveCount(1);
     expect(".o_field_widget.o_required_modifier[name=trululu] input").toHaveValue("");
 
@@ -2003,7 +2003,7 @@ test('item not dropped on discard with empty required field with "Add an item" (
     expect(".o_data_row").toHaveCount(0);
 
     // Click on "Add an item"
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_data_row").toHaveCount(1);
 
     expect(".o_field_widget.o_required_modifier[name=trululu] input").toHaveCount(1);
@@ -2522,7 +2522,7 @@ test("failing quick create on a many2one inside a one2many because ValidationErr
         arch: '<form><field name="p" /></form>',
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_field_widget[name='product_id'] input").edit("abcd", { confirm: false });
     await runAllTimers();
     await contains(".o_field_widget[name='product_id'] .o_m2o_dropdown_option_create").click();

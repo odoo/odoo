@@ -169,7 +169,7 @@ export const SELECTORS = {
     connectorValue: ".o_tree_editor_connector .o_tree_editor_connector_value",
     connectorToggler: ".o_tree_editor_connector .o_tree_editor_connector_value button.o-dropdown",
     condition: ".o_tree_editor_condition",
-    addNewRule: ".o_tree_editor_row > a",
+    addNewRule: ".o_tree_editor_row > button",
     buttonAddNewRule: ".o_tree_editor_node_control_panel > button[data-tooltip='Add rule']",
     buttonAddBranch: ".o_tree_editor_node_control_panel > button[data-tooltip='Add nested rule']",
     buttonDeleteNode: ".o_tree_editor_node_control_panel > button[data-tooltip='Delete rule']",

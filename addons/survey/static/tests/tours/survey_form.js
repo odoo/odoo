@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "edit Test survey",
     }, {
         content: "Add a first question",
-        trigger: "td.o_field_x2many_list_row_add a",
+        trigger: "td.o_field_x2many_list_row_add button",
         run: "click",
     }, {
         content: "Set the first question's title",
@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     ...changeTab("options"),
     {
         content: "Remove invalid trigger",
-        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 2') a.o_delete",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 2') button.o_delete",
         run: "click",
     }, {
         content: "Check that the alert is gone",
@@ -170,7 +170,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     ...changeTab("options"),
     {
         content: "Remove temporarily used trigger",
-        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 1') a.o_delete",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 1') button.o_delete",
         run: "click",
     }, {
         content: "Check that the alert is gone in this case too",
@@ -238,7 +238,7 @@ function addTwoAnswers() {
         {
             content: "Add the first answer",
             trigger:
-                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
+                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {
@@ -248,7 +248,7 @@ function addTwoAnswers() {
         {
             content: "Add the second answer",
             trigger:
-                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
+                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {
@@ -278,12 +278,12 @@ function changeTab(tabName) {
     return [
         {
             content: `Go to ${tabName} tab`,
-            trigger: `.modal .modal-content a[name=${tabName}].nav-link`,
+            trigger: `.modal .modal-content button[name=${tabName}].nav-link`,
             run: "click",
         },
         {
             content: `Wait for tab ${tabName} tab`,
-            trigger: `.modal .modal-content a[name=${tabName}].nav-link.active`,
+            trigger: `.modal .modal-content button[name=${tabName}].nav-link.active`,
         },
     ];
 }

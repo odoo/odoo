@@ -32,7 +32,7 @@ registerWebsitePreviewTour("website_media_iframe_video", {
         },
         {
             content: "Click on video button",
-            trigger: "a:contains('Videos')",
+            trigger: "button:contains('Videos')",
             run: "click",
         },
         {
