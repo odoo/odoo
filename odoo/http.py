@@ -443,7 +443,7 @@ def dispatch_rpc(service_name, method, params):
 
 
 def get_session_max_inactivity(env):
-    if not env or env.cr._closed:
+    if not env or env.cr.closed:
         return SESSION_LIFETIME
 
     ICP = env['ir.config_parameter'].sudo()
@@ -2110,7 +2110,7 @@ class Request:
         data = json.dumps(data, ensure_ascii=False, default=json_default)
 
         headers = werkzeug.datastructures.Headers(headers)
-        headers['Content-Length'] = len(data)
+        headers['Content-Length'] = str(len(data))
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/json; charset=utf-8'
 
@@ -2442,7 +2442,7 @@ class Dispatcher(ABC):
             ))
 
         if cors and self.request.httprequest.method == 'OPTIONS':
-            set_header('Access-Control-Max-Age', CORS_MAX_AGE)
+            set_header('Access-Control-Max-Age', str(CORS_MAX_AGE))
             set_header('Access-Control-Allow-Headers',
                        'Origin, X-Requested-With, Content-Type, Accept, Authorization')
             werkzeug.exceptions.abort(Response(status=204))
