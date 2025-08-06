@@ -206,9 +206,6 @@ export class OrderSummary extends Component {
         const selectedLine = this.currentOrder.getSelectedOrderline();
         const decreaseQuantity = selectedLine.getQuantity() - newQuantity;
         selectedLine.setQuantity(newQuantity);
-        if (newQuantity == 0) {
-            this.currentOrder.removeOrderline(selectedLine);
-        }
         return decreaseQuantity;
     }
     async handleDecreaseLine(newQuantity) {
