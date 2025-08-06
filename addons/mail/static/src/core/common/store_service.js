@@ -167,13 +167,13 @@ export class Store extends BaseStore {
                     cleanTerm(thread.displayName).includes(searchTerm)
             );
             const tab = this.discuss.activeTab;
-            if (tab !== "main") {
-                threads = threads.filter(({ channel_type }) =>
-                    this.tabToThreadType(tab).includes(channel_type)
-                );
-            } else if (tab === "main" && this.env.inDiscussApp) {
+            if (tab === "inbox") {
                 threads = threads.filter(({ channel_type }) =>
                     this.tabToThreadType("mailbox").includes(channel_type)
+                );
+            } else if (tab !== "notification") {
+                threads = threads.filter(({ channel_type }) =>
+                    this.tabToThreadType(tab).includes(channel_type)
                 );
             }
             return threads;

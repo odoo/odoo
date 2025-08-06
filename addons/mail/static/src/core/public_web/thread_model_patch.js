@@ -60,12 +60,13 @@ patch(Thread.prototype, {
             pushState = this.notEq(this.store.discuss.thread);
         }
         this.store.discuss.thread = this;
-        this.store.discuss.activeTab =
-            !this.store.env.services.ui.isSmall || this.model === "mail.box"
-                ? "main"
-                : ["chat", "group"].includes(this.channel_type)
-                ? "chat"
-                : "channel";
+        this.store.discuss.activeTab = !this.store.env.services.ui.isSmall
+            ? "notification"
+            : this.model === "mail.box"
+            ? "inbox"
+            : ["chat", "group"].includes(this.channel_type)
+            ? "chat"
+            : "channel";
         if (pushState) {
             this.setActiveURL();
         }

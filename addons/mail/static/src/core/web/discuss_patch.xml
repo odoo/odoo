@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='content']" position="before">
-            <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
+            <div t-if="ui.isSmall and store.discuss.activeTab === 'inbox'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         </xpath>
         <xpath expr="//*[@t-ref='root']" position="replace">
             <div class="h-100 d-flex flex-column">
