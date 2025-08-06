@@ -17,20 +17,23 @@
                         <t t-if="props.thread">No user found that is not already a member of this channel.</t>
                         <t t-else="">No user found.</t>
                     </div>
-                    <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 fst-italic" t-esc="showingResultNarrowText"/>
+                    <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
                     <t t-foreach="selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
-                        <li class="o-discuss-ChannelInvitation-selectable object-fit-cover d-flex align-items-center px-1 py-0 btn list-group-item border-0 rounded-0" t-att-class="{ 'o-odd': selectablePartner_index % 2 === 1, 'o-selected': selectablePartner.in(selectedPartners) }" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
+                        <li class="o-discuss-ChannelInvitation-selectable object-fit-cover d-flex align-items-start px-1 py-0 btn list-group-item border-0 rounded-0" t-att-class="{ 'o-odd': selectablePartner_index % 2 === 1, 'o-selected': selectablePartner.in(selectedPartners) }" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
                             <div class="d-flex align-items-center p-1 bg-inherit">
                                 <div class="o-discuss-ChannelInvitation-avatar position-relative d-flex flex-shrink-0 bg-inherit">
                                     <img class="w-100 h-100 rounded-3 object-fit-cover" t-att-src="selectablePartner.avatarUrl"/>
                                     <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
                                 </div>
                             </div>
-                            <t name="selectablePartnerDetail">
-                                <div class="d-flex flex-grow-1 mx-2 overflow-hidden align-items-baseline">
+                            <div class="d-flex flex-column mx-2 flex-grow-1 overflow-hidden o-mt-0_5">
+                                <div class="d-flex overflow-hidden align-items-baseline" name="selectablePartnerName">
                                     <span class="text-truncate" t-esc="selectablePartner.name"/>
                                 </div>
-                            </t>
+                                <div class="d-flex flex-column flex-grow-1 gap-1" name="selectablePartnerDetail">
+                                    <span t-if="selectablePartner.email" t-esc="selectablePartner.email" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
+                                </div>
+                            </div>
                             <input class="form-check-input flex-shrink-0 me-1" type="checkbox" t-att-checked="selectablePartner.in(selectedPartners) ? 'checked' : undefined"/>
                         </li>
                     </t>
