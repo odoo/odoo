@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from datetime import datetime
+from datetime import date, datetime
 from unittest.mock import patch
 
 from odoo import fields
@@ -110,6 +110,8 @@ class TestHrAttendance(TransactionCase):
         employee = self.env['hr.employee'].create({
             'name': "James P. Sullivan",
             'company_id': company.id,
+            'date_version': date(2021, 1, 1),
+            'contract_date_start': date(2021, 1, 1),
         })
 
         self.env['hr.attendance']._cron_absence_detection()

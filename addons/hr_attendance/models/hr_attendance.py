@@ -4,7 +4,7 @@ import pytz
 
 from calendar import monthrange
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from pytz import timezone
@@ -752,9 +752,12 @@ class HrAttendance(models.Model):
                                                                           ('adjustment', '=', False)]).employee_id
 
         technical_attendances_vals = []
-        absent_employees = self.env['hr.employee'].search([('id', 'not in', checked_in_employees.ids),
-                                                           ('company_id', 'in', companies.ids),
-                                                           ('resource_calendar_id.flexible_hours', '=', False)])
+        absent_employees = self.env['hr.employee'].search([
+            ('id', 'not in', checked_in_employees.ids),
+            ('company_id', 'in', companies.ids),
+            ('resource_calendar_id.flexible_hours', '=', False),
+            ('current_version_id.contract_date_start', '<=', date.today() - relativedelta(days=1))
+        ])
 
         for emp in absent_employees:
             local_day_start = pytz.utc.localize(yesterday).astimezone(pytz.timezone(emp._get_tz()))
