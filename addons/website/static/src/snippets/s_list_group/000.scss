@@ -1,0 +1,47 @@
+.s_list_group {
+  --icon-content: "\f00c";
+  --icon-color: #714B67;
+  --icon-bg: #dfdfdf;
+  padding: 10px 0px;
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    li {
+      position: relative;
+      padding-left: 2.5em;
+
+      &:not(.oe-nested)::before {
+        content: var(--icon-content);
+        font-family: "FontAwesome";
+        position: absolute;
+        left: 0;
+        width: 2rem;
+        height: 2rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--icon-color);
+        background: var(--icon-bg);
+        border-radius: 50%;
+      }
+
+      ul {
+        margin-top: 1em;
+      }
+
+      &.o-we-hint::after {
+        left: 40px;
+        top: 2px;
+      }
+
+      p {
+        vertical-align: middle;
+      }
+    }
+  }
+}
