@@ -367,14 +367,14 @@ export class MassMailingHtmlField extends HtmlField {
         const templatesParams = result.map(values => {
             return {
                 id: values.id,
-                modelId: values.mailing_model_id.id,
-                modelName: values.mailing_model_id.display_name,
+                modelId: values.mailing_model_id[0],
+                modelName: values.mailing_model_id[1],
                 name: `template_${values.id}`,
                 nowrap: true,
                 subject: values.subject,
                 template: values.body_arch,
-                userId: values.user_id.id,
-                userName: values.user_id.display_name,
+                userId: values.user_id[0],
+                userName: values.user_id[1],
             };
         });
 
