@@ -2617,6 +2617,15 @@ class BaseModel(metaclass=MetaModel):
         :param operation: one of ``read``, ``write``
         :return: whether the field is accessible
         """
+        if operation == 'read':
+            env = self.env
+            memo = env._field_access_memo
+            if env.su or field in memo:
+                return True
+            if self._has_field_access(field, 'read'):
+                memo.add(field)
+                return True
+            return False
         return self._has_field_access(field, operation)
 
     @api.model
@@ -2642,7 +2651,15 @@ class BaseModel(metaclass=MetaModel):
         :param operation: one of ``read``, ``write``
         :raise AccessError: if the user is not allowed to access the provided field
         """
-        if self._has_field_access(field, operation):
+        if operation == 'read':
+            env = self.env
+            memo = env._field_access_memo
+            if env.su or field in memo:
+                return
+            if self._has_field_access(field, 'read'):
+                memo.add(field)
+                return
+        elif self._has_field_access(field, operation):
             return
 
         _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, field: %s',
@@ -3099,8 +3116,8 @@ class BaseModel(metaclass=MetaModel):
                 # optimization: fetch field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep_field = self._fields[dotname.split('.', 1)[0]]
-                    if (not dep_field.store) or (
-                        dep_field.prefetch is True
+                    if (
+                        (not dep_field.store or dep_field.prefetch is True)
                         and self.has_field_access(dep_field, 'read')
                     ):
                         fields_todo.append(dep_field)

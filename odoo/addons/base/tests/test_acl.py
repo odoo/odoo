@@ -32,7 +32,7 @@ class TestACL(TransactionCaseWithUserDemo):
     def _set_field_groups(self, model, field_name, groups):
         field = model._fields[field_name]
         self.patch(field, 'groups', groups)
-        self.env.invalidate_all()
+        self.env.transaction.reset()
         self.env.registry.clear_cache('templates')
 
     def test_field_visibility_restriction(self):

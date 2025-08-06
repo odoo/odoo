@@ -518,6 +518,11 @@ class Environment(Mapping[str, "BaseModel"]):
         return {}
 
     @functools.cached_property
+    def _field_access_memo(self) -> set[Field]:
+        """Memo for `model.has_field_access(field, 'read')`.  Do not use it."""
+        return set()
+
+    @functools.cached_property
     def _field_dirty(self):
         """ Map fields to set of dirty ids. """
         return self.transaction.field_dirty
@@ -788,7 +793,7 @@ class Cache:
 
     def _get_field_cache(self, model: BaseModel, field: Field) -> Mapping[IdType, typing.Any]:
         """ Return the field cache of the given field, but not for modifying it. """
-        return self._set_field_cache(model, field)
+        return field._get_cache(model.env)
 
     def _set_field_cache(self, model: BaseModel, field: Field) -> dict[IdType, typing.Any]:
         """ Return the field cache of the given field for modifying it. """

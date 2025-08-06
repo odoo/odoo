@@ -44,14 +44,15 @@ class _Relational(Field[BaseModel]):
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
 
-        records.check_field_access(self, 'read')
+        # check field access
+        env = records.env
+        env.su or self in env._field_access_memo or records.check_field_access(self, 'read')
 
         # multi-record case
         if self.compute and self.store:
             self.recompute(records)
 
         # get the cache
-        env = records.env
         field_cache = self._get_cache(env)
 
         # retrieve values in cache, and fetch missing ones
