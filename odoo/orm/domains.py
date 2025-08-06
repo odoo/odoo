@@ -1518,7 +1518,7 @@ def _value_to_datetime(value, env, iso_only=False):
         return _value_to_datetime(value, env)
     if isinstance(value, date):
         tz = env.context.get('tz') or env.user.tz or None
-        if value.year == 9999:
+        if value.year == 9999 or value.year == 1:
             # avoid overflow errors, treat as UTC timezone
             tz = None
         elif tz:
