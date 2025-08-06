@@ -43,7 +43,7 @@ def retrying(func, env):
             tryleft = MAX_TRIES_ON_CONCURRENCY_FAILURE - tryno
             try:
                 result = func()
-                if not env.cr._closed:
+                if not env.cr.closed:
                     env.cr.flush()  # submit the changes to the database
                 break
             except (
@@ -51,7 +51,7 @@ def retrying(func, env):
                 psycopg2.OperationalError,
                 ConcurrencyError,
             ) as exc:
-                if env.cr._closed:
+                if env.cr.closed:
                     raise
                 env.cr.rollback()
                 env.transaction.reset()
