@@ -4,45 +4,49 @@
 <t t-name="web.DocMethod">
     <article class="o-doc-method mb-2 rounded" t-att-class="props.class" t-att-id="this.method.name">
         <div
-            class="o-doc-method-header position-sticky flex w-100 align-items-center justify-content-between cursor-pointer rounded bg-1"
+            class="o-doc-method-header position-sticky d-flex flex-nowrap w-100 cursor-pointer rounded bg-1"
             t-on-click="() => this.state.open = !this.state.open"
             t-att-class="{ ['border-bottom']: this.state.open, o_collapsed: !this.state.open }"
             role="button"
         >
             <div class="icon-btn" role="button" t-att-class="{ o_collapsed: !this.state.open }">
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                <i class="fa fa-angle-right ps-1 pt-1" aria-hidden="true"></i>
             </div>
             <h4 class="flex-grow ms-1" t-out="this.method.name"></h4>
-            <div class="ms-1 text-muted" t-out="this.method.module"></div>
+            <a
+                class="ms-2 fs-5"
+                t-att-href="'#' + method.name"
+                t-on-click.stop=""
+            >#</a>
+            <div class="text-muted align-self-center ms-auto" t-out="this.method.module"></div>
         </div>
 
         <div
             t-if="state.open"
-            class="o-doc-method-content p-3 bg-1 flex"
+            class="o-doc-method-content p-3 bg-1 d-flex flex-nowrap"
             t-att-class="{ 'flex-column': isVertical }"
         >
             <div t-att-class="{ 'w-100': isVertical, 'w-50 pe-2': !isVertical }">
                 <h4>Route</h4>
-                <pre t-out="this.method.url"/>
+                <pre t-out="this.method.url" class="mb-2"/>
 
                 <t t-if="doc">
                     <h4 class="mt-2">Description</h4>
                     <p class="doc_method_description mb-2" t-out="doc"></p>
                 </t>
-
-                <t t-if="method.signature">
-                    <h4 class="mt-2">Signature</h4>
-                    <pre t-out="method.signature"/>
-                </t>
-
                 <h4 class="mt-2">Parameters</h4>
                 <DocTable
                     t-if="parametersData.items.length > 0"
                     data="parametersData"
                 />
                 <div class="text-muted" t-else="">There's no parameters for this method</div>
+                <t t-if="(method.returnAnnotation || method.returnDoc)">
+                    <h4 class="mt-2">Return</h4>
+                    <pre t-if="method.returnAnnotation" t-out="method.returnAnnotation"/>
+                    <p class="doc_method_description mb-2" t-if="method.returnDoc" t-out="method.returnDoc"/>
+                </t>
             </div>
-            <div t-att-class="{ 'w-100 pt-2 mt-2 border-top': isVertical, 'w-50 ps-2 border-start': !isVertical }">
+            <div t-att-class="{ 'w-100 pt-2 mt-2 border-top': isVertical, 'w-50 ps-3 border-start': !isVertical }">
                 <DocRequest
                     url="method.url"
                     request="request"

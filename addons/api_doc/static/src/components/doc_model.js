@@ -1,4 +1,4 @@
-import { Component, useState, useEffect, onPatched } from "@odoo/owl";
+import { Component, useState, useEffect, onPatched, markup } from "@odoo/owl";
 import { DocTable, TABLE_TYPES } from "@api_doc/components/doc_table";
 import { getCrudMethodsExamples } from "@api_doc/utils/doc_model_utils";
 import { DocMethod } from "@api_doc/components/doc_method";
@@ -6,9 +6,9 @@ import { DocLoadingIndicator } from "@api_doc/components/doc_loading_indicator";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
 
 const TYPE_COLORS = {
-    "text-green": ["integer", "char", "boolean", "selection", "float"],
-    "text-blue": ["html", "datetime", "date", "binary"],
-    "text-orange": ["many2one", "many2many", "one2many", "many2one_reference"],
+    "text-success": ["integer", "char", "boolean", "selection", "float"],
+    "text-info": ["html", "datetime", "date", "binary"],
+    "text-warning": ["many2one", "many2many", "one2many", "many2one_reference"],
 };
 
 function getTypeColor(type) {
@@ -177,15 +177,24 @@ export class DocModel extends Component {
 
         for (const methodName in model.methods) {
             const method = model.methods[methodName];
+
+            let returnDoc = "";
+            let returnAnnotation = "";
+            if (method.return) {
+                returnDoc = method.return.doc ? markup(method.return.doc) : "";
+                returnAnnotation = method.return.annotation;
+            }
+
             methods.push({
                 name: methodName,
                 module: method.module,
                 api: method.api,
                 doc: method.doc,
                 model: model.model,
-                signature: `def ${methodName}${method.signature}`,
                 parameters: method.parameters,
                 url: `/json/2/${model.model}/${methodName}`,
+                returnDoc: returnDoc,
+                returnAnnotation: returnAnnotation,
             });
         }
 
@@ -227,7 +236,7 @@ export class DocModel extends Component {
                     {
                         type: TABLE_TYPES.Code,
                         value: fieldData.required ? "required" : "optional",
-                        class: fieldData.required ? "text-red" : "text-muted",
+                        class: fieldData.required ? "text-danger" : "text-muted",
                     },
                     {
                         type: TABLE_TYPES.Tooltip,
@@ -236,10 +245,6 @@ export class DocModel extends Component {
                     {
                         type: TABLE_TYPES.Code,
                         value: fieldData.module || "",
-                    },
-                    {
-                        type: TABLE_TYPES.Id,
-                        value: fieldData.name,
                     },
                 ]
             });
