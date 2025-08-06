@@ -195,11 +195,8 @@ class InteractionService {
 registry.category("services").add("public.interactions", {
     dependencies: ["localization"],
     async start(env) {
-        const el = document.querySelector("#wrapwrap");
-        if (!el) {
-            // if this is an issue, maybe we should make the wrapwrap configurable
-            return null;
-        }
+        // fallback if #wrapwrap is not present in the dom
+        const el = document.querySelector("#wrapwrap") || document.querySelector("body");
         const Interactions = registry.category("public.interactions").getAll();
         const service = new InteractionService(el, env);
         service.activate(Interactions);
