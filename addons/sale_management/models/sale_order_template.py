@@ -48,10 +48,6 @@ class SaleOrderTemplate(models.Model):
         comodel_name='sale.order.template.line', inverse_name='sale_order_template_id',
         string="Lines",
         copy=True)
-    sale_order_template_option_ids = fields.One2many(
-        comodel_name='sale.order.template.option', inverse_name='sale_order_template_id',
-        string="Optional Products",
-        copy=True)
     journal_id = fields.Many2one(
         'account.journal', string="Invoicing Journal",
         domain=[('type', '=', 'sale')], company_dependent=True, check_company=True,
@@ -87,10 +83,10 @@ class SaleOrderTemplate(models.Model):
 
     #=== CONSTRAINT METHODS ===#
 
-    @api.constrains('company_id', 'sale_order_template_line_ids', 'sale_order_template_option_ids')
+    @api.constrains('company_id', 'sale_order_template_line_ids')
     def _check_company_id(self):
         for template in self:
-            companies = template.mapped('sale_order_template_line_ids.product_id.company_id') | template.mapped('sale_order_template_option_ids.product_id.company_id')
+            companies = template.mapped('sale_order_template_line_ids.product_id.company_id')
             if len(companies) > 1:
                 raise ValidationError(_("Your template cannot contain products from multiple companies."))
             elif companies and companies != template.company_id:
@@ -128,9 +124,6 @@ class SaleOrderTemplate(models.Model):
             for line in self.sale_order_template_line_ids:
                 if line.name == line.product_id.get_product_multiline_description_sale():
                     line.with_context(lang=lang.code).name = line.product_id.with_context(lang=lang.code).get_product_multiline_description_sale()
-            for option in self.sale_order_template_option_ids:
-                if option.name == option.product_id.get_product_multiline_description_sale():
-                    option.with_context(lang=lang.code).name = option.product_id.with_context(lang=lang.code).get_product_multiline_description_sale()
 
     @api.model
     def _demo_configure_template(self):
@@ -161,17 +154,23 @@ class SaleOrderTemplate(models.Model):
             Command.create({
                 'product_id': chair_protection_product.id,
                 'product_uom_qty': 8,
-            })
-        ]
-
-        demo_template.sale_order_template_option_ids = [
+            }),
+            Command.create({
+                'name': "Optional Products Section",
+                'display_type': 'line_section',
+                'is_optional': True,
+                'product_uom_qty': 0,
+            }),
             Command.create({
                 'product_id': self.env.ref('product.product_product_16').id,
+                'product_uom_qty': 0,
             }),
             Command.create({
                 'product_id': self.env.ref('product.product_product_6').id,
+                'product_uom_qty': 0,
             }),
             Command.create({
                 'product_id': self.env.ref('product.product_product_12').id,
+                'product_uom_qty': 0,
             }),
         ]

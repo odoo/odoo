@@ -35,10 +35,17 @@
                                     <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
                                 </DropdownItem>
                             </t>
-                            <DropdownItem t-if="props.hidePrices and showPricesButton" onSelected="() => this.toggleCollapse(record, 'collapse_prices')">
+                            <DropdownItem
+                                t-if="props.hidePrices and showPricesButton"
+                                onSelected="() => this.toggleCollapse(record, 'collapse_prices')"
+                            >
                                 <i class="me-1 fa fa-fw" t-att-class="hidePrices ? 'fa-eye' : 'fa-eye-slash'"/><span t-out="hidePrices ? 'Show Prices' : 'Hide Prices'"/>
                             </DropdownItem>
-                            <DropdownItem t-if="props.hideComposition and showCompositionButton" onSelected="() => this.toggleCollapse(record, 'collapse_composition')">
+                            <DropdownItem
+                                name="composition_button"
+                                t-if="props.hideComposition and showCompositionButton"
+                                onSelected="() => this.toggleCollapse(record, 'collapse_composition')"
+                            >
                                 <i class="me-1 fa fa-fw" t-att-class="hideCompositions ? 'fa-eye' : 'fa-eye-slash'"/><span t-out="hideCompositions ? 'Show Composition' : 'Hide Composition'"/>
                             </DropdownItem>
                             <DropdownItem onSelected="() => this.addNoteInSection(record)">
