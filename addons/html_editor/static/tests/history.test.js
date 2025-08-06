@@ -197,6 +197,23 @@ describe("redo", () => {
         });
     });
 
+    test("should type a, b, undo x2, redo, undo, redo x2", async () => {
+        await testEditor({
+            contentBefore: "<p>[]</p>",
+            stepFunction: async (editor) => {
+                await insertText(editor, "a");
+                await insertText(editor, "b");
+                undo(editor);
+                undo(editor);
+                redo(editor);
+                undo(editor);
+                redo(editor);
+                redo(editor);
+            },
+            contentAfter: "<p>ab[]</p>",
+        });
+    });
+
     test("should discard draft mutations", async () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
@@ -402,7 +419,7 @@ describe("makeSavePoint", () => {
         expect(getContent(el)).toBe(`<p>[]cd</p>`);
         expect(editor.shared.history.getHistorySteps().length).toBe(1);
     });
-    test("applying a makeSavePoint consumes ulterior reversible steps and adds a new consumed step, while handling draft mutations", async () => {
+    test("applying a makeSavePoint reverses ulterior reversible steps and adds a new restore step, while handling draft mutations", async () => {
         const { el, editor, plugins } = await setupEditor(`<p>[]c</p>`);
         const historyPlugin = plugins.get("history");
         expect(editor.shared.history.getHistorySteps().length).toBe(1);
@@ -411,13 +428,12 @@ describe("makeSavePoint", () => {
         p.append(document.createTextNode("d"));
         expect(getContent(el)).toBe(`<p>[]cd</p>`);
         const savepoint = editor.shared.history.makeSavePoint();
-        // step to consume
+        // step to revert
         editor.shared.dom.insert("z");
         editor.shared.history.addStep();
         let steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(2);
         const zStep = steps.at(-1);
-        expect(historyPlugin.stepsStates.get(zStep.id)).toBe(undefined);
         // draft to discard
         p.append(document.createTextNode("e"));
         expect(getContent(el)).toBe(`<p>z[]cde</p>`);
@@ -426,12 +442,12 @@ describe("makeSavePoint", () => {
         steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(3);
         expect(steps.at(-2)).toBe(zStep);
-        expect(historyPlugin.stepsStates.get(zStep.id)).toBe("consumed");
-        expect(historyPlugin.stepsStates.get(steps.at(-1).id)).toBe("consumed");
+        expect(historyPlugin.discardedSteps.has(zStep.id)).toBe(true);
+        expect(steps.at(-1).type).toBe("restore");
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
         redo(editor);
-        // `d` was still a draft, redo can not reinsert `z` since it is consumed
+        // `d` was still a draft that got discarded on undo
         expect(getContent(el)).toBe(`<p>[]c</p>`);
     });
     test.todo("makeSavePoint should correctly revert mutations (2)", async () => {
@@ -460,6 +476,24 @@ describe("makeSavePoint", () => {
         safePoint();
         expect(getContent(el)).toBe("<font>this is another paragraph with color 2</font><p></p>");
         expect(history.steps.length).toBe(numberOfSteps);
+    });
+    test("makeSavePoint should correctly revert mutations and restore the history", async () => {
+        const { el, editor } = await setupEditor(`<p>a[]</p>`);
+        await insertText(editor, "b");
+        expect(getContent(el)).toBe(`<p>ab[]</p>`);
+
+        undo(editor);
+        expect(getContent(el)).toBe(`<p>a[]</p>`);
+
+        const restore = editor.shared.history.makeSavePoint();
+        await insertText(editor, "c");
+        expect(getContent(el)).toBe(`<p>ac[]</p>`);
+
+        restore();
+        expect(getContent(el)).toBe(`<p>a[]</p>`);
+
+        redo(editor);
+        expect(getContent(el)).toBe(`<p>ab[]</p>`);
     });
 });
 

@@ -26,6 +26,7 @@ import { omit, pick } from "@web/core/utils/objects";
  *
  * @typedef { Object } HistoryStep
  * @property { string } id
+ * @property {"original"|"undo"|"redo"|"restore"} type
  * @property { SerializedSelection } selection
  * @property { HistoryMutation[] } mutations
  * @property { string } previousStepId
@@ -249,8 +250,10 @@ export class HistoryPlugin extends Plugin {
             previousStepId: undefined,
             extraStepInfos: {},
         });
-        /** @type { Map<string, "consumed"|"undo"|"redo"> } */
-        this.stepsStates = new Map();
+        /** @type {Set<string>} Steps reverted by undo/redo operations */
+        this.revertedSteps = new Set();
+        /** @type {Set<string>} Steps reverted by restoring to a save point */
+        this.discardedSteps = new Set();
         this.nodeMap = new NodeMap();
         /** @type { WeakMap<Node, { attributes: Map<string, string>, classList: Map<string, boolean>, characterData: Map<string, string> }> } */
         this.lastObservedState = new WeakMap();
@@ -454,8 +457,8 @@ export class HistoryPlugin extends Plugin {
         if (processedRecords.length) {
             // TODO modify `handleMutations` of web_studio to handle
             // `undoOperation`
-            const stepState = this.stepsStates.get(this.currentStep.id);
-            this.getResource("handleNewRecords").forEach((cb) => cb(processedRecords, stepState));
+            const stepType = this.currentStep.type;
+            this.getResource("handleNewRecords").forEach((cb) => cb(processedRecords, stepType));
             // Process potential new records adds by handleNewRecords.
             this.processNewRecords(this.observer.takeRecords());
             this.dispatchContentUpdated();
@@ -1023,10 +1026,10 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * @param { Object } [params]
-     * @param { "consumed"|"undo"|"redo" } [params.stepState]
+     * @param { "original"|"undo"|"redo"|"restore" } [params.type]
      * @param {Object} [params.extraStepInfos]
      */
-    addStep({ stepState, extraStepInfos } = {}) {
+    addStep({ type = "original", extraStepInfos } = {}) {
         // @todo @phoenix should we allow to pause the making of a step?
         // if (!this.stepsActive) {
         //     return;
@@ -1041,9 +1044,7 @@ export class HistoryPlugin extends Plugin {
         // executing the onChange callback.
         // It is useful for external components if they execute shared.can[Undo|Redo]
         const currentStep = this.currentStep;
-        if (stepState) {
-            this.stepsStates.set(currentStep.id, stepState);
-        }
+        currentStep.type = type;
         this.handleObserverRecords();
         const currentMutationsCount = currentStep.mutations.length;
         if (currentMutationsCount === 0) {
@@ -1051,7 +1052,7 @@ export class HistoryPlugin extends Plugin {
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
         const restoreFocus = this.dependencies.selection.preserveFocus();
-        this.dispatchTo("normalize_handlers", stepCommonAncestor, stepState);
+        this.dispatchTo("normalize_handlers", stepCommonAncestor, type);
         restoreFocus();
         this.handleObserverRecords();
         if (currentMutationsCount === currentStep.mutations.length) {
@@ -1076,6 +1077,7 @@ export class HistoryPlugin extends Plugin {
         }
         this.currentStep = this.processHistoryStep({
             id: this.generateId(),
+            type: undefined,
             selection: {},
             mutations: [],
             previousStepId: undefined,
@@ -1114,15 +1116,14 @@ export class HistoryPlugin extends Plugin {
         const pos = this.getNextUndoIndex();
         let revertedStep;
         if (pos > 0) {
-            // Consider the position consumed.
             revertedStep = this.steps[pos];
-            this.stepsStates.set(revertedStep.id, "consumed");
+            this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
             this.currentStep.selection = revertedStep.selectionAfter;
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
-            this.addStep({ stepState: "undo", extraStepInfos: revertedStep.extraStepInfos });
+            this.addStep({ type: "undo", extraStepInfos: revertedStep.extraStepInfos });
             // Consider the last position of the history as an undo.
         }
         this.dispatchTo("post_undo_handlers", revertedStep);
@@ -1142,13 +1143,13 @@ export class HistoryPlugin extends Plugin {
         let revertedStep;
         if (pos > 0) {
             revertedStep = this.steps[pos];
-            this.stepsStates.set(revertedStep.id, "consumed");
+            this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
             this.currentStep.selection = revertedStep.selectionAfter;
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
-            this.addStep({ stepState: "redo", extraStepInfos: revertedStep.extraStepInfos });
+            this.addStep({ type: "redo", extraStepInfos: revertedStep.extraStepInfos });
         }
         this.dispatchTo("post_redo_handlers", revertedStep);
     }
@@ -1194,13 +1195,14 @@ export class HistoryPlugin extends Plugin {
      * Return -1 if no undo index can be found.
      */
     getNextUndoIndex() {
-        // Go back to first step that can be undone ("redo" or undefined).
+        // Go back to first step that can be undone ("original" or "redo").
         for (let index = this.steps.length - 1; index >= 0; index--) {
-            if (this.isReversibleStep(index)) {
-                const state = this.stepsStates.get(this.steps[index].id);
-                if (state === "redo" || !state) {
-                    return index;
-                }
+            const step = this.steps[index];
+            if (!this.isReversibleStep(index) || this.discardedSteps.has(step.id)) {
+                continue;
+            }
+            if (["original", "redo"].includes(step.type) && !this.revertedSteps.has(step.id)) {
+                return index;
             }
         }
         // There is no steps left to be undone, return an index that does not
@@ -1226,25 +1228,18 @@ export class HistoryPlugin extends Plugin {
      * Return -1 if no redo index can be found.
      */
     getNextRedoIndex() {
-        // We cannot redo more than what is consumed.
-        // Check if we have no more "consumed" than "redo" until we get to an
-        // "undo"
-        let totalConsumed = 0;
+        // Look for an "undo" step that has not yet been redone. Stop search if
+        // a "original" step is found.
         for (let index = this.steps.length - 1; index >= 0; index--) {
-            if (this.isReversibleStep(index)) {
-                const state = this.stepsStates.get(this.steps[index].id);
-                switch (state) {
-                    case "undo":
-                        return totalConsumed <= 0 ? index : -1;
-                    case "redo":
-                        totalConsumed -= 1;
-                        break;
-                    case "consumed":
-                        totalConsumed += 1;
-                        break;
-                    default:
-                        return -1;
-                }
+            const step = this.steps[index];
+            if (!this.isReversibleStep(index) || this.discardedSteps.has(step.id)) {
+                continue;
+            }
+            if (step.type === "original") {
+                return -1;
+            }
+            if (step.type === "undo" && !this.revertedSteps.has(step.id)) {
+                return index;
             }
         }
         return -1;
@@ -1497,7 +1492,7 @@ export class HistoryPlugin extends Plugin {
             }
             applied = true;
             const stepIndex = this.steps.findLastIndex((item) => item === step);
-            this.revertStepsUntil(stepIndex);
+            this.restoreToStep(stepIndex);
             // Apply draft mutations to recover the same currentStep state
             // as before.
             this.applyMutations(draftMutations, { forNewStep: true });
@@ -1607,13 +1602,15 @@ export class HistoryPlugin extends Plugin {
     }
 
     /**
-     * Discard the current draft, and, if necessary, consume and revert
-     * reversible steps until the specified step index, and ensure that
-     * irreversible steps are maintained. This will add a new consumed step.
+     * Restores the editable to the state of a previous step.
+     * It does so by discarding the current draft and reverting reversible steps
+     * until the specified step index, while ensuring that irreversible steps
+     * are maintained. This will add a new "restore" step and set the reverted
+     * steps's state to "discarded".
      *
      * @param {Number} stepIndex
      */
-    revertStepsUntil(stepIndex) {
+    restoreToStep(stepIndex) {
         // Discard current draft.
         this.handleObserverRecords();
         this.revertMutations(this.currentStep.mutations);
@@ -1624,8 +1621,8 @@ export class HistoryPlugin extends Plugin {
         if (stepIndex === this.steps.length - 1) {
             return;
         }
-        // Revert all mutations until stepIndex, and consume all reversible
-        // steps in the process (typically current peer steps).
+        // Revert all mutations until stepIndex, and mark all reversible
+        // steps as "discarded" in the process (typically current peer steps).
         for (let i = this.steps.length - 1; i > stepIndex; i--) {
             const currentStep = this.steps[i];
             this.revertMutations(currentStep.mutations, { forNewStep: true });
@@ -1635,7 +1632,7 @@ export class HistoryPlugin extends Plugin {
             // DOM after all steps were reverted then applied again.
             this.processNewRecords(this.observer.takeRecords());
             if (this.isReversibleStep(i)) {
-                this.stepsStates.set(currentStep.id, "consumed");
+                this.discardedSteps.add(currentStep.id);
                 lastRevertedStep = currentStep;
             }
         }
@@ -1650,9 +1647,9 @@ export class HistoryPlugin extends Plugin {
         // TODO ABD TODO @phoenix: review selections, this selection could be obsolete
         // depending on the non-reversible steps that were applied.
         this.setSerializedSelection(lastRevertedStep.selection);
-        // Register resulting mutations as a new consumed step (prevent undo).
+        // Register resulting mutations as a new "restore" step (prevent undo).
         this.dispatchContentUpdated();
-        this.addStep({ stepState: "consumed" });
+        this.addStep({ type: "restore" });
     }
 
     setStepExtra(key, value) {
