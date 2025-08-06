@@ -111,6 +111,12 @@ class DiscussChannel(models.Model):
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', recursive=True, readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
+    channel_name_member_ids = fields.One2many(
+        "discuss.channel.member",
+        compute="_compute_channel_name_member_ids",
+        help="Members from which the channel name is computed when the name field is empty.",
+    )
+
     _channel_type_not_null = models.Constraint(
         'CHECK(channel_type IS NOT NULL)',
         'The channel type cannot be empty',
@@ -179,6 +185,49 @@ class DiscussChannel(models.Model):
             raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
     # COMPUTE / INVERSE
+
+    @api.depends("channel_name_member_ids", "name")
+    def _compute_display_name(self):
+        for channel in self:
+            if channel.name:
+                channel.display_name = channel.name
+                continue
+            parts = channel.channel_name_member_ids.mapped(
+                lambda m: m.partner_id.name or m.guest_id.name
+            )
+            if channel.member_count > 3:
+                remaining = channel.member_count - 3
+                parts.append(
+                    self.env._("1 other") if remaining == 1 else self.env._("%s others", remaining)
+                )
+            channel.display_name = format_list(self.env, parts)
+
+    @api.depends("channel_member_ids")
+    def _compute_channel_name_member_ids(self):
+        to_compute = self.filtered(
+            lambda c: c.channel_type in self._member_based_naming_channel_types()
+        )
+        (self - to_compute).channel_name_member_ids = False
+        if not to_compute:
+            return
+        self.env.cr.execute("""
+            SELECT channel.id, member.id
+              FROM discuss_channel channel
+      JOIN LATERAL
+                (
+                   SELECT id
+                     FROM discuss_channel_member M
+                    WHERE M.channel_id = channel.id
+                 ORDER BY id
+                    LIMIT 3
+                ) as member ON TRUE
+             WHERE channel.id IN %s
+        """, (tuple(to_compute.ids),))
+        channel_id_to_member_ids = defaultdict(list)
+        for channel_id, member_id in self.env.cr.fetchall():
+            channel_id_to_member_ids[channel_id].append(member_id)
+        for channel in self:
+            channel.channel_name_member_ids = channel_id_to_member_ids.get(channel.id)
 
     @api.depends("channel_type", "is_member", "group_public_id")
     @api.depends_context("uid")
@@ -1036,13 +1085,16 @@ class DiscussChannel(models.Model):
         # Avoid sending potentially a lot of members for big channels: exclude chat and other small
         # channels from this optimization because they are assumed to be smaller and it's important
         # to know the member list for them.
-        channels_with_all_members = self.filtered(lambda channel: channel.channel_type != "channel")
+        channels_with_all_members = self.filtered(
+            lambda channel: channel.channel_type not in self._lazy_load_members_channel_types(),
+        )
         all_members = (
             self.self_member_id
             | self.invited_member_ids
             # sudo: discuss.channel - reading sessions of accessible channel is acceptable
             | self.sudo().rtc_session_ids.channel_member_id
             | channels_with_all_members.channel_member_ids
+            | self.channel_name_member_ids
         )
         # Prefetch all members at once. The first field accessed on a member will be channel_id
         # (in _to_store_defaults of livechat), but the field is known for some of the members
@@ -1088,6 +1140,11 @@ class DiscussChannel(models.Model):
             "last_interest_dt",
             "member_count",
             "name",
+            Store.Many(
+                "channel_name_member_ids",
+                sort="id",
+                predicate=lambda c: c.channel_type in self._member_based_naming_channel_types(),
+            ),
             Store.One("parent_channel_id", predicate=is_channel_or_group),
             # sudo: discuss.channel: reading sessions of accessible channel is acceptable
             Store.Many(
@@ -1227,6 +1284,16 @@ class DiscussChannel(models.Model):
     def _types_allowing_unfollow(self):
         """ Return the channel types which allow leaving the channel, channel will be unpinned
         otherwise """
+        return ["channel", "group"]
+
+    def _member_based_naming_channel_types(self):
+        """ Return the channel types that use member-based naming,
+            specifically the `channel_name_member_ids` field.
+        """
+        return ["group"]
+
+    def _lazy_load_members_channel_types(self):
+        """ Return the channel types that load members lazily. """
         return ["channel", "group"]
 
     def channel_fetched(self):
