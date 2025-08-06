@@ -91,63 +91,11 @@ export class Call extends Component {
     }
 
     /** @returns {CardData[]} */
-    get visibleCards() {
-        const raisingHandCards = [];
-        const sessionCards = [];
-        const invitationCards = [];
-        const filterVideos = this.store.settings.showOnlyVideo && this.channel.videoCount > 0;
-        for (const session of this.channel.rtc_session_ids) {
-            const target = session.raisingHand ? raisingHandCards : sessionCards;
-            const cameraStream = session.is_camera_on
-                ? session.videoStreams.get("camera")
-                : undefined;
-            if (!filterVideos || cameraStream) {
-                target.push({
-                    key: "session_main_" + session.id,
-                    session,
-                    type: "camera",
-                    videoStream: cameraStream,
-                });
-            }
-            const screenStream = session.is_screen_sharing_on
-                ? session.videoStreams.get("screen")
-                : undefined;
-            if (screenStream) {
-                target.push({
-                    key: "session_secondary_" + session.id,
-                    session,
-                    type: "screen",
-                    videoStream: screenStream,
-                });
-            }
-        }
-        if (!filterVideos) {
-            for (const member of this.channel.invited_member_ids) {
-                invitationCards.push({
-                    key: "member_" + member.id,
-                    member,
-                });
-            }
-        }
-        raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
-        sessionCards.sort(
-            (c1, c2) =>
-                c1.session.channel_member_id?.persona?.name?.localeCompare(
-                    c2.session.channel_member_id?.persona?.name
-                ) ?? 1
-        );
-        invitationCards.sort(
-            (c1, c2) => c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1
-        );
-        return raisingHandCards.concat(sessionCards, invitationCards);
-    }
-
-    /** @returns {CardData[]} */
     get visibleMainCards() {
         const activeSession = this.channel.activeRtcSession;
         if (!activeSession) {
             this.state.insetCard = undefined;
-            return this.visibleCards;
+            return this.channel.visibleCards;
         }
         const type = activeSession.mainVideoStreamType;
         if (type === "screen" || activeSession.is_screen_sharing_on) {

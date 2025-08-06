@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div t-if="state.sidebar and channel.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
-                <CallParticipantCard t-foreach="visibleCards" t-as="cardData" t-key="cardData.key"
+                <CallParticipantCard t-foreach="channel.visibleCards" t-as="cardData" t-key="cardData.key"
                     cardData="cardData"
                     className="'o-discuss-Call-sidebarCard w-100 p-1'"
                     thread="channel"
