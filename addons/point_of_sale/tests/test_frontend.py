@@ -2774,6 +2774,30 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_preset_customer_selection')
 
+    def test_default_preset_requires_customer(self):
+        """
+        Tests that when the default preset requires a customer in order to
+        work, we can still close the PoS before selecting a customer. Also
+        tests that when going back to the PoS, we can still select a customer.
+        """
+        preset_delivery, preset_eat_in = self.env['pos.preset'].create([
+            {
+            'name': 'Delivery',
+            'identification': 'address',
+            }, {
+            'name': 'Eat in',
+            }
+        ])
+
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': preset_delivery.id,
+            'available_preset_ids': [(6, 0, [preset_delivery.id, preset_eat_in.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_default_preset_requires_customer', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

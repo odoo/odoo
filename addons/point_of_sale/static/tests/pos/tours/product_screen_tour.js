@@ -974,3 +974,21 @@ registry.category("web_tour.tours").add("test_preset_customer_selection", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_default_preset_requires_customer", {
+    steps: () =>
+        [
+            {
+                content: "Click Discard",
+                trigger: 'button.backend-button.button.btn.btn-lg.btn-secondary:contains("Discard")',
+                run: "click",
+            },
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.selectPreset("Preset", "Delivery"),
+            PartnerList.clickPartner("Addison Olson"),
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(1, "Addison Olson"),
+            TicketScreen.nthRowContains(1, "Delivery", false),
+        ].flat(),
+});

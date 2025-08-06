@@ -221,6 +221,9 @@ export class PosStore extends WithLazyGetterTrap {
         if (savedCashier) {
             this.setCashier(savedCashier);
         }
+        else {
+            this.setCashier(this.user);
+        }
     }
 
     setCashier(user) {
