@@ -19,6 +19,7 @@ export class CallParticipantCard extends Component {
         "cardData",
         "thread",
         "minimized?",
+        "positionStyle?",
         "inset?",
         "isSidebarItem?",
         "compact?",

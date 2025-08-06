@@ -3,9 +3,9 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 
+import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useSequential } from "@mail/utils/common/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
@@ -108,7 +108,7 @@ export class ChannelInvitation extends Component {
     }
 
     get searchPlaceholder() {
-        return _t("Search people to invite");
+        return this.props.state?.searchPlaceholder ?? _t("Search people to invite");
     }
 
     async fetchPartnersToInvite() {
@@ -173,7 +173,14 @@ export class ChannelInvitation extends Component {
                 invite_to_rtc_call: this.rtc.state.channel?.eq(this.props.thread),
             });
         }
-        this.props.close();
+        if (this.props.close) {
+            this.props.close();
+        } else {
+            this.state.selectablePartners = this.state.selectablePartners.filter(
+                (partner) => !this.selectedPartners.includes(partner)
+            );
+            this.state.selectedPartners = [];
+        }
     }
 
     get invitationButtonText() {

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallParticipantCard">
-        <div class="o-discuss-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100"
+        <div class="o-discuss-CallParticipantCard cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100"
             t-att-class="{
                 'o-isTalking': !props.minimized and isTalking,
                 'o-isInvitation opacity-50': !rtcSession,
@@ -18,6 +18,7 @@
             t-on-click="onClick"
             t-on-mousedown="onMouseDown"
             t-on-touchmove="onTouchMove"
+            t-att-style="props.positionStyle"
             t-ref="root"
         >
             <!-- card -->
@@ -38,7 +39,7 @@
             <t t-if="rtcSession">
                 <!-- overlay -->
                 <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1" t-att-class="{ 'o-proportional-container w-50': isSmall }">
-                    <span t-if="!props.minimized and !props.inset" class="rounded-1 text-truncate opacity-75 w-100 o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1': isSmall, 'p-0': !isSmall }" t-esc="name"/>
+                    <span t-if="!props.minimized and !props.inset" class="rounded-1 text-truncate opacity-75 w-auto o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1': isSmall, 'p-0': !isSmall }" t-esc="name"/>
                     <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-proportional-text o-minimized rounded text-bg-danger d-flex align-items-center fw-bolder p-1" title="live" aria-label="live">
                         LIVE
                     </small>

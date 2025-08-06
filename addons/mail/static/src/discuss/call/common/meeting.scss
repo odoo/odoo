@@ -1,0 +1,65 @@
+$o-meeting-slide-duration: 0.4s;
+$o-meeting-slide-curve: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+
+.o-mail-Meeting {
+    background-color: var(--o-discuss-Call-bgColor, #{$dark});
+}
+
+.o-mail-Meeting-callContainer {
+    transition: width .33s $o-meeting-slide-curve;
+
+    &.o-sidePanelOpened {
+        // Capital letters for "MAX" function to force usage of the CSS MAX function.
+        width: calc(100% - MAX(400px, 25%)) !important;
+    }
+}
+
+.o-mail-Meeting-composer {
+    padding-bottom: 0 !important;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+.o-mail-Meeting-sidePanelContainer {
+    width: MAX(400px, 25%);
+    transform: translateX(100%);
+    transition: transform $o-meeting-slide-duration $o-meeting-slide-curve;
+
+    &.o-opened {
+        transform: translateX(0);
+    }
+
+    & .o-mail-ActionPanel {
+        flex-shrink: unset !important;
+    }
+}
+
+.o-mail-Meeting-sidePanel {
+    background-color: $o-webclient-background-color;
+}
+
+.o-mail-Meeting-closeSidePanel {
+    opacity: .15;
+}
+
+.o-mail-Meeting-sidePanelActions button {
+    aspect-ratio: 1;
+}

@@ -3,7 +3,7 @@
 
     <t t-name="discuss.Call">
         <PttAdBanner/>
-        <div class="o-discuss-Call user-select-none d-flex position-relative shadow-sm" t-att-class="{
+        <div class="o-discuss-Call user-select-none d-flex position-relative shadow-sm" t-attf-class="{{props.class}}" t-att-class="{
             'o-fullSize': isFullSize,
             'o-compact': props.compact and !isMobileOs,
             'o-minimized': minimized,
@@ -11,7 +11,7 @@
             'o-hasVideo': channel.videoCount > 0,
             'o-selfInCall': isActiveCall,
         }">
-            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
+            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto overflow-x-hidden o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
                 <BlurPerformanceWarning t-if="store.settings.blurPerformanceWarning"/>
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
@@ -26,6 +26,7 @@
                         className="'o-discuss-Call-mainCardStyle'"
                         minimized="minimized"
                         compact="props.compact"
+                        positionStyle="tiles.styles[cardData_index]"
                         thread="channel"
                     />
                     <span t-if="env.inChatWindow and visibleMainCards.length > 6" class="oi oi-ellipsis-h ps-1 pe-1"/>
@@ -33,6 +34,7 @@
                         cardData="cardData"
                         className="'o-discuss-Call-mainCardStyle p-1'"
                         minimized="minimized"
+                        positionStyle="tiles.styles[cardData_index + 6]"
                         compact="props.compact"
                         thread="channel"
                     />
@@ -43,7 +45,7 @@
                     <i t-if="state.sidebar" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
                     <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
                 </t>
-                <div t-if="state.overlay or !isControllerFloating" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute z-2 bottom-0 pb-2': isControllerFloating }">
+                <div t-if="props.hasOverlay and (state.overlay or !isControllerFloating)" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute z-2 bottom-0 pb-2': isControllerFloating }">
                     <div t-on-mousemove="onMousemoveOverlay">
                         <CallActionList thread="channel" compact="props.compact or props.isPip"/>
                     </div>

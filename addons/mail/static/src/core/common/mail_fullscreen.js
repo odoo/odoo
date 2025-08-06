@@ -48,14 +48,22 @@ export const fullscreenService = {
          * @param {object} [options]
          * @param [options.props]
          * @param {any} [options.id]
+         * @param {boolean} [options.keepBrowserHeader] - Optional flag to specify whether to keep
+         * the browser's header (address bar, tabs, etc.) visible.
          * @returns {Promise<void>}
          */
-        async function enter(component, { props, id = DEFAULT_ID } = {}) {
+        async function enter(
+            component,
+            { keepBrowserHeader = false, props, id = DEFAULT_ID } = {}
+        ) {
             this.exit();
             state.component = component;
             state.props = props;
             state.id = id;
             const el = document.body;
+            if (keepBrowserHeader) {
+                return;
+            }
             try {
                 if (el.requestFullscreen) {
                     await el.requestFullscreen();

@@ -70,7 +70,7 @@ export class CallActionList extends Component {
 
     onMouseenterMore() {
         if (this.isPromotingFullscreen) {
-            this.popover.open(this.more.el, { tooltip: _t("Enter full screen!") });
+            this.popover.open(this.more.el, { tooltip: _t("Full Screen!") });
             this.props.thread.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         }
     }

@@ -232,6 +232,8 @@ export class Rtc extends Record {
      * as long as it is on the same browser, use `selfSession`.
      */
     localSession = fields.One("discuss.channel.rtc.session");
+    inMeeting = false;
+    meetingChatOpened = false;
     /**
      * The RtcSession shared between tabs, this is set if any of the tabs of that browser is in a call.
      *
@@ -685,9 +687,20 @@ export class Rtc extends Record {
         this.soundEffectsService.play("mic-off");
     }
 
-    async enterFullscreen() {
-        const Call = registry.category("discuss.call/components").get("Call");
-        await this.fullscreen.enter(Call, { id: CALL_FULLSCREEN_ID });
+    /**
+     *
+     * @param {*} param0
+     * @param {boolean} [options.keepBrowserHeader] - Optional flag to specify whether to keep
+     * the browser's header (address bar, tabs, etc.) visible.
+     * * @param {import("@mail/discuss/call/common/meeting").MeetingPanel} [param0.initialSidePanel=false]
+     */
+    async enterFullscreen({ keepBrowserHeader = false, initialSidePanel = false } = {}) {
+        const Meeting = registry.category("discuss.call/components").get("Meeting");
+        await this.fullscreen.enter(Meeting, {
+            id: CALL_FULLSCREEN_ID,
+            keepBrowserHeader,
+            props: { initialSidePanel },
+        });
     }
 
     async exitFullscreen() {

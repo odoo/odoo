@@ -1,15 +1,25 @@
-import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
-import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
-import { Component, onMounted, onPatched, onWillUnmount, toRaw, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    toRaw,
+    useComponent,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
-import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useService } from "@web/core/utils/hooks";
+import { throttleForAnimation } from "@web/core/utils/timing";
+import { BlurPerformanceWarning } from "./blur_performance_warning";
 
 /**
  * @typedef CardData
@@ -32,7 +42,8 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
-    static props = ["thread?", "compact?", "isPip?"];
+    static props = ["thread?", "compact?", "isPip?", "hasOverlay?", "class?"];
+    static defaultProps = { hasOverlay: true };
     static template = "discuss.Call";
 
     overlayTimeout;
@@ -53,15 +64,9 @@ export class Call extends Component {
             /** @type {CardData|undefined} */
             insetCard: undefined,
         });
+        this.tiles = useArrangeTiles({ refName: "grid", minimized: this.minimized });
         this.store = useService("mail.store");
-        onMounted(() => {
-            this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
-            this.resizeObserver.observe(this.grid.el);
-            this.arrangeTiles();
-        });
-        onPatched(() => this.arrangeTiles());
         onWillUnmount(() => {
-            this.resizeObserver.disconnect();
             browser.clearTimeout(this.overlayTimeout);
         });
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
@@ -180,48 +185,78 @@ export class Call extends Component {
             this.state.overlay = false;
         }, 3000);
     }
+}
 
-    arrangeTiles() {
-        if (!this.grid.el) {
+export function useArrangeTiles({ refName }) {
+    const component = useComponent();
+    const ref = useRef(refName);
+    const TILE_GAP = 4;
+    const state = useState({ styles: [] });
+
+    const arrangeTiles = throttleForAnimation(() => {
+        if (!ref.el) {
             return;
         }
-        const { width, height } = this.grid.el.getBoundingClientRect();
-        const aspectRatio = this.minimized ? 1 : 16 / 9;
-        const tileCount = this.grid.el.children.length;
-        let optimal = {
-            area: 0,
-            columnCount: 0,
-            tileHeight: 0,
-            tileWidth: 0,
-        };
+        const { width, height } = ref.el.getBoundingClientRect();
+        const aspectRatio = component.minimized ? 1 : 16 / 9;
+        const tileCount = component.channel.visibleCards.length;
+        const paddedWidth = width - 2 * TILE_GAP;
+        const paddedHeight = height - 2 * TILE_GAP;
+        let best = { area: 0, columnCount: 0, tileHeight: 0, tileWidth: 0 };
         for (let columnCount = 1; columnCount <= tileCount; columnCount++) {
             const rowCount = Math.ceil(tileCount / columnCount);
-            const potentialHeight = width / (columnCount * aspectRatio);
-            const potentialWidth = height / rowCount;
+            const potentialTileWidthByHeight =
+                ((paddedHeight - (rowCount - 1) * TILE_GAP) / rowCount) * aspectRatio;
             let tileHeight;
             let tileWidth;
-            if (potentialHeight > potentialWidth) {
-                tileHeight = Math.floor(potentialWidth);
-                tileWidth = Math.floor(tileHeight * aspectRatio);
-            } else {
-                tileWidth = Math.floor(width / columnCount);
+            if (
+                potentialTileWidthByHeight >
+                (paddedWidth - (columnCount - 1) * TILE_GAP) / columnCount
+            ) {
+                tileWidth = Math.floor((paddedWidth - (columnCount - 1) * TILE_GAP) / columnCount);
                 tileHeight = Math.floor(tileWidth / aspectRatio);
+            } else {
+                tileHeight = Math.floor((paddedHeight - (rowCount - 1) * TILE_GAP) / rowCount);
+                tileWidth = Math.floor(tileHeight * aspectRatio);
             }
             const area = tileHeight * tileWidth;
-            if (area <= optimal.area) {
-                continue;
+            if (area > best.area) {
+                best = { area, columnCount, tileHeight, tileWidth };
             }
-            optimal = {
-                area,
-                columnCount,
-                tileHeight,
-                tileWidth,
-            };
         }
-        Object.assign(this.state, {
-            tileWidth: optimal.tileWidth,
-            tileHeight: optimal.tileHeight,
-            columnCount: optimal.columnCount,
+        const { columnCount, tileWidth, tileHeight } = best;
+        const rowCount = Math.ceil(tileCount / columnCount);
+        const layoutWidth = columnCount * tileWidth + (columnCount - 1) * TILE_GAP;
+        const layoutHeight = rowCount * tileHeight + (rowCount - 1) * TILE_GAP;
+        const offsetX = TILE_GAP + (paddedWidth - layoutWidth) / 2;
+        const offsetY = TILE_GAP + (paddedHeight - layoutHeight) / 2;
+        const numberOfTilesInLastRow = tileCount % columnCount;
+        const lastRowOffset = numberOfTilesInLastRow
+            ? ((columnCount - numberOfTilesInLastRow) * (tileWidth + TILE_GAP)) / 2
+            : 0;
+        state.styles = Array.from({ length: tileCount }, (_, i) => {
+            const col = i % columnCount;
+            const row = Math.floor(i / columnCount);
+            const isLastRow = rowCount - 1 === row;
+            const centerOffset = isLastRow ? lastRowOffset : 0;
+            const left = offsetX + col * (tileWidth + TILE_GAP) + centerOffset;
+            const top = offsetY + row * (tileHeight + TILE_GAP);
+            return `position: absolute; left: ${left}px; top: ${top}px; width: ${tileWidth}px; height: ${tileHeight}px; box-sizing: border-box;`;
         });
-    }
+    });
+    let resizeObserver;
+    onMounted(() => {
+        resizeObserver = new ResizeObserver(() => arrangeTiles());
+        resizeObserver.observe(ref.el);
+        arrangeTiles();
+    });
+    onWillUnmount(() => resizeObserver.disconnect());
+    useEffect(
+        () => {
+            arrangeTiles();
+        },
+        () => [ref.el, component.channel.visibleCards.length, component.minimized]
+    );
+
+    return state;
 }
