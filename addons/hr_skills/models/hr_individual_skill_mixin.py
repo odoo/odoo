@@ -17,6 +17,22 @@ class HrIndividualSkillMixin(models.AbstractModel):
     def _linked_field_name(self):
         raise NotImplementedError()
 
+    def _get_passive_fields(self):
+        """
+        Return additional passive fields to be included during (versioned)skill creation.
+
+        Passive fields are preserved/included when new skill versions are created due to changes in any of the
+        core/active fields (linked_field, skill_id, skill_level_id, skill_type_id),but modifying them DOES NOT
+        trigger new (versioned)skill creation.
+
+        Core/Active fields (linked_field, skill_id, skill_level_id, skill_type_id) are automatically preserved
+        and should NOT be included here.
+
+        :return: List of field names to copy to new skills
+        :rtype: list[str]
+        """
+        return []
+
     def _default_skill_type_id(self):
         if self.env.context.get('certificate_skill', False):
             return self.env['hr.skill.type'].search([('is_certification', '=', True)], limit=1)
@@ -397,6 +413,23 @@ class HrIndividualSkillMixin(models.AbstractModel):
         result_command = []
         create_vals = []
         remove_from_expire = self.env[self._name]
+
+        def _get_passive_field_value(field, skill):
+            """
+            Extracts the appropriate value from a field to be passed into a vals dict for record creation/writing.
+            Returns the raw value for most fields but extracts id(s) for relational fields.
+
+            :param field: Field name as a string to process
+            :param skill: Source record to extract value from
+            :return: ORM-ready value for the field
+            """
+            field_type = self._fields[field].type
+            if field_type == "many2one":
+                return skill[field].id
+            if field_type == "many2many" or field_type == "one2many":
+                return skill[field].ids
+            return skill[field]
+
         for command in commands:
             ind_skill = self_dict.get(command[1])
             vals = command[2]
@@ -404,11 +437,17 @@ class HrIndividualSkillMixin(models.AbstractModel):
                 result_command.append([1, ind_skill.id, vals])
                 remove_from_expire += ind_skill
                 continue
+
+            passive_vals = {
+                field: vals.get(field, _get_passive_field_value(field, ind_skill))
+                for field in self._get_passive_fields()
+            }
             new_vals = {
                 f'{self._linked_field_name()}': vals.get(self._linked_field_name(), ind_skill[self._linked_field_name()].id),
                 'skill_id': vals.get('skill_id', ind_skill.skill_id.id),
                 'skill_level_id': vals.get('skill_level_id', ind_skill.skill_level_id.id),
                 'skill_type_id': vals.get('skill_type_id', ind_skill.skill_type_id.id),
+                **passive_vals,
             }
             skill_type = self.env['hr.skill.type'].browse(new_vals['skill_type_id'])
             valid_from = vals.get('valid_from', ind_skill.valid_from if skill_type.is_certification else fields.Date.today())
