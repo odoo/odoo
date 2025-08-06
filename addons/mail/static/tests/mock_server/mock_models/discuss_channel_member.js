@@ -2,6 +2,7 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { fields, getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { ensureArray } from "@web/core/utils/arrays";
 
 const { DateTime } = luxon;
 
@@ -12,6 +13,30 @@ export class DiscussChannelMember extends models.ServerModel {
     unpin_dt = fields.Datetime({ string: "Unpin date" });
     message_unread_counter = fields.Generic({ default: 0 });
     last_interest_dt = fields.Datetime({ default: () => serializeDateTime(today()) });
+
+    create(values) {
+        const idOrIds = super.create(values);
+        this.env["discuss.channel"]._compute_channel_name_member_ids();
+        const channels_needing_name_update = this.env["discuss.channel"]
+            ._filter([
+                ["channel_name_member_ids", "in", ensureArray(idOrIds)],
+                ["name", "=", false],
+                [
+                    "channel_type",
+                    "in",
+                    this.env["discuss.channel"]._member_based_naming_channel_types(),
+                ],
+            ])
+            .filter((channel) => channel.channel_name_member_ids.length <= 3);
+        for (const channel of channels_needing_name_update) {
+            const store = new mailDataHelpers.Store().add(
+                this.env["discuss.channel"].browse(channel.id),
+                makeKwArgs({ fields: [mailDataHelpers.Store.many("channel_name_member_ids")] })
+            );
+            this.env["bus.bus"]._sendone(channel, "mail.record/insert", store.get_result());
+        }
+        return idOrIds;
+    }
 
     write(ids, vals) {
         const membersToUpdate = this.browse(ids);

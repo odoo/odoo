@@ -2,6 +2,7 @@ import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { useSequential } from "@mail/utils/common/hooks";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
+import { _t } from "@web/core/l10n/translation";
 
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
@@ -174,6 +175,7 @@ const threadPatch = {
         this.member_count = undefined;
         /** @type {string} name: only for channel. For generic thread, @see display_name */
         this.name = undefined;
+        this.channel_name_member_ids = fields.Many("discuss.channel.member");
         this.onlineMembers = fields.Many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
@@ -272,8 +274,16 @@ const threadPatch = {
         if (this.channel_type === "chat" && this.correspondent) {
             return this.correspondent.name;
         }
-        if (this.channel_type === "group" && !this.name) {
-            return formatList(this.channel_member_ids.map((channelMember) => channelMember.name));
+        if (this.channel_name_member_ids.length && !this.name) {
+            const nameParts = this.channel_name_member_ids
+                .sort((m1, m2) => m1.id - m2.id)
+                .slice(0, 3)
+                .map((member) => member.name);
+            if (this.member_count > 3) {
+                const remaining = this.member_count - 3;
+                nameParts.push(remaining === 1 ? _t("1 other") : _t("%s others", remaining));
+            }
+            return formatList(nameParts);
         }
         if (this.model === "discuss.channel" && this.name) {
             return this.name;

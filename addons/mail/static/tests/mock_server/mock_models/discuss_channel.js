@@ -33,6 +33,10 @@ export class DiscussChannel extends models.ServerModel {
         string: "Members",
         default: () => [Command.create({ partner_id: serverState.partnerId })],
     });
+    channel_name_member_ids = fields.One2many({
+        relation: "discuss.channel.member",
+        compute: "_compute_channel_name_member_ids",
+    });
     channel_type = fields.Generic({ default: "channel" });
     group_public_id = fields.Generic({
         default: () => serverState.groupId,
@@ -41,6 +45,14 @@ export class DiscussChannel extends models.ServerModel {
         default: () => uniqueId("discuss.channel_uuid-"),
     });
     last_interest_dt = fields.Datetime({ string: "Last Interest" });
+
+    _compute_channel_name_member_ids() {
+        for (const channel of this) {
+            const members = channel.channel_member_ids ?? [];
+            members.sort();
+            channel.channel_name_member_ids = members.slice(0, 3);
+        }
+    }
 
     /** @param {number[]} ids */
     action_unfollow(ids) {
@@ -436,6 +448,11 @@ export class DiscussChannel extends models.ServerModel {
                     );
                     store.add(otherMembers);
                 }
+                if (this._member_based_naming_channel_types().includes(channel.channel_type)) {
+                    res.channel_name_member_ids = mailDataHelpers.Store.many(
+                        this.env["discuss.channel.member"].browse(channel.channel_name_member_ids)
+                    );
+                }
                 res.rtc_session_ids = mailDataHelpers.Store.many(
                     DiscussChannelRtcSession.browse(channel.rtc_session_ids),
                     makeKwArgs({ extra: true, mode: "ADD" })
@@ -443,6 +460,10 @@ export class DiscussChannel extends models.ServerModel {
                 store._add_record_fields(this.browse(channel.id), res);
             }
         }
+    }
+
+    _member_based_naming_channel_types() {
+        return ["group"];
     }
 
     /**

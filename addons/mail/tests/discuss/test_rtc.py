@@ -949,6 +949,8 @@ class TestChannelRTC(MailCommon):
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda member: member.guest_id == test_guest)
         found_bus_notifs = self.assertBusNotifications(
             [
+                # mail.record/insert - discuss.channel (channel_name_member_ids)
+                (self.cr.dbname, "discuss.channel", channel.id),
                 # discuss.channel/joined
                 (self.cr.dbname, "res.partner", test_user.partner_id.id),
                 # mail.record/insert - discuss.channel (last_interest_dt)
