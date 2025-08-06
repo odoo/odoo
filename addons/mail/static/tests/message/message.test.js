@@ -177,6 +177,29 @@ test("Editing message keeps the mentioned channels", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "other" });
 });
 
+test("Editing message keeps the mentioned roles", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.role"].create([{ name: "rd-Discuss" }]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await click(".o-mail-Composer-suggestion strong", { text: "rd-Discuss" });
+    await press("Enter");
+    await contains(".o-discuss-mention", { count: 1, text: "@rd-Discuss" });
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "@rd-Discuss" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "@rd-Discuss bye", {
+        replace: true,
+    });
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "@rd-Discuss bye (edited)" });
+    await contains(".o-discuss-mention", { text: "@rd-Discuss" });
+});
+
 test("Can edit message comment in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });

@@ -53,6 +53,15 @@ patch(editAction, {
                     model: el.dataset.oeModel,
                 })
             );
+        const mentionedRoleElements = doc.querySelectorAll(".o-discuss-mention");
+        component.message.mentionedRolePromises = Array.from(mentionedRoleElements)
+            .filter((el) => el.dataset.oeModel === "res.role")
+            .map((el) =>
+                component.store["res.role"].get({
+                    id: el.dataset.oeId,
+                    model: el.dataset.oeModel,
+                })
+            );
         return super.onClick(component);
     },
 });

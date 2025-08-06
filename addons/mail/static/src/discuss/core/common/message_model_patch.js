@@ -47,6 +47,8 @@ const messagePatch = {
         });
         /** @type {Promise<Thread>[]} */
         this.mentionedChannelPromises = [];
+        /** @type {Promise<ResRole>[]} */
+        this.mentionedRolePromises = [];
         this.threadAsFirstUnread = fields.One("Thread", { inverse: "firstUnreadMessage" });
     },
     /** @returns {import("models").ChannelMember[]} */
@@ -67,10 +69,14 @@ const messagePatch = {
             (channel) => channel !== undefined
         );
         const allChannels = this.store.Thread.insert([...validChannels, ...mentionedChannels]);
+        const validRoles = (await Promise.all(this.mentionedRolePromises)).filter(
+            (role) => role !== undefined
+        );
+        const allRoles = this.store["res.role"].insert([...validRoles, ...mentionedRoles]);
         super.edit(body, attachments, {
             mentionedChannels: allChannels,
             mentionedPartners,
-            mentionedRoles,
+            mentionedRoles: allRoles,
         });
     },
 };
