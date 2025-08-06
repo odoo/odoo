@@ -954,14 +954,13 @@ export function longPressProduct(productName) {
     return [
         {
             content: `Long pressing product "${productName}"...`,
-            trigger: `.product-name:contains("${productName}")`,
-            run: async () => {
-                const el = document.querySelector(".product-name");
+            trigger: `.product-list .product-name:contains("${productName}")`,
+            run: async (el) => {
                 const mouseDown = new MouseEvent("mousedown", { bubbles: true });
                 const mouseUp = new MouseEvent("mouseup", { bubbles: true });
-                el.dispatchEvent(mouseDown);
+                el.anchor.dispatchEvent(mouseDown);
                 await new Promise((resolve) => setTimeout(resolve, LONG_PRESS_DURATION + 50));
-                el.dispatchEvent(mouseUp);
+                el.anchor.dispatchEvent(mouseUp);
             },
         },
     ];

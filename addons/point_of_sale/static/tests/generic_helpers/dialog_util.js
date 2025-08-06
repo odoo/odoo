@@ -48,3 +48,10 @@ export function bodyIs(body) {
         trigger: `.modal-body:contains(${body})`,
     };
 }
+
+export function footerBtnIsDisabled(buttonText) {
+    return {
+        content: `footer btn ${buttonText} should be disabled`,
+        trigger: `.modal .modal-footer button:contains(${buttonText})[disabled]`,
+    };
+}
