@@ -635,8 +635,10 @@ class ProfileUpdateController(http.Controller):
     @http.route('/portal/profile_update_status', type='json', auth='user', website=True)
     def get_profile_update_status(self, **kwargs):
         user = request.env.user.sudo()
+        user.invalidate_recordset(['x_has_updated_profile'])
+        user_sudo = user.sudo()
         return {
-            'requires_update': not user.x_has_updated_profile
+            'requires_update': not user_sudo.x_has_updated_profile
         }
 
     @http.route('/portal/confirm_profile_updated', type='json', auth='user', website=True)
