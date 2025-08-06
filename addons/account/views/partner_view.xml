@@ -279,6 +279,12 @@
                            groups="account.group_account_invoice,account.group_account_readonly"
                     />
                 </group>
+                <xpath expr="//page[@name='contact_addresses']//form//group//field[@name='vat']" position="before">
+                    <field name="partner_vat_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                </xpath>
+                <xpath expr="//page[@name='contact_addresses']//form//group//field[@name='vat']" position="attributes">
+                    <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
+                </xpath>
             </field>
         </record>
 
