@@ -208,6 +208,7 @@ export class FontPlugin extends Plugin {
                         });
                         this.updateFontSizeSelectorParams();
                     },
+                    onBlur: () => this.dependencies.selection.focusEditable(),
                     document: this.document,
                 },
             },
