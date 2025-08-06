@@ -4,7 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import { useService } from "@web/core/utils/hooks";
 
-export class DiscussActions extends Component {
+export class ActionList extends Component {
     static components = { Dropdown, DropdownItem };
     static props = [
         "inline?",
@@ -15,7 +15,7 @@ export class DiscussActions extends Component {
         "odooControlPanelSwitchStyle?",
         "thread?",
     ];
-    static template = "mail.DiscussActions";
+    static template = "mail.ActionList";
 
     setup() {
         super.setup();

@@ -1,4 +1,4 @@
-import { DiscussActions } from "@mail/core/common/discuss_actions";
+import { ActionList } from "@mail/core/common/action_list";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 
 import { Component } from "@odoo/owl";
@@ -12,7 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 export class DiscussSidebarChannelActions extends Component {
     static template = "mail.DiscussSidebarChannelActions";
     static props = ["thread"];
-    static components = { DiscussActions };
+    static components = { ActionList };
 
     setup() {
         this.store = useService("mail.store");

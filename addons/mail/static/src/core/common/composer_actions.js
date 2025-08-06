@@ -4,7 +4,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
-import { DiscussActionDefinition } from "./discuss_actions_definition";
+import { Action } from "./action";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -137,7 +137,7 @@ composerActionsRegistry
         sequence: 5,
     });
 
-class ComposerActionDefinition extends DiscussActionDefinition {
+class ComposerAction extends Action {
     get btnClass() {
         return typeof this.explicitDefinition.btnClass === "function"
             ? this.explicitDefinition.btnClass(this._component)
@@ -146,12 +146,6 @@ class ComposerActionDefinition extends DiscussActionDefinition {
 
     get condition() {
         return composerActionsInternal.condition(this._component, this.id, this.explicitDefinition);
-    }
-
-    get hotkey() {
-        return typeof this.explicitDefinition.hotkey === "function"
-            ? this.explicitDefinition.hotkey(this._component)
-            : this.explicitDefinition.hotkey;
     }
 
     get isPicker() {
@@ -192,7 +186,7 @@ export function useComposerActions() {
     const component = useComponent();
     const transformedActions = composerActionsRegistry
         .getEntries()
-        .map(([id, action]) => new ComposerActionDefinition(component, id, action));
+        .map(([id, action]) => new ComposerAction(component, id, action));
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);

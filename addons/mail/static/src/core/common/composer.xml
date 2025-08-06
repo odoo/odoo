@@ -53,7 +53,7 @@
                         <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column o-discuss-dropdownMenu border-secondary'">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
-                                <DiscussActions dropdown="true" group="[partitionedActions.other]"/>
+                                <ActionList dropdown="true" group="[partitionedActions.other]"/>
                             </t>
                         </Dropdown>
                     </div>

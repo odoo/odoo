@@ -1,5 +1,5 @@
 import { ChatWindow } from "@mail/core/common/chat_window";
-import { DiscussActions } from "./discuss_actions";
+import { ActionList } from "./action_list";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
@@ -13,7 +13,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 
 export class ChatHub extends Component {
-    static components = { ChatBubble, ChatWindow, DiscussActions, Dropdown };
+    static components = { ActionList, ChatBubble, ChatWindow, Dropdown };
     static props = [];
     static template = "mail.ChatHub";
 

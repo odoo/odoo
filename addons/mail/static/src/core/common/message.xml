@@ -169,7 +169,7 @@
             <Dropdown state="optionsDropdown" menuClass="'o-discuss-dropdownMenu'">
                 <button class="d-none"/>
                 <t t-set-slot="content">
-                    <DiscussActions dropdown="true" group="[messageActions.actions]"/>
+                    <ActionList dropdown="true" group="[messageActions.actions]"/>
                 </t>
             </Dropdown>
         </t>
@@ -195,7 +195,7 @@
                     <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column o-mail-Message-moreMenu o-discuss-dropdownMenu border-secondary'" >
                         <t t-call="mail.Message.expandAction"/>
                         <t t-set-slot="content">
-                            <DiscussActions dropdown="true" group="[messageActions.actions.slice(quickActionCount - 1)]"/>
+                            <ActionList dropdown="true" group="[messageActions.actions.slice(quickActionCount - 1)]"/>
                         </t>
                     </Dropdown>
                 </div>

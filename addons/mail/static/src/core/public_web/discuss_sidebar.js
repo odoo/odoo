@@ -1,7 +1,7 @@
 import { useHover } from "@mail/utils/common/hooks";
 import { Component, onMounted, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DiscussActions } from "../common/discuss_actions";
+import { ActionList } from "../common/action_list";
 
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
@@ -17,7 +17,7 @@ export const discussSidebarItemsRegistry = registry.category("mail.discuss_sideb
 export class DiscussSidebar extends Component {
     static template = "mail.DiscussSidebar";
     static props = {};
-    static components = { DiscussActions, Dropdown, ResizablePanel };
+    static components = { ActionList, Dropdown, ResizablePanel };
 
     setup() {
         super.setup();
