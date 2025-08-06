@@ -66,6 +66,7 @@ class StockValuationLayer(models.Model):
         ]).ids
         return [('id', 'in', layer_ids)]
 
+    # TODO: remove in master
     def _candidate_sort_key(self):
         self.ensure_one()
         return tuple()

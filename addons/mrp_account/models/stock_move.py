@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import models
+from odoo import _, Command, fields, models
 
 
 class StockMove(models.Model):
@@ -48,36 +48,41 @@ class StockMove(models.Model):
         return self.location_dest_id.usage == 'production' and self.location_id._should_be_valued()
 
     def _create_out_svl(self, forced_quantity=None):
-        product_unbuild_map = defaultdict(self.env['mrp.unbuild'].browse)
-        for move in self:
-            if move.unbuild_id:
-                product_unbuild_map[move.product_id] |= move.unbuild_id
-        return super(StockMove, self.with_context(product_unbuild_map=product_unbuild_map))._create_out_svl(forced_quantity)
-
-    def _get_out_svl_vals(self, forced_quantity):
-        unbuild_moves = self.filtered('unbuild_id')
-        # 'real cost' of finished product moves @ build time
-        price_unit_map = {
-            move.id: (
-                move.unbuild_id.mo_id.move_finished_ids.stock_valuation_layer_ids.filtered(
-                    lambda svl: svl.product_id == move.product_id
-                )[0].unit_cost,
-                move.company_id.currency_id.round,
-            )
-            for move in unbuild_moves.sudo()
-            if move.product_id.cost_method != 'standard' and
-            move.unbuild_id.mo_id.move_finished_ids.stock_valuation_layer_ids
-        }
-        svl_vals_list = super()._get_out_svl_vals(forced_quantity)
-        if price_unit_map:
-            for svl_vals in svl_vals_list:
-                if (move_id := svl_vals['stock_move_id']) in price_unit_map:
-                    unit_cost = price_unit_map[move_id][0]
-                    svl_vals.update({
-                        'unit_cost': unit_cost,
-                        'value': price_unit_map[move_id][1](unit_cost * svl_vals['quantity']),
-                    })
-        return svl_vals_list
+        svls = super()._create_out_svl(forced_quantity)
+        unbuild_svls = svls.filtered('stock_move_id.unbuild_id')
+        unbuild_cost_correction_move_list = list()
+        for svl in unbuild_svls:
+            build_time_unit_cost = svl.stock_move_id.unbuild_id.mo_id.move_finished_ids.filtered(
+                lambda m: m.product_id == svl.product_id
+            ).stock_valuation_layer_ids.unit_cost
+            unbuild_difference = svl.unit_cost - build_time_unit_cost
+            if svl.product_id.valuation == 'real_time' and not svl.currency_id.is_zero(unbuild_difference):
+                product_accounts = svl.product_id.product_tmpl_id.get_product_accounts()
+                valuation_account, production_account = (
+                    product_accounts['stock_valuation'],
+                    product_accounts['production'],
+                )
+                desc = _('%s - Unbuild Cost Difference', svl.stock_move_id.unbuild_id.name)
+                unbuild_cost_correction_move_list.append({
+                    'journal_id': product_accounts['stock_journal'].id,
+                    'date': fields.Date.context_today(self),
+                    'ref': desc,
+                    'move_type': 'entry',
+                    'line_ids': [Command.create({
+                        'name': desc,
+                        'ref': desc,
+                        'account_id': account.id,
+                        'balance': balance,
+                        'product_id': svl.product_id.id,
+                    }) for account, balance in (
+                        (valuation_account, unbuild_difference),
+                        (production_account, -unbuild_difference),
+                    )],
+                })
+        if unbuild_cost_correction_move_list:
+            unbuild_cost_correction_moves = self.env['account.move'].sudo().create(unbuild_cost_correction_move_list)
+            unbuild_cost_correction_moves._post()
+        return svls
 
     def _get_all_related_sm(self, product):
         moves = super()._get_all_related_sm(product)
