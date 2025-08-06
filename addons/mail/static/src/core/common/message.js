@@ -40,7 +40,7 @@ import { rpc } from "@web/core/network/rpc";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import { useLongPress } from "@mail/utils/common/hooks";
-import { DiscussActions } from "./discuss_actions";
+import { ActionList } from "./action_list";
 
 /**
  * @typedef {Object} Props
@@ -60,10 +60,10 @@ export class Message extends Component {
     static SHADOW_HIGHLIGHT_COLOR = "#e99d00bf";
     static SHADOW_LINK_HOVER_COLOR = "#564b79";
     static components = {
+        ActionList,
         ActionSwiper,
         AttachmentList,
         Composer,
-        DiscussActions,
         Dropdown,
         ImStatus,
         MessageInReply,

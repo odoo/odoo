@@ -36,7 +36,7 @@ import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/featur
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "./composer_actions";
-import { DiscussActions } from "./discuss_actions";
+import { ActionList } from "./action_list";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -58,8 +58,8 @@ const EDIT_CLICK_TYPE = {
  */
 export class Composer extends Component {
     static components = {
+        ActionList,
         AttachmentList,
-        DiscussActions,
         Dropdown,
         DropdownItem,
         FileUploader,

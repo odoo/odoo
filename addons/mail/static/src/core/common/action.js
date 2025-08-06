@@ -1,4 +1,4 @@
-export class DiscussActionDefinition {
+export class Action {
     /** User-defined explicit definition of this action */
     explicitDefinition;
     /** Component in which the action is being used */
@@ -37,6 +37,13 @@ export class DiscussActionDefinition {
     /** Determines whether this action opens a dropdown on selection. Value is shaped { template, menuClass } */
     get dropdown() {
         return this.explicitDefinition.dropdown;
+    }
+
+    /** Determines whether this action has a keyboard hotkey to trigger the onSelected */
+    get hotkey() {
+        return typeof this.explicitDefinition.hotkey === "function"
+            ? this.explicitDefinition.hotkey(this._component)
+            : this.explicitDefinition.hotkey;
     }
 
     /**

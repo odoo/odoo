@@ -1,5 +1,5 @@
+import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
-import { DiscussActions } from "@mail/core/common/discuss_actions";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -27,8 +27,8 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
  */
 export class ChatWindow extends Component {
     static components = {
+        ActionList,
         CountryFlag,
-        DiscussActions,
         Dropdown,
         Thread,
         Composer,

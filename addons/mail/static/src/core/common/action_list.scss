@@ -1,4 +1,4 @@
-.o-mail-DiscussActions-group {
+.o-mail-ActionList-group {
     &.o-inline {
         gap: 1px;
     }
@@ -7,7 +7,7 @@
     }
 }
 
-.o-mail-DiscussActions {
+.o-mail-ActionList {
     hr {
         opacity: 12.5% !important;
     }
@@ -17,7 +17,7 @@
         --btn-disabled-opacity: 0.25;
 
         &.o-danger {
-            color: var(--mail-DiscussActions-dangerColor, darken($danger, 5%)) !important;
+            color: var(--mail-ActionList-dangerColor, darken($danger, 5%)) !important;
         }
 
         &.o-success {
@@ -30,7 +30,7 @@
 
         &.o-inline {
             i {
-                opacity: var(--mail-DiscussActions-buttonInlineIconOpacity, 65%);
+                opacity: var(--mail-ActionList-buttonInlineIconOpacity, 65%);
             }
             &.o-mail-ChatWindow-command i {
                 opacity: 35%;
@@ -43,7 +43,7 @@
             }
         }
 
-        .o-mail-DiscussActions-actionLabel {
+        .o-mail-ActionList-actionLabel {
             opacity: 65%;
             .o_bottom_sheet_sheet:has(&) {
                 opacity: 100%;
@@ -51,20 +51,20 @@
         }
 
         &:hover:not(.o-dropdown-item), &.o-isActive, &.o-active, &.focus, &.show {
-            .o-mail-DiscussActions-actionLabel {
+            .o-mail-ActionList-actionLabel {
                 opacity: 100%;
             }
 
-            color: var(--mail-DiscussActions-activeItemColor, $body-color);
+            color: var(--mail-ActionList-activeItemColor, $body-color);
             &:not(.o-inline) {
                 background-color: $dropdown-link-hover-bg !important;
             }
             &.o-danger {
-                    background-color: var(--mail-DiscussActions-dangerBgColor, rgba($danger, .75)) !important;
+                    background-color: var(--mail-ActionList-dangerBgColor, rgba($danger, .75)) !important;
                     color: white !important;
             }
             &.o-success {
-                    background-color: var(--mail-DiscussActions-successBgColor, rgba($success, .6)) !important;
+                    background-color: var(--mail-ActionList-successBgColor, rgba($success, .6)) !important;
                     color: white !important;
             }
             z-index: 2 !important;

@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="mail.DiscussActions">
-    <div class="o-mail-DiscussActions flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': props.inline,'flex-column': !props.inline }">
+<t t-name="mail.ActionList">
+    <div class="o-mail-ActionList flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': props.inline,'flex-column': !props.inline }">
         <t t-set="groupAttClass" t-value="{ 'flex-column w-100': !props.inline, 'o-inline': props.inline, 'o-rounded-bubble': props.inline and !props.odooControlPanelSwitchStyle, 'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle }"/>
-        <span t-if="props.quick?.length" class="o-mail-DiscussActions-group btn-group" t-att-class="groupAttClass">
+        <span t-if="props.quick?.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
             <t t-set="groupBefore" t-value="true"/>
-            <t t-foreach="props.quick" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+            <t t-foreach="props.quick" t-as="action" t-key="action.id" t-call="mail.ActionList.action">
                 <t t-set="action" t-value="action"/>
                 <t t-set="groupSize" t-value="props.quick.length"/>
             </t>
         </span>
         <t t-else="" t-set="groupBefore" t-value="false"/>
-        <t t-if="groupBefore" t-call="mail.DiscussActions.groupSeparator"/>
-        <span t-if="props.other?.length" class="o-mail-DiscussActions-group btn-group" t-att-class="groupAttClass">
+        <t t-if="groupBefore" t-call="mail.ActionList.groupSeparator"/>
+        <span t-if="props.other?.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
             <t t-set="groupBefore" t-value="true"/>
-            <t t-foreach="props.other" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+            <t t-foreach="props.other" t-as="action" t-key="action.id" t-call="mail.ActionList.action">
                 <t t-set="action" t-value="action"/>
                 <t t-set="groupSize" t-value="props.other.length"/>
             </t>
         </span>
         <t t-else="" t-set="groupBefore" t-value="false"/>
-        <t t-if="groupBefore" t-call="mail.DiscussActions.groupSeparator"/>
+        <t t-if="groupBefore" t-call="mail.ActionList.groupSeparator"/>
         <t t-if="props.inline" t-set="group" t-value="(props.group ?? []).slice().reverse()"/>
         <t t-else="" t-set="group" t-value="(props.group ?? [])"/>
         <t t-foreach="group" t-as="group" t-key="group_index">
-            <span t-if="group.length" class="o-mail-DiscussActions-group btn-group" t-att-class="groupAttClass">
-                <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.DiscussActions.action">
+            <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
+                <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.ActionList.action">
                     <t t-set="action" t-value="action"/>
                     <t t-set="groupSize" t-value="group.length"/>
                 </t>
             </span>
-            <t t-if="!group_last" t-call="mail.DiscussActions.groupSeparator"/>
+            <t t-if="!group_last" t-call="mail.ActionList.groupSeparator"/>
         </t>
     </div>
 </t>
 
-<t t-name="mail.DiscussActions.groupSeparator">
+<t t-name="mail.ActionList.groupSeparator">
     <span t-if="props.inline" class="text-muted align-self-stretch" t-att-class="{ 'ms-2 me-1': env.inDiscussApp }"/>
     <hr t-else="" class="mx-2 my-1 o-rounded-bubble"/>
 </t>
 
-<t t-name="mail.DiscussActions.action">
+<t t-name="mail.ActionList.action">
     <t t-if="action.dropdown">
         <Dropdown menuClass="(action.dropdown.menuClass || ' ') + ' o-discuss-dropdownMenu'">
-            <t t-call="mail.DiscussActions.actionMain"/>
+            <t t-call="mail.ActionList.actionMain"/>
             <t t-set-slot="content">
                 <t t-call="{{ action.dropdown.template }}">
                     <t t-set="templateParams" t-value="action.dropdown.templateParams?.(this)"/>
@@ -52,10 +52,10 @@
             </t>
         </Dropdown>
     </t>
-    <t t-else="" t-call="mail.DiscussActions.actionMain"/>
+    <t t-else="" t-call="mail.ActionList.actionMain"/>
 </t>
 
-<t t-name="mail.DiscussActions.actionMain">
+<t t-name="mail.ActionList.actionMain">
     <t t-set="btnClass" t-value="Object.entries({
         'btn btn-secondary m-0 btn-group-item': true,
         'o-first': action_first,
@@ -77,19 +77,19 @@
     }).filter(([_, val]) => val).map(([key, _]) => key).join(' ')"/>
     <t t-set="attrs" t-value="{ 'disabled': action.disabledCondition, 'title': action.name, 'name': action.id }"/>
     <DropdownItem t-if="props.dropdown" class="btnClass + ' d-flex align-items-center gap-1'" tag="'button'" onSelected="(ev) => action.onSelected(ev)">        
-        <t t-call="mail.DiscussActions.actionContent"/>
+        <t t-call="mail.ActionList.actionContent"/>
     </DropdownItem>
     <button t-else="" t-att-class="btnClass" t-att="attrs" t-on-click="(ev) => action.onSelected(ev)">
-        <t t-call="mail.DiscussActions.actionContent"/>
+        <t t-call="mail.ActionList.actionContent"/>
     </button>
 </t>
 
-<t t-name="mail.DiscussActions.actionContent">
+<t t-name="mail.ActionList.actionContent">
     <t t-if="action.icon?.template" t-call="{{ action.icon.template }}">
         <t t-set="templateParams" t-value="action.icon.params"/>
     </t>
     <i t-elif="props.inline and action.iconLarge" t-attf-class="{{ action.iconLarge }}" class="fa-fw"/><i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'o-fs-small': props.dropdown }" class="fa-fw"/><span t-elif="action.name" t-esc="action.name"/>
-    <span t-if="!props.inline" class="o-mail-DiscussActions-actionLabel fw-bold mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
+    <span t-if="!props.inline" class="o-mail-ActionList-actionLabel fw-bold mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
 </t>
 
 </templates>
