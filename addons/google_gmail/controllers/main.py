@@ -53,6 +53,20 @@ class GoogleGmailController(http.Controller):
 
         return self._check_email_and_redirect_to_gmail_record(access_token, expiration, refresh_token, record_sudo)
 
+    @http.route('/google_gmail/iap_confirm', type='http', auth='user')
+    def google_gmail_iap_callback(self, model, rec_id, csrf_token, access_token, refresh_token, expiration):
+        """Receive back the refresh token and access token from IAP.
+
+        The authentication process with IAP is done in 4 steps;
+        1. User database make a request to `<IAP>/api/mail_oauth/1/gmail`
+        2. User browser is redirected to the URL we received from IAP
+        3. User browser is redirected to `<IAP>/api/mail_oauth/1/gmail_callback`
+           with the authorization_code
+        4. User browser is redirected to `<DB>/google_gmail/iap_confirm`
+        """
+        record = self._get_gmail_record(model, rec_id, csrf_token)
+        return self._check_email_and_redirect_to_gmail_record(access_token, expiration, refresh_token, record)
+
     def _get_gmail_record(self, model_name, rec_id, csrf_token):
         """Return the record after checking the CSRF token."""
         model = request.env[model_name]
