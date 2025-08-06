@@ -12,7 +12,7 @@ patch(Store.prototype, {
     },
     onStarted() {
         super.onStarted(...arguments);
-        this.discuss = { activeTab: "main" };
+        this.discuss = { activeTab: "notification" };
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
             ({ detail: { channel, message, silent } }) => {
@@ -34,7 +34,7 @@ patch(storeService, {
         }
         store.discuss.isActive ||= discussActionIds.includes(router.current.action);
         services.ui.bus.addEventListener("resize", () => {
-            store.discuss.activeTab = "main";
+            store.discuss.activeTab = "notification";
             if (services.ui.isSmall && store.discuss.thread?.channel_type) {
                 store.discuss.activeTab = store.discuss.thread.channel_type;
             }
