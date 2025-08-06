@@ -18,6 +18,8 @@ export class AddPageConfirmDialog extends Component {
         close: Function,
         createPage: Function,
         name: String,
+        sectionsArch: String,
+        templateId: String,
     };
     static components = {
         Switch,
@@ -31,6 +33,8 @@ export class AddPageConfirmDialog extends Component {
         this.state = useState({
             addMenu: true,
             name: this.props.name,
+            sectionsArch: this.props.sectionsArch,
+            templateId: this.props.templateId,
         });
     }
 
@@ -39,7 +43,7 @@ export class AddPageConfirmDialog extends Component {
     }
 
     async addPage() {
-        await this.props.createPage(this.state.name, this.state.addMenu);
+        await this.props.createPage(this.state.sectionsArch, this.state.name, this.state.addMenu);
     }
 }
 
@@ -243,10 +247,11 @@ class AddPageTemplatePreview extends Component {
             return;
         }
         const wrapEl = this.iframeRef.el.contentDocument.getElementById("wrap").cloneNode(true);
+        const templateId = this.props.template.key;
         for (const previewEl of wrapEl.querySelectorAll(".o_new_page_snippet_preview, .s_dialog_preview")) {
             previewEl.remove();
         }
-        this.env.addPage(wrapEl.innerHTML, this.props.template.name && _t("Copy of %s", this.props.template.name));
+        this.env.addPage(wrapEl.innerHTML, this.props.template.name && _t("Copy of %s", this.props.template.name), templateId);
     }
 }
 
@@ -436,7 +441,7 @@ export class AddPageDialog extends Component {
         this.lastTabName = "";
 
         useSubEnv({
-            addPage: (sectionsArch, name) => this.addPage(sectionsArch, name),
+            addPage: (sectionsArch, name, templateId) => this.addPage(sectionsArch, name, templateId),
             getCssLinkEls: () => this.getCssLinkEls(),
         });
     }
@@ -445,7 +450,7 @@ export class AddPageDialog extends Component {
         this.lastTabName = name;
     }
 
-    async addPage(sectionsArch, name) {
+    async addPage(sectionsArch, name, templateId) {
         if (this.props.forcedURL) {
             // We also skip the possibility to choose to add in menu in that
             // case (e.g. in creation from 404 page button). The user can still
@@ -453,8 +458,10 @@ export class AddPageDialog extends Component {
             await this.createPage(sectionsArch, this.props.forcedURL, false, this.props.pageTitle);
         } else {
             this.dialogs.add(AddPageConfirmDialog, {
-                createPage: (...args) => this.createPage(sectionsArch, ...args),
+                createPage: (...args) => this.createPage(...args),
                 name: name || this.lastTabName,
+                sectionsArch: sectionsArch || "",
+                templateId: templateId || "",
             });
         }
     }
