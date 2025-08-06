@@ -344,6 +344,53 @@
                                                 <hr class="divider" />
                                             </div>
                                         </t>
+                                        <!--Winner
+                                card-->
+                                        <t t-set="monthly_winners" t-value="request.env['website.publication'].sudo().search([
+    ('publication_type', '=', 'winner'),
+    ('is_published', '=', True),
+    ('publish_date', '&gt;=', datetime.date.today().strftime('%Y-%m-01')),
+    ('publish_date', '&lt;=', (datetime.date.today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
+], limit=5, order='winner_score desc')"/>
+                                        <t t-if="monthly_winners">
+                                            <div class="winner-card">
+                                                <div class="winner-title">
+                                                    <h3>Ganadores del mes de <t t-esc="monthly_winners[0].winner_month"/></h3>
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy2.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                </div>
+                                                <div class="winner-body1">
+                                                    <t t-foreach="monthly_winners" t-as="winner_pub">
+                                                        <div class="person">
+                                                            <t t-if="winner_pub.employee_id">
+                                                                <img t-att-src="image_data_uri(winner_pub.employee_id.image_128)" class="miniuser" t-att-alt="winner_pub.employee_id.name"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" class="miniuser" />
+                                                            </t>
+                                                            <div class="personinfo">
+                                                                <h4>
+                                                                    <t t-esc="winner_pub.employee_id.name if winner_pub.employee_id else winner_pub.name"/>
+                                                                </h4>
+                                                                <p>
+                                                                    <t t-esc="winner_pub.winner_score"/> puntos
+                                                                </p>
+                                                                
+                                                                <p t-if="winner_pub.employee_id.department_id">
+                                                                    <t t-esc="winner_pub.employee_id.department_id.name"/>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
                                     </div>
                                     <!--This
                             is the 2do column-->
@@ -540,58 +587,6 @@
                                 </div>-->
                                     </div>
                                 </div>
-                                <!--Winner
-                                card-->
-                                <t t-set="monthly_winners" t-value="request.env['website.publication'].sudo().search([
-    ('publication_type', '=', 'winner'),
-    ('is_published', '=', True),
-    ('publish_date', '&gt;=', datetime.date.today().strftime('%Y-%m-01')),
-    ('publish_date', '&lt;=', (datetime.date.today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
-], limit=5, order='winner_score desc')"/>
-                                <t t-if="monthly_winners">
-                                    <div class="winner-card">
-                                        <div class="winner-title">
-                                            <h3>Ganadores del mes</h3>
-                                            <t t-if="user.company_id.id == 1">
-                                                <img src="/mi_website_ext/static/src/img/Win.svg" alt="Grupo" />
-                                            </t>
-                                            <t t-elif="user.company_id.id == 2">
-                                                <img src="/mi_website_ext/static/src/img/Win2.svg" alt="Grupo" />
-                                            </t>
-                                        </div>
-                                        <div class="winner-body1">
-                                            <t t-foreach="monthly_winners" t-as="winner_pub">
-                                                <div class="person">
-                                                    <t t-if="winner_pub.employee_id">
-                                                        <img t-att-src="image_data_uri(winner_pub.employee_id.image_128)" class="miniuser" t-att-alt="winner_pub.employee_id.name"/>
-                                                    </t>
-                                                    <t t-else="">
-                                                        <img src="/mi_website_ext/static/src/img/imagetester.jpg" class="miniuser" />
-                                                    </t>
-                                                    <div class="personinfo">
-                                                        <h4>
-                                                            <t t-esc="winner_pub.employee_id.name if winner_pub.employee_id else winner_pub.name"/>
-                                                        </h4>
-                                                        <p>
-                                                            <t t-esc="winner_pub.winner_score"/> puntos
-                                                        </p>
-                                                        <p t-if="winner_pub.employee_id.company_id">
-                                                            <t t-esc="winner_pub.employee_id.company_id.name"/>
-                                                        </p>
-                                                    </div>
-                                                    <t t-if="user.company_id.id == 1">
-                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy.svg'"
-                                        alt="Sol" />
-                                                    </t>
-                                                    <t t-elif="user.company_id.id == 2">
-                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy2.svg'"
-                                        alt="Sol" />
-                                                    </t>
-                                                </div>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </t>
                             </div>
                             <div class="sidebar_column">
                                 <aside class="custom-sidebar">

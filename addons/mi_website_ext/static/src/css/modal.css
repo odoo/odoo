@@ -17,10 +17,6 @@
   flex: 1 0 0;
 }
 
-.modal .modal-body {
-  overflow: inherit;
-}
-
 .btn-enfermedad-custom,
 .accept-button {
   color: #191816;
@@ -49,21 +45,3 @@
   color: red;
 }
 
-body.body-has-active-modal {
-  overflow: hidden !important;
-  padding-right: 0 !important;
-}
-
-body :not(.s_popup) > .modal .modal-body {
-  overflow: inherit !important;
-}
-
-@media (min-width: 576px) {
-  body :not(.s_popup) > .modal .modal-body {
-    overflow: inherit !important;
-  }
-
-  :not(.s_popup) > .modal .modal-body {
-    overflow: inherit !important;
-  }
-}

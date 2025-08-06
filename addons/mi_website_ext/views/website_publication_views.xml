@@ -50,6 +50,7 @@
                         <group>
                             <field name="employee_id" string="Empleado Festejado/Ganador"
                            invisible="publication_type not in ['winner']"/>
+                           <field name="winner_month" invisible="publication_type != 'winner'"/>
                             <field name="winner_score" invisible="publication_type != 'winner'"/>
                             <field name="activity_datetime" invisible="publication_type != 'activity'"/>
                         </group>

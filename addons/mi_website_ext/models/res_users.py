@@ -85,13 +85,7 @@ class Users(models.Model):
                 else: 
                     delta = vacation_start_date - today
                     days_remaining = delta.days
-                    
-                    if days_remaining == 0:
-                        user.x_days_until_vacation_display = "Hoy"
-                    elif days_remaining == 1:
-                        user.x_days_until_vacation_display = "1"
-                    else:
-                        user.x_days_until_vacation_display = str(days_remaining)
+                    user.x_days_until_vacation_display = str(days_remaining)
             else:
                     user.x_days_until_vacation_display = "N/A"
 

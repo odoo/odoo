@@ -22,7 +22,6 @@
         "web.assets_frontend": [
             "mi_website_ext/static/src/js/notify_button_handler.js",
             'mi_website_ext/static/src/js/manual_viewer.js',
-            'mi_website_ext/static/src/js/modal_scroll_fix.js',
             'mi_website_ext/static/src/js/back_button_refresh.js',
             "mi_website_ext/static/src/js/startup_popups.js",
             'mi_website_ext/static/src/js/policy_viewer.js',

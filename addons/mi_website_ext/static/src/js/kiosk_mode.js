@@ -31,12 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("No se encontró el botón de Guardar después de 5 segundos.");
             }
         }, 250); 
-
-        window.addEventListener("beforeunload", function (e) {
-          e.preventDefault();
-          e.returnValue = "";
-          return "";
-        });
         
         observer.disconnect();
       }
