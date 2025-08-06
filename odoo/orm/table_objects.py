@@ -146,6 +146,8 @@ class Index(TableObject):
             definition = self._index_definition(registry)
         else:
             definition = self._index_definition
+        if not definition:
+            return ''
         return f"{'UNIQUE ' if self.unique else ''}INDEX {definition}"
 
     def apply_to_database(self, model: BaseModel):
@@ -166,6 +168,9 @@ class Index(TableObject):
             definition_clause = self._index_definition(model.pool)
         else:
             definition_clause = self._index_definition
+        if not definition_clause:
+            # Don't create index with an empty definition
+            return
         model.pool.post_constraint(cr, lambda cr: sql.add_index(
             cr,
             conname,
