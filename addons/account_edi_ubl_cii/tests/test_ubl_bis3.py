@@ -672,3 +672,195 @@ class TestUblBis3(AccountTestInvoicingCommon):
     def test_beg_testcase01_minimal_invoice_new(self):
         self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         self.test_beg_testcase01_minimal_invoice()
+
+    def test_beg_testcase10_invoice_in_usd_and_eur_vat_21(self):
+        currency = self.setup_other_currency('USD', rounding=0.01, rates=[('2018-01-01', 3_272.22 / 2_931.68)])
+        tax_21 = self.percent_tax(21.0)
+        pay_term_30days = self.env['account.payment.term'].create({
+            'name': "30 Days",
+            'note': "30 days after invoice date",
+            'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
+        })
+
+        self._setup_beg_supplier(self.env.company.partner_id, vat='BE0000000196')
+        self._setup_beg_customer(self.partner_a)
+        partner = self.env['res.partner'].with_context(no_vat_validation=True).create({
+            'name': 'Hotel Local SPRL - Nom commercial',
+            'parent_id': self.partner_a.id,
+            'email': 'dupont@hotel-local.be',
+        })
+        shipping_partner = self.env['res.partner'].with_context(no_vat_validation=True).create({
+            'name': 'Delivery location name',
+            'parent_id': self.partner_a.id,
+        })
+
+        self.product_a.name = "Something"
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'partner_shipping_id': shipping_partner.id,
+            'invoice_date': '2018-04-09',
+            'delivery_date': '2018-04-01',
+            'invoice_payment_term_id': pay_term_30days.id,
+            'narration': 'Testcase 10',
+            'currency_id': currency.id,
+            'ref': 'YR127129',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 15_582,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.assertTrue(invoice.ubl_cii_xml_id)
+
+        # NOTE: / TODO: PartyLegalEntity/CompanyID is same as EndpointID in example (but we use VAT in our output)
+        adjusted_output_tree = self.with_applied_xpath(
+            self._with_applied_common_beg_xpath(etree.fromstring(invoice.ubl_cii_xml_id.raw)),
+            '''
+            <xpath expr="//*[local-name()='ID']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:ID>2019000010</cbc:ID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingSupplierParty']/*[local-name()='Party']/*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID' and text()='BE0000000196']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:CompanyID>0123456749</cbc:CompanyID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingCustomerParty']/*[local-name()='Party']/*[local-name()='Contact']/*[local-name()='Name' and text()='Hotel Local SPRL - Nom commercial']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:Name>Jean Dupont</cbc:Name>
+            </xpath>
+            <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='PaymentID' and text()='INV/2018/00001']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:PaymentID>Invoice 2019000010</cbc:PaymentID>
+            </xpath>
+            <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='InvoicedQuantity' and text()='1.0' and @unitCode='C62']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:InvoicedQuantity unitCode="ZZ">1.0</cbc:InvoicedQuantity>
+            </xpath>
+            <xpath expr="//*[local-name()='LegalMonetaryTotal']/*[local-name()='PrepaidAmount']" position="replace"/>
+            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Something']" position="replace"/>
+            '''
+        )
+
+        self.assertXmlTreeEqual(
+            adjusted_output_tree,
+            self._get_xml_tree_from_file('bis3_from_BEG/testcase10_invoice_in_usd_and_eur_vat_21'),
+        )
+
+    def test_beg_testcase10_invoice_in_usd_and_eur_vat_21_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_beg_testcase10_invoice_in_usd_and_eur_vat_21()
+
+    def test_beg_testcase11_invoice_in_usd_and_eur_vat_6_and_vat_21(self):
+        currency = self.setup_other_currency('USD', rounding=0.01, rates=[('2018-01-01', 3_278.22 / 2_937.08)])
+        tax_21 = self.percent_tax(21.0)
+        tax_6 = self.percent_tax(6.0)
+        pay_term_30days = self.env['account.payment.term'].create({
+            'name': "30 Days",
+            'note': "30 days after invoice date",
+            'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
+        })
+
+        self._setup_beg_supplier(self.env.company.partner_id, vat='BE0000000196')
+        self._setup_beg_customer(self.partner_a)
+        partner = self.env['res.partner'].with_context(no_vat_validation=True).create({
+            'name': 'Hotel Local SPRL - Nom commercial',
+            'parent_id': self.partner_a.id,
+            'email': 'dupont@hotel-local.be',
+        })
+        shipping_partner = self.env['res.partner'].with_context(no_vat_validation=True).create({
+            'name': 'Delivery location name',
+            'parent_id': self.partner_a.id,
+        })
+
+        self.product_a.name = "Something"
+        self.product_b.name = "Something else"
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'partner_shipping_id': shipping_partner.id,
+            'invoice_date': '2018-04-09',
+            'delivery_date': '2018-04-01',
+            'invoice_payment_term_id': pay_term_30days.id,
+            'narration': 'Testcase 11',
+            'currency_id': currency.id,
+            'ref': 'YR127129',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 15_582,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_6.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.assertTrue(invoice.ubl_cii_xml_id)
+
+        # NOTE: / TODO: PartyLegalEntity/CompanyID is same as EndpointID in example (but we use VAT in our output)
+        adjusted_output_tree = self.with_applied_xpath(
+            self._with_applied_common_beg_xpath(etree.fromstring(invoice.ubl_cii_xml_id.raw)),
+            '''
+            <xpath expr="//*[local-name()='ID']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:ID>2019000011</cbc:ID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingSupplierParty']/*[local-name()='Party']/*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID' and text()='BE0000000196']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:CompanyID>0123456749</cbc:CompanyID>
+            </xpath>
+            <xpath expr="//*[local-name()='AccountingCustomerParty']/*[local-name()='Party']/*[local-name()='Contact']/*[local-name()='Name' and text()='Hotel Local SPRL - Nom commercial']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:Name>Jean Dupont</cbc:Name>
+            </xpath>
+            <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='PaymentID' and text()='INV/2018/00001']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:PaymentID>Invoice 2019000011</cbc:PaymentID>
+            </xpath>
+            <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='InvoicedQuantity' and text()='1.0' and @unitCode='C62']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:InvoicedQuantity unitCode="ZZ">1.0</cbc:InvoicedQuantity>
+            </xpath>
+            <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='InvoicedQuantity' and text()='1.0' and @unitCode='DZN']" position="replace"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cbc:InvoicedQuantity unitCode="ZZ">1.0</cbc:InvoicedQuantity>
+            </xpath>
+            <xpath expr="//*[local-name()='LegalMonetaryTotal']/*[local-name()='PrepaidAmount']" position="replace"/>
+            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Something']" position="replace"/>
+            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Something else']" position="replace"/>
+            '''
+        )
+
+        self.assertXmlTreeEqual(
+            adjusted_output_tree,
+            self._get_xml_tree_from_file('bis3_from_BEG/testcase11_invoice_in_usd_and_eur_vat_6_and_vat_21'),
+        )
+
+    def test_beg_testcase11_invoice_in_usd_and_eur_vat_6_and_vat_21_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_beg_testcase11_invoice_in_usd_and_eur_vat_6_and_vat_21()
