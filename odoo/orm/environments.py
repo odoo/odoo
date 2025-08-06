@@ -9,11 +9,11 @@ import logging
 import pytz
 import typing
 import warnings
-from collections import defaultdict
+from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import contextmanager, suppress
+from contextlib import contextmanager
 from pprint import pformat
-from weakref import WeakSet
+from weakref import ref as weakref
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
@@ -28,6 +28,7 @@ from .utils import SUPERUSER_ID
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, MutableMapping
     from datetime import tzinfo
+    from weakref import ReferenceType
     from .identifiers import IdType, NewId
     from .types import BaseModel, Field
 
@@ -36,6 +37,7 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger('odoo.api')
 
 MAX_FIXPOINT_ITERATIONS = 10
+ENVS_SIZE = 20  # used as a reference size in a transaction's environments
 
 
 class Environment(Mapping[str, "BaseModel"]):
@@ -68,20 +70,16 @@ class Environment(Mapping[str, "BaseModel"]):
             transaction = cr.transaction = Transaction(Registry(cr.dbname))
 
         # if env already exists, return it
-        for env in transaction.envs:
-            if env.cr is cr and env.uid == uid and env.su == su and env.context == context:
-                return env
+        env = transaction.lookup_env(uid, context, su)
+        if env is not None:
+            return env
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
         self.cr, self.uid, self.su = cr, uid, su
         self.context = frozendict(context)
         self.transaction = transaction
-
-        transaction.envs.add(self)
-        # the default transaction's environment is the first one with a valid uid
-        if transaction.default_env is None and uid and isinstance(uid, int):
-            transaction.default_env = self
+        transaction.add_env(self)
         return self
 
     def __setattr__(self, name: str, value: typing.Any) -> None:
@@ -562,16 +560,18 @@ class Environment(Mapping[str, "BaseModel"]):
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
     __slots__ = (
-        '_Transaction__file_open_tmp_paths', 'access_read', 'cache',
-        'default_env', 'envs', 'field_data', 'field_data_patches', 'field_dirty',
+        '_Transaction__file_open_tmp_paths', '_recent_envs', '_weak_envs',
+        'access_read', 'cache', 'default_env',
+        'field_data', 'field_data_patches', 'field_dirty',
         'protected', 'registry', 'tocompute',
     )
 
     def __init__(self, registry: Registry):
         self.registry = registry
-        # weak OrderedSet of environments
-        self.envs = WeakSet[Environment]()
-        self.envs.data = OrderedSet()  # type: ignore[attr-defined]
+        # recently used environments (maximum 2 * ENVS_SIZE)
+        self._recent_envs: deque[Environment] = deque()
+        # all environments in order of creation (weak)
+        self._weak_envs: list[ReferenceType[Environment]] = []
         # default environment (for flushing)
         self.default_env: Environment | None = None
 
@@ -598,6 +598,86 @@ class Transaction:
         self.access_read = defaultdict[tuple, defaultdict[str, dict["IdType", bool]]](lambda: defaultdict(dict))
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
         self.__file_open_tmp_paths = []  # type: ignore # noqa: PLE0237
+
+    @property
+    def envs(self):
+        for ref in self._weak_envs:
+            if env := ref():
+                yield env
+
+    def lookup_env(self, uid: int, context: dict, su: bool) -> Environment | None:
+        """ Return the environment that matches the given parameters, or ``None`` if not found. """
+        recent_envs = self._recent_envs
+        # Look up in recently accessed environments first
+        for env_index, env in enumerate(recent_envs):
+            if env.uid == uid and env.su == su and env.context == context:
+                # move env first for faster access next time
+                if env_index > 0:
+                    del recent_envs[env_index]
+                    recent_envs.appendleft(env)
+                return env
+
+        if len(self._weak_envs) <= len(recent_envs):
+            return None
+
+        # Check only the oldest environments, as they were probably created by
+        # the original transaction, and we don't want to scan too many of them.
+        for env_index, ref in enumerate(self._weak_envs):
+            env = ref()
+            if env is None:
+                continue
+            if env.uid == uid and env.su == su and env.context == context:
+                # add to recent envs for faster access next time
+                recent_envs.appendleft(env)
+                if len(recent_envs) > ENVS_SIZE * 2:
+                    self.compactify_envs()
+                return env
+            if env_index > ENVS_SIZE:
+                break
+
+        return None
+
+    def add_env(self, env: Environment):
+        """ Add ``env`` to the environments known by the transaction. """
+        self._recent_envs.appendleft(env)
+        self._weak_envs.append(weakref(env))
+        # the default transaction's environment is the first one with a valid uid
+        if self.default_env is None and env.uid and isinstance(env.uid, int):
+            self.default_env = env
+        # avoid filling the system with environments
+        if len(self._recent_envs) > ENVS_SIZE * 2:
+            self.compactify_envs()
+
+    def compactify_envs(self) -> None:
+        """ Deallocate environments to which nobody has a reference. """
+        # Start by moving environments from the environment to a weak set.
+        # Here cpython will start freeing environments that are only weakly
+        # referenced because of reference counting.
+        while len(self._recent_envs) > ENVS_SIZE:
+            self._recent_envs.pop()
+
+        ref_list = self._weak_envs
+        if len(ref_list) <= ENVS_SIZE:
+            return
+
+        ref_list = [ref for ref in ref_list if ref() is not None]  # compactify
+
+        # The following are heuristics to reduce the number of environments.
+        # We call these only when the execution time can be bounded and give up
+        # if the code references too many environments.
+        if ENVS_SIZE * 3 <= len(ref_list) < ENVS_SIZE * 4:
+            # Force a small GC run to remove environments that are in a
+            # reference cycle. This includes, among others, the attributes
+            # env.company and env.companies (that refers to env) and env.user
+            # (that refers to env(su=True)).
+            import gc  # noqa: PLC0415
+            gc.collect(0)
+            ref_list = [ref for ref in ref_list if ref() is not None]  # compactify
+
+        if len(ref_list) > ENVS_SIZE * 10:
+            _logger.debug("Creating too many environments: %d", len(ref_list))
+        # Move back the environments to the queue
+        self._weak_envs = ref_list
 
     def flush(self) -> None:
         """ Flush pending computations and updates in the transaction. """
@@ -626,6 +706,7 @@ class Transaction:
         self.field_data_patches.clear()
         self.field_dirty.clear()
         self.tocompute.clear()
+        self.compactify_envs()
         for env in self.envs:
             env.cr.cache.clear()
             break  # all envs of the transaction share the same cursor
@@ -639,6 +720,8 @@ class Transaction:
         for env in self.envs:
             reset_cached_properties(env)
         self.access_read.clear()
+        # make all environments weak
+        self._recent_envs.clear()
         self.clear()
 
     def invalidate_field_data(self) -> None:
@@ -651,8 +734,7 @@ class Transaction:
         self.field_data.clear()
         # reset Field._get_cache()
         for env in self.envs:
-            with suppress(AttributeError):
-                del env._field_cache_memo
+            env.__dict__.pop('_field_cache_memo', None)
 
 
 # sentinel value for optional parameters
