@@ -907,3 +907,31 @@ class TestLotValuation(TestStockValuationCommon):
                 with picking_form.move_ids_without_package.edit(0) as mv:
                     mv.quantity = 5.0
         self.assertEqual(in_move.quantity, 2)
+
+    def test_lot_valuated_product_forbid_quantity_without_lots_update(self):
+        in_move = self._make_in_move(self.product1, 2, 2, create_picking=True, lot_ids=[self.lot1])
+        with self.assertRaises(UserError):
+            # This action will try to update the quants by removing the lot
+            in_move.move_line_ids.lot_id = False
+        with self.assertRaises(UserError):
+            # This action will try to update the quants by removing the lot
+            self.env["stock.move.line"].create({
+                'move_id': in_move.id,
+                'quantity': 2,
+                'product_id': self.product1.id,
+            })
+
+    def test_lot_valuated_product_consumed_on_quant_without_lot(self):
+        out_move = self._make_out_move(self.product1, 2, 2, validate_move=False)
+        self.assertEqual(out_move.state, "assigned")
+
+        out_move.move_line_ids.lot_id = self.lot1.id  # Assigning a lot on the move line like this
+        out_move.picked = True
+        out_move._action_done()
+
+        quant = self.env["stock.quant"].search(
+            [("product_id", "=", self.product1.id), ("location_id.usage", "=", "internal"), ("quantity", "!=", 0)]
+        )
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.quantity, -2)
+        self.assertEqual(quant.lot_id.id, self.lot1.id)

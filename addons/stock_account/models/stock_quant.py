@@ -3,7 +3,8 @@
 
 import itertools
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_is_zero
+from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_compare, float_is_zero
 from odoo.tools.misc import groupby
 
 
@@ -87,3 +88,29 @@ class StockQuant(models.Model):
         res = super()._get_inventory_fields_write()
         res += ['accounting_date']
         return res
+
+    @api.model
+    def _check_lot_valuated(self, new_quantity, current_quantity, location, product, lot):
+        if (
+            new_quantity is not None
+            and not lot
+            and product.lot_valuated
+            and location._should_be_valued()
+            and not float_is_zero(new_quantity, precision_rounding=product.uom_id.rounding)
+            and float_compare(current_quantity, new_quantity, precision_rounding=product.uom_id.rounding) != 0
+        ):
+            raise UserError(_("The action you're performing will create a valued quantity without a Lot/Serial Number on the lot valuated product %s."))
+
+    def write(self, vals):
+        for quant in self:
+            self._check_lot_valuated(vals.get('quantity'), 0, quant.location_id, quant.product_id, quant.lot_id)
+        return super().write(vals)
+
+    @api.model_create_multi
+    def create(self, val_list):
+        for vals in val_list:
+            product = self.env["product.product"].browse(vals["product_id"])
+            location = self.env["stock.location"].browse(vals["location_id"])
+            lot = self.env["stock.location"].browse(vals["lot_id"])
+            self._check_lot_valuated(vals.get('quantity'), 0, location, product, lot)
+        return super().create(val_list)
