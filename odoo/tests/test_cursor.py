@@ -92,6 +92,10 @@ class TestCursor(BaseCursor):
                     _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
                 self._lock.release()
 
+    @property
+    def closed(self):
+        return self._closed
+
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
         self.flush()

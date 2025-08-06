@@ -414,7 +414,7 @@ def dispatch_rpc(service_name, method, params):
 
 
 def get_session_max_inactivity(env):
-    if not env or env.cr._closed:
+    if not env or env.cr.closed:
         return SESSION_LIFETIME
 
     ICP = env['ir.config_parameter'].sudo()
@@ -1974,7 +1974,7 @@ class Request:
         data = json.dumps(data, ensure_ascii=False, default=json_default)
 
         headers = werkzeug.datastructures.Headers(headers)
-        headers['Content-Length'] = len(data)
+        headers['Content-Length'] = str(len(data))
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/json; charset=utf-8'
 
@@ -2296,7 +2296,7 @@ class Dispatcher(ABC):
             ))
 
         if cors and self.request.httprequest.method == 'OPTIONS':
-            set_header('Access-Control-Max-Age', CORS_MAX_AGE)
+            set_header('Access-Control-Max-Age', str(CORS_MAX_AGE))
             set_header('Access-Control-Allow-Headers',
                        'Origin, X-Requested-With, Content-Type, Accept, Authorization')
             werkzeug.exceptions.abort(Response(status=204))
@@ -2389,7 +2389,7 @@ class HttpDispatcher(Dispatcher):
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
             if was_connected:
                 root.session_store.rotate(session, self.request.env)
-                response.set_cookie('session_id', session.sid, max_age=get_session_max_inactivity(self.env), httponly=True)
+                response.set_cookie('session_id', session.sid, max_age=get_session_max_inactivity(self.request.env), httponly=True)
             return response
 
         if isinstance(exc, HTTPException):
