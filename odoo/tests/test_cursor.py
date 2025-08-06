@@ -97,7 +97,7 @@ class TestCursor(BaseCursor):
 
     @property
     def closed(self) -> bool:
-        return self._closed or self._cursor.closed
+        return self._closed
 
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
