@@ -255,7 +255,7 @@ export const websiteService = {
                 action.doAction("website.website_preview", {
                     clearBreadcrumbs: true,
                     props: {
-                        websiteId: websiteId || currentWebsiteId,
+                        websiteId: websiteId || currentWebsiteId || false,
                         path: path || (contentWindow && contentWindow.location.href) || '/',
                         enableEditor: edition,
                         editTranslations: translation,
