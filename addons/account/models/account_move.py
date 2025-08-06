@@ -1266,7 +1266,7 @@ class AccountMove(models.Model):
         AccountTax = self.env['account.tax']
         for invoice in self.with_context(bin_size=False):
             is_draft = invoice.id != invoice._origin.id
-            invoice.needed_terms = {}
+            needed_terms_dict = {}
             invoice.needed_terms_dirty = True
             sign = 1 if invoice.is_inbound(include_receipts=True) else -1
             if invoice.is_invoice(True) and invoice.invoice_line_ids:
@@ -1315,13 +1315,13 @@ class AccountMove(models.Model):
                             'discount_balance': invoice_payment_terms.get('discount_balance') or 0.0,
                             'discount_amount_currency': invoice_payment_terms.get('discount_amount_currency') or 0.0,
                         }
-                        if key not in invoice.needed_terms:
-                            invoice.needed_terms[key] = values
+                        if key not in needed_terms_dict:
+                            needed_terms_dict[key] = values
                         else:
-                            invoice.needed_terms[key]['balance'] += values['balance']
-                            invoice.needed_terms[key]['amount_currency'] += values['amount_currency']
+                            needed_terms_dict[key]['balance'] += values['balance']
+                            needed_terms_dict[key]['amount_currency'] += values['amount_currency']
                 else:
-                    invoice.needed_terms[frozendict({
+                    needed_terms_dict[frozendict({
                         'move_id': invoice.id,
                         'date_maturity': fields.Date.to_date(invoice.invoice_date_due),
                         'discount_date': False,
@@ -1331,6 +1331,9 @@ class AccountMove(models.Model):
                         'balance': invoice.amount_total_signed,
                         'amount_currency': invoice.amount_total_in_currency_signed,
                     }
+
+            # Assign the dictionary to the Binary field
+            invoice.write({'needed_terms': needed_terms_dict})
 
     def _compute_payments_widget_to_reconcile_info(self):
         for move in self:
