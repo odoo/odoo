@@ -331,9 +331,10 @@ class ResUsers(models.Model):
         if not request:
             return values
 
-        city = request.geoip.get('city') or False
-        region = request.geoip.get('region_name') or False
-        country = request.geoip.get('country') or False
+        city = request.geoip.city.name or False
+        subdivisons = request.geoip.subdivisions
+        region = subdivisons[0].iso_code if subdivisons and subdivisons[0].iso_code else False
+        country = request.geoip.country_name or False
         if country:
             if region and city:
                 values['location_address'] = _("Near %(city)s, %(region)s, %(country)s", city=city, region=region, country=country)
