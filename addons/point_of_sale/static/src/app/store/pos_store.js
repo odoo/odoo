@@ -890,6 +890,7 @@ export class PosStore extends Reactive {
         }
 
         let to_merge_orderline;
+        let lineToReturn = line;
         for (const curLine of order.lines) {
             if (curLine.id !== line.id) {
                 if (curLine.can_be_merged_with(line) && merge !== false) {
@@ -901,6 +902,7 @@ export class PosStore extends Reactive {
         if (to_merge_orderline) {
             to_merge_orderline.merge(line);
             line.delete();
+            lineToReturn = to_merge_orderline;
             this.selectOrderLine(order, to_merge_orderline);
         } else if (!selectedOrderline) {
             this.selectOrderLine(order, order.get_last_orderline());
@@ -931,7 +933,7 @@ export class PosStore extends Reactive {
         }, 3000);
 
         // FIXME: If merged with another line, this returned object is useless.
-        return line;
+        return lineToReturn;
     }
 
     create_printer(config) {

@@ -738,3 +738,27 @@ class TestCalendarTours(HttpCaseWithUserDemo):
 
         duration = self.env['calendar.event'].with_company(second_company).get_default_duration()
         self.assertEqual(duration, 8, "Custom duration is 8 hours in the other company")
+
+    def test_calendar_res_id_fallback_when_res_id_is_0(self):
+        user_admin = self.env.ref('base.user_admin')
+        context_defaults = {
+            'default_res_model': 'res.partner',
+            'default_res_model_id': self.env['ir.model']._get('res.partner').id,
+            'default_res_id': self.user_demo.id,
+        }
+
+        self.env['mail.activity.type'].create({
+            'name': 'Meeting',
+            'category': 'meeting'
+        })
+
+        event = self.env['calendar.event'].with_user(user_admin).with_context(**context_defaults).create({
+            'name': 'All Day',
+            'start': "2018-10-16 00:00:00",
+            'start_date': "2018-10-16",
+            'stop': "2018-10-18 00:00:00",
+            'stop_date': "2018-10-18",
+            'allday': True,
+            'res_id': 0,
+        })
+        self.assertTrue(event.res_id)
