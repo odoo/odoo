@@ -74,6 +74,8 @@ class IrConfig_Parameter(models.Model):
     #   * 'mail.use_twilio_rtc_servers', 'mail.sfu_server_url' and 'mail.
     #     sfu_server_key': rtc server usage and configuration;
     #   * 'discuss.tenor_api_key': used for gif fetch service;
+    #   * 'mail.server.outlook.iap.endpoint': URL of the IAP endpoint
+    #     for outlook oauth server
     _inherit = 'ir.config_parameter'
 
     @api.model

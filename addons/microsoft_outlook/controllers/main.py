@@ -52,6 +52,20 @@ class MicrosoftOutlookController(http.Controller):
 
         return self._check_email_and_redirect_to_outlook_record(access_token, expiration, refresh_token, record_sudo)
 
+    @http.route('/microsoft_outlook/iap_confirm', type='http', auth='user')
+    def microsoft_outlook_iap_callback(self, model, rec_id, csrf_token, access_token, refresh_token, expiration):
+        """Receive back the refresh token and access token from IAP.
+
+        The authentication process with IAP is done in 4 steps;
+        1. User database make a request to `<IAP>/api/mail_oauth/1/outlook`
+        2. User browser is redirected to the URL we received from IAP
+        3. User browser is redirected to `<IAP>/api/mail_oauth/1/outlook_callback`
+           with the authorization_code
+        4. User browser is redirected to `<DB>/microsoft_outlook/iap_confirm`
+        """
+        record = self._get_outlook_record(model, rec_id, csrf_token)
+        return self._check_email_and_redirect_to_outlook_record(access_token, expiration, refresh_token, record)
+
     def _get_outlook_record(self, model_name, rec_id, csrf_token):
         """Return the given record after checking the CSRF token."""
         model = request.env[model_name]
