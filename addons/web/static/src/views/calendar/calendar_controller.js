@@ -242,11 +242,17 @@ export class CalendarController extends Component {
         this.callbackRecorder = new CallbackRecorder();
         this._baseRendererProps.callbackRecorder = this.callbackRecorder;
         this._baseRendererProps.onSquareSelection = (selectedCells) => {
-            this.selectedCells = selectedCells;
-            this.multiSelectionButtonsReactive.visible = true;
-            this.multiSelectionButtonsReactive.nbSelected = this.getSelectedRecordIds(
-                this.selectedCells
-            ).length;
+            if (selectedCells.length) {
+                this.selectedCells = selectedCells;
+                this.multiSelectionButtonsReactive.visible = true;
+                this.multiSelectionButtonsReactive.nbSelected = this.getSelectedRecordIds(
+                    this.selectedCells
+                ).length;
+            } else {
+                this.selectedCells = null;
+                this.multiSelectionButtonsReactive.visible = false;
+                this.multiSelectionButtonsReactive.nbSelected = 0;
+            }
         };
         this._baseRendererProps.cleanSquareSelection = this.cleanSquareSelection.bind(this);
 

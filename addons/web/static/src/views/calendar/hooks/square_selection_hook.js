@@ -42,15 +42,18 @@ function getResult(ctx) {
         }
     }
     const selector = selectorParts.join(",");
-    return { selectedCells: [...ref.el.querySelectorAll(selector)] };
+    return { selectedCells: [...ref.el.querySelectorAll(selector)].filter(ctx.cellIsSelectable) };
 }
 
 // @ts-ignore
 const useBlockSelection = makeDraggableHook({
     name: "useBlockSelection",
-    acceptedParams: {},
-    onComputeParams({ ctx }) {
+    acceptedParams: {
+        cellIsSelectable: [Function],
+    },
+    onComputeParams({ ctx, params }) {
         ctx.followCursor = false;
+        ctx.cellIsSelectable = params.cellIsSelectable;
     },
     onWillStartDrag({ addClass, ctx }) {
         const { current, ref } = ctx;
@@ -80,7 +83,8 @@ const useBlockSelection = makeDraggableHook({
     },
 });
 
-export function useSquareSelection() {
+export function useSquareSelection(params = {}) {
+    const cellIsSelectable = params.cellIsSelectable || (() => true);
     const component = useComponent();
     const ref = useRef("fullCalendar");
     const highlightClass = "o-highlight";
@@ -104,6 +108,7 @@ export function useSquareSelection() {
         elements: CELL_SELECTOR,
         ref,
         edgeScrolling: { speed: 40, threshold: 150 },
+        cellIsSelectable,
         onWillStartDrag: removeHighlight,
         onDragStart: highlight,
         onDrag: highlight,
@@ -131,7 +136,7 @@ export function useSquareSelection() {
         }
         const coord = getCoordinates(cell);
         const current = { initCoord: coord, coord };
-        const { selectedCells } = getResult({ current, ref });
+        const { selectedCells } = getResult({ current, ref, cellIsSelectable });
         highlight({ selectedCells });
         component.props.onSquareSelection(selectedCells);
     };

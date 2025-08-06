@@ -52,6 +52,7 @@ export class CalendarCommonRenderer extends Component {
     static template = "web.CalendarCommonRenderer";
     static eventTemplate = "web.CalendarCommonRenderer.event";
     static headerTemplate = "web.CalendarCommonRendererHeader";
+    static cellIsSelectable = (cell) => !cell.classList.contains("o_calendar_disabled");
     static props = {
         model: Object,
         isWeekendVisible: { type: Boolean, optional: true },
@@ -85,7 +86,9 @@ export class CalendarCommonRenderer extends Component {
             },
             () => [this.fc.el]
         );
-        useSquareSelection();
+        useSquareSelection({
+            cellIsSelectable: this.constructor.cellIsSelectable,
+        });
     }
 
     get options() {
