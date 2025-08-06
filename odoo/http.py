@@ -483,6 +483,8 @@ class Stream:
         # Remove class methods from the instances
         self.from_path = self.from_attachment = self.from_binary_field = None
         self.__dict__.update(kwargs)
+        assert self.type in ('data', 'path', 'url'), f"Invalid type {self.type!r} in Stream"
+        assert getattr(self, self.type, None) is not None, f"Missing attribute {self.type!r} to Stream"
 
     @classmethod
     def from_path(cls, path, filter_ext=('',), public=False):
@@ -559,9 +561,6 @@ class Stream:
             :func:`odoo.tools._vendor.send_file.send_file` instead of
             the stream sensitive values. Discouraged.
         """
-        assert self.type in ('url', 'data', 'path'), "Invalid type: {self.type!r}, should be 'url', 'data' or 'path'."
-        assert getattr(self, self.type) is not None, "There is nothing to stream, missing {self.type!r} attribute."
-
         if self.type == 'url':
             if self.max_age is not None:
                 res = request.redirect(self.url, code=302, local=False)
