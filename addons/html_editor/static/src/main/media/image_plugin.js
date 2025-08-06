@@ -224,16 +224,15 @@ export class ImagePlugin extends Plugin {
 
     setup() {
         this.imageSize = reactive({ displayName: "Default" });
+        this.addDomListener(this.editable, "pointerdown", (e) => {
+            const selection = this.dependencies.selection.getEditableSelection();
+            if (selection.isCollapsed && e.target.tagName === "IMG") {
+                this.setSelectionAroundImage(e.target);
+            }
+        });
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
-                const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
-                this.dependencies.selection.setSelection({
-                    anchorNode,
-                    anchorOffset,
-                    focusNode,
-                    focusOffset,
-                });
-                this.dependencies.selection.focusEditable();
+                this.setSelectionAroundImage(e.target);
             }
         });
         this.fileViewer = createFileViewer();
@@ -413,5 +412,16 @@ export class ImagePlugin extends Plugin {
 
     updateImageParams() {
         this.imageSize.displayName = this.imageSizeName;
+    }
+
+    setSelectionAroundImage(img) {
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(img);
+        this.dependencies.selection.setSelection({
+            anchorNode,
+            anchorOffset,
+            focusNode,
+            focusOffset,
+        });
+        this.dependencies.selection.focusEditable();
     }
 }
