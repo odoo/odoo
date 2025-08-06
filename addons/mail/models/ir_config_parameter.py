@@ -76,6 +76,9 @@ class IrConfig_Parameter(models.Model):
     #   * 'discuss.tenor_api_key': used for gif fetch service;
     #   * 'mail.server.outlook.iap.endpoint': URL of the IAP endpoint
     #     for outlook oauth server
+    #   * 'mail.server.gmail.iap.endpoint': URL of the IAP endpoint
+    #     for gmail oauth server
+
     _inherit = 'ir.config_parameter'
 
     @api.model
