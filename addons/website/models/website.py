@@ -10,7 +10,6 @@ import logging
 import re
 import requests
 import threading
-import uuid
 
 from collections import defaultdict
 from lxml import etree, html
@@ -29,7 +28,7 @@ from odoo.modules.module import get_manifest
 from odoo.tools import SQL, Query
 from odoo.tools.image import image_process
 from odoo.tools.sql import escape_psql
-from odoo.tools.translate import _, xml_translate
+from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
 
@@ -873,136 +872,29 @@ class Website(models.Model):
         industry = kwargs['industry_name']
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
-        snippets_cache = {}
-        translated_content = {}
-        hashes_to_tags_and_attributes = {}
-        html_string_to_wrapping_tags = {}
-
-        def _compute_placeholder(html_string):
-            """
-            Transforms an HTML string by converting specific HTML tags into a
-            custom pseudo-markdown format.
-
-            The function wraps the input `html_string` with a root `<div>`
-            element, parses it into a tree, and iterates through the HTML
-            elements. It replaces recognized HTML tags with a custom pseudo-
-            markdown format like `#[text](hash_value)`, where `text` is the
-            content of the tag and `hash_value` is the key to fetch the tag name
-            and the attributes.
-
-            Args:
-                html_string (str): The input HTML string to be transformed.
-
-            Returns:
-                str: The transformed string with HTML tags replaced by
-                     pseudo-markdown.
-            """
-            tree = etree.fromstring(f'<div>{html_string}</div>')
-
-            # Identifying one or more wrapping tags that enclose the entire HTML
-            # content e.g., <strong><em>text ...</em></strong>. Store them to
-            # reapply them after processing with chatGPT.
-            wrapping_html = []
-            for element in tree.iter():
-                wrapping_html.append({"tag": element.tag, "attr": element.attrib})
-                if len(element) != 1 \
-                        or (element.text and element.text.strip()) \
-                        or (element[-1].tail and element[-1].tail.strip()):
-                    break
-            # Remove the wrapping element used for parsing into a tree
-            wrapping_html = wrapping_html[1:]
-
-            # Loop through all nodes, ignoring wrapping ones, to mark them with
-            # a pseudo-markdown identifier if they are leaf nodes.
-            nb_tags_to_skip = len(wrapping_html) + 1
-            for cursor, element in enumerate(tree.iter()):
-                if cursor < nb_tags_to_skip or len(element) > 0:
-                    continue
-
-                # Generate a unique hash based on the element's text, tag
-                # and attributes.
-                attrib_string = ','.join(f'{key}={value}' for key, value in sorted(element.attrib.items()))
-                combined_string = f'{element.text or ""}-{element.tag}-{attrib_string}'
-                unique_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, combined_string)
-                hash_value = unique_uuid.hex[:12]
-
-                hashes_to_tags_and_attributes[hash_value] = {"tag": element.tag, "attr": element.attrib}
-                element.text = f'#[{element.text or "0"}]({hash_value})'
-
-            res = tree.xpath('string()')
-
-            # If there is at least one wrapping tag, save the way it needs to
-            # be re-applied.
-            if wrapping_html:
-                tags = [
-                    (
-                        f'<{tag}{" " if attrs else ""}{attrs}>',
-                        f'</{tag}>'
-                    )
-                    for el in wrapping_html
-                    for tag, attrs in [(el["tag"], " ".join([f'{k}="{v}"' for k, v in el["attr"].items()]))]
-                ]
-                opening_tags, closing_tags = zip(*tags)
-                html_string_to_wrapping_tags[html_string] = f'{"".join(opening_tags)}$0{"".join(closing_tags[::-1])}'
-
-            # Note that `get_text_content` here is still needed despite the use
-            # of `string()` in the XPath expression above. Indeed, it allows to
-            # strip newlines and double-spaces, which would confuse IAP (without
-            # this, it does not perform any replacement for some reason).
-            return xml_translate.get_text_content(res.strip())
-
-        def _render_snippet(key):
-            # Using this avoids rendering the same snippet multiple times
-            data = snippets_cache.get(key)
-            if data:
-                return data
-
-            render = IrQweb._render(key, cta_data)
-
-            terms = []
-            xml_translate(terms.append, render)
-            placeholders = [_compute_placeholder(term) for term in terms]
-
-            if text_must_be_translated_for_openai:
-                # Check if terms are translated.
-                translation_dictionary = self.env['website.page']._fields['arch_db'].get_translation_dictionary(
-                    str(IrQweb._render(key, cta_data, lang="en_US")),
-                    {text_generation_target_lang: str(render)},
-                )
-                # Remove all numeric keys.
-                translation_dictionary = {
-                    k: v
-                    for k, v in translation_dictionary.items()
-                    if not xml_translate.get_text_content(k).strip().isnumeric()
-                }
-                for from_lang_term, to_lang_terms in translation_dictionary.items():
-                    translated_content[from_lang_term] = to_lang_terms[text_generation_target_lang]
-
-            data = (render, placeholders)
-            snippets_cache[key] = data
-            return data
-
         text_generation_target_lang = self.get_current_website().default_lang_id.code
         # If the target language is not English, we need a good translation
         # coverage. But if the target lang is en_XX it's ok to have en_US text.
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
+
+        # Initialize HTML processor with context chaining - similar to website.with_context() pattern
+        html_text_processor = self.env['website.html.text.processor']._with_processing_context(
+            IrQweb=IrQweb,
+            cta_data=cta_data,
+            text_generation_target_lang=text_generation_target_lang,
+            text_must_be_translated_for_openai=text_must_be_translated_for_openai,
+        )
         generated_content = {}
+        translated_content = {}
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
                 snippet_key = website._get_snippet_view_key(snippet, page_code)
-                render, placeholders = _render_snippet(snippet_key)
-                for placeholder in placeholders:
-                    generated_content[placeholder] = ''
-        if text_must_be_translated_for_openai:
-            nb_terms_translated = len([k for k, v in translated_content.items() if k != v])
-            nb_terms_total = len(translated_content)
-        else:
-            nb_terms_translated = len(generated_content)
-            nb_terms_total = len(generated_content)
-        translated_ratio = nb_terms_translated / nb_terms_total
-        logger.debug("Ratio of translated content: %s%% (%s/%s)", translated_ratio * 100, nb_terms_translated, nb_terms_total)
+                html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
+                generated_content.update(snippet_generated_content)
+                translated_content.update(snippet_translated_content)
 
+        translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
         if translated_ratio > 0.8:
             try:
                 database_id = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
@@ -1023,58 +915,6 @@ class Website(models.Model):
         else:
             logger.info("Skip AI text generation because translation coverage is too low (%s%%)", translated_ratio * 100)
 
-        def _format_replacement(html_string):
-            """
-            Reapplies original HTML formatting by replacing pseudo-markdown
-            with corresponding HTML tags.
-
-            The function searches for the replacement of the given HTML string
-            then processes it by identifying and replacing pseudo-markdown
-            in the form of `#[string](hash)` with actual HTML tags. It uses
-            stored tag and attribute information and reconstructs the correct
-            HTML structure. Additionally, it handles any wrapping tags that was
-            identified for the given HTML.
-
-            Args:
-                html_string (str): The source HTML whose replacement has to
-                    receive original formatting
-
-            Returns:
-                str: The text with HTML tags re-applied.
-            """
-            replacement = generated_content.get(_compute_placeholder(html_string))
-            if not replacement:
-                return html_string
-
-            # Replace #[string](hash) with <tag>...</tag> based on stored tag
-            # and attribute information
-            def _replace_tag(match):
-                content = match.group(1)  # The string inside the square brackets
-                hash_value = match.group(2)  # The hash value inside the parentheses
-                if hash_value not in hashes_to_tags_and_attributes:
-                    return content
-
-                tag = hashes_to_tags_and_attributes[hash_value]['tag']
-                attr = hashes_to_tags_and_attributes[hash_value]['attr']
-                attr_string = (" " + " ".join([f'{key}="{value}"' for key, value in attr.items()])) if attr else ''
-
-                # Handle self-closing tag if content is "0"
-                if content == "0":
-                    return f'<{tag}{attr_string}/>'
-
-                return f'<{tag}{attr_string}>{content}</{tag}>'
-
-            # Use regular expression to find instances of #[string](hash) and
-            # replace them
-            tag_pattern = r'#\[([^\]]+)\]\(([^)]+)\)'
-            replacement = re.sub(tag_pattern, _replace_tag, replacement)
-
-            # Handle possible wrapping tags identified
-            if html_string in html_string_to_wrapping_tags:
-                replacement = html_string_to_wrapping_tags[html_string].replace('$0', replacement)
-
-            return replacement
-
         # Configure the pages
         for index, page_code in enumerate(requested_pages):
             snippet_list = configurator_snippets.get(page_code, [])
@@ -1087,11 +927,7 @@ class Website(models.Model):
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
                     snippet_key = website._get_snippet_view_key(snippet, page_code)
-                    render, placeholders = _render_snippet(snippet_key)
-                    # Fill rendered block with AI text
-                    render = xml_translate(_format_replacement, render)
-
-                    el = html.fromstring(render)
+                    el = html_text_processor._update_snippet_content(generated_content, snippet_key)
 
                     # Add the data-snippet attribute to identify the snippet
                     # for compatibility code
