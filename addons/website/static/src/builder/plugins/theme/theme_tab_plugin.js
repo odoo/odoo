@@ -271,15 +271,20 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
         this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     async load() {
-        return new Promise((resolve) => {
-            this.services.dialog.add(ConfirmationDialog, {
-                body: _t(
-                    "Changing the color palette will reset all your color customizations, are you sure you want to proceed?"
-                ),
-                confirm: () => resolve(true),
-                cancel: () => resolve(false),
+        const style = this.window.getComputedStyle(this.document.body);
+        const hasCustomizedColors = getCSSVariableValue("has-customized-colors", style);
+        if (hasCustomizedColors && hasCustomizedColors !== "false") {
+            return new Promise((resolve) => {
+                this.services.dialog.add(ConfirmationDialog, {
+                    body: _t(
+                        "Changing the color palette will reset all your color customizations, are you sure you want to proceed?"
+                    ),
+                    confirm: () => resolve(true),
+                    cancel: () => resolve(false),
+                });
             });
-        });
+        }
+        return true;
     }
     async apply(context) {
         if (!context.loadResult) {
