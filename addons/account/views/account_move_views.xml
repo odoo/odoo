@@ -1507,6 +1507,8 @@
                                         <field name="auto_post_until"
                                                invisible="auto_post in ('no', 'at_date')"
                                                readonly="state != 'draft'"/>
+                                        <field name="is_self_billing"
+                                               invisible="move_type not in ('in_invoice', 'in_refund')"/>
                                     </group>
                                 </group>
                             </page>

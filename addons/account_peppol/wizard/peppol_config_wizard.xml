@@ -26,6 +26,10 @@
                     </div>
                     <field name="account_peppol_migration_key"/>
                 </group>
+                <group string="Self Billing" invisible="account_peppol_proxy_state not in ('sender', 'receiver')">
+                    <field name="peppol_activate_self_billing" invisible="account_peppol_proxy_state not in ('sender', 'receiver')"/>
+                    <field name="peppol_self_billing_reception_journal_id" invisible="account_peppol_proxy_state != 'receiver'"/>
+                </group>
                 <group string="Configure your Peppol Services and allowed formats" invisible="account_peppol_proxy_state != 'receiver'">
                     <field name="service_json" invisible="1"/>
                     <div colspan="2">

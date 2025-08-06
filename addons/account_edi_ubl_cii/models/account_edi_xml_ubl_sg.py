@@ -28,8 +28,9 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
     # EXPORT: Templates
     # -------------------------------------------------------------------------
 
-    def _get_customization_id(self):
-        return 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0'
+    def _get_customization_id(self, process_type='billing'):
+        if process_type == 'billing':
+            return 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0'
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         """ https://www.peppolguide.sg/billing/bis/#_payment_means_information """

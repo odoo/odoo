@@ -24,8 +24,9 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_anz.xml"
 
-    def _get_customization_id(self):
-        return 'urn:peppol:pint:billing-1@aunz-1'
+    def _get_customization_id(self, process_type='billing'):
+        if process_type == 'billing':
+            return 'urn:peppol:pint:billing-1@aunz-1'
 
     def _get_tax_category_code(self, customer, supplier, tax):
         """ See https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_category_code """
