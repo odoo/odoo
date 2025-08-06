@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { markEventHandled } from "@web/core/utils/misc";
-import { DiscussActionDefinition } from "./discuss_actions_definition";
+import { Action } from "./action";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -87,7 +87,7 @@ threadActionsRegistry
         toggle: true,
     });
 
-class ThreadActionDefinition extends DiscussActionDefinition {
+class ThreadAction extends Action {
     /** Determines whether this is a popover linked to this action. */
     popover = null;
 
@@ -261,7 +261,7 @@ export function useThreadActions() {
     const component = useComponent();
     const transformedActions = threadActionsRegistry
         .getEntries()
-        .map(([id, action]) => new ThreadActionDefinition(component, id, action));
+        .map(([id, action]) => new ThreadAction(component, id, action));
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);

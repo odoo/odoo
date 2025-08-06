@@ -9,7 +9,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { DiscussActionDefinition } from "./discuss_actions_definition";
+import { Action } from "./action";
 
 const { DateTime } = luxon;
 
@@ -176,7 +176,7 @@ messageActionsRegistry
         sequence: 110,
     });
 
-class MessageActionDefinition extends DiscussActionDefinition {
+class MessageAction extends Action {
     get mobileCloseAfterClick() {
         return this.explicitDefinition.mobileCloseAfterClick ?? true;
     }
@@ -200,7 +200,7 @@ export function useMessageActions() {
     const component = useComponent();
     const transformedActions = messageActionsRegistry
         .getEntries()
-        .map(([id, action]) => new MessageActionDefinition(component, id, action));
+        .map(([id, action]) => new MessageAction(component, id, action));
     for (const action of transformedActions) {
         if (action.setup) {
             action.setup(action);

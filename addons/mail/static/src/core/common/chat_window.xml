@@ -25,7 +25,7 @@
                         </button>
                         <t t-set-slot="content">
                             <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 4)"/>
-                            <DiscussActions dropdown="true" quick="quickActionsInDropdown" group="partitionedActions.group" other="partitionedActions.other" thread="thread"/>
+                            <ActionList dropdown="true" quick="quickActionsInDropdown" group="partitionedActions.group" other="partitionedActions.other" thread="thread"/>
                         </t>
                     </Dropdown>
                 </div>
@@ -47,7 +47,7 @@
             </div>
             <div class="ms-1 flex-grow-1"/>
             <div class="d-flex flex-shrink-0 o-me-1_5">
-                <DiscussActions inline="true" quick="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" thread="thread"/>
+                <ActionList inline="true" quick="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" thread="thread"/>
             </div>
             <t t-if="this.store.inPublicPage and !this.store.self_partner">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
