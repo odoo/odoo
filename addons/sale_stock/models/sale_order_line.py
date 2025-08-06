@@ -327,7 +327,7 @@ class SaleOrderLine(models.Model):
             )):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves_ids.add(move.id)
-            elif move.location_id._is_outgoing() and move.to_refund:
+            elif (move._is_incoming() or move.location_id._is_outgoing()) and move.to_refund:
                 incoming_moves_ids.add(move.id)
 
         return self.env['stock.move'].browse(outgoing_moves_ids), self.env['stock.move'].browse(incoming_moves_ids)
