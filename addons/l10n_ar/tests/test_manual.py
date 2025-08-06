@@ -158,9 +158,10 @@ class TestManual(common.TestAr):
                 bill_form.partner_id = self.res_partner_adhoc
                 bill_form.invoice_payment_term_id = payment_term_id
                 bill_form.invoice_date = '2023-02-09'
-                bill_form.journal_id = purchase_not_pos_journal
                 bill_form.l10n_latam_document_type_id = doc_60_lp_a
             bill = bill_form.save()
+
+            self.assertEqual(bill.journal_id, purchase_not_pos_journal)
 
         # Create a new journal that is an AFIP POS
         purchase_pos_journal = self._create_journal('preprinted', data={'type': 'purchase', 'l10n_ar_is_pos': True})
