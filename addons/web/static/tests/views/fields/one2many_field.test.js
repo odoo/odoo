@@ -929,6 +929,33 @@ test("use the limit attribute in arch (in field o2m inline list view)", async ()
 });
 
 test.tags("desktop");
+test("delete all records in last page (in field o2m inline list view)", async () => {
+    Partner._records[0].turtles = [1, 2, 3];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list limit="2">
+                        <field name="turtle_foo"/>
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+    expect(".o_data_row").toHaveCount(2);
+    expect(".o_x2m_control_panel .o_pager").toHaveText("1-2 / 3");
+    await contains(".o_x2m_control_panel .o_pager_next").click();
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_list_record_remove").click();
+    expect(".o_x2m_control_panel .o_pager").toHaveCount(0);
+    expect(".o_data_row").toHaveCount(2);
+    await contains(".o_form_button_cancel").click();
+    expect(".o_x2m_control_panel .o_pager").toHaveText("1-2 / 3");
+});
+
+test.tags("desktop");
 test("nested x2manys with inline form, but not list", async () => {
     Turtle._views = { list: `<list><field name="turtle_foo"/></list>` };
     Partner._views = {
