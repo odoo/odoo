@@ -9,11 +9,11 @@ import logging
 import pytz
 import typing
 import warnings
-from collections import defaultdict
+from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import contextmanager, suppress
+from contextlib import contextmanager
 from pprint import pformat
-from weakref import WeakSet
+from weakref import ref as weakref
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
@@ -27,6 +27,7 @@ from .utils import SUPERUSER_ID
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, MutableMapping
     from datetime import tzinfo
+    from weakref import ReferenceType
     from .identifiers import IdType, NewId
     from .types import BaseModel, Field
 
@@ -35,6 +36,7 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger('odoo.api')
 
 MAX_FIXPOINT_ITERATIONS = 10
+DEREFERENCE_LIMIT = 20
 
 
 class Environment(Mapping[str, "BaseModel"]):
@@ -72,9 +74,30 @@ class Environment(Mapping[str, "BaseModel"]):
             transaction = cr.transaction = Transaction(Registry(cr.dbname))
 
         # if env already exists, return it
-        for env in transaction.envs:
-            if env.cr is cr and env.uid == uid and env.su == su and env.context == context:
+        envs = transaction._envs_recent
+        for env_index, env in enumerate(envs):
+            # Find in recently accessed environments
+            if env.uid == uid and env.su == su and env.context == context and env.cr is cr:
+                # move env last for faster access next time
+                if env_index > 0:
+                    del envs[env_index]
+                    envs.appendleft(env)
                 return env
+        for env_index, ref in enumerate(transaction._envs_weak) if len(envs) < len(transaction._envs_weak) else ():
+            # Check only the oldest environments, they were probably created by
+            # the original transaction and we don't want to scan through all
+            # environments if we create a huge amount of them.
+            env = ref()
+            if env is None:
+                continue
+            if env.uid == uid and env.su == su and env.context == context and env.cr is cr:
+                # add for faster access next time
+                envs.appendleft(env)
+                if len(envs) > DEREFERENCE_LIMIT * 2:
+                    transaction._dereference_envs()
+                return env
+            if env_index > DEREFERENCE_LIMIT:
+                break
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
@@ -82,10 +105,14 @@ class Environment(Mapping[str, "BaseModel"]):
         self.context = frozendict(context)
         self.transaction = transaction
 
-        transaction.envs.add(self)
+        envs.appendleft(self)
+        transaction._envs_weak.append(weakref(self))
         # the default transaction's environment is the first one with a valid uid
         if transaction.default_env is None and uid and isinstance(uid, int):
             transaction.default_env = self
+        # avoid filling the system with environments
+        if len(envs) > DEREFERENCE_LIMIT * 2:
+            transaction._dereference_envs()
         return self
 
     def __setattr__(self, name: str, value: typing.Any) -> None:
@@ -552,16 +579,17 @@ class Environment(Mapping[str, "BaseModel"]):
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
     __slots__ = (
-        '_Transaction__file_open_tmp_paths', 'cache',
-        'default_env', 'envs', 'field_data', 'field_data_patches', 'field_dirty',
+        '_Transaction__file_open_tmp_paths', '_envs_recent', '_envs_weak', 'cache',
+        'default_env', 'field_data', 'field_data_patches', 'field_dirty',
         'protected', 'registry', 'tocompute',
     )
 
     def __init__(self, registry: Registry):
         self.registry = registry
-        # weak OrderedSet of environments
-        self.envs = WeakSet[Environment]()
-        self.envs.data = OrderedSet()  # type: ignore[attr-defined]
+        # recently used environments
+        self._envs_recent: deque[Environment] = deque()
+        # all environments in order of creation (weak)
+        self._envs_weak: list[ReferenceType[Environment]] = []
         # default environment (for flushing)
         self.default_env: Environment | None = None
 
@@ -585,6 +613,46 @@ class Transaction:
 
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
         self.__file_open_tmp_paths = ()  # type: ignore # noqa: PLE0237
+
+    @property
+    def envs(self):
+        for ref in self._envs_weak:
+            if env := ref():
+                yield env
+
+    def _dereference_envs(self) -> None:
+        """ Deallocate environments to which nobody has a reference. """
+        # Start by moving environments from the environment to a weak set.
+        # Here cpython will start freeing environments that are only weakly
+        # referenced because of reference counting.
+        while len(self._envs_recent) > DEREFERENCE_LIMIT:
+            self._envs_recent.pop()
+        ref_list = self._envs_weak
+        if len(ref_list) > DEREFERENCE_LIMIT:
+            ref_list = [ref for ref in ref_list if ref() is not None]  # compact
+        # The following are heuristics to reduce the number of environments.
+        # We call these only when the execution time can be bounded and give up
+        # if the code references too many environments.
+        if DEREFERENCE_LIMIT * 3 <= len(ref_list) < DEREFERENCE_LIMIT * 4:
+            # Force a small GC run to remove environments that are in a
+            # reference cycle.
+            import gc  # noqa: PLC0415
+            gc.collect(0)
+            ref_list = [ref for ref in ref_list if ref() is not None]  # compact
+        if DEREFERENCE_LIMIT * 6 <= len(ref_list) < DEREFERENCE_LIMIT * 7:
+            # Manually clear cached properties of most recently created
+            # environments to break simple cycles even if the environment is
+            # referenced from somewhere. Skip old and newly created instances.
+            for ref in ref_list[DEREFERENCE_LIMIT:-DEREFERENCE_LIMIT]:
+                env = ref()
+                if env is not None:
+                    reset_cached_properties(env)
+                del env
+            ref_list = [ref for ref in ref_list if ref() is not None]  # compact
+        if len(ref_list) > DEREFERENCE_LIMIT * 10:
+            _logger.debug("Creating too many environments: %d", len(ref_list))
+        # Move back the environments to the queue
+        self._envs_weak = ref_list
 
     def flush(self) -> None:
         """ Flush pending computations and updates in the transaction. """
@@ -615,6 +683,8 @@ class Transaction:
         self.registry = Registry(self.registry.db_name)
         for env in self.envs:
             reset_cached_properties(env)
+        # make all environments weak
+        self._envs_recent.clear()
         self.clear()
 
     def invalidate_field_data(self) -> None:
@@ -625,10 +695,10 @@ class Transaction:
         because doing so drops the value to be written in database.
         """
         self.field_data.clear()
+        self._dereference_envs()
         # reset Field._get_cache()
         for env in self.envs:
-            with suppress(AttributeError):
-                del env._field_cache_memo
+            env.__dict__.pop('_field_cache_memo', None)
 
 
 # sentinel value for optional parameters
