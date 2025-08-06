@@ -345,7 +345,7 @@ class MrpWorkorder(models.Model):
             delta_duration = new_order_duration - old_order_duration
 
             if delta_duration > 0:
-                if order.state not in ('progress', 'done'):
+                if order.state not in ('progress', 'done', 'cancel'):
                     order.state = 'progress'
                 enddate = fields.Datetime.now()
                 date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
