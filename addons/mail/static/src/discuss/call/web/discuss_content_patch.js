@@ -1,10 +1,10 @@
-import { Discuss } from "@mail/core/public_web/discuss";
+import { DiscussContent } from "@mail/core/public_web/discuss_content";
 
 import { patch } from "@web/core/utils/patch";
 
 import { useEffect } from "@odoo/owl";
 
-patch(Discuss.prototype, {
+patch(DiscussContent.prototype, {
     setup(...args) {
         super.setup(...args);
         useEffect(
