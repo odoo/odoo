@@ -1719,6 +1719,35 @@ class TestPacking(TestPackingCommon):
         # check that the package is now in the Customer location
         self.assertEqual(pack.location_id, delivery.location_dest_id)
 
+    def test_unpick_move_after_pack_undone(self):
+        """
+        Ensure that stock moves are marked as not picked when a package level is undone.
+        """
+        self.warehouse.out_type_id.show_entire_packs = True
+        pack = self.env['stock.quant.package'].create({
+            'name': 'pack',
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=pack)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 5,
+                    'product_uom': self.productA.uom_id.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.ref('stock.stock_location_customers'),
+                }),
+            ],
+        })
+        delivery.action_confirm()
+        delivery.package_level_ids.is_done = True
+        self.assertTrue(delivery.move_ids.picked)
+        delivery.package_level_ids.is_done = False
+        self.assertFalse(delivery.move_ids.picked)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
