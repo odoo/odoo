@@ -7,8 +7,7 @@
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
-    <t t-set="roundedClass" t-value="env.inChatter or props.composer.message ? 'o-rounded-bubble' : 'rounded-4'"/>
-    <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex ' + roundedClass"/>
+    <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble'"/>
     <div t-ref="root">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0"
                 t-att-class="{
@@ -42,9 +41,8 @@
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended or props.composer.message }">
-                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border border-secondary shadow-sm"
+                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border border-secondary shadow-sm o-rounded-bubble"
                     t-att-class="{
-                        [roundedClass]: true,
                         'o-iosPwa': isIosPwa,
                         'align-self-stretch' : extended,
                         'w-100': props.composer.message,
@@ -61,8 +59,7 @@
                     </div>
                     <div class="position-relative flex-grow-1">
                         <t t-set="inputClasses" t-value="{
-                            [roundedClass]: true,
-                            'o-mail-Composer-inputStyle form-control border-0': true,
+                            'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
                             'ps-2': partitionedActions.other.length === 0
                         }"/>
                         <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin text-body user-select-auto"
