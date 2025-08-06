@@ -72,7 +72,11 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
                     'percent': vals['_tax_category_vals_']['percent'],
                     'tax_category_vals': vals['_tax_category_vals_'],
                 })
-            vals_list.append(tax_totals_vals)
+            index = next((i for i, vals in enumerate(vals_list) if vals['currency'] == company_currency), None)
+            if index is None:
+                vals_list.append(tax_totals_vals)
+            else:
+                vals_list[index] = tax_totals_vals
         return vals_list
 
     def _export_invoice_vals(self, invoice):
@@ -83,9 +87,6 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
             'customization_id': self._get_customization_ids()['pint_jp'],
             'profile_id': 'urn:peppol:bis:billing',
         })
-        if invoice.currency_id != invoice.company_id.currency_id:
-            # see https://docs.peppol.eu/poac/jp/pint-jp/bis/#_tax_in_accounting_currency
-            vals['vals']['tax_currency_code'] = invoice.company_id.currency_id.name  # accounting currency
 
         # aligned-ibr-jp-01 If the invoice is dated after 2023-10-01,
         # the tax ID must be the new "Registration Number for Qualified Invoice purpose in Japan" which shouldn't have JP added at the start.

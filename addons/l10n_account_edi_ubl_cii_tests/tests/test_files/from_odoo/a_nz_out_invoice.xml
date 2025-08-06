@@ -8,6 +8,7 @@
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
   <cbc:Note>test narration</cbc:Note>
   <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+  <cbc:TaxCurrencyCode>AUD</cbc:TaxCurrencyCode>
   <cbc:BuyerReference>ref_partner_2</cbc:BuyerReference>
   <cac:OrderReference>
     <cbc:ID>___ignore___</cbc:ID>
@@ -124,6 +125,9 @@
         </cac:TaxScheme>
       </cac:TaxCategory>
     </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="AUD">134.10</cbc:TaxAmount>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="USD">2682.00</cbc:LineExtensionAmount>

@@ -35,20 +35,6 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
         return vals
 
-    def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
-
-        if invoice.currency_id.name != 'RON':
-            ron_currency = self.env.ref("base.RON")
-            vals_list.append({
-                'currency': ron_currency,
-                'currency_dp': ron_currency.decimal_places,
-                'tax_amount': taxes_vals['tax_amount'],
-            })
-
-        return vals_list
-
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
         # EXTENDS 'account_edi_ubl_cii'
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
@@ -72,10 +58,7 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         # EXTENDS 'account_edi_ubl_cii'
         vals = super()._export_invoice_vals(invoice)
 
-        vals['vals'].update({
-            'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1',
-            'tax_currency_code': 'RON',
-        })
+        vals['vals']['customization_id'] = 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
 
         # Deal with legal_entity_vals here, as there is no way to distinguish between customer and supplier in _get_partner_party_legal_entity_vals_list
         for role in ['supplier', 'customer']:

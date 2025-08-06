@@ -36,21 +36,6 @@ class AccountEdiXmlUBLPINTSG(models.AbstractModel):
 
         return vals
 
-    def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
-        # EXTENDS account_edi_ubl_cii
-        vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
-        company_currency = invoice.company_id.currency_id
-        if invoice.currency_id != company_currency:
-            # if company currency != invoice currency, need to add a TaxTotal section
-            # see https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_invoice_totals_in_gst_accounting_currency
-            tax_totals_vals = {
-                'currency': company_currency,
-                'currency_dp': company_currency.decimal_places,
-                'tax_amount': taxes_vals['tax_amount'],
-            }
-            vals_list.append(tax_totals_vals)
-        return vals_list
-
     def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account_edi_ubl_cii
         vals_list = super()._get_tax_category_list(customer, supplier, taxes)
@@ -86,9 +71,6 @@ class AccountEdiXmlUBLPINTSG(models.AbstractModel):
             'uuid': invoice._l10n_sg_get_uuid(),
         })
 
-        if invoice.currency_id != invoice.company_id.currency_id:
-            # see https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_invoice_totals_in_gst_accounting_currency
-            vals['vals']['tax_currency_code'] = invoice.company_id.currency_id.name  # accounting currency
         return vals
 
     def _export_invoice_constraints(self, invoice, vals):

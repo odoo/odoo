@@ -239,6 +239,19 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
 
+        # We need to state the total VAT payable in company currency.
+        # See: https://docs.peppol.eu/poacc/billing/3.0/bis/#_vat_accounting_currency
+        #      https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_in_accounting_currency
+        #      https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_in_accounting_currency
+        #      https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_invoice_totals_in_gst_accounting_currency
+        company_currency = invoice.company_currency_id
+        if invoice.currency_id != company_currency:
+            vals_list.append({
+                'currency': company_currency,
+                'currency_dp': company_currency.decimal_places,
+                'tax_amount': taxes_vals['tax_amount'],
+            })
+
         for vals in vals_list:
             vals['currency_dp'] = 2
             for subtotal_vals in vals.get('tax_subtotal_vals', []):
@@ -289,6 +302,16 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._export_invoice_vals(invoice)
+
+        # We need to state the total VAT payable in company currency.
+        # The company currency is given in the TaxCurrencyCode node.
+        # See: https://docs.peppol.eu/poacc/billing/3.0/bis/#_vat_accounting_currency
+        #      https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_in_accounting_currency
+        #      https://docs.peppol.eu/poac/jp/pint-jp/bis/#_tax_in_accounting_currency
+        #      https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_in_accounting_currency
+        #      https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_invoice_totals_in_gst_accounting_currency
+        if invoice.currency_id != invoice.company_id.currency_id:
+            vals['vals']['tax_currency_code'] = invoice.company_id.currency_id.name
 
         vals['vals'].update({
             'customization_id': self._get_customization_ids()['ubl_bis3'],
@@ -523,6 +546,16 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'cbc:UBLVersionID': None,
             'cbc:CustomizationID': {'_text': self._get_customization_ids()['ubl_bis3']},
             'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'},
+            # We need to state the total VAT payable in company currency.
+            # The company currency is given in the TaxCurrencyCode node.
+            # See: https://docs.peppol.eu/poacc/billing/3.0/bis/#_vat_accounting_currency
+            #      https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_in_accounting_currency
+            #      https://docs.peppol.eu/poac/jp/pint-jp/bis/#_tax_in_accounting_currency
+            #      https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_in_accounting_currency
+            #      https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_invoice_totals_in_gst_accounting_currency
+            'cbc:TaxCurrencyCode': {
+                '_text': invoice.company_currency_id.name
+            } if invoice.company_currency_id != invoice.currency_id else None,
         })
 
         # [NL-R-001] For suppliers in the Netherlands, if the document is a creditnote, the document MUST
@@ -677,6 +710,34 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     # -------------------------------------------------------------------------
     # EXPORT: Templates for document amount nodes
     # -------------------------------------------------------------------------
+
+    def _add_document_tax_total_nodes(self, document_node, vals):
+        """ Generic helper to fill the TaxTotal and WithholdingTaxTotal nodes for a document. """
+        # Override: 'cac:TaxTotal' is a list here (it is not in UBL 2.0 or 2.1)
+
+        base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], vals['tax_grouping_function'])
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_aggregated_values(base_lines_aggregated_tax_details)
+        document_node['cac:TaxTotal'] = [self._get_tax_total_node({**vals, 'aggregated_tax_details': aggregated_tax_details, 'role': 'document'})]
+
+        # We need to state the total VAT payable in company currency.
+        # See: https://docs.peppol.eu/poacc/billing/3.0/bis/#_vat_accounting_currency
+        #      https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_in_accounting_currency
+        #      https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_in_accounting_currency
+        #      https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_invoice_totals_in_gst_accounting_currency
+        if vals['currency_id'] != vals['company_currency_id']:
+            base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], vals['tax_grouping_function'])
+            aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_aggregated_values(base_lines_aggregated_tax_details)
+            company_node = self._get_tax_total_node({
+                **vals,
+                'aggregated_tax_details': aggregated_tax_details,
+                'currency_suffix': '',
+                'currency_dp': self._get_currency_decimal_places(vals['company_currency_id']),
+                'currency_name': vals['company_currency_id'].name,
+                'role': 'document',
+            })
+            document_node['cac:TaxTotal'].append({'cbc:TaxAmount': company_node['cbc:TaxAmount']})
+
+        document_node['cac:WithholdingTaxTotal'] = None
 
     def _get_tax_subtotal_node(self, vals):
         # Compute total tax amount

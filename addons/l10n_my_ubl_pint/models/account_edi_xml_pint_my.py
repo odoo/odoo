@@ -24,24 +24,7 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
             'customization_id': self._get_customization_ids()['pint_my'],
             'profile_id': 'urn:peppol:bis:billing',
         })
-        if invoice.currency_id != invoice.company_id.currency_id:
-            # see https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_in_accounting_currency
-            vals['vals']['tax_currency_code'] = invoice.company_id.currency_id.name  # accounting currency
         return vals
-
-    def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
-        # EXTENDS account_edi_ubl_cii
-        vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
-        company_currency = invoice.company_id.currency_id
-        if invoice.currency_id != company_currency:
-            # see https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_in_accounting_currency
-            vals_list.append({
-                'currency': company_currency,
-                'currency_dp': company_currency.decimal_places,
-                'tax_amount': taxes_vals['tax_amount'],
-                'tax_subtotal_vals': [],
-            })
-        return vals_list
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
         """ [aligned-ibrp-cl-01-my]-Malaysian invoice tax categories MUST be coded using Malaysian codes. """
@@ -89,6 +72,8 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
 
         # A tax category "Outside of tax cope" can only have an amount of 0.
         for tax_total_val in vals['vals']['tax_total_vals']:
+            if 'tax_subtotal_vals' not in tax_total_val:
+                continue
             for tax_subtotal_val in tax_total_val['tax_subtotal_vals']:
                 tax_category_vals = tax_subtotal_val['tax_category_vals']
                 if tax_category_vals['tax_category_code'] == 'O' and tax_category_vals['percent'] != 0:
