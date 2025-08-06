@@ -135,7 +135,7 @@
                     </div>
                     <group>
                         <group id="batch_delivery_data">
-                            <field name="user_id" readonly="state not in ['draft', 'in_progress']"/>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                             <field name="picking_type_id" readonly="state != 'draft'"/>
                             <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                             <field name="description"/>
