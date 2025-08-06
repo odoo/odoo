@@ -131,12 +131,12 @@ class ResPartner(models.Model):
 
         return True
 
-    def _check_document_type_support(self, participant_info, ubl_cii_format):
+    def _check_document_type_support(self, participant_info, ubl_cii_format, process_type='billing'):
         service_references = participant_info.findall(
             '{*}ServiceMetadataReferenceCollection/{*}ServiceMetadataReference'
         )
         edi_builder = self._get_edi_builder(ubl_cii_format)
-        document_type = edi_builder._get_customization_id()
+        document_type = edi_builder._get_customization_id(process_type=process_type)
         for service in service_references:
             if document_type in parse.unquote_plus(service.attrib.get('href', '')):
                 return True
@@ -208,7 +208,7 @@ class ResPartner(models.Model):
 
     @api.model
     @handle_demo
-    def _get_peppol_verification_state(self, peppol_endpoint, peppol_eas, invoice_edi_format):
+    def _get_peppol_verification_state(self, peppol_endpoint, peppol_eas, invoice_edi_format, process_type='billing'):
         if not (peppol_eas and peppol_endpoint) or invoice_edi_format not in self._get_peppol_formats():
             return 'not_verified'
 
@@ -219,7 +219,7 @@ class ResPartner(models.Model):
         else:
             is_participant_on_network = self._check_peppol_participant_exists(participant_info, edi_identification)
             if is_participant_on_network:
-                is_valid_format = self._check_document_type_support(participant_info, invoice_edi_format)
+                is_valid_format = self._check_document_type_support(participant_info, invoice_edi_format, process_type=process_type)
                 if is_valid_format:
                     return 'valid'
                 else:

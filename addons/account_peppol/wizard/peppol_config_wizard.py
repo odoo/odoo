@@ -3,6 +3,12 @@ from markupsafe import Markup
 from odoo import api, Command, fields, models, _
 
 
+SELF_BILLING_DOCUMENT_TYPES = {
+    'bis3_self_billing_invoice': 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1',
+    'bis3_self_billing_credit_note': 'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1'
+}
+
+
 class PeppolService(models.TransientModel):
     _name = 'account_peppol.service'
     _order = 'document_name, id'
@@ -28,6 +34,14 @@ class PeppolConfigWizard(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_contact_email = fields.Char(default=lambda self: self.env.company.account_peppol_contact_email, required=True)
     account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
+    peppol_activate_self_billing = fields.Boolean(
+        string="Activate self-billing",
+        help="If activated, you will be able to send and receive self-billed invoices via Peppol."
+             "You can still disable reception by disabling the self-billing document types below.",
+        compute='_compute_peppol_activate_self_billing',
+        inverse='_inverse_peppol_activate_self_billing',
+    )
+    peppol_self_billing_reception_journal_id = fields.Many2one(related='company_id.peppol_self_billing_reception_journal_id', readonly=False)
 
     service_json = fields.Json(
         compute='_compute_service_json',
@@ -100,6 +114,20 @@ class PeppolConfigWizard(models.TransientModel):
                 ]
             else:
                 wizard.service_ids = None
+
+    @api.depends('company_id.peppol_activate_self_billing_sending')
+    def _compute_peppol_activate_self_billing(self):
+        for wizard in self:
+            wizard.peppol_activate_self_billing = wizard.company_id.peppol_activate_self_billing_sending
+
+    @api.onchange('peppol_activate_self_billing')
+    def _inverse_peppol_activate_self_billing(self):
+        for wizard in self:
+            wizard.company_id.peppol_activate_self_billing_sending = wizard.peppol_activate_self_billing
+
+            # When setting the 'Activate self-billing' field, automatically enable/disable the self-billing reception services.
+            self_billing_services = wizard.service_ids.filtered(lambda s: s.document_identifier in SELF_BILLING_DOCUMENT_TYPES.values())
+            self_billing_services.write({'enabled': wizard.peppol_activate_self_billing})
 
     def button_sync_form_with_peppol_proxy(self):
         """Interpret changes to the services, and add or remove them on the IAP accordingly."""

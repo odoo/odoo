@@ -68,9 +68,9 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.constrains('move_ids')
-    def _check_move_ids_constrains(self):
+    def _check_move_ids_constraints(self):
         for wizard in self:
-            self._check_move_constrains(wizard.move_ids)
+            self._check_move_constraints(wizard.move_ids)
 
     # -------------------------------------------------------------------------
     # ACTIONS

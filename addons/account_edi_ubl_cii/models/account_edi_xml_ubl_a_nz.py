@@ -23,8 +23,9 @@ class AccountEdiXmlUbl_A_Nz(models.AbstractModel):
     # EXPORT: Templates
     # -------------------------------------------------------------------------
 
-    def _get_customization_id(self):
-        return 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0'
+    def _get_customization_id(self, process_type='billing'):
+        if process_type == 'billing':
+            return 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0'
 
     def _get_party_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

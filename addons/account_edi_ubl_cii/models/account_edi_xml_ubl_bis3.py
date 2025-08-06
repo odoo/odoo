@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from markupsafe import Markup
+from typing import Literal
 
 from odoo import models, _
 from odoo.addons.account.tools import dict_to_xml
@@ -45,8 +46,19 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # EXPORT: Templates for invoice header nodes
     # -------------------------------------------------------------------------
 
-    def _get_customization_id(self):
-        return 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'
+    def _add_invoice_config_vals(self, vals):
+        super()._add_invoice_config_vals(vals)
+        invoice = vals['invoice']
+        vals['process_type'] = 'selfbilling' if invoice.is_purchase_document() and invoice.is_self_billing else 'billing'
+
+    def _can_export_selfbilling(self):
+        return bool(self._get_customization_id(process_type='selfbilling'))
+
+    def _get_customization_id(self, process_type: Literal['billing', 'selfbilling'] = 'billing'):
+        if process_type == 'billing':
+            return 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'
+        else:
+            return 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0'
 
     def _add_invoice_header_nodes(self, document_node, vals):
         # Call the parent method from UBL 2.1
@@ -56,8 +68,8 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         # Override specific BIS3 values
         document_node.update({
             'cbc:UBLVersionID': None,
-            'cbc:CustomizationID': {'_text': self._get_customization_id()},
-            'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'},
+            'cbc:CustomizationID': {'_text': self._get_customization_id(vals['process_type'])},
+            'cbc:ProfileID': {'_text': f"urn:fdc:peppol.eu:2017:poacc:{vals['process_type']}:01:1.0"},
         })
 
         # [NL-R-001] For suppliers in the Netherlands, if the document is a creditnote, the document MUST

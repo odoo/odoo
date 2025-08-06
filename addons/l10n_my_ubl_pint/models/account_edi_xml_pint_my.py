@@ -53,8 +53,9 @@ class AccountEdiXmlPint_My(models.AbstractModel):
     # EXPORT: Templates
     # -------------------------------------------------------------------------
 
-    def _get_customization_id(self):
-        return 'urn:peppol:pint:billing-1@my-1'
+    def _get_customization_id(self, process_type='billing'):
+        if process_type == 'billing':
+            return 'urn:peppol:pint:billing-1@my-1'
 
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3

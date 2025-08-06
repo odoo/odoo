@@ -97,6 +97,21 @@ class ResCompany(models.Model):
     peppol_metadata = fields.Json(string='Peppol Metadata')
     peppol_metadata_updated_at = fields.Datetime(string='Peppol meta updated at')
 
+    peppol_activate_self_billing_sending = fields.Boolean(
+        string="Activate self-billing sending",
+        help="If activated, you will be able to send vendor bills as self-billed invoices via Peppol.",
+    )
+    peppol_self_billing_reception_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Self-Billing reception journal',
+        help="Any self-billed invoices / credit notes received via Peppol will be created in draft in this journal. Defaults to the first sale journal.",
+        domain=[('type', '=', 'sale')],
+        compute='_compute_peppol_self_billing_reception_journal_id',
+        store=True,
+        readonly=False,
+        inverse='_inverse_peppol_self_billing_reception_journal_id',
+    )
+
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
@@ -234,25 +249,46 @@ class ResCompany(models.Model):
     @api.depends('account_peppol_proxy_state')
     def _compute_peppol_purchase_journal_id(self):
         for company in self:
-            if not company.peppol_purchase_journal_id and company.account_peppol_proxy_state not in ('not_registered', 'rejected'):
+            if not company.peppol_purchase_journal_id and company.peppol_can_send:
                 company.peppol_purchase_journal_id = self.env['account.journal'].search([
                     *self.env['account.journal']._check_company_domain(company),
                     ('type', '=', 'purchase'),
                 ], limit=1)
                 company.peppol_purchase_journal_id.is_peppol_journal = True
-            else:
-                company.peppol_purchase_journal_id = company.peppol_purchase_journal_id
 
     def _inverse_peppol_purchase_journal_id(self):
         for company in self:
-            # This avoid having 2 or more journals from the same company with
+            # This avoid having 2 or more purchase journals from the same company with
             # `is_peppol_journal` set to True (which could occur after changes).
             journals_to_reset = self.env['account.journal'].search([
                 ('company_id', '=', company.id),
+                ('type', '=', 'purchase'),
                 ('is_peppol_journal', '=', True),
             ])
             journals_to_reset.is_peppol_journal = False
             company.peppol_purchase_journal_id.is_peppol_journal = True
+
+    @api.depends('account_peppol_proxy_state')
+    def _compute_peppol_self_billing_reception_journal_id(self):
+        for company in self:
+            if not company.peppol_self_billing_reception_journal_id and company.peppol_can_send:
+                company.peppol_self_billing_reception_journal_id = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(company),
+                    ('type', '=', 'sale'),
+                ], limit=1)
+                company.peppol_self_billing_reception_journal_id.is_peppol_journal = True
+
+    def _inverse_peppol_self_billing_reception_journal_id(self):
+        for company in self:
+            # This avoid having 2 or more sale journals from the same company with
+            # `is_peppol_journal` set to True (which could occur after changes).
+            journals_to_reset = self.env['account.journal'].search([
+                ('company_id', '=', company.id),
+                ('type', '=', 'sale'),
+                ('is_peppol_journal', '=', True),
+            ])
+            journals_to_reset.is_peppol_journal = False
+            company.peppol_self_billing_reception_journal_id.is_peppol_journal = True
 
     @api.depends('email')
     def _compute_account_peppol_contact_email(self):
@@ -327,6 +363,8 @@ class ResCompany(models.Model):
                     "Peppol BIS Billing UBL Invoice V3",
                 "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1":
                     "Peppol BIS Billing UBL CreditNote V3",
+                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1": "Peppol BIS Self-Billing UBL Invoice V3",
+                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1": "Peppol BIS Self-Billing UBL CreditNote V3",
                 "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":
                     "SI-UBL 2.0 Invoice",
                 "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":

@@ -6,7 +6,7 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
     _inherit = 'account.edi.xml.ubl_21'
     _description = "UBL 2.1 (RS eFaktura)"
 
-    def _get_customization_id(self):
+    def _get_customization_id(self, process_type='billing'):
         return 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022'
 
     def _add_invoice_header_nodes(self, document_node, vals):

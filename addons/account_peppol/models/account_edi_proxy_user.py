@@ -210,20 +210,48 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         :return: the created move (if any)
         """
         self.ensure_one()
-        journal = journal or self.company_id.peppol_purchase_journal_id
-        if not journal:
-            return {}
+
+        file_data = self.env['account.move']._to_files_data(attachment)[0]
+
+        # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
+        # In this case, the invoice needs to be created as an out_invoice in a sale journal.
+        # 329/527: Self-billing invoice; 261: Self-billing credit note
+        is_self_billed = False
+        if file_data['xml_tree'].findtext('.//{*}InvoiceTypeCode') in ['389', '527'] or file_data['xml_tree'].findtext('.//{*}CreditNoteTypeCode') == '261':
+            is_self_billed = True
+
+        if not is_self_billed:
+            journal = journal or self.company_id.peppol_purchase_journal_id
+            move_type = 'in_invoice'
+            if not journal:
+                return {}
+
+        else:
+            journal = (
+                journal
+                or self.company_id.peppol_self_billing_reception_journal_id
+                or self.env['account.journal'].search(
+                    [
+                        *self.env['account.journal']._check_company_domain(self.company_id),
+                        ('type', '=', 'sale'),
+                    ],
+                    limit=1
+                )
+            )
+            move_type = 'out_invoice'
+            if not journal:
+                return {}
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
-            'move_type': 'in_invoice',
+            'move_type': move_type,
             'peppol_move_state': peppol_state,
             'peppol_message_uuid': uuid,
         })
         if 'is_in_extractable_state' in move._fields:
             move.is_in_extractable_state = False
 
-        move._extend_with_attachments(move._to_files_data(attachment), new=True)
+        move._extend_with_attachments([file_data], new=True)
         move._message_log(
             body=_(
                 "Peppol document (UUID: %(uuid)s) has been received successfully",
@@ -246,8 +274,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         }
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
-            journal = edi_user.company_id.peppol_purchase_journal_id
-            if not journal:
+            if not edi_user.company_id.peppol_purchase_journal_id:
                 msg = _('Please set a journal for Peppol invoices on %s before receiving documents.', edi_user.company_id.display_name)
                 if skip_no_journal:
                     _logger.warning(msg)
@@ -294,7 +321,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     "type": "binary",
                     "mimetype": "application/xml",
                 })
-                vals_to_ack = edi_user._peppol_import_invoice(attachment, content["state"], uuid, journal=journal)
+                vals_to_ack = edi_user._peppol_import_invoice(attachment, content["state"], uuid)
                 if move_to_ack := vals_to_ack.get('move'):
                     created_moves |= move_to_ack
                 if uuid_to_ack := vals_to_ack.get('uuid'):
@@ -308,7 +335,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     params={'message_uuids': uuids_to_ack},
                 )
             if created_moves:
-                journal._notify_einvoices_received(created_moves)
+                for journal, moves_in_journal in created_moves.grouped('journal_id').items():
+                    journal._notify_einvoices_received(moves_in_journal)
 
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_new_documents')._trigger()
