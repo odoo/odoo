@@ -1,5 +1,14 @@
 import { expect, test } from "@odoo/hoot";
-import { click, dblclick, pointerUp, press, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    dblclick,
+    pointerUp,
+    press,
+    queryOne,
+    waitFor,
+    waitForNone,
+    manuallyDispatchProgrammaticEvent,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { base64Img, setupEditor } from "./_helpers/editor";
@@ -626,4 +635,20 @@ test("Preview an image on dblclick", async () => {
     await dblclick("img.test-image");
     await animationFrame();
     expect(".o-FileViewer").toHaveCount(1);
+});
+
+test("should select image on pointerdown", async () => {
+    const { plugins } = await setupEditor(`
+        <img src="${base64Img}">
+        <p>test[]</p>
+    `);
+
+    const imgElement = document.querySelector("img");
+    await manuallyDispatchProgrammaticEvent(imgElement, "pointerdown");
+    await animationFrame();
+
+    const selectionPlugin = plugins.get("selection");
+    const selectedNode = selectionPlugin.getTargetedNodes()[0];
+
+    expect(selectedNode.tagName).toBe("IMG");
 });
