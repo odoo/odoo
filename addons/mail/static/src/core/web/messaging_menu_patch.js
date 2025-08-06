@@ -64,15 +64,9 @@ patch(MessagingMenu.prototype, {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
-            (this.store.failures.length > 0 &&
-                this.store.discuss.activeTab === "main" &&
-                !this.env.inDiscussApp) ||
-            (this.shouldAskPushPermission &&
-                this.store.discuss.activeTab === "main" &&
-                !this.env.inDiscussApp) ||
-            (this.canPromptToInstall &&
-                this.store.discuss.activeTab === "main" &&
-                !this.env.inDiscussApp)
+            (this.store.failures.length > 0 && this.store.discuss.activeTab === "notification") ||
+            (this.shouldAskPushPermission && this.store.discuss.activeTab === "notification") ||
+            (this.canPromptToInstall && this.store.discuss.activeTab === "notification")
         );
     },
     get installationRequest() {
@@ -84,7 +78,7 @@ patch(MessagingMenu.prototype, {
             },
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "main" && this.canPromptToInstall,
+            isShown: this.store.discuss.activeTab === "notification" && this.canPromptToInstall,
         };
     },
     get notificationRequest() {
@@ -93,18 +87,26 @@ patch(MessagingMenu.prototype, {
             displayName: _t("Turn on notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
+            isShown:
+                this.store.discuss.activeTab === "notification" && this.shouldAskPushPermission,
         };
     },
-    get tabs() {
+    get _tabs() {
         return [
             {
-                counter: this.env.inDiscussApp ? this.store.inbox.counter : undefined,
-                icon: this.env.inDiscussApp ? "fa fa-inbox" : "fa fa-envelope",
-                id: "main",
-                label: this.env.inDiscussApp ? _t("Mailboxes") : _t("All"),
+                icon: "fa fa-envelope",
+                id: "notification",
+                label: _t("Notifications"),
+                sequence: 10,
             },
-            ...super.tabs,
+            {
+                counter: this.store.inbox.counter,
+                icon: "fa fa-inbox",
+                id: "inbox",
+                label: _t("Inbox"),
+                sequence: 100,
+            },
+            ...super._tabs,
         ];
     },
     /** @param {import("models").Failure} failure */

@@ -50,7 +50,7 @@ test("messaging menu should have topbar buttons", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
     await contains(".o-mail-MessagingMenu-header button", { count: 4 });
-    await contains("button.fw-bold", { text: "All" });
+    await contains("button.fw-bold", { text: "Notifications" });
     await contains("button:not(.fw-bold)", { text: "Chats" });
     await contains("button:not(.fw-bold)", { text: "Channels" });
     await contains("button", { text: "New Message" });
@@ -642,7 +642,7 @@ test("basic rendering", async () => {
     await contains(".o-mail-MessagingMenu");
     await contains(".o-mail-MessagingMenu-header");
     await contains(".o-mail-MessagingMenu-header button", { count: 4 });
-    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Notifications" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
     await contains("button", { text: "New Message" });
@@ -657,19 +657,19 @@ test("basic rendering", async () => {
 test("switch tab", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Notifications" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
     await click(".o-mail-MessagingMenu button", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "All" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Notifications" });
     await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Chats" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
     await click(".o-mail-MessagingMenu button", { text: "Channels" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "All" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Notifications" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
     await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Channels" });
-    await click(".o-mail-MessagingMenu button", { text: "All" });
-    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
+    await click(".o-mail-MessagingMenu button", { text: "Notifications" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Notifications" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
 });
@@ -751,7 +751,7 @@ test("filtered previews", async () => {
     await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
     await click(".o-mail-MessagingMenu button", { text: "Channels" });
     await contains(".o-mail-NotificationItem", { text: "channel1" });
-    await click(".o-mail-MessagingMenu button", { text: "All" });
+    await click(".o-mail-MessagingMenu button", { text: "Notifications" });
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
     await click(".o-mail-MessagingMenu button", { text: "Channels" });
