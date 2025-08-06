@@ -3,7 +3,7 @@
 import logging
 import pytz
 import textwrap
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import escape
@@ -751,6 +751,33 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
+
+    def action_open_slot_calendar(self):
+        self.ensure_one()
+        now = datetime.now().astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
+        next_hour = now + timedelta(hours=1)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Slots'),
+            'view_mode': 'calendar,list,form',
+            'mobile_view_mode': 'list',
+            'res_model': 'event.slot',
+            'target': 'current',
+            'domain': [('event_id', '=', self.id)],
+            'context': {
+                'default_event_id': self.id,
+                # Default hours for the list view and mobile quick create.
+                # Desktop calendar multi create using defaults in local storage
+                # (= the last selected time range or fallback on 12PM-1PM).
+                'default_start_hour': next_hour.hour,
+                'default_end_hour': (next_hour + timedelta(hours=1)).hour,
+                # To disable calendar days outside of event date range.
+                'event_calendar_range_start_date': self.date_begin.astimezone(pytz.timezone(self.date_tz)).date(),
+                'event_calendar_range_end_date': self.date_end.astimezone(pytz.timezone(self.date_tz)).date(),
+                # Calendar view initial date.
+                'initial_date': min(max(datetime.now(), self.date_begin), self.date_end),
+            },
+        }
 
     def action_set_done(self):
         """

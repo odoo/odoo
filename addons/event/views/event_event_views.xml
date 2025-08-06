@@ -40,13 +40,6 @@
                                 help="Total Registrations for this Event">
                             <field name="seats_taken" widget="statinfo" string="Attendees"/>
                         </button>
-                        <button name="%(event.act_event_slot_from_event)d"
-                                type="action"
-                                class="oe_stat_button"
-                                icon="fa-calendar"
-                                invisible="not is_multi_slots">
-                            <field name="event_slot_count" widget="statinfo" string="Slots"/>
-                        </button>
                     </div>
                     <field name="active" invisible="1"/>
                     <field name="company_id" invisible="1"/>
@@ -62,7 +55,16 @@
                             <field name="date_begin" string="Date" widget="daterange" options="{'end_date_field': 'date_end'}" />
                             <field name="date_end" invisible="1" />
                             <field name="date_tz"/>
-                            <field name="is_multi_slots" string="Multiple Slots"/>
+                            <label for="is_multi_slots"/>
+                            <div class="o_row">
+                                <field name="is_multi_slots" string="Multiple Slots"/>
+                                <div invisible="not is_multi_slots">
+                                     <button name="action_open_slot_calendar"
+                                        type="object" class="btn-link p-0 pb-sm-1">
+                                        <field name="event_slot_count" class="oe_inline"/> Slot(s)
+                                    </button>
+                                </div>
+                            </div>
                             <field name="lang"/>
                             <field name="event_type_id" string="Template"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
