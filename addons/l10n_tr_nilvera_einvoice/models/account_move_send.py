@@ -25,7 +25,8 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_alerts(self, moves, moves_data):
         alerts = super()._get_alerts(moves, moves_data)
-        if tr_partners_missing_address := moves.filtered(
+        moves_to_check = moves.filtered(self._is_tr_nilvera_applicable)
+        if tr_partners_missing_address := moves_to_check.filtered(
                 lambda m: 'tr_nilvera' in moves_data[m]['extra_edis'] and (m.partner_id.country_code != 'TR' or not m.partner_id.city or not m.partner_id.state_id or not m.partner_id.street)
         ).partner_id:
             alerts["partner_data_missing"] = {
@@ -34,7 +35,7 @@ class AccountMoveSend(models.AbstractModel):
                 "action": tr_partners_missing_address._get_records_action(name=_("Check data on Partner(s)")),
             }
 
-        if tr_invalid_subscription_dates := moves.filtered(
+        if tr_invalid_subscription_dates := moves_to_check.filtered(
             lambda move: move._l10n_tr_nilvera_einvoice_check_invalid_subscription_dates()
         ):
             alerts["critical_invalid_subscription_dates"] = {
@@ -46,7 +47,7 @@ class AccountMoveSend(models.AbstractModel):
                 "level": "danger",
             }
 
-        if tr_einvoice_partners_missing_ref := moves.partner_id.filtered(
+        if tr_einvoice_partners_missing_ref := moves_to_check.partner_id.filtered(
             lambda p: p.l10n_tr_nilvera_customer_status == "einvoice" and not p.ref
         ):
             alerts["critical_partner_data_missing"] = {
@@ -54,6 +55,16 @@ class AccountMoveSend(models.AbstractModel):
                 "action_text": _("View Partner(s)"),
                 "action": tr_einvoice_partners_missing_ref._get_records_action(name=_("Check reference on Partner(s)")
                 ),
+                "level": "danger",
+            }
+
+        if invalid_negative_lines := moves_to_check.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_negative_lines(),
+        ):
+            alerts["critical_invalid_negative_lines"] = {
+                "message": _("Nilvera portal cannot process negative quantity nor negative price on invoice lines"),
+                "action_text": _("View Invoice(s)"),
+                "action": invalid_negative_lines._get_records_action(name=_("Check data on Invoice(s)")),
                 "level": "danger",
             }
 
