@@ -17,6 +17,7 @@ import requests
 import json
 import re
 import contextlib
+from markupsafe import Markup
 
 from pytz import timezone
 
@@ -144,6 +145,7 @@ class IrActions(models.Model):
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
             'Command': Command,
+            'Markup': Markup,
         }
 
     @api.model
@@ -519,6 +521,7 @@ class IrActionsServer(models.Model):
 #  - _logger: _logger.info(message): logger to emit messages in server logs
 #  - UserError: exception class for raising user-facing warning messages
 #  - Command: x2many commands namespace
+#  - Markup: wrap html content
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model
