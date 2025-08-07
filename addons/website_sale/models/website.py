@@ -313,8 +313,10 @@ class Website(models.Model):
             ThemeUtils.enable_view(xml_id)
 
         for footer_id in ThemeUtils._footer_templates:
-            footer_view = self.env['website'].with_context(website_id=website.id).viewref(footer_id)
-
+            footer_view = self.with_context(website_id=website.id).viewref(
+                footer_id,
+                raise_if_not_found=False,  # don't raise on custom footers not installed on website
+            )
             if not footer_view.active:
                 continue
 
