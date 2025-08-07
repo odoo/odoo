@@ -232,7 +232,7 @@ class Channel(models.Model):
                                 field_name=field_name,
                             )
                         )
-            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
+            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0 and 'partner_id' in cmd[2]]
 
             partner_ids_to_add = partner_ids
             # always add current user to new channel to have right values for
