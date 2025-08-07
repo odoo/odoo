@@ -34,7 +34,7 @@ test("can create a lead from the thread action after the conversation ends", asy
     });
     await start();
     await openDiscuss(channel_id);
-    await click(".o-mail-Discuss-header button[title='Create Lead']");
+    await click(".o-mail-DiscussContent-header button[title='Create Lead']");
     await insertText(".o-livechat-LivechatCommandDialog-form input", "testlead");
     await click(".o-mail-ActionPanel button", { text: "Create Lead" });
     await contains(".o_mail_notification", { text: "Created a new lead: testlead" });
