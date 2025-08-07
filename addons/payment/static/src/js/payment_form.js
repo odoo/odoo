@@ -43,6 +43,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         } else {
             this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it.
         }
+        this.defaultSubmitButtonLabel = document.querySelector(
+            'button[name="o_payment_submit_button"]'
+        )?.textContent;
 
         this.$('[data-bs-toggle="tooltip"]').tooltip();
     },
@@ -237,6 +240,12 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         const paymentOptionId = this._getPaymentOptionId(radio);
         const paymentMethodCode = this._getPaymentMethodCode(radio);
         const flow = this._getPaymentFlow(radio);
+        const btnLabel = this._isPayLaterMethod(paymentMethodCode)
+            ? _t("Confirm")
+            : this.defaultSubmitButtonLabel;
+        for (const btn of document.querySelectorAll('button[name="o_payment_submit_button"]')) {
+            btn.textContent = btnLabel;
+        }
         await this._prepareInlineForm(
             providerId, providerCode, paymentOptionId, paymentMethodCode, flow
         );
@@ -263,6 +272,19 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {},
+
+    /**
+     * Check whether or not the given payment method expects immediate payment.
+     *
+     * Override this method to change the submit button label from the default to "Confirm".
+     *
+     * @private
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @return {boolean}
+     */
+    _isPayLaterMethod(paymentMethodCode) {
+        return false;
+    },
 
     /**
      * Collapse all inline forms of the current widget.
