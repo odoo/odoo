@@ -43,7 +43,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
         if self.allocation_mode == 'employee':
-            employees = self.employee_ids
+            employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
         elif self.allocation_mode == 'category':
             employees = self.category_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)
         elif self.allocation_mode == 'company':
@@ -88,9 +88,13 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
         if conflicting_leaves:
             # YTI: More complex use cases could be managed later
+            msg = '\n'.join(f"- {l.display_name}" for l in conflicting_leaves)
+            raise UserError(self.env._("Part of the request is already covered by another request. Conflicting time off:\n%s") % msg)
+
+            # this part is never accessible because it's a subset of the above error
             invalid_time_off = conflicting_leaves.filtered(lambda leave: leave.leave_type_request_unit == 'hour')
             if invalid_time_off:
-                raise UserError(self.env_('Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
+                raise UserError(self.env._('Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
             one_day_leaves = conflicting_leaves.filtered(lambda leave: leave.request_date_from == leave.request_date_to)
             one_day_leaves.action_refuse()
             (conflicting_leaves - one_day_leaves)._split_leaves(self.date_from, self.date_to + timedelta(days=1))
