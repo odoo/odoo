@@ -108,6 +108,7 @@ test("click on remove follower", async () => {
     await contains(".o-mail-Follower");
     await click("[title='Remove this follower']");
     await contains(".o-mail-Follower", { count: 0 });
+    await contains(".o-mail-Followers-dropdown");
 });
 
 test("Load 100 followers at once", async () => {
