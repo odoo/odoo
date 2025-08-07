@@ -96,6 +96,7 @@ class BuilderContainer extends Component {
     static components = { Builder, LocalOverlayContainer };
     static props = {
         content: String,
+        editableSelector: String,
         headerContent: String,
         Plugins: Array,
         onEditorLoad: Function,
@@ -136,6 +137,7 @@ class BuilderContainer extends Component {
                 this.state.isMobile = !this.state.isMobile;
             },
             overlayRef: () => {},
+            editableSelector: this.props.editableSelector,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
             Plugins: this.props.Plugins,
@@ -164,7 +166,14 @@ class IrUiView extends models.Model {
  */
 export async function setupHTMLBuilder(
     content = "",
-    { headerContent = "", snippetContent, dropzoneSelectors, snippets, styleContent } = {}
+    {
+        editableSelector = "#wrapwrap",
+        headerContent = "",
+        snippetContent,
+        dropzoneSelectors,
+        snippets,
+        styleContent,
+    } = {}
 ) {
     defineMailModels();
     defineModels([IrUiView]);
@@ -231,6 +240,7 @@ export async function setupHTMLBuilder(
     const comp = await mountWithCleanup(BuilderContainer, {
         props: {
             content,
+            editableSelector,
             headerContent,
             Plugins,
             onEditorLoad: (editor) => {
