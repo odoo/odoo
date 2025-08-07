@@ -617,3 +617,15 @@ class TestFrontend(TestFrontendCommon):
         We can now transfer order from one table to another and from floating order to another etc.
         """
         self.start_pos_tour('test_transfering_orders', login="pos_user")
+
+    def test_direct_sales(self):
+        """
+        Direct sales should not be synced without table_id or floating_order_name, if an order is
+        sync without one of them, we assign pos_reference in floating_order_name.
+        """
+        self.start_pos_tour('test_direct_sales', login="pos_user")
+        orders = self.env['pos.order'].search([], limit=3, order='id desc')
+        self.assertEqual(orders[2].floating_order_name, orders[2].pos_reference)
+        self.assertEqual(orders[1].floating_order_name, "Test")
+        self.assertEqual(orders[0].floating_order_name, False)
+        self.assertIsNotNone(orders[0].table_id)
