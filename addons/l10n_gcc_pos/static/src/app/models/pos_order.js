@@ -5,4 +5,7 @@ patch(PosOrder.prototype, {
     get isGccCountry() {
         return ["SA", "AE", "BH", "OM", "QA", "KW"].includes(this.company.country_id?.code);
     },
+    get showTitle() {
+        return this.state !== "draft";
+    },
 });
