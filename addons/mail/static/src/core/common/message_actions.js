@@ -72,7 +72,6 @@ messageActionsRegistry
         name: _t("Mark as Todo"),
         onSelected: (component) => component.props.message.toggleStar(),
         sequence: 30,
-        mobileCloseAfterClick: false,
     })
     .add("mark-as-read", {
         condition: (component) => component.props.thread?.eq(component.store.inbox),
@@ -87,7 +86,6 @@ messageActionsRegistry
         name: _t("View Reactions"),
         onSelected: (component) => component.openReactionMenu(),
         sequence: 50,
-        mobileCloseAfterClick: false,
     })
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
@@ -177,10 +175,6 @@ messageActionsRegistry
     });
 
 class MessageAction extends Action {
-    get mobileCloseAfterClick() {
-        return this.explicitDefinition.mobileCloseAfterClick ?? true;
-    }
-
     /** Condition to display this action. */
     get condition() {
         return messageActionsInternal.condition(this._component, this.id, this.explicitDefinition);
