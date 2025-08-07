@@ -408,6 +408,10 @@ export class ResourceEditor extends Component {
     }
 
     showErrorLine() {
+        if (!this.editorRef.el) {
+            // Possibly destroyed.
+            return;
+        }
         const resourceId = this.state.currentResource.id;
         const error = this.errors.find(({ resource }) => resource.id === resourceId)?.error;
         if (error) {
@@ -422,6 +426,10 @@ export class ResourceEditor extends Component {
     }
 
     clearErrorLine() {
+        if (!this.editorRef.el) {
+            // Possibly destroyed.
+            return;
+        }
         const allGutterCells = this.editorRef.el.querySelectorAll(".ace_gutter-cell");
         for (const gutterCell of allGutterCells) {
             gutterCell.classList.remove("o_error");
