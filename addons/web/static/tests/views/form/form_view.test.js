@@ -32,6 +32,7 @@ import {
     xml,
 } from "@odoo/owl";
 import {
+    clickSave,
     contains,
     defineActions,
     defineMenus,
@@ -8276,6 +8277,43 @@ test(`do not activate an hidden tab when switching between records`, async () =>
     await contains(`.o_pager_previous`).click();
     expect(`.o_notebook .nav-item`).toHaveCount(2);
     expect(`.o_notebook .nav-link:eq(1)`).toHaveClass("active");
+});
+
+test(`required fields inside notebook`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <notebook>
+                        <page string="Name">
+                            <field name="name" required="1"/>
+                        </page>
+                        <page string="Foo">
+                            <field name="foo" required="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+    await contains(".o_field_char[name=name] input").clear();
+    await contains(".o_notebook_headers .nav-link:last").click();
+    await contains(".o_field_char[name=foo] input").clear();
+    await clickSave();
+    expect(".o_field_char[name=foo]").toHaveClass("o_field_invalid");
+    expect(".o_notebook_headers .nav-link:first").toHaveClass("o_page_invalid");
+    expect(".o_notebook_headers .nav-link:last").toHaveClass("o_page_invalid");
+    expect(".o_form_button_save").not.toBeEnabled();
+    await contains(".o_field_char[name=foo] input").edit("a");
+    expect(".o_notebook_headers .nav-link:first").toHaveClass("o_page_invalid");
+    expect(".o_notebook_headers .nav-link:last").not.toHaveClass("o_page_invalid");
+    expect(".o_form_button_save").not.toBeEnabled();
+    await contains(".o_notebook_headers .nav-link:first").click();
+    await contains(".o_field_char[name=name] input").edit("b");
+    expect(".o_notebook_headers .o_page_invalid").toHaveCount(0);
 });
 
 test(`support anchor tags with action type`, async () => {

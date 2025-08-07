@@ -183,6 +183,7 @@ export class FormCompiler extends ViewCompiler {
         const field = super.compileField(el, params);
 
         const fieldName = el.getAttribute("name");
+        params.notebookPageFields?.push(fieldName);
         const fieldString = el.getAttribute("string");
         const fieldId = el.getAttribute("field_id");
         const labelsForAttr = el.getAttribute("id") || fieldName;
@@ -572,9 +573,11 @@ export class FormCompiler extends ViewCompiler {
             }
             pageSlot.setAttribute("isVisible", isVisibleExpr);
 
+            params.notebookPageFields = [];
             for (const contents of child.children) {
                 append(pageSlot, this.compileNode(contents, { ...params, currentSlot: pageSlot }));
             }
+            pageSlot.setAttribute("fieldNames", `${JSON.stringify(params.notebookPageFields)}`);
         }
 
         return noteBook;

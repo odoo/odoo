@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillRender, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
 /**
  * A notebook component that will render only the current page and allow
@@ -70,6 +70,7 @@ export class Notebook extends Component {
     setup() {
         this.activePane = useRef("activePane");
         this.pages = this.computePages(this.props);
+        this.invalidPages = new Set();
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
         useEffect(
@@ -79,6 +80,9 @@ export class Notebook extends Component {
             },
             () => [this.state.currentPage]
         );
+        onWillRender(() => {
+            this.computeInvalidPages();
+        });
         onWillUpdateProps((nextProps) => {
             const activateDefault =
                 this.props.defaultPage !== nextProps.defaultPage || !this.defaultVisible;
@@ -154,5 +158,17 @@ export class Notebook extends Component {
         }
 
         return current;
+    }
+
+    computeInvalidPages() {
+        this.invalidPages = new Set();
+        for (const page of this.navItems) {
+            const invalid = page[1].fieldNames?.some((fieldName) =>
+                this.env.model?.root.isFieldInvalid(fieldName)
+            );
+            if (invalid) {
+                this.invalidPages.add(page[0]);
+            }
+        }
     }
 }
