@@ -83,6 +83,8 @@ class ResCompany(models.Model):
         res = super().write(vals)
         if not search_domain.is_false():
             self.env['hr.attendance'].search(search_domain)._update_overtime()
+        if vals.get('absence_management', False):
+            self.env['hr.attendance']._cron_absence_detection()
 
         return res
 

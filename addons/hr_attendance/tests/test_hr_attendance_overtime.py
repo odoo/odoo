@@ -663,15 +663,17 @@ class TestHrAttendanceOvertime(TransactionCase):
     #     self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
     #     self.assertAlmostEqual(self.flexible_employee.total_overtime, 0, 2)
 
-    #     self.env['hr.attendance']._cron_absence_detection()
+    #     self.company.write({
+    #         'absence_management': True,
+    #     })
 
-    #     # Check that absences were correctly attributed
-    #     self.assertAlmostEqual(self.other_employee.total_overtime, -8, 2)
-    #     self.assertAlmostEqual(self.jpn_employee.total_overtime, -8, 2)
-    #     self.assertAlmostEqual(self.honolulu_employee.total_overtime, -8, 2)
+    #     # Check that absences were correctly attributed (Absences on the full month - 22 working days)
+    #     self.assertAlmostEqual(self.other_employee.total_overtime, -176, 2)
+    #     self.assertAlmostEqual(self.jpn_employee.total_overtime, -176, 2)
+    #     self.assertAlmostEqual(self.honolulu_employee.total_overtime, -176, 2)
 
-    #     # Employee Checked in yesterday, no absence found
-    #     self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
+    #     # Employee Checked in yesterday, no absence found (Absences on the full month except one day - 21 working)
+    #     self.assertAlmostEqual(self.employee.total_overtime, -168, 2)
 
     #     # Flexible schedule employee, no absence found
     #     self.assertAlmostEqual(self.flexible_employee.total_overtime, 0, 2)
