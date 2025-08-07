@@ -941,6 +941,9 @@ class PosConfig(models.Model):
 
     def _load_onboarding_clothes_demo_data(self, with_demo_data=True):
         self.ensure_one()
+        product_module = self.env['ir.module.module'].search([('name', '=', 'product')])
+        if not product_module.demo:
+            convert.convert_file(self._env_with_clean_context(), 'product', 'data/product_attribute_demo.xml', idref=None, mode='init', noupdate=True)
         convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/clothes_category_data.xml', idref=None, mode='init', noupdate=True)
         if with_demo_data:
             convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/clothes_data.xml', idref=None, mode='init', noupdate=True)

@@ -5,6 +5,38 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
         </record>
 
+        <!-- Shoe Size -->
+        <record id="pa_shoe_size" model="product.attribute">
+            <field name="name">Shoes size</field>
+            <field name="create_variant">no_variant</field>
+            <field name="display_type">pills</field>
+        </record>
+
+        <record id="pav_shoe_size_39" model="product.attribute.value">
+            <field name="name">39</field>
+            <field name="attribute_id" ref="pa_shoe_size"/>
+        </record>
+
+        <record id="pav_shoe_size_40" model="product.attribute.value">
+            <field name="name">40</field>
+            <field name="attribute_id" ref="pa_shoe_size"/>
+        </record>
+
+        <record id="pav_shoe_size_41" model="product.attribute.value">
+            <field name="name">41</field>
+            <field name="attribute_id" ref="pa_shoe_size"/>
+        </record>
+
+        <record id="pav_shoe_size_42" model="product.attribute.value">
+            <field name="name">42</field>
+            <field name="attribute_id" ref="pa_shoe_size"/>
+        </record>
+
+        <record id="pav_shoe_size_43" model="product.attribute.value">
+            <field name="name">43</field>
+            <field name="attribute_id" ref="pa_shoe_size"/>
+        </record>
+
         <!-- Clothes products -->
         <record model="product.product" id="casual_t_shirt">
             <field name="name">Casual T-shirt</field>
@@ -384,15 +416,15 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_size_number">
             <field name="product_tmpl_id" ref="point_of_sale.product_odoo_sneakers_template"/>
-            <field name="attribute_id" ref="product.pa_shoe_size"/>
+            <field name="attribute_id" ref="pa_shoe_size"/>
             <field
                 name="value_ids"
                 eval="[Command.set([
-                    ref('product.pav_shoe_size_39'),
-                    ref('product.pav_shoe_size_40'),
-                    ref('product.pav_shoe_size_41'),
-                    ref('product.pav_shoe_size_42'),
-                    ref('product.pav_shoe_size_43'),
+                    ref('pav_shoe_size_39'),
+                    ref('pav_shoe_size_40'),
+                    ref('pav_shoe_size_41'),
+                    ref('pav_shoe_size_42'),
+                    ref('pav_shoe_size_43'),
             ])]" />
         </record>
 
@@ -561,15 +593,15 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_sport_shoes">
             <field name="product_tmpl_id" ref="point_of_sale.sport_shoes_template"/>
-            <field name="attribute_id" ref="product.pa_shoe_size"/>
+            <field name="attribute_id" ref="pa_shoe_size"/>
             <field
                 name="value_ids"
                 eval="[Command.set([
-                    ref('product.pav_shoe_size_39'),
-                    ref('product.pav_shoe_size_40'),
-                    ref('product.pav_shoe_size_41'),
-                    ref('product.pav_shoe_size_42'),
-                    ref('product.pav_shoe_size_43'),
+                    ref('pav_shoe_size_39'),
+                    ref('pav_shoe_size_40'),
+                    ref('pav_shoe_size_41'),
+                    ref('pav_shoe_size_42'),
+                    ref('pav_shoe_size_43'),
             ])]" />
         </record>
     </data>
