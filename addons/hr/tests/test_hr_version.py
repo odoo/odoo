@@ -320,6 +320,51 @@ class TestHrVersion(TransactionCase):
         })
         self.assertEqual(v4.contract_date_end, date(2051, 12, 31))
 
+    def test_1_version_contract_synchronisation(self):
+        """
+        When an employee has only one version, the contract_date_start should
+        be synchronized with the date_version.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        version = employee.version_id
+
+        employee.write({'contract_date_start': '2019-01-01'})
+        self.assertEqual(version.contract_date_start, version.date_version)
+
+        # date_version should not be reset if the contract_date_start is set to False
+        employee.write({'contract_date_start': False})
+        self.assertEqual(version.date_version, date(2019, 1, 1))
+
+        employee.write({'contract_date_start': '2021-01-01'})
+        self.assertEqual(version.contract_date_start, version.date_version)
+
+    def test_2_versions_contract_synchronisation(self):
+        """
+        When an employee has two versions, the synchronisation should stop
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        v1 = employee.version_id
+
+        employee.write({'contract_date_start': '2019-01-01'})
+        self.assertEqual(v1.contract_date_start, v1.date_version)
+
+        v2 = employee.create_version({'date_version': '2021-01-01'})
+        employee.write({'contract_date_start': '2020-01-01'})
+        self.assertEqual(v1.date_version, date(2019, 1, 1))
+        self.assertEqual(v2.date_version, date(2021, 1, 1))
+
+        # Archived versions do not count.
+        # So if we archive v2, the synchronisation should start again.
+        v2.active = False
+        employee.write({'contract_date_start': '2021-01-01'})
+        self.assertEqual(v1.contract_date_start, v1.date_version)
+
     def test_in_out_contract(self):
         """
         Check that an employee is in or out of the contract at a specific date.

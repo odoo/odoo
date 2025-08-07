@@ -289,6 +289,9 @@ class HrVersion(models.Model):
         if self.env.context.get('sync_contract_dates'):
             return super().write(values)
 
+        if values.get('contract_date_start', False) and len(self.employee_id.version_ids) == 1:
+            values['date_version'] = values['contract_date_start']
+
         new_vals = {
             f_name: f_value
             for f_name, f_value in values.items()
