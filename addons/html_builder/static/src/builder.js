@@ -43,10 +43,12 @@ export class Builder extends Component {
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
         editableSelector: { type: String },
+        themeTabDisplayName: { type: String, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
         config: {},
+        themeTabDisplayName: _t("Theme"),
     };
 
     setup() {

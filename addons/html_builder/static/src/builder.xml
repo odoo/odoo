@@ -35,7 +35,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button id="theme-tab" data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'theme' ? 'true' : 'false'">
-                        <i class="fa fa-cog me-2" role="none"/>Theme
+                        <i class="fa fa-cog me-2" role="none"/><t t-out="props.themeTabDisplayName"/>
                     </button>
                 </li>
             </ul>
