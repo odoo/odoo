@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div id="action_btn_desktop" t-if="!ui.isSmall" class="validation-buttons d-flex w-100 gap-2 p-2 sticky-bottom">
-                            <button class="button next validation btn btn-primary btn-lg w-100 py-4 lh-lg" t-att-class="{ highlight: !locked }" t-on-click="orderDone" name="done">
+                            <button class="button next validation btn btn-primary btn-lg w-100 py-4 lh-lg" t-att-class="{ highlight: !locked }" t-on-click="() => this.pos.orderDone(this.currentOrder)" name="done">
                                 New Order
                             </button>
                         </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex gap-2 p-2">
-                    <div class="btn-switchpane validation-button btn btn-primary btn-lg py-3 flex-fill lh-lg" t-att-class="{ highlight: !locked }" t-on-click="orderDone" name="done">
+                    <div class="btn-switchpane validation-button btn btn-primary btn-lg py-3 flex-fill lh-lg" t-att-class="{ highlight: !locked }" t-on-click="() => this.pos.orderDone(this.currentOrder)" name="done">
                                 New Order
                     </div>
                 </div>
