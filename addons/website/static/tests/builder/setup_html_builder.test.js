@@ -4,10 +4,10 @@ import {
     modifyText,
     setupWebsiteBuilder,
 } from "./website_helpers";
-import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, waitFor } from "@odoo/hoot-dom";
 import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
+import { WebsiteBuilder } from "@website/builder/website_builder";
 
 defineWebsiteModels();
 
@@ -17,25 +17,25 @@ test("setup of the editable elements", async () => {
 });
 
 test("history back", async () => {
-    let builder_sidebar;
+    let builder;
     // Patch to get the builder sidebar instance
-    patchWithCleanup(Builder.prototype, {
+    patchWithCleanup(WebsiteBuilder.prototype, {
         setup() {
             super.setup(...arguments);
-            builder_sidebar = this;
+            builder = this;
         },
     });
     // Navigating back in the browser history should not lead to a warning popup
     // if the website was not edited.
     const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
-    builder_sidebar.onBeforeLeave();
+    builder.onBeforeLeave();
     await animationFrame();
     expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(0);
     // Navigating back in the browser history should lead to a warning popup if
     // the website was edited.
     await modifyText(getEditor(), getEditableContent());
     await animationFrame();
-    builder_sidebar.onBeforeLeave();
+    builder.onBeforeLeave();
     await animationFrame();
     expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(1);
 });
