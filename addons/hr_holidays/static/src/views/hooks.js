@@ -15,7 +15,35 @@ export function useMandatoryDays(props) {
         const date = luxon.DateTime.fromJSDate(info.date).toISODate();
         const mandatoryDay = props.model.mandatoryDays[date];
         if (mandatoryDay) {
+<<<<<<< 31705dbd75403be87bfcfaaac9eb8f15aff2593e
             return [`hr_mandatory_day hr_mandatory_day_${mandatoryDay}`];
+||||||| ead3717f5584c1182453f96b5f79ee64f118aa68
+            const dayNumberElTop = info.view.el.querySelector(
+                `.fc-day-top[data-date="${info.el.dataset.date}"]`
+            );
+            const dayNumberEl = info.view.el.querySelector(
+                `.fc-day[data-date="${info.el.dataset.date}"]`
+            );
+            if (dayNumberElTop) {
+                dayNumberElTop.classList.add('hr_mandatory_day', `hr_mandatory_day_top_${mandatoryDay}`);
+            }
+            if (dayNumberEl) {
+                dayNumberEl.classList.add('hr_mandatory_day',`hr_mandatory_day_${mandatoryDay}`);
+            }
+=======
+            const dayNumberElTop = info.view.el.querySelector(
+                `.fc-day-top[data-date="${date}"]`
+            );
+            const dayNumberEl = info.view.el.querySelector(
+                `.fc-day[data-date="${date}"]`
+            );
+            if (dayNumberElTop) {
+                dayNumberElTop.classList.add('hr_mandatory_day', `hr_mandatory_day_top_${mandatoryDay}`);
+            }
+            if (dayNumberEl) {
+                dayNumberEl.classList.add('hr_mandatory_day',`hr_mandatory_day_${mandatoryDay}`);
+            }
+>>>>>>> a267484d809ece4b1fb3d15a7e2e2f8201f9c899
         }
         return [];
     };

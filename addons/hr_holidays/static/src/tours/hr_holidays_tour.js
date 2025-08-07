@@ -96,3 +96,26 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("hr_leave_mandatory_days_hebrew_tour", {
+    url: "/web",
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
+            run: "click",
+        },
+        {
+            trigger: 'td[data-date="2025-11-11"]',
+            content: "Verify that the date has the hr_mandatory_day class.",
+            run: () => {
+                const td = document.querySelector('td[data-date="2025-11-11"]');
+                if (!td?.classList.contains("hr_mandatory_day")) {
+                    console.error(
+                        "The date 2025-11-11 does not have the hr_mandatory_day class."
+                    );
+                }
+            },
+        },
+    ],
+});
