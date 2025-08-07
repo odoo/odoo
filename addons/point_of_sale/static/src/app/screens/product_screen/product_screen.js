@@ -28,6 +28,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 
 const { DateTime } = luxon;
 
@@ -410,23 +411,12 @@ export class ProductScreen extends Component {
      */
     async fastValidate(paymentMethod) {
         this.pos.isFastPaymentRunning = true;
-
-        if (
-            this.currentOrder.nb_print === 0 &&
-            this.pos.config.iface_print_auto &&
-            this.pos.config.iface_print_skip_screen
-        ) {
-            const nextPage = {
-                page: "FeedbackScreen",
-                params: {
-                    orderUuid: this.currentOrder.uuid,
-                    paymentMethodId: paymentMethod.id,
-                },
-            };
-            if (this.currentOrder.uuid === this.pos.selectedOrderUuid) {
-                this.pos.navigate(nextPage.page, nextPage.params);
-            }
-        } else {
+        const validation = new OrderPaymentValidation({
+            pos: this.pos,
+            order: this.currentOrder,
+        });
+        await validation.askBeforeValidation();
+        if (!this.pos.checkAndSkipScreenWithPrint(paymentMethod.id)) {
             await this.pos.validateOrderFast(paymentMethod);
         }
     }

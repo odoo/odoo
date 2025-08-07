@@ -52,7 +52,10 @@ export class PaymentScreen extends Component {
     }
 
     async validateOrder(isForceValidate = false) {
-        const validation = new OrderPaymentValidation({ pos: this.pos, order: this.currentOrder });
+        const validation = new OrderPaymentValidation({
+            pos: this.pos,
+            order: this.currentOrder,
+        });
         await validation.validateOrder(isForceValidate);
     }
 
@@ -296,13 +299,7 @@ export class PaymentScreen extends Component {
         this.currentOrder.selectPaymentline(line);
         this.numberBuffer.reset();
     }
-    selectNextOrder() {
-        if (this.currentOrder.originalSplittedOrder) {
-            this.pos.selectedOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
-        } else {
-            this.pos.addNewOrder();
-        }
-    }
+
     paymentMethodImage(id) {
         if (this.paymentMethod.image) {
             return `/web/image/pos.payment.method/${id}/image`;
