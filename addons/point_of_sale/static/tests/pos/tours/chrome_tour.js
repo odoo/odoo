@@ -112,6 +112,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+            { trigger: ".receipt-screen .pos-config-name:contains(Shop)" },
 
             // Cancelling a floating order should remove it from the floating orders list.
             ReceiptScreen.clickNextOrder(),
