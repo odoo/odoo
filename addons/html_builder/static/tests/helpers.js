@@ -2,6 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Img } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+import { unformat } from "@html_editor/../tests/_helpers/format";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
@@ -51,6 +52,18 @@ function getSnippetView(snippets) {
     </snippets>`;
 }
 
+/**
+ * Creates snippet structure HTML for test fixtures
+ * @param {Object} options - Snippet structure configuration
+ * @param {string} options.name - The display name of the snippet
+ * @param {string} options.content - The HTML content of the snippet
+ * @param {string[]} [options.keywords=[]] - Search keywords for the snippet
+ * @param {string} options.groupName - The snippet group (category) name
+ * @param {string} [options.imagePreview=""] - URL to preview image
+ * @param {string|number} [options.moduleId=""] - Module ID if snippet belongs to a module
+ * @param {string} [options.moduleDisplayName=""] - Human-readable module name
+ * @returns {string} HTML string for the snippet structure
+ */
 export function getSnippetStructure({
     name,
     content,
@@ -347,20 +360,92 @@ export async function waitForSnippetDialog() {
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
 }
 
+// Snippet Testing Helpers
+// Use createTestSnippets() for most cases to replace repetitive getSnippetsDescription functions
+// Use getBasicSection() for simple HTML section generation
+
+/**
+ * Creates a basic HTML section structure for test snippets
+ * @param {string} content - The content to place inside the section
+ * @param {Object} [options={}] - Configuration options
+ * @param {string} [options.name] - Name attribute for the section (data-name)
+ * @param {string} [options.snippet="s_test"] - Snippet class and data-snippet value
+ * @param {string} [options.additionalClassOnRoot=""] - Additional CSS classes for the root element
+ * @returns {string} Formatted HTML section element
+ */
+export function getBasicSection(
+    content,
+    { name, snippet = "s_test", additionalClassOnRoot = "" } = {}
+) {
+    let classes = snippet;
+    if (additionalClassOnRoot) {
+        classes += ` ${additionalClassOnRoot}`;
+    }
+    return unformat(
+        `<section class="${classes}" data-snippet="${snippet}" ${
+            name ? `data-name="${name}"` : ""
+        }><div class="test_a o-paragraph">${content}</div></section>`
+    );
+}
+
+export function createTestSnippets({ snippets: snippetConfigs = [], withName = false }) {
+    return snippetConfigs.map((snippetConfig) => {
+        const {
+            name,
+            groupName = "a",
+            content,
+            innerHTML,
+            keywords = [],
+            imagePreview = "",
+            moduleId,
+            moduleDisplayName,
+            additionalClassOnRoot,
+            snippet: snippetId,
+        } = snippetConfig;
+
+        const finalContent =
+            content ||
+            getBasicSection(innerHTML || name, {
+                name: withName ? name : "",
+                snippet: snippetId || "s_test",
+                additionalClassOnRoot,
+            });
+
+        const snippet = {
+            name,
+            groupName,
+            content: finalContent,
+            keywords,
+            imagePreview,
+            moduleId,
+            moduleDisplayName,
+        };
+
+        return snippet;
+    });
+}
+
 export async function setupHTMLBuilderWithDummySnippet(content) {
-    const getSnippetEl = () => {
-        const className = "s_test";
-        return `<section class="${className}" data-snippet="s_test" data-name="Test">
+    const snippetEl = `<section class="s_test" data-snippet="s_test" data-name="Test">
             <div class="test_a"></div>
         </section>`;
-    };
-    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: getSnippetEl() }];
+
+    const snippetsDescription = createTestSnippets({
+        snippets: [
+            {
+                name: "Test",
+                groupName: "a",
+                content: snippetEl,
+            },
+        ],
+    });
+
     const snippetsStructure = {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription().map((snippetDesc) =>
+            snippet_structure: snippetsDescription.map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
