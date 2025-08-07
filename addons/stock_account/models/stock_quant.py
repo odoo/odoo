@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import itertools
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -114,3 +115,15 @@ class StockQuant(models.Model):
             lot = self.env["stock.location"].browse(vals["lot_id"])
             self._check_lot_valuated(vals.get('quantity'), 0, location, product, lot)
         return super().create(val_list)
+
+    def _get_quants_by_products_locations(self, product_ids, location_ids, extra_domain=False):
+        quants_cache = super()._get_quants_by_products_locations(product_ids, location_ids, extra_domain=extra_domain)
+        valued_location_ids = location_ids.filtered(lambda loc: loc._should_be_valued()).ids
+        lot_valuated_product_ids = product_ids.filtered('lot_valuated').ids
+
+        res = defaultdict(lambda: self.env['stock.quant'])
+        for (prd_id, loc_id, lot_id, pck_id, own_id), quants in quants_cache.items():
+            if not lot_id and prd_id in lot_valuated_product_ids and loc_id in valued_location_ids:
+                continue
+            res[prd_id, loc_id, lot_id, pck_id, own_id] = quants
+        return res
