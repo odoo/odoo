@@ -60,3 +60,48 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     self.product_a.standard_price, 5.0 if cost_method == 'standard' else 15.0,
                     f'picking_type={picking_type.code}, cost_method={cost_method}'
                 )
+
+    def test_project_propagation_from_so_with_dropshipping(self):
+        """ Test that the project is propagated from the sale order to the purchase order
+        when using dropshipping.
+        """
+        # check that the module project is installed
+        if self.env['ir.module.module']._get('sale_project').state != 'installed':
+            self.skipTest("Skipping test: the 'project' module is not installed.")
+        # Create a dropshippable product
+        dropship_product = self.env['product.product'].create({
+            'name': 'Dropship Product',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_b.id,
+            })],
+            'route_ids': [Command.set([
+                self.env.ref('stock_dropshipping.route_drop_shipping').id
+            ])],
+        })
+        self.env.user.group_ids |= (
+            self.quick_ref('project.group_project_manager') |
+            self.quick_ref('sales_team.group_sale_salesman')
+        )
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'partner_id': self.partner_a.id,
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': dropship_product.id,
+                'product_uom_qty': 1.0,
+            })],
+            'project_id': project.id,
+        })
+        so.action_confirm()
+
+        # Check that a purchase order was created and the project is set
+        po = self.env['purchase.order'].search([
+            ('origin', '=', so.name),
+            ('partner_id', '=', self.partner_b.id),
+        ], limit=1)
+
+        self.assertTrue(po, "A Purchase Order should be created from the Sale Order.")
+        self.assertEqual(po.project_id, project, "The project should be propagated from the Sale Order to the Purchase Order.")
