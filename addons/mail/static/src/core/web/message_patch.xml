@@ -52,10 +52,10 @@
         <div><br/></div>
         <div class="o_mail_reply_container">
             <div class="o_mail_reply_content">
+                <blockquote t-out="body"/>
                 <div>
                     <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>
                 </div>
-                <blockquote t-out="body"/>
             </div>
         </div>
     </t>
