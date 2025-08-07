@@ -67,3 +67,10 @@ class StockMove(models.Model):
             **super()._assign_picking_values(picking),
             'project_id': self[:1].sale_line_id.order_id.project_id.id,
         }
+
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        project = self.sale_line_id.order_id.project_id
+        if project:
+            res['project_id'] = project.id
+        return res
