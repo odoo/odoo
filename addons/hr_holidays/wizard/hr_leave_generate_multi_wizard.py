@@ -37,8 +37,29 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     department_id = fields.Many2one('hr.department')
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag')
-    date_from = fields.Date('Start Date', required=True)
-    date_to = fields.Date('End Date', required=True)
+    date_from = fields.Date('Start Date', required=True, default=lambda self: fields.Date.today())
+    date_to = fields.Date('End Date', required=True, default=lambda self: fields.Date.today())
+    hour_from = fields.Float(string='Hour from', compute='_compute_hour_from_to', readonly=False, store=True)
+    hour_to = fields.Float(string='Hour to', compute='_compute_hour_from_to', readonly=False, store=True)
+    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit')
+    date_from_period = fields.Selection([
+        ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period Start", default='am')
+    date_to_period = fields.Selection([
+        ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period End", default='pm')
+
+    @api.depends('employee_ids', 'date_from', 'date_to', 'leave_type_request_unit')
+    def _compute_hour_from_to(self):
+        company_calendar = self.env.company.resource_calendar_id
+        for record in self:
+            calendar = record.employee_ids.resource_calendar_id if len(record.employee_ids.resource_calendar_id) == 1 else company_calendar
+            if (record.leave_type_request_unit != 'hour'
+                    and record.date_from
+                    and record.date_to
+                    and calendar):
+                record.hour_from, _ = calendar._get_hours_for_date(record.date_from)
+                _, record.hour_to = calendar._get_hours_for_date(record.date_to)
 
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
@@ -56,26 +77,37 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         self.ensure_one()
         work_days_data = employees.sudo()._get_work_days_data_batch(date_from_tz, date_to_tz)
         validated = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.holiday_status_id.leave_validation_type == 'no_validation'
-        return [{
-            'name': self.name,
-            'holiday_status_id': self.holiday_status_id.id,
-            'date_from': date_from_tz,
-            'date_to': date_to_tz,
-            'request_date_from': self.date_from,
-            'request_date_to': self.date_to,
-            'number_of_days': work_days_data[employee.id]['days'],
-            'employee_id': employee.id,
-            'state': 'validate' if validated else 'confirm',
-        } for employee in employees if work_days_data[employee.id]['days']]
+        values = []
+        for employee in employees:
+            if work_days_data[employee.id]['days'] > 0:
+                employee_values = {
+                    'name': self.name,
+                    'holiday_status_id': self.holiday_status_id.id,
+                    'request_date_from': self.date_from,
+                    'request_date_to': self.date_to,
+                    'employee_id': employee.id,
+                    'state': 'validate' if validated else 'confirm',
+                }
+                if self.leave_type_request_unit == 'hour':
+                    employee_values['request_hour_from'] = self.hour_from
+                    employee_values['request_hour_to'] = self.hour_to
+                if self.leave_type_request_unit == 'half_day':
+                    employee_values['request_date_from_period'] = self.date_from_period
+                    employee_values['request_date_to_period'] = self.date_to_period
+                values.append(employee_values)
+        return values
 
     def action_generate_time_off(self):
         self.ensure_one()
         employees = self._get_employees_from_allocation_mode()
 
         tz = ZoneInfo(self.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC')
-        date_from_tz = datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-        date_to_tz = datetime.combine(self.date_to, datetime.max.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-
+        if self.leave_type_request_unit == 'hour':
+            date_from_tz = (datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_from)).astimezone(UTC).replace(tzinfo=None)
+            date_to_tz = (datetime.combine(self.date_to, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_to)).astimezone(UTC).replace(tzinfo=None)
+        else:
+            date_from_tz = datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+            date_to_tz = datetime.combine(self.date_to, datetime.max.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
         conflicting_leaves = self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,
@@ -106,6 +138,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             # If _compute_date_from_to is used instead, it will trigger _compute_number_of_days
             # and create a conflict on the number of days calculation between the different leaves
             leave_compute_date_from_to=True,
+            multi_leave_request=True,
         ).create(vals_list)
         leaves._validate_leave_request()
 
