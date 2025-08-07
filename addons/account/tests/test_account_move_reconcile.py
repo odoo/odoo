@@ -5410,3 +5410,43 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(invoice_line.matching_number, payment_line.matching_number)
         self.assertEqual(payment_line.matching_number, currency_exchange_line.matching_number)
         self.assertEqual(currency_exchange_line.amount_residual, 0)
+
+    def test_full_reconcile_with_exchange_diff_due_to_currency_precision(self):
+        """ Test the reconciliation of 2 lines with the same amount in different currency and
+            an exchange diff due to the rounding of the company currency.
+        """
+        # use a currency without decimal for the company
+        xyz_currency = self.env['res.currency'].create({
+            'name': 'XYZ',
+            'symbol': 'XYZ',
+            'rounding': 1.00,
+            'currency_unit_label': 'XYZ currency',
+            'rate': 1,
+        })
+        self.env.user.company_id.currency_id = xyz_currency
+        # the foreign currency has 2 decimals rounding
+        foreign_currency = self.env['res.currency'].create({
+            'name': 'Foreign',
+            'symbol': 'FC',
+            'rounding': 0.01,
+            'currency_unit_label': 'Foreign currency',
+            'rate_ids': [Command.create({
+                'rate': 0.001068045157,
+                'name': '2017-01-01',
+            })],
+        })
+        # - Create a line of 16345 XYZ that is equal to 17.46 FC after rounding
+        # - Create a line of -17.46 in FC that is equal to -16348 XYZ after rounding
+        # - Reconcile both lines
+        # => Both lines should be fully reconciled with an exchange diff line of 3 XYZ
+        for line1_vals, line2_vals in [
+            ((16345, 16345, xyz_currency, '2017-01-01'), (-16348, -17.46, foreign_currency, '2017-01-01')),
+            ((-16345, -16345, xyz_currency, '2017-01-01'), (16348, 17.46, foreign_currency, '2017-01-01')),
+        ]:
+            line1 = self.create_line_for_reconciliation(*line1_vals)
+            line2 = self.create_line_for_reconciliation(*line2_vals)
+            lines = line1 + line2
+            lines.reconcile()
+            exchange_move = self._get_partials(lines).exchange_move_id
+            exchange_line = exchange_move.line_ids.filtered(lambda l: l.account_id == line1.account_id)
+            self.assertFullReconcile(line1.full_reconcile_id, lines + exchange_line)
