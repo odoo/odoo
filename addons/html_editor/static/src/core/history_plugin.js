@@ -220,7 +220,7 @@ export class HistoryPlugin extends Plugin {
         this.addDomListener(this.editable, "pointerup", () => {
             this.stageSelection();
         });
-        this.observer = new MutationObserver(this.handleNewRecords.bind(this));
+        this.observer = new MutationObserver((records) => this.handleNewRecords(records));
         this.enableObserverCallbacks = new Set();
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
@@ -365,8 +365,8 @@ export class HistoryPlugin extends Plugin {
         }
     }
 
-    handleObserverRecords() {
-        this.handleNewRecords(this.observer.takeRecords());
+    handleObserverRecords(dispatch = true) {
+        this.handleNewRecords(this.observer.takeRecords(), dispatch);
     }
 
     /**
@@ -407,14 +407,17 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * @param { MutationRecord[] } records
+     * @param { boolean } [dispatch]
      */
-    handleNewRecords(records) {
+    handleNewRecords(records, dispatch = true) {
         const filteredRecords = this.processNewRecords(records);
         if (filteredRecords.length) {
             // TODO modify `handleMutations` of web_studio to handle
             // `undoOperation`
-            const stepType = this.currentStep.type;
-            this.getResource("handleNewRecords").forEach((cb) => cb(filteredRecords, stepType));
+            if (dispatch) {
+                const stepType = this.currentStep.type;
+                this.dispatchTo("handleNewRecords", filteredRecords, stepType);
+            }
             // Process potential new records adds by handleNewRecords.
             this.processNewRecords(this.observer.takeRecords());
             this.dispatchContentUpdated();
@@ -814,7 +817,7 @@ export class HistoryPlugin extends Plugin {
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
         this.dispatchTo("normalize_handlers", stepCommonAncestor, type);
-        this.handleObserverRecords();
+        this.handleObserverRecords(false);
         if (currentMutationsCount === currentStep.mutations.length) {
             // If there was no registered mutation during the normalization step,
             // force the dispatch of a content_updated to allow i.e. the hint

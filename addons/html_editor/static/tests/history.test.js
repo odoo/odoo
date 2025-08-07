@@ -594,16 +594,21 @@ describe("shortcut", () => {
             content_updated_handlers: () => {
                 expect.step("contentUpdated");
             },
+            normalize_handlers: (root) => {
+                expect.step("normalize");
+                root.classList.add("test");
+            },
         };
         const { editor } = await setupEditor(`<p>[]</p>`, {
             config: { onChange, resources },
         });
-        expect.verifySteps([]);
+        expect.verifySteps(["normalize"]);
         await insertText(editor, "a");
         expect.verifySteps([
             // mutations for "a" insertion register new records for the current step
             "handleNewRecords",
             "contentUpdated",
+            "normalize",
             // mutations for the hint removal are filtered out (no registered record)
             "contentUpdated",
             "onchange",
