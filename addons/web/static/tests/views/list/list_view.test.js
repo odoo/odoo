@@ -11272,8 +11272,8 @@ test(`multi edition: many2many_tags in many2many field`, async () => {
     expect(`.modal [role='alert']`).toHaveCount(1, {
         message: "should have open the confirmation modal",
     });
-    expect(`.modal .o_field_many2many_tags .badge`).toHaveCount(3);
-    expect(`.modal .o_field_many2many_tags .badge:eq(2)`).toHaveText("Value 3", {
+    expect(`.modal .o_field_many2many_tags .badge`).toHaveCount(1);
+    expect(`.modal .o_field_many2many_tags .badge:eq(0)`).toHaveText("Value 3", {
         message: "should have display_name in badge",
     });
 });
@@ -11360,7 +11360,7 @@ test(`multi edition: many2many_tags field: link a record`, async () => {
     expect(`.modal-body`).toHaveText(`Are you sure you want to update 4 records?
 
 Field: M2m
-Update to: \nValue 1\nValue 2\nValue 3`); // TODO: improve this by displaying the diff (the command)
+Add: \nValue 3`);
 
     await contains(`.o_dialog footer .btn-primary`).click();
     expect.verifySteps([
@@ -11414,7 +11414,7 @@ test(`multi edition: many2many field required field`, async () => {
 Are you sure you want to update 3 records?
 
 Field: M2m
-Update to: \nValue 2`); // TODO: improve this by displaying the diff (the command)
+Remove: \nValue 1`);
 
     await contains(`.o_dialog footer .btn-primary`).click();
     expect.verifySteps(["web_save"]);
@@ -11486,7 +11486,7 @@ test(`multi edition: many2many field required field (edited field is invalid)`, 
 Are you sure you want to update 3 records?
 
 Field: M2m
-Update to: \nValue 2`); // TODO: improve this by displaying the diff (the command)
+Remove: \nValue 1`);
 
     await contains(`.o_dialog footer .btn-primary`).click();
     expect.verifySteps(["web_save"]);
@@ -19065,4 +19065,40 @@ test(`multi_edit: edit field with operator with localization`, async () => {
     expect(`table tr:eq(2) td[name=${field}]`).toHaveText("18");
     expect(`table tr:eq(3) td[name=${field}]`).toHaveText("34");
     expect(`table tr:eq(4) td[name=${field}]`).toHaveText("-8");
+});
+
+test.tags("desktop");
+test(`multi edition: many2many_tags add few tags in one time`, async () => {
+    for (let i = 4; i <= 10; i++) {
+        Bar._records.push({ id: i, name: "Value" + i });
+    }
+    Bar._views = {
+        list: `<list><field name="name"/></list>`,
+    };
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1"><field name="m2m" widget="many2many_tags"/></list>`,
+    });
+
+    expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
+
+    // select two records and enter edit mode
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
+    await contains(`.o_field_widget[name=m2m] input`).click();
+    await contains(`.o-autocomplete--dropdown-item:contains(Search more...)`).click();
+    expect(`.modal`).toHaveCount(1, { message: "should have open the modal" });
+
+    await contains(`.modal .o_list_record_selector .o-checkbox`).click();
+    await contains(`.modal button:contains(select):enabled`).click();
+    expect(`.modal .modal-header:contains(confirmation)`).toHaveCount(1, {
+        message: "should have open the confirmation modal",
+    });
+    expect(`.modal .o_field_many2many_tags .badge`).toHaveCount(8);
+    expect(`.modal .o_field_many2many_tags .badge:eq(0)`).toHaveText("Value 3", {
+        message: "should have display_name in badge",
+    });
 });

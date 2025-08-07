@@ -526,7 +526,7 @@ export class ListController extends Component {
                         };
                     }),
                     changes,
-                    nbRecords: selection.length,
+                    selection,
                     nbValidRecords: validSelectedRecords.length,
                     record,
                 };

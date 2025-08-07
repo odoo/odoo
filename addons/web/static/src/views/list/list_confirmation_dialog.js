@@ -1,6 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { Operation } from "@web/model/relational_model/operation";
 import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 
@@ -8,7 +9,7 @@ import { Component } from "@odoo/owl";
 
 export class ListConfirmationDialog extends Component {
     static template = "web.ListView.ConfirmationModal";
-    static components = { Dialog, Field };
+    static components = { Dialog, Field, TagsList };
     static props = {
         close: Function,
         title: {
@@ -21,7 +22,7 @@ export class ListConfirmationDialog extends Component {
         cancel: { type: Function, optional: true },
         isDomainSelected: Boolean,
         fields: Object,
-        nbRecords: Number,
+        selection: Array,
         nbValidRecords: Number,
         record: Object,
         changes: Object,
@@ -38,7 +39,7 @@ export class ListConfirmationDialog extends Component {
         return _t(
             "Among the %(total)s selected records, %(valid_count)s are valid for this update.",
             {
-                total: this.props.nbRecords,
+                total: this.props.selection.length,
                 valid_count: this.props.nbValidRecords,
             }
         );
@@ -68,6 +69,44 @@ export class ListConfirmationDialog extends Component {
             await this.props.confirm();
         }
         this.props.close();
+    }
+
+    getTagProps(record) {
+        return {
+            id: record.id, // datapoint_X
+            resId: record.resId,
+            text: record.data.display_name,
+            colorIndex: record.data[this.props.colorField],
+        };
+    }
+
+    getChanges(field) {
+        const selectionChangeIds = this.props.selection.map((record) => {
+            const changes = record._changes[field.name];
+            if (!changes) {
+                return [];
+            }
+            const initialCurrentIds = changes._initialCurrentIds;
+            const currentIds = changes._currentIds;
+            return [
+                ...currentIds.filter((id) => !initialCurrentIds.includes(id)),
+                ...initialCurrentIds.filter((id) => !currentIds.includes(id)).map((id) => -id),
+            ];
+        });
+        const uniqueIds = [...new Set(selectionChangeIds.flat())];
+        return {
+            operation: uniqueIds[0] < 0 ? _t("Remove") : _t("Add"),
+            tags: uniqueIds.map((_id) => {
+                const id = Math.abs(_id);
+                const record = this.props.changes[field.name]._cache[id];
+                return this.getTagProps(record);
+            }),
+        };
+    }
+
+    isManyToManyField(field) {
+        const fieldNode = field.fieldNode || {};
+        return ["many2many"].includes(fieldNode.type);
     }
 
     isValueEmpty(field) {
