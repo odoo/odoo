@@ -80,7 +80,8 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
         const definition = this.getters.getChartDefinition(chartId);
         const { fieldName } = this.getters.getChartGranularity(chartId);
         this.dispatch("UPDATE_CHART", {
-            figureId: chartId,
+            chartId,
+            figureId: this.getters.getFigureIdFromChartId(chartId),
             definition: {
                 ...definition,
                 // I don't know why it's in both searchParams and metaData.
