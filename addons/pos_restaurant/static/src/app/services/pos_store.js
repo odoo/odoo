@@ -105,6 +105,17 @@ patch(PosStore.prototype, {
 
         return order;
     },
+    async preSyncAllOrders(orders) {
+        if (this.config.module_pos_restaurant) {
+            for (const order of orders) {
+                // Avoid to block others devices on register screen when no table and name is set.
+                if (!order.table_id && !order.floating_order_name) {
+                    order.floating_order_name = order.pos_reference;
+                }
+            }
+        }
+        return super.preSyncAllOrders(...arguments);
+    },
     async setCustomerCount(o = false) {
         const currentOrder = o || this.getOrder();
         const count = await makeAwaitable(this.dialog, NumberPopup, {
