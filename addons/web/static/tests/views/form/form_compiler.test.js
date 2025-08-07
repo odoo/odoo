@@ -173,7 +173,7 @@ test("properly compile no sheet", () => {
     const expected = /*xml*/ `
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div t-att-class="{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }" class="o_form_statusbar d-flex justify-content-between py-2">
+                <div class="o_form_statusbar d-flex justify-content-between py-2">
                     <StatusBarButtons/>
                 </div>
                 <div>someDiv</div>
@@ -197,8 +197,8 @@ test("properly compile sheet", () => {
     const expected = /*xml*/ `
         <t t-translation="off">
             <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div t-on-scroll="__comp__.onScrollThrottled" class="o_form_sheet_bg">
-                    <div t-att-class="{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }" class="o_form_statusbar d-flex justify-content-between py-2"><StatusBarButtons/></div>
+                <div class="o_form_sheet_bg">
+                    <div class="o_form_statusbar d-flex justify-content-between py-2"><StatusBarButtons/></div>
                     <div>someDiv</div>
                     <div class="o_form_sheet position-relative">
                         <div>inside sheet</div>
@@ -227,7 +227,7 @@ test("properly compile buttonBox invisible in sheet", () => {
                  t-att-class="__comp__.props.class"
                  t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
                  t-ref="compiled_view_root">
-                <div t-on-scroll="__comp__.onScrollThrottled" class="o_form_sheet_bg">
+                <div class="o_form_sheet_bg">
                     <div class="o_form_sheet position-relative">
                     </div>
                 </div>
@@ -292,7 +292,7 @@ test("properly compile status bar with content", () => {
     const expected = /*xml*/ `
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div t-att-class="{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }" class="o_form_statusbar d-flex justify-content-between py-2">
+                <div class="o_form_statusbar d-flex justify-content-between py-2">
                     <StatusBarButtons>
                         <t t-set-slot="button_0" isVisible="true">
                             <div>someDiv</div>
@@ -314,7 +314,7 @@ test("properly compile status bar without content", () => {
     const expected = /*xml*/ `
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div t-att-class="{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }" class="o_form_statusbar d-flex justify-content-between py-2">
+                <div class="o_form_statusbar d-flex justify-content-between py-2">
                     <StatusBarButtons/>
                 </div>
             </div>
@@ -374,7 +374,7 @@ test("properly compile empty ButtonBox", () => {
     const expected = /*xml*/ `
         <t t-translation="off">
             <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div t-on-scroll="__comp__.onScrollThrottled" class="o_form_sheet_bg">
+                <div class="o_form_sheet_bg">
                     <div class="o_form_sheet position-relative">
                         <div class="oe_button_box" name="button_box">
                         </div>
