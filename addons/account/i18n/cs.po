@@ -11,14 +11,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:36+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-08-05 17:41+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s18-4/account/"
+"cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -203,6 +206,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) by měl být typ účtu \"%(receivable)s\" "
+"nebo \"%(payable)s\" s aktivovanými oběma možnostmi "
+"\"%(allow_reconciliation)s\" a \"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -258,7 +264,7 @@ msgstr "%snení ukládané pole"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s taxes"
-msgstr ""
+msgstr "%s daně"
 
 #. module: account
 #. odoo-python
@@ -270,19 +276,19 @@ msgstr "%s, nebo / pokud není relevantní"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s, or not applicable"
-msgstr ""
+msgstr "%s, nebo se nevztahuje"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (extrahováno z '%(root_filename)s', typ=%(type)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (typ=%(type)s)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -394,12 +400,12 @@ msgstr "/ pokud není relevantní"
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr ""
+msgstr "0% Exportů"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
 msgid "0% Imports"
-msgstr ""
+msgstr "0% Importů"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
@@ -618,6 +624,9 @@ msgid ""
 "<br/>\n"
 "                        <span>Please make sure that this is a wanted behavior.</span>"
 msgstr ""
+"<br/>\n"
+"                        <span>Ujistěte se, že se jedná o požadované "
+"chování.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -946,6 +955,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge text-bg-info\">\n"
+"                                        K ověření\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -975,6 +987,9 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style="
+"\"width: 6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\""
+">nebo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -1037,6 +1052,9 @@ msgid ""
 "                                    Taxes\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Daně\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1241,8 +1259,9 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
 msgid "<span>1</span>"
-msgstr ""
+msgstr "<span>1</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1257,8 +1276,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
 msgid "<span>=</span>"
-msgstr ""
+msgstr "<span>=</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1314,6 +1334,8 @@ msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by "
 "others:</span>"
 msgstr ""
+"<span>Jeden nebo více bankovních účtů nastavených u tohoto partnera se "
+"používá také u ostatních:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1350,7 +1372,7 @@ msgstr "<span>Daně</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span>The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Bankovní účet nemůže být duplikátem </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1619,6 +1641,197 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value="
+"\"','.join([str(i) for i in invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
+"<t t-set=\"MAX_TABLE_LINES\" t-value=\"10\"/>\n"
+"\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"padding: 16px; background-color: white; color: #454748; "
+"border-collapse:separate;\">\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
+"\"0\" style="
+"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td valign=\"middle\">\n"
+"                                    <span style=\"font-size: 10px;\""
+">Oznámení</span>\n"
+"                                    <br/>\n"
+"                                    <span style=\"font-size: 20px; font-"
+"weight: bold;\">\n"
+"                                        Přijato nové elektronické faktury\n"
+"                                    </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-"
+"top: 18px;\">\n"
+"                                        <a t-if=\"invoice_count != 1\" t"
+"-attf-href=\"/odoo/accounting/action-"
+"account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids "
+"}}\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; "
+"color: {{ object.company_id.email_primary_color or '#FFFFFF' }}; text-"
+"decoration: none !important; font-weight: 400; background-color: {{ "
+"object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px\">"
+"\n"
+"                                            Prohlížet faktury\n"
+"                                        </a>\n"
+"                                        <a t-else=\"\" t-attf-href=\"/odoo/"
+"accounting/{{ object.id }}/account.move/{{ invoices.id }}\" target=\"_blank\""
+" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ "
+"object.company_id.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px\">"
+"\n"
+"                                            Prohlížet fakturu\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td valign=\"middle\" align=\"right\">\n"
+"                                    <t t-if="
+"\"not object.company_id.uses_default_logo\">\n"
+"                                        <img t-att-src="
+"\"'/logo.png?company=%s' % object.company_id.id\" style="
+"\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt="
+"\"'%s' % object.company_id.name\"/>\n"
+"                                    </t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; "
+"border:none; height:1px; margin:16px 0;\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- BODY -->\n"
+"                <tr>\n"
+"                    <td align=\"center\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
+"\"0\" style="
+"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td style=\"font-size: 14px;\">\n"
+"                                    <p>\n"
+"                                        Dobrý den,  <t t-out="
+"\"object.company_id.name or 'Company'\"/>,\n"
+"                                        <br/><br/>\n"
+"                                        Obdrželi jste  <strong><t t-out="
+"\"invoice_count or 'new'\"/></strong> fakturu (faktury).\n"
+"                                        Tyto faktury jsou nyní dostupné pro "
+"vás v Odoo.\n"
+"                                        <br/><br/>\n"
+"                                        </p><table width=\"100%\" "
+"cellpadding=\"6\" cellspacing=\"0\" style=\"border: 1px solid #DDDDDD; "
+"border-collapse: collapse; font-size: 13px; margin-bottom: 16px;\">\n"
+"                                            <thead style=\"background-color: "
+"#F9F9F9; text-align: left;\">\n"
+"                                                <tr>\n"
+"                                                    <th style="
+"\"border: 1px solid #DDDDDD;\">Faktura</th>\n"
+"                                                    <th style="
+"\"border: 1px solid #DDDDDD;\">Dodavatel</th>\n"
+"                                                    <th style="
+"\"border: 1px solid #DDDDDD;\">Datum</th>\n"
+"                                                    <th style="
+"\"border: 1px solid #DDDDDD;\">Celkem</th>\n"
+"                                                </tr>\n"
+"                                            </thead>\n"
+"                                            <tbody>\n"
+"                                                <t t-set=\"MAX_TABLE_LINES\" "
+"t-value=\"10\"/>\n"
+"                                                <t t-foreach="
+"\"invoices[:MAX_TABLE_LINES]\" t-as=\"inv\">\n"
+"                                                    <tr>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out="
+"\"inv.name or 'INV'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out="
+"\"inv.partner_id.name or 'Unknown'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out="
+"\"inv.invoice_date or 'Unknown'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-if="
+"\"inv.amount_total is not None\" t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"object.company_id.currency_id}\"/>\n"
+"                                                            <t t-else=\"\""
+">Neznámý</t>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                                <t t-if="
+"\"invoice_count &gt; MAX_TABLE_LINES\">\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"4\" "
+"style=\"border: 1px solid #DDDDDD; text-align: center;\">\n"
+"                                                            "
+"<strong>...</strong>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                                <t t-if="
+"\"invoice_count == 0\">\n"
+"                                                    <tr>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out="
+"\"'INV'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            Přiklad "
+"dodavatele\n"
+"                                                        </td>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            2025-01-01\n"
+"                                                        </td>\n"
+"                                                        <td style="
+"\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out="
+"\"1234.56\" t-options="
+"\"{'widget': 'monetary', 'display_currency': object.company_id.currency_id}\""
+"/>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                            </tbody>\n"
+"                                        </table>\n"
+"                                        Tyto e-maily nechcete dostávat? <a t"
+"-attf-href=\"/my/journal/{{ object.id }}/unsubscribe\">Zde se odhlaste</a> "
+"nebo aktualizujte své <a t-attf-href="
+"\"/mail/view?model=account.journal&amp;res_id={{ object.id }}\"><t t-out="
+"\"object.name or 'Vendor Bills'\"/></a> nastavení deníku.\n"
+"                                    \n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"            "
 
 #. module: account
 #. odoo-python
@@ -1693,7 +1906,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr ""
+msgstr "Fiskální pozice se zahraničním DPH pro tuto zemi už existuje."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1724,7 +1937,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a archived account, you cannot post it."
-msgstr ""
+msgstr "Řádek tohoto pohybu používá archivovány účet, nemůžeš ho publikovat."
 
 #. module: account
 #. odoo-python
@@ -1993,13 +2206,13 @@ msgstr "Mapování účtů"
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
 msgid "Account Move Count"
-msgstr ""
+msgstr "Počet účetních pohybů"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 msgid "Account Move Line Items"
-msgstr ""
+msgstr "Položky řádků účetního pohybu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2189,7 +2402,7 @@ msgstr "Průvodce sloučením účtů"
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
 msgid "Account merge wizard line"
-msgstr ""
+msgstr "Řádek průvodce sloučením účtů"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2442,7 +2655,7 @@ msgstr "Vyžadována akce"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__actionable_errors
 msgid "Actionable Errors"
-msgstr ""
+msgstr "Chyby vyžadující akci"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -2533,7 +2746,7 @@ msgstr "Přidat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add QR-code link on PDF"
-msgstr ""
+msgstr "Přidejte odkaz s QR kódem v PDFu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -2632,13 +2845,13 @@ msgstr "Opravná částka"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Adjusting Entries"
-msgstr ""
+msgstr "Přizpůsobení záznamů"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_count
 msgid "Adjusting Entries Count"
-msgstr ""
+msgstr "Počet přizpůsobení záznamů"
 
 #. module: account
 #. odoo-python
@@ -17679,7 +17892,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating"
-msgstr ""
+msgstr "Ověřování"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -17708,7 +17921,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
 msgid "Values that created the draft cash-basis entry"
-msgstr ""
+msgstr "Hodnoty, které vytvořily návrh peněžní základny"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -17827,7 +18040,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Ověřte cenu a v případě potřeby ji aktualizujte."
 
 #. module: account
 #. odoo-javascript
@@ -17854,6 +18067,8 @@ msgid ""
 "Want to make your life even easier and automate bill validation from this "
 "vendor ?"
 msgstr ""
+"Chcete si ještě více usnadnit život a automatizovat ověřování faktur od "
+"tohoto dodavatele?"
 
 #. module: account
 #. odoo-javascript
@@ -17981,7 +18196,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "With residual"
-msgstr ""
+msgstr "S pozůstatkem"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -18001,7 +18216,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr ""
+msgstr "Probíhající práce"
 
 #. module: account
 #. odoo-javascript
@@ -18031,7 +18246,7 @@ msgstr "Špatná hodnota má dáti nebo dal v tomto účetním záznamu!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr ""
+msgstr "XML formát"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -18042,7 +18257,7 @@ msgstr "Ročně"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "You are about to send"
-msgstr ""
+msgstr "Chystáte se odeslat"
 
 #. module: account
 #. odoo-python
@@ -18081,7 +18296,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You can not reconcile cancelled entries."
-msgstr ""
+msgstr "Zrušené záznamy nelze odsouhlasit."
 
 #. module: account
 #. odoo-python
@@ -18096,7 +18311,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Můžete generovat pouze prodejní dokumenty."
 
 #. module: account
 #. odoo-python
@@ -18131,13 +18346,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You can unsubscribe from emails received upon invoice reception here."
-msgstr ""
+msgstr "Z odběru e-mailů zasílaných po obdržení faktury se můžete odhlásit zde."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
-msgstr ""
+msgstr "Uhrazenou fakturu nelze zablokovat."
 
 #. module: account
 #. odoo-python
@@ -18188,6 +18403,8 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"Bez přístupu k mateřské společnosti nelze vytvářet platby pro položky "
+"patřící do různých poboček."
 
 #. module: account
 #. odoo-python
@@ -18217,7 +18434,7 @@ msgstr "Nemůžete smazat výkaz který má varianty."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Nelze generovat faktury, které nebyly zaúčtovány."
 
 #. module: account
 #. odoo-python
@@ -18280,13 +18497,15 @@ msgid ""
 "You can't unlink this company from this account since there are some journal"
 " items linked to it."
 msgstr ""
+"Nemůžete odpojit tuto společnost od tohoto účtu, protože existují položky "
+"deníku, které jsou s ním spojeny."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
-msgstr ""
+msgstr "Nemůžete přidávat/upravovat záznamy před a včetně: %(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -18362,7 +18581,7 @@ msgstr "Nemůžete smazat položku daně, neboť by to ovlivnilo daňový výkaz
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
-msgstr ""
+msgstr "Nemůžete odstranit položky deníku patřící k uzamčenému záznamu deníku."
 
 #. module: account
 #. odoo-python
@@ -18388,7 +18607,7 @@ msgstr ""
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending "
 "flow."
-msgstr ""
+msgstr "Tuto šablonu email nelze smazat, používá se v procesu odesílání faktur."
 
 #. module: account
 #. odoo-python
@@ -18428,7 +18647,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "You cannot duplicate a Lock Date Exception."
-msgstr ""
+msgstr "Výjimku data uzamčení nelze upravovat."
 
 #. module: account
 #. odoo-python
@@ -18525,6 +18744,7 @@ msgstr "Nelze upravit pole %s v deníku, který již má účetní záznamy."
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"V zaúčtovaným pohybu nemůžete upravit následující pole pouze k náhledu: %s"
 
 #. module: account
 #. odoo-python
@@ -18563,13 +18783,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot register payments for miscellaneous entries."
-msgstr ""
+msgstr "Nelze registrovat platby za různé položky."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/ir_attachment.py:0
 msgid "You cannot remove parts of a restricted audit trail."
-msgstr ""
+msgstr "Části omezeného auditního záznamu nelze odstranit."
 
 #. module: account
 #. odoo-python
@@ -18578,6 +18798,8 @@ msgid ""
 "You cannot remove parts of a restricted audit trail. Archive the record "
 "instead."
 msgstr ""
+"Části omezeného auditního záznamu nelze odstranit. Místo toho archivujte "
+"záznam."
 
 #. module: account
 #. odoo-python
@@ -18603,7 +18825,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr ""
+msgstr "Uzamčený záznam deníku nemůžete resetovat na koncept."
 
 #. module: account
 #. odoo-python
@@ -18623,6 +18845,7 @@ msgstr "Nemůžete resetovat na návrh účetní záznam kurzovních rozdílů."
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
 msgstr ""
+"Výjimky z uzamčení data nelze zrušit. Požádejte někoho s rolí \"Poradce\"."
 
 #. module: account
 #. odoo-python
@@ -18641,6 +18864,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Nemůžete nastavit partnera jako fakturační adresu jiného partnera, pokud má "
+"odlišné %(vat_label)s."
 
 #. module: account
 #. odoo-python
@@ -18656,13 +18881,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use an archived account."
-msgstr ""
+msgstr "Archivovaný účet nelze použit."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "You cannot use cross report on itself"
-msgstr ""
+msgstr "Křížový přehled nelze použit sám o sobě"
 
 #. module: account
 #. odoo-python
@@ -18716,6 +18941,8 @@ msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
 msgstr ""
+"K provedení této akce nemáte potřebná oprávnění, protože nemáte přístup k "
+"následujícím společnostem: %s."
 
 #. module: account
 #. odoo-python
@@ -18733,7 +18960,7 @@ msgstr "Nemáte práva na označení účtu za (ne)důvěryhodný."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You don't have the access rights to perform this action."
-msgstr ""
+msgstr "K provedení této akce nemáte potřebná oprávnění."
 
 #. module: account
 #. odoo-python
@@ -18761,7 +18988,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr ""
+msgstr "Musíte vybrat alespoň 2 účty."
 
 #. module: account
 #. odoo-python
@@ -18863,7 +19090,7 @@ msgstr "Aktivovat měnu faktury"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form

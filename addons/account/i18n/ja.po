@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
-# 
+# * account
+#
 # Translators:
 # Wil Odoo, 2025
 # Junko Augias, 2025
-# 
+#
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:36+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"PO-Revision-Date: 2025-08-06 11:18+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
+"account/ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -52,14 +55,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"-税金グループ: 他のより細かい税が含まれています。\n"
-"-固定: 税額は価格に関係なく同額です。\n"
-"-外税率: 税額は価格に基づいて、比率で加算されます:\n"
-"例: 100 *（1 + 10％）= 110 (課税後の価格)\n"
-"例: 110 /（1 + 10％）= 100 (課税前の価格)\n"
-"-内税率: 税額は価格に含まれています:\n"
-"例: 180 / (1-10％) = 200 (課税後の価格)\n"
-"例: 200 * (1-10％) = 180 (課税前の価格)"
+"    - 税グループ: この税は複数の下位税(サブタックス)で構成されています。\n"
+"    - 固定: 価格に関係なく、税額は常に一定です。\n"
+"    - パーセンテージ: 税額は価格に対する %で加算されます:\n"
+"        例 100 * (1 + 10%) = 110 (税別)\n"
+"        例 110 / (1 + 10%) = 100 (税込)\n"
+"    - パーセンテージ税込: 税額は価格に含まれ、その割合で分割されます:\n"
+"        例 180 / (1 - 10%) = 200 (税別)\n"
+"        例 200 * (1 - 10%) = 180 (税込)\n"
+"        "
 
 #. module: account
 #. odoo-python
@@ -71,7 +75,7 @@ msgstr " '%s' の場合"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " valid until %s"
-msgstr "有効期限 %s"
+msgstr " 有効期限 %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -98,13 +102,13 @@ msgstr "仕入先請求書数"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "#Created by: %s"
-msgstr " %sの作成数"
+msgstr "#作成者: %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "%(action)s for journal %(journal)s"
-msgstr "%(action)sする：以下の仕訳  %(journal)sに対して"
+msgstr "%(action)s する %(journal)sの仕訳帳に対して"
 
 #. module: account
 #. odoo-python
@@ -138,7 +142,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
-msgstr "%(exception)s  %(user)s%(end_datetime_string)s%(reason)s."
+msgstr "%(exception)s ： %(user)s%(end_datetime_string)s%(reason)sに対する。"
 
 #. module: account
 #. odoo-python
@@ -174,7 +178,7 @@ msgid ""
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s 顧客請求済、 "
-"%(quantity_delivered)s 配送済、単価%(unit_price)s "
+"%(quantity_delivered)s 配送済、単価%(unit_price)s"
 
 #. module: account
 #. odoo-python

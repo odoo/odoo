@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* point_of_sale
-# 
+# * point_of_sale
+#
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
-# 
+#
+# "Rasareeyar Lappiam (rlap)" <rlap@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-08-07 08:44+0000\n"
+"Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
+"point_of_sale/th/>\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
@@ -33,6 +36,15 @@ msgid ""
 "            * OOOO is the sequence number.\n"
 "    "
 msgstr ""
+"\n"
+"        การอ้างอิงที่มนุษย์สามารถอ่านได้สำหรับคำสั่งนี้\n"
+"            * รูปแบบ: YYLL-SSS-FOOOO\n"
+"            * YY คือปี\n"
+"            * LL คือหมายเลขล็อกอิน (พร็อกซี่เข้าอุปกรณ์)\n"
+"            * SSS คือรหัสเซสชัน\n"
+"            * F คือ 1 หรือ 0 (1 ถ้าหมายเลขลำดับถูกสร้างจากไคลเอนต์)\n"
+"            * OOOO คือหมายเลขลำดับ\n"
+"    "
 
 #. module: point_of_sale
 #. odoo-python
@@ -314,6 +326,35 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-value="
+"\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
+"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value="
+"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">สวัสดีค่ะ <t t-out="
+"\"client_name\">ชื่อลูกค้า</t>,</t>\n"
+"                        <t t-else=\"\">สวัสดีค่ะ</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>ขอขอบคุณที่ซื้อสินค้าจาก <t t-out=\"store_name\""
+">ชื่อร้านค้า</t>!</div>\n"
+"                    <div>แนบใบเสร็จรับเงินสำหรับการซื้อของคุณ<span><t t-out="
+"\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''"
+"\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\""
+">time</t>.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>ด้วยความนับถือ,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">ชื่อร้าน</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

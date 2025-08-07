@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock
-# 
+# * stock
+#
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
-# 
+#
+# "Rasareeyar Lappiam (rlap)" <rlap@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-08-06 06:31+0000\n"
+"Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/stock/th/"
+">\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock
 #. odoo-python
@@ -52,6 +55,23 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    หากสินค้าหลายรายการมีคำนำหน้ารหัส (prefix) เหมือนกัน "
+"สินค้าเหล่านั้นจะใช้ลำดับหมายเลขเดียวกัน แต่ถ้าสินค้าระบุคำนำหน้าแตกต่างกัน "
+"แต่ละสินค้าจะมีลำดับหมายเลขเฉพาะของตัวเอง\n"
+"\n"
+"* คำอธิบาย (สำหรับคำนำหน้า):\n"
+"- ปีปัจจุบันที่มีศตวรรษ: %(year)s\n"
+"- ปีปัจจุบันที่ไม่มีศตวรรษ: %(y)s\n"
+"- เดือน: %(month)s\n"
+"- วัน: %(day)s\n"
+"- วันของปี: %(doy)s\n"
+"- สัปดาห์ของปี: %(woy)s\n"
+"- วันในสัปดาห์ (0:วันจันทร์): %(weekday)s\n"
+"- ชั่วโมง 00->24: %(h24)s\n"
+"- ชั่วโมง 00->12: %(h12)s\n"
+"- นาที: %(min)s\n"
+"- วินาที: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -340,6 +360,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* สร้างใหม่: การย้ายสต็อกถูกสร้างขึ้น แต่ยังไม่ได้รับการยืนยัน\n"
+"* กำลังรอการย้ายอีกครั้ง: การย้ายสต็อกที่เชื่อมโยงกันควรดำเนินการก่อนการย้ายครั้งนี้\n"
+"* กำลังรอ: การย้ายสต็อกได้รับการยืนยัน แต่ไม่สามารถจองสินค้าได้\n"
+"* พร้อมใช้งาน: สินค้าที่ย้ายสต็อกถูกจองไว้\n"
+"* เสร็จสิ้น: สินค้าถูกโอนย้ายแล้ว และการโอนย้ายได้รับการยืนยันแล้ว"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage

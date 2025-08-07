@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment
-# 
+# * hr_recruitment
+#
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
 # Jessica Jakara, 2025
-# 
+# "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-08-07 08:44+0000\n"
+"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
+"hr_recruitment/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -232,24 +234,33 @@ msgstr ""
 "<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "    Hei,<br/><br/>\n"
 "    Kiitämme mielenkiinnosta yritystämme\n"
-"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> ja tiimiämme kohtaan.  Halusimme\n"
-"    imoittaa, että vaikka ansioluettelosi on\n"
-"    vaikuttava, rekrytointitiimimme kävi läpi kaikki hakemukset,\n"
-"    eikä <b>valinta tällä kerralla kohdistunut sinuun</b>.\n"
+"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> ja "
+"tiimiämme kohtaan.  Halusimme\n"
+"    ilmoittaa, että ansioluettelosi on\n"
+"    vaikuttava, mutta käytyään läpi kaikki hakemukset, rekrytointitiimimme\n"
+"    valinta <b>ei tällä kerralla kohdistunut sinuun</b>.\n"
 "    <br/><br/>\n"
-"    Muistutamme, että rekrytointi on haastavaa, ja virheiden tekeminen on mahdollista. Älä epäröi vastata tähän sähköpostiin, jos mielestäsi olemme tehneet virheen tai jos haluat lisätietoja päätöksestämme.\n"
+"    Muistutamme, että rekrytointi on haastavaa, ja virheitä voi sattua. Älä "
+"epäröi vastata tähän sähköpostiin, jos olemme tehneet mielestäsi virheen tai "
+"jos haluat lisätietoja päätöksestämme.\n"
 "    <br/><br/>\n"
-"    Pidämme ansioluettelosi tallessa ja otamme yhteyttä sinuun tuleviin mahdollisuuksiin liittyen, jotka vastaavat paremmin taitojasi ja kokemustasi.\n"
+"    Pidämme ansioluettelosi tallessa ja otamme yhteyttä sinuun tuleviin "
+"mahdollisuuksiin liittyen, jotka vastaavat paremmin taitojasi ja kokemustasi."
+"\n"
 "    <br/><br/>\n"
-"    Toivotamme sinulle paljon onnea työnhakuun ja toivomme, että meillä on mahdollisuus harkita sinua rooliin tulevaisuudessa.\n"
+"    Toivotamme sinulle paljon onnea työnhakuun ja toivomme, että tapaamme "
+"toisen roolin merkeissä tulevaisuudessa.\n"
 "    <br/><br/>\n"
 "    Kiitos ajastasi,\n"
 "    <div style=\"font-size: 11px; color: grey;\">\n"
 "        <t t-if=\"object.user_id\">\n"
 "            -- <br/>\n"
-"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
-"            Sähköposti: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br/>\n"
-"            Puhelin: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell "
+"Admin</strong><br/>\n"
+"            Sähköposti: <t t-out=\"object.user_id.email or ''\""
+">admin@yourcompany.example.com</t><br/>\n"
+"            Puhelin: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            -- <br/>\n"
@@ -559,8 +570,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python-sanakirja, jonka kyky kattaa oletusarvot arvioidaan, kun tälle "
-"aliakselle luodaan uusia kirjauksia."
+"Python-hakemisto, joka arvioidaan oletusarvojen tarjoamiseksi, kun tälle "
+"aliakselle luodaan uusia tietueita."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -1820,8 +1831,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"Ylätason aliaskirjauksen tunnus (esim. tehtävien luontiin käytettävän "
-"aliaksen sisältävä projekti)"
+"Ylätason tietueen tunnus, jolla on alias (esim. tehtävien luontiin "
+"käytettävän aliaksen sisältävä projekti)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_icon
@@ -1880,8 +1891,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin "
-"poistamatta sitä."
+"Jos aktiivisen kentän arvo on epätosi, voit piilottaa resurssin poistamatta "
+"sitä."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -2612,9 +2623,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Valinnainen sen viestiketjun (kirjauksen) tunnus, johon kaikki saapuvat "
-"viestit liitetään, vaikka niihin ei vastattaisi. Jos tämä asetetaan, uusien "
-"kirjausten luominen estetään kokonaan."
+"Valinnainen sen viestiketjun (tietue) tunnus, johon kaikki saapuvat viestit "
+"liitetään, vaikka niihin ei vastattaisi. Jos tämä asetetaan, uusien "
+"tietueiden luominen estetään kokonaan."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__lang
@@ -2777,7 +2788,7 @@ msgstr "Syy"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Kirjauksen viestiketjun tunnus"
+msgstr "Tietueen viestiketjun tunnus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
@@ -3407,9 +3418,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Malli (Odoo Document Kind), jota tämä alias vastaa. Kaikki saapuvat "
-"sähköpostiviestit, jotka eivät vastaa olemassa olevaan kirjaukseen, luovat "
-"uuden kirjauksen tähän malliin (esim. projektitehtävä)"
+"Malli (Odoo Asiakirja tyyppiä), jota tämä alias vastaa. Kaikki saapuvat "
+"sähköpostit, jotka eivät vastaa olemassa olevaan kirjaukseen, luovat uuden "
+"kirjauksen tähän malliin (esim. projektitehtävä)"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq

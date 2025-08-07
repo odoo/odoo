@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mail_group
-# 
+# * mail_group
+#
 # Translators:
 # Wil Odoo, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
-# 
+# "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-08-06 14:50+0000\n"
+"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
+"mail_group/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -246,8 +248,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta "
-"varten luodaan uusia tietueita."
+"Python-hakemisto, jonka kyky tarjota oletusarvoja arvioidaan, kun tätä "
+"aliasta varten luodaan uusia tietueita."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -690,8 +692,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen "
-"sisältävä projekti)"
+"Ylätason tietueen tunnus, jolla on alias (esim. tehtävien luontiin "
+"käytettävän aliaksen sisältävä projekti)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
@@ -1099,9 +1101,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Valinnainen sen viestiketjun (tietueen) ID, johon kaikki saapuvat viestit "
-"liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, uusien "
-"tietueiden luominen estetään kokonaan."
+"Valinnainen sen viestiketjun (tietueen) tunnus, johon kaikki saapuvat "
+"viestit liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, "
+"uusien tietueiden luominen estetään kokonaan."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
@@ -1116,7 +1118,7 @@ msgstr "Ylätason malli"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Ylätason keskustelun ID"
+msgstr "Ylätason tietueen viestiketjun tunnus"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
@@ -1211,7 +1213,7 @@ msgstr "Re: %s"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Tietueen keskustelun ID"
+msgstr "Tietueen viestiketjun tunnus"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -1422,9 +1424,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Malli (Odoo Document Kind), jota tämä alias vastaa. Kaikki saapuvat "
-"sähköpostiviestit, jotka eivät vastaa olemassa olevaan tietueeseen, "
-"aiheuttavat uuden tietueen luomisen tähän malliin (esim. projektitehtävä)"
+"Malli (Odoo Asiakirja tyyppiä), jota tämä alias vastaa. Kaikkista saapuvista "
+"sähköposteista, jotka eivät vastaa olemassa olevaan tietueeseen, luodaan "
+"uusi tietue tähän malliin (esim. projektitehtävä)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1451,7 +1453,7 @@ msgstr "Kumppania ei löydy."
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 msgid "The record of the message should be the group."
-msgstr "Viestin tallenteen pitäisi olla ryhmä."
+msgstr "Viestin tietueen pitäisi olla ryhmä."
 
 #. module: mail_group
 #. odoo-javascript
