@@ -222,6 +222,7 @@ class ResConfigSettings(models.TransientModel):
         if self.env.company == self.company_id and self.chart_template \
         and self.chart_template != self.company_id.chart_template:
             self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
+            self.company_id._initiate_account_onboardings()
 
     def reload_template(self):
         self.env['account.chart.template'].try_loading(self.company_id.chart_template, company=self.company_id)
