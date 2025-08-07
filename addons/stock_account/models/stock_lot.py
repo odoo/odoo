@@ -70,6 +70,24 @@ class StockLot(models.Model):
 
         :param new_price: new standard price
         """
+<<<<<<< b5cd67ccaeaaa1179b4dc61a2492f13da765177f
+||||||| 61cbad8a16395f268cb1712ddcf84de23b92ecf5
+        if self.product_id.filtered(lambda p: p.valuation == 'real_time') and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+            raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
+
+        svl_vals_list = []
+        company_id = self.env.company
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        rounded_new_price = float_round(new_price, precision_digits=price_unit_prec)
+=======
+        if self.product_id.filtered(lambda p: p.valuation == 'real_time') and not self.env['stock.valuation.layer'].has_access('read'):
+            raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
+
+        svl_vals_list = []
+        company_id = self.env.company
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        rounded_new_price = float_round(new_price, precision_digits=price_unit_prec)
+>>>>>>> 800ce0091e897497ab567344b748fb371863c6f3
         for lot in self:
             if lot.product_id.cost_method != 'average' or lot.standard_price == new_price:
                 continue
