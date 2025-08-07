@@ -11,7 +11,6 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged, loaded_demo_data
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-from odoo.addons.point_of_sale.models.pos_config import PosConfig
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
@@ -285,6 +284,29 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'value_ids': [(6, 0, [chair_fabrics_leather.id, cls.chair_fabrics_wool.id, cls.chair_fabrics_other.id])]
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
+
+        cls.chair_addons_attribute = env['product.attribute'].create({
+            'name': 'Add-ons',
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+        })
+        cls.chair_addon_cushion = env['product.attribute.value'].create({
+            'name': 'Cushion',
+            'attribute_id': cls.chair_addons_attribute.id,
+        })
+        cls.chair_addon_cupholder = env['product.attribute.value'].create({
+            'name': 'Cup Holder',
+            'attribute_id': cls.chair_addons_attribute.id,
+        })
+        cls.chair_addon_headrest = env['product.attribute.value'].create({
+            'name': 'Headrest',
+            'attribute_id': cls.chair_addons_attribute.id,
+        })
+        env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.configurable_chair.id,
+            'attribute_id': cls.chair_addons_attribute.id,
+            'value_ids': [(6, 0, [cls.chair_addon_cushion.id, cls.chair_addon_cupholder.id, cls.chair_addon_headrest.id])]
+        })
 
         fixed_pricelist = env['product.pricelist'].create({
             'name': 'Fixed',
@@ -1029,6 +1051,18 @@ class TestUi(TestPointOfSaleHttpCommon):
         #   - the combo lines are correctly stored in and restored from local storage
         #   - the combo lines are correctly shared between the pos configs ( in cross ordering )
 
+    def test_line_configurators(self):
+        setup_product_combo_items(self)
+        self.env['product.combo.item'].create({
+            'combo_id': self.desks_combo.id,
+            'product_id': self.configurable_chair.product_variant_id.id,
+            'extra_price': 0,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_line_configurators_product')
+        self.start_pos_tour('test_line_configurators_combo')
+
     def test_07_pos_barcodes_scan(self):
         barcode_rule = self.env.ref("point_of_sale.barcode_rule_client")
         barcode_rule.pattern = barcode_rule.pattern + "|234"
@@ -1204,6 +1238,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="pos_user")
 
     def test_printed_receipt_tour(self):
+        self.main_pos_config.write({
+            'basic_receipt': True,
+        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("point_of_sale.test_printed_receipt_tour")
 

@@ -1,8 +1,5 @@
-import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
-
 const productTrigger = (productName) =>
     `label.combo-item article.product:has(.product-name:contains("${productName}"))`;
-const isComboSelectedTrigger = (productName) => `input:checked ~ ${productTrigger(productName)}`;
 const confirmationButtonTrigger = `footer button.confirm`;
 
 export function select(productName) {
@@ -15,15 +12,13 @@ export function select(productName) {
 export function isSelected(productName) {
     return {
         content: `Check that ${productName} is selected`,
-        trigger: `.modal ${isComboSelectedTrigger(productName)}`,
-        run: "click",
+        trigger: `.modal input.selected ~ ${productTrigger(productName)}`,
     };
 }
 export function isNotSelected(productName) {
     return {
         content: `Check that ${productName} is not selected`,
-        trigger: `.modal ${negate(isComboSelectedTrigger(productName), ".modal-body")}`,
-        run: "click",
+        trigger: `.modal input:not(.selected) ~ ${productTrigger(productName)}`,
     };
 }
 export function isConfirmationButtonDisabled() {

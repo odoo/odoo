@@ -11,16 +11,33 @@ export class ComboConfiguratorPopup extends Component {
         productTemplate: Object,
         getPayload: Function,
         close: Function,
+        line: { type: Object, optional: true },
     };
 
     setup() {
         this.pos = usePos();
         this.state = useState({
-            combo: Object.fromEntries(
-                this.props.productTemplate.combo_ids.map((combo) => [combo.id, 0])
-            ),
-            // configuration: id of combo_item -> ProductConfiguratorPopup payload
-            configuration: {},
+            combo: { ...this.props.line?.selectedComboIds } || {},
+            configuration:
+                this.props.line?.getAllLinesInCombo().reduce((acc, line) => {
+                    if (!line.combo_item_id) {
+                        return acc;
+                    }
+
+                    acc[line.combo_item_id.id] = {
+                        attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
+                        price_extra: line.extra_price,
+                        attribute_custom_values: line.custom_attribute_value_ids.reduce(
+                            (acc, val) => {
+                                acc[val.custom_product_template_attribute_value_id.id] =
+                                    val.custom_value;
+                                return acc;
+                            },
+                            {}
+                        ),
+                    };
+                    return acc;
+                }, {}) || {},
         });
 
         onMounted(() => {
@@ -54,7 +71,11 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     areAllCombosSelected() {
-        return Object.values(this.state.combo).every((x) => Boolean(x));
+        const values = Object.values(this.state.combo);
+        return (
+            values.length === this.props.productTemplate.combo_ids.length &&
+            values.every((x) => Boolean(x))
+        );
     }
 
     formattedComboPrice(comboItem) {
@@ -83,14 +104,19 @@ export class ComboConfiguratorPopup extends Component {
     async onClickProduct({ product, combo_item }, ev) {
         const productTmpl = product.product_tmpl_id;
         if (productTmpl.needToConfigure()) {
+            const allLines = this.props.line?.getAllLinesInCombo() || [];
+            const line = allLines
+                .filter((l) => l.combo_item_id)
+                .find((l) => l.combo_item_id.id === combo_item.id);
             const payload = await this.pos.openConfigurator(product.product_tmpl_id, {
                 hideAlwaysVariants: true,
                 forceVariantValue: product.product_template_variant_value_ids,
+                line,
+                comboItem: combo_item,
             });
             if (payload) {
                 this.state.configuration[combo_item.id] = payload;
             } else {
-                // Do not select the product if configuration popup is cancelled.
                 this.state.combo[combo_item.combo_id.id] = 0;
             }
         }

@@ -5,6 +5,7 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import { queryFirst, waitFor } from "@odoo/hoot-dom";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -525,11 +526,12 @@ export function selectedOrderlineHasDirect(productName, quantity, price) {
         price,
     });
 }
-export function orderComboLineHas(productName, quantity, priceUnit) {
+export function orderComboLineHas(productName, quantity, priceUnit, attributeLine = "") {
     return Order.hasLine({
         productName,
         quantity,
         priceUnit,
+        attributeLine,
     });
 }
 export function orderLineHas(productName, quantity, price) {
@@ -872,4 +874,34 @@ export function createProductFromFrontend(name, barcode, list_price, category) {
 
 export function editProductFromFrontend(name, barcode, list_price) {
     return productInputSteps(name, barcode, list_price);
+}
+
+export function longPressOrderline(productName, delay = 500) {
+    return [
+        {
+            content: `long press on orderline with product '${productName}'`,
+            trigger: `.order-container .orderline:has(.product-name:contains("${productName}"))`,
+            run: async () => {
+                const el = queryFirst`.order-container .orderline:has(.product-name:contains("${productName}"))`;
+                if (!el) {
+                    throw new Error(`Orderline with product '${productName}' not found`);
+                }
+                el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                el.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+                await waitFor(".modal", { timeout: delay + 1000 });
+            },
+        },
+    ];
+}
+
+export function openCartMobile() {
+    return [
+        {
+            content: "Mobile - open cart",
+            trigger: ".switchpane .btn-switchpane:contains('Cart')",
+            run: "click",
+            isActive: ["mobile"],
+        },
+    ];
 }
