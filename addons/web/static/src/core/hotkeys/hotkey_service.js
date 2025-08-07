@@ -309,7 +309,8 @@ export const hotkeyService = {
             const hotkeysFromHookToHighlight = [];
             for (const [, registration] of registrations) {
                 const overlayElement = registration.withOverlay?.();
-                if (overlayElement) {
+                const isHotKeyAvailable = registration.isAvailable? registration.isAvailable(activeElement) : true;
+                if (overlayElement && isHotKeyAvailable) {
                     hotkeysFromHookToHighlight.push({
                         hotkey: registration.hotkey.replace(
                             `${hotkeyService.overlayModifier}+`,
