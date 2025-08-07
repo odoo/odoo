@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryAllValues, waitFor } from "@odoo/hoot-dom";
-import { xml } from "@odoo/owl";
+import { markup, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addBuilderOption, setupHTMLBuilder, addBuilderPlugin } from "./helpers";
 import { ShadowOptionPlugin } from "@html_builder/plugins/shadow_option_plugin";
@@ -11,7 +11,7 @@ test("edit box-shadow with ShadowOption", async () => {
         template: xml`<ShadowOption/>`,
     });
     addBuilderPlugin(ShadowOptionPlugin);
-    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(markup`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await waitFor(".hb-row");
     expect(queryAllTexts(".hb-row .hb-row-label")).toEqual(["Shadow"]);

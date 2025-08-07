@@ -3,6 +3,7 @@ import { animationFrame, click, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { getDragHelper, waitForEndOfOperation } from "../website_helpers";
+import { markup } from "@odoo/owl";
 
 describe.current.tags("desktop");
 
@@ -23,7 +24,7 @@ const dropzoneSelectors = [
 ];
 
 test("Display inner content snippet", async () => {
-    await setupHTMLBuilder("<div><p>Text</p></div>", {
+    await setupHTMLBuilder(markup`<div><p>Text</p></div>`, {
         snippetContent,
         dropzoneSelectors,
     });
@@ -37,7 +38,7 @@ test("Display inner content snippet", async () => {
 });
 
 test("Drag & drop inner content block", async () => {
-    const { contentEl } = await setupHTMLBuilder("<div><p>Text</p></div>", {
+    const { contentEl } = await setupHTMLBuilder(markup`<div><p>Text</p></div>`, {
         snippetContent,
         dropzoneSelectors,
     });
@@ -66,7 +67,7 @@ test("Drag & drop inner content block", async () => {
 });
 
 test("Drag & drop inner content block + undo/redo", async () => {
-    const { contentEl } = await setupHTMLBuilder("<div><p>Text</p></div>", {
+    const { contentEl } = await setupHTMLBuilder(markup`<div><p>Text</p></div>`, {
         snippetContent,
         dropzoneSelectors,
     });
@@ -96,7 +97,7 @@ test("Drag & drop inner content block + undo/redo", async () => {
 });
 
 test("Drag inner content and drop it outside of a dropzone", async () => {
-    const { contentEl, builderEl } = await setupHTMLBuilder("<div><p>Text</p></div>", {
+    const { contentEl, builderEl } = await setupHTMLBuilder(markup`<div><p>Text</p></div>`, {
         snippetContent,
         dropzoneSelectors,
     });

@@ -1,7 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, Deferred, queryOne, waitFor } from "@odoo/hoot-dom";
-import { useState, xml } from "@odoo/owl";
+import { markup, useState, xml } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
@@ -142,7 +142,7 @@ describe("HTML builder tests", () => {
             selector: ".s_test",
             template: xml`<BuilderButton action="'testAction'">Click</BuilderButton>`,
         });
-        await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+        await setupHTMLBuilder(markup`<section class="s_test">Test</section>`);
         await contains(":iframe .s_test").click();
         await contains("[data-action-id='testAction']").click();
         expect("[data-action-id='testAction']").toHaveClass("active");
@@ -157,7 +157,7 @@ describe("HTML builder tests", () => {
             selector: ".s_test",
             template: xml`<BuilderButton action="'testAction'" classAction="'custom-class'">Click</BuilderButton>`,
         });
-        await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+        await setupHTMLBuilder(markup`<section class="s_test">Test</section>`);
         await contains(":iframe .s_test").click();
         await contains("[data-action-id='testAction']").click();
         expect("[data-action-id='testAction']").toHaveClass("active");
@@ -196,7 +196,7 @@ describe("HTML builder tests", () => {
             OptionComponent: TestOption,
             selector: ".test-options-target",
         });
-        await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+        await setupHTMLBuilder(markup`<section class="test-options-target">Homepage</section>`);
         await contains(":iframe .test-options-target").click();
         expect.verifySteps(["prepare"]);
         prepareDeferred = new Deferred();
@@ -214,7 +214,7 @@ describe("HTML builder tests", () => {
             selector: ".s_test",
             template: xml`<BuilderButton dataAttributeAction="'customerOrderIds'" dataAttributeActionValue="[100, 200]">Click</BuilderButton>`,
         });
-        await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+        await setupHTMLBuilder(markup`<section class="s_test">Test</section>`);
         await contains(":iframe .s_test").click();
         await contains(".we-bg-options-container button:contains('Click')").click();
         expect(".we-bg-options-container button:contains('Click')").toHaveClass("active");
@@ -253,7 +253,7 @@ describe("HTML builder tests", () => {
                 selector: ".test-options-target",
                 template: xml`<BuilderButton action="'isPreviewing'" actionValue="true">Toggle</BuilderButton>`,
             });
-            await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+            await setupHTMLBuilder(markup`<section class="test-options-target">Homepage</section>`);
             await contains(":iframe .test-options-target").click();
 
             // apply
@@ -273,7 +273,7 @@ describe("HTML builder tests", () => {
                 selector: ".test-options-target",
                 template: xml`<BuilderTextInput action="'isPreviewing'"/>`,
             });
-            await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+            await setupHTMLBuilder(markup`<section class="test-options-target">Homepage</section>`);
             await contains(":iframe .test-options-target").click();
 
             // apply
@@ -332,7 +332,7 @@ describe("HTML builder tests", () => {
             selector: ".test-options-target",
             template: xml`<BuilderButton action="'testReload'">Click</BuilderButton>`,
         });
-        await setupHTMLBuilder(`<section class="test-options-target">Test</section>`);
+        await setupHTMLBuilder(markup`<section class="test-options-target">Test</section>`);
         await contains(":iframe .test-options-target").click();
 
         // Apply

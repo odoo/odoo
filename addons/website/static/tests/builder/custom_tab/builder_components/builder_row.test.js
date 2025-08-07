@@ -1,7 +1,7 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, hover, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
-import { xml } from "@odoo/owl";
+import { markup, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
 
@@ -240,7 +240,7 @@ describe("HTML builder tests", () => {
             selector: ".test-options-target",
             template: xml`<BuilderRow label="'Supercalifragilisticexpalidocious'">Palais chatouille</BuilderRow>`,
         });
-        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await setupHTMLBuilder(markup`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
         const label = queryOne("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
         expect(label.scrollWidth).toBeGreaterThan(label.clientWidth); // the text is longer than the available width.

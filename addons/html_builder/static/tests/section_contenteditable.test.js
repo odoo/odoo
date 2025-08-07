@@ -1,11 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { setupHTMLBuilder } from "./helpers";
+import { markup } from "@odoo/owl";
 
 test("section with containers should not be contenteditable, but there containers should, unless outside o_editable", async () => {
     await setupHTMLBuilder(
-        `<section><div class="container"><span class="inside">in</span></div></section>`,
+        markup`<section><div class="container"><span class="inside">in</span></div></section>`,
         {
-            headerContent: `<section><div class="container"><span class="outside">out</span></div></section>`,
+            headerContent: markup`<section><div class="container"><span class="outside">out</span></div></section>`,
         }
     );
     expect(":iframe section:has(.inside)").toHaveProperty("isContentEditable", false);

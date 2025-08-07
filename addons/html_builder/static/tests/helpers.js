@@ -8,7 +8,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
 import { animationFrame, queryOne } from "@odoo/hoot-dom";
-import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
+import { Component, markup, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
     defineModels,
     models,
@@ -18,6 +18,7 @@ import {
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { setElementContent } from "@web/core/utils/html";
 
 export function patchWithCleanupImg() {
     const defaultImg =
@@ -92,7 +93,10 @@ class BuilderContainer extends Component {
                 }
 
                 const el = this.iframeRef.el;
-                el.contentDocument.body.innerHTML = `<div id="wrapwrap">${this.props.headerContent}<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${this.props.content}</div></div>`;
+                setElementContent(
+                    el.contentDocument.body,
+                    markup`<div id="wrapwrap">${this.props.headerContent}<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${this.props.content}</div></div>`
+                );
                 resolve(el);
             });
         });
@@ -131,14 +135,13 @@ class IrUiView extends models.Model {
 /**
  * @typedef { import("@html_editor/editor").Editor } Editor
  *
- * @param {String} content
+ * @param {String} content if it contains html, it should be constructed with ``markup`...` ``
  * @param {Object} options
- * @param {String} options.headerContent
+ * @param {String} options.headerContent if it contains html, it should be constructed with ``markup`...` ``
  * @param {*} options.snippetContent
  * @param {*} options.dropzoneSelectors
  * @param {*} options.styleContent
  * @returns {Promise<{ editor: Editor, contentEl: HTMLElement, builderEl: HTMLElement, snippetContent: String}>}
-}}
  */
 export async function setupHTMLBuilder(
     content = "",

@@ -2,6 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { getDragMoveHelper, waitForEndOfOperation } from "./website_helpers";
+import { markup } from "@odoo/owl";
 
 const dropzoneSelectors = {
     selector: "section",
@@ -10,7 +11,7 @@ const dropzoneSelectors = {
 
 test("Drag and drop basic test", async () => {
     await setupHTMLBuilder(
-        `
+        markup`
             <section class="section-1"><div><p>Text 1</p></div></section>
             <section class="section-2"><div><p>Text 2</p></div></section>
         `,

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { xml } from "@odoo/owl";
+import { markup, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addBuilderAction,
@@ -49,7 +49,7 @@ test("can call 2 separate actions with composite action", async () => {
                 Click
             </BuilderButton>`,
     });
-    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await setupHTMLBuilder(markup`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
     await contains("[data-action-id='composite']").click();
     expect(":iframe .s_test").toHaveClass("class1 class2");
@@ -89,7 +89,7 @@ test("can call the same action twice with composite action", async () => {
                 Click
             </BuilderButton>`,
     });
-    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await setupHTMLBuilder(markup`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
     await contains("[data-action-id='composite']").click();
     expect(":iframe .s_test").toHaveClass("class1 class2");
@@ -125,7 +125,7 @@ test("composite action's isApplied returns false if no action defined it", async
                 Click
             </BuilderButton>`,
     });
-    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await setupHTMLBuilder(markup`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
     expect("[data-action-id='composite']").not.toHaveClass("active");
     await contains("[data-action-id='composite']").click();
@@ -167,7 +167,7 @@ test("composite action's isApplied returns true if at least one action defined i
                 Click
             </BuilderButton>`,
     });
-    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await setupHTMLBuilder(markup`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
     expect("[data-action-id='composite']").not.toHaveClass("active");
     await contains("[data-action-id='composite']").click();

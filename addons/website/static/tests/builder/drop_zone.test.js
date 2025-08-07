@@ -11,7 +11,7 @@ const dropzone = (hovered = false) => {
 };
 
 test("#wrap element has the 'DRAG BUILDING BLOCKS HERE' message", async () => {
-    const { contentEl } = await setupHTMLBuilder("");
+    const { contentEl } = await setupHTMLBuilder();
     expect(contentEl).toHaveAttribute("data-editor-message", "DRAG BUILDING BLOCKS HERE");
 });
 

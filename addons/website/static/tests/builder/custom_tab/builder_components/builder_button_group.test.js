@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { hover } from "@odoo/hoot-dom";
-import { xml } from "@odoo/owl";
+import { markup, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addBuilderAction,
@@ -28,7 +28,7 @@ test("change the editingElement of sub widget through `applyTo` prop", async () 
                         <BuilderButton action="'customAction'"/>
                     </BuilderButtonGroup>`,
     });
-    await setupHTMLBuilder(`
+    await setupHTMLBuilder(markup`
                 <div class="test-options-target">
                     <div class="a">b</div>
                 </div>
@@ -55,7 +55,7 @@ test("should propagate actionParam in the context", async () => {
                         <BuilderButton action="'customAction'"/>
                     </BuilderButtonGroup>`,
     });
-    await setupHTMLBuilder(`
+    await setupHTMLBuilder(markup`
                 <div class="test-options-target">
                     <div class="a">b</div>
                 </div>
@@ -110,7 +110,7 @@ test("prevent preview of all buttons", async () => {
         CustomAction3,
         CustomAction4,
     });
-    await setupHTMLBuilder(`
+    await setupHTMLBuilder(markup`
                 <div class="test-options-target">
                     <div class="a">b</div>
                 </div>
@@ -141,7 +141,7 @@ test("hide/display base on applyTo", async () => {
     });
 
     await setupHTMLBuilder(
-        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
+        markup`<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
     );
     await contains(":iframe .parent-target").click();
     expect(".options-container .btn-group").toHaveCount(0);
@@ -165,7 +165,7 @@ test("hide/display base on applyTo - 2", async () => {
     });
 
     await setupHTMLBuilder(
-        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
+        markup`<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
     );
     await contains(":iframe .parent-target").click();
     expect(".options-container .btn-group").not.toBeVisible();
@@ -182,7 +182,7 @@ test("click on BuilderButton with empty value should remove styleAction", async 
             <BuilderButton styleAction="'width'" styleActionValue="'25%'"/>
         </BuilderButtonGroup>`,
     });
-    const { contentEl } = await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    const { contentEl } = await setupHTMLBuilder(markup`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains("[data-style-action='width'][data-style-action-value='25%']").click();
     expect(contentEl).toHaveInnerHTML(
@@ -204,7 +204,7 @@ test("button that matches with the highest priority should be active", async () 
             <BuilderButton classAction="'a b c'">a b c</BuilderButton>
         </BuilderButtonGroup>`,
     });
-    await setupHTMLBuilder(`<div class="test-options-target a b">b</div>`);
+    await setupHTMLBuilder(markup`<div class="test-options-target a b">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect("[data-class-action='a']").not.toHaveClass("active");
     expect("[data-class-action='a b']").toHaveClass("active");
