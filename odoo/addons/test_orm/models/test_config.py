@@ -47,7 +47,6 @@ class ResConfigSettings(models.TransientModel):
         help='A test many2one field for configuration settings'
     )
 
-
     test_datetime_field = fields.Datetime(
         string='Test Datetime Field',
         config_parameter='test_orm.test_datetime_field',
