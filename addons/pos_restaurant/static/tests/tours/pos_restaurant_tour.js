@@ -866,3 +866,42 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             TicketScreen.nbOrdersIs(1),
         ].flat(),
 });
+registry.category("web_tour.tours").add("test_direct_sales", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.syncCurrentOrder(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
+
+            Chrome.clickPlanButton(),
+            FloorScreen.clickNewOrder(),
+            ProductScreen.setTab("Test"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.syncCurrentOrder(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
+
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.syncCurrentOrder(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
+        ].flat(),
+});
