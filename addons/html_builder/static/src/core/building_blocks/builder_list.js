@@ -34,6 +34,7 @@ export class BuilderList extends Component {
         sortable: { optional: true },
         hiddenProperties: { type: Array, optional: true },
         records: { type: String, optional: true },
+        defaultNewValue: { type: Object, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -42,6 +43,7 @@ export class BuilderList extends Component {
         sortable: true,
         hiddenProperties: [],
         mode: "button",
+        defaultNewValue: {},
     };
     static components = { BuilderComponent, Dropdown };
 
@@ -148,6 +150,7 @@ export class BuilderList extends Component {
 
     makeDefaultItem() {
         return {
+            ...this.props.defaultNewValue,
             ...this.props.default,
             _id: this.getNextAvailableItemId(),
         };
