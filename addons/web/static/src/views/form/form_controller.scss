@@ -301,8 +301,6 @@
     .o_form_statusbar {
         position: relative;
         z-index: 0;
-        margin-inline: calc(-1 * var(--formView-sheetBg-padding-x));
-        padding-inline: var(--formView-sheetBg-padding-x);
 
         @include media-breakpoint-up(md) {
             position: sticky;
@@ -311,6 +309,7 @@
 
             &:not(.modal .o_form_statusbar) {
                 background-color: $body-bg;
+                box-shadow: 0 0.3rem 0.25rem -0.25rem rgba(0, 0, 0, 0.075);
             }
         }
 
