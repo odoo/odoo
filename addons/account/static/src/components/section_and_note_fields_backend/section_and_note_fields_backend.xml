@@ -12,7 +12,7 @@
         <xpath expr="//td[hasclass('o_list_record_remove')]" position="after">
             <td t-else="" class="o_list_section_options w-print-0 p-print-0 text-center">
                 <Dropdown position="'bottom-end'" t-if="!props.readonly">
-                    <button class="btn px-1">
+                    <button class="btn px-1 cursor-pointer">
                         <i class="fa fa-ellipsis-v"/>
                     </button>
                     <t t-set-slot="content">
