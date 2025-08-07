@@ -46,6 +46,11 @@ class HrVersion(models.Model):
         attendance = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
+    @ormcache()
+    def _get_default_work_entry_type_overtime_id(self):
+        attendance = self.env.ref('hr_work_entry.work_entry_type_overtime', raise_if_not_found=False)
+        return attendance.id if attendance else False
+
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
         return self._get_leave_work_entry_type(leave)
 
@@ -138,6 +143,25 @@ class HrVersion(models.Model):
     @api.model
     def _get_whitelist_fields_from_template(self):
         return super()._get_whitelist_fields_from_template() + ['work_entry_source']
+
+    # Meant for behavior override
+    def _get_real_attendance_work_entry_vals(self, intervals):
+        self.ensure_one()
+        vals = []
+        employee = self.employee_id
+        for interval in intervals:
+            work_entry_type = self._get_interval_work_entry_type(interval)
+            # All benefits generated here are using datetimes converted from the employee's timezone
+            vals += [dict([
+                      ('name', "%s: %s" % (work_entry_type.name, employee.name)),
+                      ('date_start', interval[0].astimezone(pytz.utc).replace(tzinfo=None)),
+                      ('date_stop', interval[1].astimezone(pytz.utc).replace(tzinfo=None)),
+                      ('work_entry_type_id', work_entry_type.id),
+                      ('employee_id', employee.id),
+                      ('version_id', self.id),
+                      ('company_id', self.company_id.id),
+                  ] + self._get_more_vals_attendance_interval(interval))]
+        return vals
 
     def _get_version_work_entries_values(self, date_start, date_stop):
         start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
@@ -260,18 +284,7 @@ class HrVersion(models.Model):
             real_worked_leaves = split_worked_leaves
 
             # Attendances
-            for interval in real_attendances:
-                work_entry_type = version._get_interval_work_entry_type(interval)
-                # All benefits generated here are using datetimes converted from the employee's timezone
-                version_vals += [dict([
-                    ('name', "%s: %s" % (work_entry_type.name, employee.name)),
-                    ('date_start', interval[0].astimezone(pytz.utc).replace(tzinfo=None)),
-                    ('date_stop', interval[1].astimezone(pytz.utc).replace(tzinfo=None)),
-                    ('work_entry_type_id', work_entry_type.id),
-                    ('employee_id', employee.id),
-                    ('version_id', version.id),
-                    ('company_id', version.company_id.id),
-                ] + version._get_more_vals_attendance_interval(interval))]
+            version_vals += version._get_real_attendance_work_entry_vals(real_attendances)
 
             for interval in real_worked_leaves:
                 work_entry_type = version._get_interval_leave_work_entry_type(interval, worked_leaves, bypassing_work_entry_type_codes)
@@ -515,7 +528,9 @@ class HrVersion(models.Model):
             tz = _get_tz(vals['version_id'])
             if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
                 vals['date'] = date_start.astimezone(tz).date()
-                if (date_start, date_stop) in cached_periods:
+                if 'duration' in vals:
+                    continue
+                elif (date_start, date_stop) in cached_periods:
                     vals['duration'] = cached_periods[date_start, date_stop]
                 else:
                     dt = date_stop - date_start
