@@ -173,7 +173,7 @@ class SQLCollector(Collector):
     def hook(self, cr, query, params, query_start, query_time):
         self.progress({
             'query': str(query),
-            'full_query': str(cr._format(query, params)),
+            'full_query': str(cr._format(query, params)) if params else str(query),
             'start': query_start,
             'time': query_time,
         })

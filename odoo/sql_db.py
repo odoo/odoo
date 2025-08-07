@@ -547,7 +547,17 @@ class Cursor(BaseCursor):
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
         self.flush()
-        self._cnx.commit()
+        start = real_time()
+        try:
+            self._cnx.commit()
+        finally:
+            delay = real_time() - start
+            if _logger.isEnabledFor(logging.DEBUG):
+                _logger.debug("[%.3f ms] query: COMMIT", 1000 * delay)
+        # optional hooks for performance and tracing analysis
+        current_thread = threading.current_thread()
+        for hook in getattr(current_thread, 'query_hooks', ()):
+            hook(self, 'COMMIT', (), start, delay)
         self.clear()
         self._now = None
         self.prerollback.clear()
@@ -559,7 +569,17 @@ class Cursor(BaseCursor):
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
-        self._cnx.rollback()
+        start = real_time()
+        try:
+            self._cnx.rollback()
+        finally:
+            delay = real_time() - start
+            if _logger.isEnabledFor(logging.DEBUG):
+                _logger.debug("[%.3f ms] query: COMMIT", 1000 * delay)
+        # optional hooks for performance and tracing analysis
+        current_thread = threading.current_thread()
+        for hook in getattr(current_thread, 'query_hooks', ()):
+            hook(self, 'ROLLBACK', (), start, delay)
         self._now = None
         self.postrollback.run()
 
