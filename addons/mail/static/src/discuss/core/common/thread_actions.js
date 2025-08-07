@@ -23,6 +23,7 @@ class ChannelActionDialog extends Component {
 
 threadActionsRegistry
     .add("notification-settings", {
+        actionPanelComponent: NotificationSettings,
         condition(component) {
             return (
                 component.thread?.model === "discuss.channel" &&
@@ -62,7 +63,6 @@ threadActionsRegistry
         close(component, action) {
             action.popover?.close();
         },
-        component: NotificationSettings,
         icon(component) {
             return component.thread.selfMember?.mute_until_dt
                 ? "fa fa-fw text-danger fa-bell-slash"
@@ -82,10 +82,10 @@ threadActionsRegistry
         toggle: true,
     })
     .add("attachments", {
+        actionPanelComponent: AttachmentPanel,
         condition: (component) =>
             component.thread?.hasAttachmentPanel &&
             (!component.props.chatWindow || component.props.chatWindow.isOpen),
-        component: AttachmentPanel,
         icon: "fa fa-fw fa-paperclip",
         iconLarge: "fa fa-fw fa-lg fa-paperclip",
         name: _t("Attachments"),
@@ -94,12 +94,12 @@ threadActionsRegistry
         toggle: true,
     })
     .add("invite-people", {
+        actionPanelComponent: ChannelInvitation,
+        actionPanelComponentProps(component, action) {
+            return { close: () => action.close() };
+        },
         close(component, action) {
             action.popover?.close();
-        },
-        component: ChannelInvitation,
-        componentProps(component, action) {
-            return { close: () => action.close() };
         },
         condition(component) {
             return (
@@ -152,14 +152,8 @@ threadActionsRegistry
         toggle: true,
     })
     .add("member-list", {
-        component: ChannelMemberList,
-        condition(component) {
-            return (
-                component.thread?.hasMemberList &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
-            );
-        },
-        componentProps(component, action) {
+        actionPanelComponent: ChannelMemberList,
+        actionPanelComponentProps(component, action) {
             return {
                 openChannelInvitePanel({ keepPrevious } = {}) {
                     component.threadActions.actions
@@ -167,6 +161,12 @@ threadActionsRegistry
                         ?.open({ keepPrevious });
                 },
             };
+        },
+        condition(component) {
+            return (
+                component.thread?.hasMemberList &&
+                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            );
         },
         panelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
         icon: "fa fa-fw fa-users",

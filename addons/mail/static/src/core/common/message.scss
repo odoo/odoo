@@ -137,17 +137,13 @@
     }
 }
 
-.o-mail-Message-actions {
-    z-index: $o-mail-NavigableList-zIndex - 3;
-
-    &.o-expanded {
-        z-index: $o-mail-NavigableList-zIndex - 2;
+.o-mail-Message-expandBtn {
+    i {
+        opacity: 35%;
     }
 
-    button {
-        opacity: 35%;
-
-        &:hover, &.focus, &.show {
+    &:hover, &.focus, &.show {
+        i {
             opacity: 100%;
             color: var(--mail-Message-actionIconHoveredColor, black);
         }

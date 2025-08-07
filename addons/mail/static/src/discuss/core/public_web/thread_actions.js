@@ -5,6 +5,10 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 threadActionsRegistry.add("show-threads", {
+    actionPanelComponent: SubChannelList,
+    actionPanelComponentProps(component, action) {
+        return { close: () => action.close() };
+    },
     close(component, action) {
         action.popover?.close();
     },
@@ -14,10 +18,6 @@ threadActionsRegistry.add("show-threads", {
     icon: "fa fa-fw fa-comments-o",
     iconLarge: "fa fa-fw fa-lg fa-comments-o",
     name: _t("Threads"),
-    component: SubChannelList,
-    componentProps(component, action) {
-        return { close: () => action.close() };
-    },
     setup(action) {
         const component = useComponent();
         if (!component.props.chatWindow) {

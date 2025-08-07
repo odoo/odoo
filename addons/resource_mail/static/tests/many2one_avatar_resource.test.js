@@ -180,7 +180,5 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
     await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
-    expect(
-        ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate:first"
-    ).toHaveText("Pierre");
+    expect(".o-mail-ChatWindow-moreActions > .text-truncate:first").toHaveText("Pierre");
 });

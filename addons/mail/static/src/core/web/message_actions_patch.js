@@ -31,6 +31,7 @@ messageActionsRegistry
     .add("reply-all", {
         condition: (component) => component.props.message.canReplyAll(component.props.thread),
         icon: "fa fa-reply",
+        iconLarge: "fa fa-lg fa-reply",
         name: _t("Reply All"),
         onSelected: async (component) => {
             const message = component.props.message;
@@ -67,6 +68,7 @@ messageActionsRegistry
     .add("forward", {
         condition: (component) => component.props.message.canForward(component.props.thread),
         icon: "fa fa-share",
+        iconLarge: "fa fa-lg fa-share",
         name: _t("Forward"),
         onSelected: async (component) => {
             const message = component.props.message;

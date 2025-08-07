@@ -23,8 +23,10 @@ messageActionsRegistry
             action: messageActionsRegistry.get("reaction"),
             messageActive: component.isActive,
         }),
+        componentCondition: () => !isMobileOS(),
         condition: (component) => component.props.message.canAddReaction(component.props.thread),
         icon: "oi oi-smile-add",
+        iconLarge: "oi fa-lg oi-smile-add",
         name: _t("Add a Reaction"),
         onSelected: async (component, action) =>
             component.reactionPicker.open({
@@ -49,6 +51,7 @@ messageActionsRegistry
     .add("reply-to", {
         condition: (component) => component.props.message.canReplyTo(component.props.thread),
         icon: "fa fa-reply",
+        iconLarge: "fa fa-lg fa-reply",
         name: _t("Reply"),
         onSelected: (component) => {
             const message = toRaw(component.props.message);
@@ -69,6 +72,10 @@ messageActionsRegistry
         condition: (component) => component.props.message.canToggleStar,
         icon: (component) =>
             component.props.message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o",
+        iconLarge: (component) =>
+            component.props.message.starred
+                ? "fa fa-lg fa-star o-mail-Message-starred"
+                : "fa fa-lg fa-star-o",
         name: _t("Mark as Todo"),
         onSelected: (component) => component.props.message.toggleStar(),
         sequence: 30,
@@ -76,6 +83,7 @@ messageActionsRegistry
     .add("mark-as-read", {
         condition: (component) => component.props.thread?.eq(component.store.inbox),
         icon: "fa fa-check",
+        iconLarge: "fa fa-lg fa-check",
         name: _t("Mark as Read"),
         onSelected: (component) => component.props.message.setDone(),
         sequence: 40,
@@ -83,6 +91,7 @@ messageActionsRegistry
     .add("reactions", {
         condition: (component) => component.message.reactions.length,
         icon: "fa fa-smile-o",
+        iconLarge: "fa fa-lg fa-smile-o",
         name: _t("View Reactions"),
         onSelected: (component) => component.openReactionMenu(),
         sequence: 50,
@@ -90,6 +99,7 @@ messageActionsRegistry
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
         icon: "fa fa-user-times",
+        iconLarge: "fa fa-lg fa-user-times",
         name: _t("Unfollow"),
         onSelected: (component) => component.props.message.unfollow(),
         sequence: 60,
@@ -97,6 +107,7 @@ messageActionsRegistry
     .add("edit", {
         condition: (component) => component.props.message.editable,
         icon: "fa fa-pencil",
+        iconLarge: "fa fa-lg fa-pencil",
         name: _t("Edit"),
         onSelected: (component) => {
             component.props.message.enterEditMode(component.props.thread);
@@ -107,6 +118,7 @@ messageActionsRegistry
     .add("delete", {
         condition: (component) => component.props.message.editable,
         icon: "fa fa-trash",
+        iconLarge: "fa fa-lg fa-trash",
         name: _t("Delete"),
         danger: true,
         onSelected: async (component) => {
@@ -137,6 +149,7 @@ messageActionsRegistry
             component.message.attachment_ids.length > 1 &&
             component.store.self.main_user_id?.share === false,
         icon: "fa fa-download",
+        iconLarge: "fa fa-lg fa-download",
         name: _t("Download Files"),
         onSelected: (component) =>
             download({
@@ -152,6 +165,10 @@ messageActionsRegistry
         condition: (component) => component.props.message.isTranslatable(component.props.thread),
         icon: (component) =>
             `fa fa-language ${component.state.showTranslation ? "o-mail-Message-translated" : ""}`,
+        iconLarge: (component) =>
+            `fa fa-lg fa-language ${
+                component.state.showTranslation ? "o-mail-Message-translated" : ""
+            }`,
         name: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
         onSelected: (component) => component.onClickToggleTranslation(),
         sequence: 100,
@@ -161,6 +178,7 @@ messageActionsRegistry
         onSelected: (component) => component.message.copyMessageText(),
         name: _t("Copy to Clipboard"),
         icon: "fa fa-copy",
+        iconLarge: "fa fa-lg fa-copy",
         sequence: 25,
     })
     .add("copy-link", {
@@ -169,6 +187,7 @@ messageActionsRegistry
             component.message.message_type !== "user_notification" &&
             (!component.props.thread.access_token || component.props.thread.hasReadAccess),
         icon: "fa fa-link",
+        iconLarge: "fa fa-lg fa-link",
         name: _t("Copy Link"),
         onSelected: (component) => component.message.copyLink(),
         sequence: 110,
@@ -183,7 +202,12 @@ class MessageAction extends Action {
 
 export const messageActionsInternal = {
     condition(component, id, action) {
-        return action.condition(component);
+        if (!action?.condition) {
+            return true;
+        }
+        return typeof action.condition === "function"
+            ? action.condition(component)
+            : action.condition;
     },
     sequence(component, id, action) {
         return typeof action.sequence === "function" ? action.sequence(component) : action.sequence;
