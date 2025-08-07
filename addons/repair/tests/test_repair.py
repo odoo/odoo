@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
@@ -907,3 +907,17 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(self.product_product_11.type, 'consu')
         self.assertTrue(self.product_product_11.filtered_domain(domain))
         self.assertFalse(self.product_order_repair.filtered_domain(domain))
+
+    def test_search_date_category(self):
+        """
+        Test that the search_date_category field search functionality works correctly.
+        """
+        self.env['repair.order'].search([]).unlink()
+        repair_order = self.env['repair.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'schedule_date': fields.Datetime.now(),
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+        })
+        repair_order.action_validate()
+        repairs = self.env['repair.order'].search([('search_date_category', 'in', ['yesterday', 'today'])])
+        self.assertEqual(len(repairs), 1)
