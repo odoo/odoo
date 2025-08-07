@@ -20,6 +20,11 @@ export class DataServiceOptions {
                 condition: (record) =>
                     record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
+            "product.attribute.custom.value": {
+                key: "id",
+                condition: (record) =>
+                    record.order_id?.finalized && typeof record.order_id.id === "number",
+            },
         };
     }
 
