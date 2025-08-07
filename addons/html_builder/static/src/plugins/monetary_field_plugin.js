@@ -39,4 +39,4 @@ export class MonetaryFieldPlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins").add(MonetaryFieldPlugin.id, MonetaryFieldPlugin);
+registry.category("builder-plugins").add(MonetaryFieldPlugin.id, MonetaryFieldPlugin);

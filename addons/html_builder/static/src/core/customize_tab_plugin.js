@@ -39,4 +39,4 @@ export class CustomizeTabPlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins").add(CustomizeTabPlugin.id, CustomizeTabPlugin);
+registry.category("builder-plugins").add(CustomizeTabPlugin.id, CustomizeTabPlugin);

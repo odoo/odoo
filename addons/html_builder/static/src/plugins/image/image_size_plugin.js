@@ -12,4 +12,4 @@ class ImageSizePlugin extends Plugin {
         },
     };
 }
-registry.category("website-plugins").add(ImageSizePlugin.id, ImageSizePlugin);
+registry.category("builder-plugins").add(ImageSizePlugin.id, ImageSizePlugin);

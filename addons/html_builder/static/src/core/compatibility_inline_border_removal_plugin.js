@@ -54,5 +54,5 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins")
+registry.category("builder-plugins")
     .add(CompatibilityInlineBorderRemovalPlugin.id, CompatibilityInlineBorderRemovalPlugin);

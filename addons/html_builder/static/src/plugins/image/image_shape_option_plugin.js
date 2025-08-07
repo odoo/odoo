@@ -467,4 +467,4 @@ export class ToggleImageShapeRatioAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(ImageShapeOptionPlugin.id, ImageShapeOptionPlugin);
+registry.category("builder-plugins").add(ImageShapeOptionPlugin.id, ImageShapeOptionPlugin);
