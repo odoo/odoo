@@ -351,6 +351,7 @@
             'website/static/tests/helpers.js',
             'website/static/tests/interactions/**/*',
             'website/static/tests/builder/**/*',
+            ('include', 'website.website_builder_assets'),
             'website/static/tests/mock_server/**/*',
             'website/static/tests/new_content_modal.test.js',
         ],
