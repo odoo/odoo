@@ -174,7 +174,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-content", { text: "other bye (edited)" });
     await click(".o_channel_redirect", { text: "other" });
-    await contains(".o-mail-Discuss-threadName", { value: "other" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "other" });
 });
 
 test("Can edit message comment in chatter", async () => {
@@ -939,8 +939,8 @@ test("open author avatar card", async () => {
     await start();
     await openDiscuss(channelId_1);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
-    await contains(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
-    await click(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
+    await contains(".o-mail-DiscussContent .o-mail-Message-avatarContainer img");
+    await click(".o-mail-DiscussContent .o-mail-Message-avatarContainer img");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Demo" });
     await contains(".o_card_user_infos > a", { text: "demo@example.com" });

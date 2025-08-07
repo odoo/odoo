@@ -35,7 +35,7 @@ test("Thread name unchanged when inviting new users", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
     await click("button[title='Invite People']");
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
@@ -44,7 +44,7 @@ test("Thread name unchanged when inviting new users", async () => {
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Members']");
     await contains(".o-discuss-ChannelMember", { text: "James" });
-    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
 });
 
 test("Can set a custom name to livechat conversation", async () => {
@@ -61,10 +61,10 @@ test("Can set a custom name to livechat conversation", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-DiscussSidebar-item:contains('Visitor #20')");
-    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
-    await insertText(".o-mail-Discuss-threadName", "New Name", { replace: true });
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
+    await insertText(".o-mail-DiscussContent-threadName", "New Name", { replace: true });
     await triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadName[title='New Name']");
+    await contains(".o-mail-DiscussContent-threadName[title='New Name']");
     await contains(".o-mail-DiscussSidebar-item:contains('New Name')");
 });
 

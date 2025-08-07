@@ -144,7 +144,7 @@ test("sidebar search finds livechats", async () => {
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
     await click("a", { text: "Visitor 11" });
-    await contains(".o-mail-Discuss-threadName[title='Visitor 11']");
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor 11']");
 });
 
 test("open visitor's partner profile if visitor has one", async () => {

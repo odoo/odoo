@@ -51,7 +51,7 @@
             </div>
             <t t-if="this.store.inPublicPage and !this.store.self_partner">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
-                    <img class="o-mail-Discuss-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
+                    <img class="o-mail-DiscussContent-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
                 </button>
                 <AutoresizeInput
                     t-if="state.editingGuestName"
