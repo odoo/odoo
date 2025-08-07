@@ -298,6 +298,7 @@ export class Wysiwyg extends Component {
         document: document,
         allowCommandVideo: true,
         allowCommandImage: true,
+        allowCommandFile: true,
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
         onHistoryResetFromSteps: () => {},
@@ -440,6 +441,7 @@ export class Wysiwyg extends Component {
             getUnremovableElements: this.options.getUnremovableElements,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
             allowCommandVideo: this.options.allowCommandVideo,
+            allowCommandFile: this.options.allowCommandFile,
             allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
@@ -2732,7 +2734,7 @@ export class Wysiwyg extends Component {
                 },
             );
         }
-        if (editorOptions.allowCommandImage || editorOptions.allowCommandVideo) {
+        if (editorOptions.allowCommandImage || editorOptions.allowCommandVideo || editorOptions.allowCommandFile) {
             categories.push({ name: _t('Media'), priority: 50 });
         }
         if (editorOptions.allowCommandImage) {
@@ -2757,6 +2759,28 @@ export class Wysiwyg extends Component {
                 callback: () => {
                     this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
                 },
+            });
+        }
+        if (editorOptions.allowCommandFile) {
+            commands.push({
+                category: _t('Media'),
+                name: _t('File link'),
+                priority: 20,
+                description: _t('Upload a file and insert a download link'),
+                fontawesome: 'fa-upload',
+                callback: () => {
+                    this.openMediaDialog({noVideos: false, noIcons: true});
+                }
+            });
+            commands.push({
+                category: _t('Media'),
+                name: _t('File preview'),
+                priority: 20,
+                description: _t('Upload a file and insert an interactive card preview'),
+                fontawesome: 'fa-vcard',
+                callback: () => {
+                    this.openMediaDialog({noVideos: false, noIcons: true});
+                }
             });
         }
         if (editorOptions.powerboxCategories) {
