@@ -42,12 +42,12 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
         # no edit on prefilled data from logged partner : propagate partner_id on created lead
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'website_crm_pre_tour', login=user_login)
 
-        with odoo.tests.RecordCapturer(self.env['crm.lead'], []) as capt:
+        with odoo.tests.RecordCapturer(self.env['crm.lead']) as capt:
             self.start_tour("/", "website_crm_catch_logged_partner_info_tour", login=user_login)
         self.assertEqual(capt.records.partner_id, user_partner)
 
         # edited contact us partner info : do not propagate partner_id on lead
-        with odoo.tests.RecordCapturer(self.env['crm.lead'], []) as capt:
+        with odoo.tests.RecordCapturer(self.env['crm.lead']) as capt:
             self.start_tour("/", "website_crm_tour", login=user_login)
         self.assertFalse(capt.records.partner_id)
 

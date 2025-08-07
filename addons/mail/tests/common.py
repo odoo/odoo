@@ -312,7 +312,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
         if add_to_lst:
             replying_to = f'{replying_to},{",".join(add_to_lst)}'
-        with RecordCapturer(self.env['mail.message'], []) as capture_messages, \
+        with RecordCapturer(self.env['mail.message']) as capture_messages, \
              self.mock_mail_gateway():
             self._gateway_mail_reply(
                 template, email=email,
@@ -328,7 +328,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         """ Tool to automatically reply to last outgoing mail. """
         self.assertEqual(len(self._mails), 1)
         email = self._mails[0]  # keep out of mock, otherwise _mails is rewritten
-        with RecordCapturer(self.env['mail.message'], []) as capture_messages, \
+        with RecordCapturer(self.env['mail.message']) as capture_messages, \
              self.mock_mail_gateway():
             self._gateway_mail_reply(
                 template, email=email,

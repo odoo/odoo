@@ -107,7 +107,7 @@ class EventRegistrationCase(TestEventCrmCommon):
         rules. In that case, considering all registrations to be part of the same
         group when no SO is linked is problematic as it merges unrelated data. """
         now = datetime(2024, 10, 1, 13, 30, 0)
-        with RecordCapturer(self.env['crm.lead'], []) as capture:
+        with RecordCapturer(self.env['crm.lead']) as capture:
             Attendee = self.env['event.registration'].with_context(event_lead_rule_skip=True).with_user(self.user_eventmanager)
             with self.mock_datetime_and_now(now):
                 attendees_1 = Attendee.create([
@@ -155,7 +155,7 @@ class EventRegistrationCase(TestEventCrmCommon):
         self.env.invalidate_all()
 
         # 3 leads created w/ Lead Generation rules in TestEventCrmCommon: 1 per attendee and 1 per order
-        with RecordCapturer(self.env['crm.lead'], []) as capture:
+        with RecordCapturer(self.env['crm.lead']) as capture:
             _attendees = self.env['event.registration'].with_user(self.user_eventmanager).create([
                 {
                     'event_id': self.event_0.id,

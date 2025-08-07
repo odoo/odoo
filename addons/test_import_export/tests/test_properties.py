@@ -334,7 +334,7 @@ class TestPropertiesExportImport(HttpCase):
             },
         )
 
-        with RecordCapturer(self.ModelProperty, []) as capture:
+        with RecordCapturer(self.ModelProperty) as capture:
             results = import_wizard.execute_import(
                 [fnames[0] for fnames in preview['matches'].values()],
                 [],

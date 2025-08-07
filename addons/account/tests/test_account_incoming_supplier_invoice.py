@@ -221,9 +221,9 @@ class TestAccountInvoiceImportMixin:
         """
 
         with (
-            RecordCapturer(self.env['ir.attachment'], []) as attachment_capturer,
-            RecordCapturer(self.env['mail.message'], []) as message_capturer,
-            RecordCapturer(self.env['account.move'], []) as move_capturer,
+            RecordCapturer(self.env['ir.attachment']) as attachment_capturer,
+            RecordCapturer(self.env['mail.message']) as message_capturer,
+            RecordCapturer(self.env['account.move']) as move_capturer,
         ):
             journal = self.company_data['default_journal_purchase']
             init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
