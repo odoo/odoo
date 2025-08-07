@@ -393,7 +393,7 @@ export class PaymentScreen extends Component {
         if (this.currentOrder.originalSplittedOrder) {
             this.pos.selectedOrderUuid = this.currentOrder.originalSplittedOrder.uuid;
         } else {
-            this.pos.add_new_order();
+            this.pos.selectEmptyOrder();
         }
     }
     /**

@@ -2264,7 +2264,13 @@ export class PosStore extends Reactive {
 
     selectEmptyOrder() {
         const emptyOrders = this.models["pos.order"].filter(
-            (order) => order.is_empty() && !order.finalized
+            (order) =>
+                order.is_empty() &&
+                !order.finalized &&
+                order.payment_ids.length === 0 &&
+                !order.partner_id &&
+                order.pricelist_id?.id === this.config.pricelist_id?.id &&
+                order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
         );
         if (emptyOrders.length > 0) {
             this.set_order(emptyOrders[0]);
