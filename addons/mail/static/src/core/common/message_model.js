@@ -424,7 +424,12 @@ export class Message extends Record {
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canAddReaction(thread) {
-        return Boolean(!this.is_transient && !this.isPending && this.thread?.can_react);
+        return Boolean(
+            !this.is_transient &&
+                !this.isPending &&
+                this.thread?.can_react &&
+                (this.thread?.hasMailThread || this.thread?.model === "discuss.channel")
+        );
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
