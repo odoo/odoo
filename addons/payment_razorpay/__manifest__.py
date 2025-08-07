@@ -16,7 +16,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_razorpay/static/src/js/payment_form.js',
+            'payment_razorpay/static/src/interactions/payment_form.js',
         ],
     },
     'post_init_hook': 'post_init_hook',

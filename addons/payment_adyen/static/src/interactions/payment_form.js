@@ -1,14 +1,18 @@
-
-import paymentForm from '@payment/js/payment_form';
 import { loadJS, loadCSS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 import { pyToJsLocale } from '@web/core/l10n/utils';
 import { rpc, RPCError } from '@web/core/network/rpc';
+import { patch } from '@web/core/utils/patch';
 
-paymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
 
-    adyenCheckout: undefined,
-    adyenComponents: undefined,
+patch(PaymentForm.prototype, {
+
+    setup() {
+        super.setup();
+        this.adyenCheckout = undefined;
+        this.adyenComponents = {}; // Store the component of each instantiated payment method.
+    },
 
     // #=== DOM MANIPULATION ===#
 
@@ -26,12 +30,11 @@ paymentForm.include({
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'adyen') {
-            this._super(...arguments);
+            await super._prepareInlineForm(...arguments);
             return;
         }
 
         // Check if instantiation of the component is needed.
-        this.adyenComponents ??= {}; // Store the component of each instantiated payment method.
         if (flow === 'token') {
             return; // No component for tokens.
         } else if (this.adyenComponents[paymentOptionId]) {
@@ -56,29 +59,33 @@ paymentForm.include({
         this.el.parentElement.querySelector(
             'link[href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.css"]'
         )?.remove();
-        await loadJS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.js')
-        await loadCSS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.css')
+        await this.waitFor(
+            loadJS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.js')
+        );
+        await this.waitFor(
+            loadCSS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.css')
+        );
         const { AdyenCheckout, createComponent } = window.AdyenWeb;
 
         // Create the checkout object if not already done for another payment method.
         if (!this.adyenCheckout) {
             try {
                 // Await the RPC to let it create AdyenCheckout before using it.
-                const response = await rpc(
+                const response = await this.waitFor(rpc(
                     '/payment/adyen/payment_methods',
                     {
                         'provider_id': providerId,
                         'partner_id': parseInt(this.paymentContext['partnerId']),
                         'formatted_amount': formattedAmount,
                     },
-                );
+                ));
                 // Create the Adyen Checkout SDK.
                 const providerState = this._getProviderState(radio);
                 const configuration = {
                     paymentMethodsResponse: response,
                     clientKey: inlineFormValues['client_key'],
                     amount: formattedAmount,
-                    locale: pyToJsLocale(this._getContext().lang) || 'en-US',
+                    locale: pyToJsLocale(document.documentElement.getAttribute('lang')) || 'en-US',
                     countryCode: response['country_code'],
                     environment: providerState === 'enabled' ? 'live' : 'test',
                     onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
@@ -87,7 +94,7 @@ paymentForm.include({
                     onError: this._adyenOnError.bind(this),
                     onSubmit: this._adyenOnSubmit.bind(this),
                 };
-                this.adyenCheckout = await AdyenCheckout(configuration);
+                this.adyenCheckout = await this.waitFor(AdyenCheckout(configuration));
             } catch (error) {
                 if (error instanceof RPCError) {
                     this._displayErrorDialog(
@@ -123,7 +130,7 @@ paymentForm.include({
                 blockPayPalPayLaterButton: true
             });
             this._hideInputs();
-            // Define necessary fields as the step _submitForm is missed.
+            // Define necessary fields as the step submitForm is missed.
             Object.assign(this.paymentContext, {
                 tokenizationRequested: false,
                 providerId: providerId,
@@ -158,7 +165,8 @@ paymentForm.include({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'adyen' || flow === 'token') {
-            await this._super(...arguments); // Tokens are handled by the generic flow
+            // Tokens are handled by the generic flow
+            await super._initiatePaymentFlow(...arguments);
             return;
         }
 
@@ -185,15 +193,16 @@ paymentForm.include({
      * @param {object} actions - The possible action handlers to call.
      * @return {void}
      */
-    _adyenOnSubmit(state, component, actions) {
-        // Create the transaction and retrieve the processing values.
-        rpc(
-            this.paymentContext['transactionRoute'],
-            this._prepareTransactionRouteParams(),
-        ).then(processingValues => {
+    async _adyenOnSubmit(state, component, actions) {
+        try {
+            // Create the transaction and retrieve the processing values.
+            const processingValues = await this.waitFor(rpc(
+                this.paymentContext['transactionRoute'],
+                this._prepareTransactionRouteParams(),
+            ));
             component.reference = processingValues.reference; // Store final reference.
             // Initiate the payment.
-            return rpc('/payment/adyen/payments', {
+            const paymentResponse = await this.waitFor(rpc('/payment/adyen/payments', {
                 'provider_id': processingValues.provider_id,
                 'reference': processingValues.reference,
                 'converted_amount': processingValues.converted_amount,
@@ -202,22 +211,22 @@ paymentForm.include({
                 'payment_method': state.data.paymentMethod,
                 'access_token': processingValues.access_token,
                 'browser_info': state.data.browserInfo,
-            });
-        }).then(paymentResponse => {
+            }));
             if (!paymentResponse.resultCode) {
                 actions.reject();
                 return;
             }
             if (paymentResponse.action && paymentResponse.action.type !== 'redirect') {
                 this._hideInputs(); // Only the inputs of the inline form should be used.
-                this.call('ui', 'unblock'); // The page is blocked at this point; unblock it.
+                 // The page is blocked at this point; unblock it.
+                this.env.bus.trigger('ui', 'unblock');
             }
             actions.resolve(paymentResponse);
-        }).catch(error => {
+        } catch (error) {
             const error_message = error instanceof RPCError ? error.data.message : error.message;
             this._displayErrorDialog(_t("Payment processing failed"), error_message);
             this._enableButton();
-        });
+        }
     },
 
     /**
@@ -229,22 +238,23 @@ paymentForm.include({
      * @param {object} actions - The possible action handlers to call.
      * @return {void}
      */
-    _adyenOnSubmitAdditionalDetails(state, component, actions) {
-        rpc('/payment/adyen/payments/details', {
-            'provider_id': this.paymentContext['providerId'],
-            'reference': component.reference,
-            'payment_details': state.data,
-        }).then(paymentDetails => {
+    async _adyenOnSubmitAdditionalDetails(state, component, actions) {
+        try {
+            const paymentDetails = await this.waitFor(rpc('/payment/adyen/payments/details', {
+                'provider_id': this.paymentContext['providerId'],
+                'reference': component.reference,
+                'payment_details': state.data,
+            }));
             if (!paymentDetails.resultCode) {
                 actions.reject();
                 return;
             }
             actions.resolve(paymentDetails);
-        }).catch(error => {
+        } catch (error) {
             const error_message = error instanceof RPCError ? error.data.message : error.message;
             this._displayErrorDialog(_t("Payment processing failed"), error_message);
             this._enableButton();
-        });
+        }
     },
 
     /**
