@@ -995,7 +995,7 @@ patch(PosStore.prototype, {
         return await super.askBeforeValidation();
     },
 
-    async validateOrderFast(paymentScreenEl, paymentMethod) {
+    async validateOrderFast(paymentMethod) {
         const currentOrder = this.getOrder();
         if (!currentOrder) {
             return false;
