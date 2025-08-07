@@ -467,3 +467,61 @@ class TestMrpStockReports(TestReportsCommon):
         self.assertEqual(len(repl1), 1)
         self.assertEqual(repl0[0]['summary']['quantity'], 3)
         self.assertEqual(repl1[0]['summary']['quantity'], 5)
+
+    def test_mrp_report_overview(self):
+        """
+        Checks if there is no duplicate lines in the MO Overview report with chained boms, when some
+        already produced components of the parent product are scrapped and set to be replenished.
+        """
+        # To facilitate understanding
+        product_parent, product_child = self.product1, self.product
+        warehouse_1 = self.env.ref('stock.warehouse0')
+
+        product_parent.tracking = 'none'
+        product_child.route_ids = [Command.set([self.ref('mrp.route_warehouse0_manufacture')])]
+
+        # reordering rule
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Child RR',
+            'location_id': warehouse_1.lot_stock_id.id,
+            'product_id': product_child.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+        child_bom, parent_bom = self.env['mrp.bom'].create([{  # child
+            'product_id': product_child.id,
+            'product_tmpl_id': product_child.product_tmpl_id.id,
+            'product_qty': 1,
+        }, {  # parent
+            'product_id': product_parent.id,
+            'product_tmpl_id': product_parent.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [
+                Command.create({'product_id': product_child.id, 'product_qty': 1}),
+            ],
+        }])
+        mo = self.env['mrp.production'].create({
+            'product_id': product_parent.id,
+            'product_qty': 6.0,
+            'bom_id': parent_bom.id,
+            'picking_type_id': warehouse_1.manu_type_id.id,
+        })
+        mo.action_confirm()
+
+        child_mo = self.env['mrp.production'].search([('product_id.id', '=', product_child.id), ('bom_id.id', '=', child_bom.id)], limit=1)
+        child_mo.button_mark_done()
+
+        scrap_wizard_dict = mo.button_scrap()
+        scrap_form = Form(self.env[scrap_wizard_dict['res_model']].with_context(scrap_wizard_dict['context']))
+        scrap_form.product_id = product_child
+        scrap_form.should_replenish = True
+        scrap_form.scrap_qty = 2
+        scrap_form.save().action_validate()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo_form.save()
+
+        report = self.env['report.mrp.report_mo_overview']._get_report_data(mo.id)
+        self.assertEqual(len(report['components'][0]['replenishments']), 1)
+        self.assertEqual(report['components'][0]['replenishments'][0]['summary']['quantity'], 2.0)
