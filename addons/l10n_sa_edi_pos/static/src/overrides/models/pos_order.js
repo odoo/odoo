@@ -2,6 +2,7 @@
 
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
+import {qrCodeSrc} from "@point_of_sale/utils";
 
 patch(PosOrder.prototype, {
     setup() {
@@ -28,5 +29,14 @@ patch(PosOrder.prototype, {
         } else {
             super.setToInvoice(...arguments);
         }
+    },
+    notLegal() {
+        return  !this.l10n_sa_invoice_qr_code_str || this.l10n_sa_invoice_edi_state !== "sent";
+    },
+        generateQrcode() {
+        if (!this.notLegal() && this.isSACompany()) {
+            return qrCodeSrc(this.l10n_sa_invoice_qr_code_str);
+        }
+        return false;
     },
 });

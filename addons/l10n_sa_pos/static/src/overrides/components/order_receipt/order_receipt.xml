@@ -10,14 +10,20 @@
         </xpath>
 
         <xpath expr="//span[@id='title_english']" position="replace">
-            <t t-if="!order.is_settlement()">
-                <span id="title_english">Simplified Tax Invoice</span>
+            <t t-if="!order.is_settlement() and order.is_simplified()">
+                <span id="title_english" t-translation="off">Simplified Tax Invoice</span>
+            </t>
+            <t t-else="">
+                <span id="title_english" t-translation="off">Tax Invoice</span>
             </t>
         </xpath>
 
         <xpath expr="//span[@id='title_arabic']" position="replace">
-            <t t-if="!order.is_settlement()">
-                <span id="title_arabic">فاتورة ضريبية مبسطة</span>
+            <t t-if="!order.is_settlement() and order.is_simplified()">
+                <span id="title_arabic" t-translation="off">فاتورة ضريبية مبسطة</span>
+            </t>
+            <t t-else="">
+                <span id="title_arabic" t-translation="off">الفاتورة الضريبية</span>
             </t>
         </xpath>
     </t>
