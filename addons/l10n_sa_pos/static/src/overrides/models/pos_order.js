@@ -69,4 +69,10 @@ https://zatca.gov.sa/ar/E-Invoicing/SystemsDevelopers/Documents/20210528_ZATCA_E
         const name_length_encoding = [name_byte_array.length];
         return name_tag_encoding.concat(name_length_encoding, name_byte_array);
     },
+    get isSimplified() {
+        return (
+            (this?.partner_id?.company_type === "person" || !this?.partner_id) &&
+            this.company_id.country_id?.code === "SA"
+        );
+    },
 });

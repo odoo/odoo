@@ -2,6 +2,14 @@
 <odoo>
     <template id="arabic_english_invoice" inherit_id="l10n_gcc_invoice.arabic_english_invoice">
         <xpath expr="//div[@name='due_date']" position="after">
+            <t t-if="o.company_id.country_id.code == 'SA' and o.edi_state != 'sent' and o.move_type in ('out_invoice', 'out_refund')" t-set="custom_header">
+                <div class="fw-bold text-center mt-2">
+                    <h5>THIS IS NOT A LEGAL DOCUMENT</h5>
+                    <h5>هذا المستند ليس مستنداً قانونياً</h5>
+                </div>
+                <!-- To help with centering the previous div in flex justify between-->
+                <div t-if="is_html_empty(o.company_id.report_header)" class="col-1"/>
+            </t>
             <div class="row" t-if="o.delivery_date" name="delivery_date">
                 <div class="col-6"></div>
                 <div class="col-2">
@@ -22,9 +30,9 @@
             <t t-set="information_block">
                 <div class="row">
                     <p class="col-6 me-3">
-                        <img t-if="o.l10n_sa_qr_code_str"
-                            style="display:block;"
-                            t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200, 0)"/>
+                        <img t-if="o.l10n_sa_qr_code_str and o.edi_state == 'sent'"
+                             style="display:block;"
+                             t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200, 0)"/>
                     </p>
                     <div class="col-6" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)" groups="account.group_delivery_invoice_address" name="shipping_address_block">
                         <strong class="d-block mt-3">Shipping Address</strong>

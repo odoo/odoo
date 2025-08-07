@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
-            <t t-if="order.isGccCountry">
+            <t t-if="order.isGccCountry and order.showTitle">
                 <br/>
                 <br/>
                 <div class="pos-receipt-header">
