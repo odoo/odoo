@@ -70,16 +70,9 @@
                     <field
                         name="overtime_status"
                         widget="statusbar"
-                        readonly="not is_manager"
+                        readonly="1"
                         options="{'clickable': '1'}"
-                        invisible="no_validated_overtime_hours"/>
-                    <field
-                        name="overtime_status"
-                        widget="statusbar"
-                        readonly="not is_manager"
-                        options="{'clickable': '1'}"
-                        invisible="not no_validated_overtime_hours"
-                        statusbar_visible="approved,refused"/>
+                        invisible="not overtime_status"/>
                 </header>
                 <sheet>
                     <group>
@@ -115,24 +108,27 @@
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
                                 <field name="overtime_hours" widget="float_time" string="Worked Extra Hours" invisible="overtime_hours == validated_overtime_hours"/>
                                 <label for="validated_overtime_hours"/>
-                                <div class="o_row">
+                                <div>
                                     <field
                                         name="validated_overtime_hours"
-                                        class="o_hr_narrow_field-4"
+                                        style="width:5ch"
                                         widget="float_time"
-                                        readonly="not is_manager or overtime_status == 'refused'"/>
+                                        readonly="1"/>
+                                    <!-- TODO algin icons baseline with text -->
                                     <button
-                                        class="oe_stat_button"
-                                        string="Approve"
-                                        invisible="not is_manager or overtime_status not in ['to_approve', 'refused'] or no_validated_overtime_hours"
+                                        class="oe_stat_button flex-shrink-0"
+                                        string=" "
+                                        help="Approve all overtimes for the same employee and date"
+                                        invisible="not is_manager or overtime_status not in ['to_approve', 'refused'] or not overtime_status"
                                         name="action_approve_overtime"
                                         icon="fa-check"
                                         type="object"
                                         groups="hr_attendance.group_hr_attendance_officer"/>
                                     <button
-                                        class="oe_stat_button"
-                                        string="Refuse"
-                                        invisible="not is_manager or overtime_status not in ['to_approve', 'approved'] or no_validated_overtime_hours"
+                                        class="oe_stat_button flex-shrink-0"
+                                        string=" "
+                                        help="Refuse all overtimes for the same employee and date"
+                                        invisible="not is_manager or overtime_status not in ['to_approve', 'approved'] or not overtime_status"
                                         name="action_refuse_overtime"
                                         icon="fa-times"
                                         type="object"
@@ -203,6 +199,35 @@
                             </group>
                         </group>
                     </group>
+                    <notebook invisible="not overtime_status">
+                        <page string="Overtime Details">
+                            <field name="linked_overtime_ids">
+                                <list editable="bottom">
+                                    <field name="rule_ids" widget="many2many_tags" readonly="1"/>
+                                    <field name="duration" widget="float_time" readonly="1"/>
+                                    <field name="manual_duration" widget="float_time" readonly="0"/>
+                                    <field name="amount_rate" widget="percentage"/>
+                                    <field name="status" widget="badge" readonly="1" decoration-warning="status == 'to_approve'" decoration-success="status == 'approved'" decoration-danger="status == 'refused'"/>
+                                    <button
+                                        class="oe_stat_button"
+                                        string="Approve"
+                                        invisible="not is_manager or status not in ['to_approve', 'refused']"
+                                        name="action_approve"
+                                        icon="fa-check"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"/>
+                                    <button
+                                        class="oe_stat_button"
+                                        string="Refuse"
+                                        invisible="not is_manager or status not in ['to_approve', 'approved']"
+                                        name="action_refuse"
+                                        icon="fa-times"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
@@ -379,7 +404,6 @@
                 <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
                 <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"/>
                 <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" string="Extra Hours" widget="float_time"/>
-                <field name="overtime_status" widget="badge" decoration-warning="overtime_status == 'to_approve'" decoration-success="overtime_status == 'approved'" decoration-danger="overtime_status == 'refused'"/>
                 <button
                     class="oe_stat_button"
                     string="Approve"
@@ -470,4 +494,5 @@
     <menuitem id="menu_hr_attendance_configuration" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
 
     <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" parent="menu_hr_attendance_configuration" sequence="10"/>
+
 </odoo>
