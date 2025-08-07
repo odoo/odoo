@@ -154,7 +154,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async addRowAfterSection(record, addSubSection) {
-        const canProceed = await this.props.list.leaveEditMode();
+        const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
         if (!canProceed) {
             return;
         }
@@ -170,7 +170,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async addNoteInSection(record) {
-        const canProceed = await this.props.list.leaveEditMode();
+        const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
         if (!canProceed) {
             return;
         }
@@ -186,7 +186,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async addRowInSection(record, addSubSection) {
-        const canProceed = await this.props.list.leaveEditMode();
+        const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
         if (!canProceed) {
             return;
         }
@@ -214,7 +214,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     async deleteSection(record) {
         if (this.editedRecord && this.editedRecord !== record) {
-            const left = await this.props.list.leaveEditMode();
+            const left = await this.props.list.leaveEditMode({ canAbandon: false });
             if (!left) {
                 return;
             }
@@ -414,7 +414,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async moveSectionDown(record) {
-        const canProceed = await this.props.list.leaveEditMode();
+        const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
         if (!canProceed) {
             return;
         }
@@ -426,7 +426,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async moveSectionUp(record) {
-        const canProceed = await this.props.list.leaveEditMode();
+        const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
         if (!canProceed) {
             return;
         }
