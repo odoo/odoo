@@ -53,10 +53,20 @@ class HrLeave(models.Model):
                 from_period = ['morning'] if self.request_date_from_period == 'am' else ['afternoon']
                 to_period = ['morning'] if self.request_date_to_period == 'am' else ['afternoon']
             else:
+<<<<<<< dde26e5372b8328bbc9e050f0fdedadd1de649fd
                 from_period = ['morning', 'afternoon']
                 to_period = ['morning', 'afternoon']
             attendance_ids = self.company_id.resource_calendar_id.attendance_ids
             date_from, date_to = adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, self.employee_id)
+||||||| 31705dbd75403be87bfcfaaac9eb8f15aff2593e
+                period = ['morning', 'afternoon']
+            attendance_ids = self.company_id.resource_calendar_id.attendance_ids
+            date_from, date_to = adjust_date_range(date_from, date_to, period, attendance_ids, self.employee_id)
+=======
+                period = ['morning', 'afternoon']
+            attendance_ids = self.company_id.resource_calendar_id.attendance_ids | self.resource_calendar_id.attendance_ids
+            date_from, date_to = adjust_date_range(date_from, date_to, period, attendance_ids, self.employee_id)
+>>>>>>> a68c0c59fde381689f66c9d67e2711d97fb0fabd
 
         similar = date_from.date() == date_to.date() and self.request_date_from_period == self.request_date_to_period
         if self.request_unit_half and similar and self.request_date_from_period == 'am':
