@@ -1045,7 +1045,7 @@ class AccountJournal(models.Model):
             action['domain'] = ast.literal_eval(action['domain'] or '[]')
         if not self.env.context.get('action_name'):
             if self.type == 'sale':
-                action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
+                action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt', 'entry'))]
             elif self.type == 'purchase':
                 action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry'))]
 
