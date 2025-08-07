@@ -17,14 +17,23 @@ export class FeedbackScreen extends Component {
         this.pos = usePos();
         this.containerRef = useRef("feedback-screen");
         this.amountRef = useRef("amount");
-        onMounted(() => {
+        onMounted(async () => {
             this.scaleText();
+            if (this.pos.isFastPaymentRunning) {
+                await this.fastValidate();
+            }
         });
         if (!this.pos.isFastPaymentRunning) {
             this.timeout = setTimeout(() => {
                 this.goToNextScreen();
             }, 2000);
         }
+    }
+
+    async fastValidate() {
+        const paymentMethod = this.pos.models["pos.payment.method"].get(this.props.paymentMethodId);
+        await this.pos.validateOrderFast(paymentMethod);
+        this.goToNextScreen();
     }
 
     scaleText() {
