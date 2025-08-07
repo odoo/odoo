@@ -7,6 +7,7 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import {
     addActionOption,
     addOption,
+    addPlugin,
     defineWebsiteModels,
     exampleWebsiteContent,
     modifyText,
@@ -15,6 +16,7 @@ import {
 } from "./website_helpers";
 import { xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { Plugin } from "@html_editor/plugin";
 
 defineWebsiteModels();
 
@@ -200,6 +202,50 @@ test("reload save with target, then discard and edit again should not reselect t
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".o_edit_website_container button").click();
     expect(".o-website-builder_sidebar button[data-name=blocks]").toHaveClass("active");
+});
+
+test("preview shouldn't let o_dirty", async () => {
+    addActionOption({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement }) {
+                editingElement.dataset.applied = "true";
+            }
+        },
+    });
+    let editorIsStart = false;
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            normalize_handlers: (root) => {
+                const el = root.querySelector(".test-option");
+                if (editorIsStart && el.dataset.applied !== "true") {
+                    // apply a mutation when we remove the preview
+                    el.classList.add("test");
+                }
+            },
+        };
+    }
+    addPlugin(TestPlugin);
+    addOption({
+        selector: ".test-option",
+        template: xml`<BuilderButton action="'testAction'"/>`,
+        reloadTarget: true,
+    });
+    const deferred = new Deferred();
+    await setupWebsiteBuilder(`<div class="test-option">b</div>`, {
+        delayReload: async () => await deferred,
+    });
+    editorIsStart = true;
+    await contains(":iframe .test-option").click();
+    await contains("[data-action-id=testAction]").hover(); // preview
+    expect(":iframe .test-option").toHaveAttribute("data-applied");
+    expect(":iframe .test-option").not.toHaveClass("test");
+
+    await contains(":iframe body").hover(); // leave preview
+    expect(":iframe .test-option").not.toHaveAttribute("data-applied");
+    expect(":iframe .test-option").toHaveClass("test");
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
 });
 
 function setupSaveAndReloadIframe() {
