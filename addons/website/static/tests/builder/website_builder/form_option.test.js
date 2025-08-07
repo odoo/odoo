@@ -301,13 +301,28 @@ const formWithConditionOnChexbox = `
 </form></section>
 `;
 
-test("Correctly set field dependency name at field rename", async () => {
+const changeFieldAndCheckDependency = async (changeFieldAction) => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(formWithConditionOnChexbox);
     await contains(":iframe input[value='Option 2']").click();
-    await contains("input[data-id='1']").edit("newName");
+    await changeFieldAction();
     await contains(":iframe input[name='b']").click();
     await contains("#hidden_condition_no_text_opt:contains(Option 1)").click();
+};
+
+test("Correctly set field dependency name at field rename", async () => {
+    await changeFieldAndCheckDependency(
+        async () => await contains("input[data-id='1']").edit("newName")
+    );
     expect(".o-main-components-container  .o-dropdown-item:contains('Option 3')").toHaveCount(1);
     expect(".o-main-components-container  .o-dropdown-item:contains('newName')").toHaveCount(1);
+});
+
+test("Correctly set field dependency name at field addition", async () => {
+    await changeFieldAndCheckDependency(
+        async () => await contains("button.builder_list_add_item").click()
+    );
+    expect(".o-main-components-container  .o-dropdown-item:contains('Option 2')").toHaveCount(1);
+    expect(".o-main-components-container  .o-dropdown-item:contains('Option 3')").toHaveCount(1);
+    expect(".o-main-components-container  .o-dropdown-item:contains('Item')").toHaveCount(1);
 });
