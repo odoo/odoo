@@ -100,7 +100,7 @@ test("no call with odoobot", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header");
+    await contains(".o-mail-DiscussContent-header");
     await contains("[title='Start Call']", { count: 0 });
 });
 
@@ -491,13 +491,13 @@ test("start call when accepting from push notification", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss();
-    await contains(".o-mail-Discuss-threadName[title=Inbox]");
+    await contains(".o-mail-DiscussContent-threadName[title=Inbox]");
     serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId, joinCall: true } },
         })
     );
-    await contains(".o-mail-Discuss-threadName[title=General]");
+    await contains(".o-mail-DiscussContent-threadName[title=General]");
     await contains(`.o-discuss-CallParticipantCard[title='${serverState.partnerName}']`);
 });
 
@@ -634,7 +634,7 @@ test("should also invite to the call when inviting to the channel", async () => 
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
-    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await click(".o-mail-DiscussContent-header button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
