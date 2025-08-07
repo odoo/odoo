@@ -160,7 +160,9 @@ export class ProductTemplate extends Base {
 
     getApplicablePricelistRules(pricelist) {
         const filter = (r) => r.pricelist_id.id === pricelist.id;
-        const rules = (this["<-product.pricelist.item.product_tmpl_id"] || []).filter(filter);
+        const rules = (this["<-product.pricelist.item.product_tmpl_id"] || [])
+            .filter(filter)
+            .sort((a, b) => b.min_quantity - a.min_quantity);
         const rulesSet = new Set(rules.map((r) => r.id));
         const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
         return [...rulesSet, ...generalRulesIds];

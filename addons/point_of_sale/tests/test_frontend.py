@@ -1261,6 +1261,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             'applied_on': '0_product_variant',
             'product_id': product_1.id,
             'fixed_price': 80,
+            'min_quantity': 1,
+        }, {
+            'applied_on': '0_product_variant',
+            'product_id': product_1.id,
+            'fixed_price': 70,
+            'min_quantity': 2,
         }, {
             'applied_on': '0_product_variant',
             'product_id': product_2_template.product_variant_ids[1].id,
