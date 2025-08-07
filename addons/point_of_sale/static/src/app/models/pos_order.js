@@ -1071,9 +1071,16 @@ export class PosOrder extends Base {
                 }
             });
             return resultLines;
-        } else {
-            return this.lines;
         }
+        // Group the combo lines with their parent line
+        return this.lines.reduce((acc, line) => {
+            if (line.combo_line_ids?.length > 0) {
+                acc.push(line, ...line.combo_line_ids);
+            } else if (!line.combo_parent_id) {
+                acc.push(line);
+            }
+            return acc;
+        }, []);
     }
     getName() {
         return this.floatingOrderName || "";
