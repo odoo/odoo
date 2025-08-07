@@ -80,6 +80,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'leave_validation_type': 'no_validation',
             'request_unit': 'hour',
         })
+        cls.holidays_type_half_with_alloc = LeaveType.create({
+            'name': 'Limited time off in half-days',
+            'requires_allocation': True,
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'half_day',
+        })
+        cls.holidays_type_hours_with_alloc = LeaveType.create({
+            'name': 'Limited time off in hours',
+            'requires_allocation': True,
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
 
         cls.irregular_calendar = cls.env['resource.calendar'].create({
             'name': 'Irregular Calendar With Gaps',
@@ -2009,6 +2021,336 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_date_from': '2024-07-01',
                 'request_date_to': '2024-07-02',
             })
+
+    def test_multi_timeoff_wizard_days(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+            }, {
+                'name': 'Emp2',
+                'resource_calendar_id': self.irregular_calendar.id,
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': date(2025, 12, 7),
+            'date_to': date(2025, 12, 7),
+            'employee_ids': (employee_1 + employee_2).ids,
+        })
+        leave_wizard.action_generate_time_off()
+        generated_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_1.id),
+        ])
+        self.assertEqual(len(generated_leaves), 0, "No leaves should be generated outside of working hours")
+        leave_wizard.date_from = date(2025, 12, 2)
+        leave_wizard.date_to = date(2025, 12, 2)
+        leave_wizard.action_generate_time_off()
+        generated_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_1.id),
+        ])
+        self.assertEqual(len(generated_leaves), 2, "2 leaves should be generated")
+
+    def test_multi_timeoff_wizard_days_with_allocation(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {'name': 'Emp1'}, {'name': 'Emp2'},
+        ])
+        self.env['hr.leave.allocation'].create([{
+            'name': 'Emp1 Allocation',
+            'employee_id': employee_1.id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 5,
+            'state': 'confirm',
+            'date_from': '2025-01-01',
+            'date_to': '2025-12-31',
+        }, {
+            'name': 'Emp2 Allocation',
+            'employee_id': employee_2.id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 3,
+            'state': 'confirm',
+            'date_from': '2025-01-01',
+            'date_to': '2025-12-31',
+        }]).action_approve()
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': date(2025, 12, 2),
+            'date_to': date(2025, 12, 3),
+            'employee_ids': (employee_1 + employee_2).ids,
+        })
+        leave_wizard.action_generate_time_off()
+        leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_2.id),
+        ])
+        self.assertEqual(len(leaves), 2, "Both employees have enough allocation so we create 2 leaves")
+        leave_wizard.date_from = date(2025, 12, 8)
+        leave_wizard.date_to = date(2025, 12, 10)
+        leave_wizard.action_generate_time_off()
+        new_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_2.id),
+        ]) - leaves
+        self.assertEqual(len(new_leaves), 1, "We only create leave for the employee with enough allocation")
+        self.assertEqual(new_leaves.employee_id, employee_1)
+
+    def test_multi_timeoff_wizard_days_conflicting(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {'name': 'Emp1'}, {'name': 'Emp2'},
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': date(2025, 12, 1),
+            'date_to': date(2025, 12, 4),
+            'employee_ids': (employee_1 + employee_2).ids,
+        })
+        leave_wizard.action_generate_time_off()
+        first_generated_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_1.id),
+        ])
+        self.assertEqual(len(first_generated_leaves), 2, "2 leaves should be generated")
+        self.assertEqual(first_generated_leaves.mapped('date_from'), [datetime(2025, 12, 1, 7, 0), datetime(2025, 12, 1, 7, 0)])
+        self.assertEqual(first_generated_leaves.mapped('date_to'), [datetime(2025, 12, 4, 16, 0), datetime(2025, 12, 4, 16, 0)])
+        leave_wizard.date_from = date(2025, 12, 3)
+        leave_wizard.date_to = date(2025, 12, 9)
+        leave_wizard.action_generate_time_off()
+        second_generated_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_1.id),
+        ]) - first_generated_leaves
+        self.assertEqual(len(second_generated_leaves), 2, "2 more leaves should be generated")
+        self.assertEqual(second_generated_leaves.mapped('date_from'), [datetime(2025, 12, 3, 7, 0), datetime(2025, 12, 3, 7, 0)])
+        self.assertEqual(second_generated_leaves.mapped('date_to'), [datetime(2025, 12, 9, 16, 0), datetime(2025, 12, 9, 16, 0)])
+        self.assertEqual(first_generated_leaves.mapped('date_from'), [datetime(2025, 12, 1, 7, 0), datetime(2025, 12, 1, 7, 0)])
+        self.assertEqual(first_generated_leaves.mapped('date_to'), [datetime(2025, 12, 2, 16, 0), datetime(2025, 12, 2, 16, 0)])
+
+    def test_multi_timeoff_wizard_half_day(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+            }, {
+                'name': 'Emp2',
+                'resource_calendar_id': self.irregular_calendar.id,
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_half.id,
+            'date_from': date(2025, 12, 2),
+            'date_to': date(2025, 12, 2),
+            'employee_ids': (employee_1 + employee_2).ids,
+        })
+        leave_wizard.date_from_period = 'am'
+        leave_wizard.date_to_period = 'am'
+        leave_wizard.action_generate_time_off()
+        morning_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_half.id),
+        ])
+        self.assertEqual(len(morning_leaves), 1, "Only 1 leave should be generated for the employee with regular calendar")
+        leave_wizard.date_from_period = 'pm'
+        leave_wizard.date_to_period = 'pm'
+        leave_wizard.action_generate_time_off()
+        afternoon_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_half.id),
+        ]) - morning_leaves
+        self.assertEqual(len(afternoon_leaves), 2, "2 leaves should be generated")
+        self.assertEqual(afternoon_leaves.filtered(lambda l: l.employee_id == employee_1).number_of_days, 0.5, "for the regular calendar, the leave is 0.5 day")
+        self.assertEqual(afternoon_leaves.filtered(lambda l: l.employee_id == employee_2).number_of_days, 1, "for the irregular calendar, the leave is 1 day")
+
+    def test_multi_timeoff_wizard_half_day_with_allocation(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {'name': 'Emp1'}, {'name': 'Emp2'},
+        ])
+        self.env['hr.leave.allocation'].create([{
+            'name': 'Emp1 Allocation',
+            'employee_id': employee_1.id,
+            'holiday_status_id': self.holidays_type_half_with_alloc.id,
+            'number_of_days': 3,
+            'state': 'confirm',
+            'date_from': '2025-01-01',
+            'date_to': '2025-12-31',
+        }, {
+            'name': 'Emp2 Allocation',
+            'employee_id': employee_2.id,
+            'holiday_status_id': self.holidays_type_half_with_alloc.id,
+            'number_of_days': 1.5,
+            'state': 'confirm',
+            'date_from': '2025-01-01',
+            'date_to': '2025-12-31',
+        }]).action_approve()
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_half_with_alloc.id,
+            'date_from': date(2025, 12, 2),
+            'date_to': date(2025, 12, 3),
+            'employee_ids': (employee_1 + employee_2).ids,
+            'date_from_period': 'am',
+            'date_to_period': 'am',
+        })
+        leave_wizard.action_generate_time_off()
+        leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_half_with_alloc.id),
+        ])
+        self.assertEqual(len(leaves), 2, "Both employees have enough allocation so we create 2 leaves")
+        leave_wizard.date_from = date(2025, 12, 8)
+        leave_wizard.date_to = date(2025, 12, 8)
+        leave_wizard.action_generate_time_off()
+        new_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_half_with_alloc.id),
+        ]) - leaves
+        self.assertEqual(len(new_leaves), 1, "We only create leave for the employee with enough allocation")
+        self.assertEqual(new_leaves.employee_id, employee_1)
+
+    def test_multi_timeoff_wizard_half_day_outside_company_calendar_period(self):
+        evening_calendar = self.env['resource.calendar'].create({
+            'name': 'Evening Calendar',
+            'tz': 'Europe/Brussels',
+            'company_id': False,
+            'attendance_ids': [(5, 0, 0),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 19, 'hour_to': 22, 'day_period': 'afternoon'}),
+            ],
+        })
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+            }, {
+                'name': 'Emp2',
+                'resource_calendar_id': evening_calendar.id,
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_half.id,
+            'date_from': date(2025, 12, 8),
+            'date_to': date(2025, 12, 8),
+            'employee_ids': (employee_1 + employee_2).ids,
+            'date_from_period': 'pm',
+            'date_to_period': 'pm',
+        })
+        leave_wizard.action_generate_time_off()
+        leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_half.id),
+        ])
+        self.assertEqual(len(leaves), 2, "2 leaves should be generated")
+        emp1_leave = leaves.filtered(lambda l: l.employee_id == employee_1)
+        emp2_leave = leaves.filtered(lambda l: l.employee_id == employee_2)
+        self.assertEqual(emp1_leave.number_of_hours, 4.0)
+        self.assertEqual(emp2_leave.number_of_hours, 3.0)
+        self.assertEqual(emp1_leave.number_of_days, 0.5)
+        self.assertEqual(emp2_leave.number_of_days, 1.0)
+
+    def test_multi_timeoff_wizard_hours(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+            }, {
+                'name': 'Emp2',
+                'resource_calendar_id': self.irregular_calendar.id,
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_hours.id,
+            'date_from': date(2025, 12, 2),
+            'date_to': date(2025, 12, 2),
+            'employee_ids': (employee_1 + employee_2).ids,
+        })
+        leave_wizard.hour_from = 4
+        leave_wizard.hour_to = 6
+        leave_wizard.action_generate_time_off()
+        generated_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_hours.id),
+        ])
+        self.assertEqual(len(generated_leaves), 0, "No leaves should be generated outside of working hours")
+        leave_wizard.hour_from = 8
+        leave_wizard.hour_to = 12
+        leave_wizard.action_generate_time_off()
+        generated_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_hours.id),
+        ])
+        self.assertEqual(len(generated_leaves), 1, "Only 1 leave should be generated for the employee with regular calendar")
+
+    def test_multi_timeoff_wizard_hours_with_allocation(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {'name': 'Emp1'}, {'name': 'Emp2'},
+        ])
+        self.env['hr.leave.allocation'].create([{
+            'name': 'Emp1 Allocation',
+            'employee_id': employee_1.id,
+            'holiday_status_id': self.holidays_type_hours_with_alloc.id,
+            'number_of_days': 3,
+            'state': 'confirm',
+            'date_from': '2025-01-01',
+            'date_to': '2025-12-31',
+        }, {
+            'name': 'Emp2 Allocation',
+            'employee_id': employee_2.id,
+            'holiday_status_id': self.holidays_type_hours_with_alloc.id,
+            'number_of_days': 1.5,
+            'state': 'confirm',
+            'date_from': '2025-01-01',
+            'date_to': '2025-12-31',
+        }]).action_approve()
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_hours_with_alloc.id,
+            'date_from': date(2025, 12, 2),
+            'date_to': date(2025, 12, 3),
+            'employee_ids': (employee_1 + employee_2).ids,
+            'hour_from': 8,
+            'hour_to': 10,
+        })
+        leave_wizard.action_generate_time_off()
+        leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_hours_with_alloc.id),
+        ])
+        self.assertEqual(len(leaves), 2, "Both employees have enough allocation so we create 2 leaves")
+        leave_wizard.date_from = date(2025, 12, 8)
+        leave_wizard.date_to = date(2025, 12, 8)
+        leave_wizard.hour_to = 17
+        leave_wizard.action_generate_time_off()
+        new_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_hours_with_alloc.id),
+        ]) - leaves
+        self.assertEqual(len(new_leaves), 1, "We only create leave for the employee with enough allocation")
+        self.assertEqual(new_leaves.employee_id, employee_1)
+
+    def test_multi_timeoff_wizard_hours_conflicting(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {'name': 'Emp1'}, {'name': 'Emp2'},
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_hours.id,
+            'date_from': date(2025, 12, 2),
+            'date_to': date(2025, 12, 2),
+            'employee_ids': (employee_1 + employee_2).ids,
+            'hour_from': 8,
+            'hour_to': 10,
+        })
+        leave_wizard.action_generate_time_off()
+        leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_hours.id),
+        ])
+        self.assertEqual(len(leaves), 2, "2 leaves should be generated")
+        leave_wizard.hour_from = 13
+        leave_wizard.hour_to = 17
+        leave_wizard.action_generate_time_off()
+        leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2).ids),
+            ('holiday_status_id', '=', self.holidays_type_hours.id),
+        ])
+        self.assertEqual(len(leaves), 4, "Not conflicting so 2 more leaves are created")
+        leave_wizard.hour_from = 11
+        leave_wizard.hour_to = 15
+        with self.assertRaises(UserError, msg="Automatic split for is not supported for conflicting leaves in hours"):
+            leave_wizard.action_generate_time_off()
 
     def test_coextensive_holidays_one_include_public_leave(self):
         """
