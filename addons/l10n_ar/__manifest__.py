@@ -86,6 +86,7 @@ Master Data:
         'data/res_partner_data.xml',
         'data/res.currency.csv',
         'data/res.country.csv',
+        'data/l10n_ar.arca.activity.csv',
         'views/account_move_view.xml',
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
@@ -100,6 +101,8 @@ Master Data:
         'views/portal_address_templates.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_view.xml',
+        'views/l10n_ar_arca_activity_view.xml',
+        'views/account_account_views.xml',
         'report/invoice_report_view.xml',
     ],
     'demo': [

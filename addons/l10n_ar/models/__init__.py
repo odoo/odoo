@@ -17,3 +17,6 @@ from . import uom_uom
 from . import account_chart_template
 from . import account_move
 from . import account_move_line
+from . import l10n_ar_arca_activity
+from . import res_config_settings
+from . import account_account

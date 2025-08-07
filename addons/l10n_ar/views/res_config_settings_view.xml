@@ -7,8 +7,14 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//app[@name='account']/block" position="after">
-                <div  id="argentina_localization_section" invisible="1">
+                <div id="argentina_localization_section" invisible="1">
                     <block title="Argentinean Localization" id="argentina_localization" invisible="country_code != 'AR'">
+                        <setting string="ARCA Activity" company_dependent="1" help="Principal registered activity of the company"> 
+                            <div class="content-group mt16">
+                                <label for="l10n_ar_arca_activity_id" class="o_form_label col-lg-3" string="Principal Activity"/>
+                                <field name="l10n_ar_arca_activity_id" options="{'no_open': True}"/>
+                            </div>
+                        </setting>
                     </block>
                 </div>
             </xpath>
