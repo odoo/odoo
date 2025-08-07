@@ -318,3 +318,62 @@ class TestSoLineMilestones(TestSaleCommon):
         self.assertEqual(tasks[0].sale_line_id,
                          tasks[0].project_id.sale_line_id,
                          "Task should have the correct sale line based on project.")
+
+    def test_milestone_handling_task_global_project(self):
+        """Test milestone is set on task for task_global_project tracking."""
+        project2 = self.env['project.project'].create({'name': 'Test Project 2', 'allow_milestones': True})
+        (self.product_delivery_milestones1 | self.product_delivery_milestones2).write({
+            'service_tracking': 'task_global_project',
+        })
+        self.product_delivery_milestones1.project_id = self.project
+        self.product_delivery_milestones2.project_id = project2
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': p.id, 'product_uom_qty': 10})
+                          for p in [self.product_delivery_milestones1, self.product_delivery_milestones2]],
+        })
+        sale_order.action_confirm()
+
+        for sol in sale_order.order_line:
+            self.assertEqual(sol.task_id.milestone_id.sale_line_id, sol)
+
+    def test_milestone_handling_mixed_project_configuration(self):
+        """Test milestone handling when product has no project (falls back to SO project)."""
+        (self.product_delivery_milestones1 | self.product_delivery_milestones2).write({
+            'service_tracking': 'task_global_project',
+        })
+        self.product_delivery_milestones1.project_id = self.project
+        self.product_delivery_milestones2.project_id = False
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': p.id, 'product_uom_qty': 10})
+                          for p in [self.product_delivery_milestones1, self.product_delivery_milestones2]],
+        })
+        sale_order.action_confirm()
+
+        for sol in sale_order.order_line:
+            self.assertEqual(sol.task_id.milestone_id.sale_line_id, sol)
+
+    def test_milestone_not_overridden_when_task_template_has_milestone(self):
+        """Test that task template milestone is preserved."""
+        task_template = self.env['project.task'].create({
+            'name': 'Task Template',
+            'project_id': self.project.id,
+            'is_template': True,
+            'milestone_id': self.milestone1.id,
+        })
+        self.product_delivery_milestones1.write({
+            'service_tracking': 'task_global_project',
+            'project_id': self.project.id,
+            'task_template_id': task_template.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_delivery_milestones1.id, 'product_uom_qty': 10})],
+        })
+        sale_order.action_confirm()
+
+        self.assertEqual(sale_order.order_line.task_id.milestone_id, self.milestone1)
