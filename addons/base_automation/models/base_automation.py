@@ -712,6 +712,20 @@ class BaseAutomation(models.Model):
             interval_type = 'hours'
         return interval, interval_type
 
+    @api.model
+    def _get_mail_trigger(self, message):
+        """ Get mail trigger for e-mail based automations. """
+        company_alias = message.record_company_id.alias_domain_id.name or False
+        if (
+                company_alias
+                and message.email_from
+                and company_alias.lower() in message.email_from.lower()
+        ):
+            return "on_message_sent"
+        return (
+            "on_message_received" if message.message_type != 'email_outgoing' else "on_message_sent"
+        )
+
     def _filter_pre(self, records, feedback=False):
         """ Filter the records that satisfy the precondition of automation ``self``. """
         self_sudo = self.sudo()
@@ -984,9 +998,7 @@ class BaseAutomation(models.Model):
                 if message_sudo.message_type in ('notification', 'auto_comment', 'user_notification'):
                     return message
 
-                # always execute actions when the author is a customer
-                # if author is not set, it means the message is coming from outside
-                mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
+                mail_trigger = self.env['base.automation']._get_mail_trigger(message)
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
                     records = automation._filter_pre(self, feedback=True)
