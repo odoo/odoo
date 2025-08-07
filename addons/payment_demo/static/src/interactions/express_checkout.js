@@ -5,7 +5,7 @@ import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_d
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { ExpressCheckout } from '@payment/interactions/express_checkout';
-import paymentDemoMixin from '@payment_demo/js/payment_demo_mixin';
+import paymentDemoMixin from '@payment_demo/interactions/payment_demo_mixin';
 
 patch(ExpressCheckout.prototype, {
     setup() {

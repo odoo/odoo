@@ -1,65 +1,57 @@
-import { Component } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc, RPCError } from '@web/core/network/rpc';
+import { registry } from '@web/core/registry';
 import { renderToMarkup } from '@web/core/utils/render';
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from '@web/public/interaction';
 
-publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
-    selector: '#o_payment_form',
-    events: Object.assign({}, publicWidget.Widget.prototype.events, {
-        'click [name="o_payment_radio"]': '_selectPaymentOption',
-        'click [name="o_payment_delete_token"]': '_fetchTokenData',
-        'click [name="o_payment_expand_button"]': '_hideExpandButton',
-        'click [name="o_payment_submit_button"]': '_submitForm',
-    }),
+export class PaymentForm extends Interaction {
+    static selector = '#o_payment_form';
+    dynamicContent = {
+        '[name="o_payment_radio"]': { 't-on-change': this.selectPaymentOption },
+        '[name="o_payment_delete_token"]': { 't-on-click': this.fetchTokenData },
+        '[name="o_payment_expand_button"]': { 't-on-click': this.hideExpandButton },
+        '[name="o_payment_submit_button"]': { 't-on-click': this.submitForm },
+    };
 
-    // #=== WIDGET LIFECYCLE ===#
+    // #=== INTERACTION LIFECYCLE ===#
 
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
-
-    /**
-     * @override
-     */
-    async start() {
-        // Synchronously initialize paymentContext before any await.
+    setup() {
+        // Load the payment context from the payment form dataset.
         this.paymentContext = {};
         Object.assign(this.paymentContext, this.el.dataset);
 
-        await this._super(...arguments);
-
-        // Expand the payment form of the selected payment option if there is only one.
-        const checkedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
-        if (checkedRadio) {
-            await this._expandInlineForm(checkedRadio);
-            this._enableButton(false);
-        } else {
-            this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it.
-        }
         this.defaultSubmitButtonLabel = document.querySelector(
             'button[name="o_payment_submit_button"]'
         )?.textContent;
 
-        this.$('[data-bs-toggle="tooltip"]').tooltip();
-    },
+        // Enable tooltips.
+        for (const el of this.el.querySelectorAll('[data-bs-toggle="tooltip"]')) {
+            new Tooltip(el);
+        }
+    }
+
+    async willStart() {
+        // Expand the payment form of the selected payment option if there is only one.
+        const checkedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
+        if (checkedRadio) {
+            await this.waitFor(this._expandInlineForm(checkedRadio));
+            this._enableButton(false);
+        } else {
+            this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it.
+        }
+    }
 
     // #=== EVENT HANDLERS ===#
 
     /**
      * Open the inline form of the selected payment option, if any.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    async _selectPaymentOption(ev) {
+    async selectPaymentOption(ev) {
         // Show the inputs in case they have been hidden.
         this._showInputs();
 
@@ -68,67 +60,61 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
         // Unfold and prepare the inline form of the selected payment option.
         const checkedRadio = ev.target;
-        await this._expandInlineForm(checkedRadio);
+        await this.waitFor(this._expandInlineForm(checkedRadio));
 
         // Re-enable the submit button after the inline form has been prepared.
         this._enableButton(false);
-    },
+    }
 
     /**
      * Fetch data relative to the documents linked to the token and delegate them to the token
      * deletion confirmation dialog.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    _fetchTokenData(ev) {
+    async fetchTokenData(ev) {
         ev.preventDefault();
 
         const linkedRadio = document.getElementById(ev.currentTarget.dataset['linkedRadio']);
         const tokenId = this._getPaymentOptionId(linkedRadio);
-        this.orm.call(
-            'payment.token',
-            'get_linked_records_info',
-            [tokenId],
-        ).then(linkedRecordsInfo => {
+        try {
+            const linkedRecordsInfo = await this.waitFor(this.services.orm.call(
+                'payment.token', 'get_linked_records_info', [tokenId]
+            ));
             this._challengeTokenDeletion(tokenId, linkedRecordsInfo);
-        }).catch(error => {
+        } catch (error) {
             if (error instanceof RPCError) {
-                this._displayErrorDialog(
-                    _t("Cannot delete payment method"), error.data.message
-                );
+                this._displayErrorDialog(_t("Cannot delete payment method"), error.data.message);
             } else {
                 return Promise.reject(error);
             }
-        });
-    },
+        }
+    }
 
     /**
      * Hide the button to expand the payment methods section once it has been clicked.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    _hideExpandButton(ev) {
+    hideExpandButton(ev) {
         ev.target.classList.add('d-none');
-    },
+    }
 
     /**
      * Update the payment context with the selected payment option and initiate its payment flow.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    async _submitForm(ev) {
+    async submitForm(ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
         const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
 
-        // Block the entire UI to prevent fiddling with other widgets.
+        // Block the entire UI to prevent fiddling with other interactions.
         this._disableButton(true);
 
         // Initiate the payment flow of the selected payment option.
@@ -157,7 +143,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             )?.checked ?? this.paymentContext['mode'] === 'validation';
             await this._initiatePaymentFlow(providerCode, paymentOptionId, pmCode, flow);
         }
-    },
+    }
 
     // #=== DOM MANIPULATION ===#
 
@@ -169,11 +155,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     _enableButton(unblockUI = true) {
-        Component.env.bus.trigger('enablePaymentButton');
+        this.env.bus.trigger('enablePaymentButton');
         if (unblockUI) {
-            this.call('ui', 'unblock');
+            this.env.bus.trigger('ui', 'unblock');
         }
-    },
+    }
 
     /**
      * Disable the submit button.
@@ -183,11 +169,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     _disableButton(blockUI = false) {
-        Component.env.bus.trigger('disablePaymentButton');
+        this.env.bus.trigger('disablePaymentButton');
         if (blockUI) {
-            this.call('ui', 'block');
+            this.env.bus.trigger('ui', 'block');
         }
-    },
+    }
 
     /**
      * Show the tokenization checkbox, its label, and the submit button.
@@ -201,8 +187,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         tokenizeContainer?.classList.remove('d-none');
 
         // Show the submit button.
-        Component.env.bus.trigger('showPaymentButton');
-    },
+        this.env.bus.trigger('showPaymentButton');
+    }
 
     /**
      * Hide the tokenization checkbox, its label, and the submit button.
@@ -220,8 +206,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         tokenizeContainer?.classList.add('d-none');
 
         // Hide the submit button.
-        Component.env.bus.trigger('hidePaymentButton');
-    },
+        this.env.bus.trigger('hidePaymentButton');
+    }
 
     /**
      * Open the inline form of the selected payment option and collapse the others.
@@ -240,15 +226,12 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         const paymentOptionId = this._getPaymentOptionId(radio);
         const paymentMethodCode = this._getPaymentMethodCode(radio);
         const flow = this._getPaymentFlow(radio);
-        const btnLabel = this._isPayLaterMethod(paymentMethodCode)
-            ? _t("Confirm")
-            : this.defaultSubmitButtonLabel;
-        for (const btn of document.querySelectorAll('button[name="o_payment_submit_button"]')) {
-            btn.textContent = btnLabel;
-        }
-        await this._prepareInlineForm(
+        await this.waitFor(this._prepareInlineForm(
             providerId, providerCode, paymentOptionId, paymentMethodCode, flow
-        );
+        ));
+
+        // Adapt the payment button's label based on the selected payment method.
+        this._adaptSubmitButtonLabel(paymentMethodCode);
 
         // Display the prepared inline form if it contains visible elements.
         const isVisible = element => {
@@ -267,7 +250,19 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         if (inlineForm && isVisible(inlineForm)) {
             inlineForm.classList.remove('d-none');
         }
-    },
+    }
+
+    /**
+     * Collapse all inline forms of the current interaction.
+     *
+     * @private
+     * @return {void}
+     */
+    _collapseInlineForms() {
+        this.el.querySelectorAll('[name="o_payment_inline_form"]').forEach(inlineForm => {
+            inlineForm.classList.add('d-none');
+        });
+    }
 
     /**
      * Prepare the provider-specific inline form of the selected payment option.
@@ -283,32 +278,38 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @param {string} flow - The online payment flow of the selected payment option.
      * @return {void}
      */
-    async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {},
+    async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {}
 
     /**
-     * Check whether or not the given payment method expects immediate payment.
+     * Update the payment button's label for "pay later" payment methods.
      *
-     * Override this method to change the submit button label from the default to "Confirm".
+     * @private
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @return {void}
+     */
+    _adaptSubmitButtonLabel(paymentMethodCode) {
+        const buttonLabel = this._isPayLaterPaymentMethod(paymentMethodCode)
+            ? _t("Confirm")
+            : this.defaultSubmitButtonLabel;
+        for (const btn of document.querySelectorAll('button[name="o_payment_submit_button"]')) {
+            if (btn.textContent !== buttonLabel) {
+                btn.textContent = buttonLabel;
+            }
+        }
+    }
+
+    /**
+     * Check whether the given payment method expects immediate payment.
+     *
+     * Override this method to change the submit button label from the default label to "Confirm".
      *
      * @private
      * @param {string} paymentMethodCode - The code of the selected payment method, if any.
      * @return {boolean}
      */
-    _isPayLaterMethod(paymentMethodCode) {
+    _isPayLaterPaymentMethod(paymentMethodCode) {
         return false;
-    },
-
-    /**
-     * Collapse all inline forms of the current widget.
-     *
-     * @private
-     * @return {void}
-     */
-    _collapseInlineForms() {
-        this.el.querySelectorAll('[name="o_payment_inline_form"]').forEach(inlineForm => {
-            inlineForm.classList.add('d-none');
-        });
-    },
+    }
 
     /**
      * Display an error dialog.
@@ -319,8 +320,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     _displayErrorDialog(title, errorMessage = '') {
-        this.call('dialog', 'add', ConfirmationDialog, { title: title, body: errorMessage || "" });
-    },
+        this.services.dialog.add(ConfirmationDialog, { title: title, body: errorMessage || "" });
+    }
 
     /**
      * Display the token deletion confirmation dialog.
@@ -332,14 +333,14 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _challengeTokenDeletion(tokenId, linkedRecordsInfo) {
         const body = renderToMarkup('payment.deleteTokenDialog', { linkedRecordsInfo });
-        this.call('dialog', 'add', ConfirmationDialog, {
+        this.services.dialog.add(ConfirmationDialog, {
             title: _t("Warning!"),
             body,
             confirmLabel: _t("Confirm Deletion"),
             confirm: () => this._archiveToken(tokenId),
             cancel: () => {},
         });
-    },
+    }
 
     // #=== PAYMENT FLOW ===#
 
@@ -361,7 +362,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             console.warn(`The value ${flow} is not a supported flow. Falling back to redirect.`);
             this.paymentContext.flow = 'redirect';
         }
-    },
+    }
 
     /**
      * Assign the selected token to a document through the `assignTokenRoute`.
@@ -371,20 +372,21 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     async _assignToken(tokenId) {
-        rpc(this.paymentContext['assignTokenRoute'], {
-            'token_id': tokenId,
-            'access_token': this.paymentContext['accessToken'],
-        }).then(() => {
+        try {
+            await this.waitFor(rpc(this.paymentContext['assignTokenRoute'], {
+                'token_id': tokenId,
+                'access_token': this.paymentContext['accessToken'],
+            }));
             window.location = this.paymentContext['landingRoute'];
-        }).catch(error => {
+        } catch (error) {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(_t("Cannot save payment method"), error.data.message);
                 this._enableButton(); // The button has been disabled before initiating the flow.
             } else {
                 return Promise.reject(error);
             }
-        });
-    },
+        }
+    }
 
     /**
      * Make an RPC to initiate the payment flow by creating a new transaction.
@@ -404,11 +406,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
-        // Create a transaction and retrieve its processing values.
-        await rpc(
-            this.paymentContext['transactionRoute'],
-            this._prepareTransactionRouteParams(),
-        ).then(processingValues => {
+        try {
+            // Create a transaction and retrieve its processing values.
+            const processingValues = await this.waitFor(rpc(
+                this.paymentContext['transactionRoute'], this._prepareTransactionRouteParams()
+            ));
             if (processingValues.state === 'error') {
                 this._displayErrorDialog(
                     _t("Payment processing failed"), processingValues.state_message
@@ -429,14 +431,14 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     providerCode, paymentOptionId, paymentMethodCode, processingValues
                 );
             }
-        }).catch(error => {
+        } catch (error) {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
                 this._enableButton(); // The button has been disabled before initiating the flow.
             }
             return Promise.reject(error);
-        });
-    },
+        }
+    }
 
     /**
      * Prepare the params for the RPC to the transaction route.
@@ -445,7 +447,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {object} The transaction route params.
      */
     _prepareTransactionRouteParams() {
-        let transactionRouteParams = {
+        const transactionRouteParams = {
             'provider_id': this.paymentContext.providerId,
             'payment_method_id': this.paymentContext.paymentMethodId ?? null,
             'token_id': this.paymentContext.tokenId ?? null,
@@ -468,7 +470,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             });
         }
         return transactionRouteParams;
-    },
+    }
 
     /**
      * Redirect the customer by submitting the redirect form included in the processing values.
@@ -491,7 +493,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         // Submit the form.
         document.body.appendChild(redirectForm);
         redirectForm.submit();
-    },
+    }
 
    /**
      * Process the provider-specific implementation of the direct payment flow.
@@ -503,7 +505,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @param {object} processingValues - The processing values of the transaction.
      * @return {void}
      */
-    _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {},
+   _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {}
 
     /**
      * Redirect the customer to the status route.
@@ -518,7 +520,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     _processTokenFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         // The flow is already completed as payments by tokens are immediately processed.
         window.location = '/payment/status';
-    },
+    }
 
     /**
      * Archive the provided token.
@@ -527,12 +529,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @param {number} tokenId - The id of the token whose deletion was requested.
      * @return {void}
      */
-    _archiveToken(tokenId) {
-        rpc('/payment/archive_token', {
-            'token_id': tokenId,
-        }).then(() => {
+    async _archiveToken(tokenId) {
+        try {
+            await this.waitFor(rpc('/payment/archive_token', {
+                'token_id': tokenId,
+            }));
             browser.location.reload();
-        }).catch(error => {
+        } catch (error) {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(
                     _t("Cannot delete payment method"), error.data.message
@@ -540,8 +543,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             } else {
                 return Promise.reject(error);
             }
-        });
-    },
+        }
+    }
 
     // #=== GETTERS ===#
 
@@ -555,7 +558,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     _getInlineForm(radio) {
         const inlineFormContainer = radio.closest('[name="o_payment_option"]');
         return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');
-    },
+    }
 
     /**
      * Determine and return the payment flow of the selected payment option.
@@ -578,7 +581,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         } else {
             return 'direct';
         }
-    },
+    }
 
     /**
      * Determine and return the code of the selected payment method.
@@ -589,7 +592,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _getPaymentMethodCode(radio) {
         return radio.dataset['paymentMethodCode'];
-    },
+    }
 
     /**
      * Determine and return the id of the selected payment option.
@@ -600,7 +603,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _getPaymentOptionId(radio) {
         return Number(radio.dataset['paymentOptionId']);
-    },
+    }
 
     /**
      * Determine and return the type of the selected payment option.
@@ -611,7 +614,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _getPaymentOptionType(radio) {
         return radio.dataset['paymentOptionType'];
-    },
+    }
 
     /**
      * Determine and return the id of the provider of the selected payment option.
@@ -622,7 +625,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _getProviderId(radio) {
         return Number(radio.dataset['providerId']);
-    },
+    }
 
     /**
      * Determine and return the code of the provider of the selected payment option.
@@ -633,7 +636,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _getProviderCode(radio) {
         return radio.dataset['providerCode'];
-    },
+    }
 
     /**
      * Determine and return the state of the provider of the selected payment option.
@@ -644,8 +647,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _getProviderState(radio) {
         return radio.dataset['providerState'];
-    },
+    }
 
-});
+}
 
-export default publicWidget.registry.PaymentForm;
+registry.category('public.interactions').add('payment.payment_form', PaymentForm);

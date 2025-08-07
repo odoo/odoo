@@ -1,7 +1,9 @@
-import paymentForm from '@payment/js/payment_form';
-import paymentDemoMixin from '@payment_demo/js/payment_demo_mixin';
+import { patch } from '@web/core/utils/patch';
 
-paymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
+import paymentDemoMixin from '@payment_demo/interactions/payment_demo_mixin';
+
+patch(PaymentForm.prototype, {
 
     // #=== DOM MANIPULATION ===#
 
@@ -19,7 +21,7 @@ paymentForm.include({
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'demo') {
-            this._super(...arguments);
+            await super._prepareInlineForm(...arguments);
             return;
         } else if (flow === 'token') {
             return;
@@ -42,7 +44,7 @@ paymentForm.include({
      */
     async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         if (providerCode !== 'demo') {
-            this._super(...arguments);
+            await super._processDirectFlow(...arguments);
             return;
         }
         paymentDemoMixin.processDemoPayment(processingValues);

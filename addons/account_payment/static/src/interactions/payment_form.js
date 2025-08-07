@@ -1,15 +1,16 @@
-import PaymentForm from "@payment/js/payment_form";
+import { patch } from '@web/core/utils/patch';
 
-PaymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
+
+patch(PaymentForm.prototype, {
     /**
      * Set whether we are paying an installment before submitting.
      *
      * @override method from payment.payment_form
-     * @private
      * @param {Event} ev
      * @returns {void}
      */
-    async _submitForm(ev) {
+    async submitForm(ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
@@ -24,7 +25,7 @@ PaymentForm.include({
                 this.paymentContext.amount = parseFloat(this.paymentContext.invoiceAmountDue);
             }
         }
-        await this._super(...arguments);
+        await super.submitForm(...arguments);
     },
 
         /**
@@ -35,7 +36,7 @@ PaymentForm.include({
      * @return {object} The transaction route params.
      */
         _prepareTransactionRouteParams() {
-            const transactionRouteParams =  this._super(...arguments);
+            const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
             transactionRouteParams.payment_reference = this.paymentContext.paymentReference;
             return transactionRouteParams;
         },

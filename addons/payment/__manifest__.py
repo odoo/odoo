@@ -34,7 +34,6 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment/static/lib/jquery.payment/jquery.payment.js',
             'payment/static/src/**/*',
             ('remove', 'payment/static/src/js/payment_wizard_copy_clipboard_field.js'),
         ],
@@ -44,6 +43,7 @@
         ],
         'web.assets_unit_tests_setup': [
             'payment/static/src/interactions/payment_button.js',
+            'payment/static/src/interactions/payment_form.js',
         ],
         'web.assets_unit_tests': [
             'payment/static/tests/**/*.test.js',

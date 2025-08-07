@@ -1,10 +1,17 @@
 /* global Stripe */
 
-import paymentForm from '@payment/js/payment_form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 import { _t } from '@web/core/l10n/translation';
+import { patch } from '@web/core/utils/patch';
 
-paymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
+
+patch(PaymentForm.prototype, {
+
+    setup() {
+        super.setup();
+        this.stripeElements = {}; // Store the element of each instantiated payment method.
+    },
 
     // #=== DOM MANIPULATION ===#
 
@@ -22,12 +29,10 @@ paymentForm.include({
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'stripe') {
-            this._super(...arguments);
+            await super._prepareInlineForm(...arguments);
             return;
         }
 
-        // Check if instantiation of the element is needed.
-        this.stripeElements ??= {}; // Store the element of each instantiated payment method.
         // Check if instantiation of the element is needed.
         if (flow === 'token') {
             return; // No elements for tokens.
@@ -122,20 +127,20 @@ paymentForm.include({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'stripe' || flow === 'token') {
-            await this._super(...arguments); // Tokens are handled by the generic flow.
+            // Tokens are handled by the generic flow.
+            await super._initiatePaymentFlow(...arguments);
             return;
         }
 
         // Trigger form validation and wallet collection.
-        const _super = this._super.bind(this);
         try {
-            await this.stripeElements[paymentOptionId].submit();
+            await this.waitFor(this.stripeElements[paymentOptionId].submit());
         } catch (error) {
             this._displayErrorDialog(_t("Incorrect payment details"), error.message);
             this._enableButton();
-            return
+            return;
         }
-        return await _super(...arguments);
+        await super._initiatePaymentFlow(...arguments);
     },
 
     /**
@@ -151,11 +156,13 @@ paymentForm.include({
      */
     async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         if (providerCode !== 'stripe') {
-            await this._super(...arguments);
+            await super._processDirectFlow(...arguments);
             return;
         }
 
-        const { error } = await this._stripeConfirmIntent(processingValues, paymentOptionId);
+        const { error } = await this.waitFor(
+            this._stripeConfirmIntent(processingValues, paymentOptionId)
+        );
         if (error) {
             this._displayErrorDialog(_t("Payment processing failed"), error.message);
             this._enableButton();
