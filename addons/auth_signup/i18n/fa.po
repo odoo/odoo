@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_signup
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: auth_signup
@@ -29,20 +29,11 @@ msgstr "+1 650-123-4567"
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid ""
 ",<br/><br/>\n"
-"                                A password reset was requested for the Odoo account linked to this email.\n"
-"                                You may change your password by following this link which will remain valid during"
+"                                A password reset was requested for the Odoo "
+"account linked to this email.\n"
+"                                You may change your password by following "
+"this link which will remain valid during"
 msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-",<br/><br/>\n"
-"                        A new device was used to sign in to your account. <br/><br/>\n"
-"                        Here are some details about the connection:<br/>"
-msgstr ""
-",<br/><br/>\n"
-"                        یک دستگاه جدید برای ورود به حساب شما مورد استفاده قرار گرفته است. <br/><br/>\n"
-"                        در اینجا جزئیاتی در مورد این ارتباط وجود دارد:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -50,71 +41,28 @@ msgid "--<br/>Mitchell Admin"
 msgstr "--<br/>Mitchell Admin"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
-
-#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
 msgstr "<span style=\"font-size: 10px;\">حساب شما</span><br/>"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Browser:</span>"
-msgstr ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Browser:</span>"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Location:</span>"
-msgstr ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Location:</span>"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Platform:</span>"
-msgstr ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Platform:</span>"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                Date:</span>"
-msgstr ""
-"<span style=\"font-weight: bold;\">\n"
-"                                Date:</span>"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                IP Address:</span>"
-msgstr ""
-"<span style=\"font-weight: bold;\">\n"
-"                                IP Address:</span>"
-
-#. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; "
+"width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"/>\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-"
+"value=\"ctx.get('invited_users', [])\"/>\n"
 "                <td style=\"text-align : left\">\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        Pending Invitations\n"
@@ -122,21 +70,29 @@ msgid ""
 "                </td>\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
-"                        You added the following user(s) to your database but they haven't registered yet:\n"
+"                        Dear <t t-out=\"object.name or ''\">Mitchell Admin</"
+"t>,<br/> <br/>\n"
+"                        You added the following user(s) to your database but "
+"they haven't registered yet:\n"
 "                        <ul>\n"
-"                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
-"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                            <t t-foreach=\"invited_users\" t-"
+"as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or "
+"''\">demo@example.com</li>\n"
 "                            </t>\n"
 "                        </ul>\n"
-"                        Follow up with them so they can access your database and start working with you.\n"
+"                        Follow up with them so they can access your database "
+"and start working with you.\n"
 "                        <br/><br/>\n"
 "                        Have a nice day!<br/>\n"
-"                        --<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
+"                        --<br/>The <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t> Team\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -151,23 +107,36 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Welcome to Odoo</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Welcome to Odoo</"
+"span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
 "                    </span>\n"
-"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?"
+"company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -175,30 +144,53 @@ msgid ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"                        You have been invited by <t t-out=\"object.create_uid.name or ''\">OdooBot</t> of <t t-out=\"object.company_id.name or ''\">YourCompany</t> to connect on Odoo.\n"
+"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,"
+"<br/><br/>\n"
+"                        You have been invited by <t t-"
+"out=\"object.create_uid.name or ''\">OdooBot</t> of <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t> to connect on Odoo.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-style=\"background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a t-att-"
+"href=\"object.partner_id._get_signup_url()\" t-attf-style=\"background-"
+"color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                                Accept invitation\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <b>  This link will remain valid during <t t-out=\"int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/24)\"/> days </b> <br/>\n"
-"                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
-"                        Your Odoo domain is: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br/>\n"
-"                        Your sign in email is: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br/><br/>\n"
-"                        Never heard of Odoo? It’s an all-in-one business software loved by 7+ million users. It will considerably improve your experience at work and increase your productivity.\n"
+"                        <b>  This link will remain valid during <t t-"
+"out=\"int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/"
+"24)\"/> days </b> <br/>\n"
+"                        <t t-set=\"website_url\" t-"
+"value=\"object.get_base_url()\"/>\n"
+"                        Your Odoo domain is: <b><a t-att-"
+"href=\"website_url\" t-out=\"website_url or ''\">http://"
+"yourcompany.odoo.com</a></b><br/>\n"
+"                        Your sign in email is: <b><a t-attf-href=\"/web/"
+"login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
+"''\">mark.brown23@example.com</a></b><br/><br/>\n"
+"                        Never heard of Odoo? It’s an all-in-one business "
+"software loved by 7+ million users. It will considerably improve your "
+"experience at work and increase your productivity.\n"
 "                        <br/><br/>\n"
-"                        Have a look at the <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> to discover the tool.\n"
+"                        Have a look at the <a href=\"https://www.odoo.com/"
+"page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo "
+"Tour</a> to discover the tool.\n"
 "                        <br/><br/>\n"
 "                        Enjoy Odoo!<br/>\n"
-"                        --<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
+"                        --<br/>The <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t> Team\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -206,17 +198,26 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
-"                        | <a t-att-href=\"'mailto:%s' % object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        | <a t-att-href=\"'mailto:%s' % "
+"object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
-"                        | <a t-att-href=\"'%s' % object.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                        | <a t-att-href=\"'%s' % object.company_id.website\" "
+"style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -227,9 +228,12 @@ msgid ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?"
+"utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -239,23 +243,36 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Account</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br/"
+">\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
 "                    </span>\n"
-"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?"
+"company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -263,27 +280,40 @@ msgid ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,"
+"<br/><br/>\n"
 "                        Your account has been successfully created!<br/>\n"
-"                        Your login is <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br/>\n"
-"                        To gain access to your account, you can use the following link:\n"
+"                        Your login is <strong><t t-out=\"object.email or "
+"''\">mark.brown23@example.com</t></strong><br/>\n"
+"                        To gain access to your account, you can use the "
+"following link:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a t-attf-href=\"/web/login?auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a t-attf-href=\"/web/login?"
+"auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        Thanks,<br/>\n"
-"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
 "                            <br/>\n"
-"                            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "                        </t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -291,18 +321,29 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</t></a>\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</"
+"t></a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
-"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                            <t t-out=\"object.company_id.website or ''\">http://www.example.com</t>\n"
+"                        | <a t-attf-href=\"'%s' % "
+"{{ object.company_id.website }}\" style=\"text-decoration:none; color: "
+"#454748;\">\n"
+"                            <t t-out=\"object.company_id.website or "
+"''\">http://www.example.com</t>\n"
 "                        </a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
@@ -314,9 +355,12 @@ msgid ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?"
+"utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -326,13 +370,13 @@ msgstr ""
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
-msgid "A reset password link was send by email"
+msgid "A reset password link was sent by email"
 msgstr ""
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
-msgid "A signup link was send by email"
+msgid "A signup link was sent by email"
 msgstr ""
 
 #. module: auth_signup
@@ -352,11 +396,6 @@ msgid "Back to Login"
 msgstr "بازگشت به صفحه ورود"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "Browser"
-msgstr "مرورگر وب"
-
-#. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
@@ -366,11 +405,6 @@ msgstr "نمی‌توان ایمیل فرستاد: کاربر %s نشانی ای
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Change password"
 msgstr "تغییر رمز عبور"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "City, Region, Country"
-msgstr "شهر، منطقه، کشور"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -399,8 +433,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
-"قادر به برقرارd تماس با سرور ایمیل نیست، لطفاً پیکربندی سرور ایمیل ارسالی "
-"خود را بررسی کنید"
+"قادر به برقرارd تماس با سرور ایمیل نیست، لطفاً پیکربندی سرور ایمیل ارسالی خود "
+"را بررسی کنید"
 
 #. module: auth_signup
 #. odoo-python
@@ -415,12 +449,16 @@ msgid "Could not reset your password"
 msgstr "نمی‌توان گذرواژه شما بازنشانی کرد"
 
 #. module: auth_signup
+#: model:ir.model,website_form_label:auth_signup.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
 msgstr "حساب مشتری"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
 msgstr "گرامی"
@@ -429,6 +467,14 @@ msgstr "گرامی"
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
 msgstr "حق دسترسی های پیش فرض"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -452,27 +498,20 @@ msgid "HTTP Routing"
 msgstr "مسیریابی HTTP"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__id
+msgid "ID"
+msgstr ""
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
 "اگر منتظر این ایمیل نبودید به راحتی آن را نادیده بگیرید.<br/><br/> با تشکر"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"If you don't recognize it, you should change your password immediately via "
-"this link:<br/>"
-msgstr ""
-"اگر آن را نمی‌شناسید، باید فوراَ رمز عبور خود را از طریق این لینک تغییر "
-"دهید: <br/>"
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "In %(country)s"
-msgstr "در %(country)s"
 
 #. module: auth_signup
 #. odoo-python
@@ -486,7 +525,6 @@ msgid "Let your customers log in to see their documents"
 msgstr "اجازه بدهید مشتری‌های شما وارد شوند تا اسناد خود را ببینند"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Marc Demo"
 msgstr "دموی مارچ"
@@ -498,27 +536,9 @@ msgid "Multiple accounts found for this login"
 msgstr "چندین حساب برای این ورود یافت شد"
 
 #. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "Near %(city)s, %(region)s, %(country)s"
-msgstr "%(city)s، %(region)s، %(country)s نزدیک"
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "Near %(region)s, %(country)s"
-msgstr "%(region)s، %(country)s نزدیک "
-
-#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "هیچ وقت متصل نبوده"
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "New Connection to your Account"
-msgstr "برقراری ارتباط جدید با حساب شما "
 
 #. module: auth_signup
 #. odoo-python
@@ -533,12 +553,6 @@ msgid "No login provided."
 msgstr "امکان ورود مهیا نشده است."
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "OS"
-msgstr "OS"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Odoo"
 msgstr "اودو"
@@ -547,11 +561,6 @@ msgstr "اودو"
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
 msgstr "با دعوت"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "Otherwise, you can safely ignore this email."
-msgstr "در غیر این صورت، می‌توانید بدون مشکل این ایمیل را نادیده بگیرید."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -582,7 +591,6 @@ msgid "Passwords do not match; please retype them."
 msgstr "گذرواژه مطابقت ندارد؛ دوباره تلاش کنید."
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Powered by"
 msgstr "راه اندازی شده به وسیله"
@@ -598,7 +606,6 @@ msgid "Reminder for unregistered users"
 msgstr "یادآوری برای کاربران ثبت نام نشده"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Reset Password"
@@ -620,8 +627,8 @@ msgstr "ارسال ایمیل دعوت"
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
 msgstr ""
-"در صورتی که کاربر جدید به دعوت‌نامه پاسخ ندهد، به صورت خودکار به ادمین ارسال"
-" می‌شود"
+"در صورتی که کاربر جدید به دعوت‌نامه پاسخ ندهد، به صورت خودکار به ادمین ارسال "
+"می‌شود"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
@@ -695,12 +702,6 @@ msgid "Status"
 msgstr "وضعیت"
 
 #. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/controllers/main.py:0
-msgid "Suspicious activity detected by Google reCaptcha."
-msgstr "فعالیت مشکوکی توسط گوگل reCaptcha شناسایی شد."
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr "کاربری موقت برای کاربران جدید از طریق ثبت نام انجام شد."
@@ -768,11 +769,6 @@ msgid "YourCompany"
 msgstr "شرکت شما"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
-msgstr "روز، ماه، سال، ساعت، دقیقه، ثانیه (GMT)"
-
-#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "برای مثال محمد احمدی"
@@ -798,5 +794,92 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
-"${object.create_uid.name} از ${object.company_id.name} شما را دعوت می کند تا"
-" به اودو متصل شوید"
+"${object.create_uid.name} از ${object.company_id.name} شما را دعوت می کند تا "
+"به اودو متصل شوید"
+
+#~ msgid ""
+#~ ",<br/><br/>\n"
+#~ "                        A new device was used to sign in to your account. "
+#~ "<br/><br/>\n"
+#~ "                        Here are some details about the connection:<br/>"
+#~ msgstr ""
+#~ ",<br/><br/>\n"
+#~ "                        یک دستگاه جدید برای ورود به حساب شما مورد استفاده "
+#~ "قرار گرفته است. <br/><br/>\n"
+#~ "                        در اینجا جزئیاتی در مورد این ارتباط وجود دارد:<br/"
+#~ ">"
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
+
+#~ msgid ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                    Browser:</span>"
+#~ msgstr ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                    Browser:</span>"
+
+#~ msgid ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                    Location:</span>"
+#~ msgstr ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                    Location:</span>"
+
+#~ msgid ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                    Platform:</span>"
+#~ msgstr ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                    Platform:</span>"
+
+#~ msgid ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                Date:</span>"
+#~ msgstr ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                Date:</span>"
+
+#~ msgid ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                IP Address:</span>"
+#~ msgstr ""
+#~ "<span style=\"font-weight: bold;\">\n"
+#~ "                                IP Address:</span>"
+
+#~ msgid "Browser"
+#~ msgstr "مرورگر وب"
+
+#~ msgid "City, Region, Country"
+#~ msgstr "شهر، منطقه، کشور"
+
+#~ msgid ""
+#~ "If you don't recognize it, you should change your password immediately "
+#~ "via this link:<br/>"
+#~ msgstr ""
+#~ "اگر آن را نمی‌شناسید، باید فوراَ رمز عبور خود را از طریق این لینک تغییر "
+#~ "دهید: <br/>"
+
+#~ msgid "In %(country)s"
+#~ msgstr "در %(country)s"
+
+#~ msgid "Near %(city)s, %(region)s, %(country)s"
+#~ msgstr "%(city)s، %(region)s، %(country)s نزدیک"
+
+#~ msgid "Near %(region)s, %(country)s"
+#~ msgstr "%(region)s، %(country)s نزدیک "
+
+#~ msgid "New Connection to your Account"
+#~ msgstr "برقراری ارتباط جدید با حساب شما "
+
+#~ msgid "OS"
+#~ msgstr "OS"
+
+#~ msgid "Otherwise, you can safely ignore this email."
+#~ msgstr "در غیر این صورت، می‌توانید بدون مشکل این ایمیل را نادیده بگیرید."
+
+#~ msgid "Suspicious activity detected by Google reCaptcha."
+#~ msgstr "فعالیت مشکوکی توسط گوگل reCaptcha شناسایی شد."
+
+#~ msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
+#~ msgstr "روز، ماه، سال، ساعت، دقیقه، ثانیه (GMT)"

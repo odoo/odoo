@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 09:14+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, "
 "2022\n"
@@ -34,16 +34,7 @@ msgid ""
 "                                A password reset was requested for the Odoo "
 "account linked to this email.\n"
 "                                You may change your password by following "
-"this link which will remain valid during 24 hours:<br/>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-",<br/><br/>\n"
-"                        A new device was used to sign in to your account. "
-"<br/><br/>\n"
-"                        Here are some details about the connection:<br/>"
+"this link which will remain valid during"
 msgstr ""
 
 #. module: auth_signup
@@ -52,62 +43,8 @@ msgid "--<br/>Mitchell Admin"
 msgstr ""
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "111.222.333.444"
-msgstr ""
-
-#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Browser:</span>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Location:</span>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                    Platform:</span>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                Date:</span>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"<span style=\"font-weight: bold;\">\n"
-"                                IP Address:</span>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>A password reset has been requested for this user. An email "
-"containing the following link has been sent:</strong>"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>An invitation email containing the following subscription link has "
-"been sent:</strong>"
 msgstr ""
 
 #. module: auth_signup
@@ -126,17 +63,17 @@ msgid ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <t t-set=\"invited_users\" t-value=\"ctx."
-"get('invited_users', [])\"></t>\n"
+"                <t t-set=\"invited_users\" t-"
+"value=\"ctx.get('invited_users', [])\"/>\n"
 "                <td style=\"text-align : left\">\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        Pending Invitations\n"
-"                    </span><br><br>\n"
+"                    </span><br/><br/>\n"
 "                </td>\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Dear <t t-out=\"object.name or ''\">Mitchell Admin</"
-"t>,<br> <br>\n"
+"t>,<br/> <br/>\n"
 "                        You added the following user(s) to your database but "
 "they haven't registered yet:\n"
 "                        <ul>\n"
@@ -148,16 +85,16 @@ msgid ""
 "                        </ul>\n"
 "                        Follow up with them so they can access your database "
 "and start working with you.\n"
-"                        <br><br>\n"
-"                        Have a nice day!<br>\n"
-"                        --<br>The <t t-out=\"object.company_id.name or "
+"                        <br/><br/>\n"
+"                        Have a nice day!<br/>\n"
+"                        --<br/>The <t t-out=\"object.company_id.name or "
 "''\">YourCompany</t> Team\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -188,20 +125,20 @@ msgid ""
 "0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Welcome to Odoo</"
-"span><br>\n"
+"span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
 "                    </span>\n"
-"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object."
-"company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id."
-"id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-"
-"att-alt=\"object.company_id.name\">\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?"
+"company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -215,43 +152,47 @@ msgid ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,"
-"<br><br>\n"
-"                        You have been invited by <t t-out=\"object."
-"create_uid.name or ''\">OdooBot</t> of <t t-out=\"object.company_id.name or "
-"''\">YourCompany</t> to connect on Odoo.\n"
+"<br/><br/>\n"
+"                        You have been invited by <t t-"
+"out=\"object.create_uid.name or ''\">OdooBot</t> of <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t> to connect on Odoo.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a t-att-href=\"object.signup_url\" t-attf-"
-"style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
-"border-radius: 5px; font-size:13px;\">\n"
+"                            <a t-att-"
+"href=\"object.partner_id._get_signup_url()\" t-attf-style=\"background-"
+"color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                                Accept invitation\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <t t-set=\"website_url\" t-value=\"object."
-"get_base_url()\"></t>\n"
+"                        <b>  This link will remain valid during <t t-"
+"out=\"int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/"
+"24)\"/> days </b> <br/>\n"
+"                        <t t-set=\"website_url\" t-"
+"value=\"object.get_base_url()\"/>\n"
 "                        Your Odoo domain is: <b><a t-att-"
-"href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo."
-"com</a></b><br>\n"
+"href=\"website_url\" t-out=\"website_url or ''\">http://"
+"yourcompany.odoo.com</a></b><br/>\n"
 "                        Your sign in email is: <b><a t-attf-href=\"/web/"
 "login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
-"''\">mark.brown23@example.com</a></b><br><br>\n"
+"''\">mark.brown23@example.com</a></b><br/><br/>\n"
 "                        Never heard of Odoo? It’s an all-in-one business "
 "software loved by 7+ million users. It will considerably improve your "
 "experience at work and increase your productivity.\n"
-"                        <br><br>\n"
+"                        <br/><br/>\n"
 "                        Have a look at the <a href=\"https://www.odoo.com/"
 "page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo "
 "Tour</a> to discover the tool.\n"
-"                        <br><br>\n"
-"                        Enjoy Odoo!<br>\n"
-"                        --<br>The <t t-out=\"object.company_id.name or "
+"                        <br/><br/>\n"
+"                        Enjoy Odoo!<br/>\n"
+"                        --<br/>The <t t-out=\"object.company_id.name or "
 "''\">YourCompany</t> Team\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -271,14 +212,14 @@ msgid ""
 "                    <t t-out=\"object.company_id.phone or ''\">+1 "
 "650-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
-"                        | <a t-att-href=\"'mailto:%s' % object.company_id."
-"email\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        | <a t-att-href=\"'mailto:%s' % "
+"object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
 "                        | <a t-att-href=\"'%s' % object.company_id.website\" "
-"style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id."
-"website or ''\">http://www.example.com</a>\n"
+"style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -319,21 +260,21 @@ msgid ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Account</"
-"span><br>\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br/"
+">\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
 "                    </span>\n"
-"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object."
-"company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id."
-"id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-"
-"att-alt=\"object.company_id.name\">\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?"
+"company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -347,31 +288,34 @@ msgid ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,"
-"<br><br>\n"
-"                        Your account has been successfully created!<br>\n"
+"<br/><br/>\n"
+"                        Your account has been successfully created!<br/>\n"
 "                        Your login is <strong><t t-out=\"object.email or "
-"''\">mark.brown23@example.com</t></strong><br>\n"
+"''\">mark.brown23@example.com</t></strong><br/>\n"
 "                        To gain access to your account, you can use the "
 "following link:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a t-attf-href=\"/web/login?auth_login={{object."
-"email}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; "
-"text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a t-attf-href=\"/web/login?"
+"auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        Thanks,<br>\n"
-"                        <t t-if=\"user.signature\">\n"
-"                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell "
-"Admin</t>\n"
+"                        Thanks,<br/>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "                        </t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -391,13 +335,15 @@ msgid ""
 "                    <t t-out=\"object.company_id.phone or ''\">+1 "
 "650-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % {{ object."
-"company_id.email }}\" style=\"text-decoration:none; color: #454748;\"><t t-"
-"out=\"object.company_id.email or ''\">info@yourcompany.com</t></a>\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</"
+"t></a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
-"                        | <a t-attf-href=\"'%s' % {{ object.company_id."
-"website }}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        | <a t-attf-href=\"'%s' % "
+"{{ object.company_id.website }}\" style=\"text-decoration:none; color: "
+"#454748;\">\n"
 "                            <t t-out=\"object.company_id.website or "
 "''\">http://www.example.com</t>\n"
 "                        </a>\n"
@@ -424,6 +370,18 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+msgid "A reset password link was sent by email"
+msgstr ""
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+msgid "A signup link was sent by email"
+msgstr ""
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
 msgstr ""
@@ -435,20 +393,9 @@ msgid "Another user is already registered using this email address."
 msgstr ""
 
 #. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/controllers/main.py:0
-msgid "Authentication Failed."
-msgstr ""
-
-#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
 msgstr "Nazad na prijavu"
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "Browser"
-msgstr ""
 
 #. module: auth_signup
 #. odoo-python
@@ -460,16 +407,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Change password"
 msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "City, Region, Country"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid "Close"
-msgstr "Zatvori"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -512,12 +449,16 @@ msgid "Could not reset your password"
 msgstr ""
 
 #. module: auth_signup
+#: model:ir.model,website_form_label:auth_signup.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
 msgstr "Korisnički nalog"
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
 msgstr ""
@@ -525,6 +466,14 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: auth_signup
@@ -549,23 +498,18 @@ msgid "HTTP Routing"
 msgstr "HTTP rutiranje"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__id
+msgid "ID"
+msgstr ""
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid ""
-"If you don't recognize it, you should change your password immediately via "
-"this link:<br/>"
-msgstr ""
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "In %(country)s"
 msgstr ""
 
 #. module: auth_signup
@@ -580,7 +524,6 @@ msgid "Let your customers log in to see their documents"
 msgstr ""
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Marc Demo"
 msgstr ""
@@ -592,26 +535,8 @@ msgid "Multiple accounts found for this login"
 msgstr ""
 
 #. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "Near %(city)s, %(region)s, %(country)s"
-msgstr ""
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "Near %(region)s, %(country)s"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
-msgstr ""
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_users.py:0
-msgid "New Connection to your Account"
 msgstr ""
 
 #. module: auth_signup
@@ -627,12 +552,6 @@ msgid "No login provided."
 msgstr ""
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "OS"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Odoo"
 msgstr ""
@@ -640,11 +559,6 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
-msgstr ""
-
-#. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "Otherwise, you can safely ignore this email."
 msgstr ""
 
 #. module: auth_signup
@@ -676,7 +590,6 @@ msgid "Passwords do not match; please retype them."
 msgstr ""
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Powered by"
 msgstr ""
@@ -692,7 +605,6 @@ msgid "Reminder for unregistered users"
 msgstr ""
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Reset Password"
@@ -726,12 +638,12 @@ msgid "Sent to portal user who registered themselves"
 msgstr ""
 
 #. module: auth_signup
-#: model:mail.template,name:auth_signup.set_password_email
-msgid "Settings: New Portal Signup"
+#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+msgid "Settings: New Portal Sign Up"
 msgstr ""
 
 #. module: auth_signup
-#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+#: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New User Invite"
 msgstr ""
 
@@ -746,33 +658,9 @@ msgid "Sign up"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
-msgid "Signup Expiration"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
-msgid "Signup Token"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
-msgid "Signup Token is Valid"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
-msgid "Signup URL"
 msgstr ""
 
 #. module: auth_signup
@@ -784,13 +672,7 @@ msgstr ""
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
-msgid "Signup token '%s' is no longer valid"
-msgstr ""
-
-#. module: auth_signup
-#. odoo-python
-#: code:addons/auth_signup/models/res_partner.py:0
-msgid "Signup token '%s' is not valid"
+msgid "Signup token '%s' is not valid or expired"
 msgstr ""
 
 #. module: auth_signup
@@ -881,13 +763,13 @@ msgid "YourCompany"
 msgstr ""
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
-msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
+#: model_terms:ir.ui.view,arch_db:auth_signup.fields
+msgid "e.g. John Doe"
 msgstr ""
 
 #. module: auth_signup
-#: model_terms:ir.ui.view,arch_db:auth_signup.fields
-msgid "e.g. John Doe"
+#: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+msgid "hours:<br/>"
 msgstr ""
 
 #. module: auth_signup
@@ -906,3 +788,6 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+
+#~ msgid "Close"
+#~ msgstr "Zatvori"
