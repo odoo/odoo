@@ -662,7 +662,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
         new_test_user(self.env, 'jackoneill')
         self.authenticate('jackoneill', 'jackoneill')
 
-        with RecordCapturer(self.env['ir.attachment'], []) as capture, \
+        with RecordCapturer(self.env['ir.attachment']) as capture, \
              file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
             file_content = file.read()
             file_size = len(file_content)
@@ -706,7 +706,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
         new_test_user(self.env, 'jackoneill')
         self.authenticate('jackoneill', 'jackoneill')
 
-        with RecordCapturer(self.env['ir.attachment'], []) as capture, \
+        with RecordCapturer(self.env['ir.attachment']) as capture, \
              file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
             file_size = file.seek(0, 2)
             file.seek(0)

@@ -1820,7 +1820,7 @@ class TestMailgateway(MailGatewayCommon):
         content = "שלום וברוכים הבאים למקרה המבחן הנפלא הזה"
         encoded_content = base64.b64encode(content.encode(charset)).decode()
 
-        with RecordCapturer(self.env['mail.test.gateway'], []) as capture:
+        with RecordCapturer(self.env['mail.test.gateway']) as capture:
             mail = test_mail_data.MAIL_FILE_ENCODING.format(
                 msg_id="<test_message_hebrew_iso8859_8_i@iron.sky>",
                 subject=encoded_subject,
@@ -1842,7 +1842,7 @@ class TestMailgateway(MailGatewayCommon):
         # python, check that Odoo is still capable of decoding it.
         # windows-874 is the Microsoft equivalent of cp874.
         with self.mock_mail_gateway(), \
-             RecordCapturer(self.env['mail.test.gateway'], []) as capture:
+             RecordCapturer(self.env['mail.test.gateway']) as capture:
             self.env['mail.thread'].message_process('mail.test.gateway', THAI_EMAIL_WINDOWS_874)
         capture.records.ensure_one()
         self.assertEqual(capture.records.name, 'เรื่อง')
@@ -2205,8 +2205,8 @@ class TestMailGatewayLoops(MailGatewayCommon):
 
         # simulate this email coming back to the same Odoo server -> msg_id is
         # a duplicate, hence rejected
-        with RecordCapturer(self.env['mail.test.ticket'], []) as capture_ticket, \
-             RecordCapturer(self.env['mail.test.gateway'], []) as capture_gateway:
+        with RecordCapturer(self.env['mail.test.ticket']) as capture_ticket, \
+             RecordCapturer(self.env['mail.test.gateway']) as capture_gateway:
             self._reinject()
         self.assertFalse(capture_ticket.records)
         self.assertFalse(capture_gateway.records)
@@ -2528,7 +2528,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                     # for some reason, provider rewrites message_id, then customer replies
                     outgoing['message_id'] = f'<ILikeToRewriteMessageIDFor{record.id}-{record._name}@zboing>'
                     extra = f'In-Reply-To:{outgoing["message_id"]}\nReferences:{outgoing["message_id"]} {outgoing["references"]}\n'
-                    with RecordCapturer(self.env['mail.message'], []) as capture_messages:
+                    with RecordCapturer(self.env['mail.message']) as capture_messages:
                         gateway_record = self.format_and_process(
                             MAIL_TEMPLATE, outgoing['email_to'][0], outgoing['reply_to'],
                             extra=extra,
