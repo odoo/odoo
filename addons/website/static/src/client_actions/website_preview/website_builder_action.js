@@ -288,9 +288,7 @@ export class WebsiteBuilderClientAction extends Component {
         // properly wait for the iframe to be completely ready.
         await this.waitForIframeReady();
         await Promise.all([
-            // TODO Should be website.assets_edit_frontend, but that is currently
-            // still used by website, so let's not impact it yet.
-            loadBundle("html_builder.assets_edit_frontend", {
+            loadBundle("website.assets_edit_frontend", {
                 targetDoc: this.websiteContent.el.contentDocument,
             }),
             loadBundle("website.inside_builder_style", {
