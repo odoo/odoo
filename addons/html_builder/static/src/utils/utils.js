@@ -187,3 +187,12 @@ export function isEditable(node) {
 export function removePlugins(plugins, pluginsToRemove) {
     return plugins.filter((p) => !pluginsToRemove.includes(p.name));
 }
+
+/**
+ * Check if the given value is an integer smaller than 15 digits.
+ * @param {String} value
+ * @returns {Boolean}
+ */
+export function isSmallInteger(value) {
+    return /^-?[0-9]{1,15}$/.test(value);
+}
