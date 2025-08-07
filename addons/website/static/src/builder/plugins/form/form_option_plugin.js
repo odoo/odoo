@@ -40,6 +40,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { FormOption } from "./form_option";
+import { isSmallInteger } from "@html_builder/utils/utils";
 
 const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
 export class FormOptionPlugin extends Plugin {
@@ -683,7 +684,7 @@ export class FormOptionPlugin extends Plugin {
                 ? [_t("Radio"), "exclusive_boolean"]
                 : [_t("Checkbox"), "boolean"];
             const defaults = [...fieldEl.querySelectorAll("[checked], [selected]")].map((el) =>
-                /^-?[0-9]{1,15}$/.test(el.value) ? parseInt(el.value) : el.value
+                isSmallInteger(el.value) ? parseInt(el.value) : el.value
             );
             let availableRecords = undefined;
             if (!isFieldCustom(fieldEl)) {
