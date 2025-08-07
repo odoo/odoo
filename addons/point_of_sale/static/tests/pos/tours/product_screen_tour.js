@@ -314,8 +314,12 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
             ProductScreen.selectedOrderlineHas("Test Product 2", "1", "120.0", "Red"),
 
             refresh(),
-            scan_barcode("0100100"),
-            ProductScreen.selectedOrderlineHas("Test Product 1", "2", "160.0"),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Test Product 1", "1"),
+                ...ProductScreen.clickLine("Test Product 1"),
+                Numpad.click("2"),
+            ]),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "2", "140.0"),
 
             scan_barcode("0100300"),
             Chrome.endTour(),

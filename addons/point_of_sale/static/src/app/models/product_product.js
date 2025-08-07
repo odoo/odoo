@@ -20,19 +20,17 @@ export class ProductProduct extends Base {
 
     getApplicablePricelistRules(pricelist) {
         const tmpl = this.product_tmpl_id;
-        const tmplRules = (tmpl["<-product.pricelist.item.product_tmpl_id"] || []).filter(
-            (rule) =>
-                rule.pricelist_id.id === pricelist.id &&
-                (!rule.product_id || rule.product_id.id === this.id)
-        );
-        const productRules = (this["<-product.pricelist.item.product_id"] || []).filter(
-            (rule) => rule.pricelist_id.id === pricelist.id
-        );
+        const tmplRules = (tmpl["<-product.pricelist.item.product_tmpl_id"] || [])
+            .filter((rule) => rule.pricelist_id.id === pricelist.id && !rule.product_id)
+            .sort((a, b) => b.min_quantity - a.min_quantity);
+        const productRules = (this["<-product.pricelist.item.product_id"] || [])
+            .filter((rule) => rule.pricelist_id.id === pricelist.id)
+            .sort((a, b) => b.min_quantity - a.min_quantity);
 
         const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
         const productRulesSet = new Set(productRules.map((rule) => rule.id));
         const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
-        return [...tmplRulesSet, ...productRulesSet, ...generalRulesIds];
+        return [...productRulesSet, ...tmplRulesSet, ...generalRulesIds];
     }
 }
 
