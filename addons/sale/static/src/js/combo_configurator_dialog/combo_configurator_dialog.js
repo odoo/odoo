@@ -87,6 +87,7 @@ export class ComboConfiguratorDialog extends Component {
                     showPrice: false,
                     showPackaging: false,
                 },
+                size: "md",
                 save: async configuredProduct => {
                     const selectedComboItem = comboItem.deepCopy();
                     selectedComboItem.product.ptals = configuredProduct.attribute_lines.map(
