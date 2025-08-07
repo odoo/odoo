@@ -33,5 +33,5 @@ export class BuilderContentEditablePlugin extends Plugin {
     }
 }
 registry
-    .category("website-plugins")
+    .category("builder-plugins")
     .add(BuilderContentEditablePlugin.id, BuilderContentEditablePlugin);

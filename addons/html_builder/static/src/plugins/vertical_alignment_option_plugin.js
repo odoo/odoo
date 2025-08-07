@@ -39,5 +39,5 @@ export class SetVerticalAlignmentAction extends ClassAction {
 }
 
 registry
-    .category("website-plugins")
+    .category("builder-plugins")
     .add(VerticalAlignmentOptionPlugin.id, VerticalAlignmentOptionPlugin);

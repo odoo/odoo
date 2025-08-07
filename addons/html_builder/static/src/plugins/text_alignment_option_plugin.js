@@ -15,4 +15,4 @@ class TextAlignmentOptionPlugin extends Plugin {
     };
 }
 
-registry.category("website-plugins").add(TextAlignmentOptionPlugin.id, TextAlignmentOptionPlugin);
+registry.category("builder-plugins").add(TextAlignmentOptionPlugin.id, TextAlignmentOptionPlugin);
