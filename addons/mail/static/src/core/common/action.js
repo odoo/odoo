@@ -12,9 +12,16 @@ export class Action {
         this._component = component;
     }
 
-    /** Optional component that should be displayed in the view when this action is active. */
+    /** When provided, this component is mounted for this action. UI/UX of action is fully managed by the component */
     get component() {
         return this.explicitDefinition.component;
+    }
+
+    /** When provided, action.component is conditionally picked based on this condition. When condition is false, the usual UI/UX of action from other explicit definitions is chosen */
+    get componentCondition() {
+        return typeof this.explicitDefinition.componentCondition === "function"
+            ? this.explicitDefinition.componentCondition(this._component)
+            : this.explicitDefinition.componentCondition ?? true;
     }
 
     /** Props to pass to the component of this action. */
@@ -67,7 +74,7 @@ export class Action {
     get iconLarge() {
         return typeof this.explicitDefinition.iconLarge === "function"
             ? this.explicitDefinition.iconLarge(this._component)
-            : this.explicitDefinition.iconLarge ?? this.explicitDefinition.icon;
+            : this.explicitDefinition.iconLarge ?? this.icon;
     }
 
     /** Name of this action, displayed to the user. */

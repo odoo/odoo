@@ -28,7 +28,7 @@ test("send", async () => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Thread:not([data-transient])");
-    await click(".o-mail-ChatWindow-command[title*='Close']");
+    await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
     await contains("label", { text: "Receive a copy of this conversation" });
     await contains("input:enabled", { value: "paul@example.com" });
@@ -50,7 +50,7 @@ test("send failed", async () => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Thread:not([data-transient])");
-    await click(".o-mail-ChatWindow-command[title*='Close']");
+    await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
     await contains("input", { value: "paul@example.com" });
     await click("button[data-action='sendTranscript']:enabled");
@@ -72,7 +72,7 @@ test("portal user send", async () => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Thread:not([data-transient])");
-    await click(".o-mail-ChatWindow-command[title*='Close']");
+    await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
     await contains("label", { text: "Receive a copy of this conversation" });
     await contains("input:disabled", { value: "portal@kombat.com" });

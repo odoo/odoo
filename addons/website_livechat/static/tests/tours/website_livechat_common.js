@@ -56,7 +56,7 @@ export const start = [
 export const closeChat = [
     {
         content: "Close the chat window",
-        trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-command[title*=Close]",
+        trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-header [title*=Close]",
         run: "click",
     },
 ];
@@ -121,7 +121,7 @@ export const downloadTranscript = [
 export const close = [
     {
         content: "Close the conversation with the x button",
-        trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-command[title*=Close]",
+        trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-header [title*=Close]",
         run: "click",
     },
     {

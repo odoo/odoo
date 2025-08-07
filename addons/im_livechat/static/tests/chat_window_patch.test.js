@@ -37,7 +37,7 @@ test("can fold livechat chat windows in mobile", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Visitor" });
-    await click(".o-mail-ChatWindow-command[title*='Fold']", {
+    await click(".o-mail-ChatWindow-header [title*='Fold']", {
         parent: [".o-mail-ChatWindow", { text: "Visitor" }],
     });
     await contains(".o-mail-ChatBubble");
@@ -79,7 +79,7 @@ test("closing a chat window with no message from admin side unpins it", async ()
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Partner 2" });
-    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']", {
+    await click(".o-mail-ChatWindow-header [title*='Close Chat Window']", {
         parent: [".o-mail-ChatWindow", { text: "Partner 2" }],
     });
     await openDiscuss();

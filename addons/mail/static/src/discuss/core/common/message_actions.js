@@ -20,6 +20,7 @@ messageActionsRegistry.add("set-new-message-separator", {
         );
     },
     icon: "fa fa-eye-slash",
+    iconLarge: "fa fa-lg fa-eye-slash",
     name: _t("Mark as Unread"),
     /** @param {import("@mail/core/common/message").Message} component */
     onSelected: (component) => {
