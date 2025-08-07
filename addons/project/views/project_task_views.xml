@@ -392,17 +392,19 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or is_template"/>
                     <widget name="web_ribbon" title="Template" bg_color="text-bg-info" invisible="not is_template"/>
-                    <h1 class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex w-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="d-flex w-100">
                             <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Task Title..."/>
-                        </div>
-                        <div class="d-flex justify-content-end o_state_container" invisible="not active or is_template">
+                        </h1>
+                        <div class="d-flex justify-content-end align-items-center px-1" invisible="not active or is_template">
+                            <field name="priority" class="h3 pe-2" widget="priority_switch"/>
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>
-                        <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" invisible="active and not is_template">
+                        <div class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25" invisible="active and not is_template">
+                            <field name="priority" class="h3 pe-2" widget="priority_switch"/>
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>
-                    </h1>
+                    </div>
                     <group>
                         <group>
                             <field name="project_id"
@@ -418,12 +420,11 @@
                                 options="{'no_open': True}"
                                 widget="many2many_avatar_user"/>
                             <field name="role_ids" invisible="not (is_template and has_project_template)" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                             <field name="partner_id" nolabel="0" widget="res_partner_many2one" class="o_task_customer_field" invisible="not project_id or has_template_ancestor"/>
-                            <field name="priority" widget="priority_switch"/>
                             <label for="date_deadline"/>
                             <div id="date_deadline_and_recurring_task" class="d-inline-flex w-100">
                                 <field name="date_deadline" nolabel="1" decoration-danger="date_deadline and date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>

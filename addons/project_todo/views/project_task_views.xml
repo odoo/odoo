@@ -93,15 +93,18 @@
                 </header>
                 <sheet class="o_todo_form_sheet_bg">
                     <widget name="web_ribbon" class="todo_archived" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <div class="oe_title pe-0">
-                        <h1 class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex w-100">
-                                <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="To-do..."/>
-                            </div>
-                            <div class="d-flex justify-content-end o_state_container">
-                                <field name="state" widget="todo_done_checkmark" class="o_task_state_widget"/>
-                            </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="d-flex w-100">
+                            <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Task Title..."/>
                         </h1>
+                        <div class="d-flex justify-content-end align-items-center px-1" invisible="not active">
+                            <field name="priority" class="h3 pe-2" widget="priority_switch"/>
+                            <field name="state" widget="todo_done_checkmark" class="o_task_state_widget" />
+                        </div>
+                        <div class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25" invisible="active">
+                            <field name="priority" class="h3 pe-2" widget="priority_switch"/>
+                            <field name="state" widget="todo_done_checkmark" class="o_task_state_widget" />
+                        </div>
                     </div>
                     <group>
                         <group>
@@ -109,13 +112,12 @@
                                 widget="many2many_avatar_user"
                                 required="1"
                                 placeholder="Assignees"/>
+                        </group>
+                        <group>
                             <field name="tag_ids"
                                 widget="many2many_tags"
                                 options="{'color_field': 'color', 'no_create_edit': True}"
                                 class="me-2"/>
-                        </group>
-                        <group>
-                            <field name="priority" widget="priority_switch" class="me-3"/>
                             <field name="date_deadline"
                                 decoration-danger="date_deadline &lt; current_date"/>
                         </group>
