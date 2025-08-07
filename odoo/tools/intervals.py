@@ -28,6 +28,7 @@ class Intervals(typing.Generic[T]):
         By default, adjacent intervals are merged (1, 3, a) and (3, 5, b) become
         (1, 5, a | b). This behaviour can be prevented by setting
         `keep_distinct=True`.
+
     """
     def __init__(self, intervals: Iterable[tuple[T, T, AbstractSet]] | None = None, *, keep_distinct: bool = False):
         self._items: list[tuple[T, T, AbstractSet]] = []

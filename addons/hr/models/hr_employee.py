@@ -1453,8 +1453,8 @@ class HrEmployee(models.Model):
 
     def _get_tz(self):
         self.ensure_one()
-        return self.tz or\
-               self.resource_calendar_id.tz or\
+        return self.resource_calendar_id.tz or\
+               self.tz or\
                self.company_id.resource_calendar_id.tz or\
                'UTC'
 
@@ -1604,7 +1604,8 @@ class HrEmployee(models.Model):
                                     min(date_to, version_end),
                                     tz=employee_tz,
                                     resources=self.resource_id,
-                                    compute_leaves=True)[self.resource_id.id]
+                                    compute_leaves=True,
+                                    domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
             duration_data = duration_data | version_intervals
         return duration_data
 
