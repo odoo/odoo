@@ -333,6 +333,20 @@
                 },
             ]"/>
         </function>
+        <record id="product_product_8_glass" model="product.product">
+            <field
+                name="image_1920"
+                type="base64"
+                file="product/static/img/product_product_8_glass-image.jpg"
+            />
+        </record>
+        <record id="product_product_8_metal" model="product.product">
+            <field
+                name="image_1920"
+                type="base64"
+                file="product/static/img/product_product_8_metal-image.jpg"
+            />
+        </record>
 
         <record id="product_product_9" model="product.product">
             <field name="name">Pedal Bin</field>
@@ -560,7 +574,7 @@
             <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Noise-reducing panels for open spaces</field>
-            <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.jpg"/>
             <field name="attribute_line_ids" eval="[
                 Command.create({
                     'attribute_id': ref('product.pa_color'),
@@ -572,6 +586,31 @@
                     ]
                 })
             ]"/>
+        </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[
+                {
+                    'xml_id': 'product.acoustic_ptav_black',
+                    'record': obj().env.ref('product.product_template_acoustic_bloc_screens').attribute_line_ids[0].product_template_value_ids[1],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[
+                {
+                    'xml_id': 'product.product_product_acoustic_bloc_screens_black',
+                    'record': obj().env.ref('product.product_template_acoustic_bloc_screens')._get_variant_for_combination(obj().env.ref('product.acoustic_ptav_black')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <record id="product_product_acoustic_bloc_screens_black" model="product.product">
+            <field
+                name="image_1920"
+                type="base64"
+                file="product/static/img/product_product_25_black-image.jpg"
+            />
         </record>
         <record
             id="product_acoustic_bloc_screens_customization_attribute_line"
