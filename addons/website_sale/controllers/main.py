@@ -314,7 +314,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website = request.env['website'].get_current_website()
         website_domain = website.website_domain()
 
-        ppg = website.shop_ppg or 20
+        ppg = website.shop_ppg or 21
         ppr = website.shop_ppr or 4
         gap = website.shop_gap or "16px"
 
