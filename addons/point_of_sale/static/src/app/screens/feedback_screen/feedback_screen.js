@@ -39,7 +39,7 @@ export class FeedbackScreen extends Component {
                     } finally {
                         this.state.loading = false;
                         this.timeout = setTimeout(() => {
-                            this.goToNextScreen();
+                            this.pos.orderDone(this.currentOrder);
                         }, 5000);
                     }
                 };
@@ -62,11 +62,6 @@ export class FeedbackScreen extends Component {
         this.amountRef.el.style.transform = `scale(${scale})`;
     }
 
-    goToNextScreen() {
-        const nextPage = this.pos.defaultPage;
-        this.pos.navigate(nextPage.page, nextPage.params);
-    }
-
     get currentOrder() {
         return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
@@ -82,7 +77,7 @@ export class FeedbackScreen extends Component {
             return;
         }
         clearTimeout(this.timeout);
-        this.goToNextScreen();
+        this.pos.orderDone(this.currentOrder);
     }
 }
 

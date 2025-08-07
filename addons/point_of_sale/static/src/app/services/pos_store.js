@@ -1234,11 +1234,17 @@ export class PosStore extends WithLazyGetterTrap {
         return this.models["pos.order"].find((o) => o.state === "draft") || this.addNewOrder();
     }
     getEmptyOrder() {
-        const orders = this.models["pos.order"].filter(
-            (order) => !order.finalized && order.isEmpty()
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) =>
+                order.isEmpty() &&
+                !order.finalized &&
+                order.payment_ids.length === 0 &&
+                !order.partner_id &&
+                order.pricelist_id?.id === this.config.pricelist_id?.id &&
+                order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
         );
-        if (orders.length > 0) {
-            return orders[0];
+        if (emptyOrders.length > 0) {
+            return emptyOrders[0];
         }
         return this.addNewOrder();
     }
@@ -2635,9 +2641,12 @@ export class PosStore extends WithLazyGetterTrap {
 
     orderDone(order) {
         order.setScreenData({ name: "" });
-        if (this.getOrder() === order) {
-            this.searchProductWord = "";
+        if (!this.config.module_pos_restaurant) {
+            this.selectedOrderUuid = this.getEmptyOrder().uuid;
         }
+        this.searchProductWord = "";
+        const nextPage = this.defaultPage;
+        this.navigate(nextPage.page, nextPage.params);
     }
 
     displayPrinterWarning(printResult, printerName) {

@@ -72,15 +72,6 @@ export class ReceiptScreen extends Component {
     showPhoneInput() {
         return false;
     }
-    orderDone() {
-        this.pos.orderDone(this.currentOrder);
-        if (!this.pos.config.module_pos_restaurant) {
-            this.pos.selectedOrderUuid = this.pos.getEmptyOrder().uuid;
-        }
-        this.pos.searchProductWord = "";
-        const nextPage = this.pos.defaultPage;
-        this.pos.navigate(nextPage.page, nextPage.params);
-    }
 
     generateTicketImage = async () =>
         await this.renderer.toJpeg(
