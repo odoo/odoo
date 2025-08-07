@@ -121,7 +121,7 @@
             <div class="d-flex gap-2 pt-3">
                 <!-- Left: Company Address -->
                 <div class="w-50 text-break text-start" style="font-size: 75%;">
-                    <div t-out="company.name"/>
+                    <div class="pos-config-name" t-out="order.config.name"/>
                     <div>
                         <t t-if="company.street" t-out="company.street"/>
                         <t t-if="company.city" t-out="', ' + company.city"/>
