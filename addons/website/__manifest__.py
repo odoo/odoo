@@ -149,6 +149,7 @@
         'views/snippets/s_text_highlight.xml',
         'views/snippets/s_pricelist_cafe.xml',
         'views/snippets/s_progress_bar.xml',
+        'views/snippets/s_sale_order_display.xml',
         'views/snippets/s_blockquote.xml',
         'views/snippets/s_badge.xml',
         'views/snippets/s_color_blocks_2.xml',

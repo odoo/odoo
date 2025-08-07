@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="website.s_sale_order_display_list">
+        <div class="row sale-order-list">
+            <t t-foreach="sale_orders" t-as="order" t-key="order.id">
+                <div class="col-12 mb-2">
+                    <div class="border p-2">
+                        <strong t-esc="order.name" /> - <t t-esc="order.partner_name" /> (<em t-esc="order.state" />)
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="website.s_sale_order_display_card">
+        <div class="row sale-order-card">
+            <t t-foreach="sale_orders" t-as="order" t-key="order.id">
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title" t-esc="order.name" />
+                            <p class="card-text">
+                                <strong>Customer:</strong>
+                                <t t-esc="order.partner_name" />
+                            </p>
+                            <span class="badge bg-info" t-esc="order.state" />
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
