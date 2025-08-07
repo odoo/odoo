@@ -50,9 +50,6 @@
             'html_editor/static/src/main/chatgpt/chatgpt_plugin.scss',
             'html_editor/static/src/main/link/link.scss',
         ],
-        'html_builder.assets_edit_frontend': [
-            ('include', 'website.assets_edit_frontend'),
-        ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
@@ -64,7 +61,7 @@
         ],
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
-            ('include', 'website.website_builder_assets'),
+            ('include', 'html_builder.assets'),
         ],
     },
     'license': 'LGPL-3',
