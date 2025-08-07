@@ -44,18 +44,107 @@ export class OrderSummary extends Component {
     }
 
     clickLine(ev, orderline) {
-        if (ev.detail === 2) {
-            clearTimeout(this.singleClick);
-            return;
-        }
         this.numberBuffer.reset();
+
         if (!orderline.isSelected()) {
             this.pos.selectOrderLine(this.currentOrder, orderline);
         } else {
-            this.singleClick = setTimeout(() => {
-                this.pos.getOrder().uiState.selected_orderline_uuid = null;
-            }, 300);
+            this.pos.getOrder().uiState.selected_orderline_uuid = null;
         }
+    }
+
+    async onOrderlineLongPress(ev, orderline) {
+        const order = this.currentOrder;
+        order.assertEditable();
+
+        // If combo line, edit its parent instead
+        if (orderline.combo_parent_id) {
+            orderline = orderline.combo_parent_id;
+        }
+
+        // Prevent if already sent to kitchen
+        if (typeof order.id === "number") {
+            const preparation_data = await this.pos.data.call(
+                "pos.order",
+                "get_preparation_change",
+                [order.id]
+            );
+            const prep = JSON.parse(preparation_data.last_order_preparation_change || "{}");
+            if (prep.lines && Object.keys(prep.lines).some((l) => l === orderline.uuid)) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Cannot edit orderline"),
+                    body: _t(
+                        "This orderline has already been sent to the kitchen and cannot be edited."
+                    ),
+                });
+                return false;
+            }
+        }
+
+        // Init orderline
+        const productTemplate = orderline.product_id.product_tmpl_id;
+        const values = {
+            product_tmpl_id: productTemplate,
+            product_id: orderline.product_id,
+            qty: orderline.qty,
+            price_extra: 0,
+        };
+
+        // Configurable product
+        let keepGoing = await this.pos.handleConfigurableProduct(
+            values,
+            productTemplate,
+            {
+                line: orderline,
+            },
+            true
+        );
+        if (keepGoing === false) {
+            return false;
+        }
+
+        // Combo product
+        keepGoing = await this.pos.handleComboProduct(values, order, true, {
+            line: orderline,
+        });
+        if (keepGoing === false) {
+            return false;
+        }
+
+        // Price unit
+        this.pos.handlePriceUnit(values, order, undefined);
+
+        // Update orderline
+        if (values.attribute_value_ids !== undefined) {
+            orderline.attribute_value_ids = values.attribute_value_ids.map((a) => a[1]);
+        }
+        if (values.custom_attribute_value_ids !== undefined) {
+            const createManyCustomAttributeValues = values.custom_attribute_value_ids.map(
+                (a) => a[1]
+            );
+            orderline.custom_attribute_value_ids = this.pos.models[
+                "product.attribute.custom.value"
+            ].createMany(createManyCustomAttributeValues);
+        }
+        orderline.price_extra = values.price_extra;
+        orderline.qty = values.qty;
+        if (values.product_id) {
+            orderline.product_id = values.product_id;
+        }
+        if (values.combo_line_ids !== undefined) {
+            while (orderline.combo_line_ids.length > 0) {
+                this.pos.models["pos.order.line"].delete(orderline.combo_line_ids[0]);
+            }
+            orderline.combo_line_ids = values.combo_line_ids || [];
+        }
+        if (values.price_unit !== undefined) {
+            orderline.price_unit = values.price_unit;
+        }
+        orderline.setFullProductName();
+
+        // Try to merge the orderline
+        this.pos.tryMergeOrderline(order, orderline, orderline.price_type !== "manual");
+        return true;
     }
 
     async updateSelectedOrderline({ buffer, key }) {

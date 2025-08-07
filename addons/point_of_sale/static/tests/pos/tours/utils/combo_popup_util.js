@@ -17,14 +17,12 @@ export function isSelected(productName) {
     return {
         content: `Check that ${productName} is selected`,
         trigger: `.modal ${isComboSelectedTrigger(productName)}`,
-        run: "click",
     };
 }
 export function isNotSelected(productName) {
     return {
         content: `Check that ${productName} is not selected`,
         trigger: `.modal ${negate(isComboSelectedTrigger(productName), ".modal-body")}`,
-        run: "click",
     };
 }
 export function isConfirmationButtonDisabled() {

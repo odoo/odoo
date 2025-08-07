@@ -12,18 +12,53 @@ export class ComboConfiguratorPopup extends Component {
         productTemplate: Object,
         getPayload: Function,
         close: Function,
+        line: { type: Object, optional: true },
     };
 
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");
+
+        const selected = this.props.line?.getAllLinesInCombo()?.reduce((acc, value) => {
+            if (!value.combo_item_id) {
+                return acc;
+            }
+
+            acc[value.combo_item_id.id] = 1 + (acc[value.combo_item_id.id] || 0);
+            return acc;
+        }, {});
+
         this.state = useState({
-            // configuration: id of combo_item -> ProductConfiguratorPopup payload
-            configuration: {},
+            combo: { ...this.props.line?.selectedComboIds } || {},
+            configuration:
+                this.props.line?.getAllLinesInCombo().reduce((acc, line) => {
+                    if (!line.combo_item_id) {
+                        return acc;
+                    }
+
+                    acc[line.combo_item_id.id] = {
+                        attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
+                        price_extra: line.extra_price,
+                        attribute_custom_values: line.custom_attribute_value_ids.reduce(
+                            (acc, val) => {
+                                acc[val.custom_product_template_attribute_value_id.id] =
+                                    val.custom_value;
+                                return acc;
+                            },
+                            {}
+                        ),
+                    };
+                    return acc;
+                }, {}) || {},
             qty: Object.fromEntries(
                 this.props.productTemplate.combo_ids.map((combo) => [
                     combo.id,
-                    Object.fromEntries(combo.combo_item_ids.map((item) => [item.id, 0])),
+                    Object.fromEntries(
+                        combo.combo_item_ids.map((item) => [
+                            item.id,
+                            (selected && selected[item.id]) || 0,
+                        ])
+                    ),
                 ])
             ),
         });
@@ -141,10 +176,18 @@ export class ComboConfiguratorPopup extends Component {
             if (this.state.qty[combo.id][combo_item.id] > 0 && !isSingleQtyChoice) {
                 this.state.qty[combo.id][combo_item.id] += 1;
             } else {
+                const allLines = this.props.line?.getAllLinesInCombo() || [];
+                const line = allLines
+                    .filter((l) => l.combo_item_id)
+                    .find((l) => l.combo_item_id.id === combo_item.id);
+
                 const payload = await this.pos.openConfigurator(product.product_tmpl_id, {
                     hideAlwaysVariants: true,
                     forceVariantValue: product.product_template_variant_value_ids,
+                    line,
+                    comboItem: combo_item,
                 });
+
                 if (payload) {
                     this.resetSingleQtyMaxCombo(combo);
                     this.state.configuration[combo_item.id] = payload;

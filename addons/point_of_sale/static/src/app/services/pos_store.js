@@ -706,12 +706,15 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 product = opts.presetVariant;
             }
+
+            const attrValueIds = new Set(
+                product?.product_template_attribute_value_ids?.map((v) => v.id) || []
+            );
+
             attributeLinesValues = attributeLinesValues.map((values) =>
                 values[0].attribute_id.create_variant === "no_variant"
                     ? values
-                    : values.filter((value) =>
-                          product.product_template_attribute_value_ids.includes(value)
-                      )
+                    : values.filter((value) => attrValueIds.has(value.id))
             );
         }
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
@@ -719,6 +722,7 @@ export class PosStore extends WithLazyGetterTrap {
                 productTemplate: pTemplate,
                 hideAlwaysVariants: opts.hideAlwaysVariants,
                 forceVariantValue: opts.forceVariantValue,
+                line: opts.line,
             });
         }
         return {
@@ -825,141 +829,19 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        // In case of configurable product a popup will be shown to the user
-        // We assign the payload to the current values object.
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (productTemplate.isConfigurable() && configure) {
-            const payload =
-                vals?.payload && Object.keys(vals?.payload).length
-                    ? vals.payload
-                    : await this.openConfigurator(productTemplate, opts);
-
-            if (payload) {
-                // Find candidate based on instantly created variants.
-                const attributeValues = this.models["product.template.attribute.value"]
-                    .readMany(payload.attribute_value_ids)
-                    .filter((value) => value.attribute_id.create_variant !== "no_variant")
-                    .map((value) => value.id);
-
-                let candidate = productTemplate.product_variant_ids.find((variant) => {
-                    const attributeIds = variant.product_template_attribute_value_ids.map(
-                        (value) => value.id
-                    );
-                    return (
-                        attributeValues.every((id) => attributeIds.includes(id)) &&
-                        attributeValues.length
-                    );
-                });
-
-                const isDynamic = productTemplate.attribute_line_ids.some(
-                    (line) => line.attribute_id.create_variant === "dynamic"
-                );
-
-                if (!candidate && isDynamic) {
-                    // Need to create the new product.
-                    const result = await this.data.callRelated(
-                        "product.template",
-                        "create_product_variant_from_pos",
-                        [productTemplate.id, payload.attribute_value_ids, this.config.id]
-                    );
-                    candidate = result["product.product"][0];
-                }
-
-                Object.assign(values, {
-                    attribute_value_ids: payload.attribute_value_ids.map((id) => [
-                        "link",
-                        this.models["product.template.attribute.value"].get(id),
-                    ]),
-                    custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
-                        ([id, cus]) => [
-                            "create",
-                            {
-                                custom_product_template_attribute_value_id:
-                                    this.models["product.template.attribute.value"].get(id),
-                                custom_value: cus,
-                            },
-                        ]
-                    ),
-                    price_extra: values.price_extra + payload.price_extra,
-                    qty: payload.qty || values.qty,
-                    product_id: candidate || productTemplate.product_variant_ids[0],
-                });
-            } else {
-                return;
-            }
-        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
-            // Verify price extra of variant products
-            const priceExtra = values.product_id.product_template_variant_value_ids
-                .filter((attr) => attr.attribute_id.create_variant !== "always")
-                .reduce((acc, attr) => acc + attr.price_extra, 0);
-
-            values.price_extra += priceExtra;
-            if (!values.attribute_value_ids) {
-                values.attribute_value_ids = [];
-            }
-            values.attribute_value_ids = values.attribute_value_ids.concat(
-                values.product_id.product_template_variant_value_ids.map((attr) => ["link", attr])
-            );
+        let keepGoing = await this.handleConfigurableProduct(
+            values,
+            productTemplate,
+            opts,
+            configure
+        );
+        if (keepGoing === false) {
+            return;
         }
 
-        // In case of clicking a combo product a popup will be shown to the user
-        // It will return the combo prices and the selected products
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_tmpl_id.isCombo() && configure) {
-            const payload =
-                vals?.payload && Object.keys(vals?.payload).length
-                    ? vals.payload
-                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
-                          productTemplate: values.product_tmpl_id,
-                      });
-
-            if (!payload) {
-                return;
-            }
-
-            // Product template of combo should not have more than 1 variant.
-            const [childLineConf, comboExtraLines] = payload;
-            const comboPrices = computeComboItems(
-                values.product_tmpl_id.product_variant_ids[0],
-                childLineConf,
-                order.pricelist_id,
-                this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id"),
-                comboExtraLines,
-                this.currency
-            );
-
-            values.combo_line_ids = comboPrices.map((comboItem) => [
-                "create",
-                {
-                    product_id: comboItem.combo_item_id.product_id,
-                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
-                    combo_item_id: comboItem.combo_item_id,
-                    price_unit: comboItem.price_unit,
-                    price_type: "automatic",
-                    order_id: order,
-                    qty: comboItem.qty,
-                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
-                        "link",
-                        attr,
-                    ]),
-                    custom_attribute_value_ids: Object.entries(
-                        comboItem.attribute_custom_values
-                    ).map(([id, cus]) => [
-                        "create",
-                        {
-                            custom_product_template_attribute_value_id:
-                                this.data.models["product.template.attribute.value"].get(id),
-                            custom_value: cus,
-                        },
-                    ]),
-                },
-            ]);
+        keepGoing = await this.handleComboProduct(values, order, configure);
+        if (keepGoing === false) {
+            return;
         }
 
         // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
@@ -1024,15 +906,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         // Handle price unit
-        if (!values.product_tmpl_id.isCombo() && vals.price_unit === undefined) {
-            values.price_unit = values.product_id.getPrice(
-                order.pricelist_id,
-                values.qty,
-                values.price_extra,
-                false,
-                values.product_id
-            );
-        }
+        this.handlePriceUnit(values, order, vals.price_unit);
 
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
@@ -1048,22 +922,8 @@ export class PosStore extends WithLazyGetterTrap {
             });
         }
 
-        let to_merge_orderline;
-        for (const curLine of order.lines) {
-            if (curLine.id !== line.id) {
-                if (curLine.canBeMergedWith(line) && merge !== false) {
-                    to_merge_orderline = curLine;
-                }
-            }
-        }
-
-        if (to_merge_orderline) {
-            to_merge_orderline.merge(line);
-            line.delete();
-            this.selectOrderLine(order, to_merge_orderline);
-        } else if (!selectedOrderline) {
-            this.selectOrderLine(order, order.getLastOrderline());
-        }
+        // Merge orderline if needed
+        this.tryMergeOrderline(order, line, merge, selectedOrderline);
 
         if (configure) {
             this.numberBuffer.reset();
@@ -1092,6 +952,190 @@ export class PosStore extends WithLazyGetterTrap {
 
         return order.getSelectedOrderline();
     }
+
+    /**
+     * Try to merge the orderline with another one in the order.
+     * If no orderline can be merged, select the last orderline.
+     * If merge is false, do not merge the orderline.
+     */
+    tryMergeOrderline(order, line, merge, selectedOrderline) {
+        selectedOrderline = selectedOrderline || order.getSelectedOrderline();
+        let to_merge_orderline;
+        for (const curLine of order.lines) {
+            if (curLine.id !== line.id) {
+                if (curLine.canBeMergedWith(line) && merge !== false) {
+                    to_merge_orderline = curLine;
+                }
+            }
+        }
+
+        if (to_merge_orderline) {
+            to_merge_orderline.merge(line);
+            line.delete();
+            this.selectOrderLine(order, to_merge_orderline);
+        } else if (!selectedOrderline) {
+            this.selectOrderLine(order, order.getLastOrderline());
+        }
+    }
+
+    /**
+     * Handle price unit for the order line.
+     */
+    handlePriceUnit(values, order, price_unit) {
+        if (!values.product_tmpl_id.isCombo() && price_unit === undefined) {
+            values.price_unit = values.product_id.getPrice(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id
+            );
+        }
+    }
+
+    // In case of clicking a combo product a popup will be shown to the user
+    // It will return the combo prices and the selected products
+    // ---
+    // This actions cannot be handled inside pos_order.js or pos_order_line.js
+    async handleComboProduct(values, order, configure = true, { line } = {}) {
+        if (values.product_tmpl_id.isCombo() && configure) {
+            const payload =
+                values?.payload && Object.keys(values?.payload).length
+                    ? values.payload
+                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
+                          productTemplate: values.product_tmpl_id,
+                          line: line,
+                      });
+
+            if (!payload) {
+                return false;
+            }
+
+            // Product template of combo should not have more than 1 variant.
+            const [childLineConf, comboExtraLines] = payload;
+            const comboPrices = computeComboItems(
+                values.product_tmpl_id.product_variant_ids[0],
+                childLineConf,
+                order.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                comboExtraLines,
+                this.currency
+            );
+
+            values.combo_line_ids = comboPrices.map((comboItem) => [
+                "create",
+                {
+                    product_id: comboItem.combo_item_id.product_id,
+                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
+                        "link",
+                        tax,
+                    ]),
+                    combo_item_id: comboItem.combo_item_id,
+                    price_unit: comboItem.price_unit,
+                    price_type: "automatic",
+                    order_id: order,
+                    qty: comboItem.qty,
+                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
+                        "link",
+                        attr,
+                    ]),
+                    custom_attribute_value_ids: Object.entries(
+                        comboItem.attribute_custom_values
+                    ).map(([id, cus]) => [
+                        "create",
+                        {
+                            custom_product_template_attribute_value_id:
+                                this.data.models["product.template.attribute.value"].get(id),
+                            custom_value: cus,
+                        },
+                    ]),
+                },
+            ]);
+        }
+
+        return true;
+    }
+
+    // In case of configurable product a popup will be shown to the user
+    // We assign the payload to the current values object.
+    // ---
+    // This actions cannot be handled inside pos_order.js or pos_order_line.js
+    handleConfigurableProduct = async (values, productTemplate, opts = {}, configure = true) => {
+        if (productTemplate.isConfigurable() && configure) {
+            const payload =
+                values?.payload && Object.keys(values?.payload).length
+                    ? values.payload
+                    : await this.openConfigurator(productTemplate, opts);
+
+            if (payload) {
+                // Find candidate based on instantly created variants.
+                const attributeValues = this.models["product.template.attribute.value"]
+                    .readMany(payload.attribute_value_ids)
+                    .filter((value) => value.attribute_id.create_variant !== "no_variant")
+                    .map((value) => value.id);
+
+                let candidate = productTemplate.product_variant_ids.find((variant) => {
+                    const attributeIds = variant.product_template_attribute_value_ids.map(
+                        (value) => value.id
+                    );
+                    return (
+                        attributeValues.every((id) => attributeIds.includes(id)) &&
+                        attributeValues.length
+                    );
+                });
+
+                const isDynamic = productTemplate.attribute_line_ids.some(
+                    (line) => line.attribute_id.create_variant === "dynamic"
+                );
+
+                if (!candidate && isDynamic) {
+                    // Need to create the new product.
+                    const result = await this.data.callRelated(
+                        "product.template",
+                        "create_product_variant_from_pos",
+                        [productTemplate.id, payload.attribute_value_ids, this.config.id]
+                    );
+                    candidate = result["product.product"][0];
+                }
+
+                Object.assign(values, {
+                    attribute_value_ids: payload.attribute_value_ids.map((id) => [
+                        "link",
+                        this.models["product.template.attribute.value"].get(id),
+                    ]),
+                    custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
+                        ([id, cus]) => [
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]
+                    ),
+                    price_extra: values.price_extra + payload.price_extra,
+                    qty: payload.qty || values.qty,
+                    product_id: candidate || productTemplate.product_variant_ids[0],
+                });
+            } else {
+                return false;
+            }
+        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
+            // Verify price extra of variant products
+            const priceExtra = values.product_id.product_template_variant_value_ids
+                .filter((attr) => attr.attribute_id.create_variant !== "always")
+                .reduce((acc, attr) => acc + attr.price_extra, 0);
+
+            values.price_extra += priceExtra;
+            if (!values.attribute_value_ids) {
+                values.attribute_value_ids = [];
+            }
+            values.attribute_value_ids = values.attribute_value_ids.concat(
+                values.product_id.product_template_variant_value_ids.map((attr) => ["link", attr])
+            );
+        }
+    };
 
     createPrinter(printerConfig) {
         const printerType = printerConfig.printer_type;
