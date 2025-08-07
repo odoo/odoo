@@ -4,21 +4,19 @@ import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/hooks
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { DatePickerPopup } from "@point_of_sale/app/components/popups/date_picker_popup/date_picker_popup";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
-import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -51,6 +49,11 @@ export class PaymentScreen extends Component {
         this.error = false;
         this.validateOrder = useAsyncLockedMethod(this.validateOrder);
         onMounted(this.onMounted);
+    }
+
+    async validateOrder(isForceValidate = false) {
+        const validation = new OrderPaymentValidation({ pos: this.pos, order: this.currentOrder });
+        await validation.validateOrder(isForceValidate);
     }
 
     onMounted() {
@@ -153,9 +156,6 @@ export class PaymentScreen extends Component {
         }
         // original function: click_paymentmethods
         const result = this.currentOrder.addPaymentline(paymentMethod);
-        if (!this.checkCashRoundingHasBeenWellApplied()) {
-            return;
-        }
         if (result) {
             this.numberBuffer.set(result.amount.toString());
             if (
@@ -296,177 +296,12 @@ export class PaymentScreen extends Component {
         this.currentOrder.selectPaymentline(line);
         this.numberBuffer.reset();
     }
-    async validateOrder(isForceValidate) {
-        if (!this.pos.isFastPaymentRunning && (await this.pos.askBeforeValidation()) === false) {
-            return false;
-        }
-        this.numberBuffer.capture();
-        if (!this.checkCashRoundingHasBeenWellApplied()) {
-            return;
-        }
-        const linesToRemove = this.currentOrder.lines.filter((line) => line.canBeRemoved);
-        for (const line of linesToRemove) {
-            this.currentOrder.removeOrderline(line);
-        }
-        if (await this._isOrderValid(isForceValidate)) {
-            // remove pending payments before finalizing the validation
-            const toRemove = [];
-            for (const line of this.paymentLines) {
-                if (!line.isDone() || line.amount === 0) {
-                    toRemove.push(line);
-                }
-            }
-
-            for (const line of toRemove) {
-                this.currentOrder.removePaymentline(line);
-            }
-
-            await this._finalizeValidation();
-        }
-    }
-    async _finalizeValidation() {
-        if (this.currentOrder.isPaidWithCash() || this.currentOrder.getChange()) {
-            this.hardwareProxy.openCashbox();
-        }
-
-        this.currentOrder.date_order = serializeDateTime(luxon.DateTime.now());
-        for (const line of this.paymentLines) {
-            if (!line.amount === 0) {
-                this.currentOrder.removePaymentline(line);
-            }
-        }
-
-        this.pos.addPendingOrder([this.currentOrder.id]);
-        this.currentOrder.state = "paid";
-
-        if (!this.pos.isFastPaymentRunning) {
-            this.env.services.ui.block();
-        }
-        let syncOrderResult;
-        try {
-            // 1. Save order to server.
-            syncOrderResult = await this.pos.syncAllOrders({ throw: true });
-            if (!syncOrderResult) {
-                return;
-            }
-
-            // 2. Invoice.
-            if (this.shouldDownloadInvoice() && this.currentOrder.isToInvoice()) {
-                if (this.currentOrder.raw.account_move) {
-                    await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
-                } else {
-                    throw {
-                        code: 401,
-                        message: "Backend Invoice",
-                        data: { order: this.currentOrder },
-                    };
-                }
-            }
-        } catch (error) {
-            return this.handleValidationError(error);
-        } finally {
-            if (!this.pos.isFastPaymentRunning) {
-                this.env.services.ui.unblock();
-            }
-        }
-
-        // 3. Post process.
-        const postPushOrders = syncOrderResult.filter((order) => order.waitForPushOrder());
-        if (postPushOrders.length > 0) {
-            await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
-        }
-
-        await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
-    }
-    handleValidationError(error) {
-        if (error instanceof ConnectionLostError) {
-            this.pos.navigate(this.nextPage.page, this.nextPage.params);
-            Promise.reject(error);
-        } else if (error instanceof RPCError) {
-            this.currentOrder.state = "draft";
-            handleRPCError(error, this.dialog);
-        } else {
-            throw error;
-        }
-        return error;
-    }
-    async postPushOrderResolve(ordersServerId) {
-        const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
-        if (!postPushResult) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error: no internet connection."),
-                body: _t("Some, if not all, post-processing after syncing order failed."),
-            });
-        }
-    }
-    async afterOrderValidation() {
-        // Always show the next screen regardless of error since pos has to
-        // continue working even offline.
-        let nextPage = this.nextPage;
-        let switchScreen = true;
-
-        if (!this.pos.config.module_pos_restaurant) {
-            this.pos.checkPreparationStateAndSentOrderInPreparation(this.currentOrder, {
-                orderDone: true,
-            });
-        }
-
-        if (
-            nextPage.page === "ReceiptScreen" &&
-            this.currentOrder.nb_print === 0 &&
-            this.pos.config.iface_print_auto
-        ) {
-            const invoiced_finalized = this.currentOrder.isToInvoice()
-                ? this.currentOrder.finalized
-                : true;
-
-            if (invoiced_finalized) {
-                await this.pos.printReceipt({ order: this.currentOrder });
-
-                if (this.pos.config.iface_print_skip_screen) {
-                    this.pos.orderDone(this.currentOrder);
-                    switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
-                    nextPage = {
-                        page: "FeedbackScreen",
-                        params: {
-                            orderUuid: this.currentOrder.uuid,
-                        },
-                    };
-                    if (switchScreen) {
-                        this.selectNextOrder();
-                    }
-                }
-            }
-        }
-
-        if (switchScreen) {
-            this.pos.navigate(nextPage.page, nextPage.params);
-        }
-    }
     selectNextOrder() {
         if (this.currentOrder.originalSplittedOrder) {
             this.pos.selectedOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
         } else {
             this.pos.addNewOrder();
         }
-    }
-    /**
-     * This method is meant to be overriden by localization that do not want to print the invoice pdf
-     * every time they create an account move.
-     * @returns {boolean} true if the invoice pdf should be downloaded
-     */
-    shouldDownloadInvoice() {
-        return true;
-    }
-    get nextPage() {
-        return !this.error
-            ? {
-                  page: "ReceiptScreen",
-                  params: {
-                      orderUuid: this.currentOrder.uuid,
-                  },
-              }
-            : this.pos.defaultPage;
     }
     paymentMethodImage(id) {
         if (this.paymentMethod.image) {
@@ -480,124 +315,6 @@ export class PaymentScreen extends Component {
         }
     }
 
-    async _isOrderValid(isForceValidate) {
-        if (this.currentOrder.isRefundInProcess()) {
-            return false;
-        }
-
-        if (this.currentOrder.getOrderlines().length === 0 && this.currentOrder.isToInvoice()) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Empty Order"),
-                body: _t(
-                    "There must be at least one product in your order before it can be validated and invoiced."
-                ),
-            });
-            return false;
-        }
-
-        if ((await this.pos._askForCustomerIfRequired()) === false) {
-            return false;
-        }
-
-        if (
-            (this.currentOrder.isToInvoice() || this.currentOrder.getShippingDate()) &&
-            !this.currentOrder.getPartner()
-        ) {
-            const confirmed = await ask(this.dialog, {
-                title: _t("Please select the Customer"),
-                body: _t(
-                    "You need to select the customer before you can invoice or ship an order."
-                ),
-            });
-            if (confirmed) {
-                this.pos.selectPartner();
-            }
-            return false;
-        }
-
-        const partner = this.currentOrder.getPartner();
-        if (
-            this.currentOrder.getShippingDate() &&
-            !(partner.name && partner.street && partner.city && partner.country_id)
-        ) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Incorrect address for shipping"),
-                body: _t("The selected customer needs an address."),
-            });
-            return false;
-        }
-
-        if (!this.currentOrder.presetRequirementsFilled) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Customer required"),
-                body: _t("Please add a valid customer to the order."),
-            });
-            return false;
-        }
-
-        if (
-            !this.pos.currency.isZero(this.currentOrder.getTotalWithTax()) &&
-            this.currentOrder.payment_ids.length === 0
-        ) {
-            this.notification.add(_t("Select a payment method to validate the order."));
-            return false;
-        }
-
-        if (!this.currentOrder.isPaid() || this.invoicing) {
-            return false;
-        }
-
-        // The exact amount must be paid if there is no cash payment method defined.
-        if (
-            Math.abs(
-                this.currentOrder.getTotalWithTax() -
-                    this.currentOrder.getTotalPaid() +
-                    this.currentOrder.getRoundingApplied()
-            ) > 0.00001
-        ) {
-            if (!this.pos.models["pos.payment.method"].some((pm) => pm.is_cash_count)) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Cannot return change without a cash payment method"),
-                    body: _t(
-                        "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration"
-                    ),
-                });
-                return false;
-            }
-        }
-
-        // if the change is too large, it's probably an input error, make the user confirm.
-        if (
-            !isForceValidate &&
-            this.currentOrder.getTotalWithTax() > 0 &&
-            this.currentOrder.getTotalWithTax() * 1000 < this.currentOrder.getTotalPaid()
-        ) {
-            this.dialog.add(ConfirmationDialog, {
-                title: _t("Please Confirm Large Amount"),
-                body:
-                    _t("Are you sure that the customer wants to  pay") +
-                    " " +
-                    this.env.utils.formatCurrency(this.currentOrder.getTotalPaid()) +
-                    " " +
-                    _t("for an order of") +
-                    " " +
-                    this.env.utils.formatCurrency(this.currentOrder.getTotalWithTax()) +
-                    " " +
-                    _t('? Clicking "Confirm" will validate the payment.'),
-                confirm: () => this.validateOrder(true),
-            });
-            return false;
-        }
-
-        if (!this.currentOrder._isValidEmptyOrder()) {
-            return false;
-        }
-
-        return true;
-    }
-    async _postPushOrderResolve(order, order_server_ids) {
-        return true;
-    }
     async sendPaymentRequest(line) {
         // Other payment lines can not be reversed anymore
         this.pos.paymentTerminalInProgress = true;
@@ -659,44 +376,6 @@ export class PaymentScreen extends Component {
     }
     async sendForceDone(line) {
         line.setPaymentStatus("done");
-    }
-
-    checkCashRoundingHasBeenWellApplied() {
-        const cashRounding = this.pos.config.rounding_method;
-        if (!cashRounding) {
-            return true;
-        }
-
-        const order = this.pos.getOrder();
-        const currency = this.pos.currency;
-        for (const payment of order.payment_ids) {
-            if (!payment.payment_method_id.is_cash_count) {
-                continue;
-            }
-
-            const amountPaid = payment.getAmount();
-            const expectedAmountPaid = cashRounding.round(amountPaid);
-            if (currency.isZero(expectedAmountPaid - amountPaid)) {
-                continue;
-            }
-
-            this.dialog.add(AlertDialog, {
-                title: _t("Rounding error in payment lines"),
-                body: _t(
-                    "The amount of your payment lines must be rounded to validate the transaction.\n" +
-                        "The rounding precision is %(rounding)s so you should set %(expectedAmount)s as payment amount instead of %(paidAmount)s.",
-                    {
-                        rounding: cashRounding.rounding.toFixed(this.pos.currency.decimal_places),
-                        expectedAmount: expectedAmountPaid.toFixed(
-                            this.pos.currency.decimal_places
-                        ),
-                        paidAmount: amountPaid.toFixed(this.pos.currency.decimal_places),
-                    }
-                ),
-            });
-            return false;
-        }
-        return true;
     }
 }
 

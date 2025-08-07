@@ -5,15 +5,7 @@ import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import {
-    Component,
-    onMounted,
-    useEffect,
-    useState,
-    onWillRender,
-    onWillUnmount,
-    useRef,
-} from "@odoo/owl";
+import { Component, onMounted, useEffect, useState, onWillRender, onWillUnmount } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -68,7 +60,6 @@ export class ProductScreen extends Component {
             currentOffset: 0,
             quantityByProductTmplId: {},
         });
-        this.virtualPaymentScreen = useRef("virtualPaymentScreen");
 
         useRouterParamsChecker();
         onMounted(() => {
@@ -419,9 +410,7 @@ export class ProductScreen extends Component {
      */
     async fastValidate(paymentMethod) {
         this.pos.isFastPaymentRunning = true;
-        if ((await this.pos.askBeforeValidation()) === false) {
-            return false;
-        }
+
         if (
             this.currentOrder.nb_print === 0 &&
             this.pos.config.iface_print_auto &&
@@ -438,7 +427,7 @@ export class ProductScreen extends Component {
                 this.pos.navigate(nextPage.page, nextPage.params);
             }
         } else {
-            await this.pos.validateOrderFast(this.virtualPaymentScreen.el, paymentMethod);
+            await this.pos.validateOrderFast(paymentMethod);
         }
     }
 }
