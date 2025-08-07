@@ -40,6 +40,7 @@ export class Builder extends Component {
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
+        editableSelector: { type: String },
     };
     static defaultProps = {
         onEditorLoad: () => {},
@@ -174,7 +175,9 @@ export class Builder extends Component {
             // instantiating the sub components that potentially need the
             // editor.
             const iframeEl = await this.props.iframeLoaded;
-            this.editableEl = iframeEl.contentDocument.body.querySelector("#wrapwrap");
+            this.editableEl = iframeEl.contentDocument.body.querySelector(
+                this.props.editableSelector
+            );
 
             // Prevent image dragging in the website builder. Not via css because
             // if one of the image ancestor has a dragstart listener, the dragstart handler
