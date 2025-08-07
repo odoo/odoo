@@ -2991,6 +2991,16 @@ we-select.o_grid we-toggler {
                         }
                     }
                 }
+                //custom snippet might have visibility options preventing the display of the snippet
+                &.s_custom_snippet {
+                    &.o_snippet_desktop_invisible, &.o_snippet_mobile_invisible, &.o_conditional_hidden {
+                        display: block !important;
+                        &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_full_screen_height {
+                            // e.g. Useful if "Height" option (50% or 100%) is enabled.
+                            display: flex !important;
+                        }
+                    }
+                }
             }
             &::after {
                 content: "";
