@@ -19,6 +19,7 @@ export class BuilderRow extends Component {
         level: { type: Number, optional: true },
         expand: { type: Boolean, optional: true },
         initialExpandAnim: { type: Boolean, optional: true },
+        extraLabelClass: { type: String, optional: true },
     };
     static defaultProps = { expand: false };
 

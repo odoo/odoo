@@ -29,6 +29,7 @@
                 <div
                     class="hb-row-label d-flex align-items-center"
                     t-att-class="{'hb-row-label-actionable': props.slots.collapse, 'bg-transparent': !props.label.trim()}"
+                    t-attf-class="#{this.props.extraLabelClass || ''}"
                     t-att-data-tooltip="state.tooltip"
                     t-on-click="toggleCollapseContent"
                     >
