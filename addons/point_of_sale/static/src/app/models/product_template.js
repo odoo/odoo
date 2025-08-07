@@ -192,16 +192,12 @@ export class ProductTemplate extends Base {
             return price;
         }
 
-        const tmplRules = (
-            productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || []
-        ).filter(
-            (rule) =>
-                rule.pricelist_id.id === pricelist.id &&
-                (!rule.product_id || rule.product_id.id === this.id)
-        );
-        const productRules = (
-            product?.backLink?.("<-product.pricelist.item.product_id") || []
-        ).filter((rule) => rule.pricelist_id.id === pricelist.id);
+        const tmplRules = (productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [])
+            .filter((rule) => rule.pricelist_id.id === pricelist.id && !rule.product_id)
+            .sort((a, b) => b.min_quantity - a.min_quantity);
+        const productRules = (product?.backLink?.("<-product.pricelist.item.product_id") || [])
+            .filter((rule) => rule.pricelist_id.id === pricelist.id)
+            .sort((a, b) => b.min_quantity - a.min_quantity);
 
         const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
         const productRulesSet = new Set(productRules.map((rule) => rule.id));
