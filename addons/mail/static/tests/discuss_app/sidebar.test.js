@@ -265,7 +265,7 @@ test("sidebar: open pinned channel", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
 });
 
 test("sidebar: open channel and leave it", async () => {
@@ -279,13 +279,13 @@ test("sidebar: open channel and leave it", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await waitForSteps([]);
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
     await waitForSteps(["action_unfollow"]);
 });
 
@@ -304,12 +304,12 @@ test("sidebar: unpin chat from bus", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-mail-Composer-input[placeholder='Message Demo…']");
-    await contains(".o-mail-Discuss-threadName", { value: "Demo" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Demo" });
     // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
     pyEnv["discuss.channel"].channel_pin([channelId], false);
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-    await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
+    await contains(".o-mail-DiscussContent-threadName", { count: 0, value: "Demo" });
 });
 
 test.tags("focus required");
@@ -1172,7 +1172,7 @@ test("Update channel data via bus notification", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: env1 });
-    await insertText(".o-mail-Discuss-threadName", "test", { target: env1 });
+    await insertText(".o-mail-DiscussContent-threadName", "test", { target: env1 });
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: env2 });
 });

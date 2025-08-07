@@ -101,10 +101,10 @@ registry.category("web_tour.tours").add("create_thread_for_attachment_without_bo
         },
         {
             content: "Drop a file",
-            trigger: ".o-mail-Discuss-main",
+            trigger: ".o-mail-DiscussContent-main",
             async run() {
                 const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
-                await dragenterFiles(".o-mail-Discuss-main", files);
+                await dragenterFiles(".o-mail-DiscussContent-main", files);
                 await dropFiles(".o-Dropzone", files);
             },
         },

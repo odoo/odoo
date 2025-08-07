@@ -409,8 +409,8 @@ test("inbox: mark all messages as read", async () => {
             [".badge", { text: "2" }],
         ],
     });
-    await contains(".o-mail-Discuss-content .o-mail-Message", { count: 2 });
-    await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
+    await contains(".o-mail-DiscussContent .o-mail-Message", { count: 2 });
+    await click(".o-mail-DiscussContent-header button:enabled", { text: "Mark all read" });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [
@@ -451,7 +451,7 @@ test("inbox: mark as read should not display jump to present", async () => {
     await contains(".o-mail-Message", { count: 30 });
     await scroll(".o-mail-Thread", 0);
     await contains("[title='Jump to Present']");
-    await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
+    await click(".o-mail-DiscussContent-header button:enabled", { text: "Mark all read" });
     await contains("[title='Jump to Present']", { count: 0 });
 });
 

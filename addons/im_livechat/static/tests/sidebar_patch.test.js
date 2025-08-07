@@ -63,7 +63,7 @@ test("Known user with country", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
     await contains(".o-mail-DiscussSidebarChannel img[data-src*='country_flags/be.png']");
     await click(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
-    await contains(".o-mail-Discuss-header img[data-src*='country_flags/be.png']");
+    await contains(".o-mail-DiscussContent-header img[data-src*='country_flags/be.png']");
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem img[data-src*='country_flags/be.png']");
 });

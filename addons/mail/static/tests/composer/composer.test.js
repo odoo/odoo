@@ -191,7 +191,7 @@ test("selected text is not replaced after cancelling the selection", async () =>
         .querySelector(".o-mail-Composer-input")
         .setSelectionRange(0, document.querySelector(".o-mail-Composer-input").value.length);
     await animationFrame(); // wait synced with model selection
-    await click(".o-mail-Discuss-content");
+    await click(".o-mail-DiscussContent");
     await animationFrame(); // wait t-model of Composer input synced with selection reset
     await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "🤠" });
@@ -482,7 +482,7 @@ test("leave command on channel", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
 });
 
 test("Can handle leave notification from unknown member", async () => {
@@ -524,7 +524,7 @@ test("leave command on chat", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Chuck Norris" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
 });
 
 test("Can post suggestions", async () => {

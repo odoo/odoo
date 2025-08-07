@@ -87,7 +87,7 @@ test("Hide 'help already received' notification when channel is not visible", as
     canRespondDeferred = new Deferred();
     await click("button[name='join-livechat-needing-help']");
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
-    await contains(".o-mail-Discuss-threadName[title='Inbox']");
+    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
     canRespondDeferred.resolve();
     await tick();
     await expect.waitForSteps([]);

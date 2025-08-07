@@ -29,6 +29,6 @@ test("display country in channel member list", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ActionPanel:contains(Information)");
-    await click(".o-mail-Discuss-header button[name='member-list']");
+    await click(".o-mail-DiscussContent-header button[name='member-list']");
     await contains(".o-discuss-ChannelMember span", { text: "Belgium", count: 2 });
 });

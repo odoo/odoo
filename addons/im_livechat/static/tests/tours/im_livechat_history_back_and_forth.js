@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             run: "click",
         },
         {
-            trigger: ".o-mail-Discuss-threadName[title='Visitor']",
+            trigger: ".o-mail-DiscussContent-threadName[title='Visitor']",
             async run() {
                 await delay(1000);
                 history.back();
@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             },
         },
         {
-            trigger: ".o-mail-Discuss-threadName[title='Visitor']",
+            trigger: ".o-mail-DiscussContent-threadName[title='Visitor']",
             async run() {
                 await delay(1000);
                 history.back();

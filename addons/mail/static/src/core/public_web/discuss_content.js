@@ -3,7 +3,7 @@ import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { CountryFlag } from "@mail/core/common/country_flag";
-import { DiscussActions } from "@mail/core/common/discuss_actions";
+import { ActionList } from "@mail/core/common/action_list";
 import { Thread } from "@mail/core/common/thread";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { Composer } from "@mail/core/common/composer";
@@ -15,9 +15,9 @@ import { useService } from "@web/core/utils/hooks";
 
 export class DiscussContent extends Component {
     static components = {
+        ActionList,
         AutoresizeInput,
         CountryFlag,
-        DiscussActions,
         Thread,
         ThreadIcon,
         Composer,

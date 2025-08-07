@@ -159,9 +159,9 @@ test("keep new message separator until user goes back to the thread", async () =
         (n) => n["discuss.channel.member"][0].new_message_separator,
     ]);
     await hootClick(".o-mail-DiscussSidebar-item:contains(History)");
-    await contains(".o-mail-Discuss-threadName", { value: "History" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "History" });
     await hootClick(".o-mail-DiscussSidebar-item:contains(test)");
-    await contains(".o-mail-Discuss-threadName", { value: "test" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "test" });
     await contains(".o-mail-Message", { text: "Message body 2" });
     await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
 });
@@ -241,7 +241,7 @@ test("keep new message separator when switching between chat window and discuss 
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Open in Discuss" });
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await contains(".o-mail-Thread-newMessage");
     await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-ChatWindow-header", { text: "General" });
@@ -370,7 +370,7 @@ test("only show new message separator in its thread", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "@Mitchell Admin" });
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
     await contains(".o-mail-Message", { text: "@Mitchell Admin" });
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
         count: 0,
