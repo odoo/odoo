@@ -84,6 +84,12 @@
         <field name="context">{'module' : 'hr_attendance', 'bin_size': False}</field>
     </record>
 
-    <menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="menu_hr_attendance_root"
-        sequence="99" action="action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_manager"/>
+    <menuitem id="menu_hr_attendance_config" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
+
+    <menuitem id="menu_hr_attendance_settings" name="Settings lolo" parent="menu_hr_attendance_config" sequence="100" action="action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_manager"/>
+
+    <!--
+    <menuitem id="menu_hr_attendance_overtime_rules_toto" name="Overtime Rules" parent="hr_attendance.menu_hr_attendance_config" sequence="200" action="action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_manager"/>
+    -->
+
 </odoo>

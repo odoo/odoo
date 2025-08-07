@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- views -->
+
+    <record id="hr_attendance_overtime_rule_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.rule.form</field>
+        <field name="model">hr.attendance.overtime.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="base_off"/>
+                        <field 
+                            name="working_hours_from_contract" 
+                            string="Get working hours from contract"/>
+                        <field name="working_hours" invisible="working_hours_from_contract or base_off != 'quantity'"/>
+                        <field name="work_schedule" invisible="working_hours_from_contract or base_off != 'timing'"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_rule_view_list" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.rule.list</field>
+        <field name="model">hr.attendance.overtime.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="base_off"/>
+                <field 
+                    name="working_hours_from_contract" 
+                    string="Get working hours from contract"/>
+                <field name="working_hours" invisible="working_hours_from_contract or base_off != 'quantity'"/>
+                <field name="work_schedule" invisible="working_hours_from_contract or base_off != 'timing'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_rule_action" model="ir.actions.act_window">
+        <field name="name">Overtime Rules</field>
+        <field name="res_model">hr.attendance.overtime.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_attendance_overtime_rules" name="Overtime Rules" parent="hr_attendance.menu_hr_attendance_config" sequence="200" action="hr_attendance_overtime_rule_action" groups="hr_attendance.group_hr_attendance_manager"/>
+
+</odoo>
