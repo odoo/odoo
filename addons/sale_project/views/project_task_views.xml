@@ -121,8 +121,8 @@
             <xpath expr="//page[@name='settings']//field[@name='privacy_visibility']" position="after">
                 <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id or is_template"/>
                 <label for="sale_line_id" invisible="not allow_billable or not partner_id or is_template"/>
-                <div 
-                    class="o_row" 
+                <div
+                    class="o_row"
                     invisible="not allow_billable or not partner_id or is_template">
                     <field name="sale_line_id"
                         groups="!sales_team.group_sale_salesman"
@@ -159,6 +159,11 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="priority">100</field>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="alert alert-warning" role="alert" invisible="not sale_warning_text or not allow_billable">
+                    <field name="sale_warning_text" class="fw-bold"/>
+                </div>
+            </xpath>
             <xpath expr="//span[@id='start_rating_buttons']" position="before">
                 <button class="oe_stat_button"
                         type="object" name="action_view_so" icon="fa-dollar"
@@ -179,7 +184,7 @@
                 <field name="project_sale_order_id" invisible="1"/>
                 <field name="sale_order_id" invisible="True" groups="sales_team.group_sale_salesman"/>
                 <label for="sale_line_id" invisible="not allow_billable or not project_id or not partner_id or has_template_ancestor"/>
-                <div 
+                <div
                     name="sale_line_div"
                     class="o_row"
                     invisible="not allow_billable or not project_id or not partner_id or has_template_ancestor">
@@ -207,7 +212,7 @@
                         placeholder="Non-billable"/>
                     <span
                         class="fa fa-exclamation-triangle text-warning"
-                        title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order." 
+                        title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order."
                         invisible="sale_order_state != 'cancel'"/>
                 </div>
                 <field name="allow_billable" invisible="1"/>

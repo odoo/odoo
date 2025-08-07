@@ -39,6 +39,7 @@ class ProjectTask(models.Model):
 
     # Project sharing  fields
     display_sale_order_button = fields.Boolean(string='Display Sales Order', compute='_compute_display_sale_order_button')
+    sale_warning_text = fields.Text('Helpdesk Warning', compute='_compute_sale_warning_text', help='Warning for the partner as set by the user.')
 
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
@@ -83,6 +84,14 @@ class ProjectTask(models.Model):
         billable_task = self.filtered(lambda t: t.allow_billable or (not self._origin and t.parent_id.allow_billable))
         (self - billable_task).partner_id = False
         super(ProjectTask, billable_task)._compute_partner_id()
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg')
+    def _compute_sale_warning_text(self):
+        for record in self:
+            warning = False
+            if partner_msg := record.partner_id.sale_warn_msg:
+                warning = record.partner_id.name + ' - ' + partner_msg
+            record.sale_warning_text = warning
 
     def _inverse_partner_id(self):
         for task in self:
