@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
                 assert(i.value, "Last 7 days", `based_on = ${i.value},should be "Last 7 days"`);
             },
         },
-        ...setSuggestParameters({ basedOn: "Actual Demand", nbDays: 30, factor: 50 }),
+        ...setSuggestParameters({ basedOn: "Forecasted", nbDays: 30, factor: 50 }),
         // Suggest total should be -100 units forcasted * 50% * 20 = 1000$
         { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
         /*
@@ -132,7 +132,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         checkKanbanRecordHighlight("test_product", 1, false), // expected order 1 not checked, just that highligh is off
         ...toggleSuggest(true),
 
-        ...setSuggestParameters({ basedOn: "Actual Demand", factor: 100 }),
+        ...setSuggestParameters({ basedOn: "Forecasted", factor: 100 }),
         { trigger: "span[name='suggest_total']:visible:contains('2,000')" },
         { trigger: "span[name='o_kanban_forecasted_qty']:visible:contains('100')" }, // Move out of 100 in 20days
         { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('100')" }, // 100 * 100%

@@ -240,28 +240,25 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         )
 
         context = {
-            'from_date': fields.Datetime.now(),
             'to_date': fields.Datetime.now() + relativedelta(days=2),
         }
-        self.assertEqual(product_4.with_context(context).outgoing_qty, 0)
-        self.assertEqual(product_5.with_context(context).outgoing_qty, 0)
-        self.assertEqual(product_6.with_context(context).outgoing_qty, 0)
+        self.assertEqual(product_4.with_context(context).virtual_available, 1)
+        self.assertEqual(product_5.with_context(context).virtual_available, 2)
+        self.assertEqual(product_6.with_context(context).virtual_available, 0)
 
         context = {
-            'from_date': fields.Datetime.now(),
             'to_date': fields.Datetime.now() + relativedelta(days=4),
         }
-        self.assertEqual(product_4.with_context(context).outgoing_qty, 6)
-        self.assertEqual(product_5.with_context(context).outgoing_qty, 0)
-        self.assertEqual(product_6.with_context(context).outgoing_qty, 0)
+        self.assertEqual(product_4.with_context(context).virtual_available, -5)
+        self.assertEqual(product_5.with_context(context).virtual_available, 2)
+        self.assertEqual(product_6.with_context(context).virtual_available, 0)
 
         context = {
-            'from_date': fields.Datetime.now(),
             'to_date': fields.Datetime.now() + relativedelta(days=8),
         }
-        self.assertEqual(product_4.with_context(context).outgoing_qty, 6)
-        self.assertEqual(product_5.with_context(context).outgoing_qty, 10)
-        self.assertEqual(product_6.with_context(context).outgoing_qty, 0)
+        self.assertEqual(product_4.with_context(context).virtual_available, -5)
+        self.assertEqual(product_5.with_context(context).virtual_available, -8)
+        self.assertEqual(product_6.with_context(context).virtual_available, 0)
 
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
         context = {
@@ -271,9 +268,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         }
         # Check estimed price when based on actual demand.
         self.assertEstimatedPrice(po, context, 810, based_on='actual_demand')
-        self.assertEstimatedPrice(po, context, 1800, based_on='actual_demand', factor=200)
+        self.assertEstimatedPrice(po, context, 1620, based_on='actual_demand', factor=200)
         self.assertEstimatedPrice(po, context, 450, based_on='actual_demand', days=4)
-        self.assertEstimatedPrice(po, context, 180, based_on='actual_demand', days=4, factor=50)
+        self.assertEstimatedPrice(po, context, 270, based_on='actual_demand', days=4, factor=50)
         self.assertEstimatedPrice(po, context, 0, based_on='actual_demand', days=2)
 
         # Use suggest wizard to generate PO lines and check their values.
@@ -285,8 +282,8 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
 
         self.actionAddAll(po, based_on='actual_demand', days=30, factor=200)
         self.assertRecordValues(po.order_line, [
-            {'product_id': product_4.id, 'product_qty': 11},
-            {'product_id': product_5.id, 'product_qty': 18},
+            {'product_id': product_4.id, 'product_qty': 10},
+            {'product_id': product_5.id, 'product_qty': 16},
         ])
 
         self.actionAddAll(po, based_on='actual_demand', days=4, factor=100)
@@ -296,7 +293,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
 
         self.actionAddAll(po, based_on='actual_demand', days=4, factor=50)
         self.assertRecordValues(po.order_line, [
-            {'product_id': product_4.id, 'product_qty': 2},
+            {'product_id': product_4.id, 'product_qty': 3},
         ])
 
     def test_purchase_order_suggest_quantities_for_consu(self):
@@ -558,22 +555,19 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         delivery_2.scheduled_date = today + relativedelta(days=5)
 
         context = {
-            'from_date': fields.Datetime.now(),
             'to_date': fields.Datetime.now() + relativedelta(days=6),
         }
-        self.assertEqual(product_ad.with_context(context).outgoing_qty, 19)
+        self.assertEqual(product_ad.with_context(context).virtual_available, -7)
         context = {
-            'from_date': fields.Datetime.now(),
             'to_date': fields.Datetime.now() + relativedelta(days=6),
             'warehouse_id': main_warehouse.id,
         }
-        self.assertEqual(product_ad.with_context(context).outgoing_qty, 10)
+        self.assertEqual(product_ad.with_context(context).virtual_available, -3)
         context = {
-            'from_date': fields.Datetime.now(),
             'to_date': fields.Datetime.now() + relativedelta(days=6),
             'warehouse_id': self.warehouse_1.id,
         }
-        self.assertEqual(product_ad.with_context(context).outgoing_qty, 9)
+        self.assertEqual(product_ad.with_context(context).virtual_available, -4)
 
         # Create a PO for each warehouse and check the right quantity is added to the PO line.
         po_1 = self.env['purchase.order'].create({
