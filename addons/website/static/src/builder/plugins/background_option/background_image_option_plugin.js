@@ -7,6 +7,7 @@ import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { getBackgroundImageColor } from "./background_image_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class BackgroundImageOptionPlugin extends Plugin {
     static id = "backgroundImageOption";
@@ -25,6 +26,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
             DynamicColorAction,
         },
         force_not_editable_selector: ".o_we_bg_filter",
+        get_target_element_providers: withSequence(5, (el) => el),
     };
     /**
      * Transfers the background-image and the dataset information relative to
@@ -49,7 +51,16 @@ export class BackgroundImageOptionPlugin extends Plugin {
         // It is important to delete ".o_modified_image_to_save" from the old
         // target as its image source will be deleted.
         oldEditingEl.classList.remove("o_modified_image_to_save");
+        const filterColorAction = this.dependencies.builderActions.getAction("selectFilterColor");
+        const editingElement = this.getResource("get_target_element_providers")[0](oldEditingEl);
+        const filter = filterColorAction.getValue({ editingElement });
         this.setImageBackground(oldEditingEl, "");
+        if (filter) {
+            filterColorAction.apply({
+                editingElement,
+                value: filter,
+            });
+        }
         // Apply the changes on the new editing element
         if (oldBgURL) {
             this.setImageBackground(newEditingEl, oldBgURL);
@@ -101,9 +112,10 @@ export class BackgroundImageOptionPlugin extends Plugin {
         if (backgroundURL) {
             el.classList.add("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box");
         } else {
-            this.dependencies.builderActions.getAction("selectFilterColor").apply({
-                editingElement: el.classList.contains("s_parallax_bg") ? el.parentElement : el,
-            });
+            const editingElement = this.getResource("get_target_element_providers")[0](el);
+            this.dependencies.builderActions
+                .getAction("selectFilterColor")
+                .apply({ editingElement });
             el.classList.remove(
                 "oe_img_bg",
                 "o_bg_img_center",
