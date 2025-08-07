@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
-# 
+# * account
+#
 # Translators:
 # Tymofii Lytvynenko <till.svit@gmail.com>, 2024
 # Vitalii Fedko, 2024
@@ -9,20 +9,24 @@
 # Bohdan Lisnenko, 2025
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # Wil Odoo, 2025
-# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-18 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"PO-Revision-Date: 2025-08-07 09:04+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
+"account/uk/>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -56,14 +60,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"- Група податків: Податок являє собою сукупність підподатків.\n"
+"    - Група податків: Податок являє собою сукупність підподатків.\n"
 "- Фіксований: сума податку залишається незмінною незалежно від ціни.\n"
 "- Відсоток: Сума податку становить % від ціни:\n"
 "наприклад, 100 * (1 + 10%) = 110 (без урахування ціни).\n"
 "наприклад, 110 / (1 + 10%) = 100 (з урахуванням ціни).\n"
 "- Відсотковий податок включено: Сума податку є часткою від ціни:\n"
 "наприклад, 180 / (1 - 10%) = 200 (без урахування ціни)\n"
-"наприклад, 200 * (1 - 10%) = 180 (ціна включена)."
+"наприклад, 200 * (1 - 10%) = 180 (ціна включена)\n"
+"        "
 
 #. module: account
 #. odoo-python
@@ -75,7 +80,7 @@ msgstr " для '%s'"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " valid until %s"
-msgstr "дійсний до %s"
+msgstr " дійсний до %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -948,6 +953,9 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style="
+"\"width: 6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\""
+">or</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1221,7 +1229,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>1</span>"
-msgstr ""
+msgstr "<span>1</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1236,7 +1244,7 @@ msgstr "<span><b>Гарна робота!</b> Ви пройшли всі кро�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>=</span>"
-msgstr ""
+msgstr "<span>=</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -4086,8 +4094,8 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
-"Не вдається знайти план рахунків цієї компанії, його слід налаштувати. Будь "
-"ласка, перейдіть до налаштування бухобліку."
+"Не вдається знайти план рахунків цієї компанії, його слід налаштувати. \n"
+"Будь ласка, перейдіть до налаштування бухобліку."
 
 #. module: account
 #. odoo-python
@@ -4693,7 +4701,7 @@ msgstr "Компанія"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_company_id
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_company_id
 msgid "Company "
-msgstr "Компанія"
+msgstr "Компанія "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -6503,7 +6511,7 @@ msgstr "Відобразити попередження округлення"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__qr_code
 msgid "Display SEPA QR-code"
-msgstr "Відобразити QR-код SEPA "
+msgstr "Відобразити QR-код SEPA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__display_type
@@ -7191,7 +7199,7 @@ msgstr "Виключені журнали"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
 #: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
 msgid "Expected Currency Rate"
-msgstr ""
+msgstr "Очікуваний курс валют"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -7955,7 +7963,7 @@ msgstr "Групувати за: Рахунок > Податок "
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
 msgid "Group by: Tax > Account "
-msgstr "Групувати за: Податок > Рахунок"
+msgstr "Групувати за: Податок > Рахунок "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -9704,7 +9712,7 @@ msgstr "Доступність журналів"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
 msgid "Json Activity Data"
-msgstr "Дані дії Json "
+msgstr "Дані дії Json"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__7
@@ -11362,7 +11370,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Only administrators can install chart templates"
-msgstr "Тільки адміністратори можуть встановлювати шаблони діаграм "
+msgstr "Тільки адміністратори можуть встановлювати шаблони діаграм"
 
 #. module: account
 #. odoo-python
@@ -11703,7 +11711,7 @@ msgstr "PDF-прикріплення"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_pdf_report_file
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_pdf_report_file
 msgid "PDF File"
-msgstr "PDF-файл "
+msgstr "PDF-файл"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -12343,7 +12351,7 @@ msgstr "Ризик фішингу: Середній"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
 msgid "Pick the rate on a certain date"
-msgstr ""
+msgstr "Оберіть тариф на певну дату"
 
 #. module: account
 #. odoo-python
@@ -12751,7 +12759,7 @@ msgstr "Податки купівлі"
 #. module: account
 #: model:account.account,name:account.1_expense_invest
 msgid "Purchase of Equipments"
-msgstr "Купівля обладнання "
+msgstr "Купівля обладнання"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_purchase
@@ -13021,7 +13029,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Refresh currency rate to the invoice date"
-msgstr ""
+msgstr "Оновити курс валют до дати виставлення рахунку"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -13125,7 +13133,7 @@ msgstr "Оренда"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
 msgid "Reorder by accounting date"
-msgstr "Перезамовити за датою бухобліку "
+msgstr "Перезамовити за датою бухобліку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_lines_str
@@ -13360,7 +13368,7 @@ msgstr "Повернено"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
-msgstr ""
+msgstr "Зворотне на"
 
 #. module: account
 #. odoo-python
@@ -13854,7 +13862,7 @@ msgid ""
 "for such taxes on a given account during reconciliation."
 msgstr ""
 "Виберіть це, якщо податок повинен використовувати касові бази, які створять "
-"запис для цього податку на певний рахунок під час узгодження"
+"запис для цього податку на певний рахунок під час узгодження."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -14278,7 +14286,7 @@ msgstr "Показати деталі терміну оплати"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
 #: model:ir.model.fields,field_description:account.field_account_move__show_reset_to_draft_button
 msgid "Show Reset To Draft Button"
-msgstr "Показати кнопку Скинути в чернетку "
+msgstr "Показати кнопку Скинути в чернетку"
 
 #. module: account
 #. odoo-python
@@ -15208,7 +15216,7 @@ msgid ""
 " using a single 100% line. "
 msgstr ""
 "Функцію знижки на достроковий платіж можна використовувати лише з умовами "
-"оплати з використанням одного рядка 100%."
+"оплати з використанням одного рядка 100%. "
 
 #. module: account
 #. odoo-python
@@ -15535,7 +15543,7 @@ msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
 msgstr ""
-"Дата глобальної дати блокування встановлена ​​цим винятком. Якщо дата "
+"Дата глобальної дати блокування встановлена цим винятком. Якщо дата "
 "блокування не змінена, вона встановлюється на максимальну дату."
 
 #. module: account
@@ -15723,7 +15731,8 @@ msgid ""
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
 "Ланцюг хешу сумісний: не можливо змінювати\n"
-"                                            дані без розбиття ланцюга хешу на наступні частини"
+"                                            дані без розбиття ланцюга хешу "
+"на наступні частини."
 
 #. module: account
 #. odoo-python
@@ -15782,7 +15791,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "The journal in which to upload the invoice is not specified. "
-msgstr "Журнал, в який завантажувати рахунок-фактуру, не вказано."
+msgstr "Журнал, в який завантажувати рахунок-фактуру, не вказано. "
 
 #. module: account
 #. odoo-python
@@ -17034,13 +17043,13 @@ msgstr "Загальна сума рахунку літерами"
 #: model:ir.model.fields,help:account.field_res_partner__credit
 #: model:ir.model.fields,help:account.field_res_users__credit
 msgid "Total amount this customer owes you."
-msgstr "Загальна сума, яку цей клієнт повинен заплатити вам"
+msgstr "Загальна сума, яку цей клієнт повинен заплатити вам."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__debit
 #: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "Загальна сума, яку ви повинні заплатити цьому постачальнику"
+msgstr "Загальна сума, яку ви повинні заплатити цьому постачальнику."
 
 #. module: account
 #. odoo-python
@@ -18432,7 +18441,7 @@ msgid ""
 "move and post it after."
 msgstr ""
 "Ви не можете створювати переміщення у вже опублікованому стані. Створіть "
-"чернетку переміщення та опублікуйте її. "
+"чернетку переміщення та опублікуйте її."
 
 #. module: account
 #. odoo-python
