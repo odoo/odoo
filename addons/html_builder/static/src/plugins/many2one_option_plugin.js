@@ -77,4 +77,4 @@ export class Many2OneAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(Many2OneOptionPlugin.id, Many2OneOptionPlugin);
+registry.category("builder-plugins").add(Many2OneOptionPlugin.id, Many2OneOptionPlugin);
