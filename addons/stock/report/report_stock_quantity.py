@@ -37,7 +37,7 @@ class ReportStockQuantity(models.Model):
         transfer, we will have an outgoing stock move for the source warehouse and an incoming stock move
         for the destination one. To do so, we select all relevant SM (incoming, outgoing and interwarehouse),
         then we duplicate all these SM and edit the values:
-            - product_qty is kept if the SM is not the duplicated one or if the SM is an interwarehouse one
+            - quantity is kept if the SM is not the duplicated one or if the SM is an interwarehouse one
                 otherwise, we set the value to 0 (this allows us to filter it out during the SM processing)
             - the source warehouse is kept if the SM is not the duplicated one
             - the dest warehouse is kept if the SM is not the duplicated one and is not an interwarehouse
@@ -52,8 +52,8 @@ WITH
         FROM stock_location sl
         LEFT JOIN stock_warehouse w ON sl.parent_path::text like concat('%%/', w.view_location_id, '/%%')
     ),
-    existing_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
-        SELECT m.id, m.product_id, pt.id, m.product_qty, m.date, m.state, m.company_id, source.w_id, dest.w_id
+    existing_sm (id, product_id, tmpl_id, quantity, date, state, company_id, whs_id, whd_id) AS (
+        SELECT m.id, m.product_id, pt.id, m.quantity, m.date, m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON dest.sl_id = m.location_dest_id
@@ -62,15 +62,15 @@ WITH
         WHERE pt.type = 'product' AND
             (source.w_id IS NOT NULL OR dest.w_id IS NOT NULL) AND
             (source.w_id IS NULL OR dest.w_id IS NULL OR source.w_id <> dest.w_id) AND
-            m.product_qty != 0 AND
+            m.quantity != 0 AND
             m.state NOT IN ('draft', 'cancel') AND
             (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
-    all_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
+    all_sm (id, product_id, tmpl_id, quantity, date, state, company_id, whs_id, whd_id) AS (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
             CASE 
-                WHEN is_duplicated = 0 THEN sm.product_qty
-                WHEN sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id THEN sm.product_qty
+                WHEN is_duplicated = 0 THEN sm.quantity
+                WHEN sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id THEN sm.quantity
                 ELSE 0
             END, 
             sm.date, sm.state, sm.company_id,
@@ -89,7 +89,7 @@ SELECT
     product_tmpl_id,
     state,
     date,
-    sum(product_qty) as product_qty,
+    sum(quantity) as product_qty,
     company_id,
     warehouse_id
 FROM (SELECT
@@ -102,9 +102,9 @@ FROM (SELECT
         END AS state,
         m.date::date AS date,
         CASE
-            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN -m.product_qty
-            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.product_qty
-        END AS product_qty,
+            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN -m.quantity
+            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.quantity
+        END AS quantity,
         m.company_id,
         CASE
             WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN m.whs_id
@@ -113,7 +113,7 @@ FROM (SELECT
     FROM
         all_sm m
     WHERE
-        m.product_qty != 0 AND
+        m.quantity != 0 AND
         m.state != 'done'
     UNION ALL
     SELECT
@@ -122,7 +122,7 @@ FROM (SELECT
         pp.product_tmpl_id,
         'forecast' as state,
         date.*::date,
-        q.quantity as product_qty,
+        q.quantity as quantity,
         q.company_id,
         wh.id as warehouse_id
     FROM
@@ -151,11 +151,11 @@ FROM (SELECT
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
-            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL AND m.state = 'done' THEN m.product_qty
-            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL AND m.state = 'done' THEN -m.product_qty
-            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN -m.product_qty
-            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.product_qty
-        END AS product_qty,
+            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL AND m.state = 'done' THEN m.quantity
+            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL AND m.state = 'done' THEN -m.quantity
+            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN -m.quantity
+            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.quantity
+        END AS quantity,
         m.company_id,
         CASE
             WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN m.whs_id
@@ -164,7 +164,7 @@ FROM (SELECT
     FROM
         all_sm m
     WHERE
-        m.product_qty != 0) AS forecast_qty
+        m.quantity != 0) AS forecast_qty
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
