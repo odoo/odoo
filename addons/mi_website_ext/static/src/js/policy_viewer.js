@@ -22,7 +22,6 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
     });
   },
 
-  
   destroy: function () {
     window.removeEventListener("message", this.messageHandler);
     this._super.apply(this, arguments);
@@ -59,15 +58,37 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
     const encodedPdfUrl = encodeURIComponent(pdfUrl);
 
     const modalElement = $("#pdf_viewer_modal");
-
+    const $iframe = modalElement.find("iframe");
     modalElement.find("#pdf_modal_title").text(policyName);
-    // Aseguramos que la URL del iframe se actualice cada vez que se abre el modal
-    modalElement
-      .find("iframe")
-      .attr(
-        "src",
-        `${viewerBaseUrl}?file=${encodedPdfUrl}&policy_id=${policyId}`
-      );
+    $iframe.attr(
+      "src",
+      `${viewerBaseUrl}?file=${encodedPdfUrl}&policy_id=${policyId}`
+    );
+
+    $iframe.off("load").on("load", function () {
+      try {
+        const iframeDocument = $iframe.contents();
+        const $printButton = iframeDocument.find("#printButton");
+        const $downloadButton = iframeDocument.find("#downloadButton");
+        const $editorStampButton = iframeDocument.find("#editorStampButton");
+        const $editorInkButton = iframeDocument.find("#editorInkButton");
+        const $editorFreeTextButton = iframeDocument.find(
+          "#editorFreeTextButton"
+        );
+        const $editorHighlightButton = iframeDocument.find(
+          "#editorHighlightButton"
+        );
+        $printButton.hide();
+        $downloadButton.hide();
+        $editorStampButton.hide();
+        $editorInkButton.hide();
+        $editorFreeTextButton.hide();
+        $editorHighlightButton.hide();
+        iframeDocument.find("#secondaryToolbarToggle").hide();
+      } catch (e) {
+        console.error("Error al intentar modificar el iframe de PDF.js:", e);
+      }
+    });
 
     const $headerCloseButton = modalElement.find(".btn-close");
     $headerCloseButton.prop("disabled", true);
@@ -118,7 +139,9 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
           '<i class="fa fa-check text-success me-2"/>'
         );
         this.currentPolicyId = null;
-        $(".three-column-layout").trigger("policy-read", { policyId: policyId });
+        $(".three-column-layout").trigger("policy-read", {
+          policyId: policyId,
+        });
       } else {
         alert(result.error || "No se pudo registrar la acción.");
         buttonPlaceholder

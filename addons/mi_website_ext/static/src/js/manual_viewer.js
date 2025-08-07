@@ -40,8 +40,16 @@ publicWidget.registry.ManualViewer = publicWidget.Widget.extend({
         const iframeDocument = $iframe.contents();
         const $printButton = iframeDocument.find("#printButton");
         const $downloadButton = iframeDocument.find("#downloadButton");
+        const $editorStampButton = iframeDocument.find("#editorStampButton");
+        const $editorInkButton = iframeDocument.find("#editorInkButton");
+        const $editorFreeTextButton = iframeDocument.find("#editorFreeTextButton");
+        const $editorHighlightButton = iframeDocument.find("#editorHighlightButton");
         $printButton.hide();
         $downloadButton.hide();
+        $editorStampButton.hide();
+        $editorInkButton.hide();
+        $editorFreeTextButton.hide();
+        $editorHighlightButton.hide();
         iframeDocument.find("#secondaryToolbarToggle").hide();
       } catch (e) {
         console.error("Error al intentar modificar el iframe de PDF.js:", e);
