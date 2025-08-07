@@ -644,3 +644,76 @@ class TestEventNotifications(CalendarMailCommon):
         with self.mock_mail_gateway():
             wizard.action_send_mail_and_delete()
         self.assertEqual(len(self._new_mails), 1)
+
+    def test_get_next_potential_limit_alarm(self):
+        """
+            Test that the next potential limit alarm is correctly computed for notification alarms.
+        """
+        now = fields.Datetime.now()
+        start = now - relativedelta(days=1)
+        while start.weekday() > 4:
+            start -= relativedelta(days=1)
+        stop = start + relativedelta(hours=1)
+        next_month = now + relativedelta(days=30)
+        weekday_flags = ['mon', 'tue', 'wed', 'thu', 'fri']
+        weekday_flag = weekday_flags[start.weekday()]
+        weekday_dict = {flag: False for flag in weekday_flags}
+        weekday_dict[weekday_flag] = True
+
+        partner = self.user.partner_id
+        # until_date event first alarm
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 15,
+        })
+
+        event_vals = {
+            'start': start,
+            'stop': stop,
+            'name': 'Weekly Sales Meeting',
+            'alarm_ids': [[6, 0, [alarm.id]]],
+            'partner_ids': [(4, self.partner.id)],
+        }
+        self.event.write(event_vals)
+        self.event._apply_recurrence_values({
+            'interval': 1,
+            'rrule_type': 'weekly',
+            'end_type': 'end_date',
+            'until': next_month.date().isoformat(),
+            **weekday_dict,
+        })
+        events = self.env['calendar.event'].search([('name', '=', 'Weekly Sales Meeting')])
+        self.env.flush_all()
+        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
+        for alarm_data in result.values():
+            first_alarm = alarm_data.get('first_alarm')
+            self.assertLess(now, first_alarm)
+        events.unlink()
+
+        # count event last alarm
+        recurrence_count = 5
+        start = now - relativedelta(days=1)
+        stop = start + relativedelta(hours=1)
+        event_vals = {
+            'start': start,
+            'stop': stop,
+            'name': 'Daily Sales Meeting',
+            'alarm_ids': [[6, 0, [alarm.id]]],
+            'partner_ids': [(4, self.partner.id)],
+        }
+        self.event = self.env['calendar.event'].create(event_vals)
+        self.event._apply_recurrence_values({
+            'interval': 1,
+            'rrule_type': 'daily',
+            'end_type': 'count',
+            'count': recurrence_count
+        })
+        self.env.flush_all()
+        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
+        expected_alarms = sorted([stop + relativedelta(days=offset) - relativedelta(minutes=15) for offset in range(1, recurrence_count)])
+        actual_alarms = sorted([data.get('last_alarm') for data in result.values()])
+
+        for expected, actual in zip(expected_alarms, actual_alarms):
+            self.assertEqual(actual, expected)
