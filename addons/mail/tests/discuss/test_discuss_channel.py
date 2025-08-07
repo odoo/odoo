@@ -524,3 +524,15 @@ class TestChannelInternals(MailCommon):
             ],
         ):
             test_group.execute_command_help()
+
+    def test_create_channel_with_partners_and_guests(self):
+        channel = self.env['discuss.channel'].create({
+            'name': 'test channel',
+            'channel_member_ids': [
+                (0, 0, {'guest_id': self.guest.id}),
+                (0, 0, {'partner_id': self.partner_employee.id})
+            ]
+        })
+        actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
+        expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
+        self.assertCountEqual(actual_member_ids, expected_member_ids)
