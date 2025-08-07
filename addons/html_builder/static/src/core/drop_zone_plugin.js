@@ -234,6 +234,7 @@ export class DropZonePlugin extends Plugin {
             !el.parentNode.closest("[data-oe-type=image]") &&
             !el.matches(".o_not_editable *") &&
             !el.matches(".o_we_no_overlay") &&
+            !this.delegateTo("filter_for_sibling_dropzone_predicates", el) &&
             (excludeParent ? !el.parentNode.matches(excludeParent) : true);
 
         const dropAreaEls = [];
