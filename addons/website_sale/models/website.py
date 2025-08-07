@@ -109,7 +109,7 @@ class Website(models.Model):
         store=True,
     )
     shop_ppg = fields.Integer(
-        string="Number of products in the grid on the shop", default=20,
+        string="Number of products in the grid on the shop", default=21,
     )
     shop_ppr = fields.Integer(string="Number of grid columns on the shop", default=3)
 
