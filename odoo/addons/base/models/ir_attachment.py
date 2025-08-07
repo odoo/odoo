@@ -775,7 +775,7 @@ class IrAttachment(models.Model):
         """ Create a :class:`~Stream`: from an ir.attachment record. """
         self.ensure_one()
 
-        stream = Stream(
+        kw = dict(
             mimetype=self.mimetype,
             download_name=self.name,
             etag=self.checksum,
@@ -783,20 +783,26 @@ class IrAttachment(models.Model):
         )
 
         if self.store_fname:
-            stream.type = 'path'
-            stream.path = werkzeug.security.safe_join(
+            path = werkzeug.security.safe_join(
                 os.path.abspath(config.filestore(request.db)),
                 self.store_fname
             )
-            stat = os.stat(stream.path)
-            stream.last_modified = stat.st_mtime
-            stream.size = stat.st_size
+            stat = os.stat(path)
+            kw.update(
+                type='path',
+                path=path,
+                last_modified=stat.st_mtime,
+                size=stat.st_size,
+            )
 
         elif self.db_datas:
-            stream.type = 'data'
-            stream.data = self.raw
-            stream.last_modified = self.write_date
-            stream.size = len(stream.data)
+            data = self.raw
+            kw.update(
+                type='data',
+                data=data,
+                last_modified=self.write_date,
+                size=len(data),
+            )
 
         elif self.url:
             # When the URL targets a file located in an addon, assume it
@@ -807,17 +813,18 @@ class IrAttachment(models.Model):
                 host=request.httprequest.environ.get('HTTP_HOST', '')
             )
             if static_path:
-                stream = Stream.from_path(static_path, public=True)
+                return Stream.from_path(static_path, public=True)
             else:
-                stream.type = 'url'
-                stream.url = self.url
+                kw.update(type='url', url=self.url)
 
         else:
-            stream.type = 'data'
-            stream.data = b''
-            stream.size = 0
+            kw.update(
+                type='data',
+                data=b'',
+                size=0,
+            )
 
-        return stream
+        return Stream(**kw)
 
     def _can_return_content(self, field_name=None, access_token=None):
         attachment_sudo = self.sudo().with_context(prefetch_fields=False)

@@ -208,7 +208,7 @@ class WebsiteVisitor(models.Model):
             'lang_id': request.lang.id,
             # Note that it's possible for the GEOIP database to return a country
             # code which is unknown in Odoo
-            'country_code': request.geoip.get('country_code'),
+            'country_code': request.geoip.country_code,
             'website_id': request.website.id,
             'timezone': self._get_visitor_timezone() or None,
             'write_uid': self.env.uid,
