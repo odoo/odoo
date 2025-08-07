@@ -29,7 +29,7 @@
                 <i class="oi oi-settings-adjust me-1" role="img"/>Edit
             </button>
             <button data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab">
-                <i class="fa fa-cog me-1" role="img"/>Theme
+                <i class="fa fa-cog me-1" role="img"/><t t-out="props.themeTabDisplayName"/>
             </button>
         </div>
         <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
