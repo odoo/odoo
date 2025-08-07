@@ -9,7 +9,9 @@ import * as Pricelist from "@point_of_sale/../tests/pos/tours/utils/pricelist_ut
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as ProductConfigurator from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
-import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import { refresh, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("pos_pricelist", {
     steps: () =>
@@ -58,90 +60,100 @@ registry.category("web_tour.tours").add("pos_pricelist", {
 // # - Third banana variant will be priced at 20 via product template
 // # - First apple variant will be priced at 100 via product variant
 // # - All product without rules and with product_category will be priced at 500
+const test_pricelists_in_pos_steps = [
+    ProductScreen.clickPriceList("Test Pricelist"),
+    scan_barcode("banana_0"),
+    ProductScreen.selectedOrderlineHas("Banana", "1", "100.0", "BIG"),
+    scan_barcode("banana_1"),
+    ProductScreen.selectedOrderlineHas("Banana", "1", "150.0", "MEDIUM"),
+    scan_barcode("banana_2"),
+    ProductScreen.selectedOrderlineHas("Banana", "1", "20.0", "SMALL"),
+    scan_barcode("apple_0"),
+    ProductScreen.selectedOrderlineHas("Apple", "1", "100.0", "BIG"),
+    scan_barcode("apple_1"),
+    ProductScreen.selectedOrderlineHas("Apple", "1", "500.0", "MEDIUM"),
+    scan_barcode("apple_2"),
+    ProductScreen.selectedOrderlineHas("Apple", "1", "500.0", "SMALL"),
+
+    ProductScreen.clickPriceList("Percentage Pricelist"),
+    scan_barcode("banana_0"),
+    ProductScreen.selectedOrderlineHas("Banana", "2", "100.0", "BIG"),
+    scan_barcode("banana_1"),
+    ProductScreen.selectedOrderlineHas("Banana", "2", "150.0", "MEDIUM"),
+    scan_barcode("banana_2"),
+    ProductScreen.selectedOrderlineHas("Banana", "2", "20.0", "SMALL"),
+    scan_barcode("apple_0"),
+    ProductScreen.selectedOrderlineHas("Apple", "2", "100.0", "BIG"),
+    scan_barcode("apple_1"),
+    ProductScreen.selectedOrderlineHas("Apple", "2", "500.0", "MEDIUM"),
+    scan_barcode("apple_2"),
+    ProductScreen.selectedOrderlineHas("Apple", "2", "500.0", "SMALL"),
+
+    // Try scan a product with nested pricelist on variant
+    scan_barcode("pear_0"),
+    ProductScreen.selectedOrderlineHas("Pear", "1", "10.0", "BIG"),
+    scan_barcode("pear_1"),
+    ProductScreen.selectedOrderlineHas("Pear", "1", "20.0", "MEDIUM"),
+    scan_barcode("pear_2"),
+    ProductScreen.selectedOrderlineHas("Pear", "1", "30.0", "SMALL"),
+
+    // Try scan a product with nested pricelist on template
+    scan_barcode("lime_0"),
+    ProductScreen.selectedOrderlineHas("Lime", "1", "50.0", "BIG"),
+    scan_barcode("lime_1"),
+    ProductScreen.selectedOrderlineHas("Lime", "1", "100.0", "MEDIUM"),
+    scan_barcode("lime_2"),
+    ProductScreen.selectedOrderlineHas("Lime", "1", "200.0", "SMALL"),
+
+    // Try scan a product with nested pricelist on category
+    scan_barcode("orange_0"),
+    ProductScreen.selectedOrderlineHas("Orange", "1", "500.0", "BIG"),
+    scan_barcode("orange_1"),
+    ProductScreen.selectedOrderlineHas("Orange", "1", "300.0", "MEDIUM"),
+    scan_barcode("orange_2"),
+    ProductScreen.selectedOrderlineHas("Orange", "1", "250.0", "SMALL"),
+
+    // Try scan a product with no pricelist rules
+    scan_barcode("kiwi_0"),
+    ProductScreen.selectedOrderlineHas("Kiwi", "1", "10.0", "BIG"),
+    scan_barcode("kiwi_1"),
+    ProductScreen.selectedOrderlineHas("Kiwi", "1", "5.0", "MEDIUM"),
+    scan_barcode("kiwi_2"),
+    ProductScreen.selectedOrderlineHas("Kiwi", "1", "5.0", "SMALL"),
+
+    // Test if post-loaded product with attribute open the configrator
+    scan_barcode("cherry_3"),
+    Chrome.waitRequest(),
+    {
+        content: "Click hided product with attribute",
+        trigger: "body",
+        run: () => {
+            const productTemplate = posmodel.models["product.template"].find(
+                (p) => p.name === "Cherry"
+            );
+
+            posmodel.addLineToCurrentOrder({
+                product_tmpl_id: productTemplate,
+            });
+        },
+    },
+    ProductConfigurator.pickRadio("BIG"),
+    ProductConfigurator.isUnavailable("RED"),
+    Dialog.confirm(),
+    ProductScreen.clickPayButton(),
+    PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+    PaymentScreen.clickValidate(),
+    ReceiptScreen.isShown(),
+    ReceiptScreen.clickNextOrder(),
+];
+
 registry.category("web_tour.tours").add("test_pricelists_in_pos", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-
-            ProductScreen.clickPriceList("Test Pricelist"),
-            scan_barcode("banana_0"),
-            ProductScreen.selectedOrderlineHas("Banana", "1", "100.0", "BIG"),
-            scan_barcode("banana_1"),
-            ProductScreen.selectedOrderlineHas("Banana", "1", "150.0", "MEDIUM"),
-            scan_barcode("banana_2"),
-            ProductScreen.selectedOrderlineHas("Banana", "1", "20.0", "SMALL"),
-            scan_barcode("apple_0"),
-            ProductScreen.selectedOrderlineHas("Apple", "1", "100.0", "BIG"),
-            scan_barcode("apple_1"),
-            ProductScreen.selectedOrderlineHas("Apple", "1", "500.0", "MEDIUM"),
-            scan_barcode("apple_2"),
-            ProductScreen.selectedOrderlineHas("Apple", "1", "500.0", "SMALL"),
-
-            ProductScreen.clickPriceList("Percentage Pricelist"),
-            scan_barcode("banana_0"),
-            ProductScreen.selectedOrderlineHas("Banana", "2", "100.0", "BIG"),
-            scan_barcode("banana_1"),
-            ProductScreen.selectedOrderlineHas("Banana", "2", "150.0", "MEDIUM"),
-            scan_barcode("banana_2"),
-            ProductScreen.selectedOrderlineHas("Banana", "2", "20.0", "SMALL"),
-            scan_barcode("apple_0"),
-            ProductScreen.selectedOrderlineHas("Apple", "2", "100.0", "BIG"),
-            scan_barcode("apple_1"),
-            ProductScreen.selectedOrderlineHas("Apple", "2", "500.0", "MEDIUM"),
-            scan_barcode("apple_2"),
-            ProductScreen.selectedOrderlineHas("Apple", "2", "500.0", "SMALL"),
-
-            // Try scan a product with nested pricelist on variant
-            scan_barcode("pear_0"),
-            ProductScreen.selectedOrderlineHas("Pear", "1", "10.0", "BIG"),
-            scan_barcode("pear_1"),
-            ProductScreen.selectedOrderlineHas("Pear", "1", "20.0", "MEDIUM"),
-            scan_barcode("pear_2"),
-            ProductScreen.selectedOrderlineHas("Pear", "1", "30.0", "SMALL"),
-
-            // Try scan a product with nested pricelist on template
-            scan_barcode("lime_0"),
-            ProductScreen.selectedOrderlineHas("Lime", "1", "50.0", "BIG"),
-            scan_barcode("lime_1"),
-            ProductScreen.selectedOrderlineHas("Lime", "1", "100.0", "MEDIUM"),
-            scan_barcode("lime_2"),
-            ProductScreen.selectedOrderlineHas("Lime", "1", "200.0", "SMALL"),
-
-            // Try scan a product with nested pricelist on category
-            scan_barcode("orange_0"),
-            ProductScreen.selectedOrderlineHas("Orange", "1", "500.0", "BIG"),
-            scan_barcode("orange_1"),
-            ProductScreen.selectedOrderlineHas("Orange", "1", "300.0", "MEDIUM"),
-            scan_barcode("orange_2"),
-            ProductScreen.selectedOrderlineHas("Orange", "1", "250.0", "SMALL"),
-
-            // Try scan a product with no pricelist rules
-            scan_barcode("kiwi_0"),
-            ProductScreen.selectedOrderlineHas("Kiwi", "1", "10.0", "BIG"),
-            scan_barcode("kiwi_1"),
-            ProductScreen.selectedOrderlineHas("Kiwi", "1", "5.0", "MEDIUM"),
-            scan_barcode("kiwi_2"),
-            ProductScreen.selectedOrderlineHas("Kiwi", "1", "5.0", "SMALL"),
-
-            // Test if post-loaded product with attribute open the configrator
-            scan_barcode("cherry_3"),
-            Chrome.waitRequest(),
-            {
-                content: "Click hided product with attribute",
-                trigger: "body",
-                run: () => {
-                    const productTemplate = posmodel.models["product.template"].find(
-                        (p) => p.name === "Cherry"
-                    );
-
-                    posmodel.addLineToCurrentOrder({
-                        product_tmpl_id: productTemplate,
-                    });
-                },
-            },
-            ProductConfigurator.pickRadio("BIG"),
-            ProductConfigurator.isUnavailable("RED"),
-            Dialog.confirm(),
+            ...test_pricelists_in_pos_steps,
+            refresh(), // Check pricelist sorting after a refresh
+            ...test_pricelists_in_pos_steps,
         ].flat(),
 });
