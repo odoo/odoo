@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
@@ -399,4 +401,23 @@ export function shippingLaterHighlighted() {
         content: "Shipping later button is highlighted",
         trigger: ".button:contains('Ship Later').highlight",
     };
+}
+
+// This method is used to simulate payment with a payment terminal, before using terminal the order
+// is synced to ensure that the order is up-to-date and ready for payment.
+export function syncCurrentOrder() {
+    return [
+        {
+            content: "sync current order",
+            trigger: "body",
+            run: async () => {
+                const currentOrder = posmodel.getOrder();
+                const order = await posmodel.syncAllOrders({ orders: [currentOrder] });
+
+                if (typeof order[0].id !== "number") {
+                    throw new Error("Order ID is not a number after sync.");
+                }
+            },
+        },
+    ];
 }
