@@ -57,7 +57,19 @@ test("remove parallax from block containing an inner block with parallax", async
     await contains("[data-action-value='none']").click();
     expect(":iframe section#section_a > .s_parallax_bg").not.toHaveCount();
     expect(":iframe section#section_b > .s_parallax_bg").toHaveCount();
-
+});
+test("parallax scroll effect 'none' doesn't remove the color filter", async () => {
+    const backgroundImageUrl = "url('/web/image/123/transparent.png')";
+    await setupWebsiteBuilder(`
+        <section>
+            <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
+            <div class="o_we_bg_filter" style="background-color: rgba(80, 80, 80, 50);" contenteditable="false"></div>
+        </section>`);
+    await contains(":iframe section").click();
+    expect(":iframe section .o_we_bg_filter").toHaveCount(1);
+    await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
+    await contains("[data-action-value='none']").click();
+    expect(":iframe section .o_we_bg_filter").toHaveCount(1);
 });
 
 async function setupWebsiteAndOpenParallaxOptions({ editingElClasses = "" } = {}) {

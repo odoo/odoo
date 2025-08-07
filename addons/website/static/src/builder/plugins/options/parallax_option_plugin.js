@@ -4,6 +4,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { WebsiteBackgroundOption } from "./background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { withSequence } from "@html_editor/utils/resource";
 class WebsiteParallaxPlugin extends Plugin {
     static id = "websiteParallaxPlugin";
     static dependencies = ["builderActions", "backgroundImageOption"];
@@ -14,6 +15,7 @@ class WebsiteParallaxPlugin extends Plugin {
         },
         on_bg_image_hide_handlers: this.onBgImageHide.bind(this),
         force_not_editable_selector: ".s_parallax_bg, section.s_parallax > .oe_structure",
+        get_target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {
         this.backgroundOptionSelectorParams = getSelectorParams(
@@ -85,6 +87,9 @@ class WebsiteParallaxPlugin extends Plugin {
                 value: "none",
             });
         }
+    }
+    getTargetElement(editingEl) {
+        return editingEl.classList.contains("s_parallax_bg") ? editingEl.parentElement : editingEl;
     }
 }
 export class SetParallaxTypeAction extends BuilderAction {
