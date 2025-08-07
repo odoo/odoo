@@ -6,6 +6,7 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
+import { queryFirst } from "@odoo/hoot-dom";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -596,10 +597,12 @@ export function selectedOrderlineHasDirect(productName, quantity, price) {
         price,
     });
 }
-export function orderComboLineHas(productName, quantity) {
+export function orderComboLineHas(productName, quantity, priceUnit, attributeLine = "") {
     return Order.hasLine({
         productName,
         quantity,
+        priceUnit,
+        attributeLine,
     });
 }
 export function orderLineHas(productName, quantity, price) {
@@ -981,4 +984,33 @@ export function loadSampleButtonIsThere() {
         content: "Click Load Sample",
         trigger: ".product-screen .o_nocontent_help button:contains('Load Sample')",
     };
+}
+
+export function longPressOrderline(productName, delay = 500) {
+    return [
+        {
+            content: `long press on orderline with product '${productName}'`,
+            trigger: `.order-container .orderline:has(.product-name:contains("${productName}"))`,
+            run: async () => {
+                const el = queryFirst`.order-container .orderline:has(.product-name:contains("${productName}"))`;
+                if (!el) {
+                    throw new Error(`Orderline with product '${productName}' not found`);
+                }
+                el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                el.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+            },
+        },
+    ];
+}
+
+export function openCartMobile() {
+    return [
+        {
+            content: "Mobile - open cart",
+            trigger: ".switchpane .btn-switchpane:contains('Cart')",
+            run: "click",
+            isActive: ["mobile"],
+        },
+    ];
 }

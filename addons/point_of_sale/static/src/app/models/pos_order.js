@@ -978,6 +978,7 @@ export class PosOrder extends Base {
         }
         return pos_categ_id_A - pos_categ_id_B;
     }
+
     getName() {
         return this.floatingOrderName || "";
     }
