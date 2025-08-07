@@ -601,6 +601,7 @@ export class SelfOrder extends Reactive {
         }
 
         try {
+            const tableIdentifier = this.router.getTableIdentifier([]);
             let uuid = this.selectedOrderUuid;
             this.currentOrder.recomputeOrderData();
             const data = await rpc(
@@ -608,7 +609,7 @@ export class SelfOrder extends Reactive {
                 {
                     order: this.currentOrder.serializeForORM(),
                     access_token: this.access_token,
-                    table_identifier: this.currentOrder?.table_id?.identifier || false,
+                    table_identifier: this.currentOrder?.table_id?.identifier || tableIdentifier,
                 }
             );
             const result = this.models.connectNewData(data);

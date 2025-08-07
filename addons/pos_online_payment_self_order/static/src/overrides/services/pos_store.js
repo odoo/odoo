@@ -36,7 +36,7 @@ patch(PosStore.prototype, {
                 orderId,
             ]);
             const order = result["pos.order"][0];
-            this.printReceipt({ order });
+            await this.printReceipt({ order });
             await this.sendOrderInPreparation(order, { bypassPdis: true });
         } catch {
             console.info("Another instance is already printing the receipt");

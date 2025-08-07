@@ -54,12 +54,19 @@ class PosOrder(models.Model):
         self._send_notification(order_ids)
         return result
 
+    def action_pos_order_cancel(self):
+        orders = super().action_pos_order_cancel()
+        success_orders_ids = [o['id'] for o in orders['pos.order'] if o['state'] == 'cancel']
+        orders_ids = self.browse(success_orders_ids)
+        self._send_notification(orders_ids)
+        return orders
+
     def _send_notification(self, order_ids):
         config_ids = order_ids.config_id
         for config in config_ids:
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('login_number', 0))
             config._notify('ORDER_STATE_CHANGED', {})
-    
+
     def action_send_self_order_receipt(self, email, mail_template_id, ticket_image, basic_image):
         self.ensure_one()
         self.email = email

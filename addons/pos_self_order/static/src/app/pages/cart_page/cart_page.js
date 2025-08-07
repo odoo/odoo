@@ -117,8 +117,8 @@ export class CartPage extends Component {
         ) {
             this.state.selectTable = true;
             return;
-        } else {
-            this.selfOrder.currentOrder.table_id = this.selfOrder.currentTable;
+        } else if (this.selfOrder.currentTable) {
+            this.selectTableDependingOnMode(this.selfOrder.currentTable);
         }
 
         this.selfOrder.rpcLoading = true;
@@ -162,9 +162,20 @@ export class CartPage extends Component {
         ]);
     }
 
+    selectTableDependingOnMode(table) {
+        if (this.selfOrder.config.self_ordering_pay_after === "each") {
+            this.selfOrder.currentOrder.floating_order_name = _t(
+                "Self-Order T %s",
+                table.table_number
+            );
+        } else {
+            this.selfOrder.currentOrder.table_id = table;
+        }
+    }
+
     selectTable(table) {
         if (table) {
-            this.selfOrder.currentOrder.table_id = table;
+            this.selectTableDependingOnMode(table);
             this.selfOrder.currentTable = table;
             this.router.addTableIdentifier(table);
             this.pay();
