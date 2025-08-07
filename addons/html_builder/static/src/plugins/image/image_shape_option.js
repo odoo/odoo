@@ -2,10 +2,16 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
+import { deepCopy } from "@web/core/utils/objects";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
-    static props = {};
+    static props = {
+        withAnimatedShapes: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        withAnimatedShapes: true,
+    };
     setup() {
         super.setup();
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
@@ -30,6 +36,28 @@ export class ImageShapeOption extends BaseOptionComponent {
             };
         });
     }
+    getFilteredGroups() {
+        if (this.props.withAnimatedShapes) {
+            return this.imageShapeOption.getImageShapeGroups();
+        }
+        const allDefinitions = deepCopy(this.imageShapeOption.getImageShapeGroups());
+        for (const [dName, definition] of Object.entries(allDefinitions)) {
+            for (const [gName, subgroup] of Object.entries(definition.subgroups)) {
+                for (const [sName, shape] of Object.entries(subgroup.shapes)) {
+                    if (shape.animated) {
+                        delete subgroup.shapes[sName];
+                    }
+                }
+                if (Object.keys(subgroup.shapes).length === 0) {
+                    delete definition.subgroups[gName];
+                }
+            }
+            if (Object.keys(definition.subgroups).length === 0) {
+                delete allDefinitions[dName];
+            }
+        }
+        return allDefinitions;
+    }
     isShapeVisible(img, shapeIndex) {
         const shapeName = img.dataset.shape;
         const shapeColors = img.dataset.shapeColors;
@@ -47,7 +75,7 @@ export class ImageShapeOption extends BaseOptionComponent {
                 shapeActionId: "setImageShape",
                 buttonWrapperClassName: "o-hb-img-shape-btn",
                 selectorTitle: _t("Shapes"),
-                shapeGroups: this.imageShapeOption.getImageShapeGroups(),
+                shapeGroups: this.getFilteredGroups(),
             }
         );
     }
