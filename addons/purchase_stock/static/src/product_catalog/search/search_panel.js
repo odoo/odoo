@@ -8,7 +8,7 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
     static template = "purchase_stock.SearchPanel";
     static components = { TimePeriodSelectionField };
     static basedOnOptions = [
-        ["actual_demand", "Actual Demand"],
+        ["actual_demand", "Forecasted"],
         ["one_week", "Last 7 days"],
         ["last_30_days", "Last 30 days"],
         ["three_months", "Last 3 months"],
@@ -32,10 +32,15 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
         );
     }
     onDaysInput(ev) {
-        this.suggest.numberOfDays = parseInt(ev.target.value, 10) || 0;
+        const value = parseInt(ev.target.value, 10) || 0;
+        const bounded_val = value > 0 ? (value < 999 ? value : 999) : 0; // 999 because input is 3 digits wide
+        this.suggest.numberOfDays = bounded_val;
+        ev.target.value = bounded_val;
     }
     onPercentFactorInput(ev) {
-        this.suggest.percentFactor = parseInt(ev.target.value, 10) || 0;
+        const value = parseInt(ev.target.value, 10) || 0;
+        this.suggest.percentFactor = value > 0 ? value : 0; // Negative percent doesn't make sense
+        ev.target.value = value > 0 ? value : 0;
     }
     async onSuggestToggle() {
         this.suggest.suggestToggle.isOn = !this.suggest.suggestToggle.isOn;

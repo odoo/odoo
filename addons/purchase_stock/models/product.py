@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import formatLang
-from math import ceil
+from odoo.tools.float_utils import float_round
 
 
 class ProductTemplate(models.Model):
@@ -29,7 +29,7 @@ class ProductProduct(models.Model):
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
     suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
 
-    @api.depends("qty_available", "outgoing_qty", "incoming_qty", "monthly_demand")
+    @api.depends("qty_available", "virtual_available", "incoming_qty", "monthly_demand")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggested_quantity(self):
         """ IMPROVE: computes too many time for one suggestion """
@@ -39,12 +39,12 @@ class ProductProduct(models.Model):
                 product.suggested_qty = 0
                 continue
             elif ctx.get("suggest_based_on") == "actual_demand":
-                qty = ceil(product.outgoing_qty * ctx.get("suggest_percent", 0) / 100)
+                qty = - product.virtual_available * ctx.get("suggest_percent", 0) / 100
             else:
                 monthly_ratio = ctx.get("suggest_days", 0) / (365.25 / 12)  # eg. 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
-                qty = ceil(product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100)
-            qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
-            product.suggested_qty = max(qty, 0)
+                qty = product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100
+                qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
+            product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
 
     @api.depends_context('suggest_days', 'suggest_based_on', 'warehouse_id')
     def _compute_quantities(self):
