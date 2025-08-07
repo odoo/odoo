@@ -11,6 +11,14 @@ def _l10n_es_edi_verifactu_post_init_hook(env):
             tax_data = Template._get_es_verifactu_account_tax_es_canary_common()
         else:
             tax_data = Template._get_es_verifactu_account_tax_es_common_mainland()
+        # Filter out data for non-exsting taxes; else this function will raise.
+        # In case of data for a non-existing tax we would try to create that tax.
+        # This would fail because we don't supply enough information in this module (just `l10n_es_applicability`).
+        tax_data = {
+            xmlid: value
+            for xmlid, value in tax_data.items()
+            if Template.ref(xmlid, raise_if_not_found=False)
+        }
         Template._load_data({
             'account.tax': tax_data,
         })
