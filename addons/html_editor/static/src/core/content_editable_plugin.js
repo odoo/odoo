@@ -17,6 +17,7 @@ export class ContentEditablePlugin extends Plugin {
         normalize_handlers: withSequence(5, this.normalize.bind(this)),
         clean_for_save_handlers: withSequence(Infinity, this.cleanForSave.bind(this)),
         filter_contenteditable_handlers: this.filterContentEditable.bind(this),
+        system_classes: ["o_editable_media"],
     };
 
     normalize(root) {
