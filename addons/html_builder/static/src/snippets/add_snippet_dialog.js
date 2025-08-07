@@ -36,7 +36,9 @@ export class AddSnippetDialog extends Component {
             },
             snippetModel: this.props.snippetModel,
             installSnippetModule: this.props.installSnippetModule,
-            frontendDirection: this.props.editor.editable.classList.contains("o_rtl") ? "rtl" : "ltr",
+            frontendDirection: this.props.editor.editable.classList.contains("o_rtl")
+                ? "rtl"
+                : "ltr",
         };
 
         let root;
@@ -81,14 +83,17 @@ export class AddSnippetDialog extends Component {
      */
     async insertStyle() {
         const loadCSSBundleFromEditor = (bundleName, loadOptions) => {
-            const cssLinkEl = this.props.editor.document.head
-                .querySelector(`link[type="text/css"][href*="/${bundleName}."]`);
+            const cssLinkEl = this.props.editor.document.head.querySelector(
+                `link[type="text/css"][href*="/${bundleName}."]`
+            );
             if (cssLinkEl) {
                 return loadCSS(cssLinkEl.getAttribute("href"), loadOptions);
             }
             return loadBundle(bundleName, loadOptions);
         };
-
+        this.props.editor.dispatchTo("snippet_preview_dialog_stylesheets_handlers", {
+            iframe: this.iframeRef.el,
+        });
         const loadOptions = { targetDoc: this.iframeRef.el.contentDocument, js: false };
         await Promise.all([
             loadCSSBundleFromEditor("web.assets_frontend", loadOptions),
