@@ -9,8 +9,11 @@ import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { useSetupAction } from "@web/search/action_hook";
 import { HighlightPlugin } from "./plugins/highlight/highlight_plugin";
 import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
@@ -66,6 +69,69 @@ export class WebsiteBuilder extends Component {
 
     setup() {
         this.websiteService = useService("website");
+        this.dialog = useService("dialog");
+        useSetupAction({
+            beforeUnload: (ev) => this.onBeforeUnload(ev),
+            beforeLeave: () => this.onBeforeLeave(),
+        });
+    }
+
+    discard() {
+        if (this.editor.shared.history.canUndo()) {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t(
+                    "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
+                ),
+                confirm: () => this.props.builderProps.closeEditor(),
+                cancel: () => {},
+            });
+        } else {
+            this.props.builderProps.closeEditor();
+        }
+    }
+
+    onBeforeUnload(event) {
+        if (!this.editor) {
+            return;
+        }
+        if (!this.isSaving && this.editor.shared.history.canUndo()) {
+            event.preventDefault();
+            event.returnValue = "Unsaved changes";
+        }
+    }
+
+    async onBeforeLeave() {
+        if (!this.editor) {
+            return true;
+        }
+        if (this.editor.shared.history.canUndo()) {
+            let continueProcess = true;
+            await new Promise((resolve) => {
+                this.dialog.add(ConfirmationDialog, {
+                    body: _t("If you proceed, your changes will be lost"),
+                    confirmLabel: _t("Continue"),
+                    confirm: () => resolve(),
+                    cancel: () => {
+                        continueProcess = false;
+                        resolve();
+                    },
+                });
+            });
+            return continueProcess;
+        }
+        return true;
+    }
+
+    async save() {
+        this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
+    }
+
+    async _save() {
+        this.isSaving = true;
+        // TODO: handle the urgent save and the fail of the save operation
+        await this.editor.shared.savePlugin.save({ alwaysSkipAfterSaveHandlers: false });
+        this.props.builderProps.closeEditor();
+        this.isSaving = false;
     }
 
     get builderProps() {
@@ -115,6 +181,9 @@ export class WebsiteBuilder extends Component {
             };
         };
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
+        const installSnippetModule = builderProps.installSnippetModule;
+        builderProps.installSnippetModule = (snippet) =>
+            installSnippetModule(snippet, this.save.bind(this));
         return builderProps;
     }
 }

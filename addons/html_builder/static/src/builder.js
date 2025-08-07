@@ -12,12 +12,10 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
-import { useSetupAction } from "@web/search/action_hook";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
@@ -30,7 +28,7 @@ export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
     static props = {
-        closeEditor: { type: Function },
+        closeEditor: { type: Function, optional: true },
         reloadEditor: { type: Function, optional: true },
         onEditorLoad: { type: Function, optional: true },
         installSnippetModule: { type: Function, optional: true },
@@ -44,9 +42,9 @@ export class Builder extends Component {
         getThemeTab: { type: Function, optional: true },
         editableSelector: { type: String },
         themeTabDisplayName: { type: String, optional: true },
+        slots: { type: Object, optional: true },
     };
     static defaultProps = {
-        onEditorLoad: () => {},
         config: {},
         themeTabDisplayName: _t("Theme"),
     };
@@ -69,7 +67,6 @@ export class Builder extends Component {
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
         this.orm = useService("orm");
-        this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.notification = useService("notification");
 
@@ -95,16 +92,15 @@ export class Builder extends Component {
                     }
                 },
                 reloadEditor: async (param = {}) => {
-                    await this.props.reloadEditor({
+                    await this.props.reloadEditor?.({
                         initialTab: this.state.activeTab,
                         ...param,
                     });
                 },
                 closeEditor: async () => {
-                    await this.props.closeEditor();
+                    await this.props.closeEditor?.();
                 },
-                installSnippetModule: async (snippet) =>
-                    this.props.installSnippetModule?.(snippet, this.save.bind(this)),
+                installSnippetModule: (snippet) => this.props.installSnippetModule?.(snippet),
                 resources: {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
@@ -114,10 +110,14 @@ export class Builder extends Component {
                     }),
                     before_save_handlers: () => {
                         const snippetMenuEl = this.builder_sidebarRef.el;
-                        // Add a loading effect on the save button and disable the other actions
-                        this.removeLoadingEffect = addButtonLoadingEffect(
-                            snippetMenuEl.querySelector("[data-action='save']")
-                        );
+                        const saveButton = snippetMenuEl.querySelector("[data-action='save']");
+                        delete this.removeLoadingEffect;
+                        if (saveButton) {
+                            // Add a loading effect on the save button and disable the other actions
+                            this.removeLoadingEffect = addButtonLoadingEffect(
+                                snippetMenuEl.querySelector("[data-action='save']")
+                            );
+                        }
                         this.actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
                         for (const actionButtonEl of this.actionButtonEls) {
                             actionButtonEl.disabled = true;
@@ -127,7 +127,7 @@ export class Builder extends Component {
                         for (const actionButtonEl of this.actionButtonEls) {
                             actionButtonEl.removeAttribute("disabled");
                         }
-                        this.removeLoadingEffect();
+                        this.removeLoadingEffect?.();
                     },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
@@ -170,7 +170,7 @@ export class Builder extends Component {
             },
             this.env.services
         );
-        this.props.onEditorLoad(this.editor);
+        this.props.onEditorLoad?.(this.editor);
 
         onWillStart(async () => {
             await this.snippetModel.load();
@@ -210,11 +210,6 @@ export class Builder extends Component {
             // actionService.setActionMode("current");
         });
 
-        useSetupAction({
-            beforeUnload: (ev) => this.onBeforeUnload(ev),
-            beforeLeave: () => this.onBeforeLeave(),
-        });
-
         onMounted(() => {
             this.editor.document.body.classList.add("editor_enable");
             setBuilderCSSVariables(getHtmlStyle(this.editor.document));
@@ -251,35 +246,10 @@ export class Builder extends Component {
         return !!this.props.config.customizeTab;
     }
 
-    discard() {
-        if (this.editor.shared.history.canUndo()) {
-            this.dialog.add(ConfirmationDialog, {
-                body: _t(
-                    "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
-                ),
-                confirm: () => this.props.closeEditor(),
-                cancel: () => {},
-            });
-        } else {
-            this.props.closeEditor();
-        }
-    }
-
     getInvisibleSelector(isMobile = this.props.isMobile) {
         return `.o_snippet_invisible, ${
             isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
         }`;
-    }
-
-    async save() {
-        this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
-    }
-
-    async _save() {
-        this.isSaving = true;
-        // TODO: handle the urgent save and the fail of the save operation
-        await this.editor.shared.savePlugin.save({ alwaysSkipAfterSaveHandlers: false });
-        this.props.closeEditor();
     }
 
     /**
@@ -307,32 +277,6 @@ export class Builder extends Component {
 
     redo() {
         this.editor.shared.history.redo();
-    }
-
-    onBeforeUnload(event) {
-        if (!this.isSaving && this.editor.shared.history.canUndo()) {
-            event.preventDefault();
-            event.returnValue = "Unsaved changes";
-        }
-    }
-
-    async onBeforeLeave() {
-        if (this.editor.shared.history.canUndo()) {
-            let continueProcess = true;
-            await new Promise((resolve) => {
-                this.dialog.add(ConfirmationDialog, {
-                    body: _t("If you proceed, your changes will be lost"),
-                    confirmLabel: _t("Continue"),
-                    confirm: () => resolve(),
-                    cancel: () => {
-                        continueProcess = false;
-                        resolve();
-                    },
-                });
-            });
-            return continueProcess;
-        }
-        return true;
     }
 
     onMobilePreviewClick() {

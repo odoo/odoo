@@ -439,9 +439,9 @@ test("Cancel snippet drag & drop over sidebar", async () => {
 
     // Specifying an explicit target should not be needed, but the test
     // sometimes fails, probably because the snippet is partially touching the
-    // iframe. We drop on the "Save" button to be as far as possible from the
+    // iframe. We drop on the "mobile" button to be as far as possible from the
     // iframe.
-    await moveTo(".o-website-builder_sidebar button[data-action=save]");
+    await moveTo(".o-website-builder_sidebar button[data-action=mobile]");
     await drop(getDragHelper());
     expect(".o_add_snippet_dialog").toHaveCount(0);
     await waitForEndOfOperation();
