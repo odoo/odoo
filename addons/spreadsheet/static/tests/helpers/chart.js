@@ -19,7 +19,8 @@ export function insertChartInSpreadsheet(model, type = "odoo_bar", definition = 
     definition = { ...getChartDefinition(type), ...definition };
     model.dispatch("CREATE_CHART", {
         sheetId: model.getters.getActiveSheetId(),
-        figureId: definition.id,
+        chartId: definition.id,
+        figureId: uuidGenerator.smallUuid(),
         col: 0,
         row: 0,
         offset: {

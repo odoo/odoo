@@ -54,13 +54,13 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
         switch (cmd.type) {
             case "CREATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
-                    this._addOdooChart(cmd.figureId);
+                    this._addOdooChart(cmd.chartId);
                 }
                 break;
             }
-            case "DELETE_FIGURE": {
+            case "DELETE_CHART": {
                 const charts = { ...this.charts };
-                delete charts[cmd.figureId];
+                delete charts[cmd.chartId];
                 this.history.update("charts", charts);
                 break;
             }
@@ -127,7 +127,14 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
             if (sheet.figures) {
                 for (const figure of sheet.figures) {
                     if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
-                        this._addOdooChart(figure.id, figure.data.fieldMatching ?? {});
+                        this._addOdooChart(figure.data.chartId, figure.data.fieldMatching ?? {});
+                    } else if (figure.tag === "carousel") {
+                        for (const chartId in figure.data.chartDefinitions) {
+                            const fieldMatching = figure.data.fieldMatching ?? {};
+                            if (figure.data.chartDefinitions[chartId].type.startsWith("odoo_")) {
+                                this._addOdooChart(chartId, fieldMatching[chartId]);
+                            }
+                        }
                     }
                 }
             }
@@ -143,10 +150,22 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
             if (sheet.figures) {
                 for (const figure of sheet.figures) {
                     if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
-                        figure.data.fieldMatching = this.getChartFieldMatch(figure.id);
+                        figure.data.fieldMatching = this.getChartFieldMatch(figure.data.chartId);
                         figure.data.searchParams.domain = new Domain(
                             figure.data.searchParams.domain
                         ).toJson();
+                    } else if (figure.tag === "carousel") {
+                        figure.data.fieldMatching = {};
+                        for (const chartId in figure.data.chartDefinitions) {
+                            const chartDefinition = figure.data.chartDefinitions[chartId];
+                            if (chartDefinition.type.startsWith("odoo_")) {
+                                figure.data.fieldMatching[chartId] =
+                                    this.getChartFieldMatch(chartId);
+                                chartDefinition.searchParams.domain = new Domain(
+                                    chartDefinition.searchParams.domain
+                                ).toJson();
+                            }
+                        }
                     }
                 }
             }
@@ -194,7 +213,7 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
     _addOdooChart(chartId, fieldMatching = undefined) {
         const model = this.getters.getChartDefinition(chartId).metaData.resModel;
         this.history.update("charts", chartId, {
-            figureId: chartId,
+            chartId,
             fieldMatching: fieldMatching || this.getters.getFieldMatchingForModel(model),
         });
     }

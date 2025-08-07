@@ -30,11 +30,11 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
                 break;
             case "UPDATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
-                    const chart = this.getters.getChart(cmd.figureId);
-                    if (this._shouldReloadDataSource(cmd.figureId, cmd.definition)) {
+                    const chart = this.getters.getChart(cmd.chartId);
+                    if (this._shouldReloadDataSource(cmd.chartId, cmd.definition)) {
                         this.shouldChartUpdateReloadDataSource = true;
                     } else if (cmd.definition.type !== chart.type) {
-                        const dataSource = this.getChartDataSource(cmd.figureId);
+                        const dataSource = this.getChartDataSource(cmd.chartId);
                         dataSource.changeChartType(chartTypeToDataSourceMode(cmd.definition.type));
                     }
                 }
@@ -52,17 +52,17 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
         switch (cmd.type) {
             case "CREATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
-                    this._setupChartDataSource(cmd.figureId);
+                    this._setupChartDataSource(cmd.chartId);
                 }
                 break;
             }
             case "UPDATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
                     if (this.shouldChartUpdateReloadDataSource) {
-                        this._resetChartDataSource(cmd.figureId);
+                        this._resetChartDataSource(cmd.chartId);
                         this.shouldChartUpdateReloadDataSource = false;
                     }
-                    this._setChartDataSource(cmd.figureId);
+                    this._setChartDataSource(cmd.chartId);
                 }
                 break;
             }
@@ -90,11 +90,11 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
                     (cmd) => cmd.type === "UPDATE_CHART" || cmd.type === "CREATE_CHART"
                 );
                 for (const cmd of domainEditionCommands) {
-                    if (!this.getters.getOdooChartIds().includes(cmd.figureId)) {
+                    if (!this.getters.getOdooChartIds().includes(cmd.chartId)) {
                         continue;
                     }
-                    if (this._shouldReloadDataSource(cmd.figureId, cmd.definition)) {
-                        this._resetChartDataSource(cmd.figureId);
+                    if (this._shouldReloadDataSource(cmd.chartId, cmd.definition)) {
+                        this._resetChartDataSource(cmd.chartId);
                     }
                 }
                 break;

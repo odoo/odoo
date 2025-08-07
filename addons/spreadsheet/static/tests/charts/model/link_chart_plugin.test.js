@@ -55,7 +55,7 @@ test("link is removed when figure is deleted", async function () {
     expect(model.getters.getChartOdooMenu(chartId).id).toBe(1);
     model.dispatch("DELETE_FIGURE", {
         sheetId: model.getters.getActiveSheetId(),
-        figureId: chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
     });
     expect(model.getters.getChartOdooMenu(chartId)).toBe(undefined);
 });
