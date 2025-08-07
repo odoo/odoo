@@ -10,4 +10,4 @@ class DateTimeFieldPlugin extends Plugin {
         ],
     };
 }
-registry.category("website-plugins").add(DateTimeFieldPlugin.id, DateTimeFieldPlugin);
+registry.category("builder-plugins").add(DateTimeFieldPlugin.id, DateTimeFieldPlugin);

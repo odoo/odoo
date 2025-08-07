@@ -9,4 +9,4 @@ export class ImageFieldPlugin extends Plugin {
     };
 }
 
-registry.category("website-plugins").add(ImageFieldPlugin.id, ImageFieldPlugin);
+registry.category("builder-plugins").add(ImageFieldPlugin.id, ImageFieldPlugin);

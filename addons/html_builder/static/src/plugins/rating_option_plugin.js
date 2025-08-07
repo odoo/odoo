@@ -109,7 +109,7 @@ export class TotalIconsNumberAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(RatingOptionPlugin.id, RatingOptionPlugin);
+registry.category("builder-plugins").add(RatingOptionPlugin.id, RatingOptionPlugin);
 
 function createIcons({ editingElement, nbActiveIcons, nbTotalIcons }) {
     const activeIconEl = editingElement.querySelector(".s_rating_active_icons");

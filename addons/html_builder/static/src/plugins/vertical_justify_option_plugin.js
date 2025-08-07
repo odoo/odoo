@@ -17,5 +17,5 @@ class VerticalJustifyOptionPlugin extends Plugin {
 }
 
 registry
-    .category("website-plugins")
+    .category("builder-plugins")
     .add(VerticalJustifyOptionPlugin.id, VerticalJustifyOptionPlugin);

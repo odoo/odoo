@@ -15,4 +15,4 @@ class BlockAlignmentOptionPlugin extends Plugin {
     };
 }
 
-registry.category("website-plugins").add(BlockAlignmentOptionPlugin.id, BlockAlignmentOptionPlugin);
+registry.category("builder-plugins").add(BlockAlignmentOptionPlugin.id, BlockAlignmentOptionPlugin);

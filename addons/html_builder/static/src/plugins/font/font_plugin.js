@@ -139,4 +139,4 @@ export class BuilderFontPlugin extends Plugin {
         };
     }
 }
-registry.category("website-plugins").add(BuilderFontPlugin.id, BuilderFontPlugin);
+registry.category("builder-plugins").add(BuilderFontPlugin.id, BuilderFontPlugin);

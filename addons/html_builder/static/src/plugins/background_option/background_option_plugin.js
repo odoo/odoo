@@ -22,4 +22,4 @@ class BackgroundOptionPlugin extends Plugin {
         editingEl.classList.add("o_colored_level");
     }
 }
-registry.category("website-plugins").add(BackgroundOptionPlugin.id, BackgroundOptionPlugin);
+registry.category("builder-plugins").add(BackgroundOptionPlugin.id, BackgroundOptionPlugin);
