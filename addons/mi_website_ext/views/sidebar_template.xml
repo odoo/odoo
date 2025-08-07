@@ -351,7 +351,7 @@
     ('is_published', '=', True),
     ('publish_date', '&gt;=', datetime.date.today().strftime('%Y-%m-01')),
     ('publish_date', '&lt;=', (datetime.date.today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
-], limit=5, order='winner_score desc')"/>
+], order='winner_score desc')"/>
                                         <t t-if="monthly_winners">
                                             <div class="winner-card">
                                                 <div class="winner-title">
@@ -696,7 +696,7 @@
                                             <t t-set="recent_announcements" t-value="request.env['website.publication'].sudo().search([
         ('publication_type', '=', 'announce'),
         ('is_published', '=', True),
-    ], limit=5, order='publish_date desc')"/>
+    ], limit=10, order='publish_date desc')"/>
                                             <t t-set="read_logs" t-value="request.env['publication.view.log'].sudo().search([
             ('user_id', '=', request.env.user.id),
             ('res_model', '=', 'website.publication'),
