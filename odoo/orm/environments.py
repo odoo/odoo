@@ -145,6 +145,9 @@ class Environment(Mapping[str, "BaseModel"]):
         su = (user is None and self.su) if su is None else su
         return Environment(cr, uid, context, su)
 
+    def config(self, key) -> str | bool | int | float | None:
+        return self['ir.config_parameter'].get(key)
+
     @typing.overload
     def ref(self, xml_id: str, raise_if_not_found: typing.Literal[True] = True) -> BaseModel:
         ...
