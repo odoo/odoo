@@ -218,3 +218,47 @@ class TestPricelist(ProductCommon):
             item_form.compute_price = 'percentage'
             item_form.percent_price = 20
         self.assertFalse(pricelist_2.item_ids.base_pricelist_id.id)
+
+    def test_sync_parent_pricelist(self):
+        """Check that adding a parent to a partner updates the partner's pricelist."""
+        self.partner.update({
+            'parent_id': False,
+            'specific_property_product_pricelist': self.sale_pricelist_id.id,
+        })
+        self.assertEqual(self.partner.property_product_pricelist, self.sale_pricelist_id)
+
+        company_2 = self.env.company.create({'name': "Company Two"})
+        company_1_b2b_pl, company_2_b2b_pl = self.sale_pricelist_id.create([{
+            'name': f"B2B ({company.name})",
+            'company_id': company.id,
+        } for company in self.env.company + company_2])
+        parent = self.partner.create({
+            'name': f"{self.partner.name}'s Company",
+            'is_company': True,
+            'specific_property_product_pricelist': company_1_b2b_pl.id,
+        })
+        parent.with_company(company_2).specific_property_product_pricelist = company_2_b2b_pl
+
+        self.partner.parent_id = parent
+        self.assertEqual(
+            self.partner.specific_property_product_pricelist,
+            company_1_b2b_pl,
+            "Assigning a parent with a specific pricelist should sync the parent's pricelist",
+        )
+        self.assertEqual(
+            self.partner.with_company(company_2).specific_property_product_pricelist,
+            company_2_b2b_pl,
+            "Company-specific pricelists should get synced on parent assignment",
+        )
+
+        parent.specific_property_product_pricelist = self.sale_pricelist_id
+        self.assertEqual(
+            self.partner.specific_property_product_pricelist,
+            self.sale_pricelist_id,
+            "Setting a specific parent pricelist should update the partner's pricelist",
+        )
+        self.assertEqual(
+            self.partner.with_company(company_2).specific_property_product_pricelist,
+            company_2_b2b_pl,
+            "Assigning pricelists in one company shouldn't impact pricelists in other companies",
+        )
