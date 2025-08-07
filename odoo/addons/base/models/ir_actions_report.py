@@ -508,7 +508,6 @@ class IrActionsReport(models.Model):
             report_ref=False,
             header=None,
             footer=None,
-            footer_right=None,
             landscape=False,
             specific_paperformat_args=None,
             set_viewport_size=False):
@@ -519,7 +518,6 @@ class IrActionsReport(models.Model):
         :param report_ref: report reference that is needed to get report paperformat.
         :param str header: The html header of the report containing all headers.
         :param str footer: The html footer of the report containing all footers.
-        :param str footer_right: String syntax for the --footer-right option (e.g: '[page]/[toPage]').
         :param landscape: Force the pdf to be rendered under a landscape format.
         :param specific_paperformat_args: dict of prioritized paperformat arguments.
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
@@ -580,8 +578,6 @@ class IrActionsReport(models.Model):
                     foot_file.write(footer.encode())
                 stack.callback(delete_file, foot_file_path)
                 files_command_args.extend(['--footer-html', foot_file_path])
-            elif footer_right:
-                files_command_args.extend(['--footer-right', footer_right])
 
             paths = []
             body_idx = 0
