@@ -2498,6 +2498,23 @@ export class PosStore extends WithLazyGetterTrap {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 
+    selectEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) =>
+                order.isEmpty() &&
+                !order.finalized &&
+                order.payment_ids.length === 0 &&
+                !order.partner_id &&
+                order.pricelist_id?.id === this.config.pricelist_id?.id &&
+                order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
+        );
+        if (emptyOrders.length > 0) {
+            this.setOrder(emptyOrders[0]);
+            return;
+        }
+        this.addNewOrder();
+    }
+
     async isSessionDeleted() {
         return (
             (await this.data.orm.searchCount("pos.session", [["id", "=", this.session.id]])) === 0

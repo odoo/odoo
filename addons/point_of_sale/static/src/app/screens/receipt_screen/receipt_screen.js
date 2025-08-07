@@ -80,7 +80,7 @@ export class ReceiptScreen extends Component {
     async orderDone() {
         this.currentOrder.uiState.screen_data.value = "";
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.addNewOrder();
+            this.pos.selectEmptyOrder();
         }
         this.pos.searchProductWord = "";
         this.pos.showScreen(this.nextScreen);
