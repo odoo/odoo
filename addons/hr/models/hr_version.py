@@ -563,6 +563,13 @@ class HrVersion(models.Model):
         self_sudo = self.sudo()
         return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
 
+
+    def _get_tz(self):
+        if self.resource_calendar_id and self.resource_calendar_id.tz:
+            return self.resource_calendar_id.tz
+        else:
+            return self.tz
+
     def action_open_version(self):
         self.ensure_one()
 

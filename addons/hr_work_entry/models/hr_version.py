@@ -476,7 +476,9 @@ class HrVersion(models.Model):
             tz = _get_tz(vals['version_id'])
             if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
                 vals['date'] = date_start.astimezone(tz).date()
-                if (date_start, date_stop) in cached_periods:
+                if 'duration' in vals:
+                    continue
+                elif (date_start, date_stop) in cached_periods:
                     vals['duration'] = cached_periods[date_start, date_stop]
                 else:
                     dt = date_stop - date_start

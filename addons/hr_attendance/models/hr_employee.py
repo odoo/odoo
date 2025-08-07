@@ -77,10 +77,11 @@ class HrEmployee(models.Model):
 
     @api.depends('overtime_ids.duration', 'attendance_ids', 'attendance_ids.overtime_status')
     def _compute_total_overtime(self):
-        mapped_validated_overtimes = dict(self.env['hr.attendance']._read_group(
-            domain=[('overtime_status', '=', 'approved')],
+        mapped_validated_overtimes = dict(
+            self.env['hr.attendance.overtime.line']._read_group(
+            domain=[('status', '=', 'approved')],
             groupby=['employee_id'],
-            aggregates=['validated_overtime_hours:sum']
+            aggregates=['manual_duration:sum']
         ))
 
         mapped_overtime_adjustments = dict(self.env['hr.attendance.overtime']._read_group(

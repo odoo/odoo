@@ -2,6 +2,7 @@
 from datetime import date, datetime
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import tagged, TransactionCase
 
@@ -705,7 +706,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         attendance_3 = self.env['hr.attendance'].create({
             'employee_id': self.flexible_employee.id,
             'check_in': datetime(2023, 1, 2, 16, 0),
-            'check_out': datetime(2023, 1, 2, 18, 0)
+            'check_out': datetime(2023, 1, 2, 18, 0),
         })
         self.assertEqual(attendance_1.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
         self.assertEqual(attendance_2.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
@@ -779,3 +780,132 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 4, 18, 0)
         })
         self.assertEqual(attendance.validated_overtime_hours, previous, "Extra hours shouldn't be recomputed")
+
+    def _check_overtimes(self, overtimes, vals_list):
+        self.assertEqual(len(overtimes), len(vals_list), "Wrong number of overtimes")
+        for overtime, vals in zip(overtimes, vals_list):
+            for k, v in vals.items():
+                self.assertEqual(overtime[k], v)
+
+    def test_overtime_rule_timing(self):
+        version = self.employee._get_version(date(2025, 8, 20))
+        self.env['hr.attendance.overtime.ruleset'].create({
+            'version_ids': [Command.link(version.id)],
+            'rule_ids': [
+                Command.create({
+                    'name': "Company Schedule",
+                    'base_off': 'timing',
+                    'timing_type': 'schedule',
+                    'resource_calendar_id': self.company.resource_calendar_id.id,
+                }),
+                Command.create({
+                    'name': "Naptime",
+                    'base_off': 'timing',
+                    'timing_type': 'work_days',
+                    'timing_start': 14,
+                    'timing_stop': 15,
+                }),
+            ],
+        })
+        # attendance 7 -> 16 (5-14) on a wednesday. Expected overtimes:
+        # * Naptime 14-15 (= 12-13 utc)
+        # * Company Schedule: 7-8 (= 5-6 utc)
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 8, 20, 5, 0), # a wednesday, 7 am utc
+            'check_out': datetime(2025, 8, 20, 14, 0),
+        })
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+        ])
+        self._check_overtimes(overtimes, [
+            { # 7:00 -> 8:00
+                'date': date(2025, 8, 20),
+                'time_start': datetime(2025, 8, 20, 5, 0),
+                'time_stop': datetime(2025, 8, 20, 6, 0),
+            },
+            { # 14:00 -> 15:00
+                'date': date(2025, 8, 20),
+                'time_start': datetime(2025, 8, 20, 12, 0),
+                'time_stop': datetime(2025, 8, 20, 13, 0),
+            },
+        ])
+    
+    def test_overtime_rule_quantity(self):
+        version = self.employee._get_version(date(2025, 8, 20))
+        self.env['hr.attendance.overtime.ruleset'].create({
+            'version_ids': [Command.link(version.id)],
+            'rule_ids': [
+                Command.create({
+                    'name': "> 9h/d",
+                    'base_off': 'quantity',
+                    'quantity_period': 'day',
+                    'expected_hours_from_contract': False,  # 40h contract
+                    'expected_hours': 9,
+                }),
+                Command.create({
+                    'name': "Weekly Overtime",
+                    'base_off': 'quantity',
+                    'quantity_period': 'week',
+                    'expected_hours_from_contract': True,  # 40h contract
+                }),
+            ],
+        })
+
+        # 10h on monday: 1h daily ot
+        # 8h on tue-thu (24h)
+        # 10h on friday: 1h daily ot
+        # 10 + 24 + 10 - 40 = 4 weekly ot
+        # Expected result:
+        # * monday, friday: 1 h daily ot each on the end of the day, that are also weekly
+        # * friday: 2h weekly ot in addition to the other 1h
+        self.env['hr.attendance'].create([
+            # monday 8-19 (10h bc 1 hours lunch)
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 8, 18, 6, 0), 
+                'check_out': datetime(2025, 8, 18, 17, 0),
+            },
+            # friday 8-19: 10h 
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 8, 22, 6, 0), 
+                'check_out': datetime(2025, 8, 22, 17, 0),
+            },
+            # tue-thu 8-17: 8h each 
+            *[{
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 8, day, 6, 0), 
+                'check_out': datetime(2025, 8, day, 15, 0),
+            } for day in range(19, 22)]
+        ])
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+        ])
+
+        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 4.0, 2)
+        self._check_overtimes(overtimes, [
+            { # monday 18:00->19:00 (weekly + monday daily)
+                'date': date(2025, 8, 18),
+                'time_start': datetime(2025, 8, 18, 16, 0),
+                'time_stop': datetime(2025, 8, 18, 17, 0),
+            },
+            { # friday 16:00->18:00 (weekly)
+                'date': date(2025, 8, 22),
+                'time_start': datetime(2025, 8, 22, 14, 0),
+                'time_stop': datetime(2025, 8, 22, 16, 0),
+            },
+            { # friday 18:00->19:00 (weekly + friday daily)
+                'date': date(2025, 8, 22),
+                'time_start': datetime(2025, 8, 22, 16, 0),
+                'time_stop': datetime(2025, 8, 22, 17, 0),
+            },
+        ])
+
+    def test_overtime_rule_combined(self):
+        # TODO
+        pass
+
+

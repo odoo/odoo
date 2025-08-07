@@ -115,26 +115,38 @@
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
                                 <field name="overtime_hours" widget="float_time" string="Worked Extra Hours" invisible="overtime_hours == validated_overtime_hours"/>
                                 <label for="validated_overtime_hours"/>
-                                <div class="o_row">
+                                <div>
                                     <field
                                         name="validated_overtime_hours"
-                                        class="o_hr_narrow_field-4"
+                                        style="width:5ch"
                                         widget="float_time"
-                                        readonly="not is_manager or overtime_status == 'refused'"/>
+                                        readonly="1"/>
+                                    <!-- TODO algin icons baseline with text -->
                                     <button
-                                        class="oe_stat_button"
-                                        string="Approve"
+                                        class="oe_stat_button flex-shrink-0"
+                                        string=""
+                                        help="Approve all overtimes for the same employee and date"
                                         invisible="not is_manager or overtime_status not in ['to_approve', 'refused'] or no_validated_overtime_hours"
                                         name="action_approve_overtime"
                                         icon="fa-check"
                                         type="object"
                                         groups="hr_attendance.group_hr_attendance_officer"/>
                                     <button
-                                        class="oe_stat_button"
-                                        string="Refuse"
+                                        class="oe_stat_button flex-shrink-0"
+                                        string=""
+                                        help="Refuse all overtimes for the same employee and date"
                                         invisible="not is_manager or overtime_status not in ['to_approve', 'approved'] or no_validated_overtime_hours"
                                         name="action_refuse_overtime"
                                         icon="fa-times"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"/>
+                                    <button
+                                        class="oe_stat_button flex-shrink-0"
+                                        string=""
+                                        help="Show overtime details"
+                                        invisible="not is_manager or no_validated_overtime_hours"
+                                        name="action_list_overtimes"
+                                        icon="fa-expand"
                                         type="object"
                                         groups="hr_attendance.group_hr_attendance_officer"/>
                                 </div>
@@ -396,6 +408,14 @@
                     name="action_refuse_overtime"
                     icon="fa-times"
                     type="object"/>
+                <button
+                    class="oe_stat_button"
+                    string="Details"
+                    invisible="not is_manager or no_validated_overtime_hours"
+                    name="action_list_overtimes"
+                    icon="fa-list"
+                    type="object"
+                    groups="hr_attendance.group_hr_attendance_officer"/>
             </list>
         </field>
     </record>
@@ -466,4 +486,5 @@
     <menuitem id="menu_hr_attendance_employee" name="Employees" parent="menu_hr_attendance_overview" action="hr.open_view_employee_list_my" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
 
     <menuitem id="menu_hr_attendance_view_attendances_management" name="Management" parent="menu_hr_attendance_root" sequence="6" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_management_action"/>
+
 </odoo>

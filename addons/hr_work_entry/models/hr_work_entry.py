@@ -42,6 +42,8 @@ class HrWorkEntry(models.Model):
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
     country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id')
+    #amount_rate = fields.Float("Pay rate", default=lambda self: self.work_entry_type_id.amount_rate)
+    amount_rate = fields.Float("Pay rate")
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
@@ -215,6 +217,12 @@ class HrWorkEntry(models.Model):
         vals_list = [self._set_current_contract(vals) for vals in vals_list]
         company_by_employee_id = {}
         for vals in vals_list:
+            if (
+                not 'amount_rate' in vals
+                and (work_entry_type_id := vals.get('work_entry_type_id'))
+            ):
+                work_entry_type = self.env['hr.work.entry.type'].browse(work_entry_type_id)
+                vals['amount_rate'] = work_entry_type.amount_rate
             if vals.get('company_id'):
                 continue
             if vals['employee_id'] not in company_by_employee_id:

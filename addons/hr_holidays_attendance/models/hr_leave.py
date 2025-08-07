@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -13,7 +12,7 @@ class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
     overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours')
-    employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')
+    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user')
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
 
     @api.depends('holiday_status_id')
@@ -48,6 +47,39 @@ class HrLeave(models.Model):
                 leave.overtime_id.sudo().duration = -1 * duration
         return res
 
+    @api.model
+    def _get_deductible_employee_overtime(self, employees):
+        # return dict {employee: number of hours}
+        diff_by_employee = defaultdict(lambda: 0)
+        for employee, hours in self.env['hr.attendance.overtime.line']._read_group(
+            domain = [
+                ('compensable_as_leave', '=', True),
+                ('employee_id', 'in', employees.ids),
+                ('status', '!=', 'refused'),
+            ],
+            groupby = ['employee_id'],
+            aggregates = ['manual_duration:sum'],
+        ):
+            diff_by_employee[employee] += hours
+        for employee, hours in self._read_group(
+            domain = [
+                ('holiday_status_id.overtime_deductible', '=', True),
+                ('holiday_status_id.requires_allocation', '=', False),
+                ('employee_id', 'in', employees.ids),
+                ('state', 'not in', ['refused', 'cancel']),
+            ],
+            groupby = ['employee_id'],
+            aggregates = ['number_of_hours:sum'],
+        ):
+            diff_by_employee[employee] -= hours
+        return diff_by_employee
+        
+    @api.depends('number_of_hours', 'employee_id', 'holiday_status_id')
+    def _compute_employee_overtime(self):
+        diff_by_employee = self._get_deductible_employee_overtime(self.employee_id)  
+        for leave in self:
+            leave.employee_overtime = diff_by_employee[leave.employee_id]
+
     def _check_overtime_deductible(self, leaves):
         # If the type of leave is overtime deductible, we have to check that the employee has enough extra hours
         for leave in leaves:
@@ -60,13 +92,13 @@ class HrLeave(models.Model):
                 if employee.user_id == self.env.user:
                     raise ValidationError(_('You do not have enough extra hours to request this leave'))
                 raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
-            if not leave.sudo().overtime_id:
-                leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
-                    'employee_id': employee.id,
-                    'date': leave.date_from,
-                    'adjustment': True,
-                    'duration': -1 * duration,
-                })
+        #     # if not leave.sudo().overtime_id:
+        #     #     leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
+        #     #         'employee_id': employee.id,
+        #     #         'date': leave.date_from,
+        #     #         'adjustment': True,
+        #     #         'duration': -1 * duration,
+        #     #     })
 
     def action_confirm(self):
         res = super().action_confirm()
