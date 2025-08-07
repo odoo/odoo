@@ -39,6 +39,7 @@ test("writes a list of numbers to a data attribute", async () => {
                 value: "35",
                 title: "a thing",
                 _id: "0",
+                id: "a thing",
             },
             ...defaultValueWithIds([1, 2]),
         ])
@@ -235,6 +236,7 @@ test("hides hiddenProperties from options", async () => {
                 c: "2",
                 d: "a thing",
                 _id: "0",
+                id: "a thing",
             },
             {
                 a: "4",

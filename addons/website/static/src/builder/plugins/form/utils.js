@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@html_builder/utils/utils_css";
+import { isSmallInteger } from "@html_builder/utils/utils";
 
 export const VISIBILITY_DATASET = [
     "visibilityDependency",
@@ -500,15 +501,10 @@ export function getListItems(fieldEl) {
     } else if (multipleInputsEl) {
         options = [...multipleInputsEl.querySelectorAll(".checkbox input, .radio input")];
     }
-    const isFieldElCustom = isFieldCustom(fieldEl);
     return options.map((opt) => {
         const name = selectEl ? opt : opt.nextElementSibling;
         return {
-            id: isFieldElCustom
-                ? opt.id
-                : /^-?[0-9]{1,15}$/.test(opt.value)
-                ? parseInt(opt.value)
-                : opt.value,
+            id: isSmallInteger(opt.value) ? parseInt(opt.value) : opt.value,
             display_name: name.textContent.trim(),
             selected: selectEl ? opt.selected : opt.checked,
         };
