@@ -269,6 +269,13 @@ class AccountMove(models.Model):
             lambda aml: (aml.deferred_start_date, aml.deferred_end_date))
         )) > 1
 
+    def _l10n_tr_nilvera_einvoice_check_negative_lines(self):
+        return any(
+            line.display_type not in {'line_note', 'line_section'}
+            and (line.quantity < 0 or line.price_unit < 0)
+            for line in self.invoice_line_ids
+        )
+
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------
