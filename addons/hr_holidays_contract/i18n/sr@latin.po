@@ -1,0 +1,85 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_contract
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"PO-Revision-Date: 2025-05-09 20:36+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%(time_off)s\n"
+"\n"
+"Contracts:\n"
+"%(contracts)s"
+msgstr ""
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_contract.py:0
+msgid ""
+"Changing the contract on this employee changes their working schedule in a "
+"period they already took leaves. Changing this working schedule changes the "
+"duration of these leaves in such a way the employee no longer has the "
+"required allocation for them. Please review these leaves and/or allocations "
+"before changing the contract."
+msgstr ""
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid ""
+"Contract %(contract)s from %(start_date)s to %(end_date)s, status: "
+"%(status)s"
+msgstr ""
+
+#. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr ""
+
+#. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid "undefined"
+msgstr ""
