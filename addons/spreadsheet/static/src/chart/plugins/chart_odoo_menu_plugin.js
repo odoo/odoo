@@ -1,7 +1,6 @@
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-import { coreTypes, helpers } from "@odoo/o-spreadsheet";
-import { omit } from "@web/core/utils/objects";
-const { deepEquals } = helpers;
+import { coreTypes, constants } from "@odoo/o-spreadsheet";
+const { FIGURE_ID_SPLITTER } = constants;
 
 /** Plugin that link charts with Odoo menus. It can contain either the Id of the odoo menu, or its xml id. */
 export class ChartOdooMenuPlugin extends OdooCorePlugin {
@@ -20,8 +19,8 @@ export class ChartOdooMenuPlugin extends OdooCorePlugin {
             case "LINK_ODOO_MENU_TO_CHART":
                 this.history.update("odooMenuReference", cmd.chartId, cmd.odooMenuId);
                 break;
-            case "DELETE_FIGURE":
-                this.history.update("odooMenuReference", cmd.figureId, undefined);
+            case "DELETE_CHART":
+                this.history.update("odooMenuReference", cmd.chartId, undefined);
                 break;
             case "DUPLICATE_SHEET":
                 this.updateOnDuplicateSheet(cmd.sheetId, cmd.sheetIdTo);
@@ -31,27 +30,13 @@ export class ChartOdooMenuPlugin extends OdooCorePlugin {
 
     updateOnDuplicateSheet(sheetIdFrom, sheetIdTo) {
         for (const oldChartId of this.getters.getChartIds(sheetIdFrom)) {
-            if (!this.odooMenuReference[oldChartId]) {
+            const menu = this.odooMenuReference[oldChartId];
+            if (!menu) {
                 continue;
             }
-            const oldChartDefinition = this.getters.getChartDefinition(oldChartId);
-            const oldFigure = this.getters.getFigure(sheetIdFrom, oldChartId);
-            const newChartId = this.getters.getChartIds(sheetIdTo).find((newChartId) => {
-                const newChartDefinition = this.getters.getChartDefinition(newChartId);
-                const newFigure = this.getters.getFigure(sheetIdTo, newChartId);
-                return (
-                    deepEquals(oldChartDefinition, newChartDefinition) &&
-                    deepEquals(omit(newFigure, "id"), omit(oldFigure, "id")) // compare size and position
-                );
-            });
-
-            if (newChartId) {
-                this.history.update(
-                    "odooMenuReference",
-                    newChartId,
-                    this.odooMenuReference[oldChartId]
-                );
-            }
+            const chartIdBase = oldChartId.split(FIGURE_ID_SPLITTER).pop();
+            const newChartId = `${sheetIdTo}${FIGURE_ID_SPLITTER}${chartIdBase}`;
+            this.history.update("odooMenuReference", newChartId, menu);
         }
     }
 

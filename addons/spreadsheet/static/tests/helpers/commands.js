@@ -171,10 +171,12 @@ export function createBasicChart(
     model,
     chartId,
     definition,
-    sheetId = model.getters.getActiveSheetId()
+    sheetId = model.getters.getActiveSheetId(),
+    figureId = model.uuidGenerator.smallUuid()
 ) {
     model.dispatch("CREATE_CHART", {
-        figureId: chartId,
+        chartId,
+        figureId,
         col: 0,
         row: 0,
         offset: {
@@ -196,9 +198,15 @@ export function createBasicChart(
 }
 
 /** Create a test scorecard chart in the active sheet*/
-export function createScorecardChart(model, chartId, sheetId = model.getters.getActiveSheetId()) {
+export function createScorecardChart(
+    model,
+    chartId,
+    sheetId = model.getters.getActiveSheetId(),
+    figureId = model.uuidGenerator.smallUuid()
+) {
     model.dispatch("CREATE_CHART", {
-        figureId: chartId,
+        figureId,
+        chartId,
         col: 0,
         row: 0,
         offset: { x: 0, y: 0 },
@@ -216,9 +224,15 @@ export function createScorecardChart(model, chartId, sheetId = model.getters.get
 }
 
 /** Create a test scorecard chart in the active sheet*/
-export function createGaugeChart(model, chartId, sheetId = model.getters.getActiveSheetId()) {
+export function createGaugeChart(
+    model,
+    chartId,
+    sheetId = model.getters.getActiveSheetId(),
+    figureId = model.uuidGenerator.smallUuid()
+) {
     model.dispatch("CREATE_CHART", {
-        figureId: chartId,
+        figureId,
+        chartId,
         col: 0,
         row: 0,
         offset: { x: 0, y: 0 },
@@ -253,7 +267,8 @@ export function updateChart(model, chartId, partialDefinition) {
     const definition = model.getters.getChartDefinition(chartId);
     return model.dispatch("UPDATE_CHART", {
         definition: { ...definition, ...partialDefinition },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId: model.getters.getActiveSheetId(),
     });
 }
@@ -312,5 +327,18 @@ export function createSheet(model, data = {}) {
         cols: data.cols,
         rows: data.rows,
         name: data.name,
+    });
+}
+
+export function createCarousel(model, data = { items: [] }, carouselId, sheetId, figureData = {}) {
+    return model.dispatch("CREATE_CAROUSEL", {
+        figureId: carouselId || model.uuidGenerator.smallUuid(),
+        sheetId: sheetId || model.getters.getActiveSheetId(),
+        col: 0,
+        row: 0,
+        definition: data,
+        size: { width: 500, height: 300 },
+        offset: { x: 0, y: 0 },
+        ...figureData,
     });
 }

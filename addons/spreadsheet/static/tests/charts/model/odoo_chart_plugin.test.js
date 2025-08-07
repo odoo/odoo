@@ -264,7 +264,8 @@ test("Area charts are supported", async () => {
     const definition = model.getters.getChartDefinition(chartId);
     model.dispatch("UPDATE_CHART", {
         definition: { ...definition, fillArea: true, stacked: false },
-        figureId: chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
+        chartId,
         sheetId,
     });
     let runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
@@ -273,7 +274,8 @@ test("Area charts are supported", async () => {
     expect(runtime.data.datasets[0].fill).toBe("origin");
     model.dispatch("UPDATE_CHART", {
         definition: { ...definition, fillArea: true, stacked: true },
-        figureId: chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
+        chartId,
         sheetId,
     });
     runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
@@ -306,7 +308,8 @@ test("Data reloaded strictly upon domain update", async () => {
             ...definition,
             searchParams: { ...definition.searchParams, domain: [["1", "=", "1"]] },
         },
-        figureId: chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
+        chartId,
         sheetId,
     });
     // force runtime computation
@@ -321,7 +324,8 @@ test("Data reloaded strictly upon domain update", async () => {
             ...newDefinition,
             background: "#00FF00",
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     // force runtime computation
@@ -392,7 +396,12 @@ test("Updating the domain keeps the global filters domain", async () => {
         ...definition,
         searchParams: { ...definition.searchParams, domain: [["1", "=", "1"]] },
     };
-    model.dispatch("UPDATE_CHART", { definition: updatedDefinition, figureId: chartId, sheetId });
+    model.dispatch("UPDATE_CHART", {
+        definition: updatedDefinition,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
+        sheetId,
+    });
 
     model.getters.getChartRuntime(chartId); // force runtime computation
     await waitForDataLoaded(model);
@@ -432,6 +441,7 @@ test("can import (export) contextual domain", async function () {
                         height: 335,
                         tag: "chart",
                         data: {
+                            chartId,
                             type: "odoo_line",
                             title: { text: "Partners" },
                             legendPosition: "top",
@@ -505,7 +515,8 @@ test("charts with no legend", async () => {
             ...pie,
             legendPosition: "none",
         },
-        figureId: pieChartId,
+        chartId: pieChartId,
+        figureId: model.getters.getFigureIdFromChartId(pieChartId),
         sheetId,
     });
     model.dispatch("UPDATE_CHART", {
@@ -513,7 +524,8 @@ test("charts with no legend", async () => {
             ...bar,
             legendPosition: "none",
         },
-        figureId: barChartId,
+        chartId: barChartId,
+        figureId: model.getters.getFigureIdFromChartId(barChartId),
         sheetId,
     });
     model.dispatch("UPDATE_CHART", {
@@ -521,7 +533,8 @@ test("charts with no legend", async () => {
             ...line,
             legendPosition: "none",
         },
-        figureId: lineChartId,
+        chartId: lineChartId,
+        figureId: model.getters.getFigureIdFromChartId(lineChartId),
         sheetId,
     });
     expect(
@@ -545,7 +558,8 @@ test("Bar chart with stacked attribute is supported", async () => {
             ...definition,
             stacked: true,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked).toBe(
@@ -559,7 +573,8 @@ test("Bar chart with stacked attribute is supported", async () => {
             ...definition,
             stacked: false,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked).toBe(
@@ -574,7 +589,7 @@ test("Can copy/paste Odoo chart", async () => {
     const { model } = await createSpreadsheetWithChart({ type: "odoo_pie" });
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
-    model.dispatch("SELECT_FIGURE", { figureId: chartId });
+    model.dispatch("SELECT_FIGURE", { figureId: model.getters.getFigureIdFromChartId(chartId) });
     model.dispatch("COPY");
     model.dispatch("PASTE", { target: [toZone("A1")] });
     const chartIds = model.getters.getChartIds(sheetId);
@@ -595,7 +610,7 @@ test("Can cut/paste Odoo chart", async () => {
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
     const chartRuntime = model.getters.getChartRuntime(chartId);
-    model.dispatch("SELECT_FIGURE", { figureId: chartId });
+    model.dispatch("SELECT_FIGURE", { figureId: model.getters.getFigureIdFromChartId(chartId) });
     model.dispatch("CUT");
     model.dispatch("PASTE", { target: [toZone("A1")] });
     const chartIds = model.getters.getChartIds(sheetId);
@@ -636,7 +651,8 @@ test("Line chart with stacked attribute is supported", async () => {
             ...definition,
             stacked: true,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked).toBe(
@@ -650,7 +666,8 @@ test("Line chart with stacked attribute is supported", async () => {
             ...definition,
             stacked: false,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked).toBe(
@@ -674,7 +691,7 @@ test("Load odoo chart spreadsheet with models that cannot be accessed", async fu
             }
         },
     });
-    const chartId = model.getters.getFigures(model.getters.getActiveSheetId())[0].id;
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
     const chartDataSource = model.getters.getChartDataSource(chartId);
     await waitForDataLoaded(model);
     const data = chartDataSource.getData();
@@ -701,7 +718,8 @@ test("Line chart to support cumulative data", async () => {
             ...definition,
             cumulative: true,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     await waitForDataLoaded(model);
@@ -713,7 +731,8 @@ test("Line chart to support cumulative data", async () => {
             ...definition,
             cumulative: false,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     await waitForDataLoaded(model);
@@ -787,7 +806,8 @@ test("update existing chart to cumulate past data", async () => {
             ...cumulativeChartDefinition,
             cumulatedStart: true,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     await waitForDataLoaded(model);
@@ -819,7 +839,8 @@ test("Odoo chart legend color changes with background color update", async () =>
             ...definition,
             background: "#000000",
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     expect(
@@ -850,7 +871,8 @@ test("Odoo chart datasource display name has a default when the chart title is e
             ...definition,
             title: { text: "" },
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     expect(model.getters.getOdooChartDisplayName(chartId)).toBe("(#1) Odoo Line Chart");
@@ -1281,7 +1303,8 @@ test("Show values is taken into account in the runtime", async () => {
             ...definition,
             showValues: true,
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     const runtime = model.getters.getChartRuntime(chartId);
@@ -1305,7 +1328,8 @@ test("Odoo line and bar charts display only horizontal grid lines", async () => 
             ...lineChartDefinition,
             type: "odoo_bar",
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
 
@@ -1342,7 +1366,8 @@ test("Can configure the chart datasets", async () => {
 
     model.dispatch("UPDATE_CHART", {
         definition: { ...definition, dataSets: [{ label: "My dataset" }, { label: "Second" }] },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     definition = model.getters.getChartDefinition(chartId);
@@ -1353,7 +1378,8 @@ test("Can configure the chart datasets", async () => {
             ...definition,
             searchParams: { ...searchParams, domain: [["bar", "=", false]] },
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     model.dispatch("REFRESH_ALL_DATA_SOURCES");
@@ -1382,7 +1408,8 @@ test("Chart data source is updated when changing chart type", async () => {
             ...model.getters.getChartDefinition(chartId),
             type: "odoo_line",
         },
-        figureId: chartId,
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
         sheetId,
     });
     expect.verifySteps(["changeChartType"]);
