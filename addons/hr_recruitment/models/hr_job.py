@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ast
+from markupsafe import Markup
+from ast import literal_eval
 from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
@@ -19,8 +20,7 @@ class HrJob(models.Model):
         last_used_address = self.env['hr.job'].search([('company_id', 'in', self.env.companies.ids)], order='id desc', limit=1)
         if last_used_address:
             return last_used_address.address_id
-        else:
-            return self.env.company.partner_id
+        return self.env.company.partner_id
 
     def _address_id_domain(self):
         return ['|', '&', '&', ('type', '!=', 'contact'), ('type', '!=', 'private'),
@@ -77,6 +77,8 @@ class HrJob(models.Model):
         store=True)
 
     job_source_ids = fields.One2many('hr.recruitment.source', 'job_id')
+    # Skills
+    skill_ids = fields.Many2many(comodel_name='hr.skill', string="Expected Skills")
 
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
@@ -266,7 +268,7 @@ class HrJob(models.Model):
         values = super()._alias_get_creation_values()
         values['alias_model_id'] = self.env['ir.model']._get('hr.applicant').id
         if self.id:
-            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            values['alias_defaults'] = defaults = literal_eval(self.alias_defaults or "{}")
             defaults.update({
                 'job_id': self.id,
                 'department_id': self.department_id.id,
@@ -408,3 +410,25 @@ class HrJob(models.Model):
                 'expand': 1
             },
         }
+
+    def action_search_matching_applicants(self):
+        self.ensure_one()
+        help_message_1 = _("No Matching Applicants")
+        help_message_2 = _("We do not have any applicants who meet the skill requirements for this job position in the database at the moment.")
+        action = self.env['ir.actions.actions']._for_xml_id('hr_recruitment.crm_case_categ0_act_job')
+        context = literal_eval(action['context'])
+        context['active_id'] = self.id
+        action.update({
+            'name': _("Matching Applicants"),
+            'views': [
+                (self.env.ref('hr_recruitment.crm_case_tree_view_job').id, 'list'),
+                (False, 'form'),
+            ],
+            'context': context,
+            'domain': [
+                ('job_id', '!=', self.id),
+                ('skill_ids', 'in', self.skill_ids.ids)
+            ],
+            'help': Markup("<p class='o_view_nocontent_empty_folder'>%s</p><p>%s</p>") % (help_message_1, help_message_2),
+        })
+        return action

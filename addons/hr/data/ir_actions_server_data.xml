@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_open_skills_log_department" model="ir.actions.server">
+        <field name="name">Skill History Report</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field name="binding_model_id" ref="hr.model_hr_department"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+action = env['ir.actions.act_window']._for_xml_id('action_hr_employee_skill_log_department')
+action['domain'] = [('department_id', '=', record.id)]
+        </field>
+    </record>
+
+    <record id="action_print_employees_cv" model="ir.actions.server">
+        <field name="name">Print Resume</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">
+action = env['ir.actions.act_window']._for_xml_id('action_hr_employee_cv_wizard')
+        </field>
+    </record>
+</odoo>

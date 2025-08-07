@@ -23,6 +23,9 @@ class ResourceResource(models.Model):
     show_hr_icon_display = fields.Boolean(related='employee_id.show_hr_icon_display')
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
 
+    # Skills
+    employee_skill_ids = fields.One2many(related='employee_id.employee_skill_ids')
+
     @api.depends('employee_id')
     def _compute_job_title(self):
         for resource in self:

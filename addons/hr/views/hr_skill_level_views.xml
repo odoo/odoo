@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="employee_skill_level_view_tree" model="ir.ui.view">
+        <field name="name">hr.skill.level.list</field>
+        <field name="model">hr.skill.level</field>
+        <field name="arch" type="xml">
+            <list string="Skill Levels" class="o_skill_level_tree" editable="bottom" default_order="level_progress desc">
+                <field name="name"/>
+                <field name="level_progress" widget="progressbar" options="{'editable': true}"/>
+                <field name="default_level" widget="boolean_toggle_load"/>
+                <field name="technical_is_new_default" column_invisible="1"/> <!-- needs to be here to be accessible for the front-end -->
+            </list>
+        </field>
+    </record>
+
+    <record id="employee_skill_level_view_form" model="ir.ui.view">
+        <field name="name">hr.skill.level.form</field>
+        <field name="model">hr.skill.level</field>
+        <field name="arch" type="xml">
+            <form string="Skill Level">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="level_progress" string="Progress (%)"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -14,3 +14,4 @@ from . import test_ui
 from . import test_scenario
 from . import test_hr_department
 from . import test_hr_version
+from . import test_employee_skill

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resume_line_view_form" model="ir.ui.view">
+        <field name="name">hr.resume.line.form</field>
+        <field name="model">hr.resume.line</field>
+        <field name="arch" type="xml">
+            <form string="Resume">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Title"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Odoo Inc." required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" invisible="1"/>
+                            <field name="line_type_id"/>
+                            <field name="display_type" required="1"/>
+                        </group>
+                        <group>
+                            <label for="date_start" string="Validity"/>
+                            <div class="o_row">
+                                <field name="date_start"/>
+                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                <field name="date_end" placeholder="Never Expires"/>
+                            </div>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

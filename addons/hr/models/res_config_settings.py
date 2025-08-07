@@ -8,7 +8,6 @@ class ResConfigSettings(models.TransientModel):
         'resource.calendar', 'Company Working Hours',
         related='company_id.resource_calendar_id', readonly=False)
     module_hr_presence = fields.Boolean(string="Advanced Presence Control")
-    module_hr_skills = fields.Boolean(string="Skills Management")
     hr_presence_control_login = fields.Boolean(related='company_id.hr_presence_control_login', readonly=False)
     hr_presence_control_email = fields.Boolean(related='company_id.hr_presence_control_email', readonly=False)
     hr_presence_control_ip = fields.Boolean(related='company_id.hr_presence_control_ip', readonly=False)
