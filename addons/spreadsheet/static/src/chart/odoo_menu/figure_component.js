@@ -10,16 +10,22 @@ patch(spreadsheet.components.FigureComponent.prototype, {
         this.actionService = useService("action");
         this.notificationService = useService("notification");
     },
+    get chartId() {
+        if (this.props.figureUI.tag !== "chart" && this.props.figureUI.tag !== "carousel") {
+            return undefined;
+        }
+        return this.env.model.getters.getChartIdFromFigureId(this.props.figureUI.id);
+    },
     async navigateToOdooMenu(newWindow) {
-        const menu = this.env.model.getters.getChartOdooMenu(this.props.figureUI.id);
+        const menu = this.env.model.getters.getChartOdooMenu(this.chartId);
         await navigateToOdooMenu(menu, this.actionService, this.notificationService, newWindow);
     },
     get hasOdooMenu() {
-        return this.env.model.getters.getChartOdooMenu(this.props.figureUI.id) !== undefined;
+        return this.chartId && this.env.model.getters.getChartOdooMenu(this.chartId) !== undefined;
     },
     async onClick() {
         try {
-            const definition = this.env.model.getters.getChartDefinition(this.props.figureUI.id);
+            const definition = this.env.model.getters.getChartDefinition(this.chartId);
             if (
                 this.env.isDashboard() &&
                 this.hasOdooMenu &&

@@ -6,10 +6,10 @@ function identity(cmd) {
 }
 
 otRegistry.addTransformation(
-    "DELETE_FIGURE",
+    "DELETE_CHART",
     ["LINK_ODOO_MENU_TO_CHART"],
     (toTransform, executed) => {
-        if (executed.figureId === toTransform.chartId) {
+        if (executed.chartId === toTransform.chartId) {
             return undefined;
         }
         return toTransform;
