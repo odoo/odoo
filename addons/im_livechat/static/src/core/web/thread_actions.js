@@ -5,7 +5,7 @@ import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_
 
 threadActionsRegistry
     .add("livechat-info", {
-        component: LivechatChannelInfoList,
+        actionPanelComponent: LivechatChannelInfoList,
         condition(component) {
             return component.thread?.channel_type === "livechat";
         },
@@ -19,7 +19,7 @@ threadActionsRegistry
         toggle: true,
     })
     .add("livechat-status", {
-        component: LivechatChannelInfoList,
+        actionPanelComponent: LivechatChannelInfoList,
         condition(component) {
             return (
                 component.thread?.channel_type === "livechat" && !component.thread.livechat_end_dt

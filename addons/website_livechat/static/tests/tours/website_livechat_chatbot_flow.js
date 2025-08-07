@@ -164,7 +164,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             },
             {
                 trigger:
-                    ".o-livechat-root:shadow .o-mail-ChatWindow-command[title='Restart Conversation']",
+                    ".o-livechat-root:shadow .o-mail-ChatWindow-header [title='Restart Conversation']",
                 run: "click",
             },
             {
@@ -229,7 +229,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             },
             {
                 trigger:
-                    ".o-livechat-root:shadow .o-mail-ChatWindow-command[title='Restart Conversation']",
+                    ".o-livechat-root:shadow .o-mail-ChatWindow-header [title='Restart Conversation']",
                 run: "click",
             },
             {

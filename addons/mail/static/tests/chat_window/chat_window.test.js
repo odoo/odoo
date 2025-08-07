@@ -106,7 +106,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header", { text: "General" });
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-threadAvatar");
-    await contains(".o-mail-ChatWindow-command", { count: 5 });
+    await contains(".o-mail-ChatWindow-header button", { count: 5 });
     await contains("[title='Start Call']");
     await contains("[title='Start Video Call']");
     await contains("[title='Open Actions Menu']");
@@ -116,7 +116,7 @@ test("chat window: basic rendering", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await contains(".o-mail-ChatWindow-command", { count: 16 });
+    await contains(".o-dropdown-item", { count: 11 });
     await contains(".o-dropdown-item", { text: "Open in Discuss" });
     await contains(".o-dropdown-item", { text: "Attachments" });
     await contains(".o-dropdown-item", { text: "Pinned Messages" });
@@ -160,7 +160,7 @@ test("chat window: fold", async () => {
     await contains(".o-mail-ChatWindow .o-mail-Thread");
     assertChatHub({ opened: [channelId] });
     // Fold chat window
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains(".o-mail-ChatWindow .o-mail-Thread", { count: 0 });
     assertChatHub({ folded: [channelId] });
     // Unfold chat window
@@ -178,7 +178,7 @@ test("chat window: open / close", async () => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
     assertChatHub({ opened: [channelId] });
-    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
+    await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     assertChatHub({});
     // Reopen chat window
@@ -313,8 +313,8 @@ test("Close active thread action in chatwindow on ESCAPE", async () => {
     await start();
     await contains(".o-mail-ChatWindow");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains(".o-mail-ChatWindow-command", { text: "General" });
-    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await contains(".o-mail-ChatWindow-moreActions", { text: "General" });
+    await click(".o-mail-ChatWindow-moreActions", { text: "General" });
     await click(".o-dropdown-item", { text: "Invite People" });
     await contains(".o-discuss-ChannelInvitation");
     triggerHotkey("Escape");
@@ -328,14 +328,14 @@ test("ESC cancels thread rename", async () => {
     setupChatHub({ opened: [channelId] });
     await start();
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains(".o-mail-ChatWindow-command", { text: "General" });
-    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await contains(".o-mail-ChatWindow-moreActions", { text: "General" });
+    await click(".o-mail-ChatWindow-moreActions", { text: "General" });
     await click(".o-dropdown-item", { text: "Rename Thread" });
     await contains(".o-mail-AutoresizeInput.o-focused[title='General']");
     await insertText(".o-mail-AutoresizeInput", "New", { replace: true });
     triggerHotkey("Escape");
     await contains(".o-mail-AutoresizeInput.o-focused", { count: 0 });
-    await contains(".o-mail-ChatWindow-command", { text: "General" });
+    await contains(".o-mail-ChatWindow-moreActions", { text: "General" });
 });
 
 test.tags("focus required");
@@ -662,7 +662,7 @@ test("chat window with a thread: keep scroll position in message list on folded"
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     // fold chat window
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-mail-ChatWindow .o-mail-Thread", { count: 0 });
     // unfold chat window
@@ -689,7 +689,7 @@ test("chat window with a thread: keep scroll position in message list on toggle 
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     // fold chat window
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });
     await openListView("discuss.channel", { res_id: channelId });
@@ -714,7 +714,7 @@ test("folded chat window should hide member-list and settings buttons", async ()
     await click(".o-mail-ChatWindow-header"); // click away to close the more menu
     await contains(".o-dropdown-item", { text: "Members", count: 0 });
     // Fold chat window
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains("[title='Open Actions Menu']", { count: 0 });
     await contains(".o-dropdown-item", { text: "Members", count: 0 });
     await contains(".o-dropdown-item", { text: "Call Settings", count: 0 });
@@ -853,7 +853,7 @@ test("mark as read when opening chat window", async () => {
         })
     );
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
-    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
+    await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "bob" });

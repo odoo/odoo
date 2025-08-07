@@ -123,9 +123,9 @@ test("show call UI in chat window when in call", async () => {
     await click(".o-mail-NotificationItem", { text: "General" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-discuss-Call", { count: 0 });
-    await click(".o-mail-ChatWindow-command[title='Start Call']");
+    await click(".o-mail-ChatWindow-header [title='Start Call']");
     await contains(".o-discuss-Call");
-    await contains(".o-mail-ChatWindow-command[title='Start Call']", { count: 0 });
+    await contains(".o-mail-ChatWindow-header [title='Start Call']", { count: 0 });
 });
 
 test("should disconnect when closing page while in call", async () => {

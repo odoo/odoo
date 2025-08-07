@@ -177,20 +177,7 @@
             <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
             <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
                 <t t-set="quickActions" t-value="messageActions.actions.slice(0, messageActions.actions.length gt quickActionCount ? quickActionCount - 1 : quickActionCount)"/>
-                <t t-foreach="quickActions" t-as="action" t-key="action.id">
-                    <t t-set="isStart" t-value="(!isReverse and action.isFirst) or (isReverse and action.isLast)"/>
-                    <t t-set="isEnd" t-value="(!isReverse and action.isLast) or (isReverse and action.isFirst)"/>
-                    <t t-if="action.component" t-component="action.component" t-props="action.componentProps" classNames="{
-                        'rounded-start-1': isStart,
-                        'rounded-end-1': isEnd,
-                    }"/>
-                    <button t-else="" class="o-mail-Message-actionsBtn btn border-0 p-0 rounded-0" t-att-title="action.name" t-att-name="action.id" t-on-click.stop="(ev) => action.onSelected(ev)" t-att-class="{
-                        'rounded-start-1': isStart,
-                        'rounded-end-1': isEnd,
-                    }">
-                        <i class="fa-lg" t-att-class="action.icon"/>
-                    </button>
-                </t>
+                <ActionList inline="true" group="[quickActions]"/>
                 <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
                     <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column o-mail-Message-moreMenu o-discuss-dropdownMenu border-secondary'" >
                         <t t-call="mail.Message.expandAction"/>

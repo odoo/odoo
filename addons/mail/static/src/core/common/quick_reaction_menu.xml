@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.QuickReactionMenu">
         <Dropdown state="dropdown" manual="true" menuClass="`o-mail-QuickReactionMenu-popover shadow-none`" position="'top-middle'" navigationOptions="navigationOptions">
-            <button class="btn border-0 p-0" t-att-class="attClass" t-att-title="props.action.name" t-att-aria-label="props.action.name" t-on-click="onClick">
+            <button class="btn border-0 p-0 o-inline" t-att-class="attClass" t-att-title="props.action.name" t-att-aria-label="props.action.name" t-on-click="onClick">
                 <i class="fa-lg" t-att-class="props.action.icon"/>
             </button>
             <t t-set-slot="content">

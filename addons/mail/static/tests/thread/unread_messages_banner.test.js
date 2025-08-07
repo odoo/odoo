@@ -243,6 +243,6 @@ test("mobile: mark as read when opening chat", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread.o-focused");
     await contains(".o-mail-Composer:not(.o-focused)");
-    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
+    await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
     await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob", count: 0 });
 });

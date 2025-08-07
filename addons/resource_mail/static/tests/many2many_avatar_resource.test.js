@@ -139,9 +139,7 @@ test("many2many_avatar_resource widget in form view", async () => {
     expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
     await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
-    expect(
-        ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate:first"
-    ).toHaveText("Pierre");
+    expect(".o-mail-ChatWindow-moreActions > .text-truncate:first").toHaveText("Pierre");
 });
 
 test("many2many_avatar_resource widget in list view", async () => {
@@ -211,11 +209,9 @@ test("many2many_avatar_resource widget in list view", async () => {
     expect(queryFirst(".o_avatar_card_buttons button").textContent).toBe("Send message");
     await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
-    expect(
-        queryFirst(
-            ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-        ).textContent
-    ).toBe("Pierre");
+    expect(queryFirst(".o-mail-ChatWindow-moreActions > .text-truncate").textContent).toBe(
+        "Pierre"
+    );
 });
 
 
@@ -300,7 +296,5 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
     await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
-    expect(
-        ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate:first"
-    ).toHaveText("Pierre");
+    expect(".o-mail-ChatWindow-moreActions > .text-truncate:first").toHaveText("Pierre");
 });

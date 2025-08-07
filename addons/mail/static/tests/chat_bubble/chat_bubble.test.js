@@ -60,7 +60,7 @@ test("No duplicated chat bubbles", async () => {
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow", { text: "John" });
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     // Make again from click messaging menu item
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
@@ -119,14 +119,14 @@ test("Ordering of chat bubbles is consistent and seems logical.", async () => {
     await click(".o-mail-ChatBubble[name='3']");
     await contains(".o-mail-ChatWindow", { text: "3" });
     await contains(":nth-child(7 of .o-mail-ChatBubble)[name='Demo']");
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains(".o-mail-ChatBubble[name='Demo']", { count: 0 });
     await click(".o-mail-ChatBubble[name='4']");
     await contains(":nth-child(1 of .o-mail-ChatBubble)[name='3']");
     await contains(":nth-child(2 of .o-mail-ChatBubble)[name='7']");
     await contains(":nth-child(3 of .o-mail-ChatBubble)[name='6']");
     await contains(":nth-child(7 of .o-mail-ChatBubble)[name='Demo']");
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // no reorder on receiving new message
     withUser(userId, () =>
@@ -225,7 +225,7 @@ test("chat bubbles are synced between tabs", async () => {
     await runAllTimers(); // Wait for bus service to fully load
     await click(".o-mail-ChatBubble[name='Marc']", { target: tab1 });
     await contains(".o-mail-ChatWindow", { target: tab2 }); // open sync
-    await click(".o-mail-ChatWindow-command[title='Fold']", { target: tab2 });
+    await click(".o-mail-ChatWindow-header [title='Fold']", { target: tab2 });
     await contains(".o-mail-ChatWindow", { target: tab1, count: 0 }); // fold sync
     await click(".o-mail-ChatBubble[name='Marc'] .o-mail-ChatBubble-close", { target: tab1 });
     await contains(".o-mail-ChatBubble[name='Marc']", { target: tab2, count: 0 }); // close sync
@@ -278,14 +278,14 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
     await contains(".o-mail-ChatHub-hiddenItem", { count: 0 });
     await contains(".o-mail-ChatHub-hiddenBtn", { count: 0 });
     await contains(".o-mail-ChatWindow");
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     // Can open hidden chat from messaging menu
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "2" });
     await contains(".o-mail-ChatHub-hiddenItem", { count: 0 });
     await contains(".o-mail-ChatHub-hiddenBtn", { count: 0 });
     await contains(".o-mail-ChatWindow");
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     // Can close chat from hidden menu.
     await hover(".o-mail-ChatHub-hiddenBtn");
     await hover(".o-mail-ChatHub-hiddenItem");
@@ -538,7 +538,7 @@ test("Open chat window from messaging menu with chat hub compact", async () => {
     await click(".o-mail-NotificationItem", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]); // FIXME: click fold doesn't focusout/blur the composer, thus marks as read
-    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await withUser(johnId, () =>
         rpc("/mail/message/post", {

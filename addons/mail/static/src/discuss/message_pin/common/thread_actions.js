@@ -6,7 +6,7 @@ import { useChildSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 threadActionsRegistry.add("pinned-messages", {
-    component: PinnedMessagesPanel,
+    actionPanelComponent: PinnedMessagesPanel,
     condition(component) {
         return (
             component.thread?.model === "discuss.channel" &&

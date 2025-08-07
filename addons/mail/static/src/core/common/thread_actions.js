@@ -58,7 +58,7 @@ threadActionsRegistry
         sequenceQuick: 10,
     })
     .add("search-messages", {
-        component: SearchMessagesPanel,
+        actionPanelComponent: SearchMessagesPanel,
         condition(component) {
             return (
                 ["discuss.channel", "mail.box"].includes(component.thread?.model) &&
@@ -91,6 +91,21 @@ class ThreadAction extends Action {
     /** Determines whether this is a popover linked to this action. */
     popover = null;
 
+    /** Optional component that is used as action panel of this component, i.e. when action is active. */
+    get actionPanelComponent() {
+        return this.explicitDefinition.actionPanelComponent;
+    }
+
+    /** Condition to display the action panel component of this action. */
+    get actionPanelComponentCondition() {
+        return this.isActive && this.actionPanelComponent && this.condition && !this.popover;
+    }
+
+    /** Props to pass to the action panel component of this action. */
+    get actionPanelComponentProps() {
+        return this.explicitDefinition.actionPanelComponentProps?.(this._component, this);
+    }
+
     /** Closes this action. */
     close() {
         if (this.toggle) {
@@ -98,11 +113,6 @@ class ThreadAction extends Action {
                 this._component.threadActions.actionStack.pop();
         }
         this.explicitDefinition.close?.(this._component, this);
-    }
-
-    /** Condition to display the component of this action. */
-    get componentCondition() {
-        return this.isActive && this.component && this.condition && !this.popover;
     }
 
     /** Condition to display this action. */
@@ -246,10 +256,12 @@ class ThreadAction extends Action {
 
 export const threadActionsInternal = {
     condition(component, id, action) {
-        if (action.condition === undefined) {
+        if (!action?.condition) {
             return true;
         }
-        return action.condition(component);
+        return typeof action.condition === "function"
+            ? action.condition(component)
+            : action.condition;
     },
 };
 

@@ -319,7 +319,7 @@ test("show new message separator when message is received while chat window is c
     listenStoreFetch("init_messaging");
     await start();
     await waitStoreFetch("init_messaging");
-    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
+    await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receiving a message

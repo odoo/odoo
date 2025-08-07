@@ -7,6 +7,7 @@ messageActionsRegistry.add("create-or-view-thread", {
         component.message.thread.hasSubChannelFeature &&
         component.store.self.main_user_id?.share === false,
     icon: "fa fa-comments-o",
+    iconLarge: "fa fa-lg fa-comments-o",
     onSelected: (component) => {
         if (component.message.linkedSubChannel) {
             component.message.linkedSubChannel.open({ focus: true });

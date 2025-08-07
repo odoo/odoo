@@ -9,35 +9,16 @@
     outline: none;
 }
 
-.o-mail-ChatWindow-command {
+.o-mail-ChatWindow-moreActions {
     color: inherit !important;
-    &.o-quick {
-        opacity: 15%;
-        .o-mail-ChatWindow.o-mobile & {
-            opacity: 50%
-        }
-    }
-    &.o-actionsMenu {
-        background-color: inherit !important;
-    }
-    &:not(.o-actionsMenu) {
-        padding: map-get($spacers, 1) / 2;
-    }
+    background-color: inherit !important;
     &:hover, &.o-active, &.o-hover {
-        color: var(--mail-ChatWindow-commandHoverColor, black) !important;
-
-        &.o-quick, &.o-actionsMenu {
-            backdrop-filter: invert(.025);
-        }
-    }
-    &:hover, &.o-active, &.o-hover {
+        color: var(--mail-ChatWindow-moreActionsHoverColor, black) !important;
+        backdrop-filter: invert(.025);
         border-color: transparent !important;
     }
     &:not(.o-active):not(.o-hover) .fa-caret-down {
         opacity: 25%;
-    }
-    &.o-small {
-        --border-opacity: 0.5
     }
 }
 
