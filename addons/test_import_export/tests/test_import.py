@@ -856,7 +856,7 @@ foo3,US,0,persons\n""",
             ['Joel', 'US', 'Portal', '', 'tag1', 'tag3'],
         ]
 
-        with RecordCapturer(self.env['res.partner'], []) as capture:
+        with RecordCapturer(self.env['res.partner']) as capture:
             import_wizard = self.env['base_import.import'].create({
                 'res_model': 'res.partner',
                 'file': '\n'.join([';'.join(partner_values) for partner_values in file_partner_values]),

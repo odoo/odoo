@@ -116,7 +116,7 @@ class TestUser(MailCommon):
             '"Jean Poilvache" <POILVACHE@test.example.com>',
         ]
         with self.mock_mail_gateway(), \
-             RecordCapturer(self.env['res.users'], []) as capture:
+             RecordCapturer(self.env['res.users']) as capture:
             self.env['res.users'].web_create_users(src)
 
         exp_emails = ['poiluchette@test.example.com', 'poilvache@test.example.com']
