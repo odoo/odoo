@@ -61,4 +61,4 @@ class ResetTransformImageAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(ImageTransformOptionPlugin.id, ImageTransformOptionPlugin);
+registry.category("builder-plugins").add(ImageTransformOptionPlugin.id, ImageTransformOptionPlugin);
