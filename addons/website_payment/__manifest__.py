@@ -25,7 +25,6 @@ This is a bridge module that adds multi-website support for payment providers.
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            'website_payment/static/src/js/*',
             'website_payment/static/src/interactions/*',
             'website_payment/static/src/snippets/**/*.js',
             ('remove', 'website_payment/static/src/snippets/**/*.edit.js'),

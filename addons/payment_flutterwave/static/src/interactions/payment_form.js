@@ -1,11 +1,13 @@
-import paymentForm from '@payment/js/payment_form';
+import { patch } from '@web/core/utils/patch';
 
-paymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
+
+patch(PaymentForm.prototype, {
 
     /**
      * Allow forcing redirect to authorization url for Flutterwave token flow.
      *
-     * @override method from @payment/js/payment_form
+     * @override method from @payment/interactions/payment_form
      * @private
      * @param {string} providerCode - The code of the selected payment option's provider.
      * @param {number} paymentOptionId - The id of the selected payment option.
@@ -17,7 +19,7 @@ paymentForm.include({
         if (providerCode === 'flutterwave' && processingValues.redirect_form_html) {
             this._processRedirectFlow(...arguments);
         } else {
-            this._super(...arguments);
+            super._processTokenFlow(...arguments);
         }
     }
 });

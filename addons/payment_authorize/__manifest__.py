@@ -19,8 +19,8 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'payment_authorize/static/src/interactions/payment_form.js',
             'payment_authorize/static/src/scss/payment_authorize.scss',
-            'payment_authorize/static/src/js/payment_form.js',
         ],
     },
     'author': 'Odoo S.A.',

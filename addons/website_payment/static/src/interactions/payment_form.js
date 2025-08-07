@@ -1,25 +1,30 @@
 import { _t } from '@web/core/l10n/translation';
+import { patch } from '@web/core/utils/patch';
+import { patchDynamicContent } from '@web/public/utils';
 
-import PaymentForm from '@payment/js/payment_form';
+import { PaymentForm } from '@payment/interactions/payment_form';
 
-PaymentForm.include({
-    events: Object.assign({}, PaymentForm.prototype.events || {}, {
-        'change input[name="o_donation_amount"]': '_updateAmount',
-        'focus input[name="amount"]': '_updateAmount',
-        'focus input[name="o_donation_amount"]': '_updateAmount',
-    }),
-
+patch(PaymentForm.prototype, {
+    setup() {
+        super.setup();
+        patchDynamicContent(this.dynamicContent, {
+            'input[name="o_donation_amount"]': {
+                't-on-change': this.updateAmount.bind(this),
+                't-on-focus': this.updateAmount.bind(this),
+            },
+            'input[name="amount"]': { 't-on-focus': this.updateAmount.bind(this) },
+        });
+    },
 
     // #=== EVENT HANDLERS ===#
 
     /**
      * Update the amount in the payment context with the user input.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    _updateAmount(ev) {
+    updateAmount(ev) {
         if (ev.target.value >= 0) {
             this.paymentContext.amount = ev.target.value;
             const otherAmountEl = this.el.querySelector("#other_amount");
@@ -27,9 +32,9 @@ PaymentForm.include({
                 otherAmountEl.value = ev.target.value;
             }
             if (ev.target.id === "other_amount" || ev.target.id === "other_amount_value") {
-                this.el.querySelectorAll('input[name="o_donation_amount"][type="radio"]').forEach((radioEl) => {
-                    radioEl.checked = false;
-                });
+                this.el.querySelectorAll('input[name="o_donation_amount"][type="radio"]').forEach(
+                    radioEl => radioEl.checked = false
+                );
             } else if (ev.target.name === "o_donation_amount" && otherAmountEl) {
                 otherAmountEl.checked = false;
             }
@@ -43,10 +48,9 @@ PaymentForm.include({
      * 3. The custom input must have a value.
      *
      * @override method from payment.payment_form
-     * @private
      * @param {Event} ev
      */
-    async _submitForm(ev) {
+    async submitForm(ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
@@ -65,7 +69,7 @@ PaymentForm.include({
             return donationAmountInputEl.focus();
         }
 
-        await this._super(...arguments);
+        await super.submitForm(...arguments);
     },
 
     // #=== PAYMENT FLOW ===#
@@ -104,12 +108,15 @@ PaymentForm.include({
                 this._enableButton();
                 return;
             }
+
+            // This prevents unnecessary toaster notifications on payment failure by catching the
+            // Promise.reject as we are already displaying error popup.
+            await super._initiatePaymentFlow(...arguments).catch((error) => {
+                console.log(error.data.message);
+            });
+        } else {
+            await super._initiatePaymentFlow(...arguments);
         }
-        // This prevents unnecessary toaster notifications on payment failure
-        // by catching the Promise.reject as we are already displaying error popup.
-        await this._super(...arguments).catch((error) => {
-            console.log(error.data.message);
-        });
     },
 
     /**
@@ -120,7 +127,7 @@ PaymentForm.include({
      * @return {object} The extended transaction route params.
      */
     _prepareTransactionRouteParams() {
-        const transactionRouteParams = this._super(...arguments);
+        const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
         return document.querySelector('.o_donation_payment_form')
             ? {
             ...transactionRouteParams,

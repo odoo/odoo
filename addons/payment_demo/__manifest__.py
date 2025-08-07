@@ -22,7 +22,6 @@
     'assets': {
         'web.assets_frontend': [
             'payment_demo/static/src/interactions/**/*',
-            'payment_demo/static/src/js/**/*',
         ],
     },
     'author': 'Odoo S.A.',

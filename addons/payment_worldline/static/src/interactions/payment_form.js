@@ -1,6 +1,8 @@
-import PaymentForm from '@payment/js/payment_form';
+import { patch } from '@web/core/utils/patch';
 
-PaymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
+
+patch(PaymentForm.prototype, {
     /**
      * Allow forcing redirect to 3-D Secure authentication for Ogone token flow.
      *
@@ -17,7 +19,7 @@ PaymentForm.include({
             delete processingValues.force_flow;
             this._processRedirectFlow(...arguments);
         } else {
-            this._super(...arguments);
+            super._processTokenFlow(...arguments);
         }
     },
 });

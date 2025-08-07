@@ -2,13 +2,17 @@
 
 import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
-
-import paymentForm from '@payment/js/payment_form';
 import { rpc, RPCError } from '@web/core/network/rpc';
+import { patch } from '@web/core/utils/patch';
 
-paymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
 
-    authorizeData: undefined,
+patch(PaymentForm.prototype, {
+
+    setup() {
+        super.setup();
+        this.authorizeData = {}; // Store the form data of each instantiated payment method.
+    },
 
     // #=== DOM MANIPULATION ===#
 
@@ -25,12 +29,11 @@ paymentForm.include({
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'authorize') {
-            await this._super(...arguments);
+            await super._prepareInlineForm(...arguments);
             return;
         }
 
         // Check if the inline form values were already extracted.
-        this.authorizeData ??= {}; // Store the form data of each instantiated payment method.
         if (flow === 'token') {
             return; // Don't show the form for tokens.
         } else if (this.authorizeData[paymentOptionId]) {
@@ -75,7 +78,8 @@ paymentForm.include({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'authorize' || flow === 'token') {
-            await this._super(...arguments); // Tokens are handled by the generic flow
+             // Tokens are handled by the generic flow
+            await super._initiatePaymentFlow(...arguments);
             return;
         }
 
@@ -87,7 +91,7 @@ paymentForm.include({
             return;
         }
 
-        await this._super(...arguments);
+        await super._initiatePaymentFlow(...arguments);
     },
 
     /**
@@ -103,7 +107,7 @@ paymentForm.include({
      */
     async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         if (providerCode !== 'authorize') {
-            this._super(...arguments);
+            await super._processDirectFlow(...arguments);
             return;
         }
 
@@ -117,9 +121,9 @@ paymentForm.include({
         };
 
         // Dispatch secure data to Authorize.Net to get a payment nonce in return
-        Accept.dispatchData(
-            secureData, response => this._authorizeHandleResponse(response, processingValues)
-        );
+        Accept.dispatchData(secureData, async response => {
+            await this._authorizeHandleResponse(response, processingValues);
+        });
     },
 
     /**
@@ -130,7 +134,7 @@ paymentForm.include({
      * @param {object} processingValues - The processing values of the transaction.
      * @return {void}
      */
-    _authorizeHandleResponse(response, processingValues) {
+    async _authorizeHandleResponse(response, processingValues) {
         if (response.messages.resultCode === 'Error') {
             let error = '';
             response.messages.message.forEach(msg => error += `${msg.code}: ${msg.text}\n`);
@@ -140,21 +144,22 @@ paymentForm.include({
         }
 
         // Initiate the payment
-        rpc('/payment/authorize/payment', {
-            'reference': processingValues.reference,
-            'partner_id': processingValues.partner_id,
-            'opaque_data': response.opaqueData,
-            'access_token': processingValues.access_token,
-        }).then(() => {
+        try {
+            await this.waitFor(rpc('/payment/authorize/payment', {
+                'reference': processingValues.reference,
+                'partner_id': processingValues.partner_id,
+                'opaque_data': response.opaqueData,
+                'access_token': processingValues.access_token,
+            }));
             window.location = '/payment/status';
-        }).catch((error) => {
+        } catch (error) {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
                 this._enableButton();
             } else {
                 return Promise.reject(error);
             }
-        });
+        }
     },
 
     // #=== GETTERS ===#

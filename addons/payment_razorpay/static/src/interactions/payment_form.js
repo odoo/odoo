@@ -1,10 +1,12 @@
 /* global Razorpay */
 
-import paymentForm from '@payment/js/payment_form';
 import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
+import { patch } from '@web/core/utils/patch';
 
-paymentForm.include({
+import { PaymentForm } from '@payment/interactions/payment_form';
+
+patch(PaymentForm.prototype, {
 
     // #=== DOM MANIPULATION ===#
 
@@ -22,7 +24,7 @@ paymentForm.include({
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'razorpay') {
-            this._super(...arguments);
+            await super._prepareInlineForm(...arguments);
             return;
         }
 
@@ -38,11 +40,11 @@ paymentForm.include({
 
     async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         if (providerCode !== 'razorpay') {
-            this._super(...arguments);
+            await super._processDirectFlow(...arguments);
             return;
         }
         const razorpayOptions = this._prepareRazorpayOptions(processingValues);
-        await loadJS('https://checkout.razorpay.com/v1/checkout.js');
+        await this.waitFor(loadJS('https://checkout.razorpay.com/v1/checkout.js'));
         const RazorpayJS = Razorpay(razorpayOptions);
         RazorpayJS.open();
         RazorpayJS.on('payment.failed', response => {
