@@ -129,12 +129,17 @@ export class Operation {
         let removeClickListener = () => {};
         if (shouldInterceptClick) {
             const onClick = (ev) => {
-                const trueTargetEl = this.editableDocument.elementsFromPoint(
+                const trueTargetEls = this.editableDocument.elementsFromPoint(
                     ev.clientX,
                     ev.clientY
-                )[1];
+                );
                 this.next(() => {
-                    trueTargetEl.click();
+                    for (const trueTargetEl of trueTargetEls) {
+                        if (trueTargetEl.isConnected) {
+                            trueTargetEl.click();
+                            break;
+                        }
+                    }
                 });
             };
             this.editableDocument.addEventListener("click", onClick);
