@@ -792,16 +792,17 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
 
         payment.action_post()
 
+        year = fields.Date.today().year
         wizard = self.env['account.resequence.wizard'].with_context({
             'active_ids': payment.move_id.ids,
             'active_model': 'account.move',
         }).create({
-            'first_name': 'PBNK1/2025/00002',
+            'first_name': f'PBNK1/{year}/00002',
         })
         wizard.resequence()
 
-        self.assertEqual(payment.move_id.name, 'PBNK1/2025/00002')
-        self.assertEqual(payment.name, 'PBNK1/2025/00002')
+        self.assertEqual(payment.move_id.name, f'PBNK1/{year}/00002')
+        self.assertEqual(payment.name, f'PBNK1/{year}/00002')
 
     def test_vendor_payment_save_user_selected_journal_id(self):
         journal_bank = self.env['account.journal'].search([('name', '=', 'Bank')])
