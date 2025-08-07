@@ -32,6 +32,11 @@ export class ProductConfiguratorDialog extends Component {
             optional: true,
         },
         soDate: String,
+        size: {
+            type: String,
+            optional: true,
+            validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
+        },
         edit: { type: Boolean, optional: true },
         options: {
             type: Object,

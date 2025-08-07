@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="sale.ProductConfiguratorDialog">
-        <Dialog size="size" title="title" contentClass="'o_sale_product_configurator_dialog'">
+        <Dialog size="props.size" title="title" contentClass="'o_sale_product_configurator_dialog'">
             <ProductList t-if="this.state.products.length" products="this.state.products"/>
             <ProductList
                 t-if="this.state.optionalProducts.length"
