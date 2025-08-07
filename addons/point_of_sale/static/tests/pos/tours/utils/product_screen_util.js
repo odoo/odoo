@@ -601,10 +601,12 @@ export function selectedOrderlineHasDirect(productName, quantity, price) {
         price,
     });
 }
-export function orderComboLineHas(productName, quantity) {
+export function orderComboLineHas(productName, quantity, priceUnit, attributeLine = "") {
     return Order.hasLine({
         productName,
         quantity,
+        priceUnit,
+        attributeLine,
     });
 }
 export function orderLineHas(productName, quantity, price) {
@@ -975,6 +977,35 @@ export function clickFastPaymentButton(paymentMethodName) {
             content: `Select ${paymentMethodName} fast Payment Method`,
             trigger: `.product-screen button:contains(${paymentMethodName})`,
             run: "click",
+        },
+    ];
+}
+
+export function longPressOrderline(productName, delay = 500) {
+    return [
+        {
+            content: `long press on orderline with product '${productName}'`,
+            trigger: `.order-container .orderline:has(.product-name:contains("${productName}"))`,
+            run: async ({ queryFirst }) => {
+                const el = queryFirst`.order-container .orderline:has(.product-name:contains("${productName}"))`;
+                if (!el) {
+                    throw new Error(`Orderline with product '${productName}' not found`);
+                }
+                el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                el.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+            },
+        },
+    ];
+}
+
+export function openCartMobile() {
+    return [
+        {
+            content: "Mobile - open cart",
+            trigger: ".switchpane .btn-switchpane:contains('Cart')",
+            run: "click",
+            isActive: ["mobile"],
         },
     ];
 }

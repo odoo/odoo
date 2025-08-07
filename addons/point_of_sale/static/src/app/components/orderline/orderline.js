@@ -1,4 +1,5 @@
-import { Component } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
+import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
@@ -13,6 +14,8 @@ export class Orderline extends Component {
         showTaxGroup: { type: Boolean, optional: true },
         mode: { type: String, optional: true }, // display, receipt
         basic_receipt: { type: Boolean, optional: true },
+        onClick: { type: Function, optional: true },
+        onLongPress: { type: Function, optional: true },
     };
     static defaultProps = {
         showImage: false,
@@ -20,6 +23,8 @@ export class Orderline extends Component {
         showTaxGroup: false,
         mode: "display",
         basic_receipt: false,
+        onClick: () => {},
+        onLongPress: () => {},
     };
 
     formatCurrency(amount) {
@@ -41,5 +46,27 @@ export class Orderline extends Component {
     }
     getInternalNotes() {
         return JSON.parse(this.line.note || "[]");
+    }
+
+    setup() {
+        this.root = useRef("root");
+        if (this.props.mode === "display") {
+            useTimedPress(this.root, [
+                {
+                    type: "release",
+                    maxDelay: 500,
+                    callback: (event, duration) => {
+                        this.props.onClick(event, duration);
+                    },
+                },
+                {
+                    type: "hold",
+                    delay: 500,
+                    callback: (event, duration) => {
+                        this.props.onLongPress(event, duration);
+                    },
+                },
+            ]);
+        }
     }
 }

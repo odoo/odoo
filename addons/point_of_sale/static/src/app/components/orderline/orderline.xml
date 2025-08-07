@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
-        <li t-if="line.order_id" class="orderline position-relative d-flex align-items-center lh-sm cursor-pointer"
+        <li t-ref="root" t-if="line.order_id" class="orderline position-relative d-flex align-items-center lh-sm cursor-pointer"
             t-attf-class="{{ line.combo_parent_id ? 'orderline-combo fst-italic ms-4' : '' }}"
             t-att-class="{'selected' : line.isSelected() and this.props.mode === 'display', ...line.getDisplayClasses(), ...(props.class || []), 'border-start': props.mode != 'receipt' and line.combo_parent_id}">
             <div class="product-order"></div>

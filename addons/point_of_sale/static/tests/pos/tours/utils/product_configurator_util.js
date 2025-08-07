@@ -7,15 +7,74 @@ export function pickRadio(name) {
         },
     ];
 }
+export function selectedRadio(name) {
+    return [
+        {
+            content: `checking selected radio attribute with name ${name}`,
+            trigger: `.modal .attribute-name-cell:contains('${name}') input:checked`,
+        },
+    ];
+}
+export function pickMulti(name) {
+    return [
+        {
+            content: `picking multi attribute with name ${name}`,
+            trigger: `.modal label[for^="multi-"]:contains('${name}')`,
+            run: "click",
+        },
+    ];
+}
+export function selectedMulti(name) {
+    return [
+        {
+            content: `checking selected multi attribute with name ${name}`,
+            trigger: `.modal label[for^="multi-"].active:contains('${name}')`,
+        },
+    ];
+}
 export function pickSelect(name) {
     return [
         {
             content: `picking select attribute with name ${name}`,
             trigger: `.modal .configurator_select:has(option:contains('${name}'))`,
-            run: `select ${name}`,
+            run: ({ queryAll }) => {
+                const selects = queryAll`.modal .configurator_select`;
+                for (const select of selects) {
+                    const option = Array.from(select.options).find(
+                        (opt) => opt.textContent.trim() === name
+                    );
+                    if (option) {
+                        select.value = option.value;
+                        // Manually trigger change event
+                        select.dispatchEvent(new Event("change", { bubbles: true }));
+                        return;
+                    }
+                }
+                throw new Error(`Option "${name}" not found in any select`);
+            },
         },
     ];
 }
+
+export function selectedSelect(name) {
+    return [
+        {
+            content: `check selected value for select containing option "${name}"`,
+            trigger: `.modal .configurator_select:has(option:contains(${name}))`,
+            run: ({ queryAll }) => {
+                const selects = queryAll`.modal .configurator_select:has(option:contains(${name}))`;
+                for (const select of selects) {
+                    const selected = select.options[select.selectedIndex];
+                    if (selected?.textContent.trim() === name) {
+                        return true;
+                    }
+                }
+                throw new Error(`No select found with option "${name}" selected`);
+            },
+        },
+    ];
+}
+
 export function pickColor(name) {
     return [
         {
@@ -25,12 +84,40 @@ export function pickColor(name) {
         },
     ];
 }
+export function selectedColor(name) {
+    return [
+        {
+            content: `checking selected color attribute with name ${name}`,
+            trigger: `.modal .configurator_color[data-color='${name}'].active`,
+        },
+    ];
+}
 export function fillCustomAttribute(value) {
     return [
         {
             content: `filling custom attribute with value ${value}`,
             trigger: `.modal .custom_value`,
             run: `edit ${value}`,
+        },
+    ];
+}
+
+export function selectedCustomAttribute(value) {
+    return [
+        {
+            content: `checking selected custom attribute with value "${value}"`,
+            // trigger: `.modal .custom_value:contains('${value}')`,
+            trigger: `.modal .custom_value`,
+            run: ({ queryAll }) => {
+                const inputs = queryAll(".modal .custom_value");
+                for (const input of inputs) {
+                    const actual = input.value?.trim();
+                    if (actual === value) {
+                        return true;
+                    }
+                }
+                throw new Error(`No custom input found with value "${value}"`);
+            },
         },
     ];
 }

@@ -22,7 +22,12 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             combo.select("Combo Product 9"),
             // Check Product Configurator is open
             Dialog.is("Attribute selection"),
-            Dialog.discard(),
+            {
+                content: "dialog discard",
+                trigger:
+                    ".modal-footer .o-default-button:contains(/^Add$/) + .o-default-button:contains(/^Discard$/)",
+                run: "click",
+            },
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),
             combo.isSelected("Combo Product 7"),
