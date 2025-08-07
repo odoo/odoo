@@ -14,6 +14,11 @@ For sending and receiving electronic invoices to Nilvera.
         'views/account_move_views.xml',
         'wizard/account_move_send_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_tr_nilvera_einvoice/static/src/components/**/*',
+        ],
+    },
     'auto_install': ['l10n_tr_nilvera'],
     'license': 'LGPL-3',
 }
