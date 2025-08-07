@@ -200,33 +200,50 @@ class HrAttendanceOvertimeRule(models.Model):
             ('employee_id', 'in', employees.ids),
         ])
 
-    def process_rules(self, employees, date_start, date_end=None):
-        # start on last monday before date_start, end on first sunday after
-        date_end = date_end or date_start
-        date_start -= relativedelta(days=date_start.weekday())
-        date_end += relativedelta(days=6-date_end.weekday())
+    @api.model
+    def _get_attendance_group_by_tz(attendances):
+        """ Given `attendances`, return a dict { employee timezone: attendances }
+            of all attendances that can "interact" with an attendance in the original set
+            when computing overtimes.
+            i.e. all attendances that happen in the same week for a same employee
+        """
+        employees = attendances.employee_ids
 
-        # Assume the employee doesn't change timezone between date_start and date_end
-        datetime_start = datetime.combine(date_start, datetime.min.time())
-        datetime_end = datetime.combine(date_end, datetime.max.time())
         employee_timezones = employees._get_calendar_tz_batch(datetime_start)
         tzset = set(pytz.timezone(tz) for tz in employee_timezones.values())
 
-        # fetch all attendances where the start is between
-        # date_start in the timezone where midignight is earliest
-        # and the day after date_end in the timezone where midnight is the latest
-        datetime_min = min(datetime_start.replace(tzinfo=tz) for tz in tzset)
-        datetime_max = max(datetime_end.replace(tzinfo=tz) for tz in tzset)
-        for employee, attendances in self.env.search([
-            ('date_start', '>=', datetime_min),
-            ('date_end', '<=', datetime_max),
+        # start on last monday before date_start, end on first sunday after
+        date_start = min(att.check_in.astimezone(employee_timezones[att.employee_id.id]).date())
+        date_start -= relativedelta(days=date_start.weekday())
+        # use `check_in` for date_end too, bc we always consider an attendance to be for the date of the check_in
+        date_end = max(att.check_in.astimezone(employee_timezones[att.employee_id.id]).date())
+        date_end += relativedelta(days=6-date_end.weekday())
+
+        datetime_start = datetime.combine(date_start, datetime.min.time())
+        datetime_end = datetime.combine(date_end, datetime.max.time())
+
+        attendances_by_tz = {}
+        for employee, employee_attendances in self.env['hr.attendance'].search([
+            ('check_in', '>=', datetime_min),
+            ('check_out', '<=', datetime_max),
             ('employee_id', 'in', employees.ids),
         ]).grouped('employee_id').items():
             # Remove irrelevant attendances for the employee timezone
-            tz = pytz.timezone(employee_timezones[employee.id])
-            attendances = attendances.filtered(
+            tz_name = employee_timezones[employee.id]
+            tz = pytz.timezone(tz_name)
+            employee_attendances = employee_attendances.filtered(
                 lambda att: datetime_start.replace(tzinfo=tz) <= att.check_in <= datetime_end.replace(tzinfo=tz)
             )
+
+            attendances_by_tz[tz_name] = attendances_by_tz.get(tz_name, self.env['hr.attendance']) | attendances
+
+        return attendances_by_tz
+
+
+    def process_rules(self, attendances):
+        attendances_by_tz = self._get_attendance_group_by_tz(attendances)
+        for tz_name, attendances in attendances_by_tz.items():
+            tz = pytz.timezone(tz_name)
 
             intervals_list = self.get_timing_overtime_intervals_list(attendances)
             intervals_list.extend(self.get_quantity_overtime_intervals_list(attendances, tz))
