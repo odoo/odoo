@@ -2625,21 +2625,26 @@ export class PosStore extends WithLazyGetterTrap {
             fastPaymentMethod: paymentMethod,
         });
         await validation.validateOrder(false);
+        this.isFastPaymentRunning = false;
     }
 
-    async _askForCustomerIfRequired() {
-        const splitPayments = this.getOrder().payment_ids.filter(
-            (payment) => payment.payment_method_id.split_transactions
-        );
-        if (splitPayments.length && !this.getOrder().getPartner()) {
-            const paymentMethod = splitPayments[0].payment_method_id;
-            const confirmed = await ask(this.dialog, {
-                title: _t("Customer Required"),
-                body: _t("Customer is required for %s payment method.", paymentMethod.name),
-            });
-            if (confirmed) {
-                this.pos.selectPartner();
+    checkAndSkipScreenWithPrint(paymentMethodId = null) {
+        const order = this.getOrder();
+        if (
+            order.nb_print === 0 &&
+            this.config.iface_print_auto &&
+            this.config.iface_print_skip_screen
+        ) {
+            this.isFastPaymentRunning = true;
+            const params = { orderUuid: order.uuid };
+            if (paymentMethodId) {
+                params["paymentMethodId"] = paymentMethodId;
             }
+            if (order.uuid === this.selectedOrderUuid) {
+                this.navigate("FeedbackScreen", params);
+            }
+            return true;
+        } else {
             return false;
         }
     }

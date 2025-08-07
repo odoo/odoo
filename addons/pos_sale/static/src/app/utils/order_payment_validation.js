@@ -1,11 +1,9 @@
-/** @odoo-module **/
-
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
 
-patch(PaymentScreen.prototype, {
+patch(OrderPaymentValidation.prototype, {
     async afterOrderValidation() {
-        const lines = this.currentOrder.lines.filter(
+        const lines = this.order.lines.filter(
             (e) => e.sale_order_origin_id && e.down_payment_details
         );
         if (lines.length > 0) {

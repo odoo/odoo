@@ -926,8 +926,8 @@ registry.category("web_tour.tours").add("test_direct_sales", {
 
             Chrome.clickPlanButton(),
             FloorScreen.clickNewOrder(),
-            ProductScreen.setTab("Test"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.setTab("Test"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("4.40"),
             ProductScreen.clickPayButton(),

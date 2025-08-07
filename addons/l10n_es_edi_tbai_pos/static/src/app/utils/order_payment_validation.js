@@ -1,9 +1,9 @@
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { qrCodeSrc } from "@point_of_sale/utils";
 
-patch(PaymentScreen.prototype, {
-    async _postPushOrderResolve(order, order_server_ids) {
+patch(OrderPaymentValidation.prototype, {
+    async beforePostPushOrderResolve(order, order_server_ids) {
         if (this.pos.company.l10n_es_tbai_is_enabled) {
             const l10n_es_pos_tbai_qrurl = await this.pos.data.call(
                 "pos.order",
@@ -14,6 +14,6 @@ patch(PaymentScreen.prototype, {
                 ? qrCodeSrc(l10n_es_pos_tbai_qrurl)
                 : undefined;
         }
-        return super._postPushOrderResolve(...arguments);
+        return super.beforePostPushOrderResolve(...arguments);
     },
 });

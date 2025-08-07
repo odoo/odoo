@@ -1,20 +1,14 @@
-import { _t } from "@web/core/l10n/translation";
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { omit } from "@web/core/utils/objects";
-import { useService } from "@web/core/utils/hooks";
 
-patch(PaymentScreen.prototype, {
-    setup() {
-        super.setup(...arguments);
-        this.report = useService("report");
-    },
-    //@override
+patch(OrderPaymentValidation.prototype, {
     async validateOrder(isForceValidate) {
         const pointChanges = {};
         const newCodes = [];
-        for (const pe of Object.values(this.currentOrder.uiState.couponPointChanges)) {
+        for (const pe of Object.values(this.order.uiState.couponPointChanges)) {
             if (pe.coupon_id > 0) {
                 pointChanges[pe.coupon_id] = pe.points;
             } else if (pe.barcode && !pe.giftCardId) {
@@ -22,7 +16,7 @@ patch(PaymentScreen.prototype, {
                 newCodes.push(pe.barcode);
             }
         }
-        for (const line of this.currentOrder._get_reward_lines()) {
+        for (const line of this.order._get_reward_lines()) {
             if (line.coupon_id.id < 1) {
                 continue;
             }
@@ -32,7 +26,7 @@ patch(PaymentScreen.prototype, {
                 pointChanges[line.coupon_id.id] -= line.points_cost;
             }
         }
-        if (!(await this._isOrderValid(isForceValidate))) {
+        if (!(await this.isOrderValid(isForceValidate))) {
             return;
         }
         // No need to do an rpc if no existing coupon is being used.
@@ -59,7 +53,7 @@ patch(PaymentScreen.prototype, {
                     }
                 }
                 if (!successful) {
-                    this.dialog.add(AlertDialog, {
+                    this.pos.dialog.add(AlertDialog, {
                         title: _t("Error validating rewards"),
                         body: payload.message,
                     });
@@ -75,13 +69,13 @@ patch(PaymentScreen.prototype, {
     /**
      * @override
      */
-    async _postPushOrderResolve(order, server_ids) {
+    async beforePostPushOrderResolve(order, server_ids) {
         if (!["draft", "cancel"].includes(order.state)) {
-            await this._postProcessLoyalty(order);
+            await this.postProcessLoyalty(order);
         }
-        return super._postPushOrderResolve(order, server_ids);
+        return super.beforePostPushOrderResolve(order, server_ids);
     },
-    async _postProcessLoyalty(order) {
+    async postProcessLoyalty(order) {
         // Compile data for our function
         const ProgramModel = this.pos.models["loyalty.program"];
         const rewardLines = order._get_reward_lines();
@@ -210,7 +204,7 @@ patch(PaymentScreen.prototype, {
             }
             if (payload.coupon_report) {
                 for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
-                    await this.report.doAction(actionId, active_ids);
+                    await this.pos.env.services.report.doAction(actionId, active_ids);
                 }
                 order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
             }

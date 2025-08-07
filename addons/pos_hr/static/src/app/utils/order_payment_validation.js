@@ -1,10 +1,10 @@
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
 
-patch(PaymentScreen.prototype, {
+patch(OrderPaymentValidation.prototype, {
     async validateOrder(isForceValidate) {
         if (this.pos.config.module_pos_hr) {
-            this.currentOrder.employee_id = this.pos.getCashier();
+            this.order.employee_id = this.pos.getCashier();
         }
 
         await super.validateOrder(...arguments);

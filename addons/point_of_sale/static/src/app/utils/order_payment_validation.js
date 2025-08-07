@@ -19,11 +19,17 @@ import { ask } from "./make_awaitable_dialog";
  */
 export default class OrderPaymentValidation {
     constructor({ pos, order, fastPaymentMethod = null }) {
-        this.pos = pos;
-        this.order = order;
+        this.setup({ pos, order, fastPaymentMethod });
+    }
 
-        if (fastPaymentMethod) {
-            this.order.addPaymentline(fastPaymentMethod);
+    setup(vals) {
+        this.pos = vals.pos;
+        this.order = vals.order;
+        this.payment_methods_from_config = this.pos.config.payment_method_ids
+            .slice()
+            .sort((a, b) => a.sequence - b.sequence);
+        if (vals.fastPaymentMethod) {
+            this.order.addPaymentline(vals.fastPaymentMethod);
         }
     }
 
@@ -40,13 +46,6 @@ export default class OrderPaymentValidation {
 
     get paymentLines() {
         return this.order.payment_ids;
-    }
-
-    /**
-     * This method can be overridden to perform checks before starting the order validation process.
-     */
-    async askBeforeValidation() {
-        return true;
     }
 
     /**
@@ -89,7 +88,6 @@ export default class OrderPaymentValidation {
             }
 
             await this.finalizeValidation();
-            await this.afterOrderValidation();
         }
 
         return false;
@@ -124,7 +122,9 @@ export default class OrderPaymentValidation {
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.order.isToInvoice()) {
                 if (this.order.raw.account_move) {
-                    await this.invoiceService.downloadPdf(this.order.raw.account_move);
+                    await this.pos.env.services.account_move.downloadPdf(
+                        this.order.raw.account_move
+                    );
                 } else {
                     throw {
                         code: 401,
@@ -147,7 +147,7 @@ export default class OrderPaymentValidation {
             await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
         }
 
-        return !!syncOrderResult && syncOrderResult.length > 0;
+        return await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
     }
 
     async postPushOrderResolve(ordersServerId) {
@@ -163,11 +163,12 @@ export default class OrderPaymentValidation {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        let switchScreen = true;
-        let nextPage = this.nextPage;
+        const nextPage = this.nextPage;
 
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.sendOrderInPreparation(this.order, { orderDone: true });
+            this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+                orderDone: true,
+            });
         }
 
         if (
@@ -178,26 +179,25 @@ export default class OrderPaymentValidation {
             const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
             if (invoiced_finalized) {
                 await this.pos.printReceipt({ order: this.order });
-
-                if (this.pos.config.iface_print_skip_screen) {
-                    this.pos.orderDone(this.order);
-                    switchScreen = this.order.uuid === this.pos.selectedOrderUuid;
-                    nextPage = {
-                        page: "FeedbackScreen",
-                        params: {
-                            orderUuid: this.order.uuid,
-                        },
-                    };
-                    if (switchScreen) {
-                        this.selectNextOrder();
-                    }
-                }
             }
         }
 
-        if (switchScreen) {
-            this.pos.navigate(nextPage.page, nextPage.params);
+        this.pos.navigate(nextPage.page, nextPage.params);
+    }
+
+    selectNextOrder() {
+        if (this.order.originalSplittedOrder) {
+            this.pos.selectedOrderUuid = this.order.uiState.splittedOrderUuid;
+        } else {
+            this.pos.addNewOrder();
         }
+    }
+
+    /**
+     * This method can be overridden to perform checks before starting the order validation process.
+     */
+    async askBeforeValidation() {
+        return true;
     }
 
     handleValidationError(error) {
@@ -206,7 +206,7 @@ export default class OrderPaymentValidation {
             Promise.reject(error);
         } else if (error instanceof RPCError) {
             this.order.state = "draft";
-            handleRPCError(error, this.dialog);
+            handleRPCError(error, this.pos.dialog);
         } else {
             throw error;
         }
@@ -266,7 +266,7 @@ export default class OrderPaymentValidation {
             return false;
         }
 
-        if ((await this.pos._askForCustomerIfRequired()) === false) {
+        if ((await this._askForCustomerIfRequired()) === false) {
             return false;
         }
 
@@ -274,7 +274,7 @@ export default class OrderPaymentValidation {
             (this.order.isToInvoice() || this.order.getShippingDate()) &&
             !this.order.getPartner()
         ) {
-            const confirmed = await ask(this.dialog, {
+            const confirmed = await ask(this.pos.dialog, {
                 title: _t("Please select the Customer"),
                 body: _t(
                     "You need to select the customer before you can invoice or ship an order."
@@ -310,7 +310,7 @@ export default class OrderPaymentValidation {
             !this.pos.currency.isZero(this.order.getTotalWithTax()) &&
             this.order.payment_ids.length === 0
         ) {
-            this.notification.add(_t("Select a payment method to validate the order."));
+            this.pos.notification.add(_t("Select a payment method to validate the order."));
             return false;
         }
 
@@ -365,5 +365,22 @@ export default class OrderPaymentValidation {
         }
 
         return true;
+    }
+
+    async _askForCustomerIfRequired() {
+        const splitPayments = this.order.payment_ids.filter(
+            (payment) => payment.payment_method_id.split_transactions
+        );
+        if (splitPayments.length && !this.order.getPartner()) {
+            const paymentMethod = splitPayments[0].payment_method_id;
+            const confirmed = await ask(this.pos.dialog, {
+                title: _t("Customer Required"),
+                body: _t("Customer is required for %s payment method.", paymentMethod.name),
+            });
+            if (confirmed) {
+                this.pos.selectPartner();
+            }
+            return false;
+        }
     }
 }
