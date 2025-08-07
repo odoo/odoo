@@ -351,3 +351,8 @@ class AccountMoveLine(models.Model):
         price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
 
         return price_unit
+
+    def create(self, vals_list):
+        if self._context.get('is_price_change'):
+            vals_list = [val for val in vals_list if val.get('display_type') != 'tax']
+        return super().create(vals_list)
