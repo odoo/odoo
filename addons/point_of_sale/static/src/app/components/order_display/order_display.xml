@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderDisplay">
-        <t t-set="lines" t-value="order.lines"/>
+        <t t-set="lines" t-value="comboSortedLines"/>
         <t t-if="lines.length">
             <div class="d-flex flex-column flex-grow-1 overflow-hidden">
                 <div t-ref="scrollable" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">

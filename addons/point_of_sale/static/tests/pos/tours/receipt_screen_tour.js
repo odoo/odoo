@@ -12,8 +12,6 @@ import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { run, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
-import { renderToElement } from "@web/core/utils/render";
-import { formatCurrency } from "@web/core/currency";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
     steps: () =>
@@ -216,26 +214,19 @@ registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
-            run(() => {
-                const line = posmodel.getOrder().lines[0];
-                const context = {
-                    line,
-                    props: { basic_receipt: true },
-                    formatCurrency: (amount) => formatCurrency(amount, line.currency.id),
+
+            run(async () => {
+                window.print = (e) => {
+                    const rendered = e.innerHTML;
+                    if (!rendered.includes("Desk Pad")) {
+                        throw new Error("Desk Pad is not present on the ticket");
+                    }
+
+                    if (rendered.includes("5.00 / Units")) {
+                        throw new Error("The price should not be included on a basic receipt");
+                    }
                 };
-
-                const rendered = renderToElement("point_of_sale.Orderline", {
-                    this: context,
-                    ...context,
-                });
-
-                if (!rendered.innerHTML.includes("Desk Pad")) {
-                    throw new Error("Desk Pad is not present on the ticket");
-                }
-
-                if (rendered.innerHTML.includes("5.00 / Units")) {
-                    throw new Error("The price should not be included on a basic receipt");
-                }
+                await posmodel.printReceipt({ basic: true });
             }, "Basic receipt doesn't have price"),
         ].flat(),
 });

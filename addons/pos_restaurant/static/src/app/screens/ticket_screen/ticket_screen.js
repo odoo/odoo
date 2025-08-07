@@ -62,7 +62,7 @@ patch(TicketScreen.prototype, {
 
             order.state = "draft";
             this.pos.selectedOrderUuid = order.uuid;
-            this.pos.setTip(amount);
+            await this.pos.setTip(amount);
             order.state = "paid";
             order.uiState.screen_data.value = { name: "", props: {} };
 

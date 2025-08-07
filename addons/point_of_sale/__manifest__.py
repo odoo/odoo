@@ -223,6 +223,7 @@
             "point_of_sale/static/src/app/components/odoo_logo/*",
             "point_of_sale/static/src/app/components/orderline/*",
             "point_of_sale/static/src/app/components/centered_icon/*",
+            "point_of_sale/static/src/app/utils/use_timed_press.js",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
         ],

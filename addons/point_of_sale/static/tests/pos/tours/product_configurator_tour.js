@@ -15,6 +15,9 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
 
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfigurator.selectedColor("Red"),
+            ProductConfigurator.selectedSelect("Metal"),
+            ProductConfigurator.selectedRadio("Leather"),
 
             // Cancel configuration, not product should be in order
             Dialog.cancel(),
@@ -23,48 +26,45 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
 
-            // Pick Color
-            ProductConfigurator.pickColor("Red"),
-
-            // Pick Radio
-            ProductConfigurator.pickSelect("Metal"),
-
-            // Pick Select
+            // Select attributes
             ProductConfigurator.pickRadio("Other"),
-
-            // Fill in custom attribute
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
+            ProductConfigurator.pickMulti("Cushion"),
+            ProductConfigurator.pickMulti("Headrest"),
 
-            // Confirm configuration
-            Dialog.confirm(),
+            ProductConfigurator.selectedColor("Red"),
+            ProductConfigurator.selectedSelect("Metal"),
+            ProductConfigurator.selectedRadio("Other"),
+            ProductConfigurator.selectedCustomAttribute("Custom Fabric"),
+            ProductConfigurator.selectedMulti("Cushion"),
+            ProductConfigurator.selectedMulti("Headrest"),
 
             // Check that the product has been added to the order with correct attributes and price
+            Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair",
                 "1",
                 "11.0",
-                "Red, Metal, Fabrics: Other: Custom Fabric"
+                "Red, Metal, Fabrics: Other: Custom Fabric, Cushion, Headrest"
             ),
 
             // Orderlines with the same attributes should be merged
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
-            ProductConfigurator.pickColor("Red"),
-            ProductConfigurator.pickSelect("Metal"),
             ProductConfigurator.pickRadio("Other"),
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
+            ProductConfigurator.pickMulti("Cushion"),
+            ProductConfigurator.pickMulti("Headrest"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair",
                 "2",
                 "22.0",
-                "Red, Metal, Fabrics: Other: Custom Fabric"
+                "Red, Metal, Fabrics: Other: Custom Fabric, Cushion, Headrest"
             ),
 
             // Orderlines with different attributes shouldn't be merged
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
             ProductConfigurator.pickColor("Blue"),
-            ProductConfigurator.pickSelect("Metal"),
-            ProductConfigurator.pickRadio("Leather"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair",
@@ -77,8 +77,28 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
             // Active: Other and Leather, Inactive: Wool
             ProductConfigurator.numberRadioOptions(2),
-            Dialog.confirm(),
-            Chrome.endTour(),
+            Dialog.cancel(),
+
+            // Reopen configuration and discard changes --> Come back to previous attributes
+            ProductScreen.openCartMobile(),
+            ProductScreen.longPressOrderline("Configurable Chair"),
+            ProductConfigurator.selectedColor("Red"),
+            ProductConfigurator.selectedSelect("Metal"),
+            ProductConfigurator.selectedRadio("Other"),
+            ProductConfigurator.selectedCustomAttribute("Custom Fabric"),
+            ProductConfigurator.selectedMulti("Cushion"),
+            ProductConfigurator.selectedMulti("Headrest"),
+
+            ProductConfigurator.pickColor("Blue"),
+            ProductConfigurator.fillCustomAttribute("Azerty"),
+            Dialog.cancel(),
+            ProductScreen.clickLine("Configurable Chair", 2),
+            ProductScreen.selectedOrderlineHasDirect(
+                "Configurable Chair",
+                "2",
+                "22.0",
+                "Red, Metal, Fabrics: Other: Custom Fabric, Cushion, Headrest"
+            ),
         ].flat(),
 });
 

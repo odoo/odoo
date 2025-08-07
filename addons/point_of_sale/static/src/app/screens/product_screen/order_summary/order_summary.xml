@@ -3,7 +3,9 @@
     <t t-name="point_of_sale.OrderSummary">
 		<OrderDisplay order="currentOrder" t-slot-scope="scope">
 			<t t-set="line" t-value="scope.line" />
-			<Orderline line="line" t-on-click="(event) => this.clickLine(event, line)">
+			<Orderline line="line"
+				onClick="(ev, duration) => this.clickLine(ev, line)"
+				onLongPress="(ev, duration) => this.onOrderlineLongPress(ev, line)">
 				<t t-set-slot="pack-lot-icon">
 					<i t-if="line.getProduct()?.product_tmpl_id?.isTracked()"
 						t-on-click.stop="() => this.editPackLotLines(line)" role="img"

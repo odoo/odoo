@@ -70,7 +70,7 @@
 
             <select class="configurator_select form-select form-select-md" t-on-change="(e) => this.onChange(e)">
                 <t t-foreach="props.attribute.values()" t-as="value" t-key="value.id">
-                    <option t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}">
+                    <option t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}" t-att-selected="props.selected?.id === value.id ? 'selected' : ''">
                         <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == props.selected.id)"/>
                         <t t-esc="value.name"/>
                         <t t-if="value.price_extra">
@@ -170,8 +170,8 @@
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues"/>
                     <MultiProductAttribute t-elif="attribute.attribute_id.display_type === 'multi'" attribute="attribute" 
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)" 
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                        selected="this.state.attributes[attribute.attribute_id.id]?.selected" setSelected="this.setSelected(attribute)" 
+                        customValue="this.state.attributes[attribute.attribute_id.id]?.custom_value" setCustomValue="setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues"/>
                 </div>
             </div>
@@ -183,7 +183,7 @@
                             t-on-click="confirm">
                             Add
                         </button>
-                    <button class="btn btn-secondary btn-lg lh-lg w-50 o-default-button" t-on-click="close">Discard</button>
+                    <button class="btn btn-secondary btn-lg lh-lg w-50 o-default-button" t-on-click="props.close">Discard</button>
                 </div>
             </t>
         </Dialog>

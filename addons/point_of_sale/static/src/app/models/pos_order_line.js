@@ -121,6 +121,37 @@ export class PosOrderline extends Base {
         return this.models["stock.picking.type"].getFirst();
     }
 
+    get selectedComboIds() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((acc, line) => {
+            if (!line.combo_item_id) {
+                return acc;
+            }
+
+            acc[line.combo_item_id.combo_id.id] = line.combo_item_id.id;
+            return acc;
+        }, {});
+    }
+
+    get selectedAttributes() {
+        return this.attribute_value_ids.reduce((acc, attrValue) => {
+            const customValue =
+                this.custom_attribute_value_ids.find(
+                    (c) => c.custom_product_template_attribute_value_id.id === attrValue.id
+                )?.custom_value || "";
+
+            if (attrValue.attribute_id.display_type === "multi") {
+                if (!acc[attrValue.attribute_id.id]) {
+                    acc[attrValue.attribute_id.id] = { selected: [], custom_value: customValue };
+                }
+                acc[attrValue.attribute_id.id].selected.push(attrValue);
+            } else {
+                acc[attrValue.attribute_id.id] = { selected: attrValue, custom_value: customValue };
+            }
+            return acc;
+        }, {});
+    }
+
     // To be overrided
     getDisplayClasses() {
         return {};
