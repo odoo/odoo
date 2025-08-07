@@ -56,6 +56,11 @@
         &:hover {
             border-color: var(--Notebook__link-border-color--hover);
         }
+
+        &.o_page_invalid {
+            color: o-text-color('danger') !important;
+            background-color: #{$o-input-invalid-bg} !important;
+        }
     }
 
     .tab-pane:not(.show) {
