@@ -316,20 +316,34 @@ class Product(models.Model):
         if self.env.context.get('strict'):
             loc_domain = [('location_id', 'in', locations.ids)]
             dest_loc_domain = [('location_dest_id', 'in', locations.ids)]
+            dest_loc_domain_out = [('location_dest_id', 'in', locations.ids)]
         elif locations:
             paths_domain = expression.OR([[('parent_path', '=like', loc.parent_path + '%')] for loc in locations])
             loc_domain = [('location_id', 'any', paths_domain)]
+            # The condition should be split for done and not-done moves as the final_dest_id only make sense
+            # for the part of the move chain that is not done yet.
+            dest_loc_domain_done = ('location_dest_id', 'any', paths_domain)
+            dest_loc_domain_in_progress = [
+                '|',
+                    '&', ('location_final_id', '!=', False), ('location_final_id', 'any', paths_domain),
+                    '&', ('location_final_id', '=', False), ('location_dest_id', 'any', paths_domain),
+            ]
             dest_loc_domain = [
                 '|',
-                ('location_dest_id', 'any', paths_domain),
-                '&', ('location_final_id', '!=', False), ('location_final_id', 'any', paths_domain),
-            ]
+                    '&', ('state', '=', 'done'), dest_loc_domain_done,
+                    '&', ('state', '!=', 'done'),
+            ] + dest_loc_domain_in_progress
+            dest_loc_domain_out = [
+                '|',
+                    '&', ('state', '=', 'done'), '!', dest_loc_domain_done,
+                    '&', ('state', '!=', 'done'),
+            ] + ['!'] + dest_loc_domain_in_progress
 
         # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
         return (
             loc_domain,
             dest_loc_domain + ['!'] + loc_domain,
-            loc_domain + ['!'] + dest_loc_domain,
+            loc_domain + dest_loc_domain_out,
         )
 
     def _search_qty_available(self, operator, value):

@@ -12,5 +12,5 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if order.country_code == 'IN':
             res['l10n_in_gst_treatment'] = order.l10n_in_gst_treatment
         if order.l10n_in_reseller_partner_id:
-            res['l10n_in_reseller_partner_id'] = order.l10n_in_reseller_partner_id
+            res['l10n_in_reseller_partner_id'] = order.l10n_in_reseller_partner_id.id
         return res

@@ -102,3 +102,35 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
             fpos_ref='fiscal_position_in_export_sez_in',
             partner=self.partner_foreign_no_state.id,
         )
+
+    def test_prepare_invoice_values_returns_reseller_id_as_int(self):
+        """Test that the reseller partner ID is correctly passed as an integer, not a recordset."""
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'l10n_in_reseller_partner_id': self.partner_a.id,
+            'country_code': 'IN',
+        })
+
+        so_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.env.ref('product.product_product_4').id,
+            'name': 'Test Product',
+            'product_uom_qty': 1,
+            'price_unit': 100,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+        })
+
+        wizard = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'delivered',
+            'sale_order_ids': [(6, 0, [sale_order.id])]
+        })
+
+        _, accounts = wizard._prepare_down_payment_lines_values(wizard.sale_order_ids)
+        invoice_vals = wizard._prepare_invoice_values(
+            sale_order, so_line, accounts
+        )
+
+        reseller_id = invoice_vals['l10n_in_reseller_partner_id']
+        self.assertIsInstance(reseller_id, int, "Reseller partner ID should be an integer")
+        self.assertEqual(reseller_id, self.partner_a.id)

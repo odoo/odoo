@@ -38,6 +38,7 @@ from odoo.tools import (
 )
 from odoo.tools.mail import email_re, email_split, is_html_empty, generate_tracking_message_id
 from odoo.tools.misc import StackMap
+from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -5223,13 +5224,8 @@ class AccountMove(models.Model):
             message loaded by default
         """
         self.ensure_one()
-
         report_action = self.action_send_and_print()
-        if self.env.is_admin() and not self.env.company.external_report_layout_id and not self.env.context.get('discard_logo_check'):
-            report_action = self.env['ir.actions.report']._action_configure_external_report_layout(report_action, "account.action_base_document_layout_configurator")
-            report_action['context']['default_from_invoice'] = self.move_type == 'out_invoice'
-
-        return report_action
+        return self._get_action_with_base_document_layout_configurator(report_action)
 
     def action_invoice_download_pdf(self):
         return {
@@ -5240,7 +5236,8 @@ class AccountMove(models.Model):
 
     def action_print_pdf(self):
         self.ensure_one()
-        return self.env.ref('account.account_invoices').report_action(self.id)
+        report_action = self.env.ref('account.account_invoices').report_action(self.id, config=False)
+        return self._get_action_with_base_document_layout_configurator(report_action)
 
     def preview_invoice(self):
         self.ensure_one()
@@ -5597,6 +5594,19 @@ class AccountMove(models.Model):
     def is_outbound(self, include_receipts=True):
         return self.move_type in self.get_outbound_types(include_receipts)
 
+    def _get_action_with_base_document_layout_configurator(self, report_action):
+        if (
+            self.env.is_admin()
+            and not self.env.company.external_report_layout_id
+            and not self.env.context.get('discard_logo_check')
+        ):
+            report_action = self.env['ir.actions.report']._action_configure_external_report_layout(
+                report_action,
+                "account.action_base_document_layout_configurator",
+            )
+            report_action['context']['default_from_invoice'] = self.move_type == 'out_invoice'
+        return report_action
+
     def _get_installments_data(self):
         self.ensure_one()
         term_lines = self.line_ids.filtered(lambda l: l.display_type == 'payment_term')
@@ -5900,7 +5910,9 @@ class AccountMove(models.Model):
     def _get_invoice_report_filename(self, extension='pdf'):
         """ Get the filename of the generated invoice report with extension file. """
         self.ensure_one()
-        return f"{self.name.replace('/', '_')}.{extension}"
+        report_id = self.partner_id.invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
+        file_name = safe_eval(report_id.print_report_name, {'object': self})
+        return f"{file_name.replace('/', '_')}.{extension}"
 
     def _get_invoice_proforma_pdf_report_filename(self):
         """ Get the filename of the generated proforma PDF invoice report. """
