@@ -10,9 +10,11 @@ import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { logPosMessage } from "../utils/pretty_console_log";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
+const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
@@ -102,7 +104,12 @@ export class PosData extends Reactive {
             const channel = channels.pop();
             this.connectWebSocket(channel.channel, channel.method);
 
-            console.debug("Reconnecting to channel", channel.channel);
+            logPosMessage(
+                "DataService",
+                "reconnectWebSocket",
+                `Reconnecting to channe ${channel.channel}`,
+                CONSOLE_COLOR
+            );
         }
     }
 
@@ -184,11 +191,21 @@ export class PosData extends Reactive {
                 try {
                     await this.indexedDB.create(model, data);
                 } catch {
-                    console.info(`Error while updating ${model} in indexedDB.`);
+                    logPosMessage(
+                        "DataService",
+                        "synchronizeServerDataInIndexedDB",
+                        `Error while updating ${model} in indexedDB.`,
+                        CONSOLE_COLOR
+                    );
                 }
             }
         } catch {
-            console.debug("Error while synchronizing server data in indexedDB.");
+            logPosMessage(
+                "DataService",
+                "synchronizeServerDataInIndexedDB",
+                "Error while synchronizing server data in indexedDB.",
+                CONSOLE_COLOR
+            );
         }
     }
 
@@ -408,31 +425,17 @@ export class PosData extends Reactive {
     }
 
     debugInfos() {
-        const sortedByLength = Object.keys(this.models)
-            .map((m) => [m, this.models[m].length])
-            .sort((a, b) => a[1] - b[1]);
-
-        for (const [model, length] of sortedByLength) {
-            console.debug(
-                `[%c${model}%c]: %c${length}%c records`,
-                "color:lime;",
-                "",
-                "font-weight:bold;color:#e67e22",
-                ""
-            );
-        }
-
         const measure = window.performance.measure(
             "pos_loading",
             "pos_data_service_init",
             "pos_data_service_init_end"
         );
 
-        console.debug(
-            `%cPosDataService initialized in %c${measure.duration.toFixed(2)}ms%c`,
-            "color:lime;font-weight:bold",
-            "color:#e67e22;font-weight:bold",
-            ""
+        logPosMessage(
+            "DataService",
+            "debugInfos",
+            `PosDataService initialized in ${measure.duration.toFixed(2)}ms`,
+            CONSOLE_COLOR
         );
     }
 
@@ -547,7 +550,12 @@ export class PosData extends Reactive {
                             const fieldsParams = this.relations[model][field];
 
                             if (!fieldsParams) {
-                                console.info("Warning, attempt to load a non-existent field.");
+                                logPosMessage(
+                                    "DataService",
+                                    "execute",
+                                    "Warning, attempt to load a non-existent field.",
+                                    CONSOLE_COLOR
+                                );
                                 continue;
                             }
 
@@ -578,8 +586,11 @@ export class PosData extends Reactive {
                 }
 
                 if (nonExistentRecords.length) {
-                    console.warn(
-                        "Warning, attempt to load a non-existent record with limited fields."
+                    logPosMessage(
+                        "DataService",
+                        "execute",
+                        "Warning, attempt to load a non-existent record with limited fields.",
+                        CONSOLE_COLOR
                     );
                     result = nonExistentRecords;
                 }
@@ -833,7 +844,7 @@ export class PosData extends Reactive {
         try {
             return await this.execute({ type: "call", model, method, args, kwargs, queue });
         } catch (e) {
-            console.warn("Silent call failed:", e);
+            logPosMessage("DataService", "silentCall", "Silent call failed", CONSOLE_COLOR, [e]);
             return false;
         }
     }
