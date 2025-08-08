@@ -1,12 +1,12 @@
 import { LivechatCommandDialog } from "@im_livechat/core/common/livechat_command_dialog";
 
-import { threadActionsRegistry } from "@mail/core/common/thread_actions";
+import { registerThreadAction } from "@mail/core/common/thread_actions";
 import "@mail/discuss/call/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
-threadActionsRegistry.add("create-lead", {
+registerThreadAction("create-lead", {
     actionPanelComponent: LivechatCommandDialog,
     actionPanelComponentProps: (component, action) => ({
         close: () => action.close(),

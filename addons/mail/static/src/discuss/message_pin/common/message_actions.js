@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
-import { messageActionsRegistry } from "@mail/core/common/message_actions";
+import { registerMessageAction } from "@mail/core/common/message_actions";
 
-messageActionsRegistry.add("pin", {
+registerMessageAction("pin", {
     condition: (component) =>
         component.store.self_partner && component.props.thread?.model === "discuss.channel",
     icon: "fa fa-thumb-tack",

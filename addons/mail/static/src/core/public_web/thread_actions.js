@@ -1,8 +1,8 @@
-import { threadActionsRegistry } from "@mail/core/common/thread_actions";
+import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-threadActionsRegistry.add("leave", {
+registerThreadAction("leave", {
     condition: (component) => component.thread?.canLeave || component.thread?.canUnpin,
     danger: true,
     icon: "fa fa-fw fa-sign-out",
