@@ -263,7 +263,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
 
         # modify the global rule on res_company which triggers a recursive check
         # of the rules on company
-        global_rule = self.env.ref('base.res_company_rule_employee')
+        global_rule = self.env.ref('base.res_company_rule_public')
         global_rule.domain_force = "[('id','in', company_ids)]"
 
         # read as demo user (exercising the global company rule)

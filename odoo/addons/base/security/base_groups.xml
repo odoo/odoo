@@ -71,23 +71,22 @@
             <field name="implied_by_ids" eval="[Command.link(ref('base.group_erp_manager'))]"/>
             <field name="privilege_id" ref="res_groups_privilege_contact"/>
         </record>
-        <!--
-            A group dedicated to the portal users, making groups
-            restrictions more convenient.
-        -->
+
         <record model="res.groups" id="group_portal">
             <field name="name">Role / Portal</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
         </record>
-        <!--
-            A group dedicated to the public user only, making groups
-            restrictions more convenient.
-        -->
         <record model="res.groups" id="group_public">
             <field name="name">Role / Public</field>
             <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual Odoo groups.</field>
+                They usually do not belong to the usual Odoo groups.
+                This makes group restrictions more convenient.</field>
+        </record>
+        <record model="res.groups" id="group_everyone">
+            <field name="name">Role / Everyone</field>
+            <field name="implied_by_ids" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public')), Command.link(ref('base.group_user'))]"/>
+            <field name="comment">Includes all users. This makes group restrictions more convenient.</field>
         </record>
 
         <record id="public_user" model="res.users">

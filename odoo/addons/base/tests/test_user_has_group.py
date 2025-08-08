@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged, TransactionCase
@@ -9,11 +8,11 @@ from odoo import Command
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHasGroup(TransactionCase):
     def setUp(self):
-        super(TestHasGroup, self).setUp()
+        super().setUp()
 
         self.group0 = 'test_user_has_group.group0'
         self.group1 = 'test_user_has_group.group1'
-        group0, group1 = self.env['res.groups']._load_records([
+        group0, _group1 = self.env['res.groups']._load_records([
             dict(xml_id=self.group0, values={'name': 'group0'}),
             dict(xml_id=self.group1, values={'name': 'group1'}),
         ])
@@ -32,6 +31,8 @@ class TestHasGroup(TransactionCase):
         self.grp_portal = self.env.ref(self.grp_portal_xml_id)
         self.grp_public_xml_id = 'base.group_public'
         self.grp_public = self.env.ref(self.grp_public_xml_id)
+        self.grp_everyone_xml_id = 'base.group_everyone'
+        self.grp_everyone = self.env.ref(self.grp_everyone_xml_id)
 
     def test_env_uid(self):
         Partner = self.env['res.partner'].with_user(self.test_user)
@@ -264,7 +265,7 @@ class TestHasGroup(TransactionCase):
         # 1. we have a portal user with way too much rights (e.g. 'Contact Creation', which does not imply any other group)
         # 2. a group may be (transitively) implying group_user or a portal, then it would raise an exception
         self.assertEqual(
-            self.test_user.all_group_ids, (group_0 + self.grp_portal),
+            self.test_user.all_group_ids, (group_0 + self.grp_portal + self.grp_everyone),
             "Here the portal group does not imply any other group, so we should only have this group.",
         )
 
@@ -275,8 +276,9 @@ class TestHasGroup(TransactionCase):
         """
         U = self.env["res.users"]
         G = self.env["res.groups"]
-        group_user = self.env.ref('base.group_user')
-        group_portal = self.env.ref('base.group_portal')
+        group_everyone = self.grp_everyone
+        group_user = self.grp_internal
+        group_portal = self.grp_portal
         group_no_one = self.env.ref('base.group_no_one')
 
         group_A = G.create({"name": "A"})
@@ -289,17 +291,17 @@ class TestHasGroup(TransactionCase):
         # By contrast, for a portal user we want implied groups not to be added
         # if and only if it would not give group_user (or group_public) privileges
         user_a = U.create({"name": "a", "login": "a", "group_ids": [Command.set([group_AA.id, group_user.id])]})
-        self.assertEqual(user_a.all_group_ids, (group_AA + group_A + group_user + group_no_one))
+        self.assertEqual(user_a.all_group_ids, (group_AA + group_A + group_user + group_no_one + group_everyone))
         self.assertEqual(user_a.group_ids, (group_AA + group_user))
 
         user_b = U.create({"name": "b", "login": "b", "group_ids": [Command.set([group_portal.id, group_AA.id])]})
-        self.assertEqual(user_b.all_group_ids, (group_AA + group_A + group_portal))
+        self.assertEqual(user_b.all_group_ids, (group_AA + group_A + group_portal + group_everyone))
         self.assertEqual(user_b.group_ids, (group_AA + group_portal))
 
         # user_b is not an internal user, but giving it a new group just added a new group
         (user_a + user_b).write({"group_ids": [Command.link(group_BB.id)]})
-        self.assertEqual(user_a.all_group_ids, (group_AA + group_A + group_BB + group_B + group_user + group_no_one))
-        self.assertEqual(user_b.all_group_ids, (group_AA + group_A + group_BB + group_B + group_portal))
+        self.assertEqual(user_a.all_group_ids, (group_AA + group_A + group_BB + group_B + group_user + group_no_one + group_everyone))
+        self.assertEqual(user_b.all_group_ids, (group_AA + group_A + group_BB + group_B + group_portal + group_everyone))
         self.assertEqual(user_a.group_ids, (group_AA + group_BB + group_user))
         self.assertEqual(user_b.group_ids, (group_AA + group_BB + group_portal))
 
@@ -308,7 +310,7 @@ class TestHasGroup(TransactionCase):
         group_C = G.create({"name": "C", "implied_ids": [Command.set([group_user.id])]})
 
         user_a.write({"group_ids": [Command.link(group_C.id)]})
-        self.assertEqual(user_a.all_group_ids, (group_AA + group_A + group_BB + group_B + group_C + group_user + group_no_one))
+        self.assertEqual(user_a.all_group_ids, (group_AA + group_A + group_BB + group_B + group_C + group_user + group_no_one + group_everyone))
         self.assertEqual(user_a.group_ids, (group_AA + group_BB + group_C + group_user))
 
         with self.assertRaises(ValidationError):
