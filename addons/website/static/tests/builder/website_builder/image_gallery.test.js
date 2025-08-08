@@ -184,6 +184,37 @@ test("Change gallery restore the container to the cloned equivalent image", asyn
     expectOptionContainerToInclude(queryOne(":iframe .first_img"));
 });
 
+test("Change gallery layout when images have a link", async () => {
+    await setupWebsiteBuilder(
+        `
+        <section class="s_image_gallery o_masonry" data-columns="2">
+            <div class="container">
+                <div class="o_masonry_col col-lg-6">
+                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
+                </div>
+                <div class="o_masonry_col col-lg-6">
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
+                </div>
+            </div>
+        </section>
+        `
+    );
+    await contains(":iframe .first_img").click();
+    await waitFor("[data-label='Mode']");
+    await contains("[data-label='Media'] button[data-action-id='setLink']").click();
+
+    await contains("[data-label='Your URL'] [data-action-id='setUrl'] > input").fill(
+        "http://odoo.com"
+    );
+    expect(":iframe section a[href='http://odoo.com'] > img.first_img").toHaveCount(1);
+
+    await contains("[data-label='Mode'] .dropdown-toggle").click();
+    await contains("[data-action-param='grid']").click();
+    await waitFor(":iframe .o_grid");
+
+    expect(":iframe .o_grid").toHaveCount(1);
+});
+
 test("Dropping multiple image galleries should produce unique IDs", async () => {
     await setupWebsiteBuilder("");
     patchWithCleanup(uniqueId, { nextId: 0 });
