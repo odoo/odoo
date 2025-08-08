@@ -328,3 +328,12 @@ describe("formatting normalization", () => {
         });
     });
 });
+
+describe("Editor config initialization", () => {
+    test("should replace empty content by a default baseContainer, even if not provided in the config", async () => {
+        await testEditor({
+            config: { content: "" },
+            contentAfter: "<p><br></p>",
+        });
+    });
+});
