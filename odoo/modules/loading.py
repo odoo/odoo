@@ -57,6 +57,7 @@ def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, pa
 
             _logger.info("loading %s/%s", package.name, filename)
             convert_file(env, package.name, filename, idref, mode, noupdate=kind == 'demo')
+            env.cr.flush()  # run precommit hooks
 
     return bool(files)
 
