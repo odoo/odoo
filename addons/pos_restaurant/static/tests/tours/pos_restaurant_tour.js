@@ -1089,5 +1089,21 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                 content: "Check if there still has combo lines",
                 trigger: ".orderline-combo",
             },
+            ProductScreen.addCourse(),
+            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.transferCourseTo("Course 2"),
+            {
+                content: "Check if entire combo is transfered to course 2",
+                trigger: ".pos", // dummy trigger
+                run: function () {
+                    const onlyCourse2 = window.posmodel
+                        .getOrder()
+                        .lines.every((x) => x.course_id.name === "Course 2");
+
+                    if (!onlyCourse2) {
+                        throw new Error("The entire combo must be transferred to Course 2.");
+                    }
+                },
+            },
         ].flat(),
 });
