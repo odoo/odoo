@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { deduceUrl } from "@point_of_sale/utils";
 import { effect } from "@web/core/utils/reactive";
+import { logPosMessage } from "../utils/pretty_console_log";
 
 /**
  * This object interfaces with the local proxy to communicate to the various hardware devices
@@ -58,11 +59,11 @@ export class HardwareProxy extends EventBus {
                 this.keepAlive();
             } else {
                 this.setConnectionInfo({ status: "disconnected" });
-                console.error("Connection refused by the Proxy");
+                logPosMessage("HardwareProxy", "printHtml", "Connection refused by the Proxy");
             }
         } catch {
             this.setConnectionInfo({ status: "disconnected" });
-            console.error("Could not connect to the Proxy");
+            logPosMessage("HardwareProxy", "printHtml", "Could not connect to the Proxy");
         }
     }
 
