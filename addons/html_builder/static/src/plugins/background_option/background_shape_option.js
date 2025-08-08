@@ -4,7 +4,7 @@ import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 
 export class BackgroundShapeOption extends BaseOptionComponent {
-    static template = "website.BackgroundShapeOption";
+    static template = "html_builder.BackgroundShapeOption";
     static props = {};
     setup() {
         super.setup();
