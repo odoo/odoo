@@ -1,5 +1,6 @@
 import { isVisible } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
+import { isElement } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 
 export class DropZonePlugin extends Plugin {
@@ -13,6 +14,18 @@ export class DropZonePlugin extends Plugin {
         "getSelectorChildren",
         "getSelectors",
     ];
+    resources = {
+        savable_mutation_record_predicates: (record) => {
+            if (record.type === "childList") {
+                const addedOrRemovedNode = (record.addedTrees[0] || record.removedTrees[0]).node;
+                // Do not record the addition/removal of the dropzones.
+                if (isElement(addedOrRemovedNode) && addedOrRemovedNode.matches(".oe_drop_zone")) {
+                    return false;
+                }
+            }
+            return true;
+        },
+    };
 
     setup() {
         this.snippetModel = this.config.snippetModel;
