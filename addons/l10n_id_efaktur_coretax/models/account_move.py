@@ -272,6 +272,13 @@ class AccountMove(models.Model):
         partner = self.commercial_partner_id
         trx_code = self.l10n_id_kode_transaksi
 
+        l10n_id_buyer_document_type_mapping_to_xml = {
+            'TIN': 'TIN',
+            'NIK': 'National ID',
+            'Passport': 'Passport',
+            'Other': 'Other ID'
+        }
+
         vals.update({
             "TIN": self.company_id.vat,
             "TaxInvoiceDate": self.invoice_date.strftime("%Y-%m-%d"),
@@ -283,7 +290,7 @@ class AccountMove(models.Model):
             "FacilityStamp": "",
             "RefDesc": self.name,
             "SellerIDTKU": self.company_id.vat + self.company_id.partner_id.l10n_id_tku,
-            "BuyerDocument": partner.l10n_id_buyer_document_type,
+            "BuyerDocument": l10n_id_buyer_document_type_mapping_to_xml.get(partner.l10n_id_buyer_document_type, partner.l10n_id_buyer_document_type),
             "BuyerTin": partner.vat if partner.l10n_id_buyer_document_type == "TIN" else "0000000000000000",
             "BuyerCountry": COUNTRY_CODE_MAP.get(partner.country_id.code),
             "BuyerDocumentNumber": partner.l10n_id_buyer_document_number if partner.l10n_id_buyer_document_type != "TIN" else "",
