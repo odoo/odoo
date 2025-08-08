@@ -17,7 +17,10 @@
 
     <t t-name="web.CalendarCommonPopover.popover">
         <div class="card-header d-flex justify-content-between py-2 pe-2">
-            <span class="popover-header border-0 text-truncate" t-esc="props.record.title" t-att-data-tooltip="props.record.title"/>
+            <span class="popover-header border-0 text-truncate">
+                <i t-if="props.record.titleIcon" t-attf-class="me-2 {{props.record.titleIcon}}"/>
+                <span t-esc="props.record.title" t-att-data-tooltip="props.record.title"/>
+            </span>
             <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
                 <i class="fc-close fc-icon fc-icon-x" />
             </span>
