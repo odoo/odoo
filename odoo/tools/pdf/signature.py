@@ -78,7 +78,8 @@ class PdfSigner:
         Returns:
             Optional[PrivateKeyTypes]: a private key object, or None if the key couldn't be loaded.
         """
-        if "signing_certificate_id" not in self.company or not self.company.signing_certificate_id:
+        if "signing_certificate_id" not in self.company._fields \
+            or not self.company.signing_certificate_id.pem_certificate:
             return None, None
 
         certificate = self.company.signing_certificate_id
