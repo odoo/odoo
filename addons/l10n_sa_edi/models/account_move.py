@@ -233,6 +233,16 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.is_invoice() and self.l10n_sa_confirmation_datetime and self.country_code == 'SA'
 
+    def _l10n_sa_is_legal(self):
+        # Extends l10n_sa
+        # Accounts for both ZATCA phases
+        # Phase 1: no documents
+        # Phase 2: checks the state of documents
+        self.ensure_one()
+        result = super()._l10n_sa_is_legal()
+        zatca_document = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
+        return result or (self.company_id.country_id.code == 'SA' and zatca_document and self.edi_state == "sent")
+
     def _get_report_base_filename(self):
         """
             Generate the name of the invoice PDF file according to ZATCA business rules:
