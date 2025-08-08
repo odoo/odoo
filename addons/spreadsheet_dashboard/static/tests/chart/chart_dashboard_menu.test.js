@@ -20,7 +20,7 @@ test("Can change type of odoo chart in dashboard", async () => {
     expect(".o-chart-dashboard-item[data-id='odoo_bar']").toHaveClass("active");
     await contains(".o-chart-dashboard-item[data-id='odoo_line']", { visible: false }).click();
 
-    const chartId = model.getters.getFigures(model.getters.getActiveSheetId())[0].id;
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
     const chartDefinition = model.getters.getChartDefinition(chartId);
     expect(chartDefinition.type).toBe("odoo_line");
 });
@@ -34,7 +34,7 @@ test("Can change type of spreadsheet chart in dashboard", async () => {
 
     await contains(".o-chart-dashboard-item[data-id='pie']", { visible: false }).click();
 
-    const chartId = model.getters.getFigures(model.getters.getActiveSheetId())[0].id;
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
     const chartDefinition = model.getters.getChartDefinition(chartId);
     expect(chartDefinition.type).toBe("pie");
 });

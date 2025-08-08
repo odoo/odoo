@@ -18,7 +18,7 @@ function spyCharts() {
     patchWithCleanup(components.ChartJsComponent.prototype, {
         createChart(chartData) {
             super.createChart(chartData);
-            charts[this.props.figureUI.id] = this.chart;
+            charts[this.props.chartId] = this.chart;
         },
     });
     return charts;
@@ -83,7 +83,8 @@ test("Charts are animated when chart type changes", async () => {
     const definition = model.getters.getChartDefinition("chartId");
     model.dispatch("UPDATE_CHART", {
         definition: { ...definition, type: "pie" },
-        figureId: "chartId",
+        chartId: "chartId",
+        figureId: model.getters.getFigureIdFromChartId("chartId"),
         sheetId: model.getters.getActiveSheetId(),
     });
     await animationFrame();

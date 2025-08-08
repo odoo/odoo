@@ -41,8 +41,8 @@ patch(stores.ChartDashboardMenuStore.prototype, {
         if (!type.startsWith("odoo_")) {
             return super.updateType(type);
         }
-        const figureId = this.chartId;
-        const currentDefinition = this.getters.getChartDefinition(figureId);
+        const chartId = this.chartId;
+        const currentDefinition = this.getters.getChartDefinition(chartId);
         if (currentDefinition.type === type) {
             return;
         }
@@ -57,7 +57,8 @@ patch(stores.ChartDashboardMenuStore.prototype, {
                   };
         this.model.dispatch("UPDATE_CHART", {
             definition,
-            figureId,
+            chartId,
+            figureId: this.getters.getFigureIdFromChartId(chartId),
             sheetId: this.getters.getActiveSheetId(),
         });
     },

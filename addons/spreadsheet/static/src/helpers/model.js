@@ -137,7 +137,7 @@ export async function freezeOdooData(model) {
                 figure.tag === "chart" &&
                 (figure.data.type.startsWith("odoo_") || figure.data.type === "geo")
             ) {
-                const img = odooChartToImage(model, figure);
+                const img = odooChartToImage(model, figure, figure.data.chartId);
                 figure.tag = "image";
                 figure.data = {
                     path: img,
@@ -243,10 +243,11 @@ function isLoaded(model) {
  * "data:image/png;base64,iVBORw0KGg..."
  * @param {OdooSpreadsheetModel} model
  * @param {object} figure
+ * @param {string} chartId
  * @returns {string}
  */
-function odooChartToImage(model, figure) {
-    const runtime = model.getters.getChartRuntime(figure.id);
+function odooChartToImage(model, figure, chartId) {
+    const runtime = model.getters.getChartRuntime(chartId);
     // wrap the canvas in a div with a fixed size because chart.js would
     // fill the whole page otherwise
     const div = document.createElement("div");
