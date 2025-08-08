@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
-import { getScrollingElement } from "@web/core/utils/scrolling";
+import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
 import { closest, touching } from "@web/core/utils/ui";
 import { clamp } from "@web/core/utils/numbers";
 import { rowSize } from "@html_builder/utils/grid_layout_utils";
@@ -23,6 +23,7 @@ export class DragAndDropPlugin extends Plugin {
     setup() {
         this.dropzoneSelectors = this.getResource("dropzone_selector");
         this.overlayTarget = null;
+        this.iframe = this.document.defaultView.frameElement;
     }
 
     destroy() {
@@ -106,8 +107,15 @@ export class DragAndDropPlugin extends Plugin {
         const iframeWindow =
             this.document.defaultView !== window ? this.document.defaultView : false;
 
-        const scrollingElement = () =>
-            this.dependencies.dropzone.getDropRootElement() || getScrollingElement(this.document);
+        const scrollingElement = () => {
+            let scrollingElement =
+                this.dependencies.dropzone.getDropRootElement() ||
+                getScrollingElement(this.document);
+            if (!isScrollableY(scrollingElement)) {
+                scrollingElement = closestScrollableY(this.iframe) ?? scrollingElement;
+            }
+            return scrollingElement;
+        };
 
         const dragAndDropOptions = {
             ref: { el: element },

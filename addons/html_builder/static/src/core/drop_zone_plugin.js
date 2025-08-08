@@ -478,11 +478,14 @@ export class DropZonePlugin extends Plugin {
         // In the case where the editable content is in an iframe, take the
         // iframe offset into account to compute the dropzones.
         if (isContentInIframe) {
-            const iframeRect = this.iframe.getBoundingClientRect();
             const dropzoneEls = [...this.editable.querySelectorAll(".oe_drop_zone")];
             dropzoneEls.forEach((dropzoneEl) => {
                 dropzoneEl.oldGetBoundingRect = dropzoneEl.getBoundingClientRect;
                 dropzoneEl.getBoundingClientRect = () => {
+                    // iframeRect should be re-computed every time in case
+                    // the iframe is inside a scrollable element which can
+                    // be scrolled during the drag&drop operation.
+                    const iframeRect = this.iframe.getBoundingClientRect();
                     const rect = dropzoneEl.oldGetBoundingRect();
                     rect.x += iframeRect.x;
                     rect.y += iframeRect.y;
