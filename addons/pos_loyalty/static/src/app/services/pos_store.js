@@ -565,8 +565,13 @@ patch(PosStore.prototype, {
 
     computeDiscountProductIdsForAllRewards(data) {
         const products = this.models["product.product"].readMany(data.ids);
+        const productsSerialized = products.map((p) => ({
+            product: p,
+            serialized: p.serialize(),
+        }));
+
         for (const reward of this.models["loyalty.reward"].getAll()) {
-            this.computeDiscountProductIds(reward, products);
+            this.computeDiscountProductIds(reward, products, productsSerialized);
         }
     },
 
@@ -585,7 +590,8 @@ patch(PosStore.prototype, {
         }
     },
 
-    computeDiscountProductIds(reward, products) {
+    computeDiscountProductIds(reward, products, productsSerialized = []) {
+        // TODO: remove products parameter in master
         const reward_product_domain = JSON.parse(reward.reward_product_domain);
         if (!reward_product_domain) {
             return;
@@ -594,20 +600,13 @@ patch(PosStore.prototype, {
         const domain = new Domain(reward_product_domain);
 
         try {
-            // reward.all_discount_product_ids = [
-            //     ["link", ...products.filter((p) => domain.contains(p.raw))],
-            // ];
             const existingProduct = reward.all_discount_product_ids;
             reward.all_discount_product_ids = [
                 ...existingProduct,
-                ...products.filter((p) => domain.contains(p.raw)),
+                ...productsSerialized
+                    .filter((p) => domain.contains(p.serialized))
+                    .map((p) => p.product),
             ];
-
-            // reward.update({
-            //     all_discount_product_ids: [
-            //         ["link", ...products.filter((p) => domain.contains(p.serialize()))],
-            //     ],
-            // });
         } catch (error) {
             if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
                 throw error;
