@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 const { DateTime } = luxon;
 
 export class PaymentAdyen extends PaymentInterface {
@@ -182,7 +183,9 @@ export class PaymentAdyen extends PaymentInterface {
 
         response = response.SaleToPOIRequest;
         if (response?.EventNotification?.EventToNotify === "Reject") {
-            console.error("error from Adyen", response);
+            logPosMessage("PaymentAdyen", "_adyenHandleResponse", `Error from Adyen`, false, [
+                response,
+            ]);
 
             var msg = "";
             if (response.EventNotification) {

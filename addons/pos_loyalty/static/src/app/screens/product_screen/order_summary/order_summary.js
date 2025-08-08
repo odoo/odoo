@@ -5,6 +5,7 @@ import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ManageGiftCardPopup } from "@pos_loyalty/app/components/popups/manage_giftcard_popup/manage_giftcard_popup";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 patch(OrderSummary.prototype, {
     setup() {
@@ -144,7 +145,12 @@ patch(OrderSummary.prototype, {
             getPayload: async (code, points, expirationDate) => {
                 points = parseFloat(points);
                 if (isNaN(points)) {
-                    console.error("Invalid amount value:", points);
+                    logPosMessage(
+                        "OrderSummary",
+                        "updateOnlinePaymentsDataWithServer",
+                        `Invalid amount value: ${points}`,
+                        false
+                    );
                     return;
                 }
                 code = code.trim();

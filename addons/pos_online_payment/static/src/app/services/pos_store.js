@@ -1,5 +1,6 @@
 import { patch } from "@web/core/utils/patch";
-import { PosStore } from "@point_of_sale/app/services/pos_store";
+import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 patch(PosStore.prototype, {
     async setup() {
@@ -30,7 +31,13 @@ patch(PosStore.prototype, {
             ]);
             return this.processOnlinePaymentsDataFromServer(order, opData);
         } catch (ex) {
-            console.error("updateOnlinePaymentsDataWithServer failed: ", ex);
+            logPosMessage(
+                "Store",
+                "updateOnlinePaymentsDataWithServer",
+                "Error while updating online payments data",
+                CONSOLE_COLOR,
+                [ex]
+            );
             return null;
         }
     },
@@ -39,7 +46,12 @@ patch(PosStore.prototype, {
             return false;
         }
         if (opData.id !== order.id) {
-            console.error("Called processOnlinePaymentsDataFromServer on the wrong order.");
+            logPosMessage(
+                "Store",
+                "processOnlinePaymentsDataFromServer",
+                "Called processOnlinePaymentsDataFromServer on the wrong order.",
+                CONSOLE_COLOR
+            );
         }
         if ("paid_order" in opData) {
             opData.isPaid = true;
