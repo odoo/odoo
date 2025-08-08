@@ -205,7 +205,8 @@ class ResPartner(models.Model):
     name = fields.Char(index=True, default_export_compatible=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     parent_id: ResPartner = fields.Many2one('res.partner', string='Related Company', index=True)
-    parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
+    # It's Stored intentionally and will act in place of `company_name`
+    parent_name = fields.Char(related='parent_id.name', readonly=True, store=False, string='Parent name')
     child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
@@ -291,9 +292,8 @@ class ResPartner(models.Model):
         'res.partner', string='Commercial Entity',
         compute='_compute_commercial_partner', store=True,
         recursive=True, index=True)
-    commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
+    commercial_company_name = fields.Char('Company Name Entity', related='commercial_partner_id.name',
                                           store=True)
-    company_name = fields.Char('Company Name')
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
@@ -499,12 +499,6 @@ class ResPartner(models.Model):
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
-
-    @api.depends('company_name', 'parent_id.is_company', 'commercial_partner_id.name')
-    def _compute_commercial_company_name(self):
-        for partner in self:
-            p = partner.commercial_partner_id
-            partner.commercial_company_name = p.is_company and p.name or partner.company_name
 
     def _compute_company_registry(self):
         # exists to allow overrides
@@ -900,6 +894,12 @@ class ResPartner(models.Model):
         for partner, values in zip(partners, vals_list):
             if 'lang' not in values and partner.parent_id:
                 partner._compute_lang()
+            if values.get('parent_name') and not partner.parent_id:
+                # Create parent company if we got 'parent_name'
+                partner._create_parent_from_name(
+                    values.get('parent_name'),
+                    values.get('parent_additional_values'),
+                )
 
         if self.env.context.get('_partners_skip_fields_sync'):
             return partners
@@ -967,24 +967,31 @@ class ResPartner(models.Model):
             partner._handle_first_contact_creation()
         return partners
 
-    def create_company(self):
+    def _create_parent_from_name(self, parent_name, additional_values=None):
+        """ Creates a parent form a name, used mainly when creating new partners with
+        a parent (often a company) consisting in a name only, not yet a record. """
         self.ensure_one()
-        if (new_company := self._create_contact_parent_company()):
-            # Set new company as my parent
-            self.write({
-                'parent_id': new_company.id,
-                'child_ids': [Command.update(partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
-            })
-        return True
+        if not parent_name:
+            raise ValueError(_('Parent Name is required at this point'))
+        parent_values = dict(name=parent_name, vat=self.vat)
+        parent_values.update(self._convert_fields_to_values(self._address_fields()))
+        if additional_values:
+            parent_values.update(**additional_values)
+        parent_company = self._create_contact_parent_company(parent_values)
+        # Set new company as parent
+        self.write({
+            'parent_id': parent_company.id,
+            'child_ids': [
+                Command.update(partner_id, dict(parent_id=parent_company.id))
+                for partner_id in self.child_ids.ids
+            ],
+        })
+        return parent_company
 
-    def _create_contact_parent_company(self):
+    def _create_contact_parent_company(self, values):
+        """ Need to avoid recomputation of vies_valid """
         self.ensure_one()
-        if self.company_name:
-            # Create parent company
-            values = dict(name=self.company_name, is_company=True, vat=self.vat)
-            values.update(self._convert_fields_to_values(self._address_fields()))
-            return self.create(values)
-        return self.browse()
+        return self.create(values)
 
     def open_commercial_entity(self):
         """ Utility method used to add an "Open Company" button in partner views """

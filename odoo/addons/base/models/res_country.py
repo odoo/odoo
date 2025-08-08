@@ -146,7 +146,7 @@ class ResCountry(models.CachedModel):
     def _check_address_format(self):
         for record in self:
             if record.address_format:
-                address_fields = self.env['res.partner']._formatting_address_fields() + ['state_code', 'state_name', 'country_code', 'country_name', 'company_name']
+                address_fields = self.env['res.partner']._formatting_address_fields() + ['state_code', 'state_name', 'country_code', 'country_name', 'parent_name']
                 try:
                     record.address_format % {i: 1 for i in address_fields}
                 except (ValueError, KeyError):

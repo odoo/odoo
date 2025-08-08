@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add("test_validate_customer_info_error", {
             run: "edit +886 123 456 789",
         },
         {
-            trigger: "input[name=company_name]",
+            trigger: "input[name=parent_name]",
             run: "edit Test Company",
         },
         // Invalid VAT
@@ -271,7 +271,7 @@ registry.category("web_tour.tours").add("test_checkout_b2b", {
             run: "edit Taipei",
         },
         {
-            trigger: "input[name=company_name]",
+            trigger: "input[name=parent_name]",
             run: "edit Test Company",
         },
         {
