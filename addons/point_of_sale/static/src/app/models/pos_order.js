@@ -865,11 +865,11 @@ export class PosOrder extends Base {
             newPartnerPricelist = this.config.pricelist_id;
         }
 
-        if (!this.config.use_presets || !this.preset_id.fiscal_position_id) {
+        if (!this.config.use_presets || !this.preset_id?.fiscal_position_id) {
             this.fiscal_position_id = newPartnerFiscalPosition;
         }
 
-        if (!this.config.use_presets || !this.preset_id.pricelist_id) {
+        if (!this.config.use_presets || !this.preset_id?.pricelist_id) {
             this.setPricelist(newPartnerPricelist);
         }
     }

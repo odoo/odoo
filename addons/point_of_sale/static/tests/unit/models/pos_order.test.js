@@ -149,4 +149,20 @@ describe("pos.order", () => {
         expect(taxTotalsWDiscount.total_amount).toBe(12.03);
         expect(taxTotalsWDiscount.tax_amount_currency).toBe(1.83);
     });
+
+    test("updatePricelistAndFiscalPosition", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const partner = models["res.partner"].get(3);
+
+        partner.fiscal_position_id = models["account.fiscal.position"].get(1);
+        partner.property_product_pricelist = models["product.pricelist"].get(1);
+
+        const order = store.addNewOrder();
+        order.preset_id = null;
+        order.updatePricelistAndFiscalPosition(partner);
+
+        expect(order.fiscal_position_id.id).toBe(partner.fiscal_position_id.id);
+        expect(order.pricelist_id.id).toBe(partner.property_product_pricelist.id);
+    });
 });
