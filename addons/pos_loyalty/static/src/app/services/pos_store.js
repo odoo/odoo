@@ -570,8 +570,13 @@ patch(PosStore.prototype, {
 
     computeDiscountProductIdsForAllRewards(data) {
         const products = this.models[data.model].readMany(data.ids);
+        const productsSerialized = products.map((p) => ({
+            product: p,
+            serialized: p.serialize(),
+        }));
+
         for (const reward of this.models["loyalty.reward"].getAll()) {
-            this.computeDiscountProductIds(reward, products);
+            this.computeDiscountProductIds(reward, products, productsSerialized);
         }
     },
 
@@ -590,7 +595,8 @@ patch(PosStore.prototype, {
         }
     },
 
-    computeDiscountProductIds(reward, products) {
+    computeDiscountProductIds(reward, products, productsSerialized = []) {
+        // TODO: remove products parameter in master
         const reward_product_domain = JSON.parse(reward.reward_product_domain);
         if (!reward_product_domain) {
             return;
@@ -601,7 +607,12 @@ patch(PosStore.prototype, {
         try {
             reward.update({
                 all_discount_product_ids: [
-                    ["link", ...products.filter((p) => domain.contains(p.serialize()))],
+                    [
+                        "link",
+                        ...productsSerialized
+                            .filter((p) => domain.contains(p.serialized))
+                            .map((p) => p.product),
+                    ],
                 ],
             });
         } catch (error) {
