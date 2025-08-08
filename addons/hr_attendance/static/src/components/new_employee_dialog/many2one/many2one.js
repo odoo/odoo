@@ -1,6 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Component } from "@odoo/owl";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class Many2One extends Component {
     static template = "hr_attendance.Many2One";
@@ -11,11 +12,17 @@ export class Many2One extends Component {
         value: String,
     };
 
+    setup() {
+        this.debouncedLoadOptions = useDebounced(this.loadOptionsSource.bind(this), 200);
+    }
+
     get sources() {
-        return [{
-            options: this.loadOptionsSource.bind(this),
-            optionSlot: "option",
-        }];
+        return [
+            {
+                options: this.debouncedLoadOptions,
+                optionSlot: "option",
+            },
+        ];
     }
 
     async loadOptionsSource(input) {
