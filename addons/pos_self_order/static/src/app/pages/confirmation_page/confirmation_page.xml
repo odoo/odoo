@@ -14,7 +14,7 @@
                     <h1 t-if="state.payment and selfOrder.config.self_ordering_pay_after !== 'each'" class="fw-bold" style="text-wrap: pretty;">
                         Hope you enjoyed your meal!
                     </h1>
-                    <div t-else="" class="d-flex flex-column align-items-center gap-4" style="text-wrap: pretty;">
+                    <div t-else="" class="confirmation-block d-flex flex-column align-items-center gap-4" style="text-wrap: pretty;">
                         <svg width="115px" height="115px" viewBox="0 0 133 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <g id="check-group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                 <circle id="filled-circle" fill="#28a745" cx="66.5" cy="66.5" r="54.5" />
@@ -23,7 +23,16 @@
                                 <polyline id="check" stroke="#FFFFFF" stroke-width="5.5" points="41 70 56 85 92 49" />
                             </g>
                         </svg>
-                        <h1 class="mb-0">We're preparing your order!</h1>
+                        <t t-if="confirmedOrder.preset_id?.use_timing">
+                            <t t-set="slotDate" t-value="confirmedOrder.preset_id.slotPrefix(confirmedOrder.preset_time) or confirmedOrder.preset_id.formatDate(confirmedOrder.preset_time)"/>
+                            <h1 class="mb-0">Order for
+                                <t t-if="slotDate"><t t-esc="slotDate"/>, </t>
+                                <t t-esc="orderTimeStr"/>
+                            </h1>
+                        </t>
+                        <t t-else="">
+                            <h1 class="mb-0">We're preparing your order!</h1>
+                        </t>
                     </div>
                 </div>
                 <div t-if="state.payment and confirmedOrder.state !== 'paid'" 

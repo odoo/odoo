@@ -167,11 +167,25 @@ export function clickOrders() {
 export function clickPresetTimingSlot() {
     return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
 }
-export function presetTimingSlotIs(hour) {
-    return { trigger: `.pos-leftheader .preset-time-btn:contains('${hour}')` };
+export function checkPresetTimingSlot() {
+    return {
+        trigger: `.pos-leftheader`,
+        run: () => {
+            const selectedSlot = document.querySelector(
+                ".pos-leftheader .preset-time-btn"
+            ).innerText;
+            if (DateTime.fromFormat(selectedSlot, "HH:mm") < DateTime.now()) {
+                throw new Error(
+                    `The slot ${selectedSlot} is in the past, only future slots should be available!`
+                );
+            }
+        },
+    };
 }
-export function selectPresetTimingSlotHour(hour) {
-    return { trigger: `.modal button:contains('${hour}')`, run: "click" };
+export function selectPresetTimingSlotHour() {
+    // Selects the first valid slot, as past ones are unavailable and options vary with time
+    // Freeze the time in a way that we can find available slots for the day; otherwise, it will fail
+    return [{ trigger: `.modal .preset-slot-button`, run: "click" }];
 }
 export function clickRegister() {
     return { trigger: ".pos-leftheader .register-label", run: "click" };

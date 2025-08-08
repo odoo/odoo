@@ -61,15 +61,17 @@ export class PosPreset extends Base {
     computeAvailabilities(usages = {}) {
         this.generateSlots();
 
-        const allSlots = Object.values(this.uiState.availabilities).reduce(
-            (acc, curr) => Object.assign(acc, curr),
-            {}
-        );
+        for (const [date, slots] of Object.entries(this.uiState.availabilities)) {
+            for (const [datetime, slot] of Object.entries(slots)) {
+                const usage = usages[datetime];
+                slot.order_ids = new Set([...slot.order_ids, ...(usage || [])]);
+                slot.isFull = slot.order_ids.size >= this.slots_per_interval;
+            }
 
-        for (const [datetime, slot] of Object.entries(allSlots)) {
-            const usage = usages[datetime];
-            slot.order_ids = new Set([...slot.order_ids, ...(usage || [])]);
-            slot.isFull = slot.order_ids.size >= this.slots_per_interval;
+            // Only keep non full slots for the date
+            this.uiState.availabilities[date] = Object.entries(slots)
+                .filter(([_, slot]) => !slot.isFull)
+                .map(([time, slot]) => ({ time, ...slot }));
         }
 
         return this.uiState.availabilities;
@@ -116,14 +118,16 @@ export class PosPreset extends Base {
                 while (start >= dateOpening && start <= dateClosing && interval > 0) {
                     const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
 
-                    if (slots[date][sqlDatetime]) {
-                        slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
-                    } else {
-                        slots[date][sqlDatetime] = {
-                            periode: attendance.day_period,
-                            datetime: start,
-                            order_ids: new Set(usage[sqlDatetime] || []),
-                        };
+                    if (DateTime.now() < start) {
+                        if (slots[date][sqlDatetime]) {
+                            slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
+                        } else {
+                            slots[date][sqlDatetime] = {
+                                periode: attendance.day_period,
+                                datetime: start,
+                                order_ids: new Set(usage[sqlDatetime] || []),
+                            };
+                        }
                     }
 
                     start = start.plus({ minutes: interval });

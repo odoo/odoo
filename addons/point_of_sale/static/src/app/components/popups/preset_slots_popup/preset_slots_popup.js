@@ -24,30 +24,18 @@ export class PresetSlotsPopup extends Component {
         });
 
         onWillStart(async () => {
-            for (const preset of this.timedPresets) {
-                await this.pos.syncPresetSlotAvaibility(preset);
-            }
+            await this.pos.syncPresetSlotAvaibility(this.pos.getOrder().preset_id);
         });
-    }
-
-    get timedPresets() {
-        return this.pos.models["pos.preset"].filter((p) => p.use_timing);
     }
 
     getSlotColor(slot, preset) {
         const isSelected = this.isSelected(slot, preset);
         const isFull = slot.isFull;
-        const isPast = slot.datetime < DateTime.now();
 
         if (!isSelected && isFull) {
             return "o_colorlist_item_numpad_color_1"; // Red
         }
-
-        return isSelected
-            ? "btn-primary"
-            : isPast
-            ? "btn-secondary"
-            : "o_colorlist_item_numpad_color_10"; // Green
+        return isSelected ? "btn-primary" : "o_colorlist_item_numpad_color_10"; // Green
     }
 
     isSelected(slot, preset) {
