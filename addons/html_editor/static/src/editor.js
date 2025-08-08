@@ -96,7 +96,8 @@ export class Editor {
         }
         this.editable = editable;
         this.document = editable.ownerDocument;
-        if (this.config.content) {
+        this.preparePlugins();
+        if ("content" in this.config) {
             setElementContent(editable, fixInvalidHTML(this.config.content));
             if (isEmpty(editable)) {
                 const baseContainer = createBaseContainer(
@@ -107,7 +108,6 @@ export class Editor {
                 editable.replaceChildren(baseContainer);
             }
         }
-        this.preparePlugins();
         editable.setAttribute("contenteditable", true);
         initElementForEdition(editable, { allowInlineAtRoot: !!this.config.allowInlineAtRoot });
         editable.classList.add("odoo-editor-editable");
