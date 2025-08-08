@@ -525,6 +525,27 @@ export class FormOptionPlugin extends Plugin {
                 field.id = targetEl.id;
             }
         }
+
+        // Synchronize the possible values with the fields whose visibility
+        // depends on the current field
+        const newValuesText = field.records.map((record) => record.id);
+        const inputEls = oldFieldEl.querySelectorAll(".s_website_form_input, option");
+        const inputName = oldFieldEl.querySelector(".s_website_form_input")?.name;
+        const formEl = oldFieldEl.closest(".s_website_form");
+        for (let i = 0; i < inputEls.length; i++) {
+            const input = inputEls[i];
+            if (newValuesText[i] && input.value && !newValuesText.includes(input.value)) {
+                for (const dependentEl of formEl.querySelectorAll(
+                    `[data-visibility-condition="${CSS.escape(
+                        input.value
+                    )}"][data-visibility-dependency="${CSS.escape(inputName)}"]`
+                )) {
+                    dependentEl.dataset.visibilityCondition = newValuesText[i];
+                }
+                break;
+            }
+        }
+
         const fieldEl = renderField(field);
         replaceFieldElement(oldFieldEl, fieldEl);
     }
