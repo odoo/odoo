@@ -105,7 +105,7 @@ export function useDropdownNesting(state) {
         current.remove();
     });
 
-    const isDropdown = (target) => target && target.classList.contains("o-dropdown");
+    const isDropdown = (target) => target && target.classList?.contains("o-dropdown");
     const isRTL = () => localization.direction === "rtl";
 
     return {
