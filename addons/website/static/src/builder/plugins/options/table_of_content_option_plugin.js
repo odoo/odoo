@@ -1,4 +1,4 @@
-import { applyFunDependOnSelectorAndExclude } from "@website/builder/plugins/utils";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -73,7 +73,7 @@ class TableOfContentOptionPlugin extends Plugin {
 
         if (tableOfContentMain.children.length === 0) {
             // Remove the table of content if empty content.
-            this.dependencies.remove.removeElement(tableOfContent)
+            this.dependencies.remove.removeElement(tableOfContent);
             return;
         }
 

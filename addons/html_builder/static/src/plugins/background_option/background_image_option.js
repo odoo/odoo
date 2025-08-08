@@ -4,7 +4,7 @@ import { ImageSize } from "../image/image_size";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class BackgroundImageOption extends BaseOptionComponent {
-    static template = "website.BackgroundImageOption";
+    static template = "html_builder.BackgroundImageOption";
     static props = {};
     static components = { ImageSize };
     setup() {
