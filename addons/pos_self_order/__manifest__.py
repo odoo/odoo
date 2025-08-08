@@ -85,6 +85,7 @@
             "point_of_sale/static/src/app/models/**/*",
             "pos_restaurant/static/src/app/models/restaurant_table.js",
             "point_of_sale/static/src/app/utils/numbers.js",
+            "point_of_sale/static/src/app/utils/pretty_console_log.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
             "point_of_sale/static/src/app/utils/debug-formatter.js",
         ],
