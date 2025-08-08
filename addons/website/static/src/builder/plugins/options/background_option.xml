@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.WebsiteBackgroundOption" t-inherit="website.BackgroundOption">
+<t t-name="website.WebsiteBackgroundOption" t-inherit="html_builder.BackgroundOption">
     <xpath expr="//BuilderButton[@action=&quot;'toggleBgImage'&quot;]" position="after">
         <t t-if="props.withVideos">
             <BuilderButton title.translate="Video"
