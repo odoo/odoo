@@ -69,6 +69,7 @@ patch(PropertyValue.prototype, {
         }
 
         return {
+            baseContainers: ["DIV"],
             content: this.propertyValue,
             debug: !!this.env.debug,
             direction: localization.direction || "ltr",

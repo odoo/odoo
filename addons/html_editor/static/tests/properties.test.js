@@ -110,6 +110,34 @@ test("properties: html", async () => {
     );
 });
 
+test("properties: hmtl (empty)", async () => {
+    patchWithCleanup(user, { hasGroup: (group) => false });
+    let editor;
+    patchWithCleanup(PropertyValue.prototype, {
+        onEditorLoad(ed) {
+            super.onEditorLoad(ed);
+            editor = ed;
+        },
+    });
+    await mountView({
+        type: "form",
+        resId: 3,
+        resModel: "res.partner",
+        arch: `
+            <form>
+                <field name="user_id"/>
+                <field name="properties"/>
+            </form>`,
+    });
+    expect(`[name="properties"] .odoo-editor-editable`).toHaveCount(1);
+    setSelection({
+        anchorNode: queryOne(`[name="properties"] .odoo-editor-editable .o-paragraph`),
+        anchorOffset: 0,
+    });
+    await insertText(editor, " foo");
+    expect(`[name="properties"] .odoo-editor-editable .o-paragraph`).toHaveText("foo");
+});
+
 test("properties: html migration", async () => {
     patchWithCleanup(user, { hasGroup: (group) => false });
     let component;
