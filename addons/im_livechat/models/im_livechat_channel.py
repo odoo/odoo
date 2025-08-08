@@ -31,18 +31,16 @@ class Im_LivechatChannel(models.Model):
         return [(6, 0, [self.env.uid])]
 
     def _default_button_text(self):
-        return _('Have a Question? Chat with us.')
+        return _('Need help? Chat with us.')
 
     def _default_default_message(self):
         return _('How may I help you?')
 
     # attribute fields
     name = fields.Char('Channel Name', required=True)
-    button_text = fields.Char('Text of the Button', default=_default_button_text,
-        help="Default text displayed on the Livechat Support Button", translate=True)
+    button_text = fields.Char('Text of the Button', default=_default_button_text, translate=True)
     default_message = fields.Char('Welcome Message', default=_default_default_message,
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.", translate=True)
-    input_placeholder = fields.Char('Chat Input Placeholder', help='Text that prompts the user to initiate the chat.', translate=True)
     header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
     title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
     button_background_color = fields.Char(default="#875A7B", help="Default background color of the Livechat button")
@@ -70,10 +68,8 @@ class Im_LivechatChannel(models.Model):
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
 
-    image_128 = fields.Image("Image", max_width=128, max_height=128)
-
     # relationnal fields
-    user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
+    user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Agents', default=_default_user_ids)
     channel_ids = fields.One2many('discuss.channel', 'livechat_channel_id', 'Sessions')
     chatbot_script_count = fields.Integer(string='Number of Chatbot', compute='_compute_chatbot_script_count')
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
@@ -570,7 +566,6 @@ class Im_LivechatChannel(models.Model):
             'title_color': self.title_color,
             'button_text_color': self.button_text_color,
             'button_text': self.button_text,
-            'input_placeholder': self.input_placeholder,
             'default_message': self.default_message,
             "channel_name": self.name,
             "channel_id": self.id,
@@ -616,7 +611,7 @@ class Im_LivechatChannelRule(models.Model):
              "* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"\
              "* 'Open automatically' displays the button and automatically opens the conversation pane.\n"\
              "* 'Hide' hides the chat button on the pages.\n")
-    auto_popup_timer = fields.Integer('Open automatically timer', default=0,
+    auto_popup_timer = fields.Integer('Time to Open', default=0,
         help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.")
     chatbot_script_id = fields.Many2one('chatbot.script', string='Chatbot')
     chatbot_enabled_condition = fields.Selection(
@@ -631,7 +626,7 @@ class Im_LivechatChannelRule(models.Model):
     )
     channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null',
         help="The channel of the rule")
-    country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',
+    country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Countries',
         help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
