@@ -106,3 +106,22 @@ export function releaseTable() {
         },
     ];
 }
+
+export function addCourse() {
+    return {
+        content: `click Course button`,
+        trigger: ProductScreen.controlButtonTrigger("Course"),
+        run: "click",
+    };
+}
+
+export function transferCourseTo(destCourse) {
+    return [
+        ...ProductScreen.clickControlButton("Transfer course"),
+        {
+            content: `click ${destCourse} from available courses`,
+            trigger: `.modal-body button:contains(${destCourse})`,
+            run: "click",
+        },
+    ];
+}
