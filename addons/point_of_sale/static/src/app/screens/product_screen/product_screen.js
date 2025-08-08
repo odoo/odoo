@@ -219,6 +219,7 @@ export class ProductScreen extends Component {
         const product = await this._getProductByBarcode(code);
 
         if (!product) {
+            this.sound.play("error");
             this.barcodeReader.showNotFoundNotification(code);
             return;
         }
