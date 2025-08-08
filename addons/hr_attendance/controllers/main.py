@@ -96,7 +96,7 @@ class HrAttendance(http.Controller):
             domain = Domain([('barcode', '=', False), ('company_id', '=', company.id)])
             if name:
                 domain = Domain.AND([domain, [('name', 'ilike', name)]])
-            employee_list = request.env['hr.employee'].search_read(
+            employee_list = request.env['hr.employee'].sudo().search_read(
                 domain,
                 ['id', 'name'],
                 limit=limit,
