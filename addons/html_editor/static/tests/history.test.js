@@ -394,8 +394,8 @@ describe("makeSavePoint", () => {
         steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(3);
         expect(steps.at(-2)).toBe(zStep);
-        expect(historyPlugin.stepsStates.get(zStep.id)).toBe("consumed");
-        expect(historyPlugin.stepsStates.get(steps.at(-1).id)).toBe("consumed");
+        expect(historyPlugin.stepsStates.get(zStep.id)).toBe("reverted");
+        expect(historyPlugin.stepsStates.get(steps.at(-1).id)).toBe("reverted");
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
         redo(editor);
@@ -428,6 +428,24 @@ describe("makeSavePoint", () => {
         safePoint();
         expect(getContent(el)).toBe("<font>this is another paragraph with color 2</font><p></p>");
         expect(history.steps.length).toBe(numberOfSteps);
+    });
+    test("makeSavePoint should correctly revert mutations and restore the history", async () => {
+        const { el, editor } = await setupEditor(`<p>a[]</p>`);
+        await insertText(editor, "b");
+        expect(getContent(el)).toBe(`<p>ab[]</p>`);
+
+        undo(editor);
+        expect(getContent(el)).toBe(`<p>a[]</p>`);
+
+        const restore = editor.shared.history.makeSavePoint();
+        await insertText(editor, "c");
+        expect(getContent(el)).toBe(`<p>ac[]</p>`);
+
+        restore();
+        expect(getContent(el)).toBe(`<p>a[]</p>`);
+
+        redo(editor);
+        expect(getContent(el)).toBe(`<p>ab[]</p>`);
     });
 });
 

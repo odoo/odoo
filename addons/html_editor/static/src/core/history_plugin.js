@@ -241,7 +241,7 @@ export class HistoryPlugin extends Plugin {
             previousStepId: undefined,
             extraStepInfos: {},
         });
-        /** @type { Map<string, "consumed"|"undo"|"redo"> } */
+        /** @type { Map<string, "consumed"|"undo"|"redo"|"reverted"> } */
         this.stepsStates = new Map();
         this.nodeToIdMap = new WeakMap();
         this.idToNodeMap = new Map();
@@ -785,7 +785,7 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * @param { Object } [params]
-     * @param { "consumed"|"undo"|"redo" } [params.stepState]
+     * @param { "consumed"|"undo"|"redo"|"reverted" } [params.stepState]
      * @param {Object} [params.extraStepInfos]
      */
     addStep({ stepState, extraStepInfos } = {}) {
@@ -967,7 +967,7 @@ export class HistoryPlugin extends Plugin {
     getNextRedoIndex() {
         // We cannot redo more than what is consumed.
         // Check if we have no more "consumed" than "redo" until we get to an
-        // "undo"
+        // "undo". "reverted" steps should be ignored.
         let totalConsumed = 0;
         for (let index = this.steps.length - 1; index >= 0; index--) {
             if (this.isReversibleStep(index)) {
@@ -980,6 +980,8 @@ export class HistoryPlugin extends Plugin {
                         break;
                     case "consumed":
                         totalConsumed += 1;
+                        break;
+                    case "reverted":
                         break;
                     default:
                         return -1;
@@ -1331,7 +1333,7 @@ export class HistoryPlugin extends Plugin {
     /**
      * Discard the current draft, and, if necessary, consume and revert
      * reversible steps until the specified step index, and ensure that
-     * irreversible steps are maintained. This will add a new consumed step.
+     * irreversible steps are maintained. This will add a new reverted step.
      *
      * @param {Number} stepIndex
      */
@@ -1357,7 +1359,7 @@ export class HistoryPlugin extends Plugin {
             // DOM after all steps were reverted then applied again.
             this.processNewRecords(this.observer.takeRecords());
             if (this.isReversibleStep(i)) {
-                this.stepsStates.set(currentStep.id, "consumed");
+                this.stepsStates.set(currentStep.id, "reverted");
                 lastRevertedStep = currentStep;
             }
         }
@@ -1374,7 +1376,7 @@ export class HistoryPlugin extends Plugin {
         this.setSerializedSelection(lastRevertedStep.selection);
         // Register resulting mutations as a new consumed step (prevent undo).
         this.dispatchContentUpdated();
-        this.addStep({ stepState: "consumed" });
+        this.addStep({ stepState: "reverted" });
     }
 
     setStepExtra(key, value) {

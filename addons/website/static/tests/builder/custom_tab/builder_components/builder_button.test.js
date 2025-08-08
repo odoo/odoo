@@ -1,5 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { undo } from "@html_editor/../tests/_helpers/user_actions";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, Deferred, hover, runAllTimers } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
@@ -50,6 +50,7 @@ test("call a shorthand action", async () => {
     await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("my-custom-class");
 });
+
 test("call a shorthand action and a specific action", async () => {
     addActionOption({
         customAction: class extends BuilderAction {
@@ -790,6 +791,29 @@ test("click on BuilderButton with async action", async () => {
     undo(editor);
     expect(":iframe .test-options-target").not.toHaveClass("test");
     expect(":iframe .test-options-target").not.toHaveClass("applied");
+});
+
+test("preview an action should keep the history", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+        <BuilderButton classAction="'my-custom-class'" preview="false" />
+        <BuilderButton classAction="'to-preview-class'"/>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await contains("[data-class-action='my-custom-class']").click();
+    expect(":iframe .test-options-target").toHaveClass("my-custom-class");
+
+    undo(editor);
+    expect(":iframe .test-options-target").not.toHaveClass("my-custom-class");
+
+    await contains("[data-class-action='to-preview-class']").hover();
+    await contains(":iframe body").hover();
+    redo(editor);
+    expect(":iframe .test-options-target").toHaveClass("my-custom-class");
 });
 
 class SubTestOption extends BaseOptionComponent {
