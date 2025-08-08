@@ -1,8 +1,6 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
 
-import { useComponent } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -24,8 +22,7 @@ threadActionsRegistry
         },
         sequence: 10,
         sequenceQuick: 30,
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.rtc = useService("discuss.rtc");
         },
         sidebarSequence: 10,
@@ -49,8 +46,7 @@ threadActionsRegistry
         },
         sequence: 5,
         sequenceQuick: (component) => (component.env.inDiscussApp ? 25 : 35),
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.rtc = useService("discuss.rtc");
         },
         sidebarSequence: 20,
@@ -73,8 +69,7 @@ threadActionsRegistry
         name: _t("Call Settings"),
         sequence: 20,
         sequenceGroup: 30,
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.rtc = useService("discuss.rtc");
         },
         toggle: true,
@@ -87,8 +82,7 @@ threadActionsRegistry
         iconLarge: "fa fa-fw fa-lg fa-phone text-danger",
         name: _t("Disconnect"),
         partition: false,
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.rtc = useService("discuss.rtc");
         },
         sidebarSequence: 30,

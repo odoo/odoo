@@ -1,5 +1,4 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
-import { useComponent } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -14,8 +13,7 @@ threadActionsRegistry
                 !component.ui.isSmall
             );
         },
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.actionService = useService("action");
         },
         icon: "fa fa-fw fa-expand",
@@ -54,8 +52,8 @@ threadActionsRegistry
         iconLarge: "fa fa-lg fa-fw fa-gear",
         name: _t("Advanced Settings"),
         partition: false,
-        setup(action) {
-            action.actionService = useService("action");
+        setup() {
+            this.actionService = useService("action");
         },
         sidebarSequence: 20,
         sidebarSequenceGroup: 30,

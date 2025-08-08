@@ -99,7 +99,7 @@
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"/>
                 <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-ref="picker-container">
                     <div t-if="partitionedActions.pickers.length > 1 and composerActions.activePicker and ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
-                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onClick(ev)" t-att-class="{
+                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
                             'active': pickerAction.picker.isOpen
                         }"/>
                     </div>
@@ -141,35 +141,24 @@
 </t>
 
 <t t-name="mail.Composer.quickActions">
-    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions" t-att-class="{ 'pe-1': props.composer.message or !extended, 'pe-2': extended }">
+    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <t t-foreach="partitionedActions.quick" t-as="action" t-key="action.id">
-                <t t-call="mail.Composer.quickAction"/>
-            </t>
+            <ActionList inline="true" group="[partitionedActions.quick]"/>
         </div>
     </div>
-</t>
-
-<t t-name="mail.Composer.quickAction">
-    <t t-if="action.component" t-component="action.component" t-props="action.componentProps"/>
-    <t t-else="" t-call="mail.Composer.quickActionButton"/>
-</t>
-
-<t t-name="mail.Composer.quickActionButton">
-    <button class="btn border-0 rounded-circle" t-if="showQuickAction" t-att-class="{ 'o-large': ui.isSmall and env.inChatWindow, 'o-small': !ui.isSmall or !env.inChatWindow }" t-attf-class="{{ action.btnClass }}" t-att-title="action.name" t-on-click="(ev) => action.onSelected?.(ev)" t-att-data-hotkey="action.hotkey" t-att-disabled="action.disabledCondition or areAllActionsDisabled" t-att-name="action.id" t-ref="{{ action.id }}" tabindex="0"><i class="fa-fw fa-lg" t-att-class="action.icon"/></button>
 </t>
 
 <t t-name="mail.Composer.moreActions">
     <div class="o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
-            <t t-call="mail.Composer.quickAction">
-                <t t-set="action" t-value="{
-                    'icon': 'fa fa-plus-circle',
-                    'id': 'more-actions',
-                    'name': moreName,
-                }"/>
-            </t>
+            <ActionList inline="true" group="[[{
+                'icon': 'fa fa-plus-circle',
+                'iconLarge': 'fa fa-lg fa-plus-circle',
+                'id': 'more-actions',
+                'name': moreName,
+                'onSelected': () => {},
+            }]]"/> 
         </div>
     </div>
 </t>
@@ -177,9 +166,7 @@
 <t t-name="mail.Composer.extraActions">
     <div class="me-2" t-attf-class="{{ actionsContainerClass }}">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id">
-                <t t-call="mail.Composer.quickAction"/>
-            </t>
+            <ActionList inline="true" group="[partitionedActions.other]"/>
         </div>
     </div>
 </t>

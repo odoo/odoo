@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_a
         },
         {
             content: "Open the full composer",
-            trigger: ".o-small[name='open-full-composer']",
+            trigger: "[name='open-full-composer']",
             run: "click",
         },
         {

@@ -3,7 +3,6 @@ import {
     pickerOnClick,
     pickerSetup,
 } from "@mail/core/common/composer_actions";
-import { useComponent } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { markEventHandled } from "@web/core/utils/misc";
 import { useGifPicker } from "./gif_picker";
@@ -16,14 +15,14 @@ composerActionsRegistry.add("add-gif", {
     isPicker: true,
     pickerName: _t("GIF"),
     icon: "oi oi-gif-picker",
+    iconLarge: "oi fa-lg oi-gif-picker",
     name: _t("Add GIFs"),
     onSelected: (component, action, ev) => {
         pickerOnClick(component, action, ev);
         markEventHandled(ev, "Composer.onClickAddGif");
     },
-    setup: (action) => {
-        const component = useComponent();
-        pickerSetup(action, () =>
+    setup(component) {
+        pickerSetup(this, () =>
             useGifPicker(
                 undefined,
                 {
