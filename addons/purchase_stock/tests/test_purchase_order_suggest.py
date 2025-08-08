@@ -655,8 +655,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
 
     def test_purchase_order_suggest_search_panel_ux(self):
         """ Tests the purchase catalog suggest component, in particular:
-        - Suggest: Hidding, Estimated price, Add all action, Changing warehouse
-        TODO Kanban View: Adding from record, Monthly demand & forecast on record, order of cards
+        - Suggest component: Hidding, Estimated price, Add all, Changing warehouse, Saving defaults
+        - Suggest record interactions: Monthly demand & forecast, Add button
+        - Suggest kanban interactions: Add All Filter, and kanban ordering
         """
         today = fields.Datetime.now()
         test_product = self.env['product.product'].create([{
