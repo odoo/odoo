@@ -1586,6 +1586,7 @@
                             groups="account.group_account_secured,base.group_no_one"/>
                     <separator/>
                     <filter string="Reversed" name="reversed" domain="[('payment_state', '=', 'reversed')]"/>
+                    <filter string="Manual" name="no_auto_post" domain="[('auto_post', '=', 'no')]" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
