@@ -2,7 +2,7 @@ import { markRaw, EventBus } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { EditorOverlay } from "./overlay";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { findUpTo } from "@html_editor/utils/dom_traversal";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 /**
  * @typedef { Object } OverlayShared
@@ -56,12 +56,9 @@ export class OverlayPlugin extends Plugin {
     }
 
     getScrollContainer() {
-        const isScrollable = (element) =>
-            element.scrollHeight > element.clientHeight &&
-            ["auto", "scroll"].includes(getComputedStyle(element).overflowY);
-
         return (
-            findUpTo(this.iframe || this.editable, null, isScrollable) ||
+            closestScrollableY(this.editable) ||
+            closestScrollableY(this.iframe) ||
             this.topDocument.documentElement
         );
     }

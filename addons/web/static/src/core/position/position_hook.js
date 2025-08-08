@@ -94,13 +94,30 @@ export function usePosition(refName, getTarget, options = {}) {
                 }
                 throttledUpdate();
             };
+            // Get the ownerDocument of the target, and the topmost document
+            // if the target is inside an iframe of same-origin
+            // (c.f. html_builder), to handle scroll events at these 2 levels.
+            const documents = [];
             const targetDocument = getTarget()?.ownerDocument;
-            targetDocument?.addEventListener("scroll", scrollListener, { capture: true });
-            targetDocument?.addEventListener("load", throttledUpdate, { capture: true });
+            if (targetDocument) {
+                documents.push(targetDocument);
+                if (
+                    targetDocument.defaultView &&
+                    targetDocument.defaultView.top !== targetDocument.defaultView
+                ) {
+                    documents.push(targetDocument.defaultView.top.document);
+                }
+            }
+            for (const document of documents) {
+                document.addEventListener("scroll", scrollListener, { capture: true });
+                document.addEventListener("load", throttledUpdate, { capture: true });
+            }
             window.addEventListener("resize", throttledUpdate);
             return () => {
-                targetDocument?.removeEventListener("scroll", scrollListener, { capture: true });
-                targetDocument?.removeEventListener("load", throttledUpdate, { capture: true });
+                for (const document of documents) {
+                    document.removeEventListener("scroll", scrollListener, { capture: true });
+                    document.removeEventListener("load", throttledUpdate, { capture: true });
+                }
                 window.removeEventListener("resize", throttledUpdate);
             };
         }

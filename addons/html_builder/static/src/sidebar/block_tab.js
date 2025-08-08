@@ -1,7 +1,7 @@
 import { Component, onMounted, onWillDestroy, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Tooltip } from "@web/core/tooltip/tooltip";
-import { getScrollingElement } from "@web/core/utils/scrolling";
+import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
@@ -203,11 +203,17 @@ export class BlockTab extends Component {
         const iframeWindow =
             this.document.defaultView !== window ? this.document.defaultView : false;
 
-        const scrollingElement = () =>
-            this.shared.dropzone.getDropRootElement() ||
-            this.editable.querySelector(".o_notebook") ||
-            getScrollingElement(this.document) ||
-            this.editable.querySelector(".o_editable");
+        const scrollingElement = () => {
+            let scrollingElement =
+                this.shared.dropzone.getDropRootElement() ||
+                getScrollingElement(this.document) ||
+                this.editable.querySelector(".o_editable");
+            if (!isScrollableY(scrollingElement)) {
+                scrollingElement =
+                    closestScrollableY(this.document.defaultView.frameElement) ?? scrollingElement;
+            }
+            return scrollingElement;
+        };
 
         const dragAndDropOptions = {
             ref: { el: this.blockTabRef.el },
