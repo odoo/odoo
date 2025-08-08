@@ -5,6 +5,7 @@ import { session } from "@web/session";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
 import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
+import { logPosMessage } from "../utils/pretty_console_log";
 
 export class BarcodeReader {
     static serviceDependencies = ["dialog", "hardware_proxy", "notification", "action", "orm"];
@@ -170,7 +171,13 @@ export const barcodeReaderService = {
                 });
             }
         } catch (error) {
-            console.warn("Failed to start barcode reader", error);
+            logPosMessage(
+                "BarcodeReaderService",
+                "start",
+                "Failed to start barcode reader",
+                false,
+                [error]
+            );
         }
 
         barcode.bus.addEventListener("barcode_scanned", (ev) => {

@@ -1,7 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 const BATCH_SIZE = 500; // Can be adjusted based on performance testing
 const TRANSACTION_TIMEOUT = 5000; // 5 seconds timeout for transactions
+const CONSOLE_COLOR = "#3ba9ff";
 
 export default class IndexedDB {
     constructor(dbName, dbVersion, dbStores, whenReady) {
@@ -19,21 +20,32 @@ export default class IndexedDB {
             window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
         if (!indexedDB) {
-            console.debug(
-                _t(
-                    "Warning: Your browser doesn't support IndexedDB. The data won't be saved. Please use a modern browser."
-                )
+            logPosMessage(
+                "IndexedDB",
+                "databaseEventListener",
+                "Your browser does not support IndexedDB. Data will not be saved.",
+                CONSOLE_COLOR
             );
         }
 
         this.dbInstance = indexedDB;
         const dbInstance = indexedDB.open(this.dbName, this.dbVersion);
         dbInstance.onerror = (event) => {
-            console.debug("Database error: " + event.target.errorCode);
+            logPosMessage(
+                "IndexedDB",
+                "databaseEventListener",
+                `Error opening IndexedDB: ${event.target.errorCode}`,
+                CONSOLE_COLOR
+            );
         };
         dbInstance.onsuccess = (event) => {
             this.db = event.target.result;
-            console.info(`IndexedDB ${this.dbVersion} Ready`);
+            logPosMessage(
+                "IndexedDB",
+                "databaseEventListener",
+                `IndexedDB ${this.dbVersion} Ready`,
+                CONSOLE_COLOR
+            );
             whenReady();
         };
         dbInstance.onupgradeneeded = (event) => {
@@ -88,20 +100,22 @@ export default class IndexedDB {
                         try {
                             transaction.abort();
                         } catch (e) {
-                            console.debug("Error aborting transaction:", e);
+                            logPosMessage(
+                                "IndexedDB",
+                                method,
+                                `Error aborting transaction: ${e.message}`,
+                                CONSOLE_COLOR
+                            );
                         }
                     }
                 }, TRANSACTION_TIMEOUT);
 
-                if (odoo.debug) {
-                    console.debug(
-                        `[%cIndexedDB%c]: %c${method} ${batch.length}%c ${storeName}`,
-                        "color:lime;",
-                        "",
-                        "font-weight:bold;color:#e67e22",
-                        ""
-                    );
-                }
+                logPosMessage(
+                    "IndexedDB",
+                    method,
+                    `Processing ${batch.length} items in store ${storeName}`,
+                    CONSOLE_COLOR
+                );
 
                 for (const data of batch) {
                     try {
@@ -119,16 +133,21 @@ export default class IndexedDB {
                         request.onerror = (event) => {
                             hasError = true;
                             clearTimeout(timeoutId);
-                            console.debug("IndexedDB error:", event.target?.error);
+                            logPosMessage(
+                                "IndexedDB",
+                                method,
+                                `Error processing ${method} for ${storeName}: ${event.target?.error}`,
+                                CONSOLE_COLOR
+                            );
                             reject(event.target?.error || "Unknown error");
                         };
                     } catch {
-                        if (odoo.debug === "assets") {
-                            console.debug(
-                                `%cIndexedDB: Error processing ${method} for ${storeName}`,
-                                "color: #ffb7a8"
-                            );
-                        }
+                        logPosMessage(
+                            "IndexedDB",
+                            method,
+                            `Error processing ${method} for ${storeName}: Invalid data format`,
+                            CONSOLE_COLOR
+                        );
                     }
                 }
             });
@@ -149,7 +168,12 @@ export default class IndexedDB {
             this.activeTransactions.add(transaction);
             return transaction;
         } catch (e) {
-            console.info("DATABASE is not ready yet", e);
+            logPosMessage(
+                "IndexedDB",
+                "getNewTransaction",
+                `Error creating transaction: ${e.message}`,
+                CONSOLE_COLOR
+            );
             return false;
         }
     }
@@ -195,7 +219,12 @@ export default class IndexedDB {
                     const request = objectStore.getAll();
 
                     const errorMethod = (event) => {
-                        console.debug("Error reading data from the indexed database:", event);
+                        logPosMessage(
+                            "IndexedDB",
+                            "readAll",
+                            `Error reading data from store ${store}: ${event.target.error}`,
+                            CONSOLE_COLOR
+                        );
                         reject(event.target.error || "Unknown error");
                     };
 

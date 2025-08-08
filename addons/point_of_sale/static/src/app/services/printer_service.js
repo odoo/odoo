@@ -1,6 +1,7 @@
 import { waitImages } from "@point_of_sale/utils";
 
 import { Reactive } from "@web/core/utils/reactive";
+import { logPosMessage } from "../utils/pretty_console_log";
 
 export const printerService = {
     dependencies: ["renderer"],
@@ -48,7 +49,11 @@ export class PrinterService extends Reactive {
     }
     async print(component, props, options = {}) {
         if (!this.device && !options?.webPrintFallback) {
-            console.log("No printer device available and webPrintFallback is not enabled");
+            logPosMessage(
+                "PrinterService",
+                "print",
+                "No printer device available and webPrintFallback is not enabled"
+            );
             return;
         }
         this.state.isPrinting = true;
@@ -56,7 +61,13 @@ export class PrinterService extends Reactive {
         try {
             await waitImages(el);
         } catch (e) {
-            console.error("Images could not be loaded correctly", e);
+            logPosMessage(
+                "PrinterService",
+                "print",
+                "Images could not be loaded correctly",
+                false,
+                [e]
+            );
         }
         try {
             return await this.printHtml(el, options);

@@ -1,5 +1,7 @@
 import { Domain } from "@web/core/domain";
+import { logPosMessage } from "./pretty_console_log";
 
+const CONSOLE_COLOR = "#b56be3";
 /**
  * Class representing the synchronization of records.
  * This class handles the setup and management of dynamic (flexible) models
@@ -41,6 +43,7 @@ export default class DevicesSynchronisation {
             return acc;
         }, {});
 
+        logPosMessage("Synchronisation", "dispatch", "Disptaching synchronization", CONSOLE_COLOR);
         await this.pos.data.call("pos.config", "notify_synchronisation", [
             odoo.pos_config_id,
             odoo.pos_session_id,
@@ -60,14 +63,16 @@ export default class DevicesSynchronisation {
      */
     async collect(data) {
         const { static_records, session_id, login_number } = data;
+        const isSameDevice = odoo.login_number == login_number || odoo.pos_session_id != session_id;
 
-        if (odoo.debug === "assets") {
-            console.info("Incoming synchronisation", data);
-            console.info("Login number", odoo.login_number, login_number);
-            console.info("Session Ids", odoo.pos_session_id, session_id);
-        }
+        logPosMessage(
+            "Synchronisation",
+            "collect",
+            `Incoming synchronization from ${isSameDevice ? "this" : "another"} device`,
+            CONSOLE_COLOR
+        );
 
-        if (login_number == odoo.login_number || session_id != odoo.pos_session_id) {
+        if (isSameDevice) {
             return;
         }
 
@@ -94,7 +99,12 @@ export default class DevicesSynchronisation {
                 recordIds,
             ]);
         } catch (error) {
-            console.warn("Error while reading open orders data from server", error);
+            logPosMessage(
+                "Synchronisation",
+                "readDataFromServer",
+                `Error reading open orders data from server: ${error}`,
+                CONSOLE_COLOR
+            );
             return;
         }
 

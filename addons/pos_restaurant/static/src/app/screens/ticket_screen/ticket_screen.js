@@ -3,6 +3,7 @@ import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_sc
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { Component, useState } from "@odoo/owl";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 patch(TicketScreen.prototype, {
     _getScreenToStatusMap() {
@@ -48,7 +49,9 @@ patch(TicketScreen.prototype, {
             const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
 
             if (typeof order.id === "string") {
-                console.warn(
+                logPosMessage(
+                    "TicketScreen",
+                    "settleTips",
                     `${order.name} is not yet sync. Sync it to server before setting a tip.`
                 );
                 continue;
