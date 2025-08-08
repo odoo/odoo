@@ -1862,6 +1862,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if order and not order.amount_total and not tx_sudo:
             if order.state != 'sale':
+                order._check_cart_is_ready_to_be_paid()
                 order.with_context(send_email=True).with_user(SUPERUSER_ID).action_confirm()
             request.website.sale_reset()
             return request.redirect(order.get_portal_url())
