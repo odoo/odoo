@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 export class PaymentStripe extends PaymentInterface {
     setup() {
@@ -57,7 +58,9 @@ export class PaymentStripe extends PaymentInterface {
                 }
             }
         } catch (error) {
-            console.error(error);
+            logPosMessage("PaymentStripe", "checkReader", "Error while checking reader", false, [
+                error,
+            ]);
             this._showError(error);
             return false;
         }
@@ -98,7 +101,13 @@ export class PaymentStripe extends PaymentInterface {
                     this.pos.connectedReader = this.payment_method_id.stripe_serial_number;
                     return true;
                 } catch (error) {
-                    console.error(error);
+                    logPosMessage(
+                        "PaymentStripe",
+                        "connectReader",
+                        "Error when connecting reader",
+                        false,
+                        [error]
+                    );
                     if (error.error) {
                         this._showError(error.error.message, error.code);
                     } else {
@@ -270,7 +279,13 @@ export class PaymentStripe extends PaymentInterface {
                 return await this.collectPayment(line.amount);
             }
         } catch (error) {
-            console.error(error);
+            logPosMessage(
+                "PaymentStripe",
+                "sendPaymentRequest",
+                "Error when sending payment request",
+                false,
+                [error]
+            );
             this._showError(String(error));
             return false;
         }

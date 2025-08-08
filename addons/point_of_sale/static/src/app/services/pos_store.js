@@ -37,8 +37,10 @@ import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
+import { logPosMessage } from "../utils/pretty_console_log";
 
 const { DateTime } = luxon;
+export const CONSOLE_COLOR = "#F5B427";
 
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
@@ -467,7 +469,13 @@ export class PosStore extends WithLazyGetterTrap {
                     ["product_tmpl_id", "in", [...productTmplIds]],
                 ]);
             } catch (error) {
-                console.warn("Error while fetching product variants", error);
+                logPosMessage(
+                    "Store",
+                    "processProductAttributes",
+                    "Error while fetching product variants",
+                    CONSOLE_COLOR,
+                    [error]
+                );
             }
         }
 
@@ -1425,6 +1433,14 @@ export class PosStore extends WithLazyGetterTrap {
             const missingRecords = await this.data.missingRecursive(data);
             const newData = this.models.loadConnectedData(missingRecords);
 
+            logPosMessage(
+                "Store",
+                "syncAllOrders",
+                `Successfully synced orders (${orders.length})`,
+                CONSOLE_COLOR,
+                [newData]
+            );
+
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;
 
@@ -1460,9 +1476,11 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             if (error instanceof ConnectionLostError) {
-                console.info(
-                    "%cOffline mode active, order will be synced later",
-                    "color: red; font-weight: bold;"
+                logPosMessage(
+                    "Store",
+                    "syncAllOrders",
+                    "Offline mode active, order will be synced later",
+                    CONSOLE_COLOR
                 );
             } else {
                 this.deviceSync.readDataFromServer();
@@ -1615,7 +1633,13 @@ export class PosStore extends WithLazyGetterTrap {
             await this.syncAllOrders(opts);
             return true;
         } catch (error) {
-            console.warn(error);
+            logPosMessage(
+                "Store",
+                "pushOrdersWithClosingPopup",
+                "Some orders could not be submitted to the server",
+                CONSOLE_COLOR,
+                [error]
+            );
             const reason = this.failed
                 ? _t(
                       "Some orders could not be submitted to " +
@@ -1793,7 +1817,13 @@ export class PosStore extends WithLazyGetterTrap {
                 }
                 isPrinted = await this.printChanges(order, orderChange, reprint);
             } catch (e) {
-                console.info("Failed in printing the changes in the order", e);
+                logPosMessage(
+                    "Store",
+                    "sendOrderInPreparation",
+                    "Failed in printing the changes in the order",
+                    CONSOLE_COLOR,
+                    [e]
+                );
             }
         }
         order.updateLastOrderChange();
@@ -2262,7 +2292,9 @@ export class PosStore extends WithLazyGetterTrap {
                 return null;
             }
         } catch (ex) {
-            console.error("Collecting existing lots failed: ", ex);
+            logPosMessage("Store", "editLots", "Collecting existing lots failed", CONSOLE_COLOR, [
+                ex,
+            ]);
             const confirmed = await ask(this.dialog, {
                 title: _t("Server communication problem"),
                 body: _t(
@@ -2377,7 +2409,12 @@ export class PosStore extends WithLazyGetterTrap {
                 if (event.key === "message" && event.newValue) {
                     const msg = JSON.parse(event.newValue);
                     if (msg.message === "close_tabs" && msg.session == this.session.id) {
-                        console.info("POS / Session opened in another window. EXITING POS");
+                        logPosMessage(
+                            "Store",
+                            "editLots",
+                            "POS / Session opened in another window. EXITING POS",
+                            CONSOLE_COLOR
+                        );
                         this.closePos();
                     }
                 }
