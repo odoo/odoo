@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:30+0000\n"
-"PO-Revision-Date: 2025-08-07 08:44+0000\n"
+"PO-Revision-Date: 2025-08-08 16:39+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/base/"
 "fi/>\n"
@@ -11464,6 +11464,18 @@ msgid ""
 "-----------------\n"
 "Three layouts copied from the US check printing module, adjusted for DO\n"
 msgstr ""
+"\n"
+"Tämä moduuli mahdollistaa maksujen tulostamisen esipainetuille "
+"shekkipapereille.\n"
+"Voit konfiguroida tuotoksen (asettelu, tietosegmentit, jne.) yrityksen "
+"asetuksissa ja hallinnoida\n"
+"shekkien numerointia (jos käytät esipainettuja shekkejä ilman numerointia) "
+"päiväkirjan asetuksissa.\n"
+"\n"
+"Tuetut tiedostomuodot\n"
+"-----------------\n"
+"Kolme asettelua on kopioitu Yhdysvaltojen shekkien tulostusmoduulista ja "
+"niitä on säädetty tilausten toimittamiseen sopiviksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -14287,6 +14299,11 @@ msgid ""
 "                                <span colspan=\"2\">ISO 8601 Week Year without Century: %(isoy)s</span>\n"
 "                                <span colspan=\"2\">ISO 8601 Week Number: %(isoweek)s</span>"
 msgstr ""
+"<span colspan=\"2\">ISO 8601 Viikko Vuosi ja vuosituhat: %(isoyear)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 Viikko Vuosi "
+"ilman vuosituhatta: %(isoy)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 Viikon numero: "
+"%(isoweek)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14294,6 +14311,10 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']\">to</span>\n"
 "                                <span invisible=\"evaluation_type != 'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">kohteeseen</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'sequence'\">ja</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14328,6 +14349,12 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type != 'value'\" "
+"class=\"o_actions_server_set_a_value text-muted\">Aseta arvo...</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'equation'\">\n"
+"                                    tälle Python-lausekkeelle:\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -14787,7 +14814,7 @@ msgstr "Moduuli Odoo-koodin testaamiseen eri lintereillä."
 #. module: base
 #: model:ir.module.module,description:base.module_test_orm
 msgid "A module to test the ORM."
-msgstr ""
+msgstr "Moduuli operatiivisten riskien hallinnan testaamiseen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
@@ -14903,7 +14930,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "A sequence must only be used with character fields."
-msgstr ""
+msgstr "Sarjaa saa käyttää vain merkkikenttien kanssa."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -15714,7 +15741,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_account_withholding_tax_pos
 msgid "Add support for the withholding tax module in the PoS."
-msgstr ""
+msgstr "Lisää ennakonpidätysmoduulin tuki Kassajärjestelmässä."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
@@ -16114,7 +16141,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_odoo_experts
 msgid "Advisor, Corporate, Service, Business, Finance, IT"
-msgstr ""
+msgstr "Neuvonantaja, Yritys, Palvelu, Business, Talous, IT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -16637,6 +16664,8 @@ msgid ""
 "Allows to register withholding taxes during the payment of an invoice or "
 "bill."
 msgstr ""
+"Mahdollistaa ennakonpidätysten rekisteröinnin osto- tai myyntilaskun "
+"maksamisen yhteydessä."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_withholding
@@ -17581,7 +17610,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paymob
 msgid "An Egyptian payment provider for the Middle East."
-msgstr ""
+msgstr "Egyptiläinen maksupalveluntarjoaja Lähi-idässä."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
@@ -17699,12 +17728,12 @@ msgstr "Andorra"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_anelusia
 msgid "Anelusia Fashion Theme"
-msgstr ""
+msgstr "Anelusia-muotiteema"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_anelusia
 msgid "Anelusia Theme"
-msgstr ""
+msgstr "Anelusia-teema"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -17946,7 +17975,7 @@ msgstr "Arkkitehtuuri, johon verrataan"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_enark
 msgid "Architect, Corporate, Business, Finance, Services"
-msgstr ""
+msgstr "Arkkitehti, Yritys, Business, Talous, Palvelut"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -18028,7 +18057,7 @@ msgstr "Argentiinalainen - Kassajärjestelmä ja AR Doc"
 #: model:ir.module.module,description:base.module_l10n_ar_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_stock
 msgid "Argentinean - Stock"
-msgstr ""
+msgstr "Argentiinalainen - Varastotasot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -18065,16 +18094,18 @@ msgstr "Armenia"
 msgid ""
 "Artist, Arts, Galleries, Creative, Paintings, Photography, Shows, Stores"
 msgstr ""
+"Taiteilija, Taide, Galleriat, Luovuus, Maalaukset, Valokuvaus, Näyttelyt, "
+"Kaupat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_artists
 msgid "Artists Theme"
-msgstr ""
+msgstr "Taiteilija-teema"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_artists
 msgid "Artists Theme - Art Galleries, Photography, Painting"
-msgstr ""
+msgstr "Taiteilija-teema – Taidegalleriat, valokuvaus, maalaus"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -19083,12 +19114,12 @@ msgstr "Saatavilla olevat mallit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_avantgarde
 msgid "Avantgarde Theme"
-msgstr ""
+msgstr "Avantgarde-teema"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_avantgarde
 msgid "Avantgarde is a sophisticated theme to inspire and impress"
-msgstr ""
+msgstr "Avantgarde on sivistynyt teema, joka tekee vaikutuksen ja inspiroi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -19164,12 +19195,12 @@ msgstr "Avatax geolokalisointia varten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_aviato
 msgid "Aviato Theme"
-msgstr ""
+msgstr "Aviato-teema"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_aviato
 msgid "Aviato Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "Aviato-teema – Responsiivinen bootstrap-teema Odoo CMS:lle"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fsm
@@ -19309,8 +19340,11 @@ msgstr "Estä"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_notes
+#, fuzzy
 msgid "Band, Musics, Sound, Concerts, Artists, Records, Event, Food, Stores"
 msgstr ""
+"Bändi, Musiikki, Ääni, Konserit, Artistit, Tallenteet, Tapahtuma, Ruoka, "
+"Kaupat"
 
 #. module: base
 #: model:res.country,name:base.bd
@@ -19578,7 +19612,7 @@ msgstr "Eräsiirto, kuljetusyhtiö"
 #: model:ir.module.module,description:base.module_theme_bewise
 #: model:ir.module.module,shortdesc:base.module_theme_bewise
 msgid "Be Wise Theme"
-msgstr ""
+msgstr "Be Wise -teema"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -19592,17 +19626,18 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_beauty
 msgid "Beauty Theme"
-msgstr ""
+msgstr "Kauneus-teema"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_beauty
 msgid "Beauty Theme - Cosmetics, Beauty, Make Up, Hairdresser"
-msgstr ""
+msgstr "Kauneus-teema – Kosmetiikka, kauneus, meikki, kampaaja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_beauty
 msgid "Beauty, Health, Care, Make Up, Cosmetics, Hair Dressers, Stores"
 msgstr ""
+"Kauneus, terveys, kauneudenhoito, meikki, kosmetiikka, kampaajat, kaupat"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__before
@@ -19833,17 +19868,17 @@ msgstr "Birr"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bistro
 msgid "Bistro Theme"
-msgstr ""
+msgstr "Bistro-teema"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bistro
 msgid "Bistro Theme - Restaurant, Food/Drink, Catering, Food trucks"
-msgstr ""
+msgstr "Bistro-teema – Ravintola, Ruoka/Juoma, Pitopalvelu, Ruokarekat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bistro
 msgid "Bistro, Restaurant, Bar, Pub, Cafe, Food, Catering"
-msgstr ""
+msgstr "Bistro, Ravintola, Baari, Pubi, Kahvila, Ruoka, Pitopalvelu"
 
 #. module: base
 #. odoo-python
@@ -19898,12 +19933,12 @@ msgstr "Bonaire, Sint Eustatius ja Saba"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bookstore
 msgid "Books, Magazines, Music"
-msgstr ""
+msgstr "Kirjat, Lehdet, Musiikki"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bookstore
 msgid "Bookstore Theme"
-msgstr ""
+msgstr "Kirjakauppa-teema"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_boolean_value
@@ -20038,7 +20073,7 @@ msgstr "Brasilialainen kirjanpidon EDI varastolle"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
 msgid "Bridge Website Sale for Argentina"
-msgstr ""
+msgstr "Yhdistä Verkkosivu, Myynti Argentiinalle"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_website_sale
@@ -20321,12 +20356,12 @@ msgstr "Butut"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_buzzy
 msgid "Buzzy Theme"
-msgstr ""
+msgstr "Buzzy-teema"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_buzzy
 msgid "Buzzy Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "Buzzy-teema – Responsiivinen Bootstrap-teema Odoo CMS:lle"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -20377,12 +20412,12 @@ msgstr "CPA005-maksut"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__cpu_duration
 msgid "CPU Duration"
-msgstr ""
+msgstr "CPU:n kesto"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__cpu_duration
 msgid "CPU clock (not including other processes or SQL)"
-msgstr ""
+msgstr "CPU:n kello (ei sisällä muita prosesseja tai SQL)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_crm
@@ -20457,6 +20492,7 @@ msgid ""
 "Calculate and report your company's Environmental, Social, and Governance "
 "impact."
 msgstr ""
+"Laske ja raportoi yrityksesi vaikutus ympäristöön, yhteisöön ja hallintoon."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -21081,7 +21117,7 @@ msgstr "Kiina - Kirjanpito"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_reports
 msgid "China - Accounting Reports"
-msgstr ""
+msgstr "Kiina - Kirjanpitoraportit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
@@ -21162,13 +21198,13 @@ msgstr "Kaupunki"
 #: model:ir.module.module,description:base.module_theme_clean
 #: model:ir.module.module,shortdesc:base.module_theme_clean
 msgid "Clean Theme"
-msgstr ""
+msgstr "Siisti-teema"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_cobalt
 #: model:ir.module.module,description:base.module_theme_paptic
 msgid "Clean and sharp design."
-msgstr ""
+msgstr "Siistitty ja terävä design."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -21239,7 +21275,7 @@ msgstr "Cloudflare Turnstile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_cobalt
 msgid "Cobalt Theme"
-msgstr ""
+msgstr "Kobaltti-teema"
 
 #. module: base
 #: model:res.country,name:base.cc
