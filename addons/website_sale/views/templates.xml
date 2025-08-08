@@ -1112,6 +1112,7 @@
                 <t t-cache="a,attrib_set,visible_attributes,isMobile">
                     <t t-set="_status" t-value="'inactive'"/>
                     <t t-foreach="a.value_ids" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
+                    <t t-set="_expand_attributes" t-value="_status == 'active' or visible_attributes &lt; 4"/>
                     <div
                         t-if="a.value_ids and len(a.value_ids) &gt; 1"
                         t-attf-class="accordion-item {{('border-top-0 ' + ('order-1' if _status == 'active' else 'order-2')) if isMobile else 'nav-item mb-1 rounded-0'}}"
@@ -1122,12 +1123,12 @@
                             t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header"
                         >
                             <button
-                                t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'collapsed' if not attrib_values and visible_attributes &gt;= 4 else ''}}"
+                                t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'' if _expand_attributes else 'collapsed'}}"
                                 type="button"
                                 t-att-data-status="_status"
                                 data-bs-toggle="collapse"
                                 t-attf-data-bs-target="#o_wsale_offcanvas_attribute_{{a.id}}"
-                                t-att-aria-expanded="(_status == 'active' or visible_attributes &lt; 4) and 'True' or 'False'"
+                                t-att-aria-expanded="_expand_attributes"
                                 t-attf-aria-controls="o_wsale_offcanvas_attribute_{{a.id}}"
                             >
                                 <b t-out="a.name"/>
@@ -1138,7 +1139,7 @@
                         </h6>
                         <div
                             t-attf-id="{{'o_wsale_offcanvas_attribute_' + str(a.id) if isMobile else 'o_products_attributes_' + str(a.id)}}"
-                            t-attf-class="{{'accordion-collapse collapse ' + ('show' if _status == 'active' or visible_attributes &lt; 4 else '') if isMobile else ''}}"
+                            t-attf-class="{{'accordion-collapse collapse ' + ('show' if _expand_attributes else '') if isMobile else ''}}"
                         >
                             <div t-attf-class="{{'accordion-body pt-0' if isMobile else ''}}">
                                 <div
@@ -1717,13 +1718,12 @@
         <xpath expr="//div[contains(@t-attf-class, 'accordion-item')]//h6" position="replace">
             <div t-if="not isMobile" class="accordion-header h6 mb-0">
                 <button
-                    t-attf-class="accordion-button px-0 bg-transparent shadow-none
-                        {{'collapsed' if visible_attributes &gt;= 4 else ''}}"
+                    t-attf-class="accordion-button px-0 bg-transparent shadow-none {{'' if _expand_attributes else 'collapsed'}}"
                     type="button"
                     data-bs-toggle="collapse"
                     t-attf-data-bs-target="#o_products_attributes_{{a.id}}"
                     t-attf-aria-controls="o_products_attributes_{{a.id}}"
-                    t-att-aria-expanded="'false' if visible_attributes &gt;= 4 else 'true'"
+                    t-att-aria-expanded="_expand_attributes"
                 >
                     <b t-field="a.name"/>
                 </button>
@@ -1732,7 +1732,7 @@
         <xpath expr="//div[contains(@t-attf-id, 'o_products_attributes_')]" position="attributes">
             <attribute
                 name="t-attf-class"
-                add="accordion-collapse collapse {{'' if visible_attributes &gt;= 4 else 'show'}}"
+                add="accordion-collapse collapse {{'show' if _expand_attributes else ''}}"
                 separator=" "
             />
             <attribute name="data-bs-parent" add="wsale_products_attributes_collapse"/>
