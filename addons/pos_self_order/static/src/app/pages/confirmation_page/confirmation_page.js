@@ -169,4 +169,7 @@ export class ConfirmationPage extends Component {
 
         return this.state.onReload;
     }
+    get orderTimeStr() {
+        return this.confirmedOrder.preset_time.toFormat("h:mm a");
+    }
 }

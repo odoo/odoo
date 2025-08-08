@@ -47,7 +47,11 @@ export class OrderWidget extends Component {
             label = _t("Order");
             disabled = isNoLine;
         } else {
-            label = this.selfOrder.hasPaymentMethod() ? _t("Pay") : _t("Order");
+            label = this.selfOrder.hasPaymentMethod()
+                ? _t("Pay")
+                : hasNotAllLinesSent.length
+                ? _t("Order")
+                : "";
         }
 
         return { label, disabled };
