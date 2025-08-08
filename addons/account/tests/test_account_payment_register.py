@@ -825,8 +825,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         we shouldn't sent email notification automatically.
         '''
         self.env['ir.config_parameter'].set_param('sale.automatic_invoice', True)
-        payment_token = self._create_token(provider_id=self._prepare_provider(code='demo').id,
-                                           demo_simulated_state='done')
+        if self.env['ir.module.module']._get('payment_demo').state == 'installed':
+            payment_token = self._create_token(provider_id=self._prepare_provider(code='demo').id,
+                                               demo_simulated_state='done')
+        else:
+            payment_token = self._create_token()
         payment_register = self.env['account.payment.register']\
                                .with_context(active_model='account.move', active_ids=self.out_invoice_4.ids)\
                                .create({'payment_token_id': payment_token.id})
