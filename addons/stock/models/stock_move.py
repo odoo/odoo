@@ -707,7 +707,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             if move.description_picking_manual:
                 move.description_picking = move.description_picking_manual
             elif move.product_id:
-                product = move.product_id.with_context(lang=self._get_lang())
+                product = move.product_id.with_context(lang=move._get_lang())
                 move.description_picking = product._get_picking_description(move.picking_type_id) or move._get_description()
             else:
                 move.description_picking = ""
