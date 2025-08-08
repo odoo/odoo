@@ -1607,6 +1607,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect(self._get_shop_path())
 
         if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'sale':
+            order_sudo._check_cart_is_ready_to_be_paid()
             # Only confirm the order if it wasn't already confirmed.
             order_sudo._validate_order()
 
