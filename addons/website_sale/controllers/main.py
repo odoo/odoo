@@ -1948,6 +1948,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if order and not order.amount_total and not tx_sudo:
             if order.state != 'sale':
+                order._check_cart_is_ready_to_be_paid()
                 order._validate_order()
 
             # clean context and session, then redirect to the portal page
