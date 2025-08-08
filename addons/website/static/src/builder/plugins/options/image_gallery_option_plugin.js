@@ -346,10 +346,11 @@ class ImageGalleryOption extends Plugin {
             // and not correctly loaded from cache, we use a clone of the
             // image to force the loading.
             const newImg = image.cloneNode(true);
-            newImg.loading = "eager";
+            const imgEl = newImg.tagName === "IMG" ? newImg : newImg.querySelector(":scope > img");
+            imgEl.loading = "eager";
             imgLoaded.push(
-                newImg.decode().then(() => {
-                    newImg.loading = "lazy";
+                imgEl.decode().then(() => {
+                    imgEl.loading = "lazy";
                 })
             );
             if (currentContainers.at(-1)?.element === image) {
