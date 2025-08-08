@@ -1983,6 +1983,15 @@ class TestUi(TestPointOfSaleHttpCommon):
             'taxes_id': False,
         })
 
+        # Product template to force UI reset (acts as a delay)
+        self.env['product.template'].create({
+            'name': 'Product without Attributes',
+            'available_in_pos': True,
+            'list_price': 20,
+            'taxes_id': False,
+            'barcode': '987654321',
+        })
+
         attribute_1, attribute_2, attribute_3, attribute_4 = self.env['product.attribute'].create([{
             'name': 'Attribute 1',
             'create_variant': 'always',
