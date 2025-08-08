@@ -2621,6 +2621,7 @@ class AccountMove(models.Model):
 
         res['product_catalog_currency_id'] = self.currency_id.id
         res['product_catalog_digits'] = self.line_ids._fields['price_unit'].get_digits(self.env)
+        res['show_sections'] = bool(self.id)
         return res
 
     def _get_product_catalog_domain(self):
