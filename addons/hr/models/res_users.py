@@ -123,6 +123,11 @@ class ResUsers(models.Model):
     def SELF_WRITEABLE_FIELDS(self):
         return super().SELF_WRITEABLE_FIELDS + HR_WRITABLE_FIELDS
 
+    @api.onchange("private_state_id")
+    def _onchange_private_state_id(self):
+        if self.private_state_id:
+            self.private_country_id = self.private_state_id.country_id
+
     @api.model
     def get_views(self, views, options=None):
         # Requests the My Preferences form view as last.

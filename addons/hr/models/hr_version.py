@@ -76,9 +76,10 @@ class HrVersion(models.Model):
     private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=True)
     private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=True)
     private_city = fields.Char(string="Private City", groups="hr.group_hr_user", tracking=True)
+    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
     private_state_id = fields.Many2one(
         "res.country.state", string="Private State",
-        domain="[('country_id', '=?', private_country_id)]",
+        domain="[('id', 'in', allowed_country_state_ids)]",
         groups="hr.group_hr_user", tracking=True)
     private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=True)
     private_country_id = fields.Many2one("res.country", string="Private Country",
@@ -213,6 +214,15 @@ class HrVersion(models.Model):
         for version in self.filtered('job_id'):
             if version._origin.job_id != version.job_id:
                 version.is_custom_job_title = False
+
+    @api.depends("private_country_id")
+    def _compute_allowed_country_state_ids(self):
+        states = self.env["res.country.state"].search([])
+        for version in self:
+            if version.private_country_id:
+                version.allowed_country_state_ids = version.private_country_id.state_ids
+            else:
+                version.allowed_country_state_ids = states
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
     def _check_dates(self):
