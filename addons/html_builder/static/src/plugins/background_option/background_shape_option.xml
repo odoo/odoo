@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.BackgroundShapeOption">
+<t t-name="html_builder.BackgroundShapeOption">
     <BuilderRow label.translate="Shape" level="1" t-if="isActiveItem('toggle_bg_shape_id')">
         <button class="o-hb-btn btn btn-secondary" t-on-click="this.showBackgroundShapes" t-out="state.shapeName"/>
         <BuilderButton

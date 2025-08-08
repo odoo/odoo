@@ -2,7 +2,7 @@ import { scrollTo } from "@html_builder/utils/scrolling";
 import { Component, onMounted, onWillStart, onWillUnmount, useEffect, useRef } from "@odoo/owl";
 
 export class BackgroundPositionOverlay extends Component {
-    static template = "website.BackgroundPositionOverlay";
+    static template = "html_builder.BackgroundPositionOverlay";
     static props = {
         outerHtmlEditingElement: { type: String },
         editingElement: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },

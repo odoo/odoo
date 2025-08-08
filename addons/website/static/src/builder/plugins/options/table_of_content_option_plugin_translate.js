@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { applyFunDependOnSelectorAndExclude } from "../utils";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
 export class TranslateTableOfContentOptionPlugin extends Plugin {
     static id = "tableOfContentOption";

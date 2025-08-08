@@ -1,7 +1,7 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { BackgroundOption } from "@website/builder/plugins/background_option/background_option";
+import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { ParallaxOption } from "./parallax_option";
-import { useBackgroundOption } from "@website/builder/plugins/background_option/background_hook";
+import { useBackgroundOption } from "@html_builder/plugins/background_option/background_hook";
 
 export class WebsiteBackgroundOption extends BaseOptionComponent {
     static template = "website.WebsiteBackgroundOption";
