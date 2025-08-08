@@ -155,9 +155,10 @@ class ResCompany(models.Model):
             extra_balance[vals['account_id']] += (vals['debit'] - vals['credit'])
         return extra_balance
 
-    def _get_location_valuation_vals(self):
+    def _get_location_valuation_vals(self, location_domain=False):
+        location_domain = (location_domain or []) + [('valuation_account_id', '!=', False)]
         amls_vals_list = []
-        valued_location = self.env['stock.location'].search([('valuation_account_id', '!=', False)])
+        valued_location = self.env['stock.location'].search(location_domain)
 
         moves_in_by_location = self.env['stock.move']._read_group(
             [

@@ -95,17 +95,26 @@ export class StockValuationReport extends Component {
         );
     }
 
-    openInventoryLoss() {
-        console.log("-- TODO");
+    async openInventoryLoss() {
+        const domain = [
+            "|",
+            ["location_id.usage", "=", "inventory"],
+            ["location_dest_id.usage", "=", "inventory"],
+        ];
+        return this.actionService.doAction({
+            name: _t("Inventory Loss"),
+            type: "ir.actions.act_window",
+            res_model: "stock.move.line",
+            domain,
+            views: [[false, 'list'], [false, 'form']],
+            target: 'current',
+        });
     }
 
-    openStockReport(line=false) {
+    openStockReport() {
         const additionalContext = {};
-        const resModel = line?.res_model;
-        if (resModel === "product.category") {
-            additionalContext.search_default_categ_id = line.id;
-        } else if (resModel === "product.product") {
-            additionalContext.search_default_name = line.name;
+        if (this.controller.dateSelected) {
+            additionalContext.to_date = this.controller.state.date.toFormat('y-LL-dd HH:mm:ss');
         }
         return this.actionService.doAction(
             "stock.action_product_stock_view",

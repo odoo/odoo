@@ -18,7 +18,8 @@ export class StockValuationReportLine extends Component {
     };
 
     setup() {
-        this.state = useState({ displaySublines: false });
+        this.hasSublines = Boolean(this.props.sublines?.length);
+        this.state = useState({ displaySublines: this.hasSublines });
     }
 
     // Getters -----------------------------------------------------------------
@@ -54,7 +55,7 @@ export class StockValuationReportLine extends Component {
     }
 
     get label() {
-        return this.props.label || this.props.line.account;
+        return this.props.label || this.props.line.account?.display_name;
     }
 
     get totalProps() {
