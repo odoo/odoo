@@ -27,6 +27,14 @@
             </div>
         </xpath>
         <xpath expr="//t[@t-set='address']" position="after">
+            <t t-if="o.company_id.country_id.code == 'SA' and not o._l10n_sa_is_legal() " t-set="custom_header">
+                <div class="fw-bold text-center mt-2">
+                    <h5>THIS IS NOT A LEGAL DOCUMENT</h5>
+                    <h5>هذا المستند ليس مستنداً قانونياً</h5>
+                </div>
+                <!-- To help with centering the previous div in flex justify between-->
+                <div t-if="is_html_empty(o.company_id.report_header)" class="col-1"/>
+            </t>
             <t t-set="information_block">
                 <div class="row">
                     <p class="col-6 me-3">
