@@ -81,7 +81,7 @@ test("clicking on notification opens the chat", async () => {
     });
     await start({ authenticateAs: false });
     await click(".o-livechat-LivechatButton-notification", {
-        text: "Have a Question? Chat with us.",
+        text: "Need help? Chat with us.",
     });
     await contains(".o-mail-ChatWindow");
 });
