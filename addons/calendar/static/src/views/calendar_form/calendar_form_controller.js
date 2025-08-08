@@ -1,21 +1,12 @@
 import { FormController } from "@web/views/form/form_controller";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { useService } from "@web/core/utils/hooks";
-import { onWillStart } from "@odoo/owl";
 
 export class CalendarFormController extends FormController {
     setup() {
         super.setup();
-        const ormService = useService("orm");
         this.actionService = useService("action");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
-
-        onWillStart(async () => {
-            this.discussVideocallLocation = await ormService.call(
-                "calendar.event",
-                "get_discuss_videocall_location"
-            );
-        });
     }
 
     /**
@@ -23,21 +14,12 @@ export class CalendarFormController extends FormController {
      */
     async beforeExecuteActionButton(clickParams) {
         const action = clickParams.name;
-        if (action === "clear_videocall_location" || action === "set_discuss_videocall_location") {
-            let newVal = "";
-            let videoCallSource = "custom";
-            let changes = {};
-            if (action === "set_discuss_videocall_location") {
-                newVal = this.discussVideocallLocation;
-                videoCallSource = "discuss";
-                changes.access_token = this.discussVideocallLocation.split("/").pop();
-            }
-            changes = Object.assign(changes, {
-                videocall_location: newVal,
-                videocall_source: videoCallSource,
-            });
-            this.model.root.update(changes);
-            return false; // no continue
+        if (action === "clear_videocall_location") {
+            this.model.root.clearLocation();
+            return false;
+        } else if (action === "set_discuss_videocall_location") {
+            this.model.root.setLocation();
+            return false;
         }
         return super.beforeExecuteActionButton(...arguments);
     }
