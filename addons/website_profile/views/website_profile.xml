@@ -122,8 +122,8 @@
                         </div>
 
                         <div class="d-flex flex-column justify-content-center flex-grow-1 mb-0 mb-md-5">
-                            <div t-if="user.partner_id.company_name" class="lead mb-2">
-                                <i class="fa fa-building-o fa-fw me-1"/><span t-field="user.partner_id.company_name"/>
+                            <div t-if="user.partner_id.parent_name" class="lead mb-2">
+                                <i class="fa fa-building-o fa-fw me-1"/><span t-field="user.partner_id.parent_name"/>
                             </div>
                             <div t-if="user.city or user.country_id" class="lead mb-2">
                                 <i class="fa fa-map-marker fa-fw me-1"/>

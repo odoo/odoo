@@ -154,8 +154,8 @@ class EventRegistration(models.Model):
             if not registration.company_name and registration.partner_id:
                 registration.company_name = registration._synchronize_partner_values(
                     registration.partner_id,
-                    fnames={'company_name'},
-                ).get('company_name') or False
+                    fnames={'parent_name'},
+                ).get('parent_name') or False
 
     @api.depends('state')
     def _compute_date_closed(self):

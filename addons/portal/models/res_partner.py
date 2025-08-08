@@ -15,7 +15,7 @@ class ResPartner(models.Model):
         """
         return {
             'name', 'phone', 'email', 'street', 'street2', 'city', 'state_id', 'country_id', 'zip',
-            'zipcode', 'vat', 'company_name',
+            'zipcode', 'vat', 'parent_name',
         }
 
     def _can_edit_country(self):

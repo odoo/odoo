@@ -835,8 +835,8 @@ class ResPartner(models.Model):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
 
-    def _create_contact_parent_company(self):
-        new_company = super()._create_contact_parent_company()
+    def _create_contact_parent_company(self, values):
+        new_company = super()._create_contact_parent_company(values)
         if new_company and self.vies_valid:
             new_company.env.remove_to_compute(self._fields['vies_valid'], new_company)
             new_company.vies_valid = self.vies_valid

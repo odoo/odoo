@@ -563,14 +563,14 @@ class CustomerPortal(Controller):
                 partner_sudo._onchange_phone_validation()
 
         if (
-            'company_name' in address_values
+            'parent_name' in address_values
             and partner_sudo.commercial_partner_id != partner_sudo
             and partner_sudo.commercial_partner_id.is_company
         ):
             # If partner is an individual, update existing company's name or remove one
-            company_name = address_values['company_name']
+            company_name = address_values['parent_name']
             parent_company = partner_sudo.commercial_partner_id
-            partner_sudo.company_name = False
+            partner_sudo.parent_name = False
 
             if company_name and parent_company and parent_company.name != company_name:
                 parent_company.name = company_name
