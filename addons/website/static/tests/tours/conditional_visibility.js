@@ -24,6 +24,11 @@ const snippets = [
         name: "Popup",
         groupName: "Content",
     },
+    {
+        id: 's_image_text',
+        name: 'Image - Text',
+        groupName: "Content",
+    },
 ];
 function checkEyeIcon(snippetName, visible) {
     const eyeIcon = visible ? "fa-eye" : "fa-eye-slash";
@@ -207,14 +212,14 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ":iframe #wrapwrap footer",
     },
     goBackToBlocks(),
-    ...insertSnippet(snippets[0]),
+    ...insertSnippet(snippets[3]),
     {
         content: "Click on the image of the dragged snippet",
-        trigger: ":iframe .s_text_image img",
+        trigger: ":iframe .s_text_image[data-snippet=s_image_text] img",
         run: "click",
     },
     {
-        content: "Change visibility of the 'Text - Image' snippet",
+        content: "Change visibility of the 'Image - Text' snippet",
         trigger: "[data-container-title='Column'] [data-label='Visibility'] button[data-action-param='no_desktop']",
         run: "click",
     },
@@ -223,40 +228,40 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Column')",
     },
     {
-        content: "Click on the 'Text - Image' snippet",
-        trigger: ":iframe .s_text_image",
+        content: "Click on the 'Image - Text' snippet",
+        trigger: ":iframe .s_text_image[data-snippet=s_image_text]",
         run: "click",
     },
     {
-        content: "Change visibility of the 'Text - Image' snippet",
-        trigger: "[data-container-title='Text - Image'] [data-label='Visibility'] button[data-action-param='no_desktop']",
+        content: "Change visibility of the 'Image - Text' snippet",
+        trigger: "[data-container-title='Image - Text'] [data-label='Visibility'] button[data-action-param='no_desktop']",
         run: "click",
     },
     {
-        content: "Check that only the 'Text - Image' entry is in the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + .o_we_invisible_entry:contains('Banner')",
+        content: "Check that only the 'Image - Text' entry is in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Image - Text') + .o_we_invisible_entry:not(.o_we_sublevel_1)",
     },
     {
-        content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image')",
+        content: "Click on the 'Image - Text' entry on the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Image - Text')",
         run: "click",
     },
     {
         content: "Check that the snippet is visible on the website",
-        trigger: ":iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
+        trigger: ":iframe .s_text_image[data-snippet=s_image_text].o_snippet_desktop_invisible.o_snippet_override_invisible",
     },
     {
         content: "Check that the 'Column' entry is in the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
     },
     {
-        content: "Change visibility of the 'Text - Image' snippet",
-        trigger: "[data-container-title='Text - Image'] [data-label='Visibility'] button[data-action-param='no_mobile']",
+        content: "Change visibility of the 'Image - Text' snippet",
+        trigger: "[data-container-title='Image - Text'] [data-label='Visibility'] button[data-action-param='no_mobile']",
         run: "click",
     },
     {
-        content: "Check that the 'Text - Image' has been removed from the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel:not(.o_we_invisible_entry:contains('Text - Image'))",
+        content: "Check that the 'Image - Text' has been removed from the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel:not(:has(.o_we_invisible_entry:contains('Image - Text')))",
     },
     {
         content: "Click on the 'Column' entry on the 'Invisible Elements' panel",
@@ -265,16 +270,20 @@ registerWebsitePreviewTour("conditional_visibility_5", {
     },
     {
         content: "Check that the column is visible on the website",
-        trigger: ":iframe .s_text_image .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
+        trigger: ":iframe .s_text_image[data-snippet=s_image_text] .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
     },
     {
-        content: "Change visibility of the 'Text - Image' snippet",
+        content: "Change visibility of the 'Image - Text' snippet",
         trigger: "[data-container-title='Column'] [data-label='Visibility'] button[data-action-param='no_mobile']",
         run: "click",
     },
     {
         content: "Check that the column has been removed from the 'Invisible Elements' panel",
-        trigger: ".o-snippets-menu:not(:has(.o_we_invisible_entry:contains('Column')))",
+        trigger: ".o_we_invisible_el_panel:not(:has(.o_we_invisible_entry:contains('Column')))",
+    },
+    {
+        content: "Check that the 'Image - Text' entry has been removed from the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel:not(:has(.o_we_invisible_entry:contains('Image - Text')))",
     },
     {
         content: "Activate mobile preview",
@@ -282,16 +291,7 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         run: "click",
     },
     {
-        content: "Check that only the 'Text - Image' entry is in the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + .o_we_invisible_entry:contains('Banner')",
-    },
-    {
-        content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image')",
-        run: "click",
-    },
-    {
-        content: "Check that the 'Column' entry is in the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
+        content: "Check that the 'Image - Text' entry is in the 'Invisible Elements' panel",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Image - Text')",
     },
 ]);
