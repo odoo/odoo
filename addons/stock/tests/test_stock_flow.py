@@ -2599,6 +2599,41 @@ class TestStockFlow(TestStockCommon):
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(bo.state, 'assigned')
 
+    def test_prevent_picking_print_flag(self):
+        self.env['ir.config_parameter'].sudo().set_param('stock.prevent_picking_print_flag', 'True')
+        partner = self.env['res.partner'].create({'name': 'Hulk Hogan'})
+        product = self.env['product.product'].create({
+            'name': 'ELCT',
+            'type': 'product',
+        })
+        delivery = self.env['stock.picking'].create({
+            'partner_id': partner.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_ids': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1.0,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids[0].quantity = 1
+        delivery.do_print_picking()
+        self.assertEqual(delivery.printed, False)
+
+        # setting to false deletes the param
+        self.env['ir.config_parameter'].sudo().set_param('stock.prevent_picking_print_flag', False)
+        delivery2 = delivery.copy()
+        delivery2.action_confirm()
+        delivery2.move_ids[0].quantity = 1
+        delivery2.do_print_picking()
+        self.assertEqual(delivery2.printed, True)
+
+
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
 

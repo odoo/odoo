@@ -910,7 +910,8 @@ class Picking(models.Model):
         picking_operations_report = self.env.ref('stock.action_report_picking',raise_if_not_found=False)
         if not picking_operations_report:
             raise UserError(_("The Picking Operations report has been deleted so you cannot print at this time unless the report is restored."))
-        self.write({'printed': True})
+        if not self.env['ir.config_parameter'].sudo().get_param('stock.prevent_picking_print_flag'):
+            self.write({'printed': True})
         return picking_operations_report.report_action(self)
 
     def should_print_delivery_address(self):
