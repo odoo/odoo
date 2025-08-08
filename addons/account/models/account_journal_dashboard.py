@@ -649,22 +649,20 @@ class AccountJournal(models.Model):
         general_journals = self.filtered(lambda journal: journal.type == 'general')
         if not general_journals:
             return
-        to_check_vals = {
-            journal.id: (amount_total_signed_sum, count)
-            for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
+        draft_vals = {
+            journal.id: count
+            for journal, count in self.env['account.move']._read_group(
                 domain=[
                     *self.env['account.move']._check_company_domain(self.env.companies),
                     ('journal_id', 'in', general_journals.ids),
-                    ('checked', '=', False),
-                    ('state', '=', 'posted'),
+                    ('state', '=', 'draft'),
+                    ('auto_post', '=', 'no'),
                 ],
                 groupby=['journal_id'],
-                aggregates=['amount_total_signed:sum', '__count'],
+                aggregates=['__count'],
             )
         }
         for journal in general_journals:
-            currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
-            amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
             drag_drop_settings = {
                 'image': '/web/static/img/folder.svg',
                 'text': _('Drop to create journal entries with attachments.'),
@@ -672,8 +670,7 @@ class AccountJournal(models.Model):
             }
 
             dashboard_data[journal.id].update({
-                'number_to_check': count,
-                'to_check_balance': currency.format(amount_total_signed_sum),
+                'number_draft': draft_vals.get(journal.id, 0),
                 'drag_drop_settings': drag_drop_settings,
             })
 
@@ -1031,15 +1028,15 @@ class AccountJournal(models.Model):
 
         action = self.env["ir.actions.act_window"]._for_xml_id(action_name)
 
-        context = self.env.context.copy()
         if 'context' in action and isinstance(action['context'], str):
-            context.update(ast.literal_eval(action['context']))
+            action_context = ast.literal_eval(action['context'])
         else:
-            context.update(action.get('context', {}))
-        action['context'] = context
-        action['context'].update({
+            action_context = action.get('context', {})
+        action['context'] = {
+            **action_context,
+            **self.env.context,
             'default_journal_id': self.id,
-        })
+        }
         domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.move_type' or 'move_type' # The model can be either account.move or account.move.line
 
         # Override the domain only if the action was not explicitly specified in order to keep the
