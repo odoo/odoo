@@ -1529,12 +1529,12 @@
             <h6 t-if="not isMobile" class="accordion-header">
                 <button
                     t-attf-class="accordion-button px-0 bg-transparent shadow-none
-                        {{'collapsed' if visible_attributes &gt;= 4 else ''}}"
+                        {{'collapsed' if _status != 'active' and visible_attributes &gt;= 4 else ''}}"
                     type="button"
                     data-bs-toggle="collapse"
                     t-attf-data-bs-target="#o_products_attributes_{{a.id}}"
                     t-attf-aria-controls="o_products_attributes_{{a.id}}"
-                    t-att-aria-expanded="'false' if visible_attributes &gt;= 4 else 'true'"
+                    t-att-aria-expanded="'false' if _status != 'active' and visible_attributes &gt;= 4 else 'true'"
                 >
                     <b t-field="a.name"/>
                 </button>
@@ -1543,7 +1543,7 @@
         <xpath expr="//div[contains(@t-attf-id, 'o_products_attributes_')]" position="attributes">
             <attribute
                 name="t-attf-class"
-                add="accordion-collapse collapse {{'' if visible_attributes &gt;= 4 else 'show'}}"
+                add="accordion-collapse collapse {{'' if _status != 'active' and visible_attributes &gt;= 4 else 'show'}}"
                 separator=" "
             />
             <attribute name="data-bs-parent" add="wsale_products_attributes_collapse"/>
