@@ -18,10 +18,12 @@
                 <field name="employee_id" invisible="not employee_id" widget="many2many_avatar_employee"/>
             </xpath>
             <xpath expr="//page" position="before">
-                <page string="Bank Information" invisible="not bank_id">
+                <page name="bank_information" string="Bank Information" invisible="not bank_id">
                     <group>
-                        <field name="bank_name" string="Bank Name"/>
-                        <field name="bank_bic"/>
+                        <group name="bank_details">
+                            <field name="bank_name" string="Bank Name"/>
+                            <field name="bank_bic"/>
+                        </group>
                     </group>
                     <group>
                         <group name="address_details">
