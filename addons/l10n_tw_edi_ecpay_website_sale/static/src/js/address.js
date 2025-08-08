@@ -8,7 +8,7 @@ patch(CustomerAddress.prototype, {
     setup() {
         super.setup();
         patchDynamicContent(this.dynamicContent, {
-            'input[name="company_name"]': {
+            'input[name="parent_name"]': {
                 't-on-input': this._onChangeCompanyName.bind(this),
             },
         });

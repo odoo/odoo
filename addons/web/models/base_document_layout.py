@@ -34,10 +34,6 @@ class BaseDocumentLayout(models.TransientModel):
         company = self.env.company
         address_format, company_data = company.partner_id._prepare_display_address()
         address_format = self._clean_address_format(address_format, company_data)
-        # company_name may *still* be missing from prepared address in case commercial_company_name is falsy
-        if 'company_name' not in address_format:
-            address_format = '%(company_name)s\n' + address_format
-            company_data['company_name'] = company_data['company_name'] or company.name
         return nl2br_enclose(address_format, 'div') % company_data
 
     def _clean_address_format(self, address_format, company_data):
