@@ -321,8 +321,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
         partner_specified = vals['partner'] and vals['partner'] != simplified_partner
-        if need_refund_reason and vals['refund_reason'] != 'R5' and not partner_specified:
-            errors.append(_("A refund with Refund Reason %(refund_reason)s needs a partner.",
+        if need_refund_reason and vals['refund_reason'] != 'R5' and vals['is_simplified']:
+            errors.append(_("A refund with Refund Reason %(refund_reason)s is not simplified (it needs a partner).",
                             refund_reason=vals['refund_reason']))
 
         if vals['verifactu_move_type'] == 'invoice' and not partner_specified and not vals['is_simplified']:
@@ -392,6 +392,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
         """
         document_vals = record_values['document_vals']
         error_title = _("The Veri*Factu document could not be created")
+
+        if not record_values['errors']:
+            record_values['errors'] = self._check_record_values(record_values)
 
         if record_values['errors']:
             document_vals['errors'] = self._format_errors(error_title, record_values['errors'])
@@ -547,11 +550,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
             }
         }
 
-        if not vals['is_simplified']:
-            render_vals['Destinatarios'] = {
-                'IDDestinatario': [vals['partner']._l10n_es_edi_verifactu_get_values()]
-            }
-
         rectified_document = vals['refunded_document'] or vals['substituted_document']
         if vals['verifactu_move_type'] == 'invoice':
             tipo_rectificativa = None
@@ -576,6 +574,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         # Note: Error [1189]
         # Si TipoFactura es F1 o F3 o R1 o R2 o R3 o R4 el bloque Destinatarios tiene que estar cumplimentado.
+
+        if not vals['is_simplified']:
+            render_vals['Destinatarios'] = {
+                'IDDestinatario': [vals['partner']._l10n_es_edi_verifactu_get_values()]
+            }
 
         render_vals.update({
             'TipoFactura': tipo_factura,
@@ -765,7 +768,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
     @api.model
     def _render_vals_SistemaInformatico(self, vals):
-        spanish_companies_on_db_count = self.env['res.company'].search_count([
+        spanish_companies_on_db_count = self.env['res.company'].sudo().search_count([
             ('account_fiscal_country_id.code', '=', 'ES'),
         ], limit=2)
 

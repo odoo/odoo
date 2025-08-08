@@ -657,10 +657,7 @@ class Project(models.Model):
                 self.env['account.move.line']._query_analytic_accounts(),
             )
         )
-        # account_move_line__move_id is the alias of the joined table account_move in the query
-        # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
-        # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type', 'move_id', 'display_type')
+        query_string, query_param = query.select('balance', 'parent_state', 'account_move_line.company_currency_id', 'account_move_line.analytic_distribution', 'move_id', 'display_type', 'account_move_line.date')
         self._cr.execute(query_string, query_param)
         invoices_move_line_read = self._cr.dictfetchall()
         res = {
@@ -674,7 +671,7 @@ class Project(models.Model):
         if invoices_move_line_read:
             revenues_lines = []
             cogs_lines = []
-            currency_ids = OrderedSet(iml['currency_id'] for iml in invoices_move_line_read)
+            currency_ids = OrderedSet(iml['company_currency_id'] for iml in invoices_move_line_read)
             for move_line in invoices_move_line_read:
                 if move_line['display_type'] == 'cogs':
                     cogs_lines.append(move_line)
@@ -684,8 +681,8 @@ class Project(models.Model):
                 move_ids = set()
                 amount_invoiced = amount_to_invoice = 0.0
                 for moves_read in moves:
-                    currency = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)
-                    price_subtotal = currency._convert(moves_read['price_subtotal'], self.currency_id, self.company_id)
+                    currency = self.env['res.currency'].browse(moves_read['company_currency_id']).with_prefetch(currency_ids)
+                    line_balance = currency._convert(moves_read['balance'], self.currency_id, self.company_id, moves_read['date'])
                     # an analytic account can appear several time in an analytic distribution with different repartition percentage
                     analytic_contribution = sum(
                         percentage for ids, percentage in moves_read['analytic_distribution'].items()
@@ -693,15 +690,9 @@ class Project(models.Model):
                     ) / 100.
                     move_ids.add(moves_read['move_id'])
                     if moves_read['parent_state'] == 'draft':
-                        if moves_read['move_type'] == 'out_invoice':
-                            amount_to_invoice += price_subtotal * analytic_contribution
-                        else:  # moves_read['move_type'] == 'out_refund'
-                            amount_to_invoice -= price_subtotal * analytic_contribution
+                        amount_to_invoice -= line_balance * analytic_contribution
                     else:  # moves_read['parent_state'] == 'posted'
-                        if moves_read['move_type'] == 'out_invoice':
-                            amount_invoiced += price_subtotal * analytic_contribution
-                        else:  # moves_read['move_type'] == 'out_refund'
-                            amount_invoiced -= price_subtotal * analytic_contribution
+                        amount_invoiced -= line_balance * analytic_contribution
                 # don't display the section if the final values are both 0 (invoice -> credit note)
                 if amount_invoiced != 0 or amount_to_invoice != 0:
                     section_id = 'other_invoice_revenues' if ml_type == 'revenues' else 'cost_of_goods_sold'
