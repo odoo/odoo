@@ -53,7 +53,7 @@
                         <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column o-discuss-dropdownMenu border-secondary'">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
-                                <ActionList dropdown="true" group="[partitionedActions.other]"/>
+                                <ActionList actions="partitionedActions.other" dropdown="true"/>
                             </t>
                         </Dropdown>
                     </div>
@@ -143,7 +143,7 @@
 <t t-name="mail.Composer.quickActions">
     <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <ActionList inline="true" group="[partitionedActions.quick]"/>
+            <ActionList actions="partitionedActions.quick" inline="true"/>
         </div>
     </div>
 </t>
@@ -152,13 +152,13 @@
     <div class="o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
-            <ActionList inline="true" group="[[{
+            <ActionList inline="true" actions="[{
                 'icon': 'fa fa-plus-circle',
                 'iconLarge': 'fa fa-lg fa-plus-circle',
                 'id': 'more-actions',
                 'name': moreName,
                 'onSelected': () => {},
-            }]]"/> 
+            }]"/> 
         </div>
     </div>
 </t>
@@ -166,7 +166,7 @@
 <t t-name="mail.Composer.extraActions">
     <div class="me-2" t-attf-class="{{ actionsContainerClass }}">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <ActionList inline="true" group="[partitionedActions.other]"/>
+            <ActionList actions="partitionedActions.other" inline="true"/>
         </div>
     </div>
 </t>

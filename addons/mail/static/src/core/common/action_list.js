@@ -6,20 +6,22 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ActionList extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = [
-        "inline?",
-        "dropdown?",
-        "quick?",
-        "group?",
-        "other?",
-        "odooControlPanelSwitchStyle?",
-        "thread?",
-    ];
+    static props = ["actions", "inline?", "dropdown?", "odooControlPanelSwitchStyle?", "thread?"];
     static template = "mail.ActionList";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
+    }
+
+    get groups() {
+        let groups;
+        if (this.props.actions.find((i) => Array.isArray(i))) {
+            groups = this.props.actions;
+        } else {
+            groups = [this.props.actions];
+        }
+        return groups.filter((group) => group.length); // don't show empty groups
     }
 }

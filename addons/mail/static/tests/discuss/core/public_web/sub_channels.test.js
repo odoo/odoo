@@ -143,7 +143,8 @@ test("create sub thread from sub-thread list", async () => {
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
-    await click("button[title='Threads']");
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await click(".o-mail-DiscussContent-header button[title='Threads']");
     await insertText(
         ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o_searchview_input",
         "MyEpicThread"
@@ -166,6 +167,7 @@ test("'Thread' menu available in threads", async () => {
     await start();
     await openDiscuss(subChannelID);
     await click(".o-mail-DiscussSidebar-item", { text: "ThreadOne" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "ThreadOne" });
     await click("button[title='Threads']");
     await insertText(".o-mail-ActionPanel input[placeholder='Search by name']", "ThreadTwo");
     await click(".o-mail-ActionPanel button", { text: "Create" });
@@ -203,6 +205,7 @@ test("sub thread is available for channel and group, not for chat", async () => 
     await click(".o-mail-ActionPanel button", { text: "Create" });
     await click(".o-mail-DiscussSidebar-item", { text: "Sub thread for channel" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Group" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Group" });
     await click("button[title='Threads']");
     await insertText(
         ".o-mail-ActionPanel input[placeholder='Search by name']",
@@ -254,6 +257,7 @@ test("sub-thread is visually muted when mute is active", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await click("button[title='Threads']");
     await click("button[aria-label='Create Thread']");
     await contains(".opacity-50.o-mail-DiscussSidebar-item:contains('New Thread')", { count: 0 });

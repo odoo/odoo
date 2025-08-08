@@ -4,27 +4,7 @@
 <t t-name="mail.ActionList">
     <div class="o-mail-ActionList flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': props.inline,'flex-column': !props.inline }">
         <t t-set="groupAttClass" t-value="{ 'flex-column w-100': !props.inline, 'o-inline': props.inline, 'o-rounded-bubble': props.inline and !props.odooControlPanelSwitchStyle, 'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle }"/>
-        <span t-if="props.quick?.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
-            <t t-set="groupBefore" t-value="true"/>
-            <t t-foreach="props.quick" t-as="action" t-key="action.id" t-call="mail.ActionList.action">
-                <t t-set="action" t-value="action"/>
-                <t t-set="groupSize" t-value="props.quick.length"/>
-            </t>
-        </span>
-        <t t-else="" t-set="groupBefore" t-value="false"/>
-        <t t-if="groupBefore" t-call="mail.ActionList.groupSeparator"/>
-        <span t-if="props.other?.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
-            <t t-set="groupBefore" t-value="true"/>
-            <t t-foreach="props.other" t-as="action" t-key="action.id" t-call="mail.ActionList.action">
-                <t t-set="action" t-value="action"/>
-                <t t-set="groupSize" t-value="props.other.length"/>
-            </t>
-        </span>
-        <t t-else="" t-set="groupBefore" t-value="false"/>
-        <t t-if="groupBefore" t-call="mail.ActionList.groupSeparator"/>
-        <t t-if="props.inline" t-set="group" t-value="(props.group ?? []).slice().reverse()"/>
-        <t t-else="" t-set="group" t-value="(props.group ?? [])"/>
-        <t t-foreach="group" t-as="group" t-key="group_index">
+        <t t-foreach="groups" t-as="group" t-key="group_index">
             <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
                 <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.ActionList.action">
                     <t t-set="action" t-value="action"/>

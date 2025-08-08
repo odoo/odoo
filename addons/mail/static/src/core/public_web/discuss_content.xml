@@ -45,7 +45,7 @@
                     </t>
                     <div class="ms-1 flex-grow-1"/>
                     <div class="pe-1">
-                        <ActionList inline="true" odooControlPanelSwitchStyle="true" quick="partitionedActions.quick" group="partitionedActions.group" other="partitionedActions.other" thread="thread"/>
+                        <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true" thread="thread"/>
                     </div>
                 </div>
                 <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
