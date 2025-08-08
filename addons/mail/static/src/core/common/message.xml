@@ -169,7 +169,7 @@
             <Dropdown state="optionsDropdown" menuClass="'o-discuss-dropdownMenu'">
                 <button class="d-none"/>
                 <t t-set-slot="content">
-                    <ActionList dropdown="true" group="[messageActions.actions]"/>
+                    <ActionList actions="messageActions.actions" dropdown="true"/>
                 </t>
             </Dropdown>
         </t>
@@ -177,12 +177,12 @@
             <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
             <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
                 <t t-set="quickActions" t-value="messageActions.actions.slice(0, messageActions.actions.length gt quickActionCount ? quickActionCount - 1 : quickActionCount)"/>
-                <ActionList inline="true" group="[quickActions]"/>
+                <ActionList actions="quickActions" inline="true"/>
                 <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
                     <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column o-mail-Message-moreMenu o-discuss-dropdownMenu border-secondary'" >
                         <t t-call="mail.Message.expandAction"/>
                         <t t-set-slot="content">
-                            <ActionList dropdown="true" group="[messageActions.actions.slice(quickActionCount - 1)]"/>
+                            <ActionList actions="messageActions.actions.slice(quickActionCount - 1)" dropdown="true"/>
                         </t>
                     </Dropdown>
                 </div>

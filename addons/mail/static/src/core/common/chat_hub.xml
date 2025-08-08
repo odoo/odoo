@@ -13,7 +13,7 @@
                 <Dropdown t-if="(chatHub.showConversations and !chatHub.compact) or position.dragged" state="options" position="'top-end'" menuClass="'d-flex flex-column o-discuss-dropdownMenu m-0 mb-1 border-secondary'">
                     <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn bg-100 mt-1 fs-3" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'o-bubblesHover': (bubblesHover.isHover or position.dragged) and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"><i class="oi oi-ellipsis-h"/></button>
                     <t t-set-slot="content">
-                        <ActionList dropdown="true" group="[optionActions]"/>
+                        <ActionList actions="optionActions" dropdown="true"/>
                     </t>
                 </Dropdown>
                 <t t-if="store.chatHub.compact" t-call="mail.ChatHub.compactButton"/>
