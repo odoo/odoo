@@ -1466,6 +1466,8 @@ def load_server_wide_modules():
     The `web` module is provided by the addons found in the `openerp-web` project.
     Maybe you forgot to add those addons in your addons_path configuration."""
                 _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
+        if 'web' not in config['server_wide_modules'] and len(list_dbs(True)) > 1:
+            _logger.warning("web is not in server-wide modules, database selector will not work")
 
 
 def _reexec(updated_modules=None):

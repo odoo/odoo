@@ -28,7 +28,6 @@ optparse._ = str  # disable gettext
 
 ALL_DEV_MODE = ['access', 'qweb', 'reload', 'xml']
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
-REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 
 
 class _Empty:
@@ -657,10 +656,9 @@ class configmanager:
         # ensure default server wide modules are present
         if not self['server_wide_modules']:
             self._runtime_options['server_wide_modules'] = DEFAULT_SERVER_WIDE_MODULES
-        for mod in REQUIRED_SERVER_WIDE_MODULES:
-            if mod not in self['server_wide_modules']:
-                self._log(logging.INFO, "adding missing %r to %s", mod, self.options_index['server_wide_modules'])
-                self._runtime_options['server_wide_modules'] = [mod] + self['server_wide_modules']
+        if 'base' not in self['server_wide_modules']:
+            self._log(logging.INFO, "adding missing 'base' to %s", self.options_index['server_wide_modules'])
+            self._runtime_options['server_wide_modules'] = ['base', *self['server_wide_modules']]
 
         # accumulate all log_handlers
         self._runtime_options['log_handler'] = list(_deduplicate_loggers([

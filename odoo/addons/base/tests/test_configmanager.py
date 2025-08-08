@@ -205,7 +205,7 @@ class TestConfigManager(TransactionCase):
             'addons_path': [],  # the path found in the config file is invalid
             'upgrade_path': [],  # the path found in the config file is invalid
             'pre_upgrade_scripts': [],  # the path found in the config file is invalid
-            'server_wide_modules': ['web', 'base', 'mail'],
+            'server_wide_modules': ['base', 'mail'],
             'data_dir': '/tmp/data-dir',
 
             # HTTP
@@ -502,7 +502,7 @@ class TestConfigManager(TransactionCase):
             'addons_path': [],
             'upgrade_path': [],
             'pre_upgrade_scripts': [],
-            'server_wide_modules': ['web', 'base', 'mail'],
+            'server_wide_modules': ['base', 'mail'],
             'data_dir': '/tmp/data-dir',
 
             # HTTP
@@ -628,7 +628,7 @@ class TestConfigManager(TransactionCase):
             'addons_path': [],
             'upgrade_path': [],
             'pre_upgrade_scripts': [],
-            'server_wide_modules': ['web', 'base', 'mail'],
+            'server_wide_modules': ['base', 'mail'],
             'data_dir': '/tmp/data-dir',
 
             # HTTP
