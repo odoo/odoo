@@ -8,84 +8,118 @@ import { Action } from "./action";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
-threadActionsRegistry
-    .add("fold-chat-window", {
-        condition(component) {
-            return component.props.chatWindow;
-        },
-        icon: "oi oi-fw oi-minus",
-        iconLarge: "oi oi-fw fa-lg oi-minus",
-        name(component) {
-            return !component.props.chatWindow?.isOpen ? _t("Open") : _t("Fold");
-        },
-        open(component) {
-            component.toggleFold();
-        },
-        displayActive(component) {
-            return !component.props.chatWindow?.isOpen;
-        },
-        sequence: 99,
-        sequenceQuick: 20,
-    })
-    .add("rename-thread", {
-        condition(component) {
-            return (
-                component.thread &&
-                component.props.chatWindow?.isOpen &&
-                (component.thread.is_editable || component.thread.channel_type === "chat")
-            );
-        },
-        icon: "fa fa-fw fa-pencil",
-        iconLarge: "fa fa-lg fa-fw fa-pencil",
-        name: _t("Rename Thread"),
-        open(component) {
-            component.state.editingName = true;
-        },
-        sequence: 30,
-        sequenceGroup: 20,
-    })
-    .add("close", {
-        condition(component) {
-            return component.props.chatWindow;
-        },
-        icon: "oi fa-fw oi-close",
-        iconLarge: "oi fa-lg fa-fw oi-close",
-        name: _t("Close Chat Window (ESC)"),
-        open(component) {
-            component.close();
-        },
-        sequence: 100,
-        sequenceQuick: 10,
-    })
-    .add("search-messages", {
-        actionPanelComponent: SearchMessagesPanel,
-        condition(component) {
-            return (
-                ["discuss.channel", "mail.box"].includes(component.thread?.model) &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
-            );
-        },
-        panelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
-        icon: "oi oi-fw oi-search",
-        iconLarge: "oi oi-fw fa-lg oi-search",
-        name: _t("Search Messages"),
-        nameActive: _t("Close Search"),
-        sequence: 20,
-        sequenceGroup: 20,
-        setup() {
-            useSubEnv({
-                searchMenu: {
-                    open: () => this.open(),
-                    close: () => {
-                        if (this.isActive) {
-                            this.close();
-                        }
-                    },
+/** @typedef {import("@odoo/owl").Component} Component */
+
+/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
+
+/**
+ * @typedef {Object} ThreadActionSpecificDefinition
+ * @property {Component} [actionPanelComponent]
+ * @property {(Component) => Object} [actionPanelComponentProps]
+ * @property {(Component) => void} [close]
+ * @property {boolean|(comp: Component) => boolean} [condition=true]
+ * @property {string} [nameActive]
+ * @property {string|(comp: Component) => string} [nameClass]
+ * @property {(comp: Component) => void} [open]
+ * @property {(comp: Component) => string} [panelOuterClass]
+ * @property {boolean|(comp: Component) => boolean} [partition=true]
+ * @property {boolean|(comp: Component) => boolean} [sequenceGroup]
+ * @property {boolean|(comp: Component) => boolean} [sequenceQuick]
+ * @property {boolean|(comp: Component) => boolean} [sidebar=false]
+ * @property {boolean|(comp: Component) => boolean} [sidebarSequence]
+ * @property {boolean|(comp: Component) => boolean} [sidebarSequenceGroup]
+ * @property {boolean} [toggle]
+ */
+
+/**
+ * @typedef {ActionDefinition & ThreadActionSpecificDefinition} ThreadActionDefinition
+ */
+
+/**
+ * @param {string} id
+ * @param {ThreadActionDefinition} definition
+ */
+export function registerThreadAction(id, definition) {
+    threadActionsRegistry.add(id, definition);
+}
+
+registerThreadAction("fold-chat-window", {
+    condition(component) {
+        return component.props.chatWindow;
+    },
+    icon: "oi oi-fw oi-minus",
+    iconLarge: "oi oi-fw fa-lg oi-minus",
+    name(component) {
+        return !component.props.chatWindow?.isOpen ? _t("Open") : _t("Fold");
+    },
+    open(component) {
+        component.toggleFold();
+    },
+    displayActive(component) {
+        return !component.props.chatWindow?.isOpen;
+    },
+    sequence: 99,
+    sequenceQuick: 20,
+});
+registerThreadAction("rename-thread", {
+    condition(component) {
+        return (
+            component.thread &&
+            component.props.chatWindow?.isOpen &&
+            (component.thread.is_editable || component.thread.channel_type === "chat")
+        );
+    },
+    icon: "fa fa-fw fa-pencil",
+    iconLarge: "fa fa-lg fa-fw fa-pencil",
+    name: _t("Rename Thread"),
+    open(component) {
+        component.state.editingName = true;
+    },
+    sequence: 30,
+    sequenceGroup: 20,
+});
+registerThreadAction("close", {
+    condition(component) {
+        return component.props.chatWindow;
+    },
+    icon: "oi fa-fw oi-close",
+    iconLarge: "oi fa-lg fa-fw oi-close",
+    name: _t("Close Chat Window (ESC)"),
+    open(component) {
+        component.close();
+    },
+    sequence: 100,
+    sequenceQuick: 10,
+});
+registerThreadAction("search-messages", {
+    actionPanelComponent: SearchMessagesPanel,
+    condition(component) {
+        return (
+            ["discuss.channel", "mail.box"].includes(component.thread?.model) &&
+            (!component.props.chatWindow || component.props.chatWindow.isOpen)
+        );
+    },
+    panelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
+    icon: "oi oi-fw oi-search",
+    iconLarge: "oi oi-fw fa-lg oi-search",
+    name: _t("Search Messages"),
+    nameActive: _t("Close Search"),
+    sequence: 20,
+    sequenceGroup: 20,
+    setup() {
+        useSubEnv({
+            searchMenu: {
+                open: () => this.open(),
+                close: () => {
+                    if (this.isActive) {
+                        this.close();
+                    }
                 },
-            });
-        },
-        toggle: true,
-    });
+            },
+        });
+    },
+    toggle: true,
+});
 
 class ThreadAction extends Action {
     /** Determines whether this is a popover linked to this action. */

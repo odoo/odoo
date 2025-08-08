@@ -1,5 +1,5 @@
 import {
-    composerActionsRegistry,
+    registerComposerAction,
     pickerOnClick,
     pickerSetup,
 } from "@mail/core/common/composer_actions";
@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { markEventHandled } from "@web/core/utils/misc";
 import { useGifPicker } from "./gif_picker";
 
-composerActionsRegistry.add("add-gif", {
+registerComposerAction("add-gif", {
     condition: (component) =>
         (component.store.hasGifPickerFeature || component.store.self.main_user_id?.is_admin) &&
         !component.env.inChatter &&

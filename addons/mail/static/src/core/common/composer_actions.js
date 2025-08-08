@@ -8,6 +8,31 @@ import { Action } from "./action";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
+/** @typedef {import("@odoo/owl").Component} Component */
+
+/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
+
+/**
+ * @typedef {Object} ComposerActionSpecificDefinition
+ * @property {boolean|(comp: Component) => boolean} [condition=true]
+ * @property {boolean} [isPicker]
+ * @property {string|(comp: Component) => string} [pickerName]
+ * @property {boolean|(comp: Component) => boolean} [sequenceGroup]
+ * @property {boolean|(comp: Component) => boolean} [sequenceQuick]
+ */
+
+/**
+ * @typedef {ActionDefinition & ComposerActionSpecificDefinition} ComposerActionDefinition
+ */
+
+/**
+ * @param {string} id
+ * @param {ComposerActionDefinition} definition
+ */
+export function registerComposerAction(id, definition) {
+    composerActionsRegistry.add(id, definition);
+}
+
 export function pickerOnClick(component, action, ev) {
     let anchorEl;
     if (component.ui.isSmall) {
@@ -38,107 +63,106 @@ export function pickerSetup(action, func) {
     action.picker = func();
 }
 
-composerActionsRegistry
-    .add("send-message", {
-        btnClass(component) {
-            if (this.isActive) {
-                return "o-sendMessageActive o-text-white shadow-sm";
-            }
-            return "";
-        },
-        condition: (component) =>
-            !component.env.inChatter && (!component.props.composer.message || component.ui.isSmall),
-        disabledCondition: (component) => component.isSendButtonDisabled,
-        icon: "fa fa-paper-plane-o",
-        iconLarge: "fa fa-lg fa-paper-plane-o",
-        isActive: (component) => component.sendMessageState.active,
-        name(component) {
-            if (component.props.composer.message) {
-                return _t("Save editing");
-            }
-            if (component.thread?.model === "discuss.channel") {
-                return _t("Send");
-            }
-            return component.props.type === "note" ? _t("Log") : _t("Send");
-        },
-        onSelected: (component) => component.sendMessage(),
-        setup: (component) => {
-            component.sendMessageState = useState({ active: false });
-            useEffect(
-                () => {
-                    component.sendMessageState.active = !component.isSendButtonDisabled;
+registerComposerAction("send-message", {
+    btnClass(component) {
+        if (this.isActive) {
+            return "o-sendMessageActive o-text-white shadow-sm";
+        }
+        return "";
+    },
+    condition: (component) =>
+        !component.env.inChatter && (!component.props.composer.message || component.ui.isSmall),
+    disabledCondition: (component) => component.isSendButtonDisabled,
+    icon: "fa fa-paper-plane-o",
+    iconLarge: "fa fa-lg fa-paper-plane-o",
+    isActive: (component) => component.sendMessageState.active,
+    name(component) {
+        if (component.props.composer.message) {
+            return _t("Save editing");
+        }
+        if (component.thread?.model === "discuss.channel") {
+            return _t("Send");
+        }
+        return component.props.type === "note" ? _t("Log") : _t("Send");
+    },
+    onSelected: (component) => component.sendMessage(),
+    setup: (component) => {
+        component.sendMessageState = useState({ active: false });
+        useEffect(
+            () => {
+                component.sendMessageState.active = !component.isSendButtonDisabled;
+            },
+            () => [component.isSendButtonDisabled]
+        );
+    },
+    sequenceQuick: 30,
+});
+registerComposerAction("add-emoji", {
+    icon: "fa fa-smile-o",
+    iconLarge: "fa fa-lg fa-smile-o",
+    isPicker: true,
+    pickerName: _t("Emoji"),
+    name: _t("Add Emojis"),
+    onSelected: (component, action, ev) => {
+        pickerOnClick(component, action, ev);
+        markEventHandled(ev, "Composer.onClickAddEmoji");
+    },
+    setup(component) {
+        pickerSetup(this, () =>
+            useEmojiPicker(
+                undefined,
+                {
+                    onSelect: (emoji) => component.addEmoji(emoji),
+                    onClose: () => component.setActivePicker(null),
                 },
-                () => [component.isSendButtonDisabled]
-            );
-        },
-        sequenceQuick: 30,
-    })
-    .add("add-emoji", {
-        icon: "fa fa-smile-o",
-        iconLarge: "fa fa-lg fa-smile-o",
-        isPicker: true,
-        pickerName: _t("Emoji"),
-        name: _t("Add Emojis"),
-        onSelected: (component, action, ev) => {
-            pickerOnClick(component, action, ev);
-            markEventHandled(ev, "Composer.onClickAddEmoji");
-        },
-        setup(component) {
-            pickerSetup(this, () =>
-                useEmojiPicker(
-                    undefined,
-                    {
-                        onSelect: (emoji) => component.addEmoji(emoji),
-                        onClose: () => component.setActivePicker(null),
-                    },
-                    { arrow: false }
-                )
-            );
-        },
-        sequenceQuick: 20,
-    })
-    .add("upload-files", {
-        condition: (component) => component.allowUpload,
-        icon: "fa fa-paperclip",
-        iconLarge: "fa fa-lg fa-paperclip",
-        name: _t("Attach Files"),
-        onSelected: (component, action, ev) => {
-            component.fileUploaderRef.el?.click();
-            const composer = toRaw(component.props.composer);
-            markEventHandled(ev, "composer.clickOnAddAttachment");
-            composer.autofocus++;
-        },
-        setup: (component) => {
-            component.fileUploaderRef = useRef("file-uploader");
-        },
-        sequence: 20,
-    })
-    .add("open-full-composer", {
-        condition: (component) =>
-            component.props.showFullComposer &&
-            component.thread &&
-            component.thread.model !== "discuss.channel" &&
-            !component.env.inFrontendPortalChatter,
-        hotkey: "shift+c",
-        icon: "fa fa-expand",
-        iconLarge: "fa fa-lg fa-expand",
-        name: _t("Open Full Composer"),
-        onSelected: (component) => component.onClickFullComposer(),
-        sequence: 30,
-    })
-    .add("add-canned-response", {
-        condition: (component) =>
-            component.store.hasCannedResponses &&
-            component.thread &&
-            component.env.services["mail.suggestion"]
-                .getSupportedDelimiters(component.thread)
-                .find(([delimiter]) => delimiter === "::"),
-        icon: "fa fa-file-text-o",
-        iconLarge: "fa fa-lg fa-file-text-o",
-        name: _t("Insert a Canned response"),
-        onSelected: (component, action, ev) => component.onClickInsertCannedResponse(ev),
-        sequence: 5,
-    });
+                { arrow: false }
+            )
+        );
+    },
+    sequenceQuick: 20,
+});
+registerComposerAction("upload-files", {
+    condition: (component) => component.allowUpload,
+    icon: "fa fa-paperclip",
+    iconLarge: "fa fa-lg fa-paperclip",
+    name: _t("Attach Files"),
+    onSelected: (component, action, ev) => {
+        component.fileUploaderRef.el?.click();
+        const composer = toRaw(component.props.composer);
+        markEventHandled(ev, "composer.clickOnAddAttachment");
+        composer.autofocus++;
+    },
+    setup: (component) => {
+        component.fileUploaderRef = useRef("file-uploader");
+    },
+    sequence: 20,
+});
+registerComposerAction("open-full-composer", {
+    condition: (component) =>
+        component.props.showFullComposer &&
+        component.thread &&
+        component.thread.model !== "discuss.channel" &&
+        !component.env.inFrontendPortalChatter,
+    hotkey: "shift+c",
+    icon: "fa fa-expand",
+    iconLarge: "fa fa-lg fa-expand",
+    name: _t("Open Full Composer"),
+    onSelected: (component) => component.onClickFullComposer(),
+    sequence: 30,
+});
+registerComposerAction("add-canned-response", {
+    condition: (component) =>
+        component.store.hasCannedResponses &&
+        component.thread &&
+        component.env.services["mail.suggestion"]
+            .getSupportedDelimiters(component.thread)
+            .find(([delimiter]) => delimiter === "::"),
+    icon: "fa fa-file-text-o",
+    iconLarge: "fa fa-lg fa-file-text-o",
+    name: _t("Insert a Canned response"),
+    onSelected: (component, action, ev) => component.onClickInsertCannedResponse(ev),
+    sequence: 5,
+});
 
 class ComposerAction extends Action {
     get condition() {
