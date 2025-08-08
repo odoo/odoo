@@ -1,5 +1,27 @@
 import { useComponent } from "@odoo/owl";
 
+/** @typedef {import("@odoo/owl").Component} Component */
+
+/**
+ * @typedef {Object} ActionDefinition
+ * @property {string|(comp: Component) => string} [btnClass]
+ * @property {Component} [component]
+ * @property {boolean|(comp: Component) => boolean} [componentCondition=true]
+ * @property {(comp: Component) => Component<Props, Env>} [componentProps]
+ * @property {boolean|(comp: Component) => boolean} [danger]
+ * @property {boolean|(comp: Component) => boolean} [disabledCondition]
+ * @property {boolean} [dropdown]
+ * @property {string|(comp: Component) => string} [hotkey]
+ * @property {string|(comp: Component) => string} [icon]
+ * @property {string|(comp: Component) => string} [iconLarge]
+ * @property {boolean|(comp: Component) => boolean} [isActive]
+ * @property {string|(comp: Component) => string} [name]
+ * @property {(component: Component, ev: Event) => void} [onSelected]
+ * @property {number|(comp: Component) => number} [sequence]
+ * @property {() => void} [setup]
+ * @property {boolean|(comp: Component) => boolean} [success]
+ */
+
 export class Action {
     /** User-defined explicit definition of this action */
     explicitDefinition;

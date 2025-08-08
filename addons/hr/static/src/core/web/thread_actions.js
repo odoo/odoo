@@ -1,8 +1,8 @@
-import { threadActionsRegistry } from "@mail/core/common/thread_actions";
+import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-threadActionsRegistry.add("open-hr-profile", {
+registerThreadAction("open-hr-profile", {
     condition(component) {
         return (
             component.thread?.channel_type === "chat" &&
