@@ -333,16 +333,22 @@
                                         <t t-set="product_price">
                                             <br t-if="combination_info['prevent_zero_price_sale']"/>
                                             <div t-else="" class="align-middle o_wish_price">
-                                                <t t-out="combination_info['price']"
-                                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                <span aria-label="Sale price">
+                                                    <t t-out="combination_info['price']"
+                                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                                    />
+                                                </span>
                                                 <small
-                                                    t-if="combination_info.get('base_unit_price')"
-                                                    class="cart_product_base_unit_price d-block text-muted"
+                                                    t-if="combination_info['has_discounted_price']"
+                                                    class="cart_product_base_unit_price text-muted"
                                                 >
-                                                    <t t-call="website_sale.base_unit_price">
-                                                        <t t-set="product" t-value="wish.product_id"/>
-                                                        <t t-set="base_unit_price" t-value="combination_info.get('base_unit_price')"/>
-                                                    </t>
+                                                    <del
+                                                        aria-label="Original price"
+                                                        t-out="combination_info['list_price']"
+                                                        class="text-nowrap"
+                                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                                        name="product_list_price"
+                                                    />
                                                 </small>
                                             </div>
                                         </t>
