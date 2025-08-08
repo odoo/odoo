@@ -722,6 +722,10 @@ async function mail_message_update_content(request) {
         );
         msg_values.attachment_ids = attachment_ids;
     }
+    if (!body && attachment_ids.length === 0) {
+        msg_values.partner_ids = false;
+        msg_values.parent_id = false;
+    }
     MailMessage.write([message_id], msg_values);
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
@@ -734,6 +738,7 @@ async function mail_message_update_content(request) {
                 this.env["res.partner"].browse(message.partner_ids),
                 makeKwArgs({ fields: ["avatar_128", "name"] })
             ),
+            parentMessage: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
         }).get_result()
     );
     return new mailDataHelpers.Store(
