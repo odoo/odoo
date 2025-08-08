@@ -1,5 +1,4 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
-import { useComponent } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -17,8 +16,7 @@ threadActionsRegistry
         },
         sequence: 1,
         name: _t("Mark all read"),
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.orm = useService("orm");
         },
     })
@@ -33,8 +31,7 @@ threadActionsRegistry
             component.store.unstarAll();
         },
         sequence: 2,
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.store = useService("mail.store");
         },
         name: _t("Unstar all"),

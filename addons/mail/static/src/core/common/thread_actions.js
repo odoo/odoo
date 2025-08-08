@@ -72,13 +72,13 @@ threadActionsRegistry
         nameActive: _t("Close Search"),
         sequence: 20,
         sequenceGroup: 20,
-        setup(action) {
+        setup() {
             useSubEnv({
                 searchMenu: {
-                    open: () => action.open(),
+                    open: () => this.open(),
                     close: () => {
-                        if (action.isActive) {
-                            action.close();
+                        if (this.isActive) {
+                            this.close();
                         }
                     },
                 },
@@ -275,9 +275,7 @@ export function useThreadActions() {
         .getEntries()
         .map(([id, action]) => new ThreadAction(component, id, action));
     for (const action of transformedActions) {
-        if (action.setup) {
-            action.setup(action);
-        }
+        action.setup();
     }
     const state = useState({
         get actions() {

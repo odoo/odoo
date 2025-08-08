@@ -32,8 +32,7 @@ messageActionsRegistry
             component.reactionPicker.open({
                 el: component.root?.el?.querySelector(`[name="${action.id}"]`),
             }),
-        setup() {
-            const component = useComponent();
+        setup(component) {
             component.reactionPicker = useEmojiPicker(undefined, {
                 onSelect: (emoji) => {
                     const reaction = component.props.message.reactions.find(
@@ -138,8 +137,7 @@ messageActionsRegistry
             );
             return def;
         },
-        setup: () => {
-            const component = useComponent();
+        setup: (component) => {
             component.dialog = useService("dialog");
         },
         sequence: 120,
@@ -220,9 +218,7 @@ export function useMessageActions() {
         .getEntries()
         .map(([id, action]) => new MessageAction(component, id, action));
     for (const action of transformedActions) {
-        if (action.setup) {
-            action.setup(action);
-        }
+        action.setup();
     }
     const state = useState({
         get actions() {

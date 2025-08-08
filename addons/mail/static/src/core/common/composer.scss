@@ -43,9 +43,8 @@
         .o-mail-Composer-input::placeholder {
             opacity: 50%;
         }
-
-        .o-mail-Composer-actions button:not(:hover):not(.o-active):not(.show) {
-            opacity: 25%;
+        .o-mail-Composer-mainActions button:not(.active):not(:disabled) {
+            opacity: 50%;
         }
     }
 }
@@ -60,24 +59,6 @@
         &.o-large {
             margin: 0 !important;
             padding: map-get($spacers, 2) !important;
-        }
-        &:disabled {
-            opacity: 25% !important;
-        }
-        &:enabled {
-            opacity: 35%;
-        }
-        .o-mail-Composer.o-focused & {
-            opacity: 50%;
-        }
-        &[name='more-actions'] {
-            opacity: 25%;
-            .o-mail-Composer.o-focused & {
-                opacity: 40%;
-            }
-        }
-        &.rounded-circle {
-            aspect-ratio: 1;
         }
         &.o-sendMessageActive {
             background-color: rgba($o-action, .75);
@@ -94,11 +75,6 @@
             opacity: 100% !important;
             color: var(--mail-Composer-actionHoverColor, black);
             backdrop-filter: invert(.025);
-        }
-        &:disabled {
-            --btn-active-color: var(--btn-disabled-color);
-            --btn-hover-color: var(--btn-disabled-color);
-            opacity: 25%;
         }
         &.o-mail-Composer-send.btn-link:not(:disabled) {
             background-color: rgba($o-action, .75);
@@ -186,6 +162,14 @@
             opacity: 50%;
         }
         @include text-truncate();
+    }
+}
+
+.o-mail-Composer-quickActions {
+    margin-right: map-get($spacers, 1);
+    
+    .o-mail-Composer.o-chatWindow & {
+        margin-right: 1px;
     }
 }
 

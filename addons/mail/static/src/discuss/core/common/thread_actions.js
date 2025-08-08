@@ -4,7 +4,7 @@ import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation"
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 
-import { Component, xml, useComponent } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -31,17 +31,16 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
-        setup(action) {
-            const component = useComponent();
+        setup(component) {
             if (!component.props.chatWindow) {
-                action.popover = usePopover(NotificationSettings, {
-                    onClose: () => action.close(),
+                this.popover = usePopover(NotificationSettings, {
+                    onClose: () => this.close(),
                     position: "bottom-end",
                     fixedPosition: true,
-                    popoverClass: action.panelOuterClass,
+                    popoverClass: this.panelOuterClass,
                 });
             }
-            action.dialogService = useService("dialog");
+            this.dialogService = useService("dialog");
             component.store = useService("mail.store");
         },
         open(component, action) {
@@ -137,15 +136,14 @@ threadActionsRegistry
         },
         sequence: 10,
         sequenceGroup: 20,
-        setup(action) {
-            const component = useComponent();
+        setup(component) {
             if (!component.props.chatWindow) {
-                action.popover = usePopover(ChannelInvitation, {
-                    onClose: () => action.close(),
-                    popoverClass: action.panelOuterClass,
+                this.popover = usePopover(ChannelInvitation, {
+                    onClose: () => this.close(),
+                    popoverClass: this.panelOuterClass,
                 });
             }
-            action.dialogService = useService("dialog");
+            this.dialogService = useService("dialog");
         },
         sidebarSequence: 20,
         sidebarSequenceGroup: 20,
