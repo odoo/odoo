@@ -61,40 +61,6 @@ patch(PosStore.prototype, {
             },
         ];
     },
-    get firstScreen() {
-        const screen = super.firstScreen;
-        const isFirstSession = this.config.raw.session_ids.length === 1;
-        const hasNoProducts = this.productsToDisplay.length === 0;
-
-        if (!this.config.module_pos_restaurant) {
-            return screen;
-        }
-
-        if (screen.page === "LoginScreen") {
-            return { page: "LoginScreen", params: {} };
-        }
-
-        if (isFirstSession && hasNoProducts) {
-            return {
-                page: "ProductScreen",
-                params: {
-                    orderUuid: this.getOrder()?.uuid,
-                },
-            };
-        }
-
-        return this.defaultPage;
-    },
-    get defaultScreen() {
-        if (this.config.module_pos_restaurant) {
-            const screens = {
-                register: "ProductScreen",
-                tables: "FloorScreen",
-            };
-            return screens[this.config.default_screen];
-        }
-        return super.defaultScreen;
-    },
     createNewOrder() {
         const order = super.createNewOrder(...arguments);
 
@@ -489,11 +455,6 @@ patch(PosStore.prototype, {
         const page = this.defaultPage;
         this.navigate(page.page, page.params);
     },
-    addOrderIfEmpty(forceEmpty) {
-        if (!this.config.module_pos_restaurant || forceEmpty) {
-            return super.addOrderIfEmpty(...arguments);
-        }
-    },
     async handleUrlParams(event) {
         await super.handleUrlParams(...arguments);
         if (this.config.module_pos_restaurant && this.router.state.current === "ProductScreen") {
@@ -627,18 +588,6 @@ patch(PosStore.prototype, {
                 order.floating_order_name = payload;
             }
         }
-    },
-    setFloatingOrder(floatingOrder) {
-        if (this.getOrder()?.isFilledDirectSale) {
-            this.transferOrder(this.getOrder().uuid, null, floatingOrder);
-            return;
-        }
-        this.setOrder(floatingOrder);
-
-        const screenName = floatingOrder.getScreenData().name;
-        this.navigate(screenName || "ProductScreen", {
-            orderUuid: floatingOrder.uuid,
-        });
     },
     async handleSelectNamePreset(order) {
         if (this.config.module_pos_restaurant) {
@@ -869,17 +818,6 @@ patch(PosStore.prototype, {
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
-    },
-    updateTables(...tables) {
-        this.data.call("restaurant.table", "update_tables", [
-            tables.map((t) => t.id),
-            Object.fromEntries(
-                tables.map((t) => [
-                    t.id,
-                    { ...t.serializeForORM(), parent_id: t.parent_id?.id || false },
-                ])
-            ),
-        ]);
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);

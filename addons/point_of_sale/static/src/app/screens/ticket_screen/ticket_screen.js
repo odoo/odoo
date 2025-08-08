@@ -554,11 +554,6 @@ export class TicketScreen extends Component {
     switchPane() {
         this.pos.switchPaneTicketScreen();
     }
-    closeTicketScreen() {
-        this.pos.ticket_screen_mobile_pane = "left";
-        const next = this.pos.defaultPage;
-        this.pos.navigate(next.page, next.params);
-    }
     /**
      * Find the empty order with the following priority:
      * - The empty order with the same parter as the provided.
@@ -657,9 +652,6 @@ export class TicketScreen extends Component {
         }
         this.pos.setOrder(order);
         this.pos.navigateToOrderScreen(order);
-    }
-    _getOrderList() {
-        return this.pos.models["pos.order"].getAll();
     }
     _getFilterOptions() {
         const orderStates = this._getOrderStates();

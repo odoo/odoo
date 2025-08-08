@@ -8,7 +8,4 @@ patch(PosConfig.prototype, {
     get isShareable() {
         return super.isShareable || this.module_pos_restaurant;
     },
-    get shouldLoadOrder() {
-        return super.shouldLoadOrder || this.module_pos_restaurant;
-    },
 });

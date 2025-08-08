@@ -23,10 +23,6 @@ export class PosConfig extends Base {
         return this.raw.trusted_config_ids.length > 0;
     }
 
-    get shouldLoadOrder() {
-        return this.raw.trusted_config_ids.length > 0;
-    }
-
     get printerCategories() {
         const set = new Set();
         for (const relPrinter of this.models["pos.printer"].getAll()) {

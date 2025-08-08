@@ -8,12 +8,9 @@ import {
     useComponent,
     useRef,
     useState,
-    onWillUnmount,
     useExternalListener,
 } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useService } from "@web/core/utils/hooks";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 /**
  * Introduce error handlers in the component.
@@ -214,47 +211,4 @@ export function useIsChildLarger(container) {
             computeSize();
         },
     };
-}
-
-/**
- * Manages a component to be used as a popover.
- *
- * @param {typeof import("@odoo/owl").Component} component
- * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
- * @returns {import("@web/core/popover/popover_hook").PopoverHookReturnType}
- */
-export function useReactivePopover(component, options = {}) {
-    const popoverService = useService("popover");
-    const owner = useComponent();
-    const newOptions = Object.create(options);
-    newOptions.onClose = () => {
-        if (status(owner) !== "destroyed") {
-            options.onClose?.();
-        }
-    };
-    let removeFn = null;
-    const state = useDropdownState();
-    function close() {
-        state.close();
-        removeFn?.();
-    }
-    const popover = {
-        open(target, props) {
-            close();
-            state.open();
-            const newOptions = Object.create(options);
-            newOptions.onClose = () => {
-                removeFn = null;
-                state.close();
-                options.onClose?.();
-            };
-            removeFn = popoverService.add(target, component, props, newOptions);
-        },
-        close,
-        get isOpen() {
-            return state.isOpen;
-        },
-    };
-    onWillUnmount(popover.close);
-    return popover;
 }

@@ -29,15 +29,6 @@ export class PaymentInterface {
     }
 
     /**
-     * Call this function to enable UI elements that allow a user to
-     * reverse a payment. This requires that you implement
-     * sendPaymentReversal.
-     */
-    enableReversals() {
-        this.supports_reversals = true;
-    }
-
-    /**
      * This getter determines if send_payment_request
      * is called automatically upon selecting the payment method.
      * Overriding this to false allows manual input of an amount

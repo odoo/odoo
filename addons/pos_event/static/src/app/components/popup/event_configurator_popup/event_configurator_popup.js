@@ -55,9 +55,6 @@ export class EventConfiguratorPopup extends Component {
         }
         return Math.max(ticketAvailability - existingUnsyncRegistration.length, 0);
     }
-    getProductProxy(productId) {
-        return this.pos.models["product.product"].get(productId);
-    }
     confirm() {
         const data = [];
         for (const [ticketId, { qty }] of Object.entries(this.state)) {

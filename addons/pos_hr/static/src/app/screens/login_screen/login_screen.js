@@ -35,9 +35,6 @@ patch(LoginScreen.prototype, {
     async selectCashier(pin = false, login = false, list = false) {
         return await this.cashierSelector(pin, login, list);
     },
-    unlockRegister() {
-        this.pos.login = true;
-    },
     openRegister() {
         if (this.pos.config.module_pos_hr) {
             this.pos.login = true;

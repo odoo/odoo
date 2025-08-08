@@ -470,16 +470,6 @@ export class PosOrderline extends Base {
         return this.allPrices.taxDetails;
     }
 
-    /**
-     * Calculates the taxes for a product, and converts the taxes based on the fiscal position of the order.
-     *
-     * @returns {Object} The calculated product taxes after filtering and fiscal position conversion.
-     */
-    _getProductTaxesAfterFiscalPosition() {
-        const baseLineValues = this.prepareBaseLineForTaxesComputationExtraValues();
-        return baseLineValues.tax_ids;
-    }
-
     getAllPrices(qty = this.getQuantity()) {
         const company = this.company;
         const product = this.getProduct();
@@ -675,9 +665,6 @@ export class PosOrderline extends Base {
     }
     getPriceExtra() {
         return this.price_extra;
-    }
-    setPriceExtra(price_extra) {
-        this.price_extra = parseFloat(price_extra) || 0.0;
     }
     getNote() {
         return this.note || "[]";
