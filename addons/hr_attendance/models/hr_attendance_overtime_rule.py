@@ -45,11 +45,11 @@ def _last_hours_as_intervals(starting_intervals, hours, records=set()):
             last_hours_intervals.append((start, stop, records))
             hours -= duration
         elif hours > 0:
-            last_hours_intervals.append((stop - relativedelta(hours), stop, records))
+            last_hours_intervals.append((stop - relativedelta(hours=hours), stop, records))
             break
         else:
             break
-    return last_hours_intervals
+    return Intervals(last_hours_intervals)
 
 
 class HrAttendanceOvertimeRule(models.Model):
@@ -123,21 +123,25 @@ class HrAttendanceOvertimeRule(models.Model):
                 work_schedule = rule.work_schedule
             
             #breakpoint()
+            def naive_utc(dt):
+                return dt.astimezone(utc).replace(tzinfo=None)
+
             work_intervals = Intervals(
-                (start.replace(tzinfo=None), end.replace(tzinfo=None), records) 
+                (naive_utc(start), naive_utc(end), records) 
                 for (start, end, records) 
-                in work_schedule._work_intervals_batch(utc.localize(start_dt), utc.localize(end_dt), employee)[employee.id])
+                in work_schedule._attendance_intervals_batch(utc.localize(start_dt), utc.localize(end_dt))[False]
+                | work_schedule._attendance_intervals_batch(utc.localize(start_dt), utc.localize(end_dt), lunch=True)[False])
 
             timing_intervals_list.append(
                 _replace_interval_records(attendance_intervals, rule)
                 - work_intervals)
 
-        timing_overtime_intervals = _record_overlap_intervals(intervals_list)
+        timing_overtime_intervals = _record_overlap_intervals(timing_intervals_list)
 
         # Quantity Based
         periods = ['day', 'week']
         def get_period_keys(dt, tz):
-            day = attendance.check_in.astimezone(tz).date()
+            day = dt.astimezone(tz).date()
             return {
                 'day': day,
                 'week': day - relativedelta(days=day.weekday()),
@@ -166,18 +170,20 @@ class HrAttendanceOvertimeRule(models.Model):
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 if overtime_quantity <= 0:
                     continue  # TODO handle negative
-                elif overtime_quantiy < overtime_hours_by[period][date]:
-                    quantity_intervals_list.append(_last_hours_as_interval(
+                elif overtime_quantity < overtime_hours_by[period][date]:
+                    quantity_intervals_list.append(_last_hours_as_intervals(
                         starting_intervals=timing_overtimes_by[period][date],
                         hours=overtime_quantity,
                         records=rule,
                     ))
                 else:
-                    quantity_intervals_list.append(_last_hours_as_interval(
+                    quantity_intervals_list.append(_last_hours_as_intervals(
                         starting_intervals=intervals_by[period][date],
                         hours=overtime_quantity-overtime_hours_by[period][date],
                         records=rule,
-                    ))
+                    ) | _replace_interval_records(timing_overtimes_by[period][date], rule))
+        #for intervals in [timing_overtime_intervals, *quantity_intervals_list]:
+        #   print(*intervals, sep='\n')
         return _record_overlap_intervals([timing_overtime_intervals, *quantity_intervals_list])
 
     @api.model
@@ -233,7 +239,6 @@ class HrAttendanceOvertimeRule(models.Model):
 
         return attendances_by_employee
 
-
     def process_rules(self, attendances, employee_timezones=None):
         employee_timezones = employee_timezones or attendances.employee_id._get_calendar_tz_batch(min(attendances.mapped('check_in')))
 
@@ -241,7 +246,8 @@ class HrAttendanceOvertimeRule(models.Model):
         attendances_by_employee = self._get_attendance_group_by_employee(attendances, employee_timezones)
         for employee, attendances in attendances_by_employee.items():
             tz = timezone(employee_timezones[employee.id])
-            intervals_list = self._get_overtime_intervals(employee, attendances, tz)
+            intervals = self._get_overtime_intervals(employee, attendances, tz)
+            print(*intervals, sep='\n')
             vals_list.extend({
                 'time_start': start,
                 'time_stop': stop,
@@ -249,9 +255,10 @@ class HrAttendanceOvertimeRule(models.Model):
                 'employee_id': employee.id,
                 'date': start.astimezone(tz).date(),
                 **rules._extra_overtime_vals(), # pay_rate, give_as_time_off
-                } for start, stop, rules in _record_overlap_intervals(intervals_list)
+                } for start, stop, rules in intervals
             )
 
+        print(*vals_list, sep='\n')
         self.env['hr.attendance.overtime.line'].create(vals_list)
 
     def _extra_overtime_vals(self):
