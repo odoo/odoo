@@ -345,9 +345,19 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_mandatory_days_data(self, date_start, date_end):
-        self = self._get_contextual_employee()
-        mandatory_days = self._get_mandatory_days(date_start, date_end).sorted('start_date')
-        return list(map(lambda sd: {
+        self_with_context = self._get_contextual_employee()
+        if isinstance(date_start, str):
+            date_start = datetime.fromisoformat(date_start).replace(tzinfo=None)
+        elif isinstance(date_start, datetime):
+            date_start = date_start.replace(tzinfo=None)
+
+        if isinstance(date_end, str):
+            date_end = datetime.fromisoformat(date_end).replace(tzinfo=None)
+        elif isinstance(date_end, datetime):
+            date_end = date_end.replace(tzinfo=None)
+
+        mandatory_days = self_with_context._get_mandatory_days(date_start, date_end).sorted('start_date')
+        return [{
             'id': -sd.id,
             'colorIndex': sd.color,
             'end': datetime.combine(sd.end_date, datetime.max.time()).isoformat(),
@@ -356,7 +366,7 @@ class HrEmployee(models.Model):
             'start': datetime.combine(sd.start_date, datetime.min.time()).isoformat(),
             'startType': "datetime",
             'title': sd.name,
-        }, mandatory_days))
+        } for sd in mandatory_days]
 
     def _get_mandatory_days(self, start_date, end_date):
         domain = [
