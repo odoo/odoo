@@ -5316,6 +5316,7 @@ class AccountMove(models.Model):
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         self.mapped('line_ids').remove_move_reconcile()
         self.state = 'draft'
+        self.sending_data = False
 
         self._detach_attachments()
 
@@ -5514,14 +5515,13 @@ class AccountMove(models.Model):
                 },
             ]
 
+        domain = [
+            ('sending_data', '!=', False),
+            ('state', '=', 'posted'),
+        ]
         limit = job_count + 1
-        to_process = self.env['account.move'].search(
-            [('sending_data', '!=', False)],
-            limit=limit,
-        )
-        total_to_process = self.env['account.move'].search_count(
-            [('sending_data', '!=', False)],
-        )
+        to_process = self.env['account.move'].search(domain, limit=limit)
+        total_to_process = self.env['account.move'].search_count(domain)
 
         need_retrigger = len(to_process) > job_count
         if not to_process:
