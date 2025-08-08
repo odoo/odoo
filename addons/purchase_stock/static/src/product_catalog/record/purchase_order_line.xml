@@ -5,7 +5,7 @@
        t-inherit-mode="primary">
         <xpath expr="//i[contains(@class, 'fa-shopping-cart')]"
                position="replace">
-            <i t-att-class="(props.suggested_qty ? '' : 'fa fa-shopping-cart')"/>
+            <i t-att-class="(props.suggested_qty ? 'o_catalog_card_suggest_add' : 'fa fa-shopping-cart')"/>
         </xpath>
     </t>
 </templates>

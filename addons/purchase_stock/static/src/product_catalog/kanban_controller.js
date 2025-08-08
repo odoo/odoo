@@ -2,6 +2,7 @@ import { ProductCatalogKanbanController } from "@product/product_catalog/kanban_
 import { onWillStart, useState, useSubEnv, useEffect } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useDebounced } from "@web/core/utils/timing";
+import { useBus } from "@web/core/utils/hooks";
 
 /* Controller reacts to most UI events on product catalog view (eg. next page, filters, suggestion changes),
  * pass suggestion inputs to backend through context, and reorders kanban records based on backend computations.
@@ -29,18 +30,23 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
         /* Pass context to backend and reload front-end with computed values
          * using a 300ms delay to avoid rendering entire kanban on each digit change */
-        const debouncedSync = useDebounced(async () => {
-            this.state.estimatedPrice = await rpc("/purchase_stock/update_purchase_suggest", {
-                po_id: this.orderId,
-                domain: this.model.config.domain,
-                suggest_ctx: this._getCatalogContext(),
-            });
-            await this._reload_grid();
+        this._debouncedKanbanRecompute = useDebounced(async () => {
+            this.model.config.context = this._getCatalogContext();
+            await this.model.root.load({}); // Reload the Kanban with ctx
+
+            if (this.state.suggestToggle.isOn) {
+                this.state.estimatedPrice = await rpc("/purchase_stock/update_purchase_suggest", {
+                    po_id: this.orderId,
+                    domain: this.model.config.domain,
+                    suggest_ctx: this._getCatalogContext(),
+                });
+                await this._reorderKanbanGrid();
+            }
         }, 300); // Enough to type eg. 110 in percent input without rendering 3 times
 
         useEffect(
             () => {
-                debouncedSync();
+                this._debouncedKanbanRecompute();
             },
             () => [
                 this.state.basedOn,
@@ -50,12 +56,17 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             ]
         );
 
+        // Recompute Kanban on filter changes (incl. sidebar category filters)
+        useBus(this.env.searchModel, "update", () => {
+            this._debouncedKanbanRecompute();
+        });
+
         const onAddAll = async () => {
             await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
                 this.model.config.domain,
                 this._getCatalogContext(),
             ]);
-            this._reload_grid();
+            this._filterInTheOrder(); // Apply filter to show what was added
         };
 
         useSubEnv({
@@ -64,15 +75,43 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         });
     }
 
-    /* Reload the Kanban view to display values based on suggest component state
-     and order the records with suggested quantities first if suggest is On */
-    async _reload_grid() {
-        this.model.config.context = this._getCatalogContext();
-        await this.model.root.load({}); // No other way for JS to know that product.product suggest values changed
-        if (this.state.suggestToggle.isOn) {
-            const cards = [...this.model.root.records];
-            cards.sort((a, b) => (b.data.suggested_qty || 0) - (a.data.suggested_qty || 0));
-            this.model.root.records = cards;
+    /* Moves records with suggested_qty > 0 to the front, keeping original order.
+     * Doesn't work with paging (because suggested_qty is computed on backed) */
+    async _reorderKanbanGrid() {
+        const sortBySuggested = (list) => {
+            const suggest_products = list.filter((record) => record.data.suggested_qty > 0);
+            const not_suggested_products = list.filter((record) => record.data.suggested_qty == 0);
+            return [...suggest_products, ...not_suggested_products];
+        };
+
+        const isGroupFilterOff = this.model.config.groupBy.length === 0;
+        if (isGroupFilterOff) {
+            this.model.root.records = sortBySuggested(this.model.root.records);
+        } else {
+            for (const group of this.model.root.groups || []) {
+                group.list.records = sortBySuggested(group.list.records);
+            }
+        }
+    }
+
+    /** On pagination change (eg. left and right arrow) */
+    async onUpdatedPager() {
+        this._debouncedKanbanRecompute();
+    }
+
+    /** Add "In the Order" filter, returning products in PO, if it wasn't already there. */
+    _filterInTheOrder() {
+        const sm = this.env.searchModel;
+        const inTheOrderFilter = Object.values(sm.searchItems).find(
+            (searchItem) => searchItem.name === "products_in_purchase_order"
+        );
+        if (
+            inTheOrderFilter &&
+            sm.query.findIndex((el) => el.searchItemId === inTheOrderFilter.id) === -1
+        ) {
+            sm.toggleSearchItem(inTheOrderFilter.id);
+        } else {
+            this.model.load();
         }
     }
 
