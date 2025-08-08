@@ -81,7 +81,7 @@ describe("Popup options: popup in page before edit", () => {
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
 
         // Sometimes bootstrap.js takes a bit of time to display the popup
-        await waitFor(":iframe .s_popup div.js_close_popup", { timeout: 500, visible: true });
+        await waitFor(":iframe .s_popup div.js_close_popup", { timeout: 1000, visible: true });
         expect(":iframe .s_popup .modal").toBeVisible();
         await contains(":iframe .s_popup div.js_close_popup").click();
         expect(":iframe .s_popup .modal").not.toBeVisible();
@@ -98,8 +98,9 @@ describe("Popup options: popup in page before edit", () => {
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         expect(":iframe .s_popup .modal").toBeVisible();
         setSelection({ anchorNode: queryOne(":iframe .s_popup section p"), anchorOffset: 0 });
-        insertText(editor, "Other content");
-        await animationFrame();
+        await insertText(editor, "Other content");
+        // Sometimes bootstrap.js takes a bit of time to display the popup
+        await waitFor(":iframe .s_popup div.js_close_popup", { timeout: 1000, visible: true });
         await contains(":iframe .s_popup div.js_close_popup").click();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
         expect(":iframe .s_popup .modal").not.toBeVisible();
