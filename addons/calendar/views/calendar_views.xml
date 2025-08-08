@@ -414,30 +414,30 @@
                 quick_create="true"
                 quick_create_view_id="%(calendar.view_calendar_event_form_quick_create)d"
                 color="partner_ids">
-                <field name="location" invisible="not location" options="{'icon': 'fa fa-map-marker'}"/>
                 <field name="attendees_count" invisible="1"/>
                 <field name="accepted_count" invisible="1"/>
                 <field name="declined_count" invisible="1"/>
                 <field name="user_can_edit" invisible="1"/>
+                <field name="is_highlighted" invisible="1"/>
+                <field name="privacy" invisible="1"/>
+                <field name="effective_privacy" invisible="1"/>
+                <!-- For recurrence update Dialog -->
+                <field name="recurrency" invisible="1"/>
+                <field name="recurrence_update" invisible="1"/>
+
+                <field name="location" invisible="not location" options="{'icon': 'fa fa-map-marker'}"/>
                 <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
                        filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
                 />
-                <field name="videocall_location" widget="url" text="Join Video Call" options="{'icon': 'fa fa-lg fa-video-camera'}" invisible="not videocall_location"/>
-                <field name="is_highlighted" invisible="1"/>
-                <field name="is_organizer_alone" invisible="1"/>
-                <field name="display_description" invisible="1"/>
-                <field name="description" invisible="not display_description" options="{'icon': 'fa fa-bars'}"/>
-                <field name="privacy" invisible="1"/>
-                <field name="effective_privacy" invisible="1"/>
+                <field name="videocall_location" widget="CopyClipboardURL" text="Join Video Call"
+                       options="{'icon': 'fa fa-lg fa-video-camera'}" invisible="not videocall_location"/>
                 <field name="res_model_name" invisible="not res_model_name"
                        options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'fa fa-bell-o'}"/>
                 <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag', 'color_field': 'color'}"/>
-                <!-- For recurrence update Dialog -->
-                <field name="recurrency" invisible="1"/>
-                <field name="recurrence_update" invisible="1"/>
                 <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
+                <field name="description" invisible="not display_description" options="{'icon': 'fa fa-sticky-note'}"/>
             </calendar>
         </field>
     </record>
