@@ -358,9 +358,11 @@ export class DragAndDropPlugin extends Plugin {
                 } else {
                     const previousEl = this.overlayTarget.previousElementSibling;
                     const nextEl = this.overlayTarget.nextElementSibling;
-                    const { startPreviousEl, startNextEl } = this.dragState;
+                    const parentEl = this.overlayTarget.parentElement;
                     hasSamePositionAsStart =
-                        startPreviousEl === previousEl && startNextEl === nextEl;
+                        startPreviousEl === previousEl &&
+                        startNextEl === nextEl &&
+                        startParentEl === parentEl;
                 }
                 if (!hasSamePositionAsStart) {
                     this.dependencies.history.addStep();
