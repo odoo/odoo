@@ -77,10 +77,6 @@ export class PresetSlotsPopup extends Component {
         return periodNames[period];
     }
 
-    getSlots(presetId) {
-        return this.pos.models["pos.preset"].get(presetId).uiState.availabilities;
-    }
-
     formatDate(date) {
         const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
         return dateObj.toFormat(localization.dateFormat);

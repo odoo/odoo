@@ -13,17 +13,6 @@ patch(PosOrderline.prototype, {
             this.order_id.setShippingDate(this.sale_order_origin_id.shipping_date);
         }
     },
-    getSaleOrder() {
-        if (this.sale_order_origin_id) {
-            const value = {
-                name: this.sale_order_origin_id.name,
-                details: this.down_payment_details || false,
-            };
-
-            return value;
-        }
-        return false;
-    },
     get saleDetails() {
         let down_payment_details = [];
 

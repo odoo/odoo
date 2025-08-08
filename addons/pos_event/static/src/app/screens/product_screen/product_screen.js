@@ -265,11 +265,6 @@ patch(ProductScreen.prototype, {
             }
         }
     },
-    getSlotTicketAvailability(slotId, ticketId, slotTickets, slotTicketAvailabilities) {
-        const idx = slotTickets.findIndex((st) => st[0] === slotId && st[1] === ticketId);
-        const availability = idx === undefined ? undefined : slotTicketAvailabilities[idx]; // Support 0 index
-        return availability === null ? "unlimited" : availability; // null in slotTicketAvailabilities <-> no limit
-    },
     onMouseDown(event, product) {
         if (product.event_id) {
             return;
