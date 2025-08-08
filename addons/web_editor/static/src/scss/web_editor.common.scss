@@ -342,6 +342,13 @@ div.media_iframe_video {
         height: 0;
     }
 
+    .media_iframe_video_size_for_vertical {
+        padding-bottom: 177.78%; /* 9:16 aspect ratio */
+        position: relative;
+        width: 100%;
+        height: 0;
+    }
+
     .css_editable_mode_display {
         @include o-position-absolute(0,0,0,0);
         width: 100%;
@@ -349,6 +356,10 @@ div.media_iframe_video {
         display: none;
         z-index: 2;
     }
+}
+
+div.media_iframe_video:has(.media_iframe_video_size_for_vertical) {
+    max-width: 315px;
 }
 
 // Fields

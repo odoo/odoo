@@ -63,6 +63,8 @@ export class VideoSelector extends Component {
             dailymotion: "dailymotion",
             vimeo: "vimeo",
             youku: "youku",
+            instagram: "instagram",
+            facebook: "facebook",
         };
 
         this.platformParams = {
@@ -70,6 +72,12 @@ export class VideoSelector extends Component {
             dailymotion: "startTime",
             vimeo: "#t=",
         };
+
+        this.verticalSupported = [
+            this.PLATFORMS.youtube,
+            this.PLATFORMS.instagram,
+            this.PLATFORMS.facebook,
+        ];
 
         this.OPTIONS = {
             autoplay: {
@@ -131,6 +139,7 @@ export class VideoSelector extends Component {
             platform: null,
             vimeoPreviews: [],
             errorMessage: "",
+            isVertical: false,
         });
         this.urlInputRef = useRef("url-input");
 
@@ -147,6 +156,7 @@ export class VideoSelector extends Component {
                     if (!src.includes("https:") && !src.includes("http:")) {
                         this.state.urlInput = "https:" + this.state.urlInput;
                     }
+                    this.state.isVertical = this.props.media.dataset.isVertical === "true";
                     await this.syncOptionsWithUrl();
                     if (status(this) === "destroyed") {
                         return;
@@ -202,6 +212,11 @@ export class VideoSelector extends Component {
         this.state.urlInput = "https:" + this.state.src;
     }
 
+    async onChangeIsVertical() {
+        this.state.isVertical = !this.state.isVertical;
+        await this.updateVideo();
+    }
+
     async onClickSuggestion(src) {
         this.state.urlInput = src;
         await this.updateVideo();
@@ -251,7 +266,8 @@ export class VideoSelector extends Component {
             params,
             platform,
         } = await this._getVideoURLData(url, options);
-
+        // not a URL based options, that's why manually assigned.
+        params.isVertical = this.state.isVertical;
         if (!src) {
             this.state.errorMessage = _t("The provided url is not valid");
         } else if (!platform) {
@@ -302,10 +318,15 @@ export class VideoSelector extends Component {
         return selectedMedia.map((video) => {
             const div = document.createElement("div");
             div.dataset.oeExpression = video.src;
-            div.innerHTML =
-                '<div class="css_editable_mode_display"></div>' +
-                '<div class="media_iframe_video_size" contenteditable="false"></div>' +
-                '<iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>';
+            div.dataset.isVertical = video.params.isVertical;
+            const isVerticalClass = video.params.isVertical
+                ? "media_iframe_video_size_for_vertical"
+                : "media_iframe_video_size";
+            div.innerHTML = `
+                <div class="css_editable_mode_display"></div>
+                <div class="${isVerticalClass}" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
+            `;
 
             div.querySelector("iframe").src = video.src;
             return div;
