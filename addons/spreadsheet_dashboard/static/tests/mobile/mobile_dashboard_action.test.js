@@ -31,6 +31,7 @@ test("double clicking on a figure doesn't open the side panel", async () => {
             y: 100,
         },
         data: {
+            chartId: "chartId",
             type: "line",
             dataSetsHaveTitle: false,
             dataSets: [{ dataRange: "A1" }],
