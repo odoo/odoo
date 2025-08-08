@@ -173,3 +173,11 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         }
     }
 }
+
+.modal-open:has(.o_block_tab) {
+    .o_snippet {
+        // --bs-modal-zindex + 1 so that dragged snippets are visible if the
+        // builder is in a modal
+        z-index: 1056;
+    }
+}
