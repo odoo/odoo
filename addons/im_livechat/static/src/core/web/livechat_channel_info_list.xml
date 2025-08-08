@@ -17,11 +17,15 @@
                     <t t-elif="props.thread.livechat_outcome === 'escalated'">Escalated</t>
                 </div>
             </div>
+            <div class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Notes</h3>
+                <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
+            </div>
             <div t-if="expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
                 <h3 class="pt-3">Chatbot answers</h3>
                 <t t-foreach="expectAnswerSteps" t-as="step" t-key="step.id">
-                    <div class="d-flex align-items-center gap-1 bg-light rounded-3">
-                        <i class="fa fa-comment me-1"/>
+                    <div class="d-flex align-items-center gap-1 bg-inherit rounded-3">
+                        <i class="fa fa-comment-o me-1"/>
                         <span class="text-truncate" t-esc="step.answer"/>
                     </div>
                 </t>
@@ -33,11 +37,7 @@
                 </div>
             </div>
             <t t-name="extra_infos"/>
-            <div class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Notes</h3>
-                <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
-            </div>
-            <div class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
                 <h3 class="pt-3">Send conversation</h3>
                 <TranscriptSender thread="props.thread"/>
             </div>
@@ -49,14 +49,15 @@
             <h3 class="pt-3" t-out="templateParams.title"/>
             <t t-foreach="templateParams.info_records" t-as="record" t-key="record.localId">
                 <a
-                    class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center gap-1 rounded-3"
+                    class="btn btn-sm btn-secondary d-flex align-items-center justify-content-start gap-1 px-3 py-1 rounded-3"
                     t-att-href="record.href"
                     t-att-data-oe-id="record.id"
                     t-att-data-oe-model="templateParams.model"
                     contenteditable="false"
+                    target="_blank"
                 >
                     <i class="fa fa-external-link opacity-75"/>
-                    <span class="fw-bold" t-esc="record.name"/>
+                    <span class="ms-1 fw-bold" t-esc="record.name"/>
                 </a>
             </t>
         </div>

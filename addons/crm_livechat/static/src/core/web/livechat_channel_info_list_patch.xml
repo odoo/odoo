@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="website_livechat.LivechatChannelInfoList" t-inherit="im_livechat.LivechatChannelInfoList" t-inherit-mode="extension">
         <xpath expr="//t[@t-name='extra_infos']" position="inside">
-            <t t-call="im_livechat.LivechatChannelInfoList.info_links">
+            <t t-if="props.thread.livechatVisitorMember?.persona?.opportunity_ids?.length" t-call="im_livechat.LivechatChannelInfoList.info_links">
                 <t t-set="title">Open leads</t>
                 <t t-set="templateParams"
                     t-value="{
                         title,
-                        'info_records': props.thread.livechatVisitorMember?.persona?.opportunity_ids,
+                        'info_records': props.thread.livechatVisitorMember.persona.opportunity_ids,
                         'model': 'crm.lead'
                     }"
                 />
