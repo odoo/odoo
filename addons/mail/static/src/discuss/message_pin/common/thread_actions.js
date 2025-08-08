@@ -20,13 +20,13 @@ threadActionsRegistry.add("pinned-messages", {
     nameActive: _t("Hide Pinned Messages"),
     sequence: 20,
     sequenceGroup: 10,
-    setup(action) {
+    setup() {
         useChildSubEnv({
             pinMenu: {
-                open: () => action.open(),
+                open: () => this.open(),
                 close: () => {
-                    if (action.isActive) {
-                        action.close();
+                    if (this.isActive) {
+                        this.close();
                     }
                 },
             },

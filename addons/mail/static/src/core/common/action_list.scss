@@ -29,11 +29,11 @@
         }
 
         &.o-inline {
+            i {
+                opacity: 35%;
+            }
             &.o-odooControlPanelSwitchStyle i {
                 opacity: var(--mail-ActionList-buttonInlineIconOpacity, 65%);
-            }
-            &:not(.o-odooControlPanelSwitchStyle) i {
-                opacity: 35%;
             }
         }
         &:not(.o-inline) i {
@@ -50,7 +50,7 @@
             }
         }
 
-        &:hover:not(.o-dropdown-item), &.o-isActive, &.o-active, &.focus, &.show {
+        &:hover:not(.o-dropdown-item), &.o-isActive, &.o-active, &.focus, &.show, &.active {
             .o-mail-ActionList-actionLabel {
                 opacity: 100%;
             }

@@ -57,14 +57,17 @@
 
 <t t-name="mail.ActionList.actionMain">
     <t t-set="btnClass" t-value="Object.entries({
-        'btn btn-secondary m-0 btn-group-item': true,
+        [action.btnClass ?? '']: true,
+        'o-mail-ActionList-button btn btn-secondary m-0 btn-group-item': true,
         'o-first': action_first,
         'o-last': action_last,
         'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle,
-        'rounded-3': props.inline and !props.odooControlPanelSwitchStyle,
+        'rounded-3': props.inline and !props.odooControlPanelSwitchStyle and !env.inComposer,
+        'rounded-circle': props.inline and !props.odooControlPanelSwitchStyle and env.inComposer,
         'px-1': props.inline and props.odooControlPanelSwitchStyle,
         'o-inline': props.inline,
-        'p-0': props.inline and !props.odooControlPanelSwitchStyle and !(ui.isSmall and props.inline),
+        'p-0': props.inline and !props.odooControlPanelSwitchStyle and !(ui.isSmall and props.inline) and !env.inComposer,
+        'p-1': props.inline and !props.odooControlPanelSwitchStyle and !(ui.isSmall and props.inline) and env.inComposer,
         'border-0': props.inline and !props.odooControlPanelSwitchStyle and (action.iconLage ?? action.icon),
         'border-2 o-px-0_5 o-mx-0_5': props.inline and !props.odooControlPanelSwitchStyle and !(action.iconLage ?? action.icon),
         'px-3 py-2': props.dropdown and ui.isSmall,

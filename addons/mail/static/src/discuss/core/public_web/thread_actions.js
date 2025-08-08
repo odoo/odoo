@@ -1,6 +1,6 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
-import { useChildSubEnv, useComponent } from "@odoo/owl";
+import { useChildSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -18,18 +18,17 @@ threadActionsRegistry.add("show-threads", {
     icon: "fa fa-fw fa-comments-o",
     iconLarge: "fa fa-fw fa-lg fa-comments-o",
     name: _t("Threads"),
-    setup(action) {
-        const component = useComponent();
+    setup(component) {
         if (!component.props.chatWindow) {
-            action.popover = usePopover(SubChannelList, {
-                onClose: () => action.close(),
+            this.popover = usePopover(SubChannelList, {
+                onClose: () => this.close(),
                 fixedPosition: true,
-                popoverClass: action.panelOuterClass,
+                popoverClass: this.panelOuterClass,
             });
         }
         useChildSubEnv({
             subChannelMenu: {
-                open: () => action.open(),
+                open: () => this.open(),
             },
         });
     },
