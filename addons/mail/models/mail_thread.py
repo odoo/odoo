@@ -542,7 +542,7 @@ class MailThread(models.AbstractModel):
         :param iter fields_iter: iterable of fields names to potentially track
         """
         fnames = self._track_get_fields().intersection(fields_iter)
-        if not fnames:
+        if not self or not fnames:
             return
         self.env.cr.precommit.add(self._track_finalize)
         initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
@@ -563,7 +563,7 @@ class MailThread(models.AbstractModel):
 
     def _track_discard(self):
         """ Prevent any tracking of fields on ``self``. """
-        if not self._track_get_fields():
+        if not self or not self._track_get_fields():
             return
         self.env.cr.precommit.add(self._track_finalize)
         initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
