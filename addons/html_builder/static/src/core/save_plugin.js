@@ -6,7 +6,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "isAlreadySaved", "saveView"];
+    static shared = ["save", "isAlreadySaved", "saveView", "ignoreDirty"];
     static dependencies = ["history"];
 
     resources = {
@@ -187,5 +187,18 @@ export class SavePlugin extends Plugin {
             }
             savableEl.classList.add("o_dirty");
         }
+    }
+
+    /**
+     * Prevents elements to be marked as dirty until it is reactivated with the
+     * returned callback.
+     *
+     * @returns {Function}
+     */
+    ignoreDirty() {
+        this.canObserve = false;
+        return () => {
+            this.canObserve = true;
+        };
     }
 }
