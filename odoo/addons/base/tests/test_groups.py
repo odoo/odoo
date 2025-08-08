@@ -701,13 +701,13 @@ class TestGroupsOdoo(common.TransactionCase):
 
         user.group_ids = self.env.ref('base.group_user') + self.test_group
 
-        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one'})
+        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
 
         # update res.group implied_ids having the effect that users have distinct groups
         with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             self.test_group.implied_ids += self.env.ref('base.group_public')
 
-        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one'})
+        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
 
         with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             self.env.ref('base.group_public').implied_by_ids = self.test_group
@@ -717,7 +717,7 @@ class TestGroupsOdoo(common.TransactionCase):
         with self.assertRaises(ValidationError, msg="This makes a group imply two disjoint groups."):
             self.env.ref('base.group_public').implied_ids += self.test_group
 
-        self.assertEqual(set(self.env.ref('base.group_public').all_implied_ids.get_external_id().values()), {'base.group_public'})
+        self.assertEqual(set(self.env.ref('base.group_public').all_implied_ids.get_external_id().values()), {'base.group_public', 'base.group_everyone'})
 
         new_group = self.env['res.groups'].create({
             'name': 'test group',
@@ -729,7 +729,7 @@ class TestGroupsOdoo(common.TransactionCase):
             "res_id": new_group.id,
         })
         self.env.ref('base.group_public').implied_ids += new_group
-        self.assertEqual(set(self.env.ref('base.group_public').all_implied_ids.get_external_id().values()), {'base.group_public', 'base.new_group'})
+        self.assertEqual(set(self.env.ref('base.group_public').all_implied_ids.get_external_id().values()), {'base.group_public', 'base.new_group', 'base.group_everyone'})
 
     def test_groups_7_distinct(self):
         def create(name, implied_by_ids=[]):
