@@ -102,19 +102,6 @@ export class SplitBillScreen extends Component {
         this.pos.startTransferOrder();
     }
 
-    // Calculates the sent quantities for both orders and adjusts for last_order_preparation_change.
-    _getSentQty(ogLine, newLine, orderedQty) {
-        const unorderedQty = ogLine.qty - orderedQty;
-
-        const delta = newLine.qty - unorderedQty;
-        const newQty = delta > 0 ? delta : 0;
-
-        return {
-            [ogLine.preparationKey]: orderedQty - newQty,
-            [newLine.preparationKey]: newQty,
-        };
-    }
-
     waitForNewOrder(data) {
         return new Promise((resolve) => {
             this.pos.createNewOrder(data, (order) => {

@@ -107,12 +107,6 @@ patch(PosOrder.prototype, {
         }
         return state;
     },
-    /** @override */
-    getEmailItems() {
-        return super
-            .getEmailItems(...arguments)
-            .concat(this.has_pdf_gift_card ? [_t("the gift cards")] : []);
-    },
 
     /**
      * We need to update the rewards upon changing the partner as it may impact the points available

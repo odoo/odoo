@@ -636,14 +636,6 @@ export class PosStore extends WithLazyGetterTrap {
         await this.deviceSync.readDataFromServer();
     }
 
-    get productListViewMode() {
-        const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
-        if (viewMode === "grid") {
-            return "d-grid gap-1 gap-lg-2";
-        } else {
-            return "";
-        }
-    }
     get productViewMode() {
         const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
         if (viewMode === "grid") {
@@ -655,17 +647,6 @@ export class PosStore extends WithLazyGetterTrap {
     async onProductInfoClick(productTemplate) {
         const info = await this.getProductInfo(productTemplate, 1);
         this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
-    }
-    getProductPriceFormatted(productTemplate) {
-        const formattedUnitPrice = this.env.utils.formatCurrency(
-            this.getProductPrice({ productTemplate })
-        );
-
-        if (productTemplate.to_weight) {
-            return `${formattedUnitPrice}/${productTemplate.uom_id.name}`;
-        } else {
-            return formattedUnitPrice;
-        }
     }
     async openConfigurator(pTemplate, opts = {}) {
         const attrById = this.models["product.attribute"].getAllBy("id");
@@ -1934,12 +1915,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
-    addOrderIfEmpty(forceEmpty) {
-        if (!this.getOrder()) {
-            return this.addNewOrder();
-        }
-    }
-
     connectToProxy() {
         return new Promise((resolve, reject) => {
             this.barcodeReader?.disconnectFromProxy();
@@ -2421,16 +2396,8 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
 
-    get isTicketScreenShown() {
-        return this.router.state.current === "TicketScreen";
-    }
-
     redirectToBackend() {
         window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
-    }
-
-    getDisplayDeviceIP() {
-        return this.config.proxy_ip;
     }
 
     getExcludedProductIds() {

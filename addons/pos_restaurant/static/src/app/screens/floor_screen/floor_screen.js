@@ -650,9 +650,6 @@ export class FloorScreen extends Component {
     get selectedTables() {
         return this.state.selectedTableIds.map((id) => this.pos.models["restaurant.table"].get(id));
     }
-    get nbrFloors() {
-        return this.pos.models["restaurant.floor"].length;
-    }
     movePinch(hypot) {
         const delta = hypot / this.scalehypot;
         const value = this.initalScale * delta;

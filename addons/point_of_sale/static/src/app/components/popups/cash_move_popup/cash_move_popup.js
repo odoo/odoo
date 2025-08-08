@@ -81,13 +81,6 @@ export class CashMovePopup extends Component {
             3000
         );
     }
-    _onWindowKeyup(event) {
-        if (event.key === this.props.confirmKey && !["TEXTAREA"].includes(event.target.tagName)) {
-            this.confirm();
-        } else {
-            super._onWindowKeyup(...arguments);
-        }
-    }
     onClickButton(type) {
         this.state.type = type;
         this.inputRef.el.focus();

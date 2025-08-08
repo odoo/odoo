@@ -8,8 +8,4 @@ patch(PosConfig.prototype, {
     get isShareable() {
         return super.isShareable || this.module_pos_restaurant;
     },
-    get shouldLoadOrder() {
-        const session = this.models["pos.session"].getFirst();
-        return super.shouldLoadOrder || session._self_ordering;
-    },
 });

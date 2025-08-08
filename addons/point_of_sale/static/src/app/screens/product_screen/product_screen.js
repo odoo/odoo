@@ -306,17 +306,6 @@ export class ProductScreen extends Component {
     displayAllControlPopup() {
         this.dialog.add(ControlButtonsPopup);
     }
-    get selectedOrderlineQuantity() {
-        return this.currentOrder.getSelectedOrderline()?.getQuantityStr();
-    }
-    get selectedOrderlineDisplayName() {
-        return this.currentOrder.getSelectedOrderline()?.getFullProductName();
-    }
-    get selectedOrderlineTotal() {
-        return this.env.utils.formatCurrency(
-            this.currentOrder.getSelectedOrderline()?.getDisplayPrice()
-        );
-    }
 
     switchPane() {
         this.pos.scanning = false;

@@ -27,13 +27,6 @@ export class OrderWidget extends Component {
         }
     }
 
-    get cancelAvailable() {
-        return (
-            Object.keys(this.currentOrder.changes).length > 0 ||
-            this.selfOrder.config.self_ordering_mode === "kiosk"
-        );
-    }
-
     get buttonToShow() {
         const currentPage = this.router.activeSlot;
         const payAfter = this.selfOrder.config.self_ordering_pay_after;

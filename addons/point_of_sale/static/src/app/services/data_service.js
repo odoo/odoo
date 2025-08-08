@@ -119,10 +119,6 @@ export class PosData extends Reactive {
         return `point-of-sale-${odoo.pos_config_id}-${odoo.info?.db}`;
     }
 
-    get serverDateKey() {
-        return `data_server_date_${odoo.pos_config_id}`;
-    }
-
     async resetIndexedDB() {
         // Remove data_server_date since it's used to determine the last time the data was loaded
         await this.indexedDB.reset();
@@ -895,10 +891,6 @@ export class PosData extends Reactive {
         // Delete the main record
         const result = record.delete({ silent: !removeFromServer });
         return result;
-    }
-
-    deleteUnsyncData(uuid) {
-        this.network.unsyncData = this.network.unsyncData.filter((d) => d.uuid !== uuid);
     }
 
     async preLoadData(data) {
