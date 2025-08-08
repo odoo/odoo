@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { logPosMessage } from "../utils/pretty_console_log";
 
 export const posPrinterService = {
     dependencies: ["hardware_proxy", "dialog", "renderer"],
@@ -39,8 +40,15 @@ export class PosPrinterService extends PrinterService {
             return await super.printHtml(...arguments);
         } catch (error) {
             if (error.body === undefined) {
-                console.error("An unknown error occured in printHtml:", error);
+                logPosMessage(
+                    "PosPrinterService",
+                    "printHtml",
+                    "An unknown error occured in printHtml",
+                    false,
+                    [error]
+                );
             }
+
             this.dialog.closeAll();
             this.dialog.add(RetryPrintPopup, {
                 title: error.title,

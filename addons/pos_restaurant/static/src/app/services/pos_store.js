@@ -1,11 +1,12 @@
 import { patch } from "@web/core/utils/patch";
-import { PosStore } from "@point_of_sale/app/services/pos_store";
+import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 patch(PosStore.prototype, {
     /**
@@ -956,7 +957,9 @@ patch(PosStore.prototype, {
             this.getOrder().uiState.lastPrint = changes;
             await this.printChanges(this.getOrder(), changes, false);
         } catch (e) {
-            console.error("Unable to print course", e);
+            logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
+                e,
+            ]);
         }
     },
     async transferLinesToCourse() {
@@ -1022,7 +1025,13 @@ patch(PosStore.prototype, {
                     this.showScreen(screen);
                 }
             } catch (err) {
-                console.error(err);
+                logPosMessage(
+                    "Store",
+                    "restoreSampleDataState",
+                    "Error while restoring sample data state",
+                    CONSOLE_COLOR,
+                    [err]
+                );
             }
         }
     },
