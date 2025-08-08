@@ -24,7 +24,7 @@ export class ProductCatalogSearchPanel extends SearchPanel {
     }
 
     get showSections() {
-        return this.env.model.config.context.product_catalog_order_id;
+        return this.env.model.config.context.show_sections;
     }
 
     get selectedSection() {

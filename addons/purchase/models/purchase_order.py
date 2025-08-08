@@ -1133,6 +1133,7 @@ class PurchaseOrder(models.Model):
             'product_catalog_currency_id': self.currency_id.id,
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
             'search_default_seller_ids': self.partner_id.name,
+            'show_sections': bool(self.id),
         }
 
     def _get_product_catalog_domain(self):
