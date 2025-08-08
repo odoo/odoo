@@ -11,7 +11,7 @@ class StockValuationReport(models.AbstractModel):
     def get_report_values(self, date=False):
         return {
             'data': self._get_report_data(date=date),
-            'context': self._get_report_context(),
+            'context': {},
         }
 
     @api.model
@@ -24,10 +24,6 @@ class StockValuationReport(models.AbstractModel):
             'doc_model': 'stock.valuation.report',
             'docs': docs,
         }
-
-    def _get_report_context(self):
-        # TODO: set default warehouse ? Default category ?
-        return {}
 
     def _get_report_data(self, date=False, product_category=False, warehouse=False):
         company = self.env.company
@@ -43,12 +39,13 @@ class StockValuationReport(models.AbstractModel):
             accounting_data = company.stock_accounting_value(at_date=date)
 
         accounts = inventory_data.keys() | accounting_data.keys()
+        accounts_by_id = {}
 
         accounts_lines = []
         initial_balance = {
             'label': _("Initial Balance"),
             'value': 0,
-            'lines_by_code': defaultdict(lambda: {
+            'lines_by_account_id': defaultdict(lambda: {
                 'value': 0,
                 'accounts': [],
             }),
@@ -56,7 +53,7 @@ class StockValuationReport(models.AbstractModel):
         ending_stock = {
             'label': _("Ending Stock"),
             'value': 0,
-            'lines_by_code': defaultdict(lambda: {
+            'lines_by_account_id': defaultdict(lambda: {
                 'value': 0,
                 'accounts': [],
             }),
@@ -64,35 +61,32 @@ class StockValuationReport(models.AbstractModel):
 
         # Compute Opening Balance values and Ending Stock values.
         for account in accounts:
-            code = account.code
             opening_balance = accounting_data.get(account, 0)
             ending_balance = inventory_data.get(account, 0)
             variation = ending_balance - opening_balance
-            account_vals = {
-                'id': account.id,
-                'name': account.display_name,
-                'code': code,
-            }
+            account_vals = account.read(['name', 'code', 'display_name'])[0]
+            accounts_by_id[account.id] = account_vals
             account_line = {
-                'account_move': account_vals,
+                'account_id': account.id,
                 'opening_balance': opening_balance,
                 'ending_balance': ending_balance,
-                'code': code,
                 'variation': variation,
             }
             accounts_lines.append(account_line)
             if opening_balance:
                 initial_balance['value'] += opening_balance
-                initial_balance['lines_by_code'][code]['value'] += opening_balance
-                initial_balance['lines_by_code'][code]['accounts'].append(account_vals)
+                initial_balance['lines_by_account_id'][account.id]['value'] += opening_balance
+                initial_balance['lines_by_account_id'][account.id]['accounts'].append(account_vals)
             if ending_balance:
                 ending_stock['value'] += ending_balance
-                ending_stock['lines_by_code'][code]['value'] += ending_balance
-                ending_stock['lines_by_code'][code]['accounts'].append(account_vals)
+                ending_stock['lines_by_account_id'][account.id]['value'] += ending_balance
+                ending_stock['lines_by_account_id'][account.id]['accounts'].append(account_vals)
 
         # Get accounting data.
         accounts_by_product = company._get_accounts_by_product()
-        location_valuation_vals = company._get_location_valuation_vals()
+        location_valuation_vals = company._get_location_valuation_vals(
+            location_domain=[('usage', '=', 'inventory')]
+        )
         stock_valuation_account_vals = company._get_stock_valuation_account_vals(accounts_by_product, location_valuation_vals)
 
         # Compute Inventory Loss values.
@@ -100,65 +94,60 @@ class StockValuationReport(models.AbstractModel):
             'label': _("Inventory Loss"),
             'value': 0,
         }
-        lines_by_code = defaultdict(lambda: {
+        lines_by_account_id = defaultdict(lambda: {
             'debit': 0,
             'credit': 0,
             'lines': [],
         })
         for vals in location_valuation_vals:
             account = self.env['account.account'].browse(vals['account_id'])
-            code = account.code
+            account_vals = account.read(['name', 'code', 'display_name'])[0]
+            accounts_by_id[account.id] = account_vals
             inventory_loss['value'] -= vals['debit']
-            lines_by_code[code]['debit'] += vals['debit']
-            lines_by_code[code]['credit'] += vals['credit']
-            lines_by_code[code]['lines'].append({
-                **vals,
-                'code': code,
-            })
+            lines_by_account_id[account.id]['debit'] += vals['debit']
+            lines_by_account_id[account.id]['credit'] += vals['credit']
+            lines_by_account_id[account.id]['lines'].append(vals)
         inventory_loss['lines'] = [{
-            'code': code,
+            'account_id': account_id,
             'debit': vals['debit'],
             'credit': vals['credit'],
-            'account': code,
-        } for (code, vals) in lines_by_code.items()]
+        } for (account_id, vals) in lines_by_account_id.items()]
 
         # Compute Stock Variation values.
         stock_variation = {
             'label': _("Stock Variation"),
             'value': 0,
         }
-        lines_by_code = defaultdict(lambda: {
+        lines_by_account_id = defaultdict(lambda: {
             'debit': 0,
             'credit': 0,
             'lines': [],
         })
         for vals in stock_valuation_account_vals:
             account = self.env['account.account'].browse(vals['account_id'])
-            code = account.code
+            account_vals = account.read(['name', 'code', 'display_name'])[0]
+            accounts_by_id[account.id] = account_vals
             stock_variation['value'] += vals['debit']
-            lines_by_code[code]['debit'] += vals['debit']
-            lines_by_code[code]['credit'] += vals['credit']
-            lines_by_code[code]['lines'].append({
+            lines_by_account_id[account.id]['debit'] += vals['debit']
+            lines_by_account_id[account.id]['credit'] += vals['credit']
+            lines_by_account_id[account.id]['lines'].append({
                 **vals,
-                'code': code,
+                'account_id': account.id,
             })
         stock_variation['lines'] = [{
-            'code': code,
+            'account_id': account_id,
             'debit': vals['debit'],
             'credit': vals['credit'],
-            'account': code,
-        } for (code, vals) in lines_by_code.items()]
+        } for (account_id, vals) in lines_by_account_id.items()]
 
         data = {
+            'accounts_by_id': accounts_by_id,
             'accounts_lines': accounts_lines,
             'company_id': company.id,
             'currency_id': company.currency_id.id,
-            'lines': accounts_lines,
-            'location_valuation_vals': location_valuation_vals,
             'ending_stock': ending_stock,
             'initial_balance': initial_balance,
             'inventory_loss': inventory_loss,
-            'stock_valuation_account_vals': stock_valuation_account_vals,
             'stock_variation': stock_variation,
         }
         return data

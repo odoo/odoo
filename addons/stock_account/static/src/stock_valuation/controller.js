@@ -31,10 +31,18 @@ export class StockValuationReportController {
             kwargs
         );
         this.data = res.data;
+        // Prepare the "Stock Loss" lines.
+        for (const line of this.data.inventory_loss.lines) {
+            line.account = this.data.accounts_by_id[line.account_id];
+        }
+        // Prepare "Stock Variation" lines.
+        for (const line of this.data.stock_variation.lines) {
+            line.account = this.data.accounts_by_id[line.account_id];
+        }
         // Prepare the "Initial Balance" lines.
         this.data.initial_balance.lines = [];
         this.data.initial_balance.accounts = [];
-        for (let [code, data] of Object.entries(this.data.initial_balance.lines_by_code)) {
+        for (let [code, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
             this.data.initial_balance.lines.push({
                 label: code,
                 accounts: data.accounts,
@@ -45,9 +53,10 @@ export class StockValuationReportController {
         // Prepare the "Ending Stock" lines.
         this.data.ending_stock.lines = [];
         this.data.ending_stock.accounts = [];
-        for (let [code, data] of Object.entries(this.data.ending_stock.lines_by_code)) {
+        for (let [accountId, data] of Object.entries(this.data.ending_stock.lines_by_account_id)) {
+            const account = this.data.accounts_by_id[accountId];
             this.data.ending_stock.lines.push({
-                label: code,
+                label: account.display_name,
                 accounts: data.accounts,
                 value: data.value,
             });
@@ -57,6 +66,7 @@ export class StockValuationReportController {
 
     async setDate(date) {
         this.state.date = date;
+        this.dateSelected = true;
         await this.loadReportData();
     }
 
