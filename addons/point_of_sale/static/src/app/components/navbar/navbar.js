@@ -152,7 +152,7 @@ export class Navbar extends Component {
 
         if (this.ui.isSmall) {
             this.dialog.add(QrCodeCustomerDisplay, {
-                customerDisplayURL: `${this.pos.session._base_url}${customer_display_url}`,
+                customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
             });
             return;
         }
