@@ -345,7 +345,6 @@ form: module.record_id""" % (xml_id,)
                 install_mode=True,
                 install_module=self.module,
                 install_filename=self.xml_filename,
-                install_xmlid=rec_id,
             )
 
         self._test_xml_id(rec_id)
@@ -453,6 +452,8 @@ form: module.record_id""" % (xml_id,)
             sequence = self.next_sequence()
             if sequence:
                 res['sequence'] = sequence
+        if 'xmlid' not in res and 'xmlid' in model._fields:
+            res['xmlid'] = xid
 
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         if foreign_record_to_create:
