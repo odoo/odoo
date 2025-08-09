@@ -19,15 +19,15 @@
 # Arnau Ros, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
+# Ivan Espinola, 2024
 # Martin Trigaux, 2024
 # jabiri7, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # Jonatan Gk, 2024
-# Ivan Espinola, 2024
 # Josep Anton Belchi, 2025
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
-# Noemi Pla, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-18 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,27 +200,27 @@ msgid ""
 msgstr ""
 "<div style=\"background: #ffffff\">\n"
 "                <div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
-"                    Aquí tens la teva targeta de regal!\n"
+"                    Aquí està la vostra targeta regal!\n"
 "                </div>\n"
 "                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
 "                    <img src=\"/loyalty/static/img/giftcard.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
 "                    <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
-"                        <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"                        <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">150,00 €</strong></h3>\n"
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
 "                    <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
-"                        <strong>Gift Card Code</strong>\n"
+"                        <strong>Codi de la targeta regal</strong>\n"
 "                    </p>\n"
 "                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
 "                </div>\n"
 "                <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
-"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">La targeta caduca <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">La targeta expira el <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
 "                </div>\n"
 "                <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
 "                    <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
-"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Useu-lo ara mateix!</a>\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Utilitza-la ara mateix!</a>\n"
 "                    </span>\n"
 "                </div>\n"
 "            </div>"

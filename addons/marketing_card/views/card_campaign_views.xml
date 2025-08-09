@@ -85,20 +85,20 @@
                     <page name="Card Layout" string="Card Layout">
                         <group>
                         <group>
-                            <field name="content_background" widget="image" options="{'img_class': 'w-25 object-fit-contain'}"/>
+                            <field name="content_background" widget="image" class="w-25"/>
                             <label for="content_header"/>
                             <div class="d-flex">
                                 <field name="content_header_dyn" title="Dynamic Field?"/>
                                 <field name="content_header" invisible="content_header_dyn" placeholder="e.g. Join Odoo Experience 2024"/>
                                 <field name="content_header_path" invisible="not content_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
-                                <field name="content_header_color" widget="color" style="width: 40px"/>
+                                <field name="content_header_color" widget="color" class="ms-auto" style="min-width: 40px; max-width: 40px;"/>
                             </div>
                             <label for="content_sub_header"/>
                             <div class="d-flex">
                                 <field name="content_sub_header_dyn"/>
                                 <field name="content_sub_header" invisible="content_sub_header_dyn" placeholder="e.g. Aug 24, Brussels Expo"/>
                                 <field name="content_sub_header_path" invisible="not content_sub_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
-                                <field name="content_sub_header_color" widget="color" style="width: 40px"/>
+                                <field name="content_sub_header_color" widget="color" class="ms-auto" style="min-width: 40px; max-width: 40px;"/>
                             </div>
                             <label for="content_section"/>
                             <div class="d-flex">

@@ -105,7 +105,7 @@ class AccountAnalyticLine(models.Model):
         super(AccountAnalyticLine, self - analytic_line_with_project)._compute_display_name()
         for analytic_line in analytic_line_with_project:
             if analytic_line.task_id:
-                analytic_line.display_name = f"{analytic_line.project_id.display_name} - {analytic_line.task_id.display_name}"
+                analytic_line.display_name = f"{analytic_line.project_id.sudo().display_name} - {analytic_line.task_id.sudo().display_name}"
             else:
                 analytic_line.display_name = analytic_line.project_id.display_name
 

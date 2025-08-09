@@ -14,6 +14,7 @@ import {
 const lunchInfos = {
     username: "Johnny Hache",
     wallet: 12.05,
+    wallet_with_config: 12.05,
     is_manager: false,
     currency: {
         symbol: "€",

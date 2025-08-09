@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
-# 
+# * account
+#
 # Translators:
 # Jolien De Paepe, 2024
 # Martin Trigaux, 2024
@@ -12,20 +12,24 @@
 # Camille Dantinne <cmd@odoo.com>, 2025
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# Rémi CAZENAVE <remi@le-filament.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-18 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-08-08 15:25+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-18/account/"
+"fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -1350,8 +1354,7 @@ msgid ""
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
 "<span>Cette écriture a été générée par l'application Facturation, avant "
-"l'installation de la Comptabilité. Son solde a été importé "
-"séparément.</span>"
+"l'installation de la Comptabilité. Son solde a été importé séparément.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1649,7 +1652,7 @@ msgid ""
 "journal entry."
 msgstr ""
 "Un paiement avec un compte en suspens ne peut pas être confirmé sans une "
-"écriture comptable."
+"pièce comptable."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1855,7 +1858,7 @@ msgstr "Parcours d'intégration tableau de bord comptabilité"
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Account Entry"
-msgstr "Écriture comptable"
+msgstr "Pièce comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_group
@@ -2579,7 +2582,7 @@ msgstr "Des écritures d'ajustement ont été créées pour cette facture :"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry"
-msgstr "Ajustement de l'entrée"
+msgstr "Écriture d'ajustement"
 
 #. module: account
 #. odoo-python
@@ -3089,8 +3092,8 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
-"Toute entrée jusqu'à cette date incluse sera reportée à une date ultérieure,"
-" conformément à la séquence du journal. Cette date de blocage est "
+"Toute écriture jusqu'à cette date incluse sera reportée à une date "
+"ultérieure, conformément à la séquence du journal. Cette date de blocage est "
 "irréversible et ne tolère aucune exception."
 
 #. module: account
@@ -3099,8 +3102,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
-"Toute entrée jusqu'à cette date incluse sera reportée à une date ultérieure,"
-" conformément à la séquence du journal."
+"Toute écriture jusqu'à cette date incluse sera reportée à une date "
+"ultérieure, conformément à la séquence du journal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3139,7 +3142,7 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
-"Toute entrée d'achat antérieure à cette date incluse sera reportée à une "
+"Toute écriture d'achat antérieure à cette date incluse sera reportée à une "
 "date ultérieure, conformément à la séquence du journal."
 
 #. module: account
@@ -8200,8 +8203,8 @@ msgid ""
 "considered."
 msgstr ""
 "Date la plus éloignée de telle sorte que toutes les écritures enregistrées "
-"avant (y compris) la date sont sécurisées. Seules les écritures postérieures"
-" à la date de verrouillage sont prises en compte."
+"jusqu'à la date sont sécurisées. Seules les écritures postérieures à la date "
+"de verrouillage sont prises en compte."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -15352,7 +15355,7 @@ msgstr "L'escompte doit être strictement positif."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "The Hard Lock Date cannot be removed."
-msgstr "La date de verrouillage ne peut pas être supprimée."
+msgstr "La date de verrouillage ferme ne peut pas être supprimée."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -15999,7 +16002,7 @@ msgid ""
 msgstr ""
 "L'opération est refusée car elle impacterait une déclaration fiscale déjà "
 "émise. Veuillez modifier la date de l'écriture comptable ou les dates de "
-"verrouillage suivantes pour poursuivre la procédure : %(lock_date_info)s."
+"verrouillage suivantes pour poursuivre : %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -16464,7 +16467,7 @@ msgid ""
 "Lock Date."
 msgstr ""
 "Certaines écritures ne peuvent pas être hachées. Elles peuvent être "
-"protégées par la date de verrouillage."
+"protégées par la date de verrouillage ferme."
 
 #. module: account
 #. odoo-python
@@ -16492,7 +16495,7 @@ msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
 msgstr ""
-"Il y a toujours des pièces en brouillon dans la période que vous voulez "
+"Il reste des pièces en brouillon dans la période que vous voulez "
 "verrouiller. Vous devez les comptabiliser ou les supprimer."
 
 #. module: account
@@ -16830,9 +16833,9 @@ msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
 msgstr ""
-"Ce processus n'a pas pu être verrouillé car une autre écriture ayant le même"
-" préfixe de séquence a un numéro plus élevé. Il se peut que vous deviez le "
-"reséquencer."
+"Cette écriture n’a pas pu être verrouillée, car une autre écriture avec le "
+"même préfixe de séquence possède un numéro plus élevé. Il se peut que vous "
+"deviez la reséquencer."
 
 #. module: account
 #. odoo-python

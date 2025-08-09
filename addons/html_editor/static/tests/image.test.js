@@ -19,7 +19,7 @@ test("image can be selected", async () => {
     await waitFor(".o-we-toolbar");
     expect(".btn-group[name='image_shape']").toHaveCount(1);
     const selectionPlugin = plugins.get("selection");
-    expect(selectionPlugin.getSelectedNodes()[1].tagName).toBe("IMG");
+    expect(selectionPlugin.getTargetedNodes()[0].tagName).toBe("IMG");
 });
 
 test("can shape an image", async () => {

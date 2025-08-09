@@ -26,16 +26,18 @@ msgid ""
 "<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Service's Bill</span>\n"
 "                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Service's Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">सर्विस के लिए बिल</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">सर्विस के लिए बिल</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
 msgid "Account Move"
-msgstr ""
+msgstr "अकाउंट मूव"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
 msgid "Account Move Line"
-msgstr ""
+msgstr "अकाउंट मूव लाइन"
 
 #. module: account_fleet
 #. odoo-python
@@ -51,12 +53,12 @@ msgstr "बिल"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
 msgid "Bills Count"
-msgstr ""
+msgstr "बिल काउंट"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
 msgid "Cost"
-msgstr ""
+msgstr "कीम"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
@@ -81,13 +83,13 @@ msgstr "जर्नल आइटम"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
 msgid "Need Vehicle"
-msgstr ""
+msgstr "व्हीकल की ज़रूरत है"
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 msgid "Service Vendor Bill: %s"
-msgstr ""
+msgstr "सर्विस वेंडर बिल: %s"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
@@ -118,6 +120,8 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill"
 " created."
 msgstr ""
+"आप लॉग सेवाओं के रिकॉर्ड नहीं मिटा सकते, क्योंकि उनके बिल पहले ही बन चुके "
+"हैं."
 
 #. module: account_fleet
 #. odoo-python
@@ -126,8 +130,10 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
+"आप किसी बिल लाइन से जुड़ी सेवा की रकम नहीं बदल सकते. इसे उसकी असल अकाउंटिंग "
+"एंट्री में जाकर बदलें."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr ""
+msgstr "इस व्हीकल के लिए वेंडर बिल दिखाएं"

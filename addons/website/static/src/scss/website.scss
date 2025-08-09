@@ -2940,7 +2940,14 @@ input[value*="data-oe-translation-source-sha"] {
     &:has(~ .form-control), &:has(~ .form-select) {
         padding-right: $input-group-addon-padding-x * .5;
     }
-    .form-control:disabled ~ &, .form-control[readonly] ~ &, &:has(~ .form-select:disabled), &:has(~ .form-select[readonly]) {
+    .form-control:disabled ~ &,
+    .form-control[readonly] ~ &,
+    &:has(~ .form-control:disabled),
+    &:has(~ .form-control[readonly]),
+    .form-select:disabled ~ &,
+    .form-select[readonly] ~ &,
+    &:has(~ .form-select:disabled),
+    &:has(~ .form-select[readonly]) {
         background-color: $input-disabled-bg;
         border-color: $input-disabled-border-color;
     }

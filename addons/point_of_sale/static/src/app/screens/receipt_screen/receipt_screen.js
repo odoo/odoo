@@ -32,7 +32,7 @@ export class ReceiptScreen extends Component {
             const order = this.pos.get_order();
 
             if (!this.pos.config.module_pos_restaurant) {
-                this.pos.sendOrderInPreparation(order);
+                this.pos.checkPreparationStateAndSentOrderInPreparation(order);
             }
         });
     }

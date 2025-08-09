@@ -18,6 +18,7 @@ export class FontSizeSelector extends Component {
         getDisplay: Function,
         onFontSizeInput: Function,
         onSelected: Function,
+        onBlur: { type: Function, optional: true },
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         ...toolbarButtonProps,
     };
@@ -107,7 +108,14 @@ export class FontSizeSelector extends Component {
             () => {
                 if (this.fontSizeInput) {
                     // Focus input on dropdown open, blur on close.
-                    this.dropdown.isOpen ? this.fontSizeInput.select() : this.fontSizeInput.blur();
+                    if (this.dropdown.isOpen) {
+                        this.fontSizeInput.select();
+                    } else if (
+                        this.iframeContentRef.el?.contains(this.props.document.activeElement)
+                    ) {
+                        this.fontSizeInput.blur();
+                        this.props.onBlur?.();
+                    }
                 }
             },
             () => [this.dropdown.isOpen]

@@ -212,23 +212,23 @@ export class ListPlugin extends Plugin {
             throw new Error(`listStyle is not compatible with "CL" list type`);
         }
 
-        // @todo @phoenix: original implementation removed whitespace-only text nodes from traversedNodes.
+        // @todo @phoenix: original implementation removed whitespace-only text nodes from targetedNodes.
         // Check if this is necessary.
 
-        const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
+        const targetedBlocks = this.dependencies.selection.getTargetedBlocks();
 
         // Keep deepest blocks only.
-        for (const block of traversedBlocks) {
-            if (descendants(block).some((descendant) => traversedBlocks.has(descendant))) {
-                traversedBlocks.delete(block);
+        for (const block of targetedBlocks) {
+            if (descendants(block).some((descendant) => targetedBlocks.has(descendant))) {
+                targetedBlocks.delete(block);
             }
         }
 
-        // Classify traversed blocks.
+        // Classify targeted blocks.
         const sameModeListItems = new Set();
         const nonListBlocks = new Set();
         const listsToSwitch = new Set();
-        for (const block of traversedBlocks) {
+        for (const block of targetedBlocks) {
             if (["OL", "UL"].includes(block.tagName) || !block.isContentEditable) {
                 continue;
             }
@@ -685,7 +685,7 @@ export class ListPlugin extends Plugin {
         const listItems = new Set();
         const navListItems = new Set();
         const nonListItems = [];
-        for (const block of this.dependencies.selection.getTraversedBlocks()) {
+        for (const block of this.dependencies.selection.getTargetedBlocks()) {
             const closestLI = block.closest("li");
             if (closestLI) {
                 if (closestLI.classList.contains("nav-item")) {
@@ -898,6 +898,15 @@ export class ListPlugin extends Plugin {
 
         if (isChecklistItem && this.isPointerInsideCheckbox(node, offsetX, offsetY)) {
             toggleClass(node, "o_checked");
+            const { documentSelectionIsInEditable } =
+                this.dependencies.selection.getSelectionData();
+            // When the editable is not focused, clicking on checkbox
+            // wont make it focused So changes will be lost
+            // as no blur event will occur when clicking outside.
+            if (!documentSelectionIsInEditable) {
+                this.editable.focus();
+                this.dependencies.selection.setSelection({ anchorNode: node, anchorOffset: 0 });
+            }
             ev.preventDefault();
             this.dependencies.history.addStep();
         }

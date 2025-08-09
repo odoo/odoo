@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Ilya Rozhkov, 2025
-# Anastasiia Koroleva, 2025
 # Wil Odoo, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-11 18:39+0000\n"
+"POT-Creation-Date: 2025-07-25 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,16 +28,13 @@ msgid ""
 "%s should have a KVK or OIN number set in Company ID field or as Peppol "
 "e-address (EAS code 0106 or 0190)."
 msgstr ""
+"Для «%s» необходимо указать номер KVK или OIN в поле «ИНН организации» либо "
+"как Peppol-адрес (код EAS 0106 или 0190)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "1.0"
 msgstr "1.0"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_facturx_export_22
-msgid "42"
-msgstr "42"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -49,7 +46,7 @@ msgstr "Был обнаружен платеж %s."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "A rounding amount of %s was detected."
-msgstr ""
+msgstr "Обнаружено округление на сумму %s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -111,6 +108,12 @@ msgstr "Austria UID"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9915
 msgid "Austria VOKZ"
 msgstr "Austria VOKZ"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_peppol_eas
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_peppol_eas
+msgid "Available Peppol Eas"
+msgstr "Доступные адреса Peppol EAS"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
@@ -212,7 +215,7 @@ msgstr "Контакты"
 msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
-msgstr ""
+msgstr "Не удалось найти партнера с именем «%s». Создан новый партнер."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -243,6 +246,7 @@ msgstr ""
 msgid ""
 "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
+"Не удалось получить налог %s для скидки/надбавки на уровне всего документа."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9934
@@ -343,7 +347,7 @@ msgstr "Estonia VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Exempt from tax"
-msgstr ""
+msgstr "Освобождено от налогообложения"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -402,6 +406,16 @@ msgstr "При поставках внутри общины следует ук�
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format used to import the invoice: %s"
 msgstr "Формат, используемый для импорта счета-фактуры: %s"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0225
+msgid "France FRCTC Electronic Address"
+msgstr "France FRCTC – Электронный адрес"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0240
+msgid "France Register of legal persons"
+msgstr "Франция – Реестр юридических лиц"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -479,7 +493,7 @@ msgstr "Is Peppol Edi Format"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__is_ubl_format
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__is_ubl_format
 msgid "Is Ubl Format"
-msgstr ""
+msgstr "Формат UBL"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0097
@@ -510,6 +524,11 @@ msgstr "Запись в журнале"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9919
 msgid "Kennziffer des Unternehmensregisters"
 msgstr "Kennziffer des Unternehmensregisters"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0218
+msgid "Latvia Unified registration number"
+msgstr "Латвия – Единый регистрационный номер"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9939
@@ -613,7 +632,7 @@ msgstr "Odoo"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Peppol Address"
-msgstr ""
+msgstr "Peppol-адрес"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -636,7 +655,7 @@ msgstr "Peppol e-address (EAS)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Please fill in partner's VAT or Peppol Address."
-msgstr ""
+msgstr "Пожалуйста, укажите ИНН партнера или Peppol-адрес."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -645,6 +664,8 @@ msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
 msgstr ""
+"Укажите ИНН вашей компании или Peppol-адрес, чтобы сгенерировать корректный "
+"XML-файл."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -843,6 +864,11 @@ msgid "Turkey VAT"
 msgstr "Turkey VAT"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0235
+msgid "UAE Tax Identification Number (TIN)"
+msgstr "Регистрационный налоговый номер ОАЭ (TIN)"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
 msgstr "UBL 2.0"
@@ -918,7 +944,7 @@ msgstr "X.400 address for mail text"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "XML UBL"
-msgstr ""
+msgstr "XML-файл в формате UBL"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung

@@ -70,6 +70,12 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'zip': "45660",
         })
 
+        cls.partner_foreign_no_state = cls.env['res.partner'].create({
+            'name': "Foreign Partner Without State",
+            'country_id': cls.country_us.id,
+            # No state_id defined
+        })
+
         # === Taxes === #
         cls.sgst_sale_5 = cls.env["account.chart.template"].ref('sgst_sale_5')
         cls.sgst_purchase_5 = cls.env["account.chart.template"].ref('sgst_purchase_5')
@@ -117,5 +123,12 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             move_type='out_invoice',
             partner=cls.partner_foreign,
             amounts=[300, 740],
+            taxes=cls.igst_sale_18,
+        )
+
+        cls.invoice_d = cls.init_invoice(
+            move_type='out_invoice',
+            partner=cls.partner_foreign_no_state,
+            amounts=[100, 200],
             taxes=cls.igst_sale_18,
         )

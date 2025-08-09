@@ -6,7 +6,7 @@ from odoo import fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    invoice_edi_format = fields.Selection(selection_add=[('vn_sinvoice', 'SInvoice file')])
+    invoice_edi_format = fields.Selection(selection_add=[('vn_sinvoice', 'Vietnam (SInvoice)')])
     l10n_vn_edi_symbol = fields.Many2one(
         comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
         string='Default Symbol',

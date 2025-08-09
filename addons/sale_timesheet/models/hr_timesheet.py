@@ -48,7 +48,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('project_id.partner_id.commercial_partner_id', 'task_id.partner_id.commercial_partner_id')
     def _compute_commercial_partner(self):
         for timesheet in self:
-            timesheet.commercial_partner_id = timesheet.task_id.partner_id.commercial_partner_id or timesheet.project_id.partner_id.commercial_partner_id
+            timesheet.commercial_partner_id = timesheet.task_id.sudo().partner_id.commercial_partner_id or timesheet.project_id.sudo().partner_id.commercial_partner_id
 
     @api.depends('so_line.product_id', 'project_id.billing_type', 'amount')
     def _compute_timesheet_invoice_type(self):

@@ -554,6 +554,8 @@ class HrExpense(models.Model):
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
+        if not self.has_access('write') or (self.sheet_id and not self.sheet_id.has_access('write')):
+            raise UserError(_("You don't have the rights to attach a document to a submitted expense. Please reset the expense report to draft first."))
         self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
 
     @api.model

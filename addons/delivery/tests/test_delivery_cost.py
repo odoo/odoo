@@ -299,6 +299,42 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         shipping_weight = sale_order._get_estimated_weight()
         self.assertEqual(shipping_weight, self.product.weight, "Only positive quantity products' weights should be included in estimated weight")
 
+    def test_get_invalid_delivery_weight_lines(self):
+        """Ensure we can retrieve lines that contain physical products without a weight value."""
+        order = self.empty_order
+        weightless_product = self._create_product(weight=0.0, list_price=50.0)
+        combos = self.env['product.combo'].create([{
+                'name': "Combo A",
+                'combo_item_ids': [Command.create({'product_id': self.product.id})],
+            }, {
+                'name': "Combo B",
+                'combo_item_ids': [Command.create({'product_id': weightless_product.id})],
+            },
+        ])
+        combo_product = self._create_product(type='combo', combo_ids=combos.ids)
+        combo_line = self.env['sale.order.line'].create({
+            'order_id': order.id,
+            'product_id': combo_product.id,
+        })
+        order.order_line = [
+            *[Command.create({
+                'product_id': product.id,
+                'combo_item_id': combo.combo_item_ids.id,
+                'linked_line_id': combo_line.id,
+            }) for product, combo in zip(self.product + weightless_product, combos)],
+            Command.create({'product_id': weightless_product.id, 'product_uom_qty': 0}),
+            Command.create({'product_id': self.service_product.id}),
+            Command.create({'display_type': 'line_section', 'name': "Misc."}),
+            Command.create({'is_downpayment': True, 'price_unit': 5.0}),
+        ]
+        error_lines = order.order_line._get_invalid_delivery_weight_lines()
+        self.assertIn(
+            weightless_product, error_lines.product_id,
+            "The weightless product should be part of the erroneous lines",
+        )
+        self.assertEqual(len(error_lines), 1, "Only 1 line should have an invalid weight")
+        self.assertTrue(error_lines.combo_item_id, "The erroneous line should be part of a combo")
+
     def test_fixed_price_margins(self):
         """
          margins should be ignored for fixed price carriers

@@ -510,8 +510,8 @@ class IrHttp(models.AbstractModel):
             if request.httprequest.method in ('GET', 'HEAD'):
                 try:
                     _, path = rule.build(args)
-                except odoo.exceptions.MissingError:
-                    raise werkzeug.exceptions.NotFound()
+                except odoo.exceptions.MissingError as exc:
+                    raise werkzeug.exceptions.NotFound() from exc
                 assert path is not None
                 generated_path = werkzeug.urls.url_unquote_plus(path)
                 current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)

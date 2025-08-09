@@ -387,12 +387,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
-            attributes = lazy(lambda: ProductAttribute.search([
-                ('product_tmpl_ids', 'in', search_product.ids),
-                ('visibility', '=', 'visible'),
-            ]))
-        else:
-            attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
+            attributes_grouped = request.env['product.template.attribute.line']._read_group(
+                domain=[
+                    ('product_tmpl_id', 'in', search_product.ids),
+                    ('attribute_id.visibility', '=', 'visible'),
+                ],
+                groupby=['attribute_id']
+            )
+
+            attributes_ids = [attribute.id for attribute, *aggregates in attributes_grouped]
+        attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
 
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:

@@ -1634,6 +1634,26 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotTour', login="pos_user")
 
+    def test_order_with_existing_serial(self):
+        product = self.env['product.product'].create({
+            'name': 'Serial Product',
+            'is_storable': True,
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'available_in_pos': True,
+        })
+        for sn in ["SN1", "SN2"]:
+            self.env['stock.quant'].create({
+                'product_id': product.id,
+                'inventory_quantity': 1,
+                'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
+                'lot_id': self.env['stock.lot'].create({'name': sn, 'product_id': product.id}).id,
+            }).sudo().action_apply_inventory()
+        self.env['stock.picking.type'].search([('name', '=', 'PoS Orders')]).use_create_lots = False
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_order_with_existing_serial")
+
     def test_product_search(self):
         """Verify that the product search works correctly"""
         self.env['product.product'].create([
@@ -1776,7 +1796,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         invoice = self.env['account.move'].search([('invoice_origin', '=', order.name)], limit=1)
         self.assertTrue(invoice)
-        self.assertFalse(invoice.invoice_payment_term_id) 
+        self.assertFalse(invoice.invoice_payment_term_id)
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
@@ -1896,6 +1916,64 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_draft_orders_not_syncing', login="pos_user")
         n_draft_order = self.env['pos.order'].search_count([('state', '=', 'draft')], limit=1)
         self.assertEqual(n_draft_order, 0, 'There should be no draft orders created')
+
+    def test_combo_variant_mix(self):
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [
+                Command.create({'name': 'Red'}),
+                Command.create({'name': 'Blue'})
+            ],
+            'create_variant': 'no_variant',
+        })
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'value_ids': [
+                Command.create({'name': 'Small'}),
+                Command.create({'name': 'Large'})
+            ],
+            'create_variant': 'always',
+        })
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': color_attribute.id,
+                    'value_ids': [Command.link(id) for id in color_attribute.value_ids.ids]
+                }),
+                Command.create({
+                    'attribute_id': size_attribute.id,
+                    'value_ids': [Command.link(id) for id in size_attribute.value_ids.ids]
+                })
+            ]
+        })
+
+        combo = self.env['product.combo'].create({
+            'name': 'Test Combo',
+            'combo_item_ids': [
+                Command.create({
+                    'product_id': product_template.product_variant_ids[0].id,
+                    'extra_price': 0,
+                }),
+                Command.create({
+                    'product_id': product_template.product_variant_ids[1].id,
+                    'extra_price': 0,
+                }),
+            ]
+        })
+        self.env['product.template'].create({
+            'name': 'Test Product Combo',
+            'available_in_pos': True,
+            'list_price': 20,
+            'taxes_id': False,
+            'type': 'combo',
+            'combo_ids': [Command.link(combo.id)],
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_combo_variant_mix', login="pos_user")
 
     def test_barcode_search_attributes_preset(self):
         product = self.env['product.template'].create({

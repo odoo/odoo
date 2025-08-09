@@ -178,7 +178,7 @@ class PartnerCategory(models.Model):
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if operator.endswith('like'):
-            return [('id', 'child_of', self._search(domain))]
+            return [('id', 'child_of', self._search(list(domain)))]
         return domain
 
 class PartnerTitle(models.Model):
