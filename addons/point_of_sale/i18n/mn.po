@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* point_of_sale
-# 
+#
 # Translators:
 # tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2024
 # Munkhbaatar g <muuguu17@gmail.com>, 2024
@@ -26,19 +26,19 @@
 # Bayarkhuu Bataa, 2024
 # Martin Trigaux, 2025
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:46+0000\n"
+"POT-Creation-Date: 2025-08-08 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: point_of_sale
@@ -46,7 +46,10 @@ msgstr ""
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
 "\n"
-"This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
+"This issue occurs because the quantity becomes zero after rounding during "
+"the conversion. To fix this, adjust the conversion factors or rounding "
+"method to ensure that even the smallest quantity in the original unit does "
+"not round down to zero in the target unit."
 msgstr ""
 
 #. module: point_of_sale
@@ -306,10 +309,12 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        Dear <t t-out=\"object.partner_id.name or 'Valuable Customer'\">Azure Interior</t>,\n"
+"        Dear <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
-"We have a limited-time offer only for you, enjoy a flat 20% off on your next purchase with us.\n"
+"We have a limited-time offer only for you, enjoy a flat 20% off on your next "
+"purchase with us.\n"
 "We can't wait to continue serving you.\n"
 "    </p>\n"
 "</div>\n"
@@ -339,9 +344,9 @@ msgstr "<i class=\"fa fa-pencil\"/> Засах"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %(is_invoiced)sfor"
-"             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
-"</p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
+"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
+"(company_name)s. </p>"
 msgstr ""
 
 #. module: point_of_sale
@@ -357,10 +362,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                <i class=\"fa fa-info-circle me-1\" "
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Зураасан код</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                <i class=\"fa fa-info-circle me-1\" "
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -408,7 +415,8 @@ msgstr "<span>Харах</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid ""
 "<strong> &gt; Payment Terminals</strong>\n"
-"                                    in order to install a Payment Terminal and make a fully integrated payment method."
+"                                    in order to install a Payment Terminal "
+"and make a fully integrated payment method."
 msgstr ""
 
 #. module: point_of_sale
@@ -472,6 +480,11 @@ msgid "A note with this name already exists"
 msgstr "Ийм нэртэй тэмдэглэл өмнө нь бүртгэгдсэн байна"
 
 #. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_uuid_unique
+msgid "A payment with this uuid already exists"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
@@ -499,8 +512,8 @@ msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
 msgstr ""
-"Энэхүү ПОС-ын хувьд яг одоо нээлттэй сэшн ашиглагдаж байна. Зарим тохиргооны"
-" утгуудад хийгдсэн өөрчлөлтүүд нь сэшн хаагдсаны дараа хэрэгжих болно."
+"Энэхүү ПОС-ын хувьд яг одоо нээлттэй сэшн ашиглагдаж байна. Зарим тохиргооны "
+"утгуудад хийгдсэн өөрчлөлтүүд нь сэшн хаагдсаны дараа хэрэгжих болно."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
@@ -604,8 +617,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid ""
-"Account used as outstanding account when creating accounting payment records"
-" for bank payments."
+"Account used as outstanding account when creating accounting payment records "
+"for bank payments."
 msgstr ""
 
 #. module: point_of_sale
@@ -830,8 +843,8 @@ msgstr "Бүх тэмдэглэл"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"All payment methods must be in the same currency as the Sales Journal or the"
-" company currency if that is not set."
+"All payment methods must be in the same currency as the Sales Journal or the "
+"company currency if that is not set."
 msgstr ""
 "Бүх төлбөрийн аргуудын валютын төрөл нь Борлуулалтын журнал эсвэл компаны "
 "үндсэн валюттай (борлуулалтын журнал дээр валют заагаагүй бол) ижил байх "
@@ -861,8 +874,7 @@ msgstr "Бусдын бичсэн захиалга руу хандахыг зө�
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to log and switch between selected Employees"
-msgstr ""
-"Урьдчилан тохируулсан ажилчдын жагсаалтаас сонгож нэвтрэхийг зөвшөөрөх"
+msgstr "Урьдчилан тохируулсан ажилчдын жагсаалтаас сонгож нэвтрэхийг зөвшөөрөх"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -963,6 +975,16 @@ msgid "An internal identification of the printer"
 msgstr "Принтерийн дотоод тодорхойлолт"
 
 #. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
+msgid "An order line with this uuid already exists"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
+msgid "An order with this uuid already exists"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Another session is already opened for this point of sale."
@@ -1025,11 +1047,14 @@ msgstr "Сэшн хаах үед"
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__update_stock_quantities
 msgid ""
-"At the session closing: A picking is created for the entire session when it's closed\n"
+"At the session closing: A picking is created for the entire session when "
+"it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
-"Сэшн хаах үед: Тухайн сэшний баримтуудад үндэслэн барааны зарлагын хөдөлгөөний баримт үүсч боловсруулагдана.\n"
-"Бодит цаг хугацаанд: ПОС-ын баримт сервер талд бүртгэгдэх тухай бүрд барааны зарлагын хөдөлгөөний баримт үүсч боловсруулагдана."
+"Сэшн хаах үед: Тухайн сэшний баримтуудад үндэслэн барааны зарлагын "
+"хөдөлгөөний баримт үүсч боловсруулагдана.\n"
+"Бодит цаг хугацаанд: ПОС-ын баримт сервер талд бүртгэгдэх тухай бүрд барааны "
+"зарлагын хөдөлгөөний баримт үүсч боловсруулагдана."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
@@ -1697,8 +1722,7 @@ msgstr "Гарын мөнгө өөрчлөх"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,help:point_of_sale.field_product_template__to_weight
 msgid ""
-"Check if the product should be weighted using the hardware scale "
-"integration."
+"Check if the product should be weighted using the hardware scale integration."
 msgstr ""
 "Хэрэв барааг жин шалгах төхөөрөмжтэй холбогдох жинлэх бол үүнийг сонго."
 
@@ -2177,8 +2201,8 @@ msgstr "Хязгаарлагдмал боломжоор үргэлжлүүлэх
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"Conversion Error: The following unit of measure conversions result in a zero"
-" quantity due to rounding:"
+"Conversion Error: The following unit of measure conversions result in a zero "
+"quantity due to rounding:"
 msgstr ""
 
 #. module: point_of_sale
@@ -2430,8 +2454,7 @@ msgstr "Үйлчлүүлэгч шаардлагатай"
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr ""
-"%sтөлбөрийн аргаар бүртгэхэд үйлчлүүлэгч заавал сонгогдсон байх "
-"шаардлагатай."
+"%sтөлбөрийн аргаар бүртгэхэд үйлчлүүлэгч заавал сонгогдсон байх шаардлагатай."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2813,8 +2836,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"Хандах эрх алга, энэ өгөгдлийг мэдээ илгээх имэйл жагсаалт руу хийхгүй"
+msgstr "Хандах эрх алга, энэ өгөгдлийг мэдээ илгээх имэйл жагсаалт руу хийхгүй"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2838,8 +2860,10 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
 msgid ""
 "Each Order Printer has an IP Address that defines the IoT Box/Hardware\n"
-"            Proxy where the printer can be found, and a list of product categories.\n"
-"            An Order Printer will only print updates for products belonging to one of\n"
+"            Proxy where the printer can be found, and a list of product "
+"categories.\n"
+"            An Order Printer will only print updates for products belonging "
+"to one of\n"
 "            its categories."
 msgstr ""
 
@@ -2928,8 +2952,8 @@ msgid ""
 "form."
 msgstr ""
 "Ажилчид сешнлүү нэвтрэхийн тулд тэмдгээ сканнердах эсвэл ПИН код оруулах "
-"боломжтой. Эдгээр итгэмжлэлүүдийг ажилтны маягтын * Хүний нөөцийн тохиргоо *"
-" таб дээр тохируулах боломжтой."
+"боломжтой. Эдгээр итгэмжлэлүүдийг ажилтны маягтын * Хүний нөөцийн тохиргоо * "
+"таб дээр тохируулах боломжтой."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2965,8 +2989,8 @@ msgstr "Хаалтын үлдэгдэл"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"Ensure that there is an existing bank journal. Check if chart of accounts is"
-" installed in your company."
+"Ensure that there is an existing bank journal. Check if chart of accounts is "
+"installed in your company."
 msgstr ""
 
 #. module: point_of_sale
@@ -3077,8 +3101,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cheese_croissant_product_template
-msgid ""
-"Flaky croissant filled with creamy cheese, a savory twist on a classic."
+msgid "Flaky croissant filled with creamy cheese, a savory twist on a classic."
 msgstr ""
 
 #. module: point_of_sale
@@ -3906,7 +3929,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid ""
 "Leave empty to use the default account from the company setting.\n"
-"Overrides the company's receivable account (for Point of Sale) used in the journal entries."
+"Overrides the company's receivable account (for Point of Sale) used in the "
+"journal entries."
 msgstr ""
 
 #. module: point_of_sale
@@ -3918,9 +3942,12 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
 msgid ""
 "Leave empty to use the receivable account of customer.\n"
-"Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
-"For cash journal, we directly write to the default account in the journal via statement lines.\n"
-"For bank journal, we write to the outstanding account specified in this payment method.\n"
+"Defines the journal where to book the accumulated payments (or individual "
+"payment if Identify Customer is true) after closing the session.\n"
+"For cash journal, we directly write to the default account in the journal "
+"via statement lines.\n"
+"For bank journal, we write to the outstanding account specified in this "
+"payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
 
@@ -4018,8 +4045,8 @@ msgstr "Төлбөр хийх"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__available_pricelist_ids
 msgid ""
-"Make several pricelists available in the Point of Sale. You can also apply a"
-" pricelist to specific customers from their contact form (in Sales tab). To "
+"Make several pricelists available in the Point of Sale. You can also apply a "
+"pricelist to specific customers from their contact form (in Sales tab). To "
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
@@ -4035,8 +4062,8 @@ msgid ""
 "Make sure there is an IoT Box subscription associated with your Odoo "
 "database, then restart the IoT Box."
 msgstr ""
-"Та өөрийн Odoo бааз дээрээ IoT Box үйлчилгээний идэвхижүүлэх кодыг бүртгэсэн"
-" эсэхээ нягталаад, IoT Box -оо restart хийнэ үү."
+"Та өөрийн Odoo бааз дээрээ IoT Box үйлчилгээний идэвхижүүлэх кодыг бүртгэсэн "
+"эсэхээ нягталаад, IoT Box -оо restart хийнэ үү."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4352,8 +4379,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"No chart of account configured, go to the \"configuration / settings\" menu,"
-" and install one from the Invoicing tab."
+"No chart of account configured, go to the \"configuration / settings\" menu, "
+"and install one from the Invoicing tab."
 msgstr ""
 "Дансны мод суугаагүй байна, \"Тохируулга / тохиргоо\" цэсээр орж Санхүү ТАБ "
 "дотор дансны мод суулгана уу."
@@ -4765,6 +4792,12 @@ msgid "Order Number"
 msgstr "Захиалгын дугаар"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Order Outdated"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
 msgid "Order Printer"
 msgstr "Захиалгын принтер"
@@ -4779,7 +4812,8 @@ msgstr "Захиалгын Хэвлэгч"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
 msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
-"            order updates in the kitchen/bar when the waiter updates the order."
+"            order updates in the kitchen/bar when the waiter updates the "
+"order."
 msgstr ""
 
 #. module: point_of_sale
@@ -5234,10 +5268,17 @@ msgstr "IoT Box холбоотой хэвээр эсэхийг шалгана у
 #: code:addons/point_of_sale/static/src/app/printer/base_printer.js:0
 msgid ""
 "Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
+"Some browsers don't allow HTTP calls from websites to devices in the network "
+"(for security reasons). If it is the case, you will need to follow Odoo's "
+"documentation for 'Self-signed certificate for ePOS printers' and 'Secure "
+"connection (HTTPS)' to solve the issue. "
 msgstr ""
 "Хэвлэгч төхөөрөмж холболттой хэвээр эсэхийг шалгана уу \n"
-"Зарим browder дээр вебсайт-аас төхөөрөмж рүү HTTP дуудалт хийх үйлдлийг дэмждэггүй (аюулгүй байдлын шалтгаанаар). Хэрэв тийм тохиолдол мөн байвал, Odoo -ын гарын авлага дээрх 'Self-signed certificate for ePOS printers' болон 'Secure connection (HTTPS)' зааврыг дараж мөрдөн асуудлыг шийдвэрлэнэ үү. "
+"Зарим browder дээр вебсайт-аас төхөөрөмж рүү HTTP дуудалт хийх үйлдлийг "
+"дэмждэггүй (аюулгүй байдлын шалтгаанаар). Хэрэв тийм тохиолдол мөн байвал, "
+"Odoo -ын гарын авлага дээрх 'Self-signed certificate for ePOS printers' "
+"болон 'Secure connection (HTTPS)' зааврыг дараж мөрдөн асуудлыг шийдвэрлэнэ "
+"үү. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -5251,17 +5292,18 @@ msgstr "Нээлттэй сешнүүдийг эхлээд хаана уу. Нэ
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
-"Please close and validate the following open PoS Sessions before modifying this payment method.\n"
+"Please close and validate the following open PoS Sessions before modifying "
+"this payment method.\n"
 "Open sessions: %s"
 msgstr ""
-"Төлбөрийн арга дээр өөрчлөлт оруулахын тулд эхлээд дараах нээлттэй сэшнийг батлах хаах үйлдэл хийнэ үү.\n"
+"Төлбөрийн арга дээр өөрчлөлт оруулахын тулд эхлээд дараах нээлттэй сэшнийг "
+"батлах хаах үйлдэл хийнэ үү.\n"
 "Нээлттэй сэшн: %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"Please create/select a Point of Sale above to show the configuration "
-"options."
+"Please create/select a Point of Sale above to show the configuration options."
 msgstr "Дараах тохиргоонд хамаатуулах Борлуулалтыг цэгийг сонгоно/үүсгэнэ үү."
 
 #. module: point_of_sale
@@ -5270,16 +5312,16 @@ msgstr "Дараах тохиргоонд хамаатуулах Борлуул�
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Дараах бараанд борлуулалтын орлогын данс тодорхойлно уу: '%(product)s' "
-"(id:%(id)d)."
+"Дараах бараанд борлуулалтын орлогын данс тодорхойлно уу: '%(product)s' (id:%"
+"(id)d)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
-"Төлбөр нэхэмжлэх мэдээллээ оруулна уу <small class=\"text-"
-"muted\">эсвэл</small>"
+"Төлбөр нэхэмжлэх мэдээллээ оруулна уу <small class=\"text-muted\">эсвэл</"
+"small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6473,8 +6515,8 @@ msgstr "Буцаагдсан"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session "
-"%(session)s"
+"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+"(session)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -7524,18 +7566,21 @@ msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
 msgstr ""
-"Хэрэв та бэлэн мөнгөний төлбөрийн арга сонгоогүй тохиолдолд төлбөрийн дүн нь"
-" төлбөл зохих дүнгээс хэтэрч болохгүй."
+"Хэрэв та бэлэн мөнгөний төлбөрийн арга сонгоогүй тохиолдолд төлбөрийн дүн нь "
+"төлбөл зохих дүнгээс хэтэрч болохгүй."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"The amount of your payment lines must be rounded to validate the transaction.\n"
-"The rounding precision is %s so you should set %s as payment amount instead of %s."
+"The amount of your payment lines must be rounded to validate the "
+"transaction.\n"
+"The rounding precision is %s so you should set %s as payment amount instead "
+"of %s."
 msgstr ""
 "Төлбөрийн мөр дээр дүн нь зохих хэмжээнд бүхэлчлэгдлсэн байх шаардлагатай.\n"
-"Бүхэлчлэх хэмжээ нь %s тул та төлбөрийн арга дээр %s дүнгээр бүртгэх хэрэгтэй. Одоо байгаа нь %s."
+"Бүхэлчлэх хэмжээ нь %s тул та төлбөрийн арга дээр %s дүнгээр бүртгэх "
+"хэрэгтэй. Одоо байгаа нь %s."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -7569,8 +7614,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"The default tip product is missing. Please manually specify the tip product."
-" (See Tips field.)"
+"The default tip product is missing. Please manually specify the tip product. "
+"(See Tips field.)"
 msgstr ""
 
 #. module: point_of_sale
@@ -7590,8 +7635,8 @@ msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
 msgstr ""
-"Эх захиалга дээр ашиглагдсан татварын тохируулга таны ПОС дээр ачаалагдаагүй"
-" байна. Таны Борлуулалтын цэгийн тохиргоонд зохих татварын тохируулгууд "
+"Эх захиалга дээр ашиглагдсан татварын тохируулга таны ПОС дээр ачаалагдаагүй "
+"байна. Таны Борлуулалтын цэгийн тохиргоонд зохих татварын тохируулгууд "
 "заагдсан эсэхийг нягтална уу."
 
 #. module: point_of_sale
@@ -7608,8 +7653,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"The invoice journal must be in the same currency as the Sales Journal or the"
-" company currency if that is not set."
+"The invoice journal must be in the same currency as the Sales Journal or the "
+"company currency if that is not set."
 msgstr ""
 "Нэхэмжлэлийн журнал нь борлуулалтын журналын валюттай (хэрэв борлуулалтын "
 "журнал дээр валют сонгосон байвал) эсвэл компаны үндсэн валюттай ижил байх "
@@ -7629,8 +7674,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid ""
-"The money counted doesn't match what we expected. Want to log the difference"
-" for the books?"
+"The money counted doesn't match what we expected. Want to log the difference "
+"for the books?"
 msgstr ""
 "Мөнгөний тоолсон үлдэгдэл нь системийн байх ёстой үлдэгдэлтэй таарсангүй. "
 "Зөрүүг санхүүгийн бүртгэлээр зохицуулах уу?"
@@ -7657,6 +7702,17 @@ msgstr "Энэ захиалагчид холбоотой борлуулалты�
 #: code:addons/point_of_sale/static/src/app/utils/hooks.js:0
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "Үл мэдэгдэх алдаанаас болж захиалгыг сервер рүү илгээж чадсангүй"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"The order has been modified on another device. If you have modified existing "
+"order lines, check that your changes have not been overwritten.\n"
+"\n"
+"The order will be sent to the server with the last changes made on this "
+"device."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7692,8 +7748,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid ""
 "The point of sale will only display products which are within one of the "
-"selected category trees. If no category is specified, all available products"
-" will be shown"
+"selected category trees. If no category is specified, all available products "
+"will be shown"
 msgstr ""
 "ПОС -ын програмын дэлгэцэнд зөвхөн сонгогдсон ангилалд багтах бараанууд "
 "харагдаж ашиглагдана. Хэрэв ангилал сонгохгүй хоосон орхивол бүх ангилалын "
@@ -7718,8 +7774,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
 msgid ""
-"The pricelist used if no customer is selected or if the customer has no Sale"
-" Pricelist configured if any."
+"The pricelist used if no customer is selected or if the customer has no Sale "
+"Pricelist configured if any."
 msgstr ""
 
 #. module: point_of_sale
@@ -7760,8 +7816,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
-"The requested quantity to be refunded is higher than the refundable "
-"quantity."
+"The requested quantity to be refunded is higher than the refundable quantity."
 msgstr "Буцаалт хийх тоо хэмжээ нь буцаах боломжит хэмжээнээс өндөр байна."
 
 #. module: point_of_sale
@@ -7807,8 +7862,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
-msgid ""
-"The session is being closed by another user. The page will be reloaded."
+msgid "The session is being closed by another user. The page will be reloaded."
 msgstr ""
 "Энэ сэшнийг өөр хэрэглэгч хаасан байна. Энэ хуудас дахин ачаалагдах болно."
 
@@ -7846,16 +7900,16 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Razorpay. Set your Razorpay credentials on"
-" the related payment method."
+"The transactions are processed by Razorpay. Set your Razorpay credentials on "
+"the related payment method."
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Six. Set the IP address of the terminal on"
-" the related payment method."
+"The transactions are processed by Six. Set the IP address of the terminal on "
+"the related payment method."
 msgstr ""
 "Гүйлгээнүүдийг Six төлбөрийн аргаар гүйцэлдүүлнэ. Та төлбөрийн төхөөрөмжийн "
 "IP хаягыг холбогдох төлбөрийн аргад тохируулна уу."
@@ -7864,8 +7918,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Stripe. Set your Stripe credentials on the"
-" related payment method."
+"The transactions are processed by Stripe. Set your Stripe credentials on the "
+"related payment method."
 msgstr ""
 
 #. module: point_of_sale
@@ -7895,10 +7949,12 @@ msgstr "Энэ ангилалд бүтээгдэхүүн алга."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
-"There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
+"There are still orders in draft state in the session. Pay or cancel the "
+"following orders to validate the session:\n"
 "%s"
 msgstr ""
-"Шинэ төлөвтэй захиалга уг сешнд байна. Сешнийг баталгаажулахын тулд дараах захиалгыг цуцлах эсвэл төлөх хэрэгтэй:\n"
+"Шинэ төлөвтэй захиалга уг сешнд байна. Сешнийг баталгаажулахын тулд дараах "
+"захиалгыг цуцлах эсвэл төлөх хэрэгтэй:\n"
 "%s"
 
 #. module: point_of_sale
@@ -7929,13 +7985,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"There is no cash payment method available in this point of sale to handle the change.\n"
+"There is no cash payment method available in this point of sale to handle "
+"the change.\n"
 "\n"
-" Please pay the exact amount or add a cash payment method in the point of sale configuration"
+" Please pay the exact amount or add a cash payment method in the point of "
+"sale configuration"
 msgstr ""
-"Энэ борлуулалтын цэгт хариулт мөнгийг зохицуулах ямар нэг бэлэн мөнгөний төлбөрийн арга тодорхойлогдоогүй байна.\n"
+"Энэ борлуулалтын цэгт хариулт мөнгийг зохицуулах ямар нэг бэлэн мөнгөний "
+"төлбөрийн арга тодорхойлогдоогүй байна.\n"
 "\n"
-"Тиймээс зөвхөн яг төлөх ёстой дүнгээр тааруулж төлөх эсвэл борлуулалтын цэгийн тохиргоо дээр бэлэн мөнгөний төлбөрийн арга нэмж тодорхойлно уу"
+"Тиймээс зөвхөн яг төлөх ёстой дүнгээр тааруулж төлөх эсвэл борлуулалтын "
+"цэгийн тохиргоо дээр бэлэн мөнгөний төлбөрийн арга нэмж тодорхойлно уу"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7988,8 +8048,8 @@ msgstr "Энэ зохимж байхгүй байна."
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_amount_authorized_diff
 msgid ""
-"This field depicts the maximum difference allowed between the ending balance"
-" and the theoretical cash when closing a session, for non-POS managers. If "
+"This field depicts the maximum difference allowed between the ending balance "
+"and the theoretical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
@@ -8026,11 +8086,11 @@ msgstr "Уг нэхэмжлэл үүссэн эх үүсвэр бүхий бор
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
-"This is useful for restaurants with onsite and take-away services that imply"
-" specific tax rates."
+"This is useful for restaurants with onsite and take-away services that imply "
+"specific tax rates."
 msgstr ""
-"Энэ нь рестораны тохиолдолд захиалагч хоолоо авч явах эсвэл ресторандаа идэх"
-" сонголтоос хамаарсан татварын ялгаатай хувийг тодорхойлна."
+"Энэ нь рестораны тохиолдолд захиалагч хоолоо авч явах эсвэл ресторандаа идэх "
+"сонголтоос хамаарсан татварын ялгаатай хувийг тодорхойлна."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8053,11 +8113,13 @@ msgstr ""
 msgid ""
 "This operation will destroy all ${\n"
 "                    paid ? \"paid\" : \"unpaid\"\n"
-"                } orders in the browser. You will lose all the data. This operation cannot be undone."
+"                } orders in the browser. You will lose all the data. This "
+"operation cannot be undone."
 msgstr ""
 "Энэ үйлдэл нь browser дээр хадгалагдаж буй бүх ${\n"
 "                    paid ? \"төлөгдсөн\" : \"төлөгдөөгүй\"\n"
-"                } захиалгуудыг цэвэрлэнэ. Та тэдгээр өгөгдлүүдийг алдах болно. Энэ үйлдлийг буцаах боломжгүйг анхаарна уу."
+"                } захиалгуудыг цэвэрлэнэ. Та тэдгээр өгөгдлүүдийг алдах "
+"болно. Энэ үйлдлийг буцаах боломжгүйг анхаарна уу."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8067,15 +8129,14 @@ msgid ""
 "associated to it. Create a new order for the new customer."
 msgstr ""
 "Энэ баримтанд %s бараанаас аль хэдийнээ буцаалт хийгдсэн байна. Тиймээс "
-"үйлчлүүлэгчийг сольж өөрчлөх боломжгүй. Өөр үйлчлүүлэгч сонгохыг хүсвэл Шинэ"
-" захиалга үүсгэж ашиглана уу."
+"үйлчлүүлэгчийг сольж өөрчлөх боломжгүй. Өөр үйлчлүүлэгч сонгохыг хүсвэл Шинэ "
+"захиалга үүсгэж ашиглана уу."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"This order has already been paid. You cannot set it back to draft or edit "
-"it."
+"This order has already been paid. You cannot set it back to draft or edit it."
 msgstr ""
 
 #. module: point_of_sale
@@ -8106,8 +8167,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
-"Энэ дугаарлалтыг Odoo автоматаар үүсгэсэн. Гэхдээ та хүсвэл өөрийн захиалгын"
-" мөрийн дугаарлалтын дүрмийг өөрчлөн тохируулж болно."
+"Энэ дугаарлалтыг Odoo автоматаар үүсгэсэн. Гэхдээ та хүсвэл өөрийн захиалгын "
+"мөрийн дугаарлалтын дүрмийг өөрчлөн тохируулж болно."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
@@ -8116,8 +8177,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
-"Энэ дугаарлалтыг Odoo автоматаар үүсгэсэн. Гэхдээ та хүсвэл өөрийн захиалгын"
-" дугаарлалтын дүрмийг өөрчлөн тохируулж болно."
+"Энэ дугаарлалтыг Odoo автоматаар үүсгэсэн. Гэхдээ та хүсвэл өөрийн захиалгын "
+"дугаарлалтын дүрмийг өөрчлөн тохируулж болно."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8215,7 +8276,9 @@ msgstr "Жин хэмжүүрээр хэмжих"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch "
+"a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and "
+"mayo go flying everywhere!"
 msgstr ""
 
 #. module: point_of_sale
@@ -8400,7 +8463,8 @@ msgstr "URL"
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "Unable to close and validate the session.\n"
-"Please set corresponding tax account in each repartition line of the following taxes: \n"
+"Please set corresponding tax account in each repartition line of the "
+"following taxes: \n"
 "%s"
 msgstr ""
 "Сешнийг хааж, баталгаажуулах боломжгүй байна.\n"
@@ -8747,8 +8811,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Whenever you close a session, one entry is generated in the following "
-"accounting journal for all the orders not invoiced. Invoices are recorded in"
-" accounting separately."
+"accounting journal for all the orders not invoiced. Invoices are recorded in "
+"accounting separately."
 msgstr ""
 "Сэшнийг хаах үед нэхэмжлэл үүсгээхгүй бүх захиалгуудын хувьд дараах "
 "санхүүгийн журналд нэг ерөнхий ажил гүйлгээ бүртгэгдэх болно. Нэхэмжлэл "
@@ -8808,8 +8872,8 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
-"Та нээлттэй сэшн ашиглагдаж буй үед мөнгөний бүхэлчлэлийг өөрчлөн тохируулах"
-" боломжгүй."
+"Та нээлттэй сэшн ашиглагдаж буй үед мөнгөний бүхэлчлэлийг өөрчлөн тохируулах "
+"боломжгүй."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8821,11 +8885,14 @@ msgstr "Та тоо хэмжээг өөрчлөх эрхгүй байна"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid ""
-"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"You are trying to sell products with serial/lot numbers, but some of them "
+"are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
-"Та серийн дугаар ашигладаг бүтээгдэхүүн сонгосон байна. Бүтээгдэхүүн бүр дээр сери дугаарыг нь сонгох боломжтой.\n"
-"Энэ нь зөвхөн таньд сануулж байгаа учир битгий санаа зов. ТА ЦААШ ҮРГЭЛЖЛҮҮЛЖ БОЛНО?"
+"Та серийн дугаар ашигладаг бүтээгдэхүүн сонгосон байна. Бүтээгдэхүүн бүр "
+"дээр сери дугаарыг нь сонгох боломжтой.\n"
+"Энэ нь зөвхөн таньд сануулж байгаа учир битгий санаа зов. ТА ЦААШ "
+"ҮРГЭЛЖЛҮҮЛЖ БОЛНО?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8866,8 +8933,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"You cannot archive '%(picking_type)s' as it is used by POS configuration "
-"'%(config)s'."
+"You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
+"(config)s'."
 msgstr ""
 
 #. module: point_of_sale
@@ -9010,8 +9077,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"You must set the iot box's IP address to use an IoT-connected screen. You'll"
-" find the field under the 'IoT Box' option."
+"You must set the iot box's IP address to use an IoT-connected screen. You'll "
+"find the field under the 'IoT Box' option."
 msgstr ""
 
 #. module: point_of_sale
@@ -9033,8 +9100,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You should assign a Point of Sale to your session."
-msgstr ""
-"Та өөрийн сэшндээ ямар нэг борлуулалтын цэгийн тохиргоо оноож өгнө үү."
+msgstr "Та өөрийн сэшндээ ямар нэг борлуулалтын цэгийн тохиргоо оноож өгнө үү."
 
 #. module: point_of_sale
 #. odoo-python

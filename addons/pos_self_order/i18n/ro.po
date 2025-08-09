@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Maria Muntean, 2024
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -406,11 +407,15 @@ msgstr "Fiecare comandă"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"Fiecărei mese din planul dvs. de etaj i se atribuie un cod QR unic, în funcție de configurația dvs. Din motive de securitate,\n"
-"                    atât punctul de vânzare, cât și numele mesei sunt criptate în URL-ul generat, așa cum se arată în exemplul de mai jos:."
+"Fiecărei mese din planul dvs. de etaj i se atribuie un cod QR unic, în "
+"funcție de configurația dvs. Din motive de securitate,\n"
+"                    atât punctul de vânzare, cât și numele mesei sunt "
+"criptate în URL-ul generat, așa cum se arată în exemplul de mai jos:."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -426,6 +431,13 @@ msgstr "Editează"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "Introduceți valoarea personalizată"
@@ -433,8 +445,8 @@ msgstr "Introduceți valoarea personalizată"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr ""
 "Puteți folosi și imprima acest cod QR de câte ori aveți nevoie, în funcție "
 "de cerințele dvs."
@@ -460,6 +472,18 @@ msgstr "Urmați instrucțiunile de pe terminal"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
 msgstr "Generic"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -522,11 +546,15 @@ msgstr "Dacă acest produs este disponibil în ecranele de autocomandă"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Dacă aveți nevoie de coduri QR personalizate, începeți prin a scana codul QR relevant pentru a obține URL-ul. Apoi, folosiți\n"
-"                un generator de coduri QR precum https://www.qrcode-monkey.com sau https://www.qr-code-generator.com"
+"Dacă aveți nevoie de coduri QR personalizate, începeți prin a scana codul QR "
+"relevant pentru a obține URL-ul. Apoi, folosiți\n"
+"                un generator de coduri QR precum https://www.qrcode-"
+"monkey.com sau https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -625,7 +653,8 @@ msgid ""
 "                online or order with the QR codes on your tables"
 msgstr ""
 "Permiteți clienților dvs. să exploreze ușor meniul dvs.\n"
-"                online sau să comande cu ajutorul codurilor QR de pe mesele dvs"
+"                online sau să comande cu ajutorul codurilor QR de pe mesele "
+"dvs"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1000,8 +1029,8 @@ msgstr "Selectați o masă"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
 "Selectați pentru ce puncte de vânzare doriți să afișați acest link. Lăsați "
 "gol pentru a-l afișa pentru toate punctele de vânzare. Trebuie să selectați "
@@ -1178,8 +1207,7 @@ msgstr "Disponibilitatea după trebuie să fie între 00:00 și 24:00"
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
 msgstr ""
-"Disponibilitatea până la trebuie să fie mai mare decât Disponibilitatea "
-"după."
+"Disponibilitatea până la trebuie să fie mai mare decât Disponibilitatea după."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1191,8 +1219,7 @@ msgstr "Disponibilitatea până la trebuie să fie între 00:00 și 24:00"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "The Self-Order default user must be a POS user"
-msgstr ""
-"Utilizatorul implicit pentru autocomandă trebuie să fie utilizator POS"
+msgstr "Utilizatorul implicit pentru autocomandă trebuie să fie utilizator POS"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_after
