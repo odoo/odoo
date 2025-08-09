@@ -828,7 +828,7 @@ actual arch.
         err.context = {
             'view': self,
             'name': getattr(self, 'name', None),
-            'xmlid': self.env.context.get('install_xmlid') or self.xml_id,
+            'xmlid': self.xml_id,
             'view.model': self.model,
             'view.parent': self.inherit_id,
             'file': self.env.context.get('install_filename'),
@@ -846,7 +846,7 @@ actual arch.
         error_context = {
             'view': self,
             'name': getattr(self, 'name', None),
-            'xmlid': self.env.context.get('install_xmlid') or self.xml_id,
+            'xmlid': self.xml_id,
             'view.model': self.model,
             'view.parent': self.inherit_id,
             'file': self.env.context.get('install_filename'),
