@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
-# 
+# * account
+#
 # Translators:
 # Sven ServisiRAM <sven@servisiram.hr>, 2024
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2024
@@ -40,20 +40,23 @@
 # Bole <bole@dajmi5.com>, 2025
 # Luka Carević <luka@uvid.hr>, 2025
 # Ivica Dimjašević, 2025
-# 
+# Alen Komljen <alen@uvid.hr>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-18 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ivica Dimjašević, 2025\n"
-"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"PO-Revision-Date: 2025-08-08 10:53+0000\n"
+"Last-Translator: Alen Komljen <alen@uvid.hr>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/account/"
+"hr/>\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -314,6 +317,8 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
+"Novo polje « Ukupno (uključujući porez) » za ubrzanje i kontrolu unosa "
+"automatskim kreiranjem stavki s pravim računom i porezom."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1359,6 +1364,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>Upozorenje:</strong> Kada je revizijski trag omogućen, više ga ne "
+"možete onemogućiti ako postoje stavke dnevnika."
 
 #. module: account
 #. odoo-python
@@ -2082,6 +2089,7 @@ msgstr "Dokumenti računovodstva"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
 msgstr ""
+"Način rada računovodstvene tvrtke promijenit će kodiranje računa/faktura:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -2185,7 +2193,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Audit Trail"
-msgstr "Aktiviraj Praćenje i Tragove"
+msgstr "Aktiviraj revizijski trag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -2357,7 +2365,7 @@ msgstr "Dodaj kontakte za obavijestiti..."
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Add your terms & conditions at the bottom of invoices/orders/quotations"
-msgstr ""
+msgstr "Dodajte svoje uvjete i odredbe na dno računa/narudžbi/ponuda"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -2428,6 +2436,9 @@ msgid ""
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
+"Nakon uvoza tri računa za dobavljača bez izmjena, Odoo će predložiti "
+"automatsku potvrdu budućih računa. Ovu opciju možete uključiti ili "
+"isključiti u profilu dobavljača u bilo kojem trenutku."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -2924,7 +2935,7 @@ msgstr "Primjeni"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
-msgstr "Primjeni porez evropske države u koju je proizvod isporučen."
+msgstr "Primijeni porez europske države u koju je proizvod isporučen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -3064,7 +3075,7 @@ msgstr "Bilježenje nadzora aktivirano"
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Audit Trail"
-msgstr ""
+msgstr "Revizijski trag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
@@ -4343,7 +4354,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
 msgstr ""
-"Naplatite dugovanja kupaca samo jednim klikom koriteći Euro SEPA servis"
+"Naplatite dugovanja kupaca samo jednim klikom koristeći Euro SEPA servis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5394,7 +5405,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
 msgid "Customer Invoices and Vendor Bills"
-msgstr ""
+msgstr "Računi kupaca i računi dobavljača"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5718,12 +5729,12 @@ msgstr "Zadani konto prihoda"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm"
-msgstr ""
+msgstr "Zadani Incoterm"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm of your company"
-msgstr "Zadani incoterm vaše tvrtke"
+msgstr "Zadani Incoterm vaše tvrtke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__default_opening_date_filter
@@ -5786,7 +5797,7 @@ msgstr "Zadane vrijednosti"
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__incoterm_id
 msgid "Default incoterm"
-msgstr "Zadani incoterm"
+msgstr "Zadani Incoterm"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__company_price_include
@@ -6262,7 +6273,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Display the total amount of an invoice in letters"
-msgstr ""
+msgstr "Prikaži ukupni iznos računa slovima"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
@@ -6557,7 +6568,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
-msgstr ""
+msgstr "EU unutarzajednička prodaja na daljinu"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
@@ -6579,12 +6590,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Early Discount Gain"
-msgstr ""
+msgstr "Dobit od prijevremenog popusta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Early Discount Loss"
-msgstr ""
+msgstr "Gubitak od prijevremenog popusta"
 
 #. module: account
 #. odoo-python
@@ -6631,7 +6642,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "Popusti za prijevremenu uplatu:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -7666,7 +7677,7 @@ msgstr "Grupa poreza"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Group payments into a single batch to ease the reconciliation process"
-msgstr ""
+msgstr "Grupiraj plaćanja u jednu seriju radi lakšeg procesa usklađivanja"
 
 #. module: account
 #. odoo-python
@@ -8184,7 +8195,7 @@ msgstr "Uvezi bankovne izvode u CAMT.053"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CSV, XLS, and XLSX"
-msgstr ""
+msgstr "Uvezi svoje bankovne izvode u CSV, XLS i XLSX formatu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9811,7 +9822,7 @@ msgstr "Glavni prilog"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Main Currency"
-msgstr ""
+msgstr "Glavna valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__commercial_partner_id
@@ -9821,7 +9832,7 @@ msgstr "Glavni partner"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
 msgid "Main currency of the company."
-msgstr "Glavna valuta kompanije"
+msgstr "Glavna valuta tvrtke"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10336,7 +10347,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr ""
+msgstr "Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -12138,7 +12149,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Prices"
-msgstr ""
+msgstr "Cijene"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
@@ -12245,13 +12256,13 @@ msgstr "Konto dobiti"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "Stavka svojstva dolazne metode plaćanja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "Stavka svojstva odlazne metode plaćanja"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -12921,7 +12932,7 @@ msgstr "Pregledaj"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Review Chart of Accounts"
-msgstr ""
+msgstr "Pregledajte kontni plan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -13139,7 +13150,7 @@ msgstr "Prodavač"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Same Account as product"
-msgstr ""
+msgstr "Isti račun kao proizvod"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -13308,7 +13319,7 @@ msgstr "Zaključaj stavke dnevnika"
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Secure Posted Entries with Hash"
-msgstr ""
+msgstr "Osigurajte knjižene unose pomoću hash vrijednosti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secured
@@ -14140,7 +14151,7 @@ msgstr "Rank dobavljača"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr ""
+msgstr "Privremeni račun"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
@@ -14495,7 +14506,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Taxes are also displayed in local currency on invoices"
-msgstr ""
+msgstr "Porezi se također prikazuju u lokalnoj valuti na računima"
 
 #. module: account
 #. odoo-python
@@ -16313,7 +16324,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs & revenues by project, department, etc"
-msgstr ""
+msgstr "Pratite troškove i prihode po projektu, odjelu i slično"
 
 #. module: account
 #. odoo-python
@@ -16395,6 +16406,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Pokreni upozorenja prilikom kreiranja računa i prodajnih narudžbi za "
+"partnere čiji ukupni dug premašuje "
+"ograničenje.                                      Postavi vrijednost veću od "
+"0.0 za aktivaciju provjere kreditnog limita"
 
 #. module: account
 #. odoo-python

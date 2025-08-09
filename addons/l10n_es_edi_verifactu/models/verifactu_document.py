@@ -802,7 +802,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
     @api.model
     def _render_vals_SistemaInformatico(self, vals):
-        spanish_companies_on_db_count = self.env['res.company'].search_count([
+        spanish_companies_on_db_count = self.env['res.company'].sudo().search_count([
             ('account_fiscal_country_id.code', '=', 'ES'),
         ], limit=2)
 
