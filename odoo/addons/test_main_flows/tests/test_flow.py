@@ -16,6 +16,12 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
         self.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
+        self.env.ref('purchase_stock.route_warehouse0_buy').write({
+            'product_selectable': True,
+        })
+        self.env.ref('mrp.route_warehouse0_manufacture').write({
+            'product_selectable': True,
+        })
         # Enable Make to Order
         self.env.ref('stock.route_warehouse0_mto').active = True
 

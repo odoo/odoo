@@ -9,4 +9,4 @@ class StockReplenishMixin(models.AbstractModel):
 
     def _get_allowed_route_domain(self):
         domains = super()._get_allowed_route_domain()
-        return Domain.AND([domains, [('id', '!=', self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping', raise_if_not_found=False).id)]])
+        return Domain.AND([domains, [('id', '!=', self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False).id)]])

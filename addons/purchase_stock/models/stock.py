@@ -284,3 +284,14 @@ class ProcurementGroup(models.Model):
                 wh = wh_by_comp[company]
                 procurement.values['route_ids'] |= wh.reception_route_id
         return super().run(procurements, raise_user_error=raise_user_error)
+
+    def _get_product_routes(self, product):
+        route_ids = super()._get_product_routes(product)
+        buy_routes = self.env['stock.rule'].search([
+            ('action', '=', 'buy'),
+            ('picking_type_id.code', '=', 'incoming'),
+            ('active', '=', True),
+        ]).mapped('route_id')
+        if buy_routes and product.purchase_ok and product.seller_ids:
+            route_ids |= buy_routes
+        return route_ids
