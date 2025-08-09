@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-26 18:37+0000\n"
+"POT-Creation-Date: 2025-08-08 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -2532,6 +2532,12 @@ msgid "A map and a listing of your stores"
 msgstr "지도 및 매장 목록"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "A mega menu cannot have a parent or child menu."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid ""
 "A moist, red-hued cake with layers of cream cheese frosting, perfect for any "
@@ -4805,11 +4811,6 @@ msgid ""
 msgstr ""
 "일관된 성능과 가동 시간으로 중단을 최소화하고 빠른 응답 시간으로 효율적이고 "
 "안정적인 서비스를 보장합니다."
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
-msgid "Google Search Console"
-msgstr "구글 서치 콘솔"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
@@ -7710,8 +7711,13 @@ msgid "Google Play"
 msgstr "구글 플레이"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
+msgid "Google Search Console"
+msgstr "구글 서치 콘솔"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 msgid "Google Search Console Key"
 msgstr ""
 
@@ -10158,6 +10164,18 @@ msgstr "검색창이 포함된 메뉴"
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "Menus"
 msgstr "메뉴"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus cannot have more than two levels of hierarchy."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus with child menus cannot be added as a submenu."
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard

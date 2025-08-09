@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Maitê Dietze, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:40+0000\n"
+"POT-Creation-Date: 2025-08-08 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -32,8 +34,8 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
-"%s não está mais disponível, e por isso foi removido do seu pedido. Revise o"
-" pedido e valide-o novamente."
+"%s não está mais disponível, e por isso foi removido do seu pedido. Revise o "
+"pedido e valide-o novamente."
 
 #. module: pos_self_order
 #. odoo-python
@@ -432,11 +434,15 @@ msgstr "Cada pedido"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"Cada mesa no piso tem um código QR atribuído com base na sua configuração. Por motivos de segurança,\n"
-"                    o nome das mesas e do ponto de venda estão criptografados na URL gerada, como mostrado no exemplo abaixo:"
+"Cada mesa no piso tem um código QR atribuído com base na sua configuração. "
+"Por motivos de segurança,\n"
+"                    o nome das mesas e do ponto de venda estão "
+"criptografados na URL gerada, como mostrado no exemplo abaixo:"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
@@ -451,6 +457,13 @@ msgstr "Editar"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "Insira seu valor personalizado"
@@ -458,8 +471,8 @@ msgstr "Insira seu valor personalizado"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr "Use e imprima este código QR quantas vezes forem necessárias."
 
 #. module: pos_self_order
@@ -478,6 +491,18 @@ msgstr "Siga as instruções no terminal"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
 msgstr "Genérico"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -502,8 +527,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
-"Ei, parece que você esqueceu de criar produtos ou adicioná-los a pos_config."
-" Adicione-os antes de usar o autoatendimento"
+"Ei, parece que você esqueceu de criar produtos ou adicioná-los a pos_config. "
+"Adicione-os antes de usar o autoatendimento"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -557,11 +582,15 @@ msgstr "Se esse produto está ou não disponível nas telas de autoatendimento"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Se você precisa de códigos QR, comece escaneando o código QR relevante para adquirir a URL Em seguida, use um\n"
-"                gerador de código QR como https://www.qrcode-monkey.com ou https://www.qr-code-generator.com"
+"Se você precisa de códigos QR, comece escaneando o código QR relevante para "
+"adquirir a URL Em seguida, use um\n"
+"                gerador de código QR como https://www.qrcode-monkey.com ou "
+"https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -597,8 +626,7 @@ msgid ""
 "It seems there hasn't been any activity on this kiosk. Would you like to "
 "continue?"
 msgstr ""
-"Parece que não houve nenhuma atividade nesse quiosque. Gostaria de "
-"continuar?"
+"Parece que não houve nenhuma atividade nesse quiosque. Gostaria de continuar?"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1063,8 +1091,8 @@ msgstr "Selecione uma mesa"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
 "Selecione para quais pontos de venda você deseja exibir este link. Deixe em "
 "branco para exibi-lo em todos os pontos de venda. É necessário selecionar "
@@ -1345,8 +1373,7 @@ msgstr "Você não está autorizado a remover este pedido"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "You cannot add cash payment methods in kiosk mode."
 msgstr ""
-"Você não pode adicionar métodos de pagamento em dinheiro no modo de "
-"quiosque."
+"Você não pode adicionar métodos de pagamento em dinheiro no modo de quiosque."
 
 #. module: pos_self_order
 #. odoo-javascript

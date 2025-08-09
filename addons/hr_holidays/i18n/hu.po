@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_holidays
-# 
+#
 # Translators:
 # f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2024
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2024
@@ -13,19 +13,19 @@
 # krnkris, 2024
 # gezza <geza.nagy@oregional.hu>, 2025
 # Valics Lehel, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-08 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Valics Lehel, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_holidays
@@ -58,6 +58,11 @@ msgstr "!important; font-size: 10px\" &gt;"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
+msgid "# Public Holidays"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -181,11 +186,9 @@ msgstr "&lt;/th&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -255,14 +258,16 @@ msgstr "<i class=\"fa fa-times\"/> Elutasítás"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
-"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
+"                            <span class=\"ml8\" invisible=\"request_unit != "
+"'hour'\">Hours</span>"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Days</span>\n"
-"                                <span class=\"ml8\" invisible=\"type_request_unit != 'hour'\">Hours</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -277,7 +282,6 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid ""
 "<span class=\"o_stat_text\">\n"
@@ -322,17 +326,25 @@ msgid "<span class=\"text-muted\">from </span>"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"<span>The allocated days cannot be used, because the allocation is set to "
+"finish in the past.</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid ""
-"<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
+"<span>The employee has a different timezone than yours! Here dates and times "
+"are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid ""
-"<span>You can only take this time off in whole days, so if your schedule has"
-" half days, it won't be used efficiently.</span>"
+"<span>You can only take this time off in whole days, so if your schedule has "
+"half days, it won't be used efficiently.</span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -350,16 +362,15 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid ""
-"A great way to keep track on employee’s PTOs, sick days, and approval "
-"status."
+"A great way to keep track on employee’s PTOs, sick days, and approval status."
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 msgid ""
-"A great way to keep track on your time off requests, sick days, and approval"
-" status."
+"A great way to keep track on your time off requests, sick days, and approval "
+"status."
 msgstr ""
 
 #. module: hr_holidays
@@ -536,6 +547,11 @@ msgid "Activity State"
 msgstr "Tevékenység állapot"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_activity_type
+msgid "Activity Type"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Activity Type Icon"
@@ -609,7 +625,7 @@ msgstr "Egész nap"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "Allocated ("
+msgid "Allocated"
 msgstr ""
 
 #. module: hr_holidays
@@ -695,8 +711,8 @@ msgstr "Kiosztás típusa"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be confirmed \"To Approve\" or validated once \"Second "
-"Approval\" in order to approve it."
+"Allocation must be \"To Approve\" or \"Second Approval\" in order to approve "
+"it."
 msgstr ""
 
 #. module: hr_holidays
@@ -721,7 +737,8 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
+msgid ""
+"Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
 
 #. module: hr_holidays
@@ -792,9 +809,6 @@ msgstr "Jóváhagyás"
 
 #. module: hr_holidays
 #. odoo-javascript
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -926,7 +940,8 @@ msgstr "Augusztus"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid ""
-"Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
+"Automatic time off spliting during batch generation is not managed for "
+"ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
 
@@ -950,12 +965,6 @@ msgid "Available:"
 msgstr ""
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
-msgid "Away"
-msgstr "Távol"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
@@ -969,6 +978,8 @@ msgid "Back on %s"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/graph/hr_holidays_graph_renderer.js:0
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_balance
 msgid "Balance"
 msgstr "Egyenleg"
@@ -1064,6 +1075,7 @@ msgstr "Visszaállíthat"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
@@ -1282,6 +1294,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__country_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Country"
 msgstr "Ország"
 
@@ -1298,6 +1311,11 @@ msgstr "Borítókép"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,website_form_label:hr_holidays.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: hr_holidays
@@ -1440,6 +1458,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -1499,6 +1518,11 @@ msgid "Discard"
 msgstr "Elvetés"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__display_name
@@ -1512,6 +1536,13 @@ msgstr "Elvetés"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -1667,6 +1698,14 @@ msgid "End Date"
 msgstr "Befejező dátum"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
+msgid ""
+"End date has been updated because the employee will leave the company on %"
+"(departure_date)s."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
 msgid "Extra Days Requests Allowed"
 msgstr ""
@@ -1756,8 +1795,8 @@ msgstr "Font awesome ikon pld: fa-tasks"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
 msgid ""
 "For an Accrual Allocation, this field contains the theorical amount of time "
-"given to the employee, due to a previous start date, on the first run of the"
-" plan. This can be manually edited."
+"given to the employee, due to a previous start date, on the first run of the "
+"plan. This can be manually edited."
 msgstr ""
 
 #. module: hr_holidays
@@ -1927,6 +1966,11 @@ msgid "Hr Icon Display"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__id
@@ -1940,6 +1984,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__id
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
@@ -1975,8 +2026,7 @@ msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
+msgstr "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
@@ -2046,6 +2096,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
 msgid "Is Unpaid"
 msgstr "Fizetetlen"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__is_used
+msgid "Is Used"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jan
@@ -2249,8 +2304,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid ""
-"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
-"Approval"
+"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval"
 msgstr ""
 
 #. module: hr_holidays
@@ -2341,10 +2395,10 @@ msgid "Morning"
 msgstr "Reggel"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/multi_time_off_generation_menu/multiple_time_off_generation_menu.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Multiple Requests"
 msgstr ""
 
@@ -2434,8 +2488,8 @@ msgstr "Új kiosztás kérelem"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"New Allocation Request created by %(user)s: %(count)s Days of "
-"%(allocation_type)s"
+"New Allocation Request created by %(user)s: %(count)s Days of %"
+"(allocation_type)s"
 msgstr ""
 
 #. module: hr_holidays
@@ -2644,7 +2698,6 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
-#: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
 msgid "Online"
 msgstr "Online"
 
@@ -2658,33 +2711,33 @@ msgstr "Csak"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
-" can approve or refuse allocation requests."
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator "
+"can approve or refuse allocation requests."
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Only a Time Off Manager can reset a refused leave."
+msgid "Only a Time Off Administrator can reset a refused leave."
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Only a Time Off Manager can reset a started leave."
+msgid "Only a Time Off Administrator can reset a started leave."
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Only a Time Off Manager can reset other people leaves."
+msgid "Only a Time Off Administrator can reset other people leaves."
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"Only a Time Off Officer or Manager can approve/refuse its own requests."
+"Only a Time Off Officer or Administrator can approve/refuse its own requests."
 msgstr ""
 
 #. module: hr_holidays
@@ -2723,7 +2776,6 @@ msgstr "Egyéb"
 #: code:addons/hr_holidays/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
-#: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
 msgid "Out of office"
 msgstr "Házon kívül"
 
@@ -2783,11 +2835,6 @@ msgid "Provide a reason to cancel an approved time off"
 msgstr ""
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
-msgid "Public"
-msgstr "Nyilvános"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
 msgstr ""
@@ -2796,7 +2843,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
+#: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 msgid "Public Holidays"
 msgstr "Ünnepnapok"
 
@@ -2833,9 +2882,6 @@ msgstr "Okok"
 
 #. module: hr_holidays
 #. odoo-javascript
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -2942,11 +2988,6 @@ msgstr "Visszaállítás"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__resource_calendar_id
 msgid "Resource Calendar"
 msgstr "Erőforrás naptár"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
-msgid "Resource Time Off"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -3075,8 +3116,10 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_validation_type
 msgid ""
 "Select the level of approval needed in case of request by employee\n"
-"            #     - No validation needed: The employee's request is automatically approved.\n"
-"            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
+"            #     - No validation needed: The employee's request is "
+"automatically approved.\n"
+"            #     - Approved by Time Off Officer: The employee's request "
+"need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
 
@@ -3094,7 +3137,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_res_users__leave_manager_id
 msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 
 #. module: hr_holidays
@@ -3134,8 +3178,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Az összes olyan rekord megjelenítése, melynél a következő akció dátuma a mai"
-" nap előtti"
+"Az összes olyan rekord megjelenítése, melynél a következő akció dátuma a mai "
+"nap előtti"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_sl
@@ -3162,18 +3206,23 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
-"                Leave empty if this accrual plan can be used with any Time Off Type."
+"                Leave empty if this accrual plan can be used with any Time "
+"Off Type."
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__transition_mode
 msgid ""
-"Specify what occurs if a level transition takes place in the middle of a pay period.\n"
+"Specify what occurs if a level transition takes place in the middle of a pay "
+"period.\n"
 "\n"
-"                'Immediately' will switch the employee to the new accrual level on the exact date during the ongoing pay period.\n"
+"                'Immediately' will switch the employee to the new accrual "
+"level on the exact date during the ongoing pay period.\n"
 "\n"
-"                'After this accrual's period' will keep the employee on the same accrual level until the ongoing pay period is complete.\n"
-"                After it is complete, the new level will take effect when the next pay period begins."
+"                'After this accrual's period' will keep the employee on the "
+"same accrual level until the ongoing pay period is complete.\n"
+"                After it is complete, the new level will take effect when "
+"the next pay period begins."
 msgstr ""
 
 #. module: hr_holidays
@@ -3297,8 +3346,7 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"The Start Date of the Validity Period must be anterior to the End Date."
+msgid "The Start Date of the Validity Period must be anterior to the End Date."
 msgstr ""
 
 #. module: hr_holidays
@@ -3344,7 +3392,7 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
-msgid "The employee no longer works in the company"
+msgid "The employee will leave the company on %(departure_date)s."
 msgstr ""
 
 #. module: hr_holidays
@@ -3359,7 +3407,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid ""
-"The leaves planned in the future are exceeding the maximum value of the allocation.\n"
+"The leaves planned in the future are exceeding the maximum value of the "
+"allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
 
@@ -3386,8 +3435,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
-msgid ""
-"The request start date must be before or equal to the request end date."
+msgid "The request start date must be before or equal to the request end date."
 msgstr ""
 
 #. module: hr_holidays
@@ -3417,9 +3465,12 @@ msgid ""
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
 "Az állapot „Benyújt”-ra van állítva, amikor szabadság kérelem létrehozva.\n"
-"A „Jóváhagyandó” állapot akkor jelentkezik, amikor a felhasználó megerősíti a szabadság kérelmet.\n"
-"Az „Elutasított” állapot akkor áll fenn, amikor a menedzser megtagadja az szabadság kérelmet.\n"
-"A „Jóváhagyott” állapot akkor áll fenn, amikor a menedzser jóváhagyja a szabadság kérelmet."
+"A „Jóváhagyandó” állapot akkor jelentkezik, amikor a felhasználó megerősíti "
+"a szabadság kérelmet.\n"
+"Az „Elutasított” állapot akkor áll fenn, amikor a menedzser megtagadja az "
+"szabadság kérelmet.\n"
+"A „Jóváhagyott” állapot akkor áll fenn, amikor a menedzser jóváhagyja a "
+"szabadság kérelmet."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3464,8 +3515,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
-msgid ""
-"This area is automatically filled by the user who validate the time off"
+msgid "This area is automatically filled by the user who validate the time off"
 msgstr ""
 "Ezt a területet automatikusan kitölti a felhasználó, aki érvényesíti a "
 "szabadságot"
@@ -3473,12 +3523,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
-"This area is automatically filled by the user who validate the time off with"
-" second level (If time off type need second validation)"
+"This area is automatically filled by the user who validate the time off with "
+"second level (If time off type need second validation)"
 msgstr ""
 "Ezt a területet automatikusan kitölti a felhasználó, aki érvényesíti a "
-"szabadságot a második szinten (Ha a szabadság típusához második ellenőrzésre"
-" van szükség)"
+"szabadságot a második szinten (Ha a szabadság típusához második ellenőrzésre "
+"van szükség)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
@@ -3527,8 +3577,7 @@ msgid ""
 "This value is given by the sum of all time off requests with a negative "
 "value."
 msgstr ""
-"Ezt az értéket az összes szabadság kérelem összege adja meg negatív "
-"értékben."
+"Ezt az értéket az összes szabadság kérelem összege adja meg negatív értékben."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
@@ -3536,8 +3585,7 @@ msgid ""
 "This value is given by the sum of all time off requests with a positive "
 "value."
 msgstr ""
-"Ezt az értéket az összes szabadság kérelem összege adja meg pozitív "
-"értékben."
+"Ezt az értéket az összes szabadság kérelem összege adja meg pozitív értékben."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__thu
@@ -3549,18 +3597,16 @@ msgstr "Csütörtök"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_holiday_allocation_id
 #: model:ir.model,name:hr_holidays.model_hr_leave
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__request
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_root
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:mail.message.subtype,name:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Time Off"
 msgstr "Szabadság"
 
@@ -3585,7 +3631,12 @@ msgid "Time Off Approval"
 msgstr "Szabadság jóváhagyás"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_tree_inherit_leave
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "Time Off Approver"
 msgstr "Szabadság jóváhagyó"
 
@@ -3620,11 +3671,15 @@ msgstr "Szabadság értesítő altípus"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid ""
-"Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
-"                Employees request allocations to Time Off Officers (e.g. recuperation days)."
+"Time Off Officers allocate time off days to employees (e.g. paid time off)."
+"<br>\n"
+"                Employees request allocations to Time Off Officers (e.g. "
+"recuperation days)."
 msgstr ""
-"Szabadság tisztviselők osztják ki a szabadságokat az alkalmazottaknak (pl. fizetett szabadságok).<br>\n"
-" Az alkalmazottak kérelmezik a kiosztást a Szabadság tisztviselőktől (pl. Tanulmányi szabadság)."
+"Szabadság tisztviselők osztják ki a szabadságokat az alkalmazottaknak (pl. "
+"fizetett szabadságok).<br>\n"
+" Az alkalmazottak kérelmezik a kiosztást a Szabadság tisztviselőktől (pl. "
+"Tanulmányi szabadság)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3699,6 +3754,11 @@ msgstr "Kivett szabadságok:"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off Type"
 msgstr "Szabadság típus"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Time Off Type's Name"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -3865,8 +3925,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid ""
 "Total number of paid time off allocated to this employee, change this value "
-"to create allocation/time off request. Total based on all the time off types"
-" without overriding limit."
+"to create allocation/time off request. Total based on all the time off types "
+"without overriding limit."
 msgstr ""
 
 #. module: hr_holidays
@@ -3988,8 +4048,6 @@ msgstr "Felhasználó távol van"
 
 #. module: hr_holidays
 #. odoo-javascript
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -4016,8 +4074,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid ""
-"Validity End date has been updated because Employee no longer works in the "
-"company"
+"Validity End date has been updated because the employee will leave the "
+"company on %(departure_date)s."
 msgstr ""
 
 #. module: hr_holidays
@@ -4041,6 +4099,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid "Virtual Remaining Time Off"
 msgstr "Virtuális maradék szabadság"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
@@ -4162,7 +4226,8 @@ msgstr "Igen"
 msgid ""
 "Yes: Time off requests need to have a valid allocation.\n"
 "\n"
-"              No Limit: Time Off requests can be taken without any prior allocation."
+"              No Limit: Time Off requests can be taken without any prior "
+"allocation."
 msgstr ""
 
 #. module: hr_holidays
@@ -4174,8 +4239,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid ""
-"You can define a period of time where the days carried over will be "
-"available"
+"You can define a period of time where the days carried over will be available"
 msgstr ""
 
 #. module: hr_holidays
@@ -4219,15 +4283,14 @@ msgstr "A(z) %s állapotú kiosztási kérelmet nem törölheti."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You cannot first approve a time off for %s, because you are not his time off"
-" manager"
+"You cannot first approve a time off for %s, because you are not his time off "
+"manager"
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
-msgid ""
-"You cannot have a cap on accrued time without setting a maximum amount."
+msgid "You cannot have a cap on accrued time without setting a maximum amount."
 msgstr ""
 
 #. module: hr_holidays
@@ -4251,8 +4314,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"You cannot reduce the duration below the duration of leaves already taken by"
-" the employee."
+"You cannot reduce the duration below the duration of leaves already taken by "
+"the employee."
 msgstr ""
 
 #. module: hr_holidays
@@ -4267,13 +4330,29 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
+"You do not have any allocation for this time off type.\n"
+"Please request an allocation before submitting your time off request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "You must be %s's Manager to approve this leave"
+msgid "You must be %s's Time Off Approver to approve this leave"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"approve this leave"
 msgstr ""
 
 #. module: hr_holidays
@@ -4288,15 +4367,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You must be either %s's manager or Time off Manager to approve this leave"
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid ""
-"You must either be a Time off Officer or Time off Manager to approve this "
-"leave"
+"You must either be a Time off Officer or Time off Administrator to approve "
+"this leave"
 msgstr ""
 
 #. module: hr_holidays
@@ -4308,8 +4380,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You must have manager rights to modify/validate a time off that already "
-"begun"
+"You must have manager rights to modify/validate a time off that already begun"
 msgstr ""
 "A menedzser jogosultságával kell rendelkeznie a már megkezdett szabadság "
 "módosítására / érvényesítésére"
@@ -4320,7 +4391,8 @@ msgstr ""
 msgid ""
 "You've already booked time off which overlaps with this period:\n"
 "%s\n"
-"Attempting to double-book your time off won't magically make your vacation 2x better!\n"
+"Attempting to double-book your time off won't magically make your vacation "
+"2x better!\n"
 msgstr ""
 
 #. module: hr_holidays
@@ -4468,6 +4540,12 @@ msgid "hours"
 msgstr "óra"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+msgid "id"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "in"
@@ -4577,3 +4655,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "érvényesített"
+
+#~ msgid "Away"
+#~ msgstr "Távol"
+
+#~ msgid "Public"
+#~ msgstr "Nyilvános"

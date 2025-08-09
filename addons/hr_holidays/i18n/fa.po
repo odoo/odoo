@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_holidays
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
@@ -9,19 +9,19 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2025
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # Naser mars, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-08 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_holidays
@@ -54,6 +54,11 @@ msgstr "!مهم; اندازه-فونت: 10px\" &gt;"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!مهم; اندازه-فونت: 8px; عرض-حداقل: 18px\"&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
+msgid "# Public Holidays"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -177,11 +182,10 @@ msgstr "&lt;/th&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
-"& lt؛ td class = \"text-center oe_leftfit oe_Rightfit\" style = "
-"\"background-color:"
+"& lt؛ td class = \"text-center oe_leftfit oe_Rightfit\" style = \"background-"
+"color:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -256,17 +260,20 @@ msgstr "<i class=\"fa fa-times\"/> رد"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
-"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
+"                            <span class=\"ml8\" invisible=\"request_unit != "
+"'hour'\">Hours</span>"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Days</span>\n"
-"                                <span class=\"ml8\" invisible=\"type_request_unit != 'hour'\">Hours</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">روز</span>\n"
-"                                <span class=\"ml8\" invisible=\"type_request_unit != 'hour'\">ساعت</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">ساعت</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
@@ -280,7 +287,6 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid ""
 "<span class=\"o_stat_text\">\n"
@@ -328,20 +334,28 @@ msgid "<span class=\"text-muted\">from </span>"
 msgstr "<span class=\"text-muted\">از </span>"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"<span>The allocated days cannot be used, because the allocation is set to "
+"finish in the past.</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid ""
-"<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
+"<span>The employee has a different timezone than yours! Here dates and times "
+"are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid ""
-"<span>You can only take this time off in whole days, so if your schedule has"
-" half days, it won't be used efficiently.</span>"
+"<span>You can only take this time off in whole days, so if your schedule has "
+"half days, it won't be used efficiently.</span>"
 msgstr ""
-"<span>شما فقط می‌توانید این مرخصی را به صورت روزهای کامل بگیرید، بنابراین "
-"اگر برنامه شما شامل نیم روزها باشد، به طور کارآمدی استفاده نخواهد شد.</span>"
+"<span>شما فقط می‌توانید این مرخصی را به صورت روزهای کامل بگیرید، بنابراین اگر "
+"برنامه شما شامل نیم روزها باشد، به طور کارآمدی استفاده نخواهد شد.</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -358,16 +372,15 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid ""
-"A great way to keep track on employee’s PTOs, sick days, and approval "
-"status."
+"A great way to keep track on employee’s PTOs, sick days, and approval status."
 msgstr "راهی عالی برای پیگیری وضعیت PTO کارمند، روزهای بیماری و وضعیت تایید."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 msgid ""
-"A great way to keep track on your time off requests, sick days, and approval"
-" status."
+"A great way to keep track on your time off requests, sick days, and approval "
+"status."
 msgstr "راهی عالی برای پیگیری درخواست‌های مرخصی، روزهای بیماری و وضعیت تأیید."
 
 #. module: hr_holidays
@@ -401,8 +414,8 @@ msgid ""
 "Absent Employee(s), Whose time off requests are either confirmed or "
 "validated on today"
 msgstr ""
-"کارمند(های) غایب، که درخواست‌های مرخصی آنها در امروز یا تایید و یا معتبر شده"
-" است"
+"کارمند(های) غایب، که درخواست‌های مرخصی آنها در امروز یا تایید و یا معتبر شده "
+"است"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -546,6 +559,11 @@ msgid "Activity State"
 msgstr "وضعیت فعالیت"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_activity_type
+msgid "Activity Type"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Activity Type Icon"
@@ -619,8 +637,8 @@ msgstr "همه روزها"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-msgid "Allocated ("
-msgstr "مجاز شده ("
+msgid "Allocated"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
@@ -705,8 +723,8 @@ msgstr "نوع تخصیص"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be confirmed \"To Approve\" or validated once \"Second "
-"Approval\" in order to approve it."
+"Allocation must be \"To Approve\" or \"Second Approval\" in order to approve "
+"it."
 msgstr ""
 
 #. module: hr_holidays
@@ -731,7 +749,8 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
+msgid ""
+"Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
 
 #. module: hr_holidays
@@ -808,9 +827,6 @@ msgstr "تصویب"
 
 #. module: hr_holidays
 #. odoo-javascript
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -942,7 +958,8 @@ msgstr "آگوست"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid ""
-"Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
+"Automatic time off spliting during batch generation is not managed for "
+"ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
 
@@ -966,12 +983,6 @@ msgid "Available:"
 msgstr "موجود:"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
-msgid "Away"
-msgstr "دور از کار"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
@@ -985,6 +996,8 @@ msgid "Back on %s"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/graph/hr_holidays_graph_renderer.js:0
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_balance
 msgid "Balance"
 msgstr "تراز"
@@ -1080,6 +1093,7 @@ msgstr "می تواند بازنشانی کند"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
@@ -1191,8 +1205,8 @@ msgid ""
 "allocation accordingly."
 msgstr ""
 "تغییر این برنامه کاری منجر به کمبود تخصیص مرخصی برای کارمند(ان) مورد نظر "
-"می‌شود به طوری که مرخصی‌های آینده‌ی آنها قبلاً گرفته شده‌اند. لطفاً "
-"مرخصی‌های این کارمند را بررسی کرده و تخصیص آنها را به درستی تنظیم کنید."
+"می‌شود به طوری که مرخصی‌های آینده‌ی آنها قبلاً گرفته شده‌اند. لطفاً مرخصی‌های این "
+"کارمند را بررسی کرده و تخصیص آنها را به درستی تنظیم کنید."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -1302,11 +1316,12 @@ msgid ""
 "Count of time off requests for this time off type (approved or waiting for "
 "approbation) with a start date in the current year."
 msgstr ""
-"برای این نوع مرخصی (تایید شده یا در انتظار تایید) تعداد درخواست‌های مرخصی با"
-" تاریخ شروع در سال جاری."
+"برای این نوع مرخصی (تایید شده یا در انتظار تایید) تعداد درخواست‌های مرخصی با "
+"تاریخ شروع در سال جاری."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__country_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Country"
 msgstr "کشور"
 
@@ -1323,6 +1338,11 @@ msgstr "تصویر رویی"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,website_form_label:hr_holidays.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: hr_holidays
@@ -1462,11 +1482,12 @@ msgid ""
 "Define the maximum level of negative days this kind of time off can reach. "
 "Value must be at least 1."
 msgstr ""
-"حداکثر میزان روزهای منفی که این نوع مرخصی می‌تواند به آن برسد را تعریف کنید."
-" مقدار باید حداقل ۱ باشد."
+"حداکثر میزان روزهای منفی که این نوع مرخصی می‌تواند به آن برسد را تعریف کنید. "
+"مقدار باید حداقل ۱ باشد."
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -1526,6 +1547,11 @@ msgid "Discard"
 msgstr "رها کردن"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__display_name
@@ -1539,6 +1565,13 @@ msgstr "رها کردن"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "نام نمایش داده شده"
 
@@ -1559,8 +1592,8 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"به دلیل تغییر در تعطیلات جهانی، %s روز اضافی از سهمیه شما کسر شده است. لطفاً"
-" این مرخصی را بررسی کنید اگر نیاز به تغییر آن دارید."
+"به دلیل تغییر در تعطیلات جهانی، %s روز اضافی از سهمیه شما کسر شده است. لطفاً "
+"این مرخصی را بررسی کنید اگر نیاز به تغییر آن دارید."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1700,6 +1733,14 @@ msgid "End Date"
 msgstr "تاریخ پایان"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
+msgid ""
+"End date has been updated because the employee will leave the company on %"
+"(departure_date)s."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
 msgid "Extra Days Requests Allowed"
 msgstr "درخواست‌های روزهای اضافی مجاز"
@@ -1796,8 +1837,8 @@ msgstr "آیکون فونت عالی به عبارتی fa-tasks"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
 msgid ""
 "For an Accrual Allocation, this field contains the theorical amount of time "
-"given to the employee, due to a previous start date, on the first run of the"
-" plan. This can be manually edited."
+"given to the employee, due to a previous start date, on the first run of the "
+"plan. This can be manually edited."
 msgstr ""
 "برای تخصیص تجمیعی، این فیلد شامل مقدار نظری زمان اعطا شده به کارمند است که "
 "به دلیل تاریخ شروع قبلی در اولین اجرای برنامه به وی داده شده است. این مقدار "
@@ -1970,6 +2011,11 @@ msgid "Hr Icon Display"
 msgstr "نمایش آیکون منابع انسانی"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__id
@@ -1983,6 +2029,13 @@ msgstr "نمایش آیکون منابع انسانی"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__id
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -2036,8 +2089,8 @@ msgid ""
 "If checked, users request can exceed the allocated days and balance can go "
 "in negative."
 msgstr ""
-"اگر علامت‌گذاری شده باشد، درخواست کاربران می‌تواند از روزهای اختصاص داده شده"
-" فراتر رود و تراز به حالت منفی برود."
+"اگر علامت‌گذاری شده باشد، درخواست کاربران می‌تواند از روزهای اختصاص داده شده "
+"فراتر رود و تراز به حالت منفی برود."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
@@ -2096,6 +2149,11 @@ msgstr "مسئول است"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
 msgid "Is Unpaid"
 msgstr "آیا پرداخت‌نشده است"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__is_used
+msgid "Is Used"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jan
@@ -2300,8 +2358,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid ""
-"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
-"Approval"
+"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval"
 msgstr "حداکثر مرخصی مجاز- مرخصی قبلا گرفته شده - مرخصی در انتظار تایید"
 
 #. module: hr_holidays
@@ -2392,10 +2449,10 @@ msgid "Morning"
 msgstr "صبح"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/multi_time_off_generation_menu/multiple_time_off_generation_menu.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Multiple Requests"
 msgstr ""
 
@@ -2485,11 +2542,11 @@ msgstr "درخواست جدید تخصیص"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"New Allocation Request created by %(user)s: %(count)s Days of "
-"%(allocation_type)s"
+"New Allocation Request created by %(user)s: %(count)s Days of %"
+"(allocation_type)s"
 msgstr ""
-"درخواست تخصیص جدید ایجاد شده توسط %(user)s: %(count)s  روز از "
-"%(allocation_type)s"
+"درخواست تخصیص جدید ایجاد شده توسط %(user)s: %(count)s  روز از %"
+"(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -2697,7 +2754,6 @@ msgstr "در مرخصی"
 #: code:addons/hr_holidays/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
-#: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
 msgid "Online"
 msgstr "آنلاین"
 
@@ -2711,35 +2767,34 @@ msgstr "تنها"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
-" can approve or refuse allocation requests."
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator "
+"can approve or refuse allocation requests."
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Only a Time Off Manager can reset a refused leave."
-msgstr "فقط یک مدیر مرخصی می‌تواند مرخصی افراد دیگر را بازنشانی کند."
+msgid "Only a Time Off Administrator can reset a refused leave."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Only a Time Off Manager can reset a started leave."
-msgstr "فقط یک مدیر مرخصی می‌تواند مرخصی افراد دیگر را بازنشانی کند."
+msgid "Only a Time Off Administrator can reset a started leave."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Only a Time Off Manager can reset other people leaves."
-msgstr "فقط یک مدیر مرخصی می‌تواند مرخصی افراد دیگر را بازنشانی کند."
+msgid "Only a Time Off Administrator can reset other people leaves."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"Only a Time Off Officer or Manager can approve/refuse its own requests."
+"Only a Time Off Officer or Administrator can approve/refuse its own requests."
 msgstr ""
-"فقط یک مسئول یا مدیر مرخصی می‌تواند درخواست‌های خود را تأیید یا رد کند."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2777,7 +2832,6 @@ msgstr "دیگر"
 #: code:addons/hr_holidays/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
-#: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
 msgid "Out of office"
 msgstr "بیرون از دفتر"
 
@@ -2837,11 +2891,6 @@ msgid "Provide a reason to cancel an approved time off"
 msgstr ""
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
-msgid "Public"
-msgstr "همگانی"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
 msgstr ""
@@ -2850,7 +2899,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
+#: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 msgid "Public Holidays"
 msgstr "تعطیلات عمومی"
 
@@ -2887,9 +2938,6 @@ msgstr "دلایل"
 
 #. module: hr_holidays
 #. odoo-javascript
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -2996,11 +3044,6 @@ msgstr "تنظیم مجدد"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__resource_calendar_id
 msgid "Resource Calendar"
 msgstr "تقویم منبع"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
-msgid "Resource Time Off"
-msgstr "مرخصی منابع"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -3129,8 +3172,10 @@ msgstr "انتخاب نوع مرخصی"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_validation_type
 msgid ""
 "Select the level of approval needed in case of request by employee\n"
-"            #     - No validation needed: The employee's request is automatically approved.\n"
-"            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
+"            #     - No validation needed: The employee's request is "
+"automatically approved.\n"
+"            #     - Approved by Time Off Officer: The employee's request "
+"need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
 
@@ -3148,10 +3193,12 @@ msgstr "انتخاب کنید درخواستی که به تازگی ایجاد �
 #: model:ir.model.fields,help:hr_holidays.field_res_users__leave_manager_id
 msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "کاربر مسئول تصویب \"مرخصی\" این کارمند را انتخاب کنید.\n"
-"در صورت خالی بودن، مصوبه توسط یک مدیر یا تصویب‌کننده (تعیین شده در تنظیمات/کاربران) انجام می‌شود."
+"در صورت خالی بودن، مصوبه توسط یک مدیر یا تصویب‌کننده (تعیین شده در تنظیمات/"
+"کاربران) انجام می‌شود."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__sep
@@ -3203,8 +3250,7 @@ msgstr "مرخصی استعلاجی"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
 msgstr ""
-"برخی مرخصی‌ها نمی‌توانند به هیچ تخصیصی پیوند داده شوند. برای دیدن آن "
-"مرخصی‌ها،"
+"برخی مرخصی‌ها نمی‌توانند به هیچ تخصیصی پیوند داده شوند. برای دیدن آن مرخصی‌ها،"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3220,26 +3266,37 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
-"                Leave empty if this accrual plan can be used with any Time Off Type."
+"                Leave empty if this accrual plan can be used with any Time "
+"Off Type."
 msgstr ""
-"مشخص کنید که آیا این برنامه افزایش اعتبار فقط می‌تواند با این نوع مرخصی استفاده شود.\n"
-"                خالی بگذارید اگر این برنامه افزایش اعتبار می‌تواند با هر نوع مرخصی استفاده شود."
+"مشخص کنید که آیا این برنامه افزایش اعتبار فقط می‌تواند با این نوع مرخصی "
+"استفاده شود.\n"
+"                خالی بگذارید اگر این برنامه افزایش اعتبار می‌تواند با هر نوع "
+"مرخصی استفاده شود."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__transition_mode
 msgid ""
-"Specify what occurs if a level transition takes place in the middle of a pay period.\n"
+"Specify what occurs if a level transition takes place in the middle of a pay "
+"period.\n"
 "\n"
-"                'Immediately' will switch the employee to the new accrual level on the exact date during the ongoing pay period.\n"
+"                'Immediately' will switch the employee to the new accrual "
+"level on the exact date during the ongoing pay period.\n"
 "\n"
-"                'After this accrual's period' will keep the employee on the same accrual level until the ongoing pay period is complete.\n"
-"                After it is complete, the new level will take effect when the next pay period begins."
+"                'After this accrual's period' will keep the employee on the "
+"same accrual level until the ongoing pay period is complete.\n"
+"                After it is complete, the new level will take effect when "
+"the next pay period begins."
 msgstr ""
-"تعیین کنید چه اتفاقی می‌افتد اگر یک انتقال سطحی در میانه یک دوره پرداخت رخ دهد.\n"
+"تعیین کنید چه اتفاقی می‌افتد اگر یک انتقال سطحی در میانه یک دوره پرداخت رخ "
+"دهد.\n"
 "\n"
-"'بلافاصله' کارمند را به سطح جدید جمع‌آوری امتیاز در تاریخ دقیق در طول دوره پرداخت جاری منتقل می‌کند.\n"
+"'بلافاصله' کارمند را به سطح جدید جمع‌آوری امتیاز در تاریخ دقیق در طول دوره "
+"پرداخت جاری منتقل می‌کند.\n"
 "\n"
-"'پس از پایان دوره جمع‌آوری امتیاز' کارمند را تا زمان تکمیل دوره پرداخت جاری در همان سطح جمع‌آوری امتیاز نگه می‌دارد. بعد از اینکه کامل شد، سطح جدید زمانی که دوره پرداخت بعدی شروع می‌شود، به کار می‌افتد."
+"'پس از پایان دوره جمع‌آوری امتیاز' کارمند را تا زمان تکمیل دوره پرداخت جاری "
+"در همان سطح جمع‌آوری امتیاز نگه می‌دارد. بعد از اینکه کامل شد، سطح جدید زمانی "
+"که دوره پرداخت بعدی شروع می‌شود، به کار می‌افتد."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -3362,8 +3419,7 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"The Start Date of the Validity Period must be anterior to the End Date."
+msgid "The Start Date of the Validity Period must be anterior to the End Date."
 msgstr "بایستی تاریخ شروع دوره اعتبار قبل از تاریخ پایان باشد."
 
 #. module: hr_holidays
@@ -3373,9 +3429,8 @@ msgid ""
 "This field defines the number of days, months or years after which accrual "
 "is used."
 msgstr ""
-"شروع انباشت پس از یک دوره تعیین‌شده از تاریخ شروع تخصیص آغاز می‌شود. این "
-"فیلد تعداد روزها، ماه‌ها یا سال‌ها را که پس از آن انباشت استفاده می‌شود، "
-"تعریف می‌کند."
+"شروع انباشت پس از یک دوره تعیین‌شده از تاریخ شروع تخصیص آغاز می‌شود. این فیلد "
+"تعداد روزها، ماه‌ها یا سال‌ها را که پس از آن انباشت استفاده می‌شود، تعریف می‌کند."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3415,7 +3470,7 @@ msgstr "مدت زمان باید بیشتر از ۰ باشد."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
-msgid "The employee no longer works in the company"
+msgid "The employee will leave the company on %(departure_date)s."
 msgstr ""
 
 #. module: hr_holidays
@@ -3432,7 +3487,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid ""
-"The leaves planned in the future are exceeding the maximum value of the allocation.\n"
+"The leaves planned in the future are exceeding the maximum value of the "
+"allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
 "برنامه‌ریزی‌های مرخصی آینده، از مقدار حداکثر تخصیص‌ها بیشتر است.  \n"
@@ -3462,8 +3518,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
-msgid ""
-"The request start date must be before or equal to the request end date."
+msgid "The request start date must be before or equal to the request end date."
 msgstr "تاریخ شروع درخواست باید قبل یا برابر با تاریخ پایان درخواست باشد."
 
 #. module: hr_holidays
@@ -3539,22 +3594,20 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
-"این تخصیص قبلاً یک بار اجرا شده است، هرگونه تغییر بر روزهای تخصیص داده شده "
-"به کارمند تأثیری نخواهد داشت. اگر نیاز به تغییر تنظیمات تخصیص دارید، آن را "
-"حذف کنید و یک تخصیص جدید ایجاد کنید."
+"این تخصیص قبلاً یک بار اجرا شده است، هرگونه تغییر بر روزهای تخصیص داده شده به "
+"کارمند تأثیری نخواهد داشت. اگر نیاز به تغییر تنظیمات تخصیص دارید، آن را حذف "
+"کنید و یک تخصیص جدید ایجاد کنید."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
-msgid ""
-"This area is automatically filled by the user who validate the time off"
-msgstr ""
-"این منطقه به طور خودکار توسط کاربری که  مرخصی را معتبر می‌کند، پر می‌شود"
+msgid "This area is automatically filled by the user who validate the time off"
+msgstr "این منطقه به طور خودکار توسط کاربری که  مرخصی را معتبر می‌کند، پر می‌شود"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
-"This area is automatically filled by the user who validate the time off with"
-" second level (If time off type need second validation)"
+"This area is automatically filled by the user who validate the time off with "
+"second level (If time off type need second validation)"
 msgstr ""
 "این منطقه به طور خودکار توسط کاربری که  مرخصی با سطح دوم معتبر می‌کند، پر "
 "می‌شود (اگر نوع مرخصی، نیاز به معتبرسازی دوم داشته باشد)"
@@ -3563,8 +3616,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr ""
-"این منطقه به طور خودکار توسط کاربری که  تخصیص را معتبر می‌کند، پر می‌شود"
+msgstr "این منطقه به طور خودکار توسط کاربری که  تخصیص را معتبر می‌کند، پر می‌شود"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -3581,8 +3633,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
 msgid "This field defines the unit of time after which the accrual starts."
-msgstr ""
-"این فیلد واحد زمانی را تعریف می‌کند که بعد از آن حق استفاده شروع می‌شود."
+msgstr "این فیلد واحد زمانی را تعریف می‌کند که بعد از آن حق استفاده شروع می‌شود."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
@@ -3625,18 +3676,16 @@ msgstr "5شنبه"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_holiday_allocation_id
 #: model:ir.model,name:hr_holidays.model_hr_leave
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__leave_manager_id
-#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__request
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_root
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:mail.message.subtype,name:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Time Off"
 msgstr "مرخصی"
 
@@ -3661,7 +3710,12 @@ msgid "Time Off Approval"
 msgstr "مصوبه مرخصی"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_tree_inherit_leave
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "Time Off Approver"
 msgstr "تصویب‌کننده مرخصی"
 
@@ -3696,11 +3750,15 @@ msgstr "زیرنوع اعلان مرخصی"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid ""
-"Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
-"                Employees request allocations to Time Off Officers (e.g. recuperation days)."
+"Time Off Officers allocate time off days to employees (e.g. paid time off)."
+"<br>\n"
+"                Employees request allocations to Time Off Officers (e.g. "
+"recuperation days)."
 msgstr ""
-"مسئولین مرخصی، روزهای مرخصی را به کارمندان اختصاص می‌دهند (به عنوان مثال مرخصی پرداخت‌شده). <br>\n"
-"                کارمندان درخواست تخصیص را به مسئولین مرخصی (مانند روزهای بهبودی) می‌دهند."
+"مسئولین مرخصی، روزهای مرخصی را به کارمندان اختصاص می‌دهند (به عنوان مثال "
+"مرخصی پرداخت‌شده). <br>\n"
+"                کارمندان درخواست تخصیص را به مسئولین مرخصی (مانند روزهای "
+"بهبودی) می‌دهند."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3775,6 +3833,11 @@ msgstr "مرخصی گرفته‌شده:"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off Type"
 msgstr "نوع مرخصی"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Time Off Type's Name"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -3941,12 +4004,12 @@ msgstr "تعداد کل روزهای اختصاص داده شده."
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid ""
 "Total number of paid time off allocated to this employee, change this value "
-"to create allocation/time off request. Total based on all the time off types"
-" without overriding limit."
+"to create allocation/time off request. Total based on all the time off types "
+"without overriding limit."
 msgstr ""
-"تعداد کل مرخصی پرداخت شده که به این کارمند اختصاص داده‌شده است، این مقدار را"
-" تغییر دهید تا درخواست تخصیص/مرخصی  ایجاد شود. مجموع بر اساس تمام انواع "
-"مرخصی بدون محدودیت."
+"تعداد کل مرخصی پرداخت شده که به این کارمند اختصاص داده‌شده است، این مقدار را "
+"تغییر دهید تا درخواست تخصیص/مرخصی  ایجاد شود. مجموع بر اساس تمام انواع مرخصی "
+"بدون محدودیت."
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
@@ -4071,8 +4134,6 @@ msgstr "کاربر خارج از دفتر است"
 
 #. module: hr_holidays
 #. odoo-javascript
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/views/calendar/common/calendar_common_popover.xml:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -4099,8 +4160,8 @@ msgstr "نوع اعتبارسنجی"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid ""
-"Validity End date has been updated because Employee no longer works in the "
-"company"
+"Validity End date has been updated because the employee will leave the "
+"company on %(departure_date)s."
 msgstr ""
 
 #. module: hr_holidays
@@ -4124,6 +4185,12 @@ msgstr "توقف اعتبار"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid "Virtual Remaining Time Off"
 msgstr "مرخصی باقی‌مانده مجازی"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
@@ -4245,11 +4312,13 @@ msgstr "بله"
 msgid ""
 "Yes: Time off requests need to have a valid allocation.\n"
 "\n"
-"              No Limit: Time Off requests can be taken without any prior allocation."
+"              No Limit: Time Off requests can be taken without any prior "
+"allocation."
 msgstr ""
 "بله: درخواست‌های مرخصی باید تخصیص معتبر داشته باشند.\n"
 "\n"
-"          بدون محدودیت: درخواست‌های مرخصی می‌توانند بدون هیچ تخصیص قبلی گرفته شوند."
+"          بدون محدودیت: درخواست‌های مرخصی می‌توانند بدون هیچ تخصیص قبلی گرفته "
+"شوند."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4260,8 +4329,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid ""
-"You can define a period of time where the days carried over will be "
-"available"
+"You can define a period of time where the days carried over will be available"
 msgstr ""
 
 #. module: hr_holidays
@@ -4296,8 +4364,8 @@ msgstr "نمی‌توانید مرخصی‌ای را که در گذشته است
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
-"شما نمی‌توانید درخواستی که شامل تخصیص‌هایی از مرخصی‌های تأیید شده است را حذف"
-" کنید."
+"شما نمی‌توانید درخواستی که شامل تخصیص‌هایی از مرخصی‌های تأیید شده است را حذف "
+"کنید."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4309,17 +4377,16 @@ msgstr "شما نمی توانید یک درخواست تخصیص را که در
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You cannot first approve a time off for %s, because you are not his time off"
-" manager"
+"You cannot first approve a time off for %s, because you are not his time off "
+"manager"
 msgstr ""
-"شما نمی توانید ابتدا یک مرخصی برای %s را تصویب‌ کنید، زیرا شما مدیر مرخصی او"
-" نیستید"
+"شما نمی توانید ابتدا یک مرخصی برای %s را تصویب‌ کنید، زیرا شما مدیر مرخصی او "
+"نیستید"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
-msgid ""
-"You cannot have a cap on accrued time without setting a maximum amount."
+msgid "You cannot have a cap on accrued time without setting a maximum amount."
 msgstr ""
 "شما نمی‌توانید محدودیتی بر زمان جمع شده اعمال کنید بدون اینکه مقدار حداکثر "
 "تنظیم شده باشد."
@@ -4345,11 +4412,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"You cannot reduce the duration below the duration of leaves already taken by"
-" the employee."
+"You cannot reduce the duration below the duration of leaves already taken by "
+"the employee."
 msgstr ""
-"شما نمی‌توانید مدت زمان را کمتر از مدت مرخصی‌هایی که قبلاً توسط کارمند گرفته"
-" شده است کاهش دهید."
+"شما نمی‌توانید مدت زمان را کمتر از مدت مرخصی‌هایی که قبلاً توسط کارمند گرفته "
+"شده است کاهش دهید."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4358,8 +4425,16 @@ msgid ""
 "You cannot refuse this allocation request since the employee has already "
 "taken leaves for it. Please refuse or delete those leaves first."
 msgstr ""
-"شما نمی‌توانید این درخواست تخصیص را رد کنید زیرا کارمند قبلاً مرخصی‌هایی "
-"برای آن گرفته است. لطفاً ابتدا آن مرخصی‌ها را رد یا حذف کنید."
+"شما نمی‌توانید این درخواست تخصیص را رد کنید زیرا کارمند قبلاً مرخصی‌هایی برای "
+"آن گرفته است. لطفاً ابتدا آن مرخصی‌ها را رد یا حذف کنید."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"You do not have any allocation for this time off type.\n"
+"Please request an allocation before submitting your time off request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -4371,8 +4446,16 @@ msgstr "شما حق دسترسی برای مصوبه دوم در یک درخوا
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "You must be %s's Manager to approve this leave"
-msgstr "شما باید مدیر %s باشید تا این مرخصی را تأیید کنید"
+msgid "You must be %s's Time Off Approver to approve this leave"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"approve this leave"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -4386,18 +4469,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You must be either %s's manager or Time off Manager to approve this leave"
-msgstr "شما باید مدیر %s یا مدیر مرخصی باشید تا این مرخصی را تصویب‌ کنید"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid ""
-"You must either be a Time off Officer or Time off Manager to approve this "
-"leave"
+"You must either be a Time off Officer or Time off Administrator to approve "
+"this leave"
 msgstr ""
-"شما باید یا مسئول مرخصی یا مدیر مرخصی باشید تا بتوانید این مرخصی را تأیید "
-"کنید"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4408,8 +4482,7 @@ msgstr "شما باید در سطوح برنامه تجمیع، نرخی بزر�
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You must have manager rights to modify/validate a time off that already "
-"begun"
+"You must have manager rights to modify/validate a time off that already begun"
 msgstr ""
 "شما باید حق  دسترسی مدیر برای تغییر/معتبرسازی یک مرخصی که آغاز شده، داشته "
 "باشید"
@@ -4420,11 +4493,13 @@ msgstr ""
 msgid ""
 "You've already booked time off which overlaps with this period:\n"
 "%s\n"
-"Attempting to double-book your time off won't magically make your vacation 2x better!\n"
+"Attempting to double-book your time off won't magically make your vacation "
+"2x better!\n"
 msgstr ""
 "شما قبلاً مرخصی را رزرو کرده‌اید که با این دوره همپوشانی دارد:\n"
 "%s\n"
-"تلاش برای دوبار رزرو کردن مرخصی شما به طور جادویی تعطیلات شما را دو برابر بهتر نمی‌کند!"
+"تلاش برای دوبار رزرو کردن مرخصی شما به طور جادویی تعطیلات شما را دو برابر "
+"بهتر نمی‌کند!"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4571,6 +4646,12 @@ msgid "hours"
 msgstr "ساعت"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+msgid "id"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "in"
@@ -4680,3 +4761,43 @@ msgstr "تأیید کردن"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "معتبرشده"
+
+#~ msgid "Allocated ("
+#~ msgstr "مجاز شده ("
+
+#~ msgid "Away"
+#~ msgstr "دور از کار"
+
+#~ msgid "Only a Time Off Manager can reset a refused leave."
+#~ msgstr "فقط یک مدیر مرخصی می‌تواند مرخصی افراد دیگر را بازنشانی کند."
+
+#~ msgid "Only a Time Off Manager can reset a started leave."
+#~ msgstr "فقط یک مدیر مرخصی می‌تواند مرخصی افراد دیگر را بازنشانی کند."
+
+#~ msgid "Only a Time Off Manager can reset other people leaves."
+#~ msgstr "فقط یک مدیر مرخصی می‌تواند مرخصی افراد دیگر را بازنشانی کند."
+
+#~ msgid ""
+#~ "Only a Time Off Officer or Manager can approve/refuse its own requests."
+#~ msgstr ""
+#~ "فقط یک مسئول یا مدیر مرخصی می‌تواند درخواست‌های خود را تأیید یا رد کند."
+
+#~ msgid "Public"
+#~ msgstr "همگانی"
+
+#~ msgid "Resource Time Off"
+#~ msgstr "مرخصی منابع"
+
+#~ msgid "You must be %s's Manager to approve this leave"
+#~ msgstr "شما باید مدیر %s باشید تا این مرخصی را تأیید کنید"
+
+#~ msgid ""
+#~ "You must be either %s's manager or Time off Manager to approve this leave"
+#~ msgstr "شما باید مدیر %s یا مدیر مرخصی باشید تا این مرخصی را تصویب‌ کنید"
+
+#~ msgid ""
+#~ "You must either be a Time off Officer or Time off Manager to approve this "
+#~ "leave"
+#~ msgstr ""
+#~ "شما باید یا مسئول مرخصی یا مدیر مرخصی باشید تا بتوانید این مرخصی را تأیید "
+#~ "کنید"

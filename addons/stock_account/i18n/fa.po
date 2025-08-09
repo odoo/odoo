@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_account
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
 # Hanna Kheradroosta, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-08-08 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Hanna Kheradroosta, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: stock_account
@@ -58,7 +58,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
-"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %"
+"(product)s\n"
 "%(reason)s"
 msgstr ""
 
@@ -66,7 +67,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+"                            <small class=\"mx-2 fst-italic\">Use a negative "
+"added value to record a decrease in the product value</small>"
 msgstr ""
 "<small class=\"mx-2 fst-italic\">از یک مقدار افزوده منفی برای ثبت کاهش در "
 "ارزش محصول استفاده کنید</small>"
@@ -164,8 +166,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
-"Affect landed costs on reception operations and split them among products to"
-" update their cost price."
+"Affect landed costs on reception operations and split them among products to "
+"update their cost price."
 msgstr ""
 "بر هزینه های تمام شده تا درب انبار در عملیات پذیرش تأثیر بگذارید و آنها را "
 "بین محصولات تقسیم کنید تا قیمت تمام شده آنها بروز شود."
@@ -187,6 +189,7 @@ msgstr "برنامه‌های تحلیلی"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
+#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
 msgid "Automated"
 msgstr "خودکار"
 
@@ -203,6 +206,9 @@ msgstr "میانگین هزینه"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
+#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__average
+#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__average
+#: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr "میانگین هزینه (AVCO)"
 
@@ -225,8 +231,8 @@ msgstr "لغو"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
 "نمی توان یک حساب ورودی موجودی برای محصول %s پیدا کرد. قبل از پردازش این "
 "عملیات باید یکی را در دسته محصول یا مکان تعریف کنید."
@@ -249,8 +255,8 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
-"تغییر روش هزینه یک تغییر مهم است که بر ارزش گذاری موجودی شما تأثیر می گذارد."
-" آیا مطمئنید که می خواهید آن تغییر را ایجاد کنید؟"
+"تغییر روش هزینه یک تغییر مهم است که بر ارزش گذاری موجودی شما تأثیر می گذارد. "
+"آیا مطمئنید که می خواهید آن تغییر را ایجاد کنید؟"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
@@ -301,10 +307,15 @@ msgid "Cost"
 msgstr "هزینه"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
+#: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
+msgid "Cost Method"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
 msgstr "روش هزینه یابی"
 
@@ -312,11 +323,11 @@ msgstr "روش هزینه یابی"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Costing method change for product category %(category)s: from %(old_method)s"
-" to %(new_method)s."
+"Costing method change for product category %(category)s: from %(old_method)s "
+"to %(new_method)s."
 msgstr ""
-"تغییر روش هزینه‌یابی برای دسته محصول %(category)s: از %(old_method)s به "
-"%(new_method)s."
+"تغییر روش هزینه‌یابی برای دسته محصول %(category)s: از %(old_method)s به %"
+"(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -326,13 +337,15 @@ msgstr "حساب طرف حساب"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid ""
-"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
-"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+"Counterpart journal items for all incoming stock moves will be posted in "
+"this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for "
+"all products in this category. It can also directly be set on each product."
 msgstr ""
-"آیتم های روزنامه همتا برای همه انتقالات ورودی موجودی در این حساب پست می‌شود،"
-" مگر اینکه حساب ارزش‌گذاری خاصی در محل منبع تنظیم شده باشد. این مقدار پیش "
-"فرض برای همه محصولات این دسته است. همچنین می توان آن را مستقیما روی هر محصول"
-" تنظیم کرد."
+"آیتم های روزنامه همتا برای همه انتقالات ورودی موجودی در این حساب پست می‌شود، "
+"مگر اینکه حساب ارزش‌گذاری خاصی در محل منبع تنظیم شده باشد. این مقدار پیش فرض "
+"برای همه محصولات این دسته است. همچنین می توان آن را مستقیما روی هر محصول "
+"تنظیم کرد."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -382,8 +395,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"تاریخی که در صورت ارزیابی خودکار موجودی، ورودی های حسابداری ایجاد می شود. در"
-" صورت خالی بودن، از تاریخ موجودی استفاده خواهد شد."
+"تاریخی که در صورت ارزیابی خودکار موجودی، ورودی های حسابداری ایجاد می شود. در "
+"صورت خالی بودن، از تاریخ موجودی استفاده خواهد شد."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -401,6 +414,26 @@ msgid "Display Lots & Serial Numbers on Invoices"
 msgstr "نمایش سری ساخت و شماره سریال در فاکتورها"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
+#: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
+#: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_quantity_history__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_request_count__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
@@ -415,13 +448,16 @@ msgstr "نمایش شماره سریال و سری ساخت روی فاکتور�
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Due to a change of product category (from %(old_category)s to "
-"%(new_category)s), the costing method has changed for product %(product)s: "
+"Due to a change of product category (from %(old_category)s to %"
+"(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
+#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__fifo
+#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__fifo
+#: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__fifo
 msgid "First In First Out (FIFO)"
 msgstr "اولین ورودی اولین خروجی (FIFO)"
 
@@ -436,6 +472,26 @@ msgid "Has Remaining Qty"
 msgstr "دارای مقدار باقی‌مانده"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__id
+#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
+#: model:ir.model.fields,field_description:stock_account.field_account_move__id
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_account.field_product_category__id
+#: model:ir.model.fields,field_description:stock_account.field_product_product__id
+#: model:ir.model.fields,field_description:stock_account.field_product_template__id
+#: model:ir.model.fields,field_description:stock_account.field_res_company__id
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_lot__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_quantity_history__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_request_count__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
 msgid "ID"
@@ -444,6 +500,7 @@ msgstr "شناسه"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
+#: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
 
@@ -461,9 +518,6 @@ msgstr "مکان های انبارداری"
 #. odoo-python
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Inventory Valuation"
@@ -562,6 +616,7 @@ msgstr "شماره‌های سریال و لات بر روی فاکتور ظاه
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
+#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__manual_periodic
 msgid "Manual"
 msgstr "دستی"
 
@@ -573,16 +628,17 @@ msgstr "ارزش گذاری موجودی دستی: %s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
-#: model:ir.model.fields,help:stock_account.field_product_product__valuation
-#: model:ir.model.fields,help:stock_account.field_product_template__valuation
-#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
+"Manual: The accounting entries to value the inventory are not posted "
+"automatically.\n"
+"        Automated: An accounting entry is automatically created to value the "
+"inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"دفترچه راهنما: سندهای حسابداری برای ارزش گذاری موجودی به طور خودکار پست نمی شوند.\n"
-"         خودکار: یک سند حسابداری به طور خودکار برای ارزش گذاری موجودی در هنگام ورود یا خروج یک محصول از شرکت ایجاد می شود.\n"
+"دفترچه راهنما: سندهای حسابداری برای ارزش گذاری موجودی به طور خودکار پست نمی "
+"شوند.\n"
+"         خودکار: یک سند حسابداری به طور خودکار برای ارزش گذاری موجودی در "
+"هنگام ورود یا خروج یک محصول از شرکت ایجاد می شود.\n"
 "        "
 
 #. module: stock_account
@@ -622,7 +678,8 @@ msgstr "محصول"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Product %(product)s has quantity in valued location %(location)s without any "
+"lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
 
@@ -754,23 +811,29 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
+#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__standard
+#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__standard
+#: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
 msgid "Standard Price"
 msgstr "قیمت استاندارد"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
-#: model:ir.model.fields,help:stock_account.field_product_product__cost_method
-#: model:ir.model.fields,help:stock_account.field_product_template__cost_method
-#: model:ir.model.fields,help:stock_account.field_stock_quant__cost_method
 msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
+"Standard Price: The products are valued at their standard cost defined on "
+"the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average "
+"cost.\n"
+"        First In First Out (FIFO): The products are valued supposing those "
+"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"قیمت استاندارد: محصولات به قیمت تمام شده استاندارد خود که روی محصول تعریف شده است، ارزش گذاری می شوند.\n"
-"         میانگین هزینه (AVCO): محصولات با میانگین موزون بهای تمام شده ارزیابی می شوند.\n"
-"         First In First Out (FIFO): محصولات با این فرض ارزش گذاری می شوند که محصولاتی که ابتدا وارد شرکت می شوند نیز ابتدا آن را ترک کنند.\n"
+"قیمت استاندارد: محصولات به قیمت تمام شده استاندارد خود که روی محصول تعریف "
+"شده است، ارزش گذاری می شوند.\n"
+"         میانگین هزینه (AVCO): محصولات با میانگین موزون بهای تمام شده "
+"ارزیابی می شوند.\n"
+"         First In First Out (FIFO): محصولات با این فرض ارزش گذاری می شوند که "
+"محصولاتی که ابتدا وارد شرکت می شوند نیز ابتدا آن را ترک کنند.\n"
 "         "
 
 #. module: stock_account
@@ -858,8 +921,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
-"فیلد فنی برای نمایش صحیح ارز شرکت انتخاب‌شده‌ی فعلی که با مجموع ارزش "
-"لایه‌های ارزیابی محصول مطابقت دارد"
+"فیلد فنی برای نمایش صحیح ارز شرکت انتخاب‌شده‌ی فعلی که با مجموع ارزش لایه‌های "
+"ارزیابی محصول مطابقت دارد"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -950,8 +1013,8 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
-"مقدار لایه ارزیابی موجودی نمی‌تواند منفی باشد. هزینه اضافه می‌تواند برای "
-"تصحیح یک انتقال خاص به‌کار رود."
+"مقدار لایه ارزیابی موجودی نمی‌تواند منفی باشد. هزینه اضافه می‌تواند برای تصحیح "
+"یک انتقال خاص به‌کار رود."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -960,23 +1023,31 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
-"<div>لایه‌های ارزیابی وجود ندارد. لایه‌های ارزیابی زمانی ایجاد می‌شوند که "
-"حرکت محصولات بر ارزیابی موجودی تأثیر بگذارد.</div>"
+"<div>لایه‌های ارزیابی وجود ندارد. لایه‌های ارزیابی زمانی ایجاد می‌شوند که حرکت "
+"محصولات بر ارزیابی موجودی تأثیر بگذارد.</div>"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/fields/boolean_confirm.js:0
 msgid ""
-"This operation might lead in a loss of data. Valuation will be identical for"
-" all lots/SN. Do you want to proceed ? "
+"This operation might lead in a loss of data. Valuation will be identical for "
+"all lots/SN. Do you want to proceed ? "
 msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"This product is valuated by lot/serial number. Changing the cost will update"
-" the cost of every lot/serial number in stock."
+"This product is valuated by lot/serial number. Changing the cost will update "
+"the cost of every lot/serial number in stock."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"This product is valuated by lot: an explicit Lot/Serial number is required "
+"when adding quantity"
 msgstr ""
 
 #. module: stock_account
@@ -1015,12 +1086,13 @@ msgstr "انتقال"
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
-"Trigger a decrease of the delivered/received quantity in the associated Sale"
-" Order/Purchase Order"
+"Trigger a decrease of the delivered/received quantity in the associated Sale "
+"Order/Purchase Order"
 msgstr "باعث کاهش مقدار تحویل/دریافت شده در سفارش فروش/سفارش خرید مرتبط"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
 msgid "Unit"
 msgstr "عدد"
 
@@ -1033,12 +1105,6 @@ msgstr "هزینه واحد"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
 msgstr "ارزش واحد"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
-msgid "Unit of Measure"
-msgstr "واحد اندازه‌گیری"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
@@ -1061,8 +1127,8 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"برای ارزیابی موجودی در زمان واقعی استفاده می شود. هنگامی که در یک مکان مجازی"
-" (نوع غیر داخلی) تنظیم می شود، این حساب برای نگهداری ارزش محصولاتی که از یک "
+"برای ارزیابی موجودی در زمان واقعی استفاده می شود. هنگامی که در یک مکان مجازی "
+"(نوع غیر داخلی) تنظیم می شود، این حساب برای نگهداری ارزش محصولاتی که از یک "
 "مکان داخلی به این مکان منتقل می شوند، به جای حساب خروجی موجودی عمومی که روی "
 "محصول تنظیم شده است، استفاده می شود. این هیچ تاثیری برای مکان های داخلی "
 "ندارد."
@@ -1077,12 +1143,15 @@ msgid ""
 "internal locations."
 msgstr ""
 "برای ارزیابی موجودی در زمان واقعی استفاده می شود. وقتی روی یک مکان مجازی "
-"(نوع غیر داخلی) تنظیم شود، این حساب برای نگهداری ارزش محصولاتی که به خارج از"
-" این مکان منتقل می شوند و به یک مکان داخلی منتقل می شوند، به جای حساب خروجی "
-"موجودی عمومی که روی محصول تنظیم شده است، استفاده می شود. این هیچ تاثیری برای"
-" مکان های داخلی ندارد."
+"(نوع غیر داخلی) تنظیم شود، این حساب برای نگهداری ارزش محصولاتی که به خارج از "
+"این مکان منتقل می شوند و به یک مکان داخلی منتقل می شوند، به جای حساب خروجی "
+"موجودی عمومی که روی محصول تنظیم شده است، استفاده می شود. این هیچ تاثیری برای "
+"مکان های داخلی ندارد."
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -1115,6 +1184,7 @@ msgstr "ارزش‌گذاری در تاریخ"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
+#: model:ir.model.fields,field_description:stock_account.field_stock_lot__lot_valuated
 msgid "Valuation by Lot/Serial number"
 msgstr ""
 
@@ -1122,11 +1192,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Valuation method change for product category %(category)s: from "
-"%(old_method)s to %(new_method)s."
+"Valuation method change for product category %(category)s: from %"
+"(old_method)s to %(new_method)s."
 msgstr ""
-"تغییر روش ارزش گذاری برای دسته محصول %(category)s: از %(old_method)s به "
-"%(new_method)s."
+"تغییر روش ارزش گذاری برای دسته محصول %(category)s: از %(old_method)s به %"
+"(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
@@ -1154,7 +1224,8 @@ msgstr "مقدار Svl"
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 
@@ -1176,14 +1247,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid ""
-"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
-"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"When doing automated inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the "
+"destination location. This is the default value for all products in this "
+"category.\n"
 "                It can also directly be set on each product."
 msgstr ""
 "هنگام انجام ارزیابی خودکار موجودی، اقلام روزنامه همتا برای همه جابجایی‌های "
 "موجودی خروجی در این حساب پست می‌شود، مگر اینکه حساب ارزش‌گذاری خاصی در محل "
-"مقصد تنظیم شده باشد. این مقدار پیش فرض برای همه محصولات این دسته است. همچنین"
-" می توان آن را مستقیما روی هر محصول تنظیم کرد."
+"مقصد تنظیم شده باشد. این مقدار پیش فرض برای همه محصولات این دسته است. همچنین "
+"می توان آن را مستقیما روی هر محصول تنظیم کرد."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -1201,6 +1275,7 @@ msgstr "مدل ویزارد برای ارزیابی مجدد موجودی انب
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/stock_lot.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
 msgstr ""
@@ -1263,8 +1338,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any input valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any input valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "شما هیچ حساب ارزیابی ورودی در دسته محصول خود ندارید. قبل از پردازش این "
 "عملیات باید یکی را تعریف کنید."
@@ -1283,8 +1358,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You "
+"must define one before processing this operation."
 msgstr ""
 "شما هیچ حساب ورودی موجودی تعریف شده در دسته محصول خود ندارید. قبل از پردازش "
 "این عملیات باید یکی را تعریف کنید."
@@ -1296,8 +1371,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
-"شما هیچ روزنامه موجودی در دسته بندی محصول خود ندارید، بررسی کنید که آیا جدول"
-" حساب را نصب کرده اید یا خیر."
+"شما هیچ روزنامه موجودی در دسته بندی محصول خود ندارید، بررسی کنید که آیا جدول "
+"حساب را نصب کرده اید یا خیر."
 
 #. module: stock_account
 #. odoo-python
@@ -1305,11 +1380,11 @@ msgstr ""
 #: code:addons/stock_account/models/stock_move.py:0
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
-"شما هیچ حساب ارزیابی موجودی در دسته بندی محصول خود ندارید. قبل از پردازش این"
-" عملیات باید یکی را تعریف کنید."
+"شما هیچ حساب ارزیابی موجودی در دسته بندی محصول خود ندارید. قبل از پردازش این "
+"عملیات باید یکی را تعریف کنید."
 
 #. module: stock_account
 #. odoo-python
@@ -1341,3 +1416,6 @@ msgstr "واحدها"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr ""
+
+#~ msgid "Unit of Measure"
+#~ msgstr "واحد اندازه‌گیری"

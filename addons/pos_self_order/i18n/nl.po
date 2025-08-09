@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:40+0000\n"
+"POT-Creation-Date: 2025-08-08 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_self_order
@@ -33,8 +33,8 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
-"%s is niet meer beschikbaar en is daarom uit je order verwijderd. Controleer"
-" je order en valideer deze opnieuw."
+"%s is niet meer beschikbaar en is daarom uit je order verwijderd. Controleer "
+"je order en valideer deze opnieuw."
 
 #. module: pos_self_order
 #. odoo-python
@@ -326,8 +326,8 @@ msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
 msgstr ""
-"Aangepaste links dat het restaurant kan configureren om weer te geven op het"
-" self-orderscherm"
+"Aangepaste links dat het restaurant kan configureren om weer te geven op het "
+"self-orderscherm"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -431,11 +431,15 @@ msgstr "Elke order"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"Elke tafel in je plattegrond krijgt een unieke QR-code toegewezen op basis van je configuratie. Om veiligheidsredenen is\n"
-"                    zowel de kassa- als de tafelnamen worden gecodeerd in de gegenereerde URL, zoals weergegeven in het onderstaande voorbeeld:."
+"Elke tafel in je plattegrond krijgt een unieke QR-code toegewezen op basis "
+"van je configuratie. Om veiligheidsredenen is\n"
+"                    zowel de kassa- als de tafelnamen worden gecodeerd in de "
+"gegenereerde URL, zoals weergegeven in het onderstaande voorbeeld:."
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
@@ -450,6 +454,13 @@ msgstr "Bewerken"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "Voer je aangepaste waarde in"
@@ -457,8 +468,8 @@ msgstr "Voer je aangepaste waarde in"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr ""
 "Je kunt deze QR-code zo vaak gebruiken en afdrukken als nodig is, "
 "afhankelijk van je vereisten."
@@ -479,6 +490,18 @@ msgstr "Volg de instructies op de terminal"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
 msgstr "Generiek"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -558,11 +581,15 @@ msgstr "Als dit product beschikbaar is in de zelfbestelling-schermen"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Als je aangepaste QR-codes nodig heeft, scan dan eerst de relevante QR-code om de URL te verkrijgen. Maak dan\n"
-"                gebruik van een QR-codegenerator zoals https://www.qrcode-monkey.com of https://www.qr-code-generator.com"
+"Als je aangepaste QR-codes nodig heeft, scan dan eerst de relevante QR-code "
+"om de URL te verkrijgen. Maak dan\n"
+"                gebruik van een QR-codegenerator zoals https://www.qrcode-"
+"monkey.com of https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -578,8 +605,8 @@ msgstr "Weer te geven afbeelding op het self-orderscherm"
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
-"In de zelfbedieningsmodus moet je ten minste één tafel hebben om QR-codes te"
-" kunnen genereren"
+"In de zelfbedieningsmodus moet je ten minste één tafel hebben om QR-codes te "
+"kunnen genereren"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -838,8 +865,8 @@ msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
 msgstr ""
-"Personaliseer je startscherm door een of meerdere afbeeldingen toe te voegen"
-" om een diavoorstelling te maken"
+"Personaliseer je startscherm door een of meerdere afbeeldingen toe te voegen "
+"om een diavoorstelling te maken"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1064,8 +1091,8 @@ msgstr "Selecteer een tafel"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
 "Kies voor welke kassasystemen je deze link wil weergeven. Laat leeg om deze "
 "weer te geven voor alle kassasystemen. Je moet een keuze maken uit de "

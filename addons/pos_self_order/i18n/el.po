@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
@@ -10,19 +10,19 @@
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # Gerasimos Kanelatos, 2025
 # Charalampos Loukas, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-08-08 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Charalampos Loukas, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_self_order
@@ -32,7 +32,7 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
@@ -55,11 +55,6 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                    URL:"
-msgstr ""
-
-#. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
-msgid "<sup title=\"Only works for kiosk and mobile\">?</sup>"
 msgstr ""
 
 #. module: pos_self_order
@@ -111,18 +106,8 @@ msgid "All the items will be removed from the cart."
 msgstr ""
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Allow self-order customers to set their order for takeout."
-msgstr ""
-
-#. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Allow takeout order"
-msgstr ""
-
-#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "An error has occurred"
 msgstr ""
 
@@ -139,16 +124,6 @@ msgid "Are you sure you want to cancel this order?"
 msgstr ""
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_after
-msgid "Availability After"
-msgstr ""
-
-#. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_until
-msgid "Availability Until"
-msgstr ""
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -162,11 +137,6 @@ msgid "Available Languages"
 msgstr ""
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
-msgid "Available between"
-msgstr ""
-
-#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
 msgstr ""
@@ -175,6 +145,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
+msgid "Available in self"
 msgstr ""
 
 #. module: pos_self_order
@@ -195,6 +170,7 @@ msgstr "Πίσω"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -207,6 +183,7 @@ msgstr ""
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 msgid "Cancel order"
 msgstr ""
@@ -243,6 +220,18 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Choose your time"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "City"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/out_of_paper_popup/out_of_paper_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Close"
@@ -271,12 +260,19 @@ msgstr "Ρυθμίσεις διαμόρφωσης"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Connection lost, please try again later"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Continue"
 msgstr "Συνέχεια"
@@ -291,6 +287,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Could you please confirm your table number?"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_country
+msgid "Country"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,website_form_label:pos_self_order.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: pos_self_order
@@ -361,6 +367,13 @@ msgid "Default language for the kiosk mode"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__delivery
+msgid "Delivery"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
 msgid "Disable"
 msgstr ""
@@ -375,7 +388,24 @@ msgid "Discard"
 msgstr "Απόρριψη"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_country__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_partner__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -399,14 +429,15 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-msgid "Eat In"
+#: model:ir.model,name:pos_self_order.model_pos_preset
+msgid "Easily load a set of configuration options"
 msgstr ""
 
 #. module: pos_self_order
@@ -417,6 +448,13 @@ msgstr "Επεξεργασία"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr ""
@@ -424,13 +462,8 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
-msgstr ""
-
-#. module: pos_self_order
-#: model:ir.model,name:pos_self_order.model_ir_binary
-msgid "File streaming helper model for controllers"
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr ""
 
 #. module: pos_self_order
@@ -449,6 +482,18 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
 msgstr "Γενική"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -496,7 +541,24 @@ msgid "How to use"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_country__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_partner__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -509,8 +571,10 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
 
 #. module: pos_self_order
@@ -592,9 +656,13 @@ msgid "Light"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__pos_config_ids
+msgid "Linked PoS Configurations"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Loading..."
 msgstr "Φόρτωση..."
 
@@ -650,6 +718,12 @@ msgstr "ΝΕΑ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "NOTE"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Name"
 msgstr ""
 
 #. module: pos_self_order
@@ -729,7 +803,7 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Orders not found on server"
 msgstr ""
 
@@ -773,25 +847,20 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Phone"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 msgid "Pickup At Counter"
 msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__counter
 msgid "Pickup zone"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
-msgid "Please wait until the price is loaded"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_session.py:0
-msgid "PoS Order by Session"
 msgstr ""
 
 #. module: pos_self_order
@@ -866,6 +935,7 @@ msgstr "Είδος"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 msgid "Product Information"
 msgstr "Πληροφορίες Είδους"
@@ -888,13 +958,13 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Product is not available"
 msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Product not found"
 msgstr ""
 
@@ -965,6 +1035,30 @@ msgstr "Διακριτικό Ασφαλείας"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select a country"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select a hour"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select a state"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
 msgstr ""
@@ -973,8 +1067,14 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select your address"
 msgstr ""
 
 #. module: pos_self_order
@@ -990,12 +1090,19 @@ msgid "Self Order Kiosk Image Brand Name"
 msgstr ""
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
+msgid "Self Order Visible"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Self Order:"
 msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#: model_terms:ir.ui.view,arch_db:pos_self_order.view_pos_preset_form
 msgid "Self Ordering"
 msgstr ""
 
@@ -1022,18 +1129,6 @@ msgid "Self Ordering Url"
 msgstr ""
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
-msgid "Self Takeaway"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
-msgid "Self-Order"
-msgstr ""
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Self-ordering:"
@@ -1045,6 +1140,7 @@ msgid "Sequence"
 msgstr "Ακολουθία"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Service at"
 msgstr ""
@@ -1077,6 +1173,12 @@ msgid "Status"
 msgstr "Κατάσταση"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Street and Number"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
 msgid "Style"
 msgstr "Στύλ"
@@ -1088,6 +1190,7 @@ msgstr "Επιτυχία"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__table
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__table
 msgid "Table"
 msgstr "Πίνακας"
 
@@ -1105,18 +1208,12 @@ msgstr ""
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-msgid "Table detective time!"
+msgid "Table selection"
 msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Table:"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-msgid "Take Out"
 msgstr ""
 
 #. module: pos_self_order
@@ -1134,41 +1231,14 @@ msgstr "Φόροι:"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "Thanks a lot!"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_category.py:0
-msgid "The Availability After must be set between 00:00 and 24:00"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_category.py:0
-msgid "The Availability Until must be greater than Availability After."
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_category.py:0
-msgid "The Availability Until must be set between 00:00 and 24:00"
 msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "The Self-Order default user must be a POS user"
-msgstr ""
-
-#. module: pos_self_order
-#: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_after
-msgid "The product will be available after this hour."
-msgstr ""
-
-#. module: pos_self_order
-#: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_until
-msgid "The product will be available until this hour."
 msgstr ""
 
 #. module: pos_self_order
@@ -1214,7 +1284,7 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Uncategorised"
 msgstr ""
 
@@ -1225,7 +1295,19 @@ msgstr "Προσοχή"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "We need more info"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "We'll do everything to be on time!"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "We're currently closed"
 msgstr ""
 
@@ -1242,9 +1324,21 @@ msgid "We're preparing your order!"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "When would you like to receive your orders ?"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Yes"
 msgstr "Ναι"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+msgid "You are not authorized to remove this order"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -1261,7 +1355,7 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
 msgstr ""
 
@@ -1279,14 +1373,20 @@ msgid "Your Selection"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+msgid "Your order does not exist or has been removed"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order has been cancelled"
 msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order has been paid"
 msgstr ""
 
@@ -1298,24 +1398,25 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order status has been changed"
 msgstr ""
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
-msgid "and"
-msgstr "και"
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Zip"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "each"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-msgid "floor"
 msgstr ""
 
 #. module: pos_self_order
@@ -1333,3 +1434,6 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "options"
 msgstr ""
+
+#~ msgid "and"
+#~ msgstr "και"

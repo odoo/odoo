@@ -1,23 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-08-08 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -190,8 +199,8 @@ msgid ""
 "The GS1 content type defines what kind of data the rule will process the "
 "barcode as:        * Date: the barcode will be converted into a Odoo "
 "datetime;        * Measure: the barcode's value is related to a specific "
-"unit;        * Numeric Identifier: fixed length barcode following a specific"
-" encoding;        * Alpha-Numeric Name: variable length barcode."
+"unit;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
 "Il tipo di contenuto GS1 definisce in quale tipo di dati verrà elaborato il "
 "codice a barre dalla regola:        *Data: il codice a barre verrà "
@@ -209,7 +218,8 @@ msgid ""
 "\t- A second one to catch the value."
 msgstr ""
 "Il modello di regola \"%s\" non è valido, ha bisogno di due gruppi:\n"
-"\t- Un primo per l'identificatore dell'applicazione (di solito da 2 a 4 cifre);\n"
+"\t- Un primo per l'identificatore dell'applicazione (di solito da 2 a 4 "
+"cifre);\n"
 "\t- Un secondo per catturare il valore."
 
 #. module: barcodes_gs1_nomenclature
@@ -223,12 +233,17 @@ msgstr "Il modello di regola \"%(rule)s\" non è un Regex valido: %(error)s"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "C'è qualcosa che non va con il modello di regola del codice a barre \"%s\".\n"
-"Se la regola utilizza decimali, verifica che non sia possibile ottenere qualcosa di diverso da una cifra come ultimo carattere per l'Identificatore di applicazione.\n"
-"Verifica anche che i possibili valori abbinati possano essere solo cifre, altrimenti il valore non può essere espresso come misura."
+"Se la regola utilizza decimali, verifica che non sia possibile ottenere "
+"qualcosa di diverso da una cifra come ultimo carattere per l'Identificatore "
+"di applicazione.\n"
+"Verifica anche che i possibili valori abbinati possano essere solo cifre, "
+"altrimenti il valore non può essere espresso come misura."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -237,8 +252,8 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
-"Questa nomenclatura usa la specifica GS1, solo le regole di codifica GS1-128"
-" sono accettate in questo tipo di nomenclatura."
+"Questa nomenclatura usa la specifica GS1, solo le regole di codifica GS1-128 "
+"sono accettate in questo tipo di nomenclatura."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -253,8 +268,7 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "This barcode can't be partially or fully parsed."
 msgstr ""
-"Questo codice a barre non può essere analizzato parzialmente o "
-"completamente."
+"Questo codice a barre non può essere analizzato parzialmente o completamente."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding

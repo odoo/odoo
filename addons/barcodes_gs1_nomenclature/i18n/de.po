@@ -1,24 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-08-08 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -192,14 +200,14 @@ msgid ""
 "The GS1 content type defines what kind of data the rule will process the "
 "barcode as:        * Date: the barcode will be converted into a Odoo "
 "datetime;        * Measure: the barcode's value is related to a specific "
-"unit;        * Numeric Identifier: fixed length barcode following a specific"
-" encoding;        * Alpha-Numeric Name: variable length barcode."
+"unit;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"Der GS1-Inhaltstyp legt fest, als welche Art von Daten die Regel den Barcode"
-" verarbeiten wird: * Datum: Der Barcode wird in eine Odoo-Datumszeit "
+"Der GS1-Inhaltstyp legt fest, als welche Art von Daten die Regel den Barcode "
+"verarbeiten wird: * Datum: Der Barcode wird in eine Odoo-Datumszeit "
 "umgewandelt; * Kennzahl: Der Wert des Barcodes bezieht sich auf eine "
-"bestimmte Einheit; * Numerische Kennung: Barcode mit fester Länge, der einer"
-" bestimmten Codierung folgt; * Alphanumerischer Name: Barcode mit variabler "
+"bestimmte Einheit; * Numerische Kennung: Barcode mit fester Länge, der einer "
+"bestimmten Codierung folgt; * Alphanumerischer Name: Barcode mit variabler "
 "Länge."
 
 #. module: barcodes_gs1_nomenclature
@@ -225,12 +233,16 @@ msgstr "Das Regelmuster „%(rule)s“ ist kein gültiger Regex: %(error)s"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "Mit der Barcode-Regel „%s“ ist etwas nicht in Ordnung.\n"
-"Wenn diese Regel Dezimalzahlen verwendet, stellen Sie sicher, dass nur Ziffern für den Application Identifier enthalten sind.\n"
-"Stellen Sie sicher, dass mögliche übereinstimmende Werte nur Ziffern enthalten, da der Wert sonst nicht als Kennzahl zugeordnet werden kann."
+"Wenn diese Regel Dezimalzahlen verwendet, stellen Sie sicher, dass nur "
+"Ziffern für den Application Identifier enthalten sind.\n"
+"Stellen Sie sicher, dass mögliche übereinstimmende Werte nur Ziffern "
+"enthalten, da der Wert sonst nicht als Kennzahl zugeordnet werden kann."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -239,8 +251,8 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
-"Diese Nomenklatur verwendet die GS1-Spezifikation, nur die "
-"GS1-128-Kodierungsregeln werden für diese Art von Nomenklatur akzeptiert."
+"Diese Nomenklatur verwendet die GS1-Spezifikation, nur die GS1-128-"
+"Kodierungsregeln werden für diese Art von Nomenklatur akzeptiert."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript

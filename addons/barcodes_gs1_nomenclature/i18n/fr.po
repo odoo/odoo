@@ -1,23 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-08-08 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -190,13 +199,13 @@ msgid ""
 "The GS1 content type defines what kind of data the rule will process the "
 "barcode as:        * Date: the barcode will be converted into a Odoo "
 "datetime;        * Measure: the barcode's value is related to a specific "
-"unit;        * Numeric Identifier: fixed length barcode following a specific"
-" encoding;        * Alpha-Numeric Name: variable length barcode."
+"unit;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
 "Le type de contenu GS1 définit ce quelles données cette règle va gérer:   "
 "*Date : le code-barres sera converti en datetime Odoo;     *Mesure :  le "
-"code-barres est relatif à une unité spécifique;     *Identifiant numérique :"
-" code-barres de taille fixe suivi d'un encodage spécifique;     *Nom "
+"code-barres est relatif à une unité spécifique;     *Identifiant numérique : "
+"code-barres de taille fixe suivi d'un encodage spécifique;     *Nom "
 "alphanumérique : code-barres à taille variable"
 
 #. module: barcodes_gs1_nomenclature
@@ -208,7 +217,8 @@ msgid ""
 "\t- A second one to catch the value."
 msgstr ""
 "Le modèle de règle \"%s\" est invalide, il nécessite 2 groupes:\n"
-"\t- Un premier pour l'identifiant de l'application (normalement 2 à 4 chiffres);\n"
+"\t- Un premier pour l'identifiant de l'application (normalement 2 à 4 "
+"chiffres);\n"
 "\t- Un second pour la valeur"
 
 #. module: barcodes_gs1_nomenclature
@@ -222,12 +232,17 @@ msgstr "Le modèle de règle '%(rule)s' n'est pas un Regex valide : %(error)s"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "Il y a une erreur avec la règle de code-barres \"%s\".\n"
-"Si cette règle utilise des décimales, vérifiez qu'elle ne peut pas obtenir autre chose qu'un chiffre comme dernier caractère de l'identifiant de l'application.\n"
-"Vérifiez également que les valeurs correspondantes possibles ne peuvent être que des chiffres, sinon la valeur ne peut pas être convertie en mesure."
+"Si cette règle utilise des décimales, vérifiez qu'elle ne peut pas obtenir "
+"autre chose qu'un chiffre comme dernier caractère de l'identifiant de "
+"l'application.\n"
+"Vérifiez également que les valeurs correspondantes possibles ne peuvent être "
+"que des chiffres, sinon la valeur ne peut pas être convertie en mesure."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
