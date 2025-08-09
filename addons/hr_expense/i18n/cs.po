@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # Tomáš Píšek, 2023
 # Ivana Bartonkova, 2024
@@ -12,20 +12,21 @@
 # Tereza Mokrá, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2025
 # Marta Wacławek, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:35+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -58,10 +59,8 @@ msgstr "%(date_from)s - %(date_to)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
-msgstr ""
-"%(user)s potvrzuje, že tento výdaj není duplikátem s podobným výdajem."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
+msgstr "%(user)s potvrzuje, že tento výdaj není duplikátem s podobným výdajem."
 
 #. module: hr_expense
 #. odoo-python
@@ -109,7 +108,8 @@ msgstr "11. 8. 2023"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Use this reference as a subject prefix when submitting by email.</i>\n"
+"                                        <i class=\"text-muted\">Use this "
+"reference as a subject prefix when submitting by email.</i>\n"
 "                                    </span>"
 msgstr ""
 
@@ -231,7 +231,8 @@ msgstr "Všetky správy"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
-msgid "All expenses in an expense report must have the same \"paid by\" criteria."
+msgid ""
+"All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
 
 #. module: hr_expense
@@ -404,8 +405,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
-"Daně včetně ceny i daně bez ceny se budou chovat jako daně se zahrnutím ceny"
-" pro výdaje."
+"Daně včetně ceny i daně bez ceny se budou chovat jako daně se zahrnutím ceny "
+"pro výdaje."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -748,8 +749,7 @@ msgstr "Výdaje zaměstnanců"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
-"Enable users to choose default category for automatically generated "
-"expenses."
+"Enable users to choose default category for automatically generated expenses."
 msgstr ""
 
 #. module: hr_expense
@@ -757,8 +757,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr "Zadejte název, vyberte kategorii a nakonfigurujte výši svých výdajů."
 
 #. module: hr_expense
@@ -1212,7 +1211,6 @@ msgstr "Je vybrán produkt s nenulovými náklady"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
 msgstr "Vše začíná zde - pojďme na to!"
@@ -1333,12 +1331,10 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"Manažeři zde mohou zprávu schválit, poté může účetní zaúčtovat účetní "
-"zápisy."
+"Manažeři zde mohou zprávu schválit, poté může účetní zaúčtovat účetní zápisy."
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
@@ -1875,10 +1871,12 @@ msgstr "Naskenováním tohoto QR kódu získáte aplikaci Odoo:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "Vyberte uživatele odpovědného za schválení „Výdaje“ tohoto zaměstnance.\n"
-"Pokud je prázdné, schválení provede administrátor nebo schvalovatel (určeno v nastavení / uživatelé)."
+"Pokud je prázdné, schválení provede administrátor nebo schvalovatel (určeno "
+"v nastavení / uživatelé)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1896,9 +1894,8 @@ msgid ""
 msgstr ""
 "Odesláním e-mailu na tento e-mailový alias s účtenkou v příloze vytvoříte "
 "výdaj jedním kliknutím. Pokud první slovo předmětu e-mailu obsahuje interní "
-"odkaz na kategorii nebo název kategorie, automaticky se nastaví odpovídající"
-" kategorie. Zadáním částky výdaje do předmětu e-mailu ji nastavíte i na "
-"výdaj."
+"odkaz na kategorii nebo název kategorie, automaticky se nastaví odpovídající "
+"kategorie. Zadáním částky výdaje do předmětu e-mailu ji nastavíte i na výdaj."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -2090,9 +2087,17 @@ msgstr "Schvalovatel týmu"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr "Výchozí deník společnosti použitý při vytvoření výdaje zaměstnanců."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The current user has no related employee, or the related employee does not "
+"belong to this company."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2100,14 +2105,14 @@ msgstr "Výchozí deník společnosti použitý při vytvoření výdaje zaměst
 #, python-format
 msgid "The current user has no related employee. Please, create one."
 msgstr ""
-"Aktuální uživatel nemá žádného souvisejícího zaměstnance. Vytvořte si prosím"
-" jednu."
+"Aktuální uživatel nemá žádného souvisejícího zaměstnance. Vytvořte si prosím "
+"jednu."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "První slovo předmětu e-mailu neodpovídalo žádnému kódu kategorie. Kategorii "
 "budete muset na výdajích nastavit ručně."
@@ -2180,8 +2185,7 @@ msgstr "Tady to máte - správa výdajů ve zkratce!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
-msgid ""
-"This note will be shown to users when they select this expense product."
+msgid "This note will be shown to users when they select this expense product."
 msgstr ""
 "Tato poznámka bude zobrazena uživatelům, kteří zvolí tento výdaj produktu."
 
@@ -2327,7 +2331,6 @@ msgstr "Zobrazit hlášení"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr "Ztrácíte čas zaznamenávání vašich příjmů? Zkusme lepší způsob."
@@ -2347,13 +2350,14 @@ msgstr "Webová historie komunikace"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                         using this product won't be able to"
-" change the amount of the expense,                                         "
-"only the quantity. Use a cost different than 0 for expense categories funded"
-" by                                         the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                         or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                         using this product won't be "
+"able to change the amount of the "
+"expense,                                         only the quantity. Use a "
+"cost different than 0 for expense categories funded "
+"by                                         the company at fixed cost like "
+"allowances for mileage, per diem, "
+"accommodation                                         or meal."
 msgstr ""
 
 #. module: hr_expense
@@ -2376,7 +2380,6 @@ msgstr "Nemáte oprávnění upravovat tento výkaz výdajů."
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense."
@@ -2450,8 +2453,8 @@ msgstr "Nemůžete odstranit analytický účet, který se používá ve výdaji
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot delete only some entries linked to an expense report. All entries"
-" must be deleted at the same time."
+"You cannot delete only some entries linked to an expense report. All entries "
+"must be deleted at the same time."
 msgstr ""
 
 #. module: hr_expense
@@ -2546,11 +2549,11 @@ msgstr "Musíte k deníku přidat způsob ruční platby (%s)"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
-"Abyste mohli pokračovat, musíte mít ve své databázi alespoň jednu kategorii,"
-" kterou lze zařadit do nákladů!"
+"Abyste mohli pokračovat, musíte mít ve své databázi alespoň jednu kategorii, "
+"kterou lze zařadit do nákladů!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
