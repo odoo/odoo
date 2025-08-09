@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    #ports:
+    #  - "5434:5432"           # optional; remove if you don't need host psql
+
+  odoo:
+    image: odoo:18.0
+    depends_on: [db]
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo
+    volumes:
+      - .:/mnt/odoo-src:cached
+      - odoo-data:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf
+      - ./custom-addons:/mnt/extra-addons
+    ports:
+      - "8069:8069"
+    command: ["odoo", "-c", "/etc/odoo/odoo.conf"]
+
+volumes:
+  pgdata: {}       # <— these top-level volume defs were missing
+  odoo-data: {}
