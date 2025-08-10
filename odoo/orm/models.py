@@ -1546,16 +1546,14 @@ class BaseModel(metaclass=MetaModel):
     def _add_missing_default_values(self, values: ValuesType) -> ValuesType:
         # avoid overriding inherited values when parent is set
         avoid_models = set()
-
-        def collect_models_to_avoid(model):
-            for parent_mname, parent_fname in model._inherits.items():
+        avoid_models_stack = [self]
+        while avoid_models_stack:
+            for parent_mname, parent_fname in avoid_models_stack.pop()._inherits.items():
                 if parent_fname in values:
                     avoid_models.add(parent_mname)
                 else:
                     # manage the case where an ancestor parent field is set
-                    collect_models_to_avoid(self.env[parent_mname])
-
-        collect_models_to_avoid(self)
+                    avoid_models_stack.append(self.env[parent_mname])
 
         def avoid(field):
             # check whether the field is inherited from one of avoid_models
@@ -4764,21 +4762,19 @@ class BaseModel(metaclass=MetaModel):
             self = self.with_context(__copy_data_seen=defaultdict(set))
 
         # build a black list of fields that should not be copied
-        blacklist = set(MAGIC_COLUMNS + ['parent_path'])
-        whitelist = set(name for name, field in self._fields.items() if not field.inherited)
+        blacklist = {*MAGIC_COLUMNS, 'parent_path'}
+        whitelist = {name for name, field in self._fields.items() if not field.inherited}
 
-        def blacklist_given_fields(model):
-            # blacklist the fields that are given by inheritance
-            for parent_model, parent_field in model._inherits.items():
+        blacklist_stack = [self]
+        while blacklist_stack:
+            for parent_model, parent_field in blacklist_stack.pop()._inherits.items():
                 blacklist.add(parent_field)
                 if parent_field in default:
                     # all the fields of 'parent_model' are given by the record:
                     # default[parent_field], except the ones redefined in self
                     blacklist.update(set(self.env[parent_model]._fields) - whitelist)
                 else:
-                    blacklist_given_fields(self.env[parent_model])
-
-        blacklist_given_fields(self)
+                    blacklist_stack.append(self.env[parent_model])
 
         fields_to_copy = {name: field
                           for name, field in self._fields.items()
