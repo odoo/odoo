@@ -186,10 +186,11 @@ class BaseCursor(_CursorProtocol):
         self.precommit.clear()
 
     def reset(self) -> None:
-        """ Reset the current transaction (this invalidates more that clear()).
+        """ Reset the current transaction (this invalidates more than `clear()`).
             This method should be called only right after commit() or rollback().
         """
         if self.transaction is not None:
+            self.transaction.default_env = None  # break the cyclic reference
             self.transaction.reset()
 
     def execute(self, query, params=None, log_exceptions: bool = True) -> None:
@@ -534,6 +535,7 @@ class Cursor(BaseCursor):
 
         # Clean the underlying connection, and run rollback hooks.
         self.rollback()
+        self.reset()
 
         self._closed = True
 

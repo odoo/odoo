@@ -82,6 +82,7 @@ class TestCursor(BaseCursor):
         if not self._closed:
             try:
                 self.rollback()
+                self.reset()
                 if self._savepoint:
                     self._savepoint.close(rollback=False)
             finally:
@@ -91,6 +92,10 @@ class TestCursor(BaseCursor):
                 if tos is not self:
                     _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
                 self._lock.release()
+
+    @property
+    def closed(self) -> bool:
+        return self._closed or self._cursor.closed
 
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
