@@ -34,11 +34,11 @@ class HrLeave(models.Model):
 
         if not self.request_unit_hours:
             # Use company's working schedule hours for the leave to avoid duration calculation issues.
-            def adjust_date_range(date_from, date_to, period, attendance_ids, employee_id):
-                period_ids_from = attendance_ids.filtered(lambda a: a.day_period in period
+            def adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, employee_id):
+                period_ids_from = attendance_ids.filtered(lambda a: a.day_period in from_period
                                                                     and int(a.dayofweek) == date_from.weekday()
                                                                     and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_from)))
-                period_ids_to = attendance_ids.filtered(lambda a: a.day_period in period
+                period_ids_to = attendance_ids.filtered(lambda a: a.day_period in to_period
                                                                     and int(a.dayofweek) == date_to.weekday()
                                                                     and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_to)))
                 if period_ids_from:
@@ -50,13 +50,16 @@ class HrLeave(models.Model):
                 return date_from, date_to
 
             if self.request_unit_half:
-                period = ['morning'] if self.request_date_from_period == 'am' else ['afternoon']
+                from_period = ['morning'] if self.request_date_from_period == 'am' else ['afternoon']
+                to_period = ['morning'] if self.request_date_to_period == 'am' else ['afternoon']
             else:
-                period = ['morning', 'afternoon']
+                from_period = ['morning', 'afternoon']
+                to_period = ['morning', 'afternoon']
             attendance_ids = self.company_id.resource_calendar_id.attendance_ids
-            date_from, date_to = adjust_date_range(date_from, date_to, period, attendance_ids, self.employee_id)
+            date_from, date_to = adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, self.employee_id)
 
-        if self.request_unit_half and self.request_date_from_period == 'am':
+        similar = date_from.date() == date_to.date() and self.request_date_from_period == self.request_date_to_period
+        if self.request_unit_half and similar and self.request_date_from_period == 'am':
             # In normal workflows request_unit_half implies that date_from and date_to are the same
             # request_unit_half allows us to choose between `am` and `pm`
             # In a case where we work from mon-wed and request a half day in the morning
@@ -88,8 +91,8 @@ class HrLeave(models.Model):
         # Undo the last day increment
         return (date_start, date_target)
 
-    @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
-                 'request_unit_half', 'request_unit_hours', 'employee_id')
+    @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
+                'request_date_from', 'request_date_to', 'request_unit_half', 'request_unit_hours', 'employee_id')
     def _compute_date_from_to(self):
         super()._compute_date_from_to()
         for leave in self:

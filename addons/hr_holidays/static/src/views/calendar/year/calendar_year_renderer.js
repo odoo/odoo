@@ -73,13 +73,15 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     eventClassNames({ event }) {
         const classesToAdd = super.eventClassNames(...arguments);
         const record = this.props.model.records[event.id];
-        if (record && record.request_date_from_period) {
-            record.request_date_from_period === "am"
-                ? classesToAdd.push("o_event_half_left")
-                : classesToAdd.push("o_event_half_right");
+        if (record && record.requestDateFromPeriod && record.sameDay) {
+            if (record.requestDateFromPeriod === "am" && record.requestDateToPeriod === "am") {
+                classesToAdd.push("o_event_half_left")
+            } else if (record.requestDateFromPeriod === "pm" && record.requestDateToPeriod === "pm") {
+                classesToAdd.push("o_event_half_right")
+            }
         }
         // handling half pill UX for custom_hours
-        if (record?.rawRecord?.request_unit_hours) {
+        if (record?.rawRecord?.request_unit_hours && record.sameDay) {
             if (record.end.c.hour < 12) {
                 classesToAdd.push("o_event_half_left");
             } else if (record.end.c.hour >= 12) {

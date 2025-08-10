@@ -133,12 +133,13 @@ class TestFrenchLeaves(TransactionCase):
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-10',
             'request_date_to': '2021-09-10',
-            'request_unit_half': True,
             'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
         })
         # Since the employee works on the afternoon, the date_to is not post-poned
         self.assertEqual(leave.number_of_days, 0.5, 'The number of days should be equal to 0.5.')
         leave.request_date_from_period = 'pm'
+        leave.request_date_to_period = 'pm'
         # This however should push the date_to
         self.assertEqual(leave.number_of_days, 2.5, 'The number of days should be equal to 2.5.')
 
@@ -342,30 +343,32 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'request_date_from': '2024-07-22',
-            'request_date_to': '2024-07-22',
-        })
-        self.assertEqual(leave.number_of_days, 1, 'The duration should be 1 day.')
-        self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
-
-        leave = self.env['hr.leave'].create({
-            'name': 'Test',
-            'holiday_status_id': self.time_off_type.id,
-            'employee_id': self.employee.id,
             'request_date_from': '2024-07-29',
             'request_date_to': '2024-07-29',
-            'request_unit_half': True,
             'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
         })
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
         self.assertEqual(leave.date_from.date(), date(2024, 7, 29))
         self.assertEqual(leave.date_to.date(), date(2024, 7, 29))
         self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
 
+        leave.request_date_to_period = 'pm'
         leave.request_date_from_period = 'pm'
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
         self.assertEqual(leave.date_from.date(), date(2024, 7, 29))
         self.assertEqual(leave.date_to.date(), date(2024, 7, 29))
+        self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
+
+        self.time_off_type.request_unit = "day"
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2024-07-22',
+            'request_date_to': '2024-07-22',
+        })
+        self.assertEqual(leave.number_of_days, 1, 'The duration should be 1 day.')
         self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
 
     def test_leave_full_day_different_working_hours(self):
