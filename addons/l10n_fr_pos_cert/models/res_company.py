@@ -60,7 +60,7 @@ class ResCompany(models.Model):
         msg_alert = ''
         report_dict = {}
         if self._is_accounting_unalterable():
-            orders = self.env['pos.order'].search([('state', 'in', ['paid', 'done']), ('company_id', '=', self.id),
+            orders = self.with_context(prefetch_fields=False).env['pos.order'].search([('state', 'in', ['paid', 'done']), ('company_id', '=', self.id),
                                     ('l10n_fr_secure_sequence_number', '!=', 0)], order="l10n_fr_secure_sequence_number ASC")
 
             if not orders:
